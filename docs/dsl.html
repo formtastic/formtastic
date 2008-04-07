@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+	<meta http-equiv="Content-Language" content="en-us" />
+	<title>untitled</title>
+	<meta name="Copyright" content="(c) 2008 Copyright Justin French" />
+</head>
+	
+<body>
+	
+	<% semantic_form_for @article do |form| %>
+	  
+	  <%= form.error_messages -%>
+	  
+	  <% form.input_field_set do %>
+	    <%= form.input :title %>                               
+	    <%= form.input :body, :rows => 20 %>                                
+	    <%= form.input :extract, :required => false, :rows => 5 %>         
+	    <%= form.input :description, :required => false, :rows => 5 %>     
+	    <%= form.input :keywords, :required => false, :hint => "Example: ruby, rails, forms" %>        
+	    <%= form.input :section_id, :include_blank => true %>                          
+	    <%= form.input :publication_state_id, :as => :radio %> 
+	    <%= form.input :url_title, :required => false %>                           
+	    <%= form.input :author_id %>                           
+	    <%= form.input :allow_comments, :label => "Allow commenting on this article" %>                      
+	  <% end %>                                                
+	                                                           
+	  <% form.button_field_set do %>                                    
+	    <%= form.commit_button -%>                             
+	  <% end %>
+	    	    	
+	<% end %>
+		
+</body>
+</html>
+

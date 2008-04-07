@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+	<meta http-equiv="Content-Language" content="en-us" />
+	<title>untitled</title>
+	<meta name="Copyright" content="(c) 2008 Copyright Justin French" />
+</head>
+	
+<body>
+
+
+  <form id="new-article-form" action="#" method="post">
+    <fieldset>
+      
+      <legend><span>Create a new Article</span></legend>
+      
+      <div id="errors">
+        <p>We encountered <strong>2 errors</strong> while trying to process this form:</p>
+        <ol>
+          <li><a href="#article_title_input">title</a> must be provided</li>
+          <li><a href="#article_section_id_input">section</a> must be provided</li>
+        </ol>
+      </div>
+      
+      <fieldset class="inputs">
+        <ol>
+          <li id="article_title_input" class="required string error">
+            <label for="article_title">Title</label>
+            <input type="text" id="article_title" name="article[title]" size="50" />
+            <p class="error"><strong>title must be provided</strong></p>
+          </li>
+
+          <li id="article_body_input" class="required text">
+            <label for="article_body">Body</label>
+            <textarea id="article_body" name="article[body]" rows="20" cols="50"></textarea>
+          </li>
+
+          <li id="article_extract_input" class="optional text">
+            <label for="article_extract">Extract</label>
+            <textarea id="article_extract" name="article[extract]" rows="5" cols="50"></textarea>
+            <p class="hint">An interesting passage or quote extracted from the article.</p>
+          </li>
+
+          <li id="article_keywords_input" class="optional string">
+            <label for="article_keywords">Keywords</label>
+            <input type="text" id="article_keywords" name="article[keywords]" size="50" />
+            <p class="hint">ruby, rails, forms, internets, remarkability</p>
+          </li>
+
+          <li id="article_section_id_input" class="required select error">
+            <label for="article_section_id">Section</lable>
+            <select id="article_section_id" name="article[section_id]">
+              <option value=""></option>
+              <option value="1">Blog</option>
+              <option value="2">Projects</option>
+            </select>
+            <p class="error"><strong>section must be provided</strong></p>
+          </li>
+
+          <li id="article_publication_state_id_input" class="required radio">
+            <fieldset>
+              <legend><span>Publication State</span></legend>
+              <ol>
+                <li>
+                  <label><input type="radio" id="article_publication_state_id_1" name="article[publication_state_id]" value="1" /> draft (hidden)</label>
+                </li>
+                <li>
+                  <label><input type="radio" id="article_publication_state_id_2" name="article[publication_state_id]" value="2" checked="checked" /> ready for publication (hidden)</label>
+                </li>
+                <li>
+                  <label><input type="radio" id="article_publication_state_id_3" name="article[publication_state_id]" value="3" checked="checked" /> published (visible)</label>
+                </li>
+              </ol>
+            </fieldset>
+          </li>
+
+          <li id="article_allow_comments_input" class="required checkbox">
+            <input type="hidden" id="article_allow_comments_0" name="article[allow_comments]" value="0" />
+            <label><input type="checkbox" id="article_allow_comments_1" name="article[allow_comments]" value="1" /> Allow commenting on this article</label>
+          </li>
+        </ol>
+      </fieldset>
+      
+      <fieldset class="buttons">
+        <ol>
+          <li class="primary">
+            <input type="submit" name="commit" value="Create new Article" />
+          </li>
+         </ol>
+      </fieldset>
+      
+    </fieldset>
+  </form>
+
+</body>
+</html>
+

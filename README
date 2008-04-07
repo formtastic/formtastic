@@ -1,0 +1,144 @@
+=Formtastic Sneaky Preview
+
+Formtastic is a Rails FormBuilder DSL (with some other goodies) to make it far easier to create beautiful, semantically rich, syntactically awesome, readily stylable and wonderfully accessible HTML forms in your Rails applications.
+
+One day, I finally had enough.  Hacked together forms were easy, but awesome forms with decent semantics, rich mark-up and plenty of CSS hooks were incredibly painful.  I was discouraged from doing things properly because it was do much mark-up and code to write.
+
+So I opened up a text file, and wrote a DSL for how I'd like to author forms:
+
+  <% semantic_form_for @article do |form| %>
+    
+    <%= form.error_messages %>
+    
+    <% form.input_field_set "Basic" do %>
+      <%= form.input :title %>                               
+      <%= form.input :body, :rows => 20 %>                                
+      <%= form.input :section_id, :include_blank => true %>                          
+      <%= form.input :publication_state_id, :as => :radio %> 
+      <%= form.input :author_id, :as => :select %>                           
+      <%= form.input :allow_comments, :label => "Allow commenting on this article" %>                      
+    <% end %>                                                
+    
+    <% form.input_field_set "Extra" do %>
+      <%= form.input :keywords, :required => false, :hint => "Example: ruby, rails, forms" %>        
+      <%= form.input :extract, :required => false, :rows => 5 %>
+      <%= form.input :description, :required => false, :rows => 5 %>
+      <%= form.input :url_title, :required => false %>                           
+    <% end %>
+
+    <% form.button_field_set do %>                                    
+      <%= form.cancel_button -%>                             
+      <%= form.commit_button -%>                             
+    <% end %>
+      	    	
+  <% end %>
+
+I also wrote the accompanying HTML output I expected, favoring something very similar to the fieldsets, lists and other semantic elements Aaron Gustafson presented in <i>Learning to Love Forms</i> <http://www.slideshare.net/AaronGustafson/learning-to-love-forms-web-directions-south-07>, and then hacked together enough Ruby to prove it could be done.
+
+
+==Configuration
+
+If you wish, put something like this in config/initializers/formtastic_config.rb:
+
+  JustinFrench::Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
+  JustinFrench::Formtastic::SemanticFormBuilder.required_string = "(required)"
+  JustinFrench::Formtastic::SemanticFormBuilder.optional_string = "(optional)"
+  
+  
+==Guiding Principals
+
+* great forms are at the heart of most web applications
+* semantically rich (and far more accessible) HTML forms really are possible with the use of appropriate elements like fieldsets & lists
+* sometimes more mark-up is better
+* stylesheet authors have more options and more control if plenty of structural mark-up, class names and element ids are provided
+* it should be easy to write a great form rather than a crappy form
+* I'm sick of re-inventing the wheel every time I need a form
+* applications with great data modelling and a RESTful architecture are my main consideration
+* there's no such thing as a silver bullet and I'll still have to hard-code some things I do
+* best practices and common patterns have to start somewhere
+
+
+
+==Status
+
+THIS IS DEFINITELY NOT PRODUCTION-READY.  THINGS ARE GOING TO CHANGE A LOT.
+
+It's incredibly opinionated, incomplete, a work in progress, messy around the edges, messy in the middle too, tightly coupled to the database, tightly coupled to "my way" of doing things and also incredibly lacking in unit tests so far, but I hope you try it and offer some suggestions and improvements any way.
+
+* Justin's Weblog: http://justinfrench.com
+* Justin's email: justin at indent dot com dot au
+* Documentation: http://formtastic.justinfrench.com
+* SVN repository: http://indent.svnrepository.com/svn/plugins/formtastic/trunk
+
+
+==Roadmap
+
+* There's plenty of TODOs in the code
+* get the basic form_for implementation complete, proven and *well tested* (did I mention how laborious testing form builders is?)
+* provide generic, reusable, stylesheets that prove this stuff works
+* go back and ensure it works for remote_form_for, etc
+* probably do a shortcut like <%= form.inputs :name, :login, :email, :bio %> for those that want the form with zero configuration 
+
+
+==Installation
+
+You know the drill:
+
+  cd path/to/your/app
+  ./script/plugin install http://indent.svnrepository.com/svn/plugins/formtastic/trunk
+
+
+==Usage
+
+The smallest example:
+
+  <% semantic_form_for @user do |form| %>
+    <% form.input_field_set do %>
+      <%= form.input :name %>
+      <%= form.input :email %>
+    <% end %>
+  <% end %>
+
+With an output something like:
+
+  <form id="new-article-form" action="#" method="post">
+    <fieldset>
+      <legend><span>Create a new User</span></legend>
+      <fieldset class="inputs">
+        <ol>
+          <li id="user_name_input" class="required string">
+            <label for="user_name">Name <abbr title="required">*</abbr></label>
+            <input type="text" id="user_name" name="user[name]" size="50" />
+          </li>
+          <li id="user_email_input" class="required string">
+            <label for="user_email">Email <abbr title="required">*</abbr></label>
+            <input type="text" id="user_email" name="user[email]" size="50" />
+          </li>
+        </ol>
+      </fieldset>
+    </fieldset>
+  </form>
+ 
+  
+==What about Stylesheets?
+
+It's no where near complete, but there is a sample CSS file here:
+http://indent.svnrepository.com/svn/plugins/formtastic/sample/public/stylesheets/formtastic.css
+
+The plan is that a CSS file similar to this will be generated or otherwise made available to your app to give you basic vertical (labels above inputs) and horizontal (labels to the left of inputs), and then if needed, you would write new styles on top to customise the presentation to suit you.
+
+
+==Compatibility
+
+I'm only testing Formtastic with the latest Rails stable release (2.0.2 at this time).
+
+
+==But it doesn't do that thing I really need!
+
+Oh noes!  It might not ever do it either.  We'll see.  This is not a silver bullet.  I want to make the usual stuff easy, and the unusual stuff possible.  That might mean that some of the inputs on your form still have to be hard-coded, but some is better than all, right?
+
+I really hope the plugin will soon be clean and extensible enough to invite others to contribute more complex input types (calendars, etc) to the core.
+
+
+
+Copyright (c) 2007 Justin French, released under the MIT license.
