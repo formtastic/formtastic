@@ -2,9 +2,9 @@
 
 Formtastic is a Rails FormBuilder DSL (with some other goodies) to make it far easier to create beautiful, semantically rich, syntactically awesome, readily stylable and wonderfully accessible HTML forms in your Rails applications.
 
-One day, I finally had enough.  Hacked together forms were easy, but awesome forms with decent semantics, rich mark-up and plenty of CSS hooks were incredibly painful.  I was discouraged from doing things properly because it was do much mark-up and code to write.
+==The Story
 
-So I opened up a text file, and wrote a DSL for how I'd like to author forms:
+Hacked together forms were easy, but awesome forms with decent semantics, rich mark-up and plenty of CSS hooks were incredibly painful.  I was discouraged from doing things properly because it was do much mark-up and code to write.  One day, I finally had enough, so I opened up my text editor, and wrote a DSL for how I'd like to author forms:
 
   <% semantic_form_for @article do |form| %>
     
@@ -66,9 +66,7 @@ THIS IS DEFINITELY NOT PRODUCTION-READY.  THINGS ARE GOING TO CHANGE A LOT.
 It's incredibly opinionated, incomplete, a work in progress, messy around the edges, messy in the middle too, tightly coupled to the database, tightly coupled to "my way" of doing things and also incredibly lacking in unit tests so far, but I hope you try it and offer some suggestions and improvements any way.
 
 * Justin's Weblog: http://justinfrench.com
-* Justin's email: justin at indent dot com dot au
-* Documentation: http://formtastic.justinfrench.com
-* SVN repository: http://indent.svnrepository.com/svn/plugins/formtastic/trunk
+* Github: http://github.com/justinfrench/formtastic/
 
 
 ==Roadmap
@@ -78,14 +76,6 @@ It's incredibly opinionated, incomplete, a work in progress, messy around the ed
 * provide generic, reusable, stylesheets that prove this stuff works
 * go back and ensure it works for remote_form_for, etc
 * probably do a shortcut like <%= form.inputs :name, :login, :email, :bio %> for those that want the form with zero configuration 
-
-
-==Installation
-
-You know the drill:
-
-  cd path/to/your/app
-  ./script/plugin install http://indent.svnrepository.com/svn/plugins/formtastic/trunk
 
 
 ==Usage
@@ -122,15 +112,12 @@ With an output something like:
   
 ==What about Stylesheets?
 
-It's no where near complete, but there is a sample CSS file here:
-http://indent.svnrepository.com/svn/plugins/formtastic/sample/public/stylesheets/formtastic.css
-
 The plan is that a CSS file similar to this will be generated or otherwise made available to your app to give you basic vertical (labels above inputs) and horizontal (labels to the left of inputs), and then if needed, you would write new styles on top to customise the presentation to suit you.
 
 
 ==Compatibility
 
-I'm only testing Formtastic with the latest Rails stable release (2.0.2 at this time).
+I'm only testing Formtastic with the latest Rails stable release.
 
 
 ==But it doesn't do that thing I really need!
