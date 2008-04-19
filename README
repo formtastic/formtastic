@@ -122,8 +122,7 @@ With an output something like:
   
 ==What about Stylesheets?
 
-It's no where near complete, but there is a sample CSS file here:
-http://indent.svnrepository.com/svn/plugins/formtastic/sample/public/stylesheets/formtastic.css
+It's no where near complete, but there is a sample CSS file in sample/formtastic.css
 
 The plan is that a CSS file similar to this will be generated or otherwise made available to your app to give you basic vertical (labels above inputs) and horizontal (labels to the left of inputs), and then if needed, you would write new styles on top to customise the presentation to suit you.
 
