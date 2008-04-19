@@ -89,8 +89,10 @@ module JustinFrench #:nodoc:
         options[:label] ||= method.to_s.humanize
         options[:as] ||= default_input_type(@object_name, method)
         
+        input_method = "#{options[:as]}_input"
+        raise("Cannot guess an input type for '#{method}' - please set :as option") unless respond_to?(input_method) 
         content = ''
-        content += send("#{options[:as]}_input", method, options) # eg string_input or select_input
+        content += send(input_method, method, options) # eg string_input or select_input
         content += inline_errors(method, options)
         content += inline_hints(method, options)
         
@@ -361,7 +363,7 @@ module JustinFrench #:nodoc:
       
       def default_string_options(method) #:nodoc:
         column = @template.instance_eval("@#{@object_name}").class.columns_hash[method.to_s]
-        if column.limit.nil?
+        if column.nil? || column.limit.nil?
           { :size => DEFAULT_TEXT_FIELD_SIZE }
         else
           { :maxlen => column.limit, :size => [column.limit, DEFAULT_TEXT_FIELD_SIZE].min }
