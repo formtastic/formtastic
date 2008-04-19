@@ -7,6 +7,9 @@ this one in your layouts and override the declarations made here to suit your ne
 allow you to easily update this file as Formtastic's stylesheets improve over time without 
 clobbering your own changes.
 
+This assumes you're also using the YUI reset stylesheet:
+http://yui.yahooapis.com/2.5.1/build/reset/reset-min.css
+
 This stylesheet forms part of the Formtastic Rails Plugin
 (c) 2008 Justin French
 

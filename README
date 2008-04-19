@@ -114,6 +114,16 @@ With an output something like:
 
 The plan is that a CSS file similar to this will be generated or otherwise made available to your app to give you basic vertical (labels above inputs) and horizontal (labels to the left of inputs), and then if needed, you would write new styles on top to customise the presentation to suit you.
 
+You can use a proof-of-concept file however:
+
+1. Use the generator to copy the file into your public directory
+./script/generate formtastic_stylesheets
+
+2. Add both YUI's reset.css and formtastic.css to your layout:
+
+<%= stylesheet_link_tag "http://yui.yahooapis.com/2.5.1/build/reset/reset-min.css" -%>
+<%= stylesheet_link_tag "formtastic" -%>
+
 
 ==Compatibility
 
