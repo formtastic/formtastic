@@ -115,7 +115,23 @@ With an output something like:
   </fieldset>
 </form>
 </pre>
-  
+
+
+h2. Conventions & Prerequisites
+
+In a few places (like radio or select widgets for belongs_to associations) Formtastic expects your ActiveRecord instances to respond to the <code>to_label</code> method (returning a String).  You can easily add this to your models, for example, a User object might want to return the user's first name, last name and login:
+
+<pre>
+class User < ActiveRecord::Base
+  #...
+  def to_label
+    "#{first_name} #{last_name} (#{login})"
+  end
+end
+</pre>
+
+
+
 h2. What about Stylesheets?
 
 The plan is that a CSS file similar to this will be generated or otherwise made available to your app to give you basic vertical (labels above inputs) and horizontal (labels to the left of inputs), and then if needed, you would write new styles on top to customise the presentation to suit you.
