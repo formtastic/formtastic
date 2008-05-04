@@ -24,8 +24,8 @@ div.fieldWithErrors { display:inline; }
 --------------------------------------------------------------------------------------------------*/
 
 form.formtastic fieldset { }
-form.formtastic fieldset.inputs { background:#eee; }
-form.formtastic fieldset.buttons { background:#aaa; padding:10px; }
+form.formtastic fieldset.inputs { border-top:1px solid #eee; }
+form.formtastic fieldset.buttons { padding:10px; }
 form.formtastic fieldset ol { }
 
 /* clearfixing the fieldsets */
@@ -38,7 +38,7 @@ html[xmlns] form.formtastic fieldset { display: block; }
 /* INPUT LIs
 --------------------------------------------------------------------------------------------------*/
 
-form.formtastic fieldset ol li { border-bottom:1px solid #ccc; padding:10px; }*/
+form.formtastic fieldset ol li { border-bottom:1px solid #eee; padding:5px; }
 
 /* clearfixing the li's */
 form.formtastic fieldset ol li { display: inline-block; }
@@ -54,40 +54,40 @@ form.formtastic fieldset ol li.error { background:pink; }
 /* LABELS
 --------------------------------------------------------------------------------------------------*/
   
-form.formtastic fieldset ol li label { display:block; width:150px; float:left; }
+form.formtastic fieldset ol li label { display:block; width:25%; float:left; }
 
 
 /* INLINE HINTS
 --------------------------------------------------------------------------------------------------*/
-form.formtastic fieldset ol li p.inline-hints { color:#666; margin:0.5em 0 0 150px; }
+form.formtastic fieldset ol li p.inline-hints { color:#666; margin:0.5em 0 0 25%; }
 
 
 /* INLINE ERRORS
 --------------------------------------------------------------------------------------------------*/
-form.formtastic fieldset ol li p.inline-errors { color:red; margin:0.5em 0 0 150px; }
+form.formtastic fieldset ol li p.inline-errors { color:red; margin:0.5em 0 0 25%; }
 
 /* STRING & NUMERIC OVERRIDES
 --------------------------------------------------------------------------------------------------*/
-form.formtastic fieldset ol li.string input { width:300px; }
-form.formtastic fieldset ol li.numeric input { width:300px; }
+form.formtastic fieldset ol li.string input { width:74%; }
+form.formtastic fieldset ol li.numeric input { width:74%; }
 
 /* TEXTAREA OVERRIDES
 --------------------------------------------------------------------------------------------------*/
-form.formtastic fieldset ol li.text textarea { width:300px; }
+form.formtastic fieldset ol li.text textarea { width:74%; }
 
 
 /* BOOLEAN (CHECKBOX) OVERRIDES
 --------------------------------------------------------------------------------------------------*/
-form.formtastic fieldset ol li.boolean label { padding-left:150px; width:auto; }
-form.formtastic fieldset ol li.boolean label input { margin-right:0.5em; }
+form.formtastic fieldset ol li.boolean label { padding-left:25%; width:auto; }
+form.formtastic fieldset ol li.boolean label input { margin:0 0.5em 0 0.2em; }
 
 
 /* BELONGS_TO (RADIO) OVERRIDES
 --------------------------------------------------------------------------------------------------*/
 form.formtastic fieldset ol li.radio fieldset { }
-form.formtastic fieldset ol li.radio fieldset legend { display:block; float:left; width:150px; position:relative; }
+form.formtastic fieldset ol li.radio fieldset legend { display:block; float:left; width:25%; position:relative; }
 form.formtastic fieldset ol li.radio fieldset legend span { }
-form.formtastic fieldset ol li.radio fieldset ol { float:left; width:300px; }
+form.formtastic fieldset ol li.radio fieldset ol { float:left; width:74%; }
 form.formtastic fieldset ol li.radio fieldset ol li { padding:0; border:0; margin-bottom:.2em; }
 form.formtastic fieldset ol li.radio fieldset ol li label { float:none; width:100%; }
 form.formtastic fieldset ol li.radio fieldset ol li label input { margin-right:0.5em; }
@@ -103,13 +103,13 @@ form.formtastic fieldset ol li.date fieldset legend,
 form.formtastic fieldset ol li.datetime fieldset legend,
 
 form.formtastic fieldset ol li.date fieldset legend,
-form.formtastic fieldset ol li.datetime fieldset legend { display:block; float:left; width:150px; position:relative; }
+form.formtastic fieldset ol li.datetime fieldset legend { display:block; float:left; width:25%; position:relative; }
 
 form.formtastic fieldset ol li.date fieldset legend span,
 form.formtastic fieldset ol li.datetime fieldset legend span {  }
 
 form.formtastic fieldset ol li.date fieldset ol,
-form.formtastic fieldset ol li.datetime fieldset ol { float:left; width:300px; margin:0; padding:0; }
+form.formtastic fieldset ol li.datetime fieldset ol { float:left; width:74%; margin:0; padding:0; }
 
 form.formtastic fieldset ol li.date fieldset ol li,
 form.formtastic fieldset ol li.datetime fieldset ol li { float:left; width:auto; margin:0; padding:0; border:0; }
