@@ -105,4 +105,4 @@ form.formtastic fieldset ol li.date fieldset legend span {  }
 form.formtastic fieldset ol li.date fieldset ol { float:left; width:300px; margin:0; padding:0; }
 form.formtastic fieldset ol li.date fieldset ol li { float:left; width:auto; margin:0; padding:0; border:0; }
 form.formtastic fieldset ol li.date fieldset ol li label { display:none; }
-form.formtastic fieldset ol li.radio fieldset ol li label input { display:inline; margin:0; padding:0;  }
+form.formtastic fieldset ol li.date fieldset ol li label input { display:inline; margin:0; padding:0;  }
