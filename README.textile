@@ -52,9 +52,9 @@ h2. Guiding Principals
 
 * great forms are at the heart of most web applications
 * semantically rich (and far more accessible) HTML forms really are possible with the use of appropriate elements like fieldsets & lists
-* sometimes more mark-up is better
+* sometimes _more mark-up_ is better
 * stylesheet authors have more options and more control if plenty of structural mark-up, class names and element ids are provided
-* it should be easy to write a great form rather than a crappy form
+* it should be _easier_ to write a great form than a crappy one
 * I'm sick of re-inventing the wheel every time I need a form
 * applications with great data modelling and a RESTful architecture are my main consideration
 * there's no such thing as a silver bullet and I'll still have to hard-code some things I do
@@ -78,7 +78,7 @@ h2. Roadmap
 * get the basic form_for implementation complete, proven and *well tested* (did I mention how laborious testing form builders is?)
 * provide generic, reusable, stylesheets that prove this stuff works
 * go back and ensure it works for remote_form_for, etc
-* probably do a shortcut like <%= form.inputs :name, :login, :email, :bio %> for those that want the form with zero configuration 
+* probably do a shortcut like <code><%= form.inputs :name, :login, :email, :bio %></code> for those that want the form with zero configuration 
 
 
 h2. Usage
