@@ -242,7 +242,7 @@ module JustinFrench #:nodoc:
       
       
       # Same as string_input for now
-      def numeric_input
+      def numeric_input(method, options)
         input_label(method, options) + 
         @template.text_field(@object_name, method, options.reverse_merge(default_string_options(method)))
       end
