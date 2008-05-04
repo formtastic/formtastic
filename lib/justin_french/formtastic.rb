@@ -150,19 +150,34 @@ module JustinFrench #:nodoc:
       protected
       
       
+      # Outputs a label and a select box containing options from the parent (belongs_to) association.
+      #
       #   <label for="vehicle_owner_id">Owner</label>
       #   <select id="vehicle_owner_id" name="vehicle[owner_id]">
       #     <option value="1">Justin French</option>
       #     <option value="2">Jane Doe</option>
       #   </select>
+      #
+      # Note: This input calls #to_label on each record in the parent association, so in the example
+      # where a Post belongs_to an Author, you need to define an instance method to_label on Post, 
+      # which will be used as the text for the each option in the select.  You can specify an 
+      # alternate method with the :label_method option:
+      #
+      #   f.input :author_id, :as => :select, :label_method => :full_name
+      #
+      # TODO: need ordering and conditions on the find() for the belongs_to choices, or maybe a 
+      # finder method override.
       def select_input(method, options)
+        options[:label_method] ||= :to_label
+
         parent_class = method.to_s.sub(/_id$/,'').camelize.constantize
-        choices = parent_class.find(:all).map {|o| [o.name, o.id]} # TODO
+        choices = parent_class.find(:all).map {|o| [o.send(options[:label_method]), o.id]}
+        
         input_label(method, options) + @template.select(@object_name, method, choices, options)
       end
       
       
-      # Outputs a fieldset containign a legend for the label text, and an ordered list (ol) of list
+      # Outputs a fieldset containing a legend for the label text, and an ordered list (ol) of list
       # items, one for each possible choice in the belongs_to association.  Each li contains a 
       # label and a radio input.  Example:
       # 
@@ -178,8 +193,18 @@ module JustinFrench #:nodoc:
       #     </ol>
       #   </fieldset>
       # 
-      # TODO: need ordering and conditions on the find() for the belongs_to choices, or maybe a finder method override.
+      # Note: This input calls #to_label on each record in the parent association, so in the example
+      # where a Post belongs_to an Author, you need to define an instance method to_label on Post, 
+      # which will be used as the text for the labels next to each radio button. You can specify an 
+      # alternate method with the :label_method option:
+      #
+      #   f.input :author_id, :as => :radio, :label_method => :full_name
+      #
+      # TODO: need ordering and conditions on the find() for the belongs_to choices, or maybe a 
+      # finder method override.
       def radio_input(method, options)
+        options[:label_method] ||= :to_label
+                
         parent_class = method.to_s.sub(/_id$/,'').camelize.constantize
         choices = parent_class.find(:all) # TODO
         
@@ -188,7 +213,7 @@ module JustinFrench #:nodoc:
           @template.content_tag(:ol, 
             choices.map { |c| 
               @template.content_tag(:li,
-                input_label(method, options, "#{@template.radio_button(@object_name, method, c.id)} #{c.name}") # TODO
+                input_label(method, options, "#{@template.radio_button(@object_name, method, c.id)} #{c.send(options[:label_method])}")
               )
             }
           )
