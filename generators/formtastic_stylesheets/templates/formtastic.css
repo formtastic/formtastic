@@ -96,10 +96,26 @@ form.formtastic fieldset ol li.radio fieldset ol li label input { margin-right:0
 /* DATE & TIME OVERRIDES
 --------------------------------------------------------------------------------------------------*/
 
-form.formtastic fieldset ol li.date fieldset {}
-form.formtastic fieldset ol li.date fieldset legend { display:block; float:left; width:150px; position:relative; }
-form.formtastic fieldset ol li.date fieldset legend span {  }
-form.formtastic fieldset ol li.date fieldset ol { float:left; width:300px; margin:0; padding:0; }
-form.formtastic fieldset ol li.date fieldset ol li { float:left; width:auto; margin:0; padding:0; border:0; }
-form.formtastic fieldset ol li.date fieldset ol li label { display:none; }
-form.formtastic fieldset ol li.date fieldset ol li label input { display:inline; margin:0; padding:0;  }
+form.formtastic fieldset ol li.date fieldset,
+form.formtastic fieldset ol li.datetime fieldset {}
+
+form.formtastic fieldset ol li.date fieldset legend,
+form.formtastic fieldset ol li.datetime fieldset legend,
+
+form.formtastic fieldset ol li.date fieldset legend,
+form.formtastic fieldset ol li.datetime fieldset legend { display:block; float:left; width:150px; position:relative; }
+
+form.formtastic fieldset ol li.date fieldset legend span,
+form.formtastic fieldset ol li.datetime fieldset legend span {  }
+
+form.formtastic fieldset ol li.date fieldset ol,
+form.formtastic fieldset ol li.datetime fieldset ol { float:left; width:300px; margin:0; padding:0; }
+
+form.formtastic fieldset ol li.date fieldset ol li,
+form.formtastic fieldset ol li.datetime fieldset ol li { float:left; width:auto; margin:0; padding:0; border:0; }
+
+form.formtastic fieldset ol li.date fieldset ol li label,
+form.formtastic fieldset ol li.datetime fieldset ol li label { display:none; }
+
+form.formtastic fieldset ol li.date fieldset ol li label input, 
+form.formtastic fieldset ol li.datetime fieldset ol li label input { display:inline; margin:0; padding:0;  }
