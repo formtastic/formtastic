@@ -269,6 +269,16 @@ module JustinFrench #:nodoc:
       end
       
       
+      # Outputs a fieldset with a legend for the method label, and a ordered list (ol) of list
+      # items (li), one for each fragment for the time (hour, minute, second).  Each li contains a label
+      # (eg "Hour") and a select box.  See date_or_datetime_input for a more detailed output example.
+      # 
+      # Some of Rails' options for select_time are supported, but not everything yet.
+      def time_input(method, options)
+        date_or_datetime_input(method, options.merge(:discard_year => true, :discard_month => true, :discard_day => true))
+      end
+      
+      
       # <fieldset>
       #   <legend>Created At</legend>
       #   <ol>
@@ -303,12 +313,15 @@ module JustinFrench #:nodoc:
       # missing the ability to re-order the inputs.
       def date_or_datetime_input(method, options)
         position = { :year => 1, :month => 2, :day => 3, :hour => 4, :minute => 5, :second => 6 }
-        inputs = [:year, :month, :day, :hour, :minute, :second]
+        inputs = [:year, :month, :day]
+        time_inputs = [:hour, :minute]
+        time_inputs << [:second] if options[:include_seconds]
                 
         list_items_capture = ""
-        inputs.each do |input|
+        (inputs + time_inputs).each do |input|
           if options["discard_#{input}".intern]
-            break
+            break if time_inputs.include?(input)
+            list_items_capture << @template.hidden_field_tag("#{@object_name}[#{method}(#{position[input]}i)]", @template.instance_eval("@#{@object_name}").send(method), :id => "#{@object_name}_#{method}_#{position[input]}i")
           else
             list_items_capture << @template.content_tag(:li, 
               @template.content_tag(:label, input.to_s.humanize, :for => "#{@object_name}_#{method}_#{position[input]}i") + 
@@ -322,13 +335,7 @@ module JustinFrench #:nodoc:
           @template.content_tag(:ol, list_items_capture)
         )
       end
-      
-      
-      # TODO - needs some work eh?
-      def time_input(method, options)
-        input_label(method, options) + @template.time_select(@object_name, method, options)   
-      end
-      
+            
        
       # Outputs a label containing a checkbox and the label text.
       # 
