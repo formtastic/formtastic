@@ -143,8 +143,15 @@ module JustinFrench #:nodoc:
         field_set_and_list_wrapping(field_set_html_options, &block)
       end
       
-      # TODO: Not really implemented yet.
-      def commit_button(value = "submit", options = {})
+      # Creates a submit input tag with the value "Save [model name]" (for existing records) or 
+      # "Create [model name]" (for new records) by default:
+      # 
+      #   <%= form.commit_button %> => <input name="commit" type="submit" value="Save Post" />
+      # 
+      # The value of the button text can be overridden:
+      #
+      #  <%= form.commit_button "Go" %> => <input name="commit" type="submit" value="Go" />
+      def commit_button(value = save_or_create_commit_button_text)
         @template.submit_tag(value, options) 
       end
       
@@ -155,6 +162,11 @@ module JustinFrench #:nodoc:
       
       
       protected
+      
+      def save_or_create_commit_button_text
+        prefix = @template.instance_eval("@#{@object_name}").new_record? ? "Create" : "Save"
+        "#{prefix} #{@object_name.humanize}"
+      end
       
       
       # Outputs a label and a select box containing options from the parent (belongs_to) association.
