@@ -163,11 +163,6 @@ module JustinFrench #:nodoc:
       
       protected
       
-      def save_or_create_commit_button_text
-        prefix = @template.instance_eval("@#{@object_name}").new_record? ? "Create" : "Save"
-        "#{prefix} #{@object_name.humanize}"
-      end
-      
       
       # Outputs a label and a select box containing options from the parent (belongs_to) association.
       #
