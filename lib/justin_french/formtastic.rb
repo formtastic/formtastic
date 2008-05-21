@@ -123,14 +123,21 @@ module JustinFrench #:nodoc:
       #   <% input_field_set :id => "main-inputs" do %>
       #     ...
       #   <% end %>
+      #
+      # One special option exists (:name), which is passed along to a legend tag within the 
+      # fieldset (otherwise a legend is not generated):
+      #
+      #   <% input_field_set :name => "Advanced Options" do %>...<% end %>
       def input_field_set(field_set_html_options = {}, &block)
-        field_set_html_options[:class] ||= "inputs"
+        options[:class] ||= "inputs"
         field_set_and_list_wrapping(field_set_html_options, &block)
       end
       
       # Creates a fieldset and ol tag wrapping for form buttons / actions as list items.  
       # See input_field_set documentation for a full example.  The fieldset's default class attriute
       # is set to "buttons".
+      #
+      # See input_field_set for html attriutes and special options.
       def button_field_set(field_set_html_options = {}, &block)
         field_set_html_options[:class] ||= "buttons"
         field_set_and_list_wrapping(field_set_html_options, &block)
@@ -370,9 +377,12 @@ module JustinFrench #:nodoc:
       end
       
       def field_set_and_list_wrapping(field_set_html_options, &block) #:nodoc:
+        legend_text = field_set_html_options.delete(:name)
+        legend = legend_text.blank? ? "" : @template.content_tag(:legend, @template.content_tag(:span, legend_text))
+        
         @template.concat(
           @template.content_tag(:fieldset, 
-            @template.content_tag(:ol, @template.capture(&block)),
+            legend + @template.content_tag(:ol, @template.capture(&block)),
             field_set_html_options
           ), 
           block.binding
