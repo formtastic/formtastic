@@ -151,7 +151,7 @@ module JustinFrench #:nodoc:
       # The value of the button text can be overridden:
       #
       #  <%= form.commit_button "Go" %> => <input name="commit" type="submit" value="Go" />
-      def commit_button(value = save_or_create_commit_button_text)
+      def commit_button(value = save_or_create_commit_button_text, options = {})
         @template.submit_tag(value, options) 
       end
       
