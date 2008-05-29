@@ -9,12 +9,10 @@ Hacked together forms were easy, but awesome forms with decent semantics, rich m
 <pre>
 <% semantic_form_for @article do |form| %>
   
-  <%= form.error_messages %>
-  
   <% form.input_field_set :name => "Basic" do %>
     <%= form.input :title %>                               
-    <%= form.input :body, :rows => 20 %>                                
-    <%= form.input :section_id, :include_blank => true %>                          
+    <%= form.input :body %>                                
+    <%= form.input :section_id %>                          
     <%= form.input :publication_state_id, :as => :radio %> 
     <%= form.input :author_id, :as => :select %>                           
     <%= form.input :allow_comments, :label => "Allow commenting on this article" %>                      
@@ -22,8 +20,8 @@ Hacked together forms were easy, but awesome forms with decent semantics, rich m
   
   <% form.input_field_set :name => "Advanced" do %>
     <%= form.input :keywords, :required => false, :hint => "Example: ruby, rails, forms" %>        
-    <%= form.input :extract, :required => false, :rows => 5 %>
-    <%= form.input :description, :required => false, :rows => 5 %>
+    <%= form.input :extract, :required => false %>
+    <%= form.input :description, :required => false %>
     <%= form.input :url_title, :required => false %>                           
   <% end %>
 
