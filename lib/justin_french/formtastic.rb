@@ -152,7 +152,7 @@ module JustinFrench #:nodoc:
       #
       #  <%= form.commit_button "Go" %> => <input name="commit" type="submit" value="Go" />
       def commit_button(value = save_or_create_commit_button_text, options = {})
-        @template.submit_tag(value, options) 
+        @template.submit_tag(value) 
       end
       
       # TODO: Not implemented yet, just use Rails' standard error stuff for now.
@@ -193,7 +193,7 @@ module JustinFrench #:nodoc:
         parent_class = method.to_s.sub(/_id$/,'').camelize.constantize
         choices = parent_class.find(:all).map {|o| [o.send(options[:label_method]), o.id]}
         
-        input_label(method, options) + @template.select(@object_name, method, choices, options)
+        input_label(method, options) + @template.select(@object_name, method, choices)
       end
       
       
@@ -243,13 +243,13 @@ module JustinFrench #:nodoc:
 
       # Outputs a label and a password input, nothing fancy.
       def password_input(method, options)
-        input_label(method, options) + @template.password_field(@object_name, method, options)   
+        input_label(method, options) + @template.password_field(@object_name, method)   
       end
       
       
       # Outputs a label and a textarea, nothing fancy.
       def text_input(method, options)
-        input_label(method, options) + @template.text_area(@object_name, method, options)   
+        input_label(method, options) + @template.text_area(@object_name, method)   
       end
       
       
@@ -257,14 +257,14 @@ module JustinFrench #:nodoc:
       # size and maxlen -- see default_string_options() for the low-down.
       def string_input(method, options)
         input_label(method, options) + 
-        @template.text_field(@object_name, method, options.reverse_merge(default_string_options(method)))
+        @template.text_field(@object_name, method, default_string_options(method))
       end
       
       
       # Same as string_input for now
       def numeric_input(method, options)
         input_label(method, options) + 
-        @template.text_field(@object_name, method, options.reverse_merge(default_string_options(method)))
+        @template.text_field(@object_name, method, default_string_options(method))
       end
        
             
@@ -345,7 +345,7 @@ module JustinFrench #:nodoc:
           else
             list_items_capture << @template.content_tag(:li, 
               @template.content_tag(:label, input.to_s.humanize, :for => "#{@object_name}_#{method}_#{position[input]}i") + 
-              @template.send("select_#{input}".intern, @template.instance_eval("@#{@object_name}").send(method), options.merge(:prefix => @object_name, :field_name => "#{method}(#{position[input]}i)"))
+              @template.send("select_#{input}".intern, @template.instance_eval("@#{@object_name}").send(method), :prefix => @object_name, :field_name => "#{method}(#{position[input]}i)")
             )
           end
         end
@@ -362,7 +362,7 @@ module JustinFrench #:nodoc:
       # TODO - what about a yes/no boolean?
       def boolean_input(method, options)
         input_label(method, options, 
-          @template.check_box(@object_name, method, options) + 
+          @template.check_box(@object_name, method) + 
           label_text(method, options)
         )
       end
