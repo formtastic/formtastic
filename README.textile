@@ -47,19 +47,24 @@ JustinFrench::Formtastic::SemanticFormBuilder.all_fields_required_by_default = f
 JustinFrench::Formtastic::SemanticFormBuilder.required_string = "(required)"
 JustinFrench::Formtastic::SemanticFormBuilder.optional_string = "(optional)"
 </pre> 
-  
-h2. Guiding Principals
 
-* great forms are at the heart of most web applications
-* semantically rich (and far more accessible) HTML forms really are possible with the use of appropriate elements like fieldsets & lists
-* sometimes _more mark-up_ is better
-* stylesheet authors have more options and more control if plenty of structural mark-up, class names and element ids are provided
-* it should be _easier_ to write a great form than a crappy one
-* I'm sick of re-inventing the wheel every time I need a form
-* applications with great data modelling and a RESTful architecture are my main consideration
-* there's no such thing as a silver bullet and I'll still have to hard-code some things I do
+
+h2. Why?
+
+* web apps = lots of forms
+* forms are so friggin' boring to code
+* semantically rich & accessible forms really are possible
+* the "V" is way behind the "M" and "C" in Rails' MVC – it's the ugly sibling
 * best practices and common patterns have to start somewhere
+* i need a challenge
 
+
+h2. Opinions
+
+* it should be easier to do things the right way than the wrong way
+* sometimes _more mark-up_ is better
+* elements and attribute hooks are _gold_ for stylesheet authors
+* make the common things we do easy, yet still ensure uncommon things are still possible
 
 
 h2. Status
