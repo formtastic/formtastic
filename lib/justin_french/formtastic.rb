@@ -59,7 +59,7 @@ module JustinFrench #:nodoc:
       # 
       # Most inputs map directly to one of ActiveRecord's column types by default (eg string_input), 
       # but there are a few special cases and some simplification (:integer, :float and :decimal 
-      # columns) all map to a single numeric_input, for example). 
+      # columns all map to a single numeric_input, for example). 
       # 
       # * :select (<select> menu for objects in a belongs_to association) - default for fields ending in '_id'
       # * :radio (a set of radio buttons for objects in the parent association) - alternative for fields ending in '_id'
