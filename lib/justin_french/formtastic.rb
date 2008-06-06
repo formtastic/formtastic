@@ -421,7 +421,7 @@ module JustinFrench #:nodoc:
         if column.nil? || column.limit.nil?
           { :size => DEFAULT_TEXT_FIELD_SIZE }
         else
-          { :maxlen => column.limit, :size => [column.limit, DEFAULT_TEXT_FIELD_SIZE].min }
+          { :maxlength => column.limit, :size => [column.limit, DEFAULT_TEXT_FIELD_SIZE].min }
         end       
       end
       
