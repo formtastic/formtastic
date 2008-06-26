@@ -1,36 +1,36 @@
 module JustinFrench #:nodoc:
   module Formtastic #:nodoc:
     
-    # Defines a semantic_form_for wrapping around a standard form_for method with the
-    # SemanticFormBuilder.
+    # Wrappers around form_for (etc) with :builder => SemanticFormBuilder.
+    #
+    # * semantic_form_for(@post)
+    # * semantic_fields_for(@post)
+    # * semantic_form_remote_for(@post)
+    # * semantic_remote_form_for(@post)
     # 
-    # Example:
+    # Each of which are the equivalent of:
+    #
+    # * form_for(@post, :builder => JustinFrench::Formtastic::SemanticFormBuilder))
+    # * fields_for(@post, :builder => JustinFrench::Formtastic::SemanticFormBuilder))
+    # * form_remote_for(@post, :builder => JustinFrench::Formtastic::SemanticFormBuilder))
+    # * remote_form_for(@post, :builder => JustinFrench::Formtastic::SemanticFormBuilder))
+    # 
+    # Example Usage:
     #   
-    #   <% semantic_form_for @article do %>
-    #     ...
+    #   <% semantic_form_for @post do |f| %>
+    #     <%= f.input :title %>
+    #     <%= f.input :body %>
     #   <% end %>
-    # 
-    # TODO:
-    # * semantic_fields_for
-    # * semantic_form_remote_for
-    # * semantic_remote_form_for
     module SemanticFormHelper
-      
-      def semantic_form_for(record_or_name_or_array, *args, &proc)
-        options = args.extract_options!
-        form_for(record_or_name_or_array, *(args << options.merge(:builder => JustinFrench::Formtastic::SemanticFormBuilder, :html => { :class => "formtastic" })), &proc)
+      [:form_for, :fields_for, :form_remote_for, :remote_form_for].each do |meth|
+        src = <<-END_SRC   
+          def semantic_#{meth}(record_or_name_or_array, *args, &proc)
+            options = args.extract_options!            
+            #{meth}(record_or_name_or_array, *(args << options.merge(:builder => JustinFrench::Formtastic::SemanticFormBuilder)), &proc)
+          end
+        END_SRC
+        module_eval src, __FILE__, __LINE__
       end
-      
-      # TODO
-      #[:form_for, :fields_for, :form_remote_for, :remote_form_for].each do |meth|
-      #  src = <<-END_SRC   
-      #    def semantic_#{meth}(record_or_name_or_array, *args, &proc)
-      #      options = args.extract_options!            
-      #      #{meth}(record_or_name_or_array, *(args << options.merge(:builder => JustinFrench::Formtastic::SemanticFormBuilder)), &proc)
-      #    end
-      #  END_SRC
-      #  module_eval src, __FILE__, __LINE__
-      #end
     end
  
     
