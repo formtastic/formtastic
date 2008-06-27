@@ -71,9 +71,6 @@ h2. Status
 
 It's incredibly opinionated, incomplete, a work in progress, messy around the edges, messy in the middle too, tightly coupled to the database, tightly coupled to "my way" of doing things and also incredibly lacking in unit tests so far, but I hope you try it and offer some suggestions and improvements any way.
 
-* Github: http://github.com/justinfrench/formtastic/
-* Justin's Weblog: http://justinfrench.com
-
 
 h2. Roadmap
 
@@ -167,6 +164,17 @@ Oh noes!  It might not ever do it either.  We'll see.  This is not a silver bull
 
 I really hope the plugin will soon be clean and extensible enough to invite others to contribute more complex input types (calendars, etc) to the core.
 
+
+
+h2. Contributors
+
+* Justin French http://justinfrench.com
+* Xavier Shay http://rhnh.net
+
+
+h2. Project Info
+
+Formtastic is hosted on Github: http://github.com/justinfrench/formtastic/, where you contributions are greatly welcomed.
 
 
 Copyright (c) 2007 Justin French, released under the MIT license.
