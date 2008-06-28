@@ -36,17 +36,6 @@ Hacked together forms were easy, but awesome forms with decent semantics, rich m
 I also wrote the accompanying HTML output I expected, favoring something very similar to the fieldsets, lists and other semantic elements Aaron Gustafson presented in <i>Learning to Love Forms</i> <http://www.slideshare.net/AaronGustafson/learning-to-love-forms-web-directions-south-07>, and then hacked together enough Ruby to prove it could be done.
 
 
-h2. Configuration
-
-If you wish, put something like this in config/initializers/formtastic_config.rb:
-
-<pre>
-JustinFrench::Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
-JustinFrench::Formtastic::SemanticFormBuilder.required_string = "(required)"
-JustinFrench::Formtastic::SemanticFormBuilder.optional_string = "(optional)"
-</pre> 
-
-
 h2. Why?
 
 * web apps = lots of forms
@@ -65,6 +54,48 @@ h2. Opinions
 * make the common things we do easy, yet still ensure uncommon things are still possible
 
 
+h2. The Available Inputs
+
+* :select (a select menu for belongs_to associations) - default for columns ending in '_id'
+* :radio (a set of radio inputs for belongs_to associations) - alternative for columns ending in '_id'
+* :password (a password input) - default for :string column types with 'password' in the method name
+* :text (a textarea) - default for :text column types
+* :date (a date select) - default for :date column types
+* :datetime (a date and time select) - default for :datetime and :timestamp column types
+* :time (a time select) - default for :time column types
+* :boolean (a checkbox) - default for :boolean column types
+* :string (a text field) - default for :string column types
+* :numeric (a text field, like string) - default for :integer, :float and :decimal column types
+
+The documentation is pretty good for each of these (what it does, what the ouput is, etc) so go check it out.
+
+
+h3. One day...
+
+* calendars and other more humanized date/time selections
+* vanilla html file selection to work well with things like ThoughtBot's "Paperclip":http://www.thoughtbot.com/projects/paperclip
+* flash-based multi-file selection
+* an interface for tagging and other has_many_through style associations
+
+In the meantime, there's nothing stopping you from mixing some old fashioned HTML and ERB for custom widgets in with the Formtastic DLS stuff in your views, and I'd love to hear what others are finding a need for.
+
+h3. Fields without database columns
+
+Formtastic is pretty tightly coupled to ActiveRecord database columns, but it will at least _attempt_ to play nicely with your models other methods (like a virtual column 'full_name' which is split into first_name and last_name in a before save callback), and I'd like this to continue and improve.
+
+
+h2. Configuration
+
+If you wish, put something like this in config/initializers/formtastic_config.rb:
+
+<pre>
+JustinFrench::Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
+JustinFrench::Formtastic::SemanticFormBuilder.required_string = "(required)"
+JustinFrench::Formtastic::SemanticFormBuilder.optional_string = "(optional)"
+</pre>
+
+
+
 h2. Status
 
 *THIS IS DEFINITELY NOT PRODUCTION-READY.  THINGS ARE GOING TO CHANGE A LOT.*
@@ -76,7 +107,7 @@ h2. Roadmap
 
 * There's plenty of TODOs in the code
 * get the basic form_for implementation complete, proven and *well tested* (did I mention how laborious testing form builders is?)
-* provide generic, reusable, stylesheets that prove this stuff works
+* improve the generic, reusable, stylesheets that prove this stuff works
 * probably do a shortcut like <code><%= form.inputs :name, :login, :email, :bio %></code> for those that want the form with zero configuration 
 
 
@@ -89,6 +120,9 @@ The smallest example:
   <% form.input_field_set do %>
     <%= form.input :name %>
     <%= form.input :email %>
+    <%= form.input :password %>
+    <%= form.input :department_id, :as => :radio %>
+    <%= form.input :date_of_birth %>
   <% end %>
 <% end %>
 </pre>
@@ -168,8 +202,8 @@ I really hope the plugin will soon be clean and extensible enough to invite othe
 
 h2. Contributors
 
-* Justin French http://justinfrench.com
-* Xavier Shay http://rhnh.net
+* "Justin French":http://justinfrench.com
+* "Xavier Shay":http://rhnh.net
 
 
 h2. Project Info

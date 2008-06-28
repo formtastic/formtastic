@@ -61,16 +61,16 @@ module JustinFrench #:nodoc:
       # but there are a few special cases and some simplification (:integer, :float and :decimal 
       # columns all map to a single numeric_input, for example). 
       # 
-      # * :select (<select> menu for objects in a belongs_to association) - default for fields ending in '_id'
-      # * :radio (a set of radio buttons for objects in the parent association) - alternative for fields ending in '_id'
-      # * :password (a password input field) - default for :string column types with 'password' in the method name
+      # * :select (a select menu for belongs_to associations) - default for columns ending in '_id'
+      # * :radio (a set of radio inputs for belongs_to associations) - alternative for columns ending in '_id'
+      # * :password (a password input) - default for :string column types with 'password' in the method name
       # * :text (a textarea) - default for :text column types
       # * :date (a date select) - default for :date column types
       # * :datetime (a date and time select) - default for :datetime and :timestamp column types
       # * :time (a time select) - default for :time column types
       # * :boolean (a checkbox) - default for :boolean column types
-      # * :string (a text field input) - default for :string column types
-      # * :numeric (a text field input, like string) - default for :integer, :float and :decimal column types
+      # * :string (a text field) - default for :string column types
+      # * :numeric (a text field, like string) - default for :integer, :float and :decimal column types
       # 
       # Example:
       # 
