@@ -1,36 +1,36 @@
 module JustinFrench #:nodoc:
   module Formtastic #:nodoc:
     
-    # Defines a semantic_form_for wrapping around a standard form_for method with the
-    # SemanticFormBuilder.
+    # Wrappers around form_for (etc) with :builder => SemanticFormBuilder.
+    #
+    # * semantic_form_for(@post)
+    # * semantic_fields_for(@post)
+    # * semantic_form_remote_for(@post)
+    # * semantic_remote_form_for(@post)
     # 
-    # Example:
+    # Each of which are the equivalent of:
+    #
+    # * form_for(@post, :builder => JustinFrench::Formtastic::SemanticFormBuilder))
+    # * fields_for(@post, :builder => JustinFrench::Formtastic::SemanticFormBuilder))
+    # * form_remote_for(@post, :builder => JustinFrench::Formtastic::SemanticFormBuilder))
+    # * remote_form_for(@post, :builder => JustinFrench::Formtastic::SemanticFormBuilder))
+    # 
+    # Example Usage:
     #   
-    #   <% semantic_form_for @article do %>
-    #     ...
+    #   <% semantic_form_for @post do |f| %>
+    #     <%= f.input :title %>
+    #     <%= f.input :body %>
     #   <% end %>
-    # 
-    # TODO:
-    # * semantic_fields_for
-    # * semantic_form_remote_for
-    # * semantic_remote_form_for
     module SemanticFormHelper
-      
-      def semantic_form_for(record_or_name_or_array, *args, &proc)
-        options = args.extract_options!
-        form_for(record_or_name_or_array, *(args << options.merge(:builder => JustinFrench::Formtastic::SemanticFormBuilder, :html => { :class => "formtastic" })), &proc)
+      [:form_for, :fields_for, :form_remote_for, :remote_form_for].each do |meth|
+        src = <<-END_SRC   
+          def semantic_#{meth}(record_or_name_or_array, *args, &proc)
+            options = args.extract_options!            
+            #{meth}(record_or_name_or_array, *(args << options.merge(:builder => JustinFrench::Formtastic::SemanticFormBuilder)), &proc)
+          end
+        END_SRC
+        module_eval src, __FILE__, __LINE__
       end
-      
-      # TODO
-      #[:form_for, :fields_for, :form_remote_for, :remote_form_for].each do |meth|
-      #  src = <<-END_SRC   
-      #    def semantic_#{meth}(record_or_name_or_array, *args, &proc)
-      #      options = args.extract_options!            
-      #      #{meth}(record_or_name_or_array, *(args << options.merge(:builder => JustinFrench::Formtastic::SemanticFormBuilder)), &proc)
-      #    end
-      #  END_SRC
-      #  module_eval src, __FILE__, __LINE__
-      #end
     end
  
     
@@ -59,18 +59,18 @@ module JustinFrench #:nodoc:
       # 
       # Most inputs map directly to one of ActiveRecord's column types by default (eg string_input), 
       # but there are a few special cases and some simplification (:integer, :float and :decimal 
-      # columns) all map to a single numeric_input, for example). 
+      # columns all map to a single numeric_input, for example). 
       # 
-      # * :select (<select> menu for objects in a belongs_to association) - default for fields ending in '_id'
-      # * :radio (a set of radio buttons for objects in the parent association) - alternative for fields ending in '_id'
-      # * :password (a password input field) - default for :string column types with 'password' in the method name
+      # * :select (a select menu for belongs_to associations) - default for columns ending in '_id'
+      # * :radio (a set of radio inputs for belongs_to associations) - alternative for columns ending in '_id'
+      # * :password (a password input) - default for :string column types with 'password' in the method name
       # * :text (a textarea) - default for :text column types
       # * :date (a date select) - default for :date column types
       # * :datetime (a date and time select) - default for :datetime and :timestamp column types
       # * :time (a time select) - default for :time column types
       # * :boolean (a checkbox) - default for :boolean column types
-      # * :string (a text field input) - default for :string column types
-      # * :numeric (a text field input, like string) - default for :integer, :float and :decimal column types
+      # * :string (a text field) - default for :string column types
+      # * :numeric (a text field, like string) - default for :integer, :float and :decimal column types
       # 
       # Example:
       # 
@@ -152,7 +152,7 @@ module JustinFrench #:nodoc:
       #
       #  <%= form.commit_button "Go" %> => <input name="commit" type="submit" value="Go" />
       def commit_button(value = save_or_create_commit_button_text, options = {})
-        @template.submit_tag(value, options) 
+        @template.submit_tag(value) 
       end
       
       # TODO: Not implemented yet, just use Rails' standard error stuff for now.
@@ -193,7 +193,7 @@ module JustinFrench #:nodoc:
         parent_class = method.to_s.sub(/_id$/,'').camelize.constantize
         choices = parent_class.find(:all).map {|o| [o.send(options[:label_method]), o.id]}
         
-        input_label(method, options) + @template.select(@object_name, method, choices, options)
+        input_label(method, options) + @template.select(@object_name, method, choices)
       end
       
       
@@ -243,13 +243,13 @@ module JustinFrench #:nodoc:
 
       # Outputs a label and a password input, nothing fancy.
       def password_input(method, options)
-        input_label(method, options) + @template.password_field(@object_name, method, options)   
+        input_label(method, options) + @template.password_field(@object_name, method)   
       end
       
       
       # Outputs a label and a textarea, nothing fancy.
       def text_input(method, options)
-        input_label(method, options) + @template.text_area(@object_name, method, options)   
+        input_label(method, options) + @template.text_area(@object_name, method)   
       end
       
       
@@ -257,14 +257,14 @@ module JustinFrench #:nodoc:
       # size and maxlen -- see default_string_options() for the low-down.
       def string_input(method, options)
         input_label(method, options) + 
-        @template.text_field(@object_name, method, options.reverse_merge(default_string_options(method)))
+        @template.text_field(@object_name, method, default_string_options(method))
       end
       
       
       # Same as string_input for now
       def numeric_input(method, options)
         input_label(method, options) + 
-        @template.text_field(@object_name, method, options.reverse_merge(default_string_options(method)))
+        @template.text_field(@object_name, method, default_string_options(method))
       end
        
             
@@ -345,7 +345,7 @@ module JustinFrench #:nodoc:
           else
             list_items_capture << @template.content_tag(:li, 
               @template.content_tag(:label, input.to_s.humanize, :for => "#{@object_name}_#{method}_#{position[input]}i") + 
-              @template.send("select_#{input}".intern, @template.instance_eval("@#{@object_name}").send(method), options.merge(:prefix => @object_name, :field_name => "#{method}(#{position[input]}i)"))
+              @template.send("select_#{input}".intern, @template.instance_eval("@#{@object_name}").send(method), :prefix => @object_name, :field_name => "#{method}(#{position[input]}i)")
             )
           end
         end
@@ -362,7 +362,7 @@ module JustinFrench #:nodoc:
       # TODO - what about a yes/no boolean?
       def boolean_input(method, options)
         input_label(method, options, 
-          @template.check_box(@object_name, method, options) + 
+          @template.check_box(@object_name, method) + 
           label_text(method, options)
         )
       end
