@@ -26,7 +26,7 @@ module JustinFrench #:nodoc:
         src = <<-END_SRC   
           def semantic_#{meth}(record_or_name_or_array, *args, &proc)
             options = args.extract_options!            
-            #{meth}(record_or_name_or_array, *(args << options.merge(:builder => JustinFrench::Formtastic::SemanticFormBuilder)), &proc)
+            #{meth}(record_or_name_or_array, *(args << options.merge(:builder => JustinFrench::Formtastic::SemanticFormBuilder, :html => { :class => "formtastic new_" + record_or_name_or_array.class.to_s.underscore })), &proc)
           end
         END_SRC
         module_eval src, __FILE__, __LINE__
