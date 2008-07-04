@@ -48,7 +48,7 @@ html[xmlns] form.formtastic fieldset ol li { display: block; }
 
 form.formtastic fieldset ol li.required {  }
 form.formtastic fieldset ol li.optional {  }
-form.formtastic fieldset ol li.error { background:pink; }
+form.formtastic fieldset ol li.error { background:#FFCCFF; }
   
 
 /* LABELS
