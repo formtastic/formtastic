@@ -169,15 +169,13 @@ h2. What about Stylesheets?
 
 A proof-of-concept (very much a work-in-progress) stylesheet is provided which you can include in your layout.  Customisation is best achieved by overriding these styles in an additional stylesheet so that the formtastic styles can be updated without clobbering your changes.
 
-1. Use the generator to copy the formtastic.css into your public directory
+1. Use the generator to copy the formtastic.css and formtastic_changes.css into your public directory
 
 <pre>
 ./script/generate formtastic_stylesheets
 </pre>
 
-2. Create an empty file public/stylesheets/formtastic_changes.css for your custom styles
-
-3. Add both YUI's reset.css, formtastic.css and formtastic_changes.css to your layout:
+2. Add both YUI's reset.css, formtastic.css and formtastic_changes.css to your layout:
 
 <pre>
 <%= stylesheet_link_tag "http://yui.yahooapis.com/2.5.1/build/reset/reset-min.css" %>
