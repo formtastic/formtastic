@@ -175,10 +175,9 @@ A proof-of-concept (very much a work-in-progress) stylesheet is provided which y
 ./script/generate formtastic_stylesheets
 </pre>
 
-2. Add both YUI's reset.css, formtastic.css and formtastic_changes.css to your layout:
+2. Add both formtastic.css and formtastic_changes.css to your layout:
 
 <pre>
-<%= stylesheet_link_tag "http://yui.yahooapis.com/2.5.1/build/reset/reset-min.css" %>
 <%= stylesheet_link_tag "formtastic" %>
 <%= stylesheet_link_tag "formtastic_changes" %>
 </pre>
