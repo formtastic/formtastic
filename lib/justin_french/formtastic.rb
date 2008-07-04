@@ -254,7 +254,7 @@ module JustinFrench #:nodoc:
       
       
       # Outputs a label and a text input, nothing fancy, but it does pick up some attributes like 
-      # size and maxlen -- see default_string_options() for the low-down.
+      # size and maxlength -- see default_string_options() for the low-down.
       def string_input(method, options)
         input_label(method, options) + 
         @template.text_field(@object_name, method, default_string_options(method))
