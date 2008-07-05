@@ -417,7 +417,7 @@ module JustinFrench #:nodoc:
       end
       
       def default_string_options(method) #:nodoc:
-        column = @template.instance_eval("@#{@object_name}").class.columns_hash[method.to_s]
+        column = @template.instance_eval("@#{@object_name}").column_for_attribute(method)
         if column.nil? || column.limit.nil?
           { :size => DEFAULT_TEXT_FIELD_SIZE }
         else
