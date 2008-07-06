@@ -69,6 +69,7 @@ module JustinFrench #:nodoc:
       # * :datetime (a date and time select) - default for :datetime and :timestamp column types
       # * :time (a time select) - default for :time column types
       # * :boolean (a checkbox) - default for :boolean column types
+      # * :boolean_select (a yes/no select box)
       # * :string (a text field) - default for :string column types
       # * :numeric (a text field, like string) - default for :integer, :float and :decimal column types
       # 
@@ -357,16 +358,29 @@ module JustinFrench #:nodoc:
       end
             
        
-      # Outputs a label containing a checkbox and the label text.
-      # 
-      # TODO - what about a yes/no boolean?
+      # Outputs a label containing a checkbox and the label text.  The label defaults to the column
+      # name (method name) and can be altered with the :label option.
       def boolean_input(method, options)
         input_label(method, options, 
           @template.check_box(@object_name, method) + 
           label_text(method, options)
         )
       end
-    
+      
+      # Outputs a label and select box containing two options for "true" and "false". The visible
+      # text defaults to "Yes" and "No" respectively, but can be altered with the :true and :false
+      # options.  The label text to the column name (method name), but can be altered with the 
+      # :label option. Example:
+      #
+      #  f.input :awesome, :as => :boolean_select, :true => "Yeah!", :false => "Nah!", :label => "Awesome?"
+      def boolean_select_input(method, options)
+        options[:true] ||= "Yes"
+        options[:false] ||= "No"
+        
+        choices = [ [options[:true],1], [options[:false],0] ]
+        input_label(method, options) + @template.select(@object_name, method, choices)
+      end
+          
       def inline_errors(method, options)  #:nodoc:
         errors = @template.instance_eval("@#{@object_name}").errors.on(method).to_a
         errors.empty? ? '' : @template.content_tag(:p, errors.to_sentence, :class => 'inline-errors')

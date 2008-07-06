@@ -64,6 +64,7 @@ h2. The Available Inputs
 * :datetime (a date and time select) - default for :datetime and :timestamp column types
 * :time (a time select) - default for :time column types
 * :boolean (a checkbox) - default for :boolean column types
+* :boolean_select (a yes/no select box)
 * :string (a text field) - default for :string column types
 * :numeric (a text field, like string) - default for :integer, :float and :decimal column types
 
