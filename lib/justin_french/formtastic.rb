@@ -83,7 +83,7 @@ module JustinFrench #:nodoc:
       #     <% end %>
       #   <% end %>
       def input(method, options = {})
-        raise "@#{@object_name} doesn't respond to the method #{method}" unless @template.instance_eval("@#{@object_name}").respond_to?(method) # TODO
+        raise "@#{@object_name} doesn't respond to the method #{method}" unless @template.instance_eval("@#{@object_name}").respond_to?(method)
         
         options[:required] = @@all_fields_required_by_default if options[:required].nil?
         options[:label] ||= method.to_s.humanize
@@ -164,7 +164,7 @@ module JustinFrench #:nodoc:
       protected
       
       
-      def save_or_create_commit_button_text
+      def save_or_create_commit_button_text #:nodoc:
         prefix = @template.instance_eval("@#{@object_name}").new_record? ? "Create" : "Save"
         "#{prefix} #{@object_name.humanize}"
       end
@@ -329,8 +329,8 @@ module JustinFrench #:nodoc:
       #   </ol>
       # </fieldset>
       # 
-      # TODO: This is an absolute abomination, but so is the official Rails select_date().  Mainly
-      # missing the ability to re-order the inputs.
+      # This is an absolute abomination, but so is the official Rails select_date().  Mainly
+      # missing the ability to re-order the inputs, but maybe that's fine!
       def date_or_datetime_input(method, options)
         position = { :year => 1, :month => 2, :day => 3, :hour => 4, :minute => 5, :second => 6 }
         inputs = [:year, :month, :day]
