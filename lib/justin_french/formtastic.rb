@@ -380,7 +380,52 @@ module JustinFrench #:nodoc:
         choices = [ [options[:true],1], [options[:false],0] ]
         input_label(method, options) + @template.select(@object_name, method, choices)
       end
-          
+      
+      # Outputs a fieldset containing two radio buttons (with labels) for "true" and "false". The 
+      # visible label text for each option defaults to "Yes" and "No" respectively, but can be 
+      # altered with the :true and :false options.  The fieldset legend defaults to the column name
+      # (method name), but can be altered with the :label option.  Example:
+      #
+      #  f.input :awesome, :as => :boolean_radio, :true => "Yeah!", :false => "Nah!", :label => "Awesome?"
+      #
+      # Returns something like:
+      #
+      #  <li class="boolean_radio required" id="post_public_input">
+      #    <fieldset><legend><span>make this sucker public?<abbr title="required">*</abbr></span></legend>
+      #      <ol>
+      #        <li>
+      #          <label for="post_public_true">
+      #            <input id="post_public_true" name="post[public]" type="radio" value="true" /> Yeah!
+      #          </label>
+      #        </li>
+      #        <li>
+      #          <label for="post_public_false">
+      #            <input id="post_public_false" name="post[public]" type="radio" checked="checked" /> Nah!
+      #          </label>
+      #        </li>
+      #      </ol>
+      #    </fieldset>
+      #  </li>
+      def boolean_radio_input(method, options)
+        options[:true] ||= "Yes"
+        options[:false] ||= "No"
+
+        choices = [ {:label => options[:true], :value => true}, {:label => options[:false], :value => false} ]
+
+        @template.content_tag(:fieldset, 
+          %{<legend><span>#{label_text(method, options)}</span></legend>} + 
+          @template.content_tag(:ol, 
+            choices.map { |c| 
+              @template.content_tag(:li,
+                @template.label_tag("#{@object_name}_#{method}_#{c[:value]}", 
+                  "#{@template.radio_button_tag("#{@object_name}[#{method}]", c[:value], @template.instance_eval("@#{@object_name}").send(method) == c[:value], :id => "#{@object_name}_#{method}_#{c[:value]}")} #{c[:label]}" # TODO checked is always false, which ain't always right ;)
+                )
+              )
+            }
+          )
+        )
+      end
+      
       def inline_errors(method, options)  #:nodoc:
         errors = @template.instance_eval("@#{@object_name}").errors.on(method).to_a
         errors.empty? ? '' : @template.content_tag(:p, errors.to_sentence, :class => 'inline-errors')
