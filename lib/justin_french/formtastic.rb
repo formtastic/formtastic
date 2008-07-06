@@ -373,11 +373,25 @@ module JustinFrench #:nodoc:
       # :label option. Example:
       #
       #  f.input :awesome, :as => :boolean_select, :true => "Yeah!", :false => "Nah!", :label => "Awesome?"
+      #
+      # Returns something like:
+      # 
+      #  <li class="boolean_select required" id="post_public_input">
+      #    <label for="post_public">
+      #      make this sucker public?<abbr title="required">*</abbr>
+      #    </label>
+      #    <select id="post_public" name="post[public]">
+      #      <option value="1">hell yeah</option>
+      #      <option value="0">No</option>
+      #    </select>
+      #  </li>
+      #
+      # TODO: Doesn't handle :include_blank => true, but then again, neither do most of the inputs.
       def boolean_select_input(method, options)
         options[:true] ||= "Yes"
         options[:false] ||= "No"
         
-        choices = [ [options[:true],1], [options[:false],0] ]
+        choices = [ [options[:true],true], [options[:false],false] ]
         input_label(method, options) + @template.select(@object_name, method, choices)
       end
       
