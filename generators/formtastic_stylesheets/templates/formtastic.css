@@ -15,12 +15,12 @@ This stylesheet forms part of the Formtastic Rails Plugin
 
 /* obviously inspired by Yahoo's reset.css, but scoped to just form.formtastic elements that we care about */
 form.formtastic, form.formtastic ul, form.formtastic ol, form.formtastic li, form.formtastic fieldset, form.formtastic legend, form.formtastic input, form.formtastic textarea, form.formtastic p { margin:0; padding:0; }
-  form.formtastic fieldset { border:0; }
+form.formtastic fieldset { border:0; }
 form.formtastic em, form.formtastic strong { font-style:normal; font-weight:normal; }
 form.formtastic li { list-style:none; }
-form.formtastic abbr, form.formtastic acronym { border:0;font-variant:normal; }
+form.formtastic abbr, form.formtastic acronym { border:0; font-variant:normal; }
 form.formtastic input, form.formtastic textarea, form.formtastic select { font-family:inherit; font-size:inherit; font-weight:inherit; }
-form.formtastic input, form.formtastic textarea, form.formtastic select { *font-size:100%; }
+form.formtastic input, form.formtastic textarea, form.formtastic select { font-size:100%; }
 form.formtastic legend { color:#000; }
 
 /* Rails wraps error fields with divs */
