@@ -4,7 +4,7 @@ Formtastic is a Rails FormBuilder DSL (with some other goodies) to make it far e
 
 h2. The Story
 
-Hacked together forms were easy, but awesome forms with decent semantics, rich mark-up and plenty of CSS hooks were incredibly painful.  I was discouraged from doing things properly because it was do much mark-up and code to write.  One day, I finally had enough, so I opened up my text editor, and wrote a DSL for how I'd like to author forms:
+Hacked together forms were easy, but awesome forms with decent semantics, rich mark-up and plenty of CSS hooks were incredibly painful.  I was discouraged from doing things properly because it was too much mark-up and code to write.  One day, I finally had enough, so I opened up my text editor, and wrote a DSL for how I'd like to author forms:
 
 <pre>
 <% semantic_form_for @article do |form| %>
@@ -33,7 +33,7 @@ Hacked together forms were easy, but awesome forms with decent semantics, rich m
 <% end %>
 </pre>
 
-I also wrote the accompanying HTML output I expected, favoring something very similar to the fieldsets, lists and other semantic elements Aaron Gustafson presented in <i>Learning to Love Forms</i> <http://www.slideshare.net/AaronGustafson/learning-to-love-forms-web-directions-south-07>, and then hacked together enough Ruby to prove it could be done.
+I also wrote the accompanying HTML output I expected, favoring something very similar to the fieldsets, lists and other semantic elements Aaron Gustafson presented in "Learning to Love Forms":http://www.slideshare.net/AaronGustafson/learning-to-love-forms-web-directions-south-07, hacking together enough Ruby to prove it could be done.
 
 
 h2. Why?
