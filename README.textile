@@ -7,30 +7,30 @@ h2. The Story
 Hacked together forms were easy, but awesome forms with decent semantics, rich mark-up and plenty of CSS hooks were incredibly painful.  I was discouraged from doing things properly because it was do much mark-up and code to write.  One day, I finally had enough, so I opened up my text editor, and wrote a DSL for how I'd like to author forms:
 
 <pre>
-<% semantic_form_for @article do |form| %>
+  <% semantic_form_for @article do |form| %>
   
-  <% form.input_field_set :name => "Basic" do %>
-    <%= form.input :title %>                               
-    <%= form.input :body %>                                
-    <%= form.input :section_id %>                          
-    <%= form.input :publication_state_id, :as => :radio %> 
-    <%= form.input :author_id, :as => :select %>                           
-    <%= form.input :allow_comments, :label => "Allow commenting on this article" %>                      
-  <% end %>                                                
+    <% form.input_field_set :name => "Basic" do %>
+      <%= form.input :title %>                               
+      <%= form.input :body %>                                
+      <%= form.input :section_id %>                          
+      <%= form.input :publication_state_id, :as => :radio %> 
+      <%= form.input :author_id, :as => :select %>                           
+      <%= form.input :allow_comments, :label => "Allow commenting on this article" %>                      
+    <% end %>                                                
   
-  <% form.input_field_set :name => "Advanced" do %>
-    <%= form.input :keywords, :required => false, :hint => "Example: ruby, rails, forms" %>        
-    <%= form.input :extract, :required => false %>
-    <%= form.input :description, :required => false %>
-    <%= form.input :url_title, :required => false %>                           
-  <% end %>
+    <% form.input_field_set :name => "Advanced" do %>
+      <%= form.input :keywords, :required => false, :hint => "Example: ruby, rails, forms" %>        
+      <%= form.input :extract, :required => false %>
+      <%= form.input :description, :required => false %>
+      <%= form.input :url_title, :required => false %>                           
+    <% end %>
 
-  <% form.button_field_set do %>                                    
-    <%= form.cancel_button %>                             
-    <%= form.commit_button %>                             
-  <% end %>
+    <% form.button_field_set do %>                                    
+      <%= form.cancel_button %>                             
+      <%= form.commit_button %>                             
+    <% end %>
 
-<% end %>
+  <% end %>
 </pre>
 
 I also wrote the accompanying HTML output I expected, favoring something very similar to the fieldsets, lists and other semantic elements Aaron Gustafson presented in <i>Learning to Love Forms</i> <http://www.slideshare.net/AaronGustafson/learning-to-love-forms-web-directions-south-07>, and then hacked together enough Ruby to prove it could be done.
@@ -90,9 +90,9 @@ h2. Configuration
 If you wish, put something like this in config/initializers/formtastic_config.rb:
 
 <pre>
-JustinFrench::Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
-JustinFrench::Formtastic::SemanticFormBuilder.required_string = "(required)"
-JustinFrench::Formtastic::SemanticFormBuilder.optional_string = "(optional)"
+  JustinFrench::Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
+  JustinFrench::Formtastic::SemanticFormBuilder.required_string = "(required)"
+  JustinFrench::Formtastic::SemanticFormBuilder.optional_string = "(optional)"
 </pre>
 
 
@@ -117,15 +117,15 @@ h2. Usage
 The smallest example:
 
 <pre>
-<% semantic_form_for @user do |form| %>
-  <% form.input_field_set do %>
-    <%= form.input :name %>
-    <%= form.input :email %>
-    <%= form.input :password %>
-    <%= form.input :department_id, :as => :radio %>
-    <%= form.input :date_of_birth %>
+  <% semantic_form_for @user do |form| %>
+    <% form.input_field_set do %>
+      <%= form.input :name %>
+      <%= form.input :email %>
+      <%= form.input :password %>
+      <%= form.input :department_id, :as => :radio %>
+      <%= form.input :date_of_birth %>
+    <% end %>
   <% end %>
-<% end %>
 </pre>
 
 With an output something like:
