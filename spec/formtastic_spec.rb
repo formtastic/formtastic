@@ -17,20 +17,107 @@ describe 'Formtastic' do
     false
   end
 
-  describe '#semantic_form_for' do
-    it 'yields an instance of SemanticFormBuilder' do
-      _erbout = ''
-      semantic_form_for(:post, Object.new, :url => '/hello') do |builder|
-        builder.class.should == JustinFrench::Formtastic::SemanticFormBuilder  
+  describe 'form helper wrapper' do
+    
+    setup do 
+      # Resource-oriented styles like form_for(@post) will expect a path method for the object,
+      # so we're defining some here.
+      def post_path(o); "/posts/1"; end
+      def posts_path; "/posts"; end
+      def new_post_path; "/posts/new"; end
+      
+      # Sometimes we need a Post class
+      class Post; end
+      
+      # Sometimes we need a mock @post object 
+      @new_post = mock('post')
+      @new_post.stub!(:class).and_return(Post)
+      @new_post.stub!(:id).and_return(nil)
+      @new_post.stub!(:new_record?).and_return(true)
+      
+      # ERB stuff expects an _erbout variable, so you don't have to set it up at the start of every
+      # spec any more.        
+      def _erbout; ''; end
+      
+      # Matching and testing against _erbout is ugly, so let's call it what it is, html.
+      def html; _erbout; end
+    end
+    
+    describe '#semantic_form_for' do  
+        
+      it 'yields an instance of SemanticFormBuilder' do
+        semantic_form_for(:post, Post.new, :url => '/hello') do |builder|
+          builder.class.should == JustinFrench::Formtastic::SemanticFormBuilder  
+        end
+      end
+      
+      it 'adds a class of "formtastic" to generated form' do
+        semantic_form_for(:post, Post.new, :url => '/hello') do |builder|
+        end
+        html.should match_xpath("form/@class", /\bformtastic\b/)
+      end
+      
+      it 'can be called with a resource-oriented style' do
+        semantic_form_for(@new_post) do |builder|
+          builder.object.class.should == Post
+          builder.object_name.should == "post"
+        end
+      end
+      
+      xit 'can be called with a resource-oriented style with an inline object' do
+        semantic_form_for(Post.new) do |builder|
+          builder.object.class.should == Post
+          builder.object_name.should == "post"
+        end
+      end
+        
+      it 'can be called with a generic style and instance variable' do
+        semantic_form_for(:post, @new_post, :url => new_post_path) do |builder|
+          builder.object.class.should == Post
+          builder.object_name.to_s.should == "post" # TODO: is this forced .to_s a bad assumption somewhere?
+        end
+      end
+      
+      it 'can be called with a generic style and inline object' do
+        semantic_form_for(:post, Post.new, :url => new_post_path) do |builder|
+          builder.object.class.should == Post
+          builder.object_name.to_s.should == "post" # TODO: is this forced .to_s a bad assumption somewhere?
+        end
+      end
+    
+      xit 'cannot be called without an object' do
+        lambda { 
+          semantic_form_for(:post, :url => new_post_path) do |builder| 
+          end 
+        }.should raise_error
+      end
+    
+    end
+    
+    describe '#semantic_fields_for' do
+      it 'yields an instance of SemanticFormBuilder' do
+        semantic_fields_for(:post, Post.new, :url => '/hello') do |builder|
+          builder.class.should == JustinFrench::Formtastic::SemanticFormBuilder  
+        end
       end
     end
-
-    it 'adds a class of "formtastic" to generated form' do
-      _erbout = ''
-      semantic_form_for(:post, Object.new, :url => '/hello') do |builder|
+    
+    describe '#semantic_form_remote_for' do
+      it 'yields an instance of SemanticFormBuilder' do
+        semantic_form_remote_for(:post, Post.new, :url => '/hello') do |builder|
+          builder.class.should == JustinFrench::Formtastic::SemanticFormBuilder  
+        end
       end
-      _erbout.should match_xpath("form/@class", /\bformtastic\b/)
     end
+    
+    describe '#semantic_form_for_remote' do
+      it 'yields an instance of SemanticFormBuilder' do
+        semantic_form_remote_for(:post, Post.new, :url => '/hello') do |builder|
+          builder.class.should == JustinFrench::Formtastic::SemanticFormBuilder  
+        end
+      end
+    end
+    
   end
 
   describe '#input' do
