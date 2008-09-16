@@ -21,6 +21,25 @@ module JustinFrench #:nodoc:
     #     <%= f.input :title %>
     #     <%= f.input :body %>
     #   <% end %>
+    #
+    # The above examples use a resource-oriented style of form_for() helper where only the @post
+    # object is given as an argument, but the generic style is also supported if you really want it, 
+    # as is forms with inline objects (Post.new) rather than objects with instance variables (@post):
+    #
+    #   <% semantic_form_for :post, @post, :url => posts_path do |f| %>
+    #     ...
+    #   <% end %>
+    #
+    #   <% semantic_form_for :post, Post.new, :url => posts_path do |f| %>
+    #     ...
+    #   <% end %>
+    #
+    # The shorter, resource-oriented style is most definitely preferred, and has recieved the most
+    # testing to date.
+    #
+    # Please note: Although it's possible to call Rails' built-in form_for() helper without an 
+    # object, all semantic forms *must* have an object (either Post.new or @post), as Formtastic 
+    # has too many dependencies on an ActiveRecord object being present.
     module SemanticFormHelper
       [:form_for, :fields_for, :form_remote_for, :remote_form_for].each do |meth|
         src = <<-END_SRC   
@@ -84,12 +103,11 @@ module JustinFrench #:nodoc:
       #     <% end %>
       #   <% end %>
       def input(method, options = {})
-        raise "@#{@object_name} doesn't respond to the method #{method}" unless @template.instance_eval("@#{@object_name}").respond_to?(method)
+        raise "@#{@object_name} doesn't respond to the method #{method}" unless @object.respond_to?(method)
         
         options[:required] = @@all_fields_required_by_default if options[:required].nil?
         options[:label] ||= method.to_s.humanize
-        options[:as] ||= default_input_type(@object_name, method)
-        
+        options[:as] ||= default_input_type(@object, method)
         input_method = "#{options[:as]}_input"
         raise("Cannot guess an input type for '#{method}' - please set :as option") unless respond_to?(input_method) 
         content = ''
@@ -166,7 +184,7 @@ module JustinFrench #:nodoc:
       
       
       def save_or_create_commit_button_text #:nodoc:
-        prefix = @template.instance_eval("@#{@object_name}").new_record? ? "Create" : "Save"
+        prefix = @object.new_record? ? "Create" : "Save"
         "#{prefix} #{@object_name.humanize}"
       end
       
@@ -342,11 +360,11 @@ module JustinFrench #:nodoc:
         (inputs + time_inputs).each do |input|
           if options["discard_#{input}".intern]
             break if time_inputs.include?(input)
-            list_items_capture << @template.hidden_field_tag("#{@object_name}[#{method}(#{position[input]}i)]", @template.instance_eval("@#{@object_name}").send(method), :id => "#{@object_name}_#{method}_#{position[input]}i")
+            list_items_capture << @template.hidden_field_tag("#{@object_name}[#{method}(#{position[input]}i)]", @object.send(method), :id => "#{@object_name}_#{method}_#{position[input]}i")
           else
             list_items_capture << @template.content_tag(:li, 
               @template.content_tag(:label, input.to_s.humanize, :for => "#{@object_name}_#{method}_#{position[input]}i") + 
-              @template.send("select_#{input}".intern, @template.instance_eval("@#{@object_name}").send(method), :prefix => @object_name, :field_name => "#{method}(#{position[input]}i)")
+              @template.send("select_#{input}".intern, @object.send(method), :prefix => @object_name, :field_name => "#{method}(#{position[input]}i)")
             )
           end
         end
@@ -441,7 +459,7 @@ module JustinFrench #:nodoc:
       end
       
       def inline_errors(method, options)  #:nodoc:
-        errors = @template.instance_eval("@#{@object_name}").errors.on(method).to_a
+        errors = @object.errors.on(method).to_a
         errors.empty? ? '' : @template.content_tag(:p, errors.to_sentence, :class => 'inline-errors')
       end
       
@@ -475,22 +493,24 @@ module JustinFrench #:nodoc:
         )
       end
       
-      def default_input_type(object_name, method) #:nodoc:
-        if type = @template.instance_eval("@#{object_name}").send("column_for_attribute", method).type
+      def default_input_type(object, method) #:nodoc:
+        column = object.send("column_for_attribute", method)
+        if type = (column && column.type)
           
           # handle the special cases where the column type doesn't map to an input method
           return :select if type == :integer && method.to_s =~ /_id$/
-          return :password if type == :string && method =~ /password/
           return :datetime if type == :timestamp
           return :numeric if [:integer, :float, :decimal].include?(type)
           
           # otherwise assume the input name will be the same as the column type (eg string_input)
           return type
+        elsif method.to_s =~ /password/
+          return :password
         end
       end
-      
+            
       def default_string_options(method) #:nodoc:
-        column = @template.instance_eval("@#{@object_name}").column_for_attribute(method)
+        column = @object.column_for_attribute(method)
         if column.nil? || column.limit.nil?
           { :size => DEFAULT_TEXT_FIELD_SIZE }
         else
@@ -501,7 +521,7 @@ module JustinFrench #:nodoc:
       def list_item_html_attributes(method, options) #:nodoc:
         classes = [options[:as].to_s]
         classes << (options[:required] ? 'required' : 'optional')
-        classes << 'error' if @template.instance_eval("@#{@object_name}").errors.on(method)
+        classes << 'error' if @object.errors.on(method)
         return { :id => "#{@object_name}_#{method}_input", :class => classes.join(" ") } 
       end
       
