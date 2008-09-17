@@ -200,6 +200,106 @@ describe 'Formtastic' do
     end
     
     describe ':as option' do
+      
+      describe 'when not specified' do
+        
+        it 'should raise an error for methods that don\'t have a db column' do
+          _erbout = ''
+          @new_post.stub!(:method_without_a_database_column)
+          @new_post.stub!(:column_for_attribute).and_return(nil)
+          semantic_form_for(@new_post) do |builder| 
+            lambda { 
+              builder.send(:default_input_type, @new_post, :method_without_a_database_column) 
+            }.should raise_error("Cannot guess an input type for 'method_without_a_database_column' - please set :as option")
+          end
+        end
+          
+        it 'should default to a :select for column names ending in "_id"' do
+          _erbout = ''
+          @new_post.stub!(:user_id)
+          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :integer))
+          semantic_form_for(@new_post) do |builder| 
+            builder.send(:default_input_type, @new_post, :user_id).should == :select
+          end
+        end
+                
+        it 'should default to a :password for :string column types with "password" in the method name' do
+          _erbout = ''
+          @new_post.stub!(:password)
+          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string))
+          semantic_form_for(@new_post) do |builder| 
+            builder.send(:default_input_type, @new_post, :password).should == :password
+          end
+        end
+                
+        it 'should default to a :text for :text column types' do
+          _erbout = ''
+          @new_post.stub!(:body)
+          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :text))
+          semantic_form_for(@new_post) do |builder| 
+            builder.send(:default_input_type, @new_post, :body).should == :text
+          end
+        end
+        
+        it 'should default to a :date for :date column types' do
+          _erbout = ''
+          @new_post.stub!(:publish_on)
+          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :date))
+          semantic_form_for(@new_post) do |builder| 
+            builder.send(:default_input_type, @new_post, :publish_on).should == :date
+          end
+        end
+        
+        it 'should default to a :datetime for :datetime and :timestamp column types' do
+          _erbout = ''
+          @new_post.stub!(:publish_at)
+          [:datetime, :timestamp].each do |column_type|
+            @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => column_type))
+            semantic_form_for(@new_post) do |builder| 
+              builder.send(:default_input_type, @new_post, :publish_at).should == :datetime
+            end
+          end
+        end
+        
+        it 'should default to a :time for :time column types' do
+          _erbout = ''
+          @new_post.stub!(:publish_at)
+          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :time))
+          semantic_form_for(@new_post) do |builder| 
+            builder.send(:default_input_type, @new_post, :publish_at).should == :time
+          end
+        end
+        
+        it 'should default to a :boolean for :boolean column types' do
+          _erbout = ''
+          @new_post.stub!(:public)
+          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
+          semantic_form_for(@new_post) do |builder| 
+            builder.send(:default_input_type, @new_post, :public).should == :boolean
+          end
+        end
+        
+        it 'should default to a :string for :string column types' do
+          _erbout = ''
+          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string))
+          semantic_form_for(@new_post) do |builder| 
+            builder.send(:default_input_type, @new_post, :title).should == :string
+          end
+        end
+        
+        it 'should default to a :numeric for :integer, :float and :decimal column types' do
+          _erbout = ''
+          @new_post.stub!(:comment_count)
+          [:integer, :float, :decimal].each do |column_type|
+            @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => column_type))
+            semantic_form_for(@new_post) do |builder| 
+              builder.send(:default_input_type, @new_post, :comment_count).should == :numeric
+            end
+          end
+        end
+      
+      end
+      
     end
     
     describe ':label option' do
