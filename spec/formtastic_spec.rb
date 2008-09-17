@@ -123,8 +123,74 @@ describe 'Formtastic' do
     
   end
 
-  describe '#input method' do
-          
+  describe '#input' do
+    
+    setup do 
+      @new_post.stub!(:title)
+      @new_post.stub!(:body)
+      @new_post.stub!(:errors).and_return(mock('errors', :on => nil))
+      @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
+    end
+    
+    it 'should raise an error when the object does not respond to the method' do
+      _erbout = ''
+      semantic_form_for(@new_post) do |builder| 
+        lambda { builder.input :method_on_post_that_doesnt_exist }.should raise_error("@post doesn't respond to the method method_on_post_that_doesnt_exist")
+      end 
+    end
+    
+    it 'should create a list item for each input' do
+      _erbout = ''
+      semantic_form_for(@new_post) do |builder| 
+        _erbout += builder.input(:title)
+        _erbout += builder.input(:body)
+      end
+       _erbout.should have_tag('form li', :count => 2)
+    end
+    
+    describe ':required option' do
+    
+      it 'should set a "required" class when true' do
+        _erbout = ''
+        semantic_form_for(@new_post) do |builder| 
+          _erbout += builder.input(:title, :required => true)
+        end
+        _erbout.should_not have_tag('form li.optional')
+        _erbout.should have_tag('form li.required')
+      end
+      
+      it 'should set an "optional" class when false' do
+        _erbout = ''
+        semantic_form_for(@new_post) do |builder| 
+          _erbout += builder.input(:title, :required => false)
+        end
+        _erbout.should_not have_tag('form li.required')
+        _erbout.should have_tag('form li.optional')
+      end
+      
+      it 'should use the default value when none is provided' do
+        JustinFrench::Formtastic::SemanticFormBuilder.all_fields_required_by_default.should == true
+        JustinFrench::Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
+        _erbout = ''
+        semantic_form_for(@new_post) do |builder| 
+          _erbout += builder.input(:title)
+        end
+        _erbout.should_not have_tag('form li.required')
+        _erbout.should have_tag('form li.optional')
+      end
+      
+    end
+    
+    describe ':as option' do
+    end
+    
+    describe ':label option' do
+    end
+    
+    describe ':hint option' do
+    end
+    
+    # these original specs will eventually go away, once the coverage is up in the new stuff
     it 'generates a text field with label' do
       _erbout = ''
       @new_post.stub!(:title).and_return('hello')
