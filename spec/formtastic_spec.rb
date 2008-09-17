@@ -179,6 +179,24 @@ describe 'Formtastic' do
         _erbout.should have_tag('form li.optional')
       end
       
+      it 'should append the "required" string to the label when required' do
+        string = JustinFrench::Formtastic::SemanticFormBuilder.required_string = " required yo!" # ensure there's something in the string 
+        _erbout = ''
+        semantic_form_for(@new_post) do |builder| 
+          _erbout += builder.input(:title, :required => true)
+        end
+        _erbout.should have_tag('form li.required label', /#{string}$/)
+      end
+      
+      it 'should append the "optional" string to the label when optional' do 
+        string = JustinFrench::Formtastic::SemanticFormBuilder.optional_string = " optional yo!" # ensure there's something in the string 
+        _erbout = ''
+        semantic_form_for(@new_post) do |builder| 
+          _erbout += builder.input(:title, :required => false)
+        end
+        _erbout.should have_tag('form li.optional label', /#{string}$/)
+      end
+      
     end
     
     describe ':as option' do
