@@ -109,7 +109,6 @@ module JustinFrench #:nodoc:
         options[:label] ||= method.to_s.humanize
         options[:as] ||= default_input_type(@object, method)
         input_method = "#{options[:as]}_input"
-        raise("Cannot guess an input type for '#{method}' - please set :as option") unless respond_to?(input_method) 
         content = ''
         content += send(input_method, method, options) # eg string_input or select_input
         content += inline_errors(method, options)
@@ -493,20 +492,26 @@ module JustinFrench #:nodoc:
         )
       end
       
+      # For methods that have a database column, take a best guess as to what the inout method
+      # should be.  In most cases, it will just return the column type (eg :string), but for special
+      # cases it will simplify (like the case of :integer, :float & :decimal to :numeric), or do
+      # something different (like :password and :select).
+      #
+      # If there is no column for the method (eg "virtual columns" with an attr_accessor), an error
+      # is raised asking you to specify the :as option for the input.
       def default_input_type(object, method) #:nodoc:
         column = object.send("column_for_attribute", method)
-        if type = (column && column.type)
-          
+        if column
           # handle the special cases where the column type doesn't map to an input method
-          return :select if type == :integer && method.to_s =~ /_id$/
-          return :datetime if type == :timestamp
-          return :numeric if [:integer, :float, :decimal].include?(type)
-          
+          return :select if column.type == :integer && method.to_s =~ /_id$/
+          return :datetime if column.type == :timestamp
+          return :numeric if [:integer, :float, :decimal].include?(column.type)
+          return :password if column.type == :string && method.to_s =~ /password/
           # otherwise assume the input name will be the same as the column type (eg string_input)
-          return type
-        elsif method.to_s =~ /password/
-          return :password
-        end
+          return column.type
+        else
+          raise("Cannot guess an input type for '#{method}' - please set :as option")
+        end          
       end
             
       def default_string_options(method) #:nodoc:
