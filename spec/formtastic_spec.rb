@@ -49,7 +49,7 @@ describe 'Formtastic' do
         _erbout = ''
         semantic_form_for(:post, Post.new, :url => '/hello') do |builder|
         end
-        _erbout.should match_xpath("form/@class", /\bformtastic\b/)
+        _erbout.should have_tag("form.formtastic")
       end
       
       it 'can be called with a resource-oriented style' do
@@ -193,28 +193,22 @@ describe 'Formtastic' do
     # these original specs will eventually go away, once the coverage is up in the new stuff
     it 'generates a text field with label' do
       _erbout = ''
-      @new_post.stub!(:title).and_return('hello')
-      @new_post.stub!(:errors).and_return(mock('errors', :on => nil))
-      @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
       semantic_form_for(@new_post) do |builder|
         _erbout += builder.input :title
       end
-      _erbout.should have_xpath("form/li/label")
-      _erbout.should have_xpath("form/li/input")
-      _erbout.should match_xpath("form/li/input/@value", "hello")
+      _erbout.should have_tag("form li label")
+      _erbout.should have_tag("form li input")
     end
     
-    it 'generates a text area with label' do
+    it 'generates a textarea with label' do
       _erbout = ''
-      @new_post.stub!(:body).and_return('hello')
-      @new_post.stub!(:errors).and_return(mock('errors', :on => nil))
-      @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :text))
+      @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :text, :limit => nil))
+      
       semantic_form_for(@new_post) do |builder|
         _erbout += builder.input :body
       end
-      _erbout.should have_xpath("form/li/label")
-      _erbout.should have_xpath("form/li/textarea")
-      _erbout.should match_xpath("form/li/textarea/@value", "hello")
+      _erbout.should have_tag("form li label")
+      _erbout.should have_tag("form li textarea")
     end
     
   end
