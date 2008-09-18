@@ -227,6 +227,7 @@ describe 'Formtastic' do
         
         it 'should default to a :select for column names ending in "_id"' do
           default_input_type(:integer, :user_id).should == :select
+          default_input_type(:integer, :section_id).should == :select
         end
                 
         it 'should default to a :password for :string column types with "password" in the method name' do
