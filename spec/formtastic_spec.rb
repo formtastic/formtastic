@@ -231,6 +231,8 @@ describe 'Formtastic' do
                 
         it 'should default to a :password for :string column types with "password" in the method name' do
           default_input_type(:string, :password).should == :password
+          default_input_type(:string, :hashed_password).should == :password
+          default_input_type(:string, :password_hash).should == :password
         end
                 
         it 'should default to a :text for :text column types' do
