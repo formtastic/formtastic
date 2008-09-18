@@ -9,6 +9,7 @@ describe 'Formtastic' do
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::ActiveRecordHelper
   include ActionView::Helpers::RecordIdentificationHelper
+  include ActiveSupport
   include ActionController::PolymorphicRoutes
   
   include JustinFrench::Formtastic::SemanticFormHelper
@@ -203,12 +204,12 @@ describe 'Formtastic' do
       
       describe 'when not specified' do
         
-        def default_input_type(method, column_type)
+        def default_input_type(column_type, column_name = :generic_column_name)
           _erbout = ''
-          @new_post.stub!(method)
+          @new_post.stub!(column_name)
           @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => column_type))
           semantic_form_for(@new_post) do |builder| 
-            @default_type = builder.send(:default_input_type, @new_post, method)
+            @default_type = builder.send(:default_input_type, @new_post, column_name)
           end
           return @default_type
         end
@@ -225,42 +226,42 @@ describe 'Formtastic' do
         end
         
         it 'should default to a :select for column names ending in "_id"' do
-          default_input_type(:user_id, :integer).should == :select
+          default_input_type(:integer, :user_id).should == :select
         end
                 
         it 'should default to a :password for :string column types with "password" in the method name' do
-          default_input_type(:password, :string).should == :password
+          default_input_type(:string, :password).should == :password
         end
                 
         it 'should default to a :text for :text column types' do
-          default_input_type(:body, :text).should == :text
+          default_input_type(:text).should == :text
         end
         
         it 'should default to a :date for :date column types' do
-          default_input_type(:publish_on, :date).should == :date
+          default_input_type(:date).should == :date
         end
         
         it 'should default to a :datetime for :datetime and :timestamp column types' do
-          default_input_type(:publish_at, :datetime).should == :datetime
-          default_input_type(:publish_at, :timestamp).should == :datetime
+          default_input_type(:datetime).should == :datetime
+          default_input_type(:timestamp).should == :datetime
         end
         
         it 'should default to a :time for :time column types' do
-          default_input_type(:publish_at, :time).should == :time
+          default_input_type(:time).should == :time
         end
         
         it 'should default to a :boolean for :boolean column types' do
-          default_input_type(:public, :boolean).should == :boolean
+          default_input_type(:boolean).should == :boolean
         end
         
         it 'should default to a :string for :string column types' do
-          default_input_type(:title, :string).should == :string
+          default_input_type(:string).should == :string
         end
         
         it 'should default to a :numeric for :integer, :float and :decimal column types' do
-          default_input_type(:comment_count, :integer).should == :numeric
-          default_input_type(:comment_count, :float).should == :numeric
-          default_input_type(:comment_count, :decimal).should == :numeric
+          default_input_type(:integer).should == :numeric
+          default_input_type(:float).should == :numeric
+          default_input_type(:decimal).should == :numeric
         end
       
       end
