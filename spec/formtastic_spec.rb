@@ -291,7 +291,7 @@ describe 'Formtastic' do
       
       it 'should default the method name when not specified and pass it down to the label tag' do
         _erbout = ''
-        @new_post.stub!(:meta_description) # wanted a two word method name for a Post, that's the best I could come up with
+        @new_post.stub!(:meta_description) # a two word method name
         @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
         semantic_form_for(@new_post) do |builder| 
           _erbout += builder.input(:meta_description)
@@ -313,6 +313,16 @@ describe 'Formtastic' do
     end
     
     describe ':hint option' do
+      
+      it 'should be passed down to the paragraph tag when specified' do
+        _erbout = ''
+        hint_text = "this is the title of the post"
+        semantic_form_for(@new_post) do |builder| 
+          _erbout += builder.input(:title, :hint => hint_text)
+        end
+        _erbout.should have_tag("form li p.inline-hints", hint_text)
+      end
+          
     end
     
     # these original specs will eventually go away, once the coverage is up in the new stuff
