@@ -202,89 +202,81 @@ describe 'Formtastic' do
     
     describe ':as option' do
       
-      describe 'when not specified' do
-        
-        def default_input_type(column_type, column_name = :generic_column_name)
-          _erbout = ''
-          @new_post.stub!(column_name)
-          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => column_type))
-          semantic_form_for(@new_post) do |builder| 
-            @default_type = builder.send(:default_input_type, @new_post, column_name)
-          end
-          return @default_type
+      def default_input_type(column_type, column_name = :generic_column_name)
+        _erbout = ''
+        @new_post.stub!(column_name)
+        @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => column_type))
+        semantic_form_for(@new_post) do |builder| 
+          @default_type = builder.send(:default_input_type, @new_post, column_name)
         end
-                
-        it 'should raise an error for methods that don\'t have a db column' do
-          _erbout = ''
-          @new_post.stub!(:method_without_a_database_column)
-          @new_post.stub!(:column_for_attribute).and_return(nil)
-          semantic_form_for(@new_post) do |builder| 
-            lambda { 
-              builder.send(:default_input_type, @new_post, :method_without_a_database_column) 
-            }.should raise_error("Cannot guess an input type for 'method_without_a_database_column' - please set :as option")
-          end
+        return @default_type
+      end
+              
+      it 'should raise an error for methods that don\'t have a db column' do
+        _erbout = ''
+        @new_post.stub!(:method_without_a_database_column)
+        @new_post.stub!(:column_for_attribute).and_return(nil)
+        semantic_form_for(@new_post) do |builder| 
+          lambda { 
+            builder.send(:default_input_type, @new_post, :method_without_a_database_column) 
+          }.should raise_error("Cannot guess an input type for 'method_without_a_database_column' - please set :as option")
         end
-        
-        it 'should default to a :select for column names ending in "_id"' do
-          default_input_type(:integer, :user_id).should == :select
-          default_input_type(:integer, :section_id).should == :select
-        end
-                
-        it 'should default to a :password for :string column types with "password" in the method name' do
-          default_input_type(:string, :password).should == :password
-          default_input_type(:string, :hashed_password).should == :password
-          default_input_type(:string, :password_hash).should == :password
-        end
-                
-        it 'should default to a :text for :text column types' do
-          default_input_type(:text).should == :text
-        end
-        
-        it 'should default to a :date for :date column types' do
-          default_input_type(:date).should == :date
-        end
-        
-        it 'should default to a :datetime for :datetime and :timestamp column types' do
-          default_input_type(:datetime).should == :datetime
-          default_input_type(:timestamp).should == :datetime
-        end
-        
-        it 'should default to a :time for :time column types' do
-          default_input_type(:time).should == :time
-        end
-        
-        it 'should default to a :boolean for :boolean column types' do
-          default_input_type(:boolean).should == :boolean
-        end
-        
-        it 'should default to a :string for :string column types' do
-          default_input_type(:string).should == :string
-        end
-        
-        it 'should default to a :numeric for :integer, :float and :decimal column types' do
-          default_input_type(:integer).should == :numeric
-          default_input_type(:float).should == :numeric
-          default_input_type(:decimal).should == :numeric
-        end
-      
       end
       
-      describe 'when specified' do
-        
-        it 'should call the corresponding input method' do
-          [:select, :radio, :password, :text, :date, :datetime, :time, :boolean, :boolean_select, :string, :numeric].each do |input_style|
-            _erbout = ''
-            @new_post.stub!(:generic_column_name)
-            @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
-            semantic_form_for(@new_post) do |builder| 
-              builder.should_receive(:"#{input_style}_input").once.and_return("fake HTML output from #input")
-              _erbout += builder.input(:generic_column_name, :as => input_style)
-            end
+      it 'should default to :select for column names ending in "_id"' do
+        default_input_type(:integer, :user_id).should == :select
+        default_input_type(:integer, :section_id).should == :select
+      end
+              
+      it 'should default to :password for :string column types with "password" in the method name' do
+        default_input_type(:string, :password).should == :password
+        default_input_type(:string, :hashed_password).should == :password
+        default_input_type(:string, :password_hash).should == :password
+      end
+              
+      it 'should default to :text for :text column types' do
+        default_input_type(:text).should == :text
+      end
+      
+      it 'should default to :date for :date column types' do
+        default_input_type(:date).should == :date
+      end
+      
+      it 'should default to :datetime for :datetime and :timestamp column types' do
+        default_input_type(:datetime).should == :datetime
+        default_input_type(:timestamp).should == :datetime
+      end
+      
+      it 'should default to :time for :time column types' do
+        default_input_type(:time).should == :time
+      end
+      
+      it 'should default to :boolean for :boolean column types' do
+        default_input_type(:boolean).should == :boolean
+      end
+      
+      it 'should default to :string for :string column types' do
+        default_input_type(:string).should == :string
+      end
+      
+      it 'should default to :numeric for :integer, :float and :decimal column types' do
+        default_input_type(:integer).should == :numeric
+        default_input_type(:float).should == :numeric
+        default_input_type(:decimal).should == :numeric
+      end
+      
+      it 'should call the corresponding input method' do
+        [:select, :radio, :password, :text, :date, :datetime, :time, :boolean, :boolean_select, :string, :numeric].each do |input_style|
+          _erbout = ''
+          @new_post.stub!(:generic_column_name)
+          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
+          semantic_form_for(@new_post) do |builder| 
+            builder.should_receive(:"#{input_style}_input").once.and_return("fake HTML output from #input")
+            _erbout += builder.input(:generic_column_name, :as => input_style)
           end
         end
-        
       end
-        
+      
     end
     
     describe ':label option' do
