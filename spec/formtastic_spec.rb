@@ -292,7 +292,6 @@ describe 'Formtastic' do
       it 'should default the method name when not specified and pass it down to the label tag' do
         _erbout = ''
         @new_post.stub!(:meta_description) # a two word method name
-        @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
         semantic_form_for(@new_post) do |builder| 
           _erbout += builder.input(:meta_description)
         end
@@ -302,8 +301,6 @@ describe 'Formtastic' do
       
       it 'should be passed down to the label tag when specified' do
         _erbout = ''
-        @new_post.stub!(:title)
-        @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
         semantic_form_for(@new_post) do |builder| 
           _erbout += builder.input(:title, :label => "Kustom")
         end
