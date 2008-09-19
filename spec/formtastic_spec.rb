@@ -288,6 +288,14 @@ describe 'Formtastic' do
           end
         end
         
+        it "should include inline errors when found on the method" do
+          pending
+        end
+        
+        it "should not include errors when there are none for the method" do
+          pending
+        end
+        
       end
       
       describe ':label option' do
