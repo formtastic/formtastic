@@ -33,6 +33,7 @@ describe 'Formtastic' do
     @new_post.stub!(:class).and_return(Post)
     @new_post.stub!(:id).and_return(nil)
     @new_post.stub!(:new_record?).and_return(true)
+    @new_post.stub!(:errors).and_return(mock('errors', :on => nil))
   end
   
   describe 'SemanticFormHelper' do
@@ -131,7 +132,6 @@ describe 'Formtastic' do
       setup do 
         @new_post.stub!(:title)
         @new_post.stub!(:body)
-        @new_post.stub!(:errors).and_return(mock('errors', :on => nil))
         @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
       end
       
@@ -352,6 +352,94 @@ describe 'Formtastic' do
         end
         _erbout.should have_tag("form li label")
         _erbout.should have_tag("form li textarea")
+      end
+      
+    end
+    
+    describe '#string_input' do
+      
+      setup do 
+        @new_post.stub!(:title)
+        @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 50))
+      end
+      
+      it 'should have a string class on the wrapper' do
+        _erbout = ''
+        semantic_form_for(@new_post) do |builder|
+          _erbout += builder.input :title, :as => :string
+        end
+        _erbout.should have_tag('form li.string')
+      end
+      
+      it 'should have a post_title_input id on the wrapper' do
+        _erbout = ''
+        semantic_form_for(@new_post) do |builder|
+          _erbout += builder.input :title, :as => :string
+        end
+        _erbout.should have_tag('form li#post_title_input')
+      end
+      
+      it 'should generate a label for the input' do
+        _erbout = ''
+        semantic_form_for(@new_post) do |builder|
+          _erbout += builder.input :title, :as => :string
+        end
+        _erbout.should have_tag('form li label')
+        _erbout.should have_tag('form li label[@for="post_title"')
+        _erbout.should have_tag('form li label', /Title/)
+      end
+      
+      it 'should generate a text input' do
+        _erbout = ''
+        semantic_form_for(@new_post) do |builder|
+          _erbout += builder.input :title, :as => :string
+        end
+        _erbout.should have_tag('form li input')
+        _erbout.should have_tag('form li input#post_title')
+        _erbout.should have_tag('form li input[@type="text"]')
+        _erbout.should have_tag('form li input[@name="post[title]"]')
+        _erbout.should have_tag("form li input[@maxlength='#{@new_post.column_for_attribute(:title).limit}']")
+      end
+      
+      it 'should have a maxlength matching the column limit' do
+        _erbout = ''
+        semantic_form_for(@new_post) do |builder|
+          _erbout += builder.input :title, :as => :string
+        end
+        @new_post.column_for_attribute(:title).limit.should == 50
+        _erbout.should have_tag("form li input[@maxlength='#{@new_post.column_for_attribute(:title).limit}']")
+      end
+      
+      it 'should use DEFAULT_TEXT_FIELD_SIZE for columns longer than DEFAULT_TEXT_FIELD_SIZE' do
+        default_size = JustinFrench::Formtastic::SemanticFormBuilder::DEFAULT_TEXT_FIELD_SIZE
+        column_limit_larger_than_default = default_size * 2
+        @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => column_limit_larger_than_default))
+        _erbout = ''
+        semantic_form_for(@new_post) do |builder|
+          _erbout += builder.input :title, :as => :string
+        end
+        _erbout.should have_tag("form li.string input[@size='#{default_size}']")
+      end
+      
+      it 'should use the column size for columns shorter than DEFAULT_TEXT_FIELD_SIZE' do
+        default_size = JustinFrench::Formtastic::SemanticFormBuilder::DEFAULT_TEXT_FIELD_SIZE
+        column_limit_shorter_than_default = 1
+        @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => column_limit_shorter_than_default))
+        _erbout = ''
+        semantic_form_for(@new_post) do |builder|
+          _erbout += builder.input :title, :as => :string
+        end
+        _erbout.should have_tag("form li input[@size='#{column_limit_shorter_than_default}']")
+      end
+      
+      it 'should use DEFAULT_TEXT_FIELD_SIZE for methods without database columns' do
+        default_size = JustinFrench::Formtastic::SemanticFormBuilder::DEFAULT_TEXT_FIELD_SIZE
+        @new_post.stub!(:method_without_column)
+        _erbout = ''
+        semantic_form_for(@new_post) do |builder|
+          _erbout += builder.input :method_without_column, :as => :string
+        end
+        _erbout.should have_tag("form li input[@size='#{default_size}']")
       end
       
     end
