@@ -8,6 +8,7 @@ task :default => :spec
 desc 'Test the formtastic plugin.'
 Spec::Rake::SpecTask.new('spec') do |t|
   t.spec_files = FileList['spec/**/*_spec.rb']
+  t.spec_opts = ["-c"]
 end
 
 desc 'Test the formtastic plugin with specdoc formatting and colors'
