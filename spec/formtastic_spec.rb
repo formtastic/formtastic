@@ -136,7 +136,7 @@ describe 'Formtastic' do
     it 'should raise an error when the object does not respond to the method' do
       _erbout = ''
       semantic_form_for(@new_post) do |builder| 
-        lambda { builder.input :method_on_post_that_doesnt_exist }.should raise_error("@post doesn't respond to the method method_on_post_that_doesnt_exist")
+        lambda { builder.input :method_on_post_that_doesnt_exist }.should raise_error(NoMethodError)
       end 
     end
     

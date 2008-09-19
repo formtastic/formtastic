@@ -103,7 +103,7 @@ module JustinFrench #:nodoc:
       #     <% end %>
       #   <% end %>
       def input(method, options = {})
-        raise "@#{@object_name} doesn't respond to the method #{method}" unless @object.respond_to?(method)
+        raise NoMethodError unless @object.respond_to?(method)
         
         options[:required] = @@all_fields_required_by_default if options[:required].nil?
         options[:label] ||= method.to_s.humanize
