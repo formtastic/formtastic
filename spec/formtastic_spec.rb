@@ -547,6 +547,33 @@ describe 'Formtastic' do
       end
             
     end
+    
+    describe '#password_input' do
+    end
+    
+    describe '#text_input' do
+    end
+    
+    describe '#date_input' do
+    end
+    
+    describe '#datetime_input' do
+    end
+    
+    describe '#time_input' do
+    end
+    
+    describe '#boolean_input' do
+    end
+    
+    describe '#boolean_select_input' do
+    end
+    
+    describe '#string_input' do
+    end
+    
+    describe '#numeric_input' do
+    end
         
   end
 
