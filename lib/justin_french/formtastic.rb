@@ -250,12 +250,15 @@ module JustinFrench #:nodoc:
           %{<legend><span>#{label_text(method, options)}</span></legend>} + 
           @template.content_tag(:ol, 
             choices.map { |c| 
-              @template.content_tag(:li,
-                input_label(method, options, "#{@template.radio_button(@object_name, method, c.id)} #{c.send(options[:label_method])}")
+              @template.content_tag(:li, 
+                @template.content_tag(:label, 
+                  "#{@template.radio_button(@object_name, method, c.id)} #{c.send(options[:label_method])}", 
+                  :for => "#{@object_name}_#{method}_#{c.id}"
+                )
               )
             }
           )
-        )  
+        )
       end
 
 
