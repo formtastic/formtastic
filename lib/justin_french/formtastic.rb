@@ -264,7 +264,8 @@ module JustinFrench #:nodoc:
 
       # Outputs a label and a password input, nothing fancy.
       def password_input(method, options)
-        input_label(method, options) + @template.password_field(@object_name, method)   
+        input_label(method, options) + 
+        @template.password_field(@object_name, method, default_string_options(method))   
       end
       
       
