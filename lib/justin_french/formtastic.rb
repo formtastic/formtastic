@@ -105,7 +105,7 @@ module JustinFrench #:nodoc:
       def input(method, options = {})
         raise NoMethodError unless @object.respond_to?(method)
         
-        options[:required] = @@all_fields_required_by_default if options[:required].nil?
+        options[:required] = required(method, options[:required])
         options[:label] ||= method.to_s.humanize
         options[:as] ||= default_input_type(@object, method)
         input_method = "#{options[:as]}_input"
@@ -115,6 +115,19 @@ module JustinFrench #:nodoc:
         content += inline_hints(method, options)
         
         return @template.content_tag(:li, content, list_item_html_attributes(method, options))
+      end
+      
+      def required(attribute, required_option)
+        if @object.class.respond_to?(:reflect_on_all_validations)
+          attribute_sym = attribute.to_s.sub(/_id$/, '').to_sym
+          @object.class.reflect_on_all_validations.any? do |validation|
+            validation.macro == :validates_presence_of && validation.name == attribute_sym
+          end
+        elsif required_option.nil?
+           @@all_fields_required_by_default
+         else
+           required_option
+        end
       end
       
       # Creates a fieldset and ol tag wrapping for form inputs as list items.  Example:
