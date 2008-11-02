@@ -68,7 +68,7 @@ h2. The Available Inputs
 * :string (a text field) - default for :string column types
 * :numeric (a text field, like string) - default for :integer, :float and :decimal column types
 
-The documentation is pretty good for each of these (what it does, what the ouput is, etc) so go check it out.
+The documentation is pretty good for each of these (what it does, what the output is, etc) so go check it out.
 
 
 h3. One day...
