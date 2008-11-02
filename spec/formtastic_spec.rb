@@ -208,16 +208,64 @@ describe 'Formtastic' do
         end
         
         describe 'when not provided' do
-            
-          it 'should use the default value' do
-            JustinFrench::Formtastic::SemanticFormBuilder.all_fields_required_by_default.should == true
-            JustinFrench::Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
-            _erbout = ''
-            semantic_form_for(@new_post) do |builder| 
-              _erbout += builder.input(:title)
+          
+          describe 'and the validation reflection plugin is available' do
+          
+            describe 'and validates_presence_of was called for the method' do
+              
+              before do
+                @new_post.class.stub!(:reflect_on_all_validations).and_return([
+                  mock('MacroReflection', :macro => :validates_presence_of, :name => :title)
+                ])
+                @new_post.class.stub!(:method_defined?).with(:reflect_on_all_validations).and_return(true)
+                @new_post.class.should_receive(:reflect_on_all_validations)
+              end
+              
+              it 'should be required' do
+                _erbout = ''
+                semantic_form_for(@new_post) do |builder| 
+                  _erbout += builder.input(:title)
+                end
+                _erbout.should have_tag('form li.required')
+                _erbout.should_not have_tag('form li.optional')
+              end
+                            
             end
-            _erbout.should_not have_tag('form li.required')
-            _erbout.should have_tag('form li.optional')
+            
+            describe 'and validates_presence_of was not called for the method' do
+              
+              before do
+                @new_post.class.stub!(:reflect_on_all_validations).and_return([])
+                @new_post.class.stub!(:method_defined?).with(:reflect_on_all_validations).and_return(true)
+                @new_post.class.should_receive(:reflect_on_all_validations)
+              end
+              
+              it 'should not be required' do
+                _erbout = ''
+                semantic_form_for(@new_post) do |builder| 
+                  _erbout += builder.input(:title)
+                end
+                _erbout.should_not have_tag('form li.required')
+                _erbout.should have_tag('form li.optional')
+              end
+              
+            end
+            
+          end
+          
+          describe 'and the validation reflection plugin is not available' do
+            
+            it 'should use the default value' do
+              JustinFrench::Formtastic::SemanticFormBuilder.all_fields_required_by_default.should == true
+              JustinFrench::Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
+              _erbout = ''
+              semantic_form_for(@new_post) do |builder| 
+                _erbout += builder.input(:title)
+              end
+              _erbout.should_not have_tag('form li.required')
+              _erbout.should have_tag('form li.optional')
+            end
+          
           end
           
         end        

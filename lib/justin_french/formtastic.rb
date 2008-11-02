@@ -118,7 +118,7 @@ module JustinFrench #:nodoc:
       end
       
       def required(attribute, required_option)
-        if @object.class.respond_to?(:reflect_on_all_validations)
+        if @object.class.method_defined?(:reflect_on_all_validations)
           attribute_sym = attribute.to_s.sub(/_id$/, '').to_sym
           @object.class.reflect_on_all_validations.any? do |validation|
             validation.macro == :validates_presence_of && validation.name == attribute_sym
