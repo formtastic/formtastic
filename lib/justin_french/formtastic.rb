@@ -105,7 +105,7 @@ module JustinFrench #:nodoc:
       def input(method, options = {})
         raise NoMethodError unless @object.respond_to?(method)
         
-        options[:required] = required(method, options[:required])
+        options[:required] = method_required?(method, options[:required])
         options[:label] ||= method.to_s.humanize
         options[:as] ||= default_input_type(@object, method)
         input_method = "#{options[:as]}_input"
@@ -115,19 +115,6 @@ module JustinFrench #:nodoc:
         content += inline_hints(method, options)
         
         return @template.content_tag(:li, content, list_item_html_attributes(method, options))
-      end
-      
-      def required(attribute, required_option)
-        if @object.class.method_defined?(:reflect_on_all_validations)
-          attribute_sym = attribute.to_s.sub(/_id$/, '').to_sym
-          @object.class.reflect_on_all_validations.any? do |validation|
-            validation.macro == :validates_presence_of && validation.name == attribute_sym
-          end
-        elsif required_option.nil?
-           @@all_fields_required_by_default
-         else
-           required_option
-        end
       end
       
       # Creates a fieldset and ol tag wrapping for form inputs as list items.  Example:
@@ -194,12 +181,33 @@ module JustinFrench #:nodoc:
       
       protected
       
-      
       def save_or_create_commit_button_text #:nodoc:
         prefix = @object.new_record? ? "Create" : "Save"
         "#{prefix} #{@object_name.humanize}"
       end
       
+      # Determins if the attribute (eg :title) should be considered required or not.
+      #
+      # * if the :required option was provided in the options hash, the true/false value will be 
+      #   returned immediately, allowing the view to override any guesswork that follows:
+      # * if the :required option isn't provided in the options hash, and the ValidationReflection 
+      #   plugin is installed (http://github.com/redinger/validation_reflection), true is returned
+      #   if the validates_presence_of macro has been used in the class for this attribute, or false
+      #   otherwise.
+      # * if the :required option isn't provided, and the plugin isn't available, the value of the
+      #   configuration option @@all_fields_required_by_default is used.
+      def method_required?(attribute, required_option) #:nodoc:
+        return required_option unless required_option.nil?
+        
+        if @object.class.method_defined?(:reflect_on_all_validations)
+          attribute_sym = attribute.to_s.sub(/_id$/, '').to_sym
+          @object.class.reflect_on_all_validations.any? do |validation|
+            validation.macro == :validates_presence_of && validation.name == attribute_sym
+          end
+        else
+          @@all_fields_required_by_default
+        end
+      end
       
       # Outputs a label and a select box containing options from the parent (belongs_to) association.
       #

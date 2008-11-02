@@ -165,6 +165,10 @@ end
 </pre>
 
 
+h2. Dependencies
+
+None! But if you have the "ValidationReflection":http://github.com/redinger/validation_reflection plugin is installed, you won't have to specify the :required option (it checks the validations on the model instead).
+
 
 h2. What about Stylesheets?
 

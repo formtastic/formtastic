@@ -165,6 +165,10 @@ describe 'Formtastic' do
         
         describe 'when true' do
           
+          before do
+            @new_post.class.should_not_receive(:reflect_on_all_validations)
+          end
+          
           it 'should set a "required" class' do
             _erbout = ''
             semantic_form_for(@new_post) do |builder| 
@@ -186,6 +190,10 @@ describe 'Formtastic' do
         end
         
         describe 'when false' do
+          
+          before do
+            @new_post.class.should_not_receive(:reflect_on_all_validations)
+          end
           
           it 'should set an "optional" class' do
             _erbout = ''
@@ -210,15 +218,17 @@ describe 'Formtastic' do
         describe 'when not provided' do
           
           describe 'and the validation reflection plugin is available' do
-          
+            
+            before do
+              @new_post.class.stub!(:method_defined?).with(:reflect_on_all_validations).and_return(true)
+            end
+            
             describe 'and validates_presence_of was called for the method' do
               
               before do
-                @new_post.class.stub!(:reflect_on_all_validations).and_return([
+                @new_post.class.should_receive(:reflect_on_all_validations).and_return([
                   mock('MacroReflection', :macro => :validates_presence_of, :name => :title)
                 ])
-                @new_post.class.stub!(:method_defined?).with(:reflect_on_all_validations).and_return(true)
-                @new_post.class.should_receive(:reflect_on_all_validations)
               end
               
               it 'should be required' do
@@ -235,11 +245,9 @@ describe 'Formtastic' do
             describe 'and validates_presence_of was not called for the method' do
               
               before do
-                @new_post.class.stub!(:reflect_on_all_validations).and_return([])
-                @new_post.class.stub!(:method_defined?).with(:reflect_on_all_validations).and_return(true)
-                @new_post.class.should_receive(:reflect_on_all_validations)
+                @new_post.class.should_receive(:reflect_on_all_validations).and_return([])
               end
-              
+                         
               it 'should not be required' do
                 _erbout = ''
                 semantic_form_for(@new_post) do |builder| 
