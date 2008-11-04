@@ -782,7 +782,7 @@ describe 'Formtastic' do
         @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
       end
       
-      it 'should have a text class on the wrapper' do
+      it 'should have a boolean class on the wrapper' do
         _erbout = ''
         semantic_form_for(@new_post) do |builder|
           _erbout += builder.input :allow_comments, :as => :boolean
@@ -790,7 +790,7 @@ describe 'Formtastic' do
         _erbout.should have_tag('form li.boolean')
       end
       
-      it 'should have a post_title_input id on the wrapper' do
+      it 'should have a post_allow_comments_input id on the wrapper' do
         _erbout = ''
         semantic_form_for(@new_post) do |builder|
           _erbout += builder.input :allow_comments, :as => :boolean
@@ -798,7 +798,7 @@ describe 'Formtastic' do
         _erbout.should have_tag('form li#post_allow_comments_input')
       end
       
-      it 'should generate a label, containing the input' do
+      it 'should generate a label containing the input' do
         _erbout = ''
         semantic_form_for(@new_post) do |builder|
           _erbout += builder.input :allow_comments, :as => :boolean
