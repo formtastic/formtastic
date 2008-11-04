@@ -435,28 +435,7 @@ describe 'Formtastic' do
         end
         
       end
-      
-      # these original specs will eventually go away, once the coverage is up in the new stuff
-      it 'generates a text field with label' do
-        _erbout = ''
-        semantic_form_for(@new_post) do |builder|
-          _erbout += builder.input :title
-        end
-        _erbout.should have_tag("form li label")
-        _erbout.should have_tag("form li input")
-      end
-      
-      it 'generates a textarea with label' do
-        _erbout = ''
-        @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :text, :limit => nil))
-        
-        semantic_form_for(@new_post) do |builder|
-          _erbout += builder.input :body
-        end
-        _erbout.should have_tag("form li label")
-        _erbout.should have_tag("form li textarea")
-      end
-      
+            
     end
 
     def should_have_maxlength_matching_column_limit(method_name, as, column_type)
