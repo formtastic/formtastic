@@ -369,22 +369,30 @@ describe 'Formtastic' do
       
       describe ':label option' do
         
-        it 'should default the method name when not specified and pass it down to the label tag' do
-          _erbout = ''
-          @new_post.stub!(:meta_description) # a two word method name
-          semantic_form_for(@new_post) do |builder| 
-            _erbout += builder.input(:meta_description)
+        describe 'when provided' do
+        
+          it 'should be passed down to the label tag' do
+            _erbout = ''
+            semantic_form_for(@new_post) do |builder| 
+              _erbout += builder.input(:title, :label => "Kustom")
+            end
+            _erbout.should have_tag("form li label", /Kustom/)
           end
-          _erbout.should have_tag("form li label", /#{'meta_description'.humanize}/)
-          _erbout.should have_tag("form li label", /Meta description/)
+          
         end
         
-        it 'should be passed down to the label tag when specified' do
-          _erbout = ''
-          semantic_form_for(@new_post) do |builder| 
-            _erbout += builder.input(:title, :label => "Kustom")
+        describe 'when not provided' do
+        
+          it 'should default the method name, passing it down to the label tag' do
+            _erbout = ''
+            @new_post.stub!(:meta_description) # a two word method name
+            semantic_form_for(@new_post) do |builder| 
+              _erbout += builder.input(:meta_description)
+            end
+            _erbout.should have_tag("form li label", /#{'meta_description'.humanize}/)
+            _erbout.should have_tag("form li label", /Meta description/)
           end
-          _erbout.should have_tag("form li label", /Kustom/)
+          
         end
         
       end
