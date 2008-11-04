@@ -542,6 +542,9 @@ describe 'Formtastic' do
     end
     
     describe '#select_input' do
+      
+      it 'should have some specs!'
+      
     end
     
     describe '#radio_input' do
@@ -703,21 +706,27 @@ describe 'Formtastic' do
     end
     
     describe '#text_input' do
+      it 'should have some specs!'
     end
     
     describe '#date_input' do
+      it 'should have some specs!'
     end
     
     describe '#datetime_input' do
+      it 'should have some specs!'
     end
     
     describe '#time_input' do
+      it 'should have some specs!'
     end
     
     describe '#boolean_input' do
+      it 'should have some specs!'
     end
     
     describe '#boolean_select_input' do
+      it 'should have some specs!'
     end
         
     describe '#numeric_input' do
