@@ -479,7 +479,7 @@ describe 'Formtastic' do
       _erbout.should have_tag("form li input[@size='#{default_size}']")
     end
     
-    describe '#string_input' do
+    describe 'as a string input' do
       
       setup do 
         @new_post.stub!(:title)
@@ -541,13 +541,13 @@ describe 'Formtastic' do
       
     end
     
-    describe '#select_input' do
+    describe 'as a select input for belongs_to associations' do
       
       it 'should have some specs!'
       
     end
     
-    describe '#radio_input' do
+    describe 'as a radio button set for belongs_to associations' do
       
       setup do 
         @fred = mock('user')
@@ -643,7 +643,7 @@ describe 'Formtastic' do
             
     end
     
-    describe '#password_input' do
+    describe 'as a password' do
       
       setup do 
         @new_post.stub!(:password_hash)
@@ -705,31 +705,31 @@ describe 'Formtastic' do
       
     end
     
-    describe '#text_input' do
+    describe 'as a text input' do
       it 'should have some specs!'
     end
     
-    describe '#date_input' do
+    describe 'as a date input' do
       it 'should have some specs!'
     end
     
-    describe '#datetime_input' do
+    describe 'as a datetime input' do
       it 'should have some specs!'
     end
     
-    describe '#time_input' do
+    describe 'as a time input' do
       it 'should have some specs!'
     end
     
-    describe '#boolean_input' do
+    describe 'as a boolean input' do
       it 'should have some specs!'
     end
     
-    describe '#boolean_select_input' do
+    describe 'as a boolean select input' do
       it 'should have some specs!'
     end
         
-    describe '#numeric_input' do
+    describe 'as a numeric input' do
       
       setup do 
         @new_post.stub!(:comments_count)
