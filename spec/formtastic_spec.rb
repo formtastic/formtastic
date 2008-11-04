@@ -1,6 +1,61 @@
 require File.dirname(__FILE__) + '/test_helper'
 require 'justin_french/formtastic' 
 
+module FormtasticSpecHelper
+  
+  def should_have_maxlength_matching_column_limit(method_name, as, column_type)
+    _erbout = ''
+    semantic_form_for(@new_post) do |builder|
+      _erbout += builder.input method_name, :as => as
+    end
+    @new_post.column_for_attribute(method_name).limit.should == 50
+    _erbout.should have_tag("form li input[@maxlength='#{@new_post.column_for_attribute(method_name).limit}']")
+  end
+  
+  def should_use_default_text_size_for_columns_longer_than_default(method_name, as, column_type)
+    default_size = JustinFrench::Formtastic::SemanticFormBuilder::DEFAULT_TEXT_FIELD_SIZE
+    column_limit_larger_than_default = default_size * 2
+    @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => column_type, :limit => column_limit_larger_than_default))
+    _erbout = ''
+    semantic_form_for(@new_post) do |builder|
+      _erbout += builder.input method_name, :as => as
+    end
+    _erbout.should have_tag("form li input[@size='#{default_size}']")
+  end
+  
+  def should_use_the_column_size_for_columns_shorter_than_default(method_name, as, column_type)
+    default_size = JustinFrench::Formtastic::SemanticFormBuilder::DEFAULT_TEXT_FIELD_SIZE
+    column_limit_shorter_than_default = 1
+    @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => column_type, :limit => column_limit_shorter_than_default))
+    _erbout = ''
+    semantic_form_for(@new_post) do |builder|
+      _erbout += builder.input method_name, :as => as
+    end
+    _erbout.should have_tag("form li input[@size='#{column_limit_shorter_than_default}']")
+  end
+  
+  def should_use_default_size_for_methods_without_columns(as)
+    default_size = JustinFrench::Formtastic::SemanticFormBuilder::DEFAULT_TEXT_FIELD_SIZE
+    @new_post.stub!(:method_without_column)
+    _erbout = ''
+    semantic_form_for(@new_post) do |builder|
+      _erbout += builder.input :method_without_column, :as => as
+    end
+    _erbout.should have_tag("form li input[@size='#{default_size}']")
+  end
+  
+  def default_input_type(column_type, column_name = :generic_column_name)
+    _erbout = ''
+    @new_post.stub!(column_name)
+    @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => column_type))
+    semantic_form_for(@new_post) do |builder| 
+      @default_type = builder.send(:default_input_type, @new_post, column_name)
+    end
+    return @default_type
+  end
+  
+end
+
 describe 'Formtastic' do
   include ActionView::Helpers::FormHelper
   include ActionView::Helpers::FormTagHelper
@@ -127,7 +182,9 @@ describe 'Formtastic' do
   end
 
   describe 'SemanticFormBuilder' do
-
+    
+    include FormtasticSpecHelper
+    
     describe '#input' do
       
       before do 
@@ -276,16 +333,6 @@ describe 'Formtastic' do
         describe ':as option' do
 
           describe 'when not provided' do
-
-            def default_input_type(column_type, column_name = :generic_column_name)
-              _erbout = ''
-              @new_post.stub!(column_name)
-              @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => column_type))
-              semantic_form_for(@new_post) do |builder| 
-                @default_type = builder.send(:default_input_type, @new_post, column_name)
-              end
-              return @default_type
-            end
 
             it 'should raise an error (and ask for the :as option to be specified) for methods that don\'t have a column in the database' do
               _erbout = ''
@@ -443,47 +490,6 @@ describe 'Formtastic' do
         
       end
             
-    end
-
-    def should_have_maxlength_matching_column_limit(method_name, as, column_type)
-      _erbout = ''
-      semantic_form_for(@new_post) do |builder|
-        _erbout += builder.input method_name, :as => as
-      end
-      @new_post.column_for_attribute(method_name).limit.should == 50
-      _erbout.should have_tag("form li input[@maxlength='#{@new_post.column_for_attribute(method_name).limit}']")
-    end
-    
-    def should_use_default_text_size_for_columns_longer_than_default(method_name, as, column_type)
-      default_size = JustinFrench::Formtastic::SemanticFormBuilder::DEFAULT_TEXT_FIELD_SIZE
-      column_limit_larger_than_default = default_size * 2
-      @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => column_type, :limit => column_limit_larger_than_default))
-      _erbout = ''
-      semantic_form_for(@new_post) do |builder|
-        _erbout += builder.input method_name, :as => as
-      end
-      _erbout.should have_tag("form li input[@size='#{default_size}']")
-    end
-    
-    def should_use_the_column_size_for_columns_shorter_than_default(method_name, as, column_type)
-      default_size = JustinFrench::Formtastic::SemanticFormBuilder::DEFAULT_TEXT_FIELD_SIZE
-      column_limit_shorter_than_default = 1
-      @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => column_type, :limit => column_limit_shorter_than_default))
-      _erbout = ''
-      semantic_form_for(@new_post) do |builder|
-        _erbout += builder.input method_name, :as => as
-      end
-      _erbout.should have_tag("form li input[@size='#{column_limit_shorter_than_default}']")
-    end
-    
-    def should_use_default_size_for_methods_without_columns(as)
-      default_size = JustinFrench::Formtastic::SemanticFormBuilder::DEFAULT_TEXT_FIELD_SIZE
-      @new_post.stub!(:method_without_column)
-      _erbout = ''
-      semantic_form_for(@new_post) do |builder|
-        _erbout += builder.input :method_without_column, :as => as
-      end
-      _erbout.should have_tag("form li input[@size='#{default_size}']")
     end
     
     describe 'as a string input' do
