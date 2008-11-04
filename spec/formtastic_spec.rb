@@ -136,119 +136,129 @@ describe 'Formtastic' do
         @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
       end
       
-      it 'should require the first argument (the method on form\'s object)' do
-        _erbout = ''
-        lambda { 
+      describe 'arguments and options' do
+        
+        it 'should require the first argument (the method on form\'s object)' do
+          _erbout = ''
+          lambda { 
+            semantic_form_for(@new_post) do |builder| 
+              builder.input # no args passed in at all
+            end
+          }.should raise_error(ArgumentError)
+        end
+        
+        it 'should raise an error when the object does not respond to the method supplied in the first argument' do
+          _erbout = ''
           semantic_form_for(@new_post) do |builder| 
-            builder.input # no args passed in at all
-          end
-        }.should raise_error(ArgumentError)
-      end
-      
-      it 'should raise an error when the object does not respond to the method' do
-        _erbout = ''
-        semantic_form_for(@new_post) do |builder| 
-          lambda { builder.input :method_on_post_that_doesnt_exist }.should raise_error(NoMethodError)
-        end 
-      end
-      
-      it 'should create a list item for each input' do
-        _erbout = ''
-        semantic_form_for(@new_post) do |builder| 
-          _erbout += builder.input(:title)
-          _erbout += builder.input(:body)
-        end
-         _erbout.should have_tag('form li', :count => 2)
-      end
-      
-      describe ':required option' do
-        
-        describe 'when true' do
-          
-          before do
-            @new_post.class.should_not_receive(:reflect_on_all_validations)
-          end
-          
-          it 'should set a "required" class' do
-            _erbout = ''
-            semantic_form_for(@new_post) do |builder| 
-              _erbout += builder.input(:title, :required => true)
-            end
-            _erbout.should_not have_tag('form li.optional')
-            _erbout.should have_tag('form li.required')
-          end
-          
-          it 'should append the "required" string to the label' do
-            string = JustinFrench::Formtastic::SemanticFormBuilder.required_string = " required yo!" # ensure there's something in the string 
-            _erbout = ''
-            semantic_form_for(@new_post) do |builder| 
-              _erbout += builder.input(:title, :required => true)
-            end
-            _erbout.should have_tag('form li.required label', /#{string}$/)
-          end
-        
+            lambda { builder.input :method_on_post_that_doesnt_exist }.should raise_error(NoMethodError)
+          end 
         end
         
-        describe 'when false' do
-          
-          before do
-            @new_post.class.should_not_receive(:reflect_on_all_validations)
-          end
-          
-          it 'should set an "optional" class' do
-            _erbout = ''
-            semantic_form_for(@new_post) do |builder| 
-              _erbout += builder.input(:title, :required => false)
-            end
-            _erbout.should_not have_tag('form li.required')
-            _erbout.should have_tag('form li.optional')
-          end
-          
-          it 'should append the "optional" string to the label' do 
-            string = JustinFrench::Formtastic::SemanticFormBuilder.optional_string = " optional yo!" # ensure there's something in the string 
-            _erbout = ''
-            semantic_form_for(@new_post) do |builder| 
-              _erbout += builder.input(:title, :required => false)
-            end
-            _erbout.should have_tag('form li.optional label', /#{string}$/)
-          end
-        
-        end
-        
-        describe 'when not provided' do
-          
-          describe 'and the validation reflection plugin is available' do
-            
+        describe ':required option' do
+
+          describe 'when true' do
+
             before do
-              @new_post.class.stub!(:method_defined?).with(:reflect_on_all_validations).and_return(true)
+              @new_post.class.should_not_receive(:reflect_on_all_validations)
             end
-            
-            describe 'and validates_presence_of was called for the method' do
-              
-              before do
-                @new_post.class.should_receive(:reflect_on_all_validations).and_return([
-                  mock('MacroReflection', :macro => :validates_presence_of, :name => :title)
-                ])
+
+            it 'should set a "required" class' do
+              _erbout = ''
+              semantic_form_for(@new_post) do |builder| 
+                _erbout += builder.input(:title, :required => true)
               end
-              
-              it 'should be required' do
-                _erbout = ''
-                semantic_form_for(@new_post) do |builder| 
-                  _erbout += builder.input(:title)
+              _erbout.should_not have_tag('form li.optional')
+              _erbout.should have_tag('form li.required')
+            end
+
+            it 'should append the "required" string to the label' do
+              string = JustinFrench::Formtastic::SemanticFormBuilder.required_string = " required yo!" # ensure there's something in the string 
+              _erbout = ''
+              semantic_form_for(@new_post) do |builder| 
+                _erbout += builder.input(:title, :required => true)
+              end
+              _erbout.should have_tag('form li.required label', /#{string}$/)
+            end
+
+          end
+
+          describe 'when false' do
+
+            before do
+              @new_post.class.should_not_receive(:reflect_on_all_validations)
+            end
+
+            it 'should set an "optional" class' do
+              _erbout = ''
+              semantic_form_for(@new_post) do |builder| 
+                _erbout += builder.input(:title, :required => false)
+              end
+              _erbout.should_not have_tag('form li.required')
+              _erbout.should have_tag('form li.optional')
+            end
+
+            it 'should append the "optional" string to the label' do 
+              string = JustinFrench::Formtastic::SemanticFormBuilder.optional_string = " optional yo!" # ensure there's something in the string 
+              _erbout = ''
+              semantic_form_for(@new_post) do |builder| 
+                _erbout += builder.input(:title, :required => false)
+              end
+              _erbout.should have_tag('form li.optional label', /#{string}$/)
+            end
+
+          end
+
+          describe 'when not provided' do
+
+            describe 'and the validation reflection plugin is available' do
+
+              before do
+                @new_post.class.stub!(:method_defined?).with(:reflect_on_all_validations).and_return(true)
+              end
+
+              describe 'and validates_presence_of was called for the method' do
+
+                before do
+                  @new_post.class.should_receive(:reflect_on_all_validations).and_return([
+                    mock('MacroReflection', :macro => :validates_presence_of, :name => :title)
+                  ])
                 end
-                _erbout.should have_tag('form li.required')
-                _erbout.should_not have_tag('form li.optional')
+
+                it 'should be required' do
+                  _erbout = ''
+                  semantic_form_for(@new_post) do |builder| 
+                    _erbout += builder.input(:title)
+                  end
+                  _erbout.should have_tag('form li.required')
+                  _erbout.should_not have_tag('form li.optional')
+                end
+
               end
-                            
+
+              describe 'and validates_presence_of was not called for the method' do
+
+                before do
+                  @new_post.class.should_receive(:reflect_on_all_validations).and_return([])
+                end
+
+                it 'should not be required' do
+                  _erbout = ''
+                  semantic_form_for(@new_post) do |builder| 
+                    _erbout += builder.input(:title)
+                  end
+                  _erbout.should_not have_tag('form li.required')
+                  _erbout.should have_tag('form li.optional')
+                end
+
+              end
+
             end
-            
-            describe 'and validates_presence_of was not called for the method' do
-              
-              before do
-                @new_post.class.should_receive(:reflect_on_all_validations).and_return([])
-              end
-                         
-              it 'should not be required' do
+
+            describe 'and the validation reflection plugin is not available' do
+
+              it 'should use the default value' do
+                JustinFrench::Formtastic::SemanticFormBuilder.all_fields_required_by_default.should == true
+                JustinFrench::Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
                 _erbout = ''
                 semantic_form_for(@new_post) do |builder| 
                   _erbout += builder.input(:title)
@@ -256,182 +266,179 @@ describe 'Formtastic' do
                 _erbout.should_not have_tag('form li.required')
                 _erbout.should have_tag('form li.optional')
               end
-              
+
             end
-            
-          end
-          
-          describe 'and the validation reflection plugin is not available' do
-            
-            it 'should use the default value' do
-              JustinFrench::Formtastic::SemanticFormBuilder.all_fields_required_by_default.should == true
-              JustinFrench::Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
+
+          end        
+
+        end
+
+        describe ':as option' do
+
+          describe 'when not provided' do
+
+            def default_input_type(column_type, column_name = :generic_column_name)
               _erbout = ''
+              @new_post.stub!(column_name)
+              @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => column_type))
+              semantic_form_for(@new_post) do |builder| 
+                @default_type = builder.send(:default_input_type, @new_post, column_name)
+              end
+              return @default_type
+            end
+
+            it 'should raise an error (and ask for the :as option to be specified) for methods that don\'t have a column in the database' do
+              _erbout = ''
+              @new_post.stub!(:method_without_a_database_column)
+              @new_post.stub!(:column_for_attribute).and_return(nil)
+              semantic_form_for(@new_post) do |builder| 
+                lambda { 
+                  builder.send(:default_input_type, @new_post, :method_without_a_database_column) 
+                }.should raise_error("Cannot guess an input type for 'method_without_a_database_column' - please set :as option")
+              end
+            end
+
+            it 'should default to :select for column names ending in "_id"' do
+              default_input_type(:integer, :user_id).should == :select
+              default_input_type(:integer, :section_id).should == :select
+            end
+
+            it 'should default to :password for :string column types with "password" in the method name' do
+              default_input_type(:string, :password).should == :password
+              default_input_type(:string, :hashed_password).should == :password
+              default_input_type(:string, :password_hash).should == :password
+            end
+
+            it 'should default to :text for :text column types' do
+              default_input_type(:text).should == :text
+            end
+
+            it 'should default to :date for :date column types' do
+              default_input_type(:date).should == :date
+            end
+
+            it 'should default to :datetime for :datetime and :timestamp column types' do
+              default_input_type(:datetime).should == :datetime
+              default_input_type(:timestamp).should == :datetime
+            end
+
+            it 'should default to :time for :time column types' do
+              default_input_type(:time).should == :time
+            end
+
+            it 'should default to :boolean for :boolean column types' do
+              default_input_type(:boolean).should == :boolean
+            end
+
+            it 'should default to :string for :string column types' do
+              default_input_type(:string).should == :string
+            end
+
+            it 'should default to :numeric for :integer, :float and :decimal column types' do
+              default_input_type(:integer).should == :numeric
+              default_input_type(:float).should == :numeric
+              default_input_type(:decimal).should == :numeric
+            end
+
+          end
+
+          it 'should call the corresponding input method' do
+            [:select, :radio, :password, :text, :date, :datetime, :time, :boolean, :boolean_select, :string, :numeric].each do |input_style|
+              _erbout = ''
+              @new_post.stub!(:generic_column_name)
+              @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
+              semantic_form_for(@new_post) do |builder| 
+                builder.should_receive(:"#{input_style}_input").once.and_return("fake HTML output from #input")
+                _erbout += builder.input(:generic_column_name, :as => input_style)
+              end
+            end
+          end
+
+        end
+
+        describe ':label option' do
+
+          describe 'when provided' do
+
+            it 'should be passed down to the label tag' do
+              _erbout = ''
+              semantic_form_for(@new_post) do |builder| 
+                _erbout += builder.input(:title, :label => "Kustom")
+              end
+              _erbout.should have_tag("form li label", /Kustom/)
+            end
+
+          end
+
+          describe 'when not provided' do
+
+            it 'should default the method name, passing it down to the label tag' do
+              _erbout = ''
+              @new_post.stub!(:meta_description) # a two word method name
+              semantic_form_for(@new_post) do |builder| 
+                _erbout += builder.input(:meta_description)
+              end
+              _erbout.should have_tag("form li label", /#{'meta_description'.humanize}/)
+              _erbout.should have_tag("form li label", /Meta description/)
+            end
+
+          end
+
+        end
+
+        describe ':hint option' do
+
+          describe 'when provided' do
+
+            it 'should be passed down to the paragraph tag' do
+              _erbout = ''
+              hint_text = "this is the title of the post"
+              semantic_form_for(@new_post) do |builder| 
+                _erbout += builder.input(:title, :hint => hint_text)
+              end
+              _erbout.should have_tag("form li p.inline-hints", hint_text)
+            end
+
+          end
+
+          describe 'when not provided' do
+
+            it 'should not render a hint paragraph' do
+              _erbout = ''
+              hint_text = "this is the title of the post"
               semantic_form_for(@new_post) do |builder| 
                 _erbout += builder.input(:title)
               end
-              _erbout.should_not have_tag('form li.required')
-              _erbout.should have_tag('form li.optional')
+              _erbout.should_not have_tag("form li p.inline-hints")
             end
-          
-          end
-          
-        end        
-        
-      end
-      
-      describe ':as option' do
-        
-        describe 'when not provided' do
-          
-          def default_input_type(column_type, column_name = :generic_column_name)
-            _erbout = ''
-            @new_post.stub!(column_name)
-            @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => column_type))
-            semantic_form_for(@new_post) do |builder| 
-              @default_type = builder.send(:default_input_type, @new_post, column_name)
-            end
-            return @default_type
-          end
-          
-          it 'should raise an error (and ask for the :as option to be specified) for methods that don\'t have a column in the database' do
-            _erbout = ''
-            @new_post.stub!(:method_without_a_database_column)
-            @new_post.stub!(:column_for_attribute).and_return(nil)
-            semantic_form_for(@new_post) do |builder| 
-              lambda { 
-                builder.send(:default_input_type, @new_post, :method_without_a_database_column) 
-              }.should raise_error("Cannot guess an input type for 'method_without_a_database_column' - please set :as option")
-            end
+
           end
 
-          it 'should default to :select for column names ending in "_id"' do
-            default_input_type(:integer, :user_id).should == :select
-            default_input_type(:integer, :section_id).should == :select
-          end
-
-          it 'should default to :password for :string column types with "password" in the method name' do
-            default_input_type(:string, :password).should == :password
-            default_input_type(:string, :hashed_password).should == :password
-            default_input_type(:string, :password_hash).should == :password
-          end
-
-          it 'should default to :text for :text column types' do
-            default_input_type(:text).should == :text
-          end
-
-          it 'should default to :date for :date column types' do
-            default_input_type(:date).should == :date
-          end
-
-          it 'should default to :datetime for :datetime and :timestamp column types' do
-            default_input_type(:datetime).should == :datetime
-            default_input_type(:timestamp).should == :datetime
-          end
-
-          it 'should default to :time for :time column types' do
-            default_input_type(:time).should == :time
-          end
-
-          it 'should default to :boolean for :boolean column types' do
-            default_input_type(:boolean).should == :boolean
-          end
-
-          it 'should default to :string for :string column types' do
-            default_input_type(:string).should == :string
-          end
-
-          it 'should default to :numeric for :integer, :float and :decimal column types' do
-            default_input_type(:integer).should == :numeric
-            default_input_type(:float).should == :numeric
-            default_input_type(:decimal).should == :numeric
-          end
-          
-        end
-        
-        it 'should call the corresponding input method' do
-          [:select, :radio, :password, :text, :date, :datetime, :time, :boolean, :boolean_select, :string, :numeric].each do |input_style|
-            _erbout = ''
-            @new_post.stub!(:generic_column_name)
-            @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
-            semantic_form_for(@new_post) do |builder| 
-              builder.should_receive(:"#{input_style}_input").once.and_return("fake HTML output from #input")
-              _erbout += builder.input(:generic_column_name, :as => input_style)
-            end
-          end
         end
         
       end
       
-      describe ':label option' do
-        
-        describe 'when provided' do
-        
-          it 'should be passed down to the label tag' do
-            _erbout = ''
-            semantic_form_for(@new_post) do |builder| 
-              _erbout += builder.input(:title, :label => "Kustom")
-            end
-            _erbout.should have_tag("form li label", /Kustom/)
+      describe 'rendering as any type of input' do
+
+        it 'should create a list item for each input' do
+          _erbout = ''
+          semantic_form_for(@new_post) do |builder| 
+            _erbout += builder.input(:title)
+            _erbout += builder.input(:body)
           end
-          
+           _erbout.should have_tag('form li', :count => 2)
         end
         
-        describe 'when not provided' do
-        
-          it 'should default the method name, passing it down to the label tag' do
-            _erbout = ''
-            @new_post.stub!(:meta_description) # a two word method name
-            semantic_form_for(@new_post) do |builder| 
-              _erbout += builder.input(:meta_description)
-            end
-            _erbout.should have_tag("form li label", /#{'meta_description'.humanize}/)
-            _erbout.should have_tag("form li label", /Meta description/)
+        describe 'inline errors' do
+
+          describe 'when there are errors on the object for this method' do
+            it "should include inline errors when found on the method"
           end
-          
-        end
-        
-      end
-      
-      describe ':hint option' do
-        
-        describe 'when provided' do
-          
-          it 'should be passed down to the paragraph tag' do
-            _erbout = ''
-            hint_text = "this is the title of the post"
-            semantic_form_for(@new_post) do |builder| 
-              _erbout += builder.input(:title, :hint => hint_text)
-            end
-            _erbout.should have_tag("form li p.inline-hints", hint_text)
+
+          describe 'when there are no errors' do 
+            it "it should not include the errors"
           end
-        
-        end
-        
-        describe 'when not provided' do
-          
-          it 'should not render a hint paragraph' do
-            _erbout = ''
-            hint_text = "this is the title of the post"
-            semantic_form_for(@new_post) do |builder| 
-              _erbout += builder.input(:title)
-            end
-            _erbout.should_not have_tag("form li p.inline-hints")
-          end
-          
-        end
-        
-            
-      end
-      
-      describe 'inline errors' do
-        
-        describe 'when there are errors on the object for this method' do
-          it "should include inline errors when found on the method"
-        end
-        
-        describe 'when there are no errors' do 
-          it "it should not include the errors"
+
         end
         
       end
