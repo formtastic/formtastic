@@ -719,7 +719,48 @@ describe 'Formtastic' do
     end
     
     describe 'as a text input' do
-      it 'should have some specs!'
+
+      setup do 
+        @new_post.stub!(:body)
+        @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :text))
+      end
+      
+      it 'should have a text class on the wrapper' do
+        _erbout = ''
+        semantic_form_for(@new_post) do |builder|
+          _erbout += builder.input :body, :as => :text
+        end
+        _erbout.should have_tag('form li.text')
+      end
+      
+      it 'should have a post_title_input id on the wrapper' do
+        _erbout = ''
+        semantic_form_for(@new_post) do |builder|
+          _erbout += builder.input :body, :as => :text
+        end
+        _erbout.should have_tag('form li#post_body_input')
+      end
+      
+      it 'should generate a label for the input' do
+        _erbout = ''
+        semantic_form_for(@new_post) do |builder|
+          _erbout += builder.input :body, :as => :text
+        end
+        _erbout.should have_tag('form li label')
+        _erbout.should have_tag('form li label[@for="post_body"')
+        _erbout.should have_tag('form li label', /Body/)
+      end
+      
+      it 'should generate a text input' do
+        _erbout = ''
+        semantic_form_for(@new_post) do |builder|
+          _erbout += builder.input :body, :as => :text
+        end
+        _erbout.should have_tag('form li textarea')
+        _erbout.should have_tag('form li textarea#post_body')
+        _erbout.should have_tag('form li textarea[@name="post[body]"]')
+      end
+            
     end
     
     describe 'as a date input' do
