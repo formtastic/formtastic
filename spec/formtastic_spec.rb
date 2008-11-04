@@ -391,14 +391,32 @@ describe 'Formtastic' do
       
       describe ':hint option' do
         
-        it 'should be passed down to the paragraph tag when specified' do
-          _erbout = ''
-          hint_text = "this is the title of the post"
-          semantic_form_for(@new_post) do |builder| 
-            _erbout += builder.input(:title, :hint => hint_text)
+        describe 'when provided' do
+          
+          it 'should be passed down to the paragraph tag' do
+            _erbout = ''
+            hint_text = "this is the title of the post"
+            semantic_form_for(@new_post) do |builder| 
+              _erbout += builder.input(:title, :hint => hint_text)
+            end
+            _erbout.should have_tag("form li p.inline-hints", hint_text)
           end
-          _erbout.should have_tag("form li p.inline-hints", hint_text)
+        
         end
+        
+        describe 'when not provided' do
+          
+          it 'should not render a hint paragraph' do
+            _erbout = ''
+            hint_text = "this is the title of the post"
+            semantic_form_for(@new_post) do |builder| 
+              _erbout += builder.input(:title)
+            end
+            _erbout.should_not have_tag("form li p.inline-hints")
+          end
+          
+        end
+        
             
       end
       
