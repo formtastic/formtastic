@@ -776,7 +776,50 @@ describe 'Formtastic' do
     end
     
     describe 'as a boolean input' do
-      it 'should have some specs!'
+      
+      setup do 
+        @new_post.stub!(:allow_comments)
+        @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
+      end
+      
+      it 'should have a text class on the wrapper' do
+        _erbout = ''
+        semantic_form_for(@new_post) do |builder|
+          _erbout += builder.input :allow_comments, :as => :boolean
+        end
+        _erbout.should have_tag('form li.boolean')
+      end
+      
+      it 'should have a post_title_input id on the wrapper' do
+        _erbout = ''
+        semantic_form_for(@new_post) do |builder|
+          _erbout += builder.input :allow_comments, :as => :boolean
+        end
+        _erbout.should have_tag('form li#post_allow_comments_input')
+      end
+      
+      it 'should generate a label, containing the input' do
+        _erbout = ''
+        semantic_form_for(@new_post) do |builder|
+          _erbout += builder.input :allow_comments, :as => :boolean
+        end
+        _erbout.should have_tag('form li label')
+        _erbout.should have_tag('form li label[@for="post_allow_comments"')
+        _erbout.should have_tag('form li label', /Allow comments/)
+        _erbout.should have_tag('form li label input[@type="checkbox"]')
+      end
+      
+      it 'should generate a checkbox input' do
+        _erbout = ''
+        semantic_form_for(@new_post) do |builder|
+          _erbout += builder.input :allow_comments, :as => :boolean
+        end
+        _erbout.should have_tag('form li label input')
+        _erbout.should have_tag('form li label input#post_allow_comments')
+        _erbout.should have_tag('form li label input[@type="checkbox"]')
+        _erbout.should have_tag('form li label input[@name="post[allow_comments]"]')
+      end
+    
     end
     
     describe 'as a boolean select input' do
