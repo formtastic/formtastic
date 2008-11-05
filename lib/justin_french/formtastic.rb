@@ -399,7 +399,6 @@ module JustinFrench #:nodoc:
         )
       end
             
-       
       # Outputs a label containing a checkbox and the label text.  The label defaults to the column
       # name (method name) and can be altered with the :label option.
       def boolean_input(method, options)
@@ -414,17 +413,17 @@ module JustinFrench #:nodoc:
       # options.  The label text to the column name (method name), but can be altered with the 
       # :label option. Example:
       #
-      #  f.input :awesome, :as => :boolean_select, :true => "Yeah!", :false => "Nah!", :label => "Awesome?"
+      #  f.input :awesome, :as => :boolean_select, :true => "Yeah!", :false => "Nah!", :label => "Make this sucker public?"
       #
       # Returns something like:
       # 
       #  <li class="boolean_select required" id="post_public_input">
       #    <label for="post_public">
-      #      make this sucker public?<abbr title="required">*</abbr>
+      #      Make this sucker public?<abbr title="required">*</abbr>
       #    </label>
       #    <select id="post_public" name="post[public]">
-      #      <option value="1">hell yeah</option>
-      #      <option value="0">No</option>
+      #      <option value="1">Yeah!</option>
+      #      <option value="0">Nah!</option>
       #    </select>
       #  </li>
       #
