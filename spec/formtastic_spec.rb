@@ -465,7 +465,7 @@ describe 'Formtastic' do
         
       end
       
-      describe 'rendering as any type of input' do
+      describe ':as any type of input' do
 
         it 'should create a list item for each input' do
           _erbout = ''
@@ -489,445 +489,445 @@ describe 'Formtastic' do
         end
         
       end
-            
-    end
-    
-    describe 'as a string input' do
       
-      setup do 
-        @new_post.stub!(:title)
-        @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 50))
-      end
-      
-      it 'should have a string class on the wrapper' do
-        _erbout = ''
-        semantic_form_for(@new_post) do |builder|
-          _erbout += builder.input :title, :as => :string
-        end
-        _erbout.should have_tag('form li.string')
-      end
-      
-      it 'should have a post_title_input id on the wrapper' do
-        _erbout = ''
-        semantic_form_for(@new_post) do |builder|
-          _erbout += builder.input :title, :as => :string
-        end
-        _erbout.should have_tag('form li#post_title_input')
-      end
-      
-      it 'should generate a label for the input' do
-        _erbout = ''
-        semantic_form_for(@new_post) do |builder|
-          _erbout += builder.input :title, :as => :string
-        end
-        _erbout.should have_tag('form li label')
-        _erbout.should have_tag('form li label[@for="post_title"')
-        _erbout.should have_tag('form li label', /Title/)
-      end
-      
-      it 'should generate a text input' do
-        _erbout = ''
-        semantic_form_for(@new_post) do |builder|
-          _erbout += builder.input :title, :as => :string
-        end
-        _erbout.should have_tag('form li input')
-        _erbout.should have_tag('form li input#post_title')
-        _erbout.should have_tag('form li input[@type="text"]')
-        _erbout.should have_tag('form li input[@name="post[title]"]')
-      end
-      
-      it 'should have a maxlength matching the column limit' do
-        should_have_maxlength_matching_column_limit(:title, :string, :string)
-      end
-      
-      it 'should use DEFAULT_TEXT_FIELD_SIZE for columns longer than DEFAULT_TEXT_FIELD_SIZE' do
-        should_use_default_text_size_for_columns_longer_than_default(:title, :string, :string)
-      end
-      
-      it 'should use the column size for columns shorter than DEFAULT_TEXT_FIELD_SIZE' do
-        should_use_the_column_size_for_columns_shorter_than_default(:title, :string, :string)
-      end
-      
-      it 'should use DEFAULT_TEXT_FIELD_SIZE for methods without database columns' do
-        should_use_default_size_for_methods_without_columns(:string)
-      end
-      
-    end
-    
-    describe 'as a select input for belongs_to associations' do
-      
-      it 'should have some specs!'
-      
-    end
-    
-    describe 'as a radio button set for belongs_to associations' do
-      
-      setup do 
-        @fred = mock('user')
-        @fred.stub!(:to_label).and_return('Fred Smith')
-        @fred.stub!(:id).and_return(37)
-        
-        @bob = mock('user')
-        @bob.stub!(:to_label).and_return('Bob Rock')
-        @bob.stub!(:id).and_return(42)
-        
-        Author.stub!(:find).and_return([@fred, @bob])
-        
-        @new_post.stub!(:author).and_return(@bob)
-        @new_post.stub!(:author_id).and_return(@bob.id)
-        @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :integer, :limit => 255))
-      end
-      
-      it 'should have a radio class on the wrapper' do
-        _erbout = ''
-        semantic_form_for(@new_post) do |builder|
-          _erbout += builder.input :author_id, :as => :radio
-        end
-      end
-      
-      it 'should have a post_author_id_input id on the wrapper' do
-        _erbout = ''
-        semantic_form_for(@new_post) do |builder|
-          _erbout += builder.input :author_id, :as => :radio
-        end
-        _erbout.should have_tag('form li#post_author_id_input')
-      end
-      
-      it 'should generate a fieldset and legend containing label text for the input' do
-        _erbout = ''
-        semantic_form_for(@new_post) do |builder|
-          _erbout += builder.input :author_id, :as => :radio
-        end
-        _erbout.should have_tag('form li fieldset')
-        _erbout.should have_tag('form li fieldset legend')
-        _erbout.should have_tag('form li fieldset legend', /Author/)
-      end
-      
-      it 'should generate an ordered list with a list item for each choice' do
-        _erbout = ''
-        semantic_form_for(@new_post) do |builder|
-          _erbout += builder.input :author_id, :as => :radio
-        end
-        _erbout.should have_tag('form li fieldset ol')
-        _erbout.should have_tag('form li fieldset ol li', :count => Author.find(:all).size)
-      end
-      
-      describe "each choice" do
-      
-        it 'should contain a label for the radio input with a nested input and label text' do
-          _erbout = ''
-          semantic_form_for(@new_post) do |builder|
-            _erbout += builder.input :author_id, :as => :radio
-          end
-          Author.find(:all).each do |author|
-            _erbout.should have_tag('form li fieldset ol li label')
-            _erbout.should have_tag('form li fieldset ol li label', /#{author.to_label}/)
-            _erbout.should have_tag("form li fieldset ol li label[@for='post_author_id_#{author.id}']")
-            _erbout.should have_tag("form li fieldset ol li label input")
-          end
-        end
-        
-        it "should have a radio input" do
-          _erbout = ''
-          semantic_form_for(@new_post) do |builder|
-            _erbout += builder.input :author_id, :as => :radio
-          end
-          Author.find(:all).each do |author|
-            _erbout.should have_tag("form li fieldset ol li label input#post_author_id_#{author.id}")
-            _erbout.should have_tag("form li fieldset ol li label input[@type='radio']")
-            _erbout.should have_tag("form li fieldset ol li label input[@value='#{author.id}']")
-            _erbout.should have_tag("form li fieldset ol li label input[@name='post[author_id]']")
-          end
-        end
-        
-        it "should mark input as checked if it's the the existing choice" do
-          _erbout = ''
-          @new_post.author_id.should == @bob.id
-          @new_post.author.id.should == @bob.id
-          @new_post.author.should == @bob
-          semantic_form_for(@new_post) do |builder|
-            _erbout += builder.input :author_id, :as => :radio
-          end
-          #_erbout.should have_tag("form li fieldset ol li label input[@checked='checked']")
-          pending("this works fine when tested in a browser, so there must be something wrong with my mocks and stubs")
-        end
-      
-      end
-            
-    end
-    
-    describe 'as a password' do
-      
-      setup do 
-        @new_post.stub!(:password_hash)
-        @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 50))
-      end
-      
-      it 'should have a password class on the wrapper' do
-        _erbout = ''
-        semantic_form_for(@new_post) do |builder|
-          _erbout += builder.input :password_hash, :as => :password
-        end
-        _erbout.should have_tag('form li.password')
-      end
-      
-      it 'should have a post_title_input id on the wrapper' do
-        _erbout = ''
-        semantic_form_for(@new_post) do |builder|
-          _erbout += builder.input :password_hash, :as => :password
-        end
-        _erbout.should have_tag('form li#post_password_hash_input')
-      end
-      
-      it 'should generate a label for the input' do
-        _erbout = ''
-        semantic_form_for(@new_post) do |builder|
-          _erbout += builder.input :password_hash, :as => :password
-        end
-        _erbout.should have_tag('form li label')
-        _erbout.should have_tag('form li label[@for="post_password_hash"')
-        _erbout.should have_tag('form li label', /Password hash/)
-      end
-      
-      it 'should generate a password input' do
-        _erbout = ''
-        semantic_form_for(@new_post) do |builder|
-          _erbout += builder.input :password_hash, :as => :password
-        end
-        _erbout.should have_tag('form li input')
-        _erbout.should have_tag('form li input#post_password_hash')
-        _erbout.should have_tag('form li input[@type="password"]')
-        _erbout.should have_tag('form li input[@name="post[password_hash]"]')
-      end
-      
-      it 'should have a maxlength matching the column limit' do
-        should_have_maxlength_matching_column_limit(:password_hash, :password, :string)
-      end
-      
-      it 'should use DEFAULT_TEXT_FIELD_SIZE for columns longer than DEFAULT_TEXT_FIELD_SIZE' do
-        should_use_default_text_size_for_columns_longer_than_default(:password_hash, :password, :string)
-      end
-      
-      it 'should use the column size for columns shorter than DEFAULT_TEXT_FIELD_SIZE' do
-        should_use_the_column_size_for_columns_shorter_than_default(:password_hash, :password, :string)
-      end
-      
-      it 'should use DEFAULT_TEXT_FIELD_SIZE for methods without database columns' do
-        should_use_default_size_for_methods_without_columns(:password)
-      end
-      
-    end
-    
-    describe 'as a text input' do
+      describe ':as => :string' do
 
-      setup do 
-        @new_post.stub!(:body)
-        @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :text))
-      end
-      
-      it 'should have a text class on the wrapper' do
-        _erbout = ''
-        semantic_form_for(@new_post) do |builder|
-          _erbout += builder.input :body, :as => :text
+        setup do 
+          @new_post.stub!(:title)
+          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 50))
         end
-        _erbout.should have_tag('form li.text')
-      end
-      
-      it 'should have a post_title_input id on the wrapper' do
-        _erbout = ''
-        semantic_form_for(@new_post) do |builder|
-          _erbout += builder.input :body, :as => :text
+
+        it 'should have a string class on the wrapper' do
+          _erbout = ''
+          semantic_form_for(@new_post) do |builder|
+            _erbout += builder.input :title, :as => :string
+          end
+          _erbout.should have_tag('form li.string')
         end
-        _erbout.should have_tag('form li#post_body_input')
-      end
-      
-      it 'should generate a label for the input' do
-        _erbout = ''
-        semantic_form_for(@new_post) do |builder|
-          _erbout += builder.input :body, :as => :text
+
+        it 'should have a post_title_input id on the wrapper' do
+          _erbout = ''
+          semantic_form_for(@new_post) do |builder|
+            _erbout += builder.input :title, :as => :string
+          end
+          _erbout.should have_tag('form li#post_title_input')
         end
-        _erbout.should have_tag('form li label')
-        _erbout.should have_tag('form li label[@for="post_body"')
-        _erbout.should have_tag('form li label', /Body/)
-      end
-      
-      it 'should generate a text input' do
-        _erbout = ''
-        semantic_form_for(@new_post) do |builder|
-          _erbout += builder.input :body, :as => :text
+
+        it 'should generate a label for the input' do
+          _erbout = ''
+          semantic_form_for(@new_post) do |builder|
+            _erbout += builder.input :title, :as => :string
+          end
+          _erbout.should have_tag('form li label')
+          _erbout.should have_tag('form li label[@for="post_title"')
+          _erbout.should have_tag('form li label', /Title/)
         end
-        _erbout.should have_tag('form li textarea')
-        _erbout.should have_tag('form li textarea#post_body')
-        _erbout.should have_tag('form li textarea[@name="post[body]"]')
-      end
-            
-    end
-    
-    describe 'as a date input' do
-      it 'should have some specs!'
-    end
-    
-    describe 'as a datetime input' do
-      it 'should have some specs!'
-    end
-    
-    describe 'as a time input' do
-      it 'should have some specs!'
-    end
-    
-    describe 'as a boolean input' do
-      
-      setup do 
-        @new_post.stub!(:allow_comments)
-        @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
-      end
-      
-      it 'should have a boolean class on the wrapper' do
-        _erbout = ''
-        semantic_form_for(@new_post) do |builder|
-          _erbout += builder.input :allow_comments, :as => :boolean
+
+        it 'should generate a text input' do
+          _erbout = ''
+          semantic_form_for(@new_post) do |builder|
+            _erbout += builder.input :title, :as => :string
+          end
+          _erbout.should have_tag('form li input')
+          _erbout.should have_tag('form li input#post_title')
+          _erbout.should have_tag('form li input[@type="text"]')
+          _erbout.should have_tag('form li input[@name="post[title]"]')
         end
-        _erbout.should have_tag('form li.boolean')
-      end
-      
-      it 'should have a post_allow_comments_input id on the wrapper' do
-        _erbout = ''
-        semantic_form_for(@new_post) do |builder|
-          _erbout += builder.input :allow_comments, :as => :boolean
+
+        it 'should have a maxlength matching the column limit' do
+          should_have_maxlength_matching_column_limit(:title, :string, :string)
         end
-        _erbout.should have_tag('form li#post_allow_comments_input')
-      end
-      
-      it 'should generate a label containing the input' do
-        _erbout = ''
-        semantic_form_for(@new_post) do |builder|
-          _erbout += builder.input :allow_comments, :as => :boolean
+
+        it 'should use DEFAULT_TEXT_FIELD_SIZE for columns longer than DEFAULT_TEXT_FIELD_SIZE' do
+          should_use_default_text_size_for_columns_longer_than_default(:title, :string, :string)
         end
-        _erbout.should have_tag('form li label')
-        _erbout.should have_tag('form li label[@for="post_allow_comments"')
-        _erbout.should have_tag('form li label', /Allow comments/)
-        _erbout.should have_tag('form li label input[@type="checkbox"]')
-      end
-      
-      it 'should generate a checkbox input' do
-        _erbout = ''
-        semantic_form_for(@new_post) do |builder|
-          _erbout += builder.input :allow_comments, :as => :boolean
+
+        it 'should use the column size for columns shorter than DEFAULT_TEXT_FIELD_SIZE' do
+          should_use_the_column_size_for_columns_shorter_than_default(:title, :string, :string)
         end
-        _erbout.should have_tag('form li label input')
-        _erbout.should have_tag('form li label input#post_allow_comments')
-        _erbout.should have_tag('form li label input[@type="checkbox"]')
-        _erbout.should have_tag('form li label input[@name="post[allow_comments]"]')
-      end
-    
-    end
-    
-    describe 'as a boolean select input' do
-      
-      it 'should have some specs, but rspec has hijacked the @template.select method'
-      
-      #setup do 
-      #  @new_post.stub!(:allow_comments)
-      #  @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
-      #end
-      #
-      #it 'should have a boolean_select class on the wrapper' do
-      #  _erbout = ''
-      #  semantic_form_for(@new_post) do |builder|
-      #    _erbout += builder.input :allow_comments, :as => :boolean_select
-      #  end
-      #  _erbout.should have_tag('form li.boolean_select')
-      #end
-      #
-      #it 'should have a post_allow_comments_input id on the wrapper' do
-      #  _erbout = ''
-      #  semantic_form_for(@new_post) do |builder|
-      #    _erbout += builder.input :allow_comments, :as => :boolean_select
-      #  end
-      #  _erbout.should have_tag('form li#post_allow_comments_input')
-      #end
-      #
-      #it 'should generate a label containing the input' do
-      #  _erbout = ''
-      #  semantic_form_for(@new_post) do |builder|
-      #    _erbout += builder.input :allow_comments, :as => :boolean_select
-      #  end
-      #  _erbout.should have_tag('form li label')
-      #  _erbout.should have_tag('form li label[@for="post_allow_comments"')
-      #  _erbout.should have_tag('form li label', /Allow comments/)
-      #end
-      #
-      #it 'should generate a checkbox input' do
-      #  _erbout = ''
-      #  semantic_form_for(@new_post) do |builder|
-      #    _erbout += builder.input :allow_comments, :as => :boolean_select
-      #  end
-      #  _erbout.should have_tag('form li label input')
-      #  _erbout.should have_tag('form li label input#post_allow_comments')
-      #  _erbout.should have_tag('form li label input[@type="checkbox"]')
-      #  _erbout.should have_tag('form li label input[@name="post[allow_comments]"]')
-      #end
-      
-    end
-        
-    describe 'as a numeric input' do
-      
-      setup do 
-        @new_post.stub!(:comments_count)
-        @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :integer, :limit => 50))
-      end
-      
-      it 'should have a numeric class on the wrapper' do
-        _erbout = ''
-        semantic_form_for(@new_post) do |builder|
-          _erbout += builder.input :comments_count, :as => :numeric
+
+        it 'should use DEFAULT_TEXT_FIELD_SIZE for methods without database columns' do
+          should_use_default_size_for_methods_without_columns(:string)
         end
-        _erbout.should have_tag('form li.numeric')
+
       end
-      
-      it 'should have a comments_count_input id on the wrapper' do
-        _erbout = ''
-        semantic_form_for(@new_post) do |builder|
-          _erbout += builder.input :comments_count, :as => :numeric
+
+      describe ':as => :radio (radio button set for belongs_to associations)' do
+
+        setup do 
+          @fred = mock('user')
+          @fred.stub!(:to_label).and_return('Fred Smith')
+          @fred.stub!(:id).and_return(37)
+
+          @bob = mock('user')
+          @bob.stub!(:to_label).and_return('Bob Rock')
+          @bob.stub!(:id).and_return(42)
+
+          Author.stub!(:find).and_return([@fred, @bob])
+
+          @new_post.stub!(:author).and_return(@bob)
+          @new_post.stub!(:author_id).and_return(@bob.id)
+          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :integer, :limit => 255))
         end
-        _erbout.should have_tag('form li#post_comments_count_input')
-      end
-      
-      it 'should generate a label for the input' do
-        _erbout = ''
-        semantic_form_for(@new_post) do |builder|
-          _erbout += builder.input :comments_count, :as => :numeric
+
+        it 'should have a radio class on the wrapper' do
+          _erbout = ''
+          semantic_form_for(@new_post) do |builder|
+            _erbout += builder.input :author_id, :as => :radio
+          end
         end
-        _erbout.should have_tag('form li label')
-        _erbout.should have_tag('form li label[@for="post_comments_count"')
-        _erbout.should have_tag('form li label', /Comments count/)
-      end
-      
-      it 'should generate a text input' do
-        _erbout = ''
-        semantic_form_for(@new_post) do |builder|
-          _erbout += builder.input :comments_count, :as => :numeric
+
+        it 'should have a post_author_id_input id on the wrapper' do
+          _erbout = ''
+          semantic_form_for(@new_post) do |builder|
+            _erbout += builder.input :author_id, :as => :radio
+          end
+          _erbout.should have_tag('form li#post_author_id_input')
         end
-        _erbout.should have_tag('form li input')
-        _erbout.should have_tag('form li input#post_comments_count')
-        _erbout.should have_tag('form li input[@type="text"]')
-        _erbout.should have_tag('form li input[@name="post[comments_count]"]')
+
+        it 'should generate a fieldset and legend containing label text for the input' do
+          _erbout = ''
+          semantic_form_for(@new_post) do |builder|
+            _erbout += builder.input :author_id, :as => :radio
+          end
+          _erbout.should have_tag('form li fieldset')
+          _erbout.should have_tag('form li fieldset legend')
+          _erbout.should have_tag('form li fieldset legend', /Author/)
+        end
+
+        it 'should generate an ordered list with a list item for each choice' do
+          _erbout = ''
+          semantic_form_for(@new_post) do |builder|
+            _erbout += builder.input :author_id, :as => :radio
+          end
+          _erbout.should have_tag('form li fieldset ol')
+          _erbout.should have_tag('form li fieldset ol li', :count => Author.find(:all).size)
+        end
+
+        describe "each choice" do
+
+          it 'should contain a label for the radio input with a nested input and label text' do
+            _erbout = ''
+            semantic_form_for(@new_post) do |builder|
+              _erbout += builder.input :author_id, :as => :radio
+            end
+            Author.find(:all).each do |author|
+              _erbout.should have_tag('form li fieldset ol li label')
+              _erbout.should have_tag('form li fieldset ol li label', /#{author.to_label}/)
+              _erbout.should have_tag("form li fieldset ol li label[@for='post_author_id_#{author.id}']")
+              _erbout.should have_tag("form li fieldset ol li label input")
+            end
+          end
+
+          it "should have a radio input" do
+            _erbout = ''
+            semantic_form_for(@new_post) do |builder|
+              _erbout += builder.input :author_id, :as => :radio
+            end
+            Author.find(:all).each do |author|
+              _erbout.should have_tag("form li fieldset ol li label input#post_author_id_#{author.id}")
+              _erbout.should have_tag("form li fieldset ol li label input[@type='radio']")
+              _erbout.should have_tag("form li fieldset ol li label input[@value='#{author.id}']")
+              _erbout.should have_tag("form li fieldset ol li label input[@name='post[author_id]']")
+            end
+          end
+
+          it "should mark input as checked if it's the the existing choice" do
+            _erbout = ''
+            @new_post.author_id.should == @bob.id
+            @new_post.author.id.should == @bob.id
+            @new_post.author.should == @bob
+            semantic_form_for(@new_post) do |builder|
+              _erbout += builder.input :author_id, :as => :radio
+            end
+            #_erbout.should have_tag("form li fieldset ol li label input[@checked='checked']")
+            pending("this works fine when tested in a browser, so there must be something wrong with my mocks and stubs")
+          end
+
+        end
+
+      end
+
+      describe ':as => :password' do
+
+        setup do 
+          @new_post.stub!(:password_hash)
+          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 50))
+        end
+
+        it 'should have a password class on the wrapper' do
+          _erbout = ''
+          semantic_form_for(@new_post) do |builder|
+            _erbout += builder.input :password_hash, :as => :password
+          end
+          _erbout.should have_tag('form li.password')
+        end
+
+        it 'should have a post_title_input id on the wrapper' do
+          _erbout = ''
+          semantic_form_for(@new_post) do |builder|
+            _erbout += builder.input :password_hash, :as => :password
+          end
+          _erbout.should have_tag('form li#post_password_hash_input')
+        end
+
+        it 'should generate a label for the input' do
+          _erbout = ''
+          semantic_form_for(@new_post) do |builder|
+            _erbout += builder.input :password_hash, :as => :password
+          end
+          _erbout.should have_tag('form li label')
+          _erbout.should have_tag('form li label[@for="post_password_hash"')
+          _erbout.should have_tag('form li label', /Password hash/)
+        end
+
+        it 'should generate a password input' do
+          _erbout = ''
+          semantic_form_for(@new_post) do |builder|
+            _erbout += builder.input :password_hash, :as => :password
+          end
+          _erbout.should have_tag('form li input')
+          _erbout.should have_tag('form li input#post_password_hash')
+          _erbout.should have_tag('form li input[@type="password"]')
+          _erbout.should have_tag('form li input[@name="post[password_hash]"]')
+        end
+
+        it 'should have a maxlength matching the column limit' do
+          should_have_maxlength_matching_column_limit(:password_hash, :password, :string)
+        end
+
+        it 'should use DEFAULT_TEXT_FIELD_SIZE for columns longer than DEFAULT_TEXT_FIELD_SIZE' do
+          should_use_default_text_size_for_columns_longer_than_default(:password_hash, :password, :string)
+        end
+
+        it 'should use the column size for columns shorter than DEFAULT_TEXT_FIELD_SIZE' do
+          should_use_the_column_size_for_columns_shorter_than_default(:password_hash, :password, :string)
+        end
+
+        it 'should use DEFAULT_TEXT_FIELD_SIZE for methods without database columns' do
+          should_use_default_size_for_methods_without_columns(:password)
+        end
+
+      end
+
+      describe ':as => :text' do
+
+        setup do 
+          @new_post.stub!(:body)
+          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :text))
+        end
+
+        it 'should have a text class on the wrapper' do
+          _erbout = ''
+          semantic_form_for(@new_post) do |builder|
+            _erbout += builder.input :body, :as => :text
+          end
+          _erbout.should have_tag('form li.text')
+        end
+
+        it 'should have a post_title_input id on the wrapper' do
+          _erbout = ''
+          semantic_form_for(@new_post) do |builder|
+            _erbout += builder.input :body, :as => :text
+          end
+          _erbout.should have_tag('form li#post_body_input')
+        end
+
+        it 'should generate a label for the input' do
+          _erbout = ''
+          semantic_form_for(@new_post) do |builder|
+            _erbout += builder.input :body, :as => :text
+          end
+          _erbout.should have_tag('form li label')
+          _erbout.should have_tag('form li label[@for="post_body"')
+          _erbout.should have_tag('form li label', /Body/)
+        end
+
+        it 'should generate a text input' do
+          _erbout = ''
+          semantic_form_for(@new_post) do |builder|
+            _erbout += builder.input :body, :as => :text
+          end
+          _erbout.should have_tag('form li textarea')
+          _erbout.should have_tag('form li textarea#post_body')
+          _erbout.should have_tag('form li textarea[@name="post[body]"]')
+        end
+
+      end
+
+      describe ':as => :date' do
+        it 'should have some specs!'
+      end
+
+      describe ':as => :datetime' do
+        it 'should have some specs!'
+      end
+
+      describe ':as => :time' do
+        it 'should have some specs!'
+      end
+
+      describe ':as => :boolean' do
+
+        setup do 
+          @new_post.stub!(:allow_comments)
+          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
+        end
+
+        it 'should have a boolean class on the wrapper' do
+          _erbout = ''
+          semantic_form_for(@new_post) do |builder|
+            _erbout += builder.input :allow_comments, :as => :boolean
+          end
+          _erbout.should have_tag('form li.boolean')
+        end
+
+        it 'should have a post_allow_comments_input id on the wrapper' do
+          _erbout = ''
+          semantic_form_for(@new_post) do |builder|
+            _erbout += builder.input :allow_comments, :as => :boolean
+          end
+          _erbout.should have_tag('form li#post_allow_comments_input')
+        end
+
+        it 'should generate a label containing the input' do
+          _erbout = ''
+          semantic_form_for(@new_post) do |builder|
+            _erbout += builder.input :allow_comments, :as => :boolean
+          end
+          _erbout.should have_tag('form li label')
+          _erbout.should have_tag('form li label[@for="post_allow_comments"')
+          _erbout.should have_tag('form li label', /Allow comments/)
+          _erbout.should have_tag('form li label input[@type="checkbox"]')
+        end
+
+        it 'should generate a checkbox input' do
+          _erbout = ''
+          semantic_form_for(@new_post) do |builder|
+            _erbout += builder.input :allow_comments, :as => :boolean
+          end
+          _erbout.should have_tag('form li label input')
+          _erbout.should have_tag('form li label input#post_allow_comments')
+          _erbout.should have_tag('form li label input[@type="checkbox"]')
+          _erbout.should have_tag('form li label input[@name="post[allow_comments]"]')
+        end
+
+      end
+
+      describe ':as => :boolean_select' do
+
+        it 'should have some specs, but rspec has hijacked the @template.select method'
+
+        #setup do 
+        #  @new_post.stub!(:allow_comments)
+        #  @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
+        #end
+        #
+        #it 'should have a boolean_select class on the wrapper' do
+        #  _erbout = ''
+        #  semantic_form_for(@new_post) do |builder|
+        #    _erbout += builder.input :allow_comments, :as => :boolean_select
+        #  end
+        #  _erbout.should have_tag('form li.boolean_select')
+        #end
+        #
+        #it 'should have a post_allow_comments_input id on the wrapper' do
+        #  _erbout = ''
+        #  semantic_form_for(@new_post) do |builder|
+        #    _erbout += builder.input :allow_comments, :as => :boolean_select
+        #  end
+        #  _erbout.should have_tag('form li#post_allow_comments_input')
+        #end
+        #
+        #it 'should generate a label containing the input' do
+        #  _erbout = ''
+        #  semantic_form_for(@new_post) do |builder|
+        #    _erbout += builder.input :allow_comments, :as => :boolean_select
+        #  end
+        #  _erbout.should have_tag('form li label')
+        #  _erbout.should have_tag('form li label[@for="post_allow_comments"')
+        #  _erbout.should have_tag('form li label', /Allow comments/)
+        #end
+        #
+        #it 'should generate a checkbox input' do
+        #  _erbout = ''
+        #  semantic_form_for(@new_post) do |builder|
+        #    _erbout += builder.input :allow_comments, :as => :boolean_select
+        #  end
+        #  _erbout.should have_tag('form li label input')
+        #  _erbout.should have_tag('form li label input#post_allow_comments')
+        #  _erbout.should have_tag('form li label input[@type="checkbox"]')
+        #  _erbout.should have_tag('form li label input[@name="post[allow_comments]"]')
+        #end
+
+      end
+
+      describe ':as => :numeric' do
+
+        setup do 
+          @new_post.stub!(:comments_count)
+          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :integer, :limit => 50))
+        end
+
+        it 'should have a numeric class on the wrapper' do
+          _erbout = ''
+          semantic_form_for(@new_post) do |builder|
+            _erbout += builder.input :comments_count, :as => :numeric
+          end
+          _erbout.should have_tag('form li.numeric')
+        end
+
+        it 'should have a comments_count_input id on the wrapper' do
+          _erbout = ''
+          semantic_form_for(@new_post) do |builder|
+            _erbout += builder.input :comments_count, :as => :numeric
+          end
+          _erbout.should have_tag('form li#post_comments_count_input')
+        end
+
+        it 'should generate a label for the input' do
+          _erbout = ''
+          semantic_form_for(@new_post) do |builder|
+            _erbout += builder.input :comments_count, :as => :numeric
+          end
+          _erbout.should have_tag('form li label')
+          _erbout.should have_tag('form li label[@for="post_comments_count"')
+          _erbout.should have_tag('form li label', /Comments count/)
+        end
+
+        it 'should generate a text input' do
+          _erbout = ''
+          semantic_form_for(@new_post) do |builder|
+            _erbout += builder.input :comments_count, :as => :numeric
+          end
+          _erbout.should have_tag('form li input')
+          _erbout.should have_tag('form li input#post_comments_count')
+          _erbout.should have_tag('form li input[@type="text"]')
+          _erbout.should have_tag('form li input[@name="post[comments_count]"]')
+        end
+
+        it 'should have a maxlength matching the column limit' do
+          should_have_maxlength_matching_column_limit(:comments_count, :numeric, :integer)
+        end
+
+        it 'should use DEFAULT_TEXT_FIELD_SIZE for columns longer than DEFAULT_TEXT_FIELD_SIZE' do
+          should_use_default_text_size_for_columns_longer_than_default(:comments_count, :numeric, :integer)
+        end
+
+        it 'should use the column size for columns shorter than DEFAULT_TEXT_FIELD_SIZE' do
+          should_use_the_column_size_for_columns_shorter_than_default(:comments_count, :numeric, :integer)
+        end
+
+        it 'should use DEFAULT_TEXT_FIELD_SIZE for methods without database columns' do
+          should_use_default_size_for_methods_without_columns(:numeric)
+        end
+
       end
       
-      it 'should have a maxlength matching the column limit' do
-        should_have_maxlength_matching_column_limit(:comments_count, :numeric, :integer)
-      end
-      
-      it 'should use DEFAULT_TEXT_FIELD_SIZE for columns longer than DEFAULT_TEXT_FIELD_SIZE' do
-        should_use_default_text_size_for_columns_longer_than_default(:comments_count, :numeric, :integer)
-      end
-      
-      it 'should use the column size for columns shorter than DEFAULT_TEXT_FIELD_SIZE' do
-        should_use_the_column_size_for_columns_shorter_than_default(:comments_count, :numeric, :integer)
-      end
-      
-      it 'should use DEFAULT_TEXT_FIELD_SIZE for methods without database columns' do
-        should_use_default_size_for_methods_without_columns(:numeric)
+      describe ':as => :select (for belongs_to associations)' do
+
+        it 'should have some specs!'
+
       end
       
     end
