@@ -476,16 +476,51 @@ describe 'Formtastic' do
            _erbout.should have_tag('form li', :count => 2)
         end
         
-        describe 'inline errors' do
-
-          describe 'when there are errors on the object for this method' do
-            it "should include inline errors when found on the method"
+        describe 'when there are errors on the object for this method' do
+          
+          before do
+            @title_errors = ['must not be blank', 'must be longer than 10 characters', 'must be awesome']
+            @errors = mock('errors')
+            @errors.stub!(:on).with(:title).and_return(@title_errors)
+            @new_post.stub!(:errors).and_return(@errors)
           end
-
-          describe 'when there are no errors' do 
-            it "it should not include the errors"
+          
+          it 'should apply an errors class to the list item' do
+            _erbout = ''
+            semantic_form_for(@new_post) do |builder| 
+              _erbout += builder.input(:title)
+            end
+             _erbout.should have_tag('form li.error')
           end
-
+          
+          it 'should render a paragraph with the errors joined into a sentence' do
+            _erbout = ''
+            semantic_form_for(@new_post) do |builder| 
+              _erbout += builder.input(:title)
+            end
+             _erbout.should have_tag('form li.error p.inline-errors', @title_errors.to_sentence)
+          end
+          
+        end
+        
+        describe 'when there are no errors on the object for this method' do
+          
+          it 'should not apply an errors class to the list item' do
+            _erbout = ''
+            semantic_form_for(@new_post) do |builder| 
+              _erbout += builder.input(:title)
+            end
+             _erbout.should_not have_tag('form li.error')
+          end          
+          
+          it 'should render a paragraph for the errors' do
+            _erbout = ''
+            semantic_form_for(@new_post) do |builder| 
+              _erbout += builder.input(:title)
+            end
+             _erbout.should_not have_tag('form li.error p.inline-errors')
+          end
+          
         end
         
       end
