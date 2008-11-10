@@ -473,9 +473,9 @@ module JustinFrench #:nodoc:
             choices.map { |c| 
               @template.content_tag(:li,
                 @template.label_tag("#{@object_name}_#{method}_#{c[:value]}", 
-                  "#{@template.radio_button_tag("#{@object_name}[#{method}]", c[:value].to_s, @object.send(method) == c[:value], :id => "#{@object_name}_#{method}_#{c[:value]}")} #{c[:label]}"
-                )
-              )
+                  "#{@template.radio_button_tag("#{@object_name}[#{method}]", c[:value].to_s, (@object.send(method) == c[:value]), :id => "#{@object_name}_#{method}_#{c[:value]}")} #{c[:label]}"
+                ),
+              :class => c[:value].to_s)
             }
           )
         )
