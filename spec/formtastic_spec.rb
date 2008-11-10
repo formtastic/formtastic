@@ -759,7 +759,7 @@ describe 'Formtastic' do
       describe ':as => :time' do
         it 'should have some specs!'
       end
-
+      
       describe ':as => :boolean' do
 
         setup do 
@@ -795,7 +795,118 @@ describe 'Formtastic' do
           @out.should have_tag('form li label input[@type="checkbox"]')
           @out.should have_tag('form li label input[@name="post[allow_comments]"]')
         end
-
+      
+      end
+      
+      describe ':as => :boolean_radio' do
+        
+        setup do 
+          @new_post.stub!(:allow_comments)
+          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
+          
+          _erbout = ''
+          semantic_form_for(@new_post) do |builder|
+            _erbout += builder.input :allow_comments, :as => :boolean_radio
+          end
+          
+          @out = _erbout
+        end
+        
+        it 'should have a boolean_radio class on the wrapper' do
+          @out.should have_tag('form li.boolean_radio')
+        end
+        
+        it 'should have a post_allow_comments_input id on the wrapper' do
+          @out.should have_tag('form li#post_allow_comments_input')
+        end
+        
+        it 'should generate a fieldset containing a legend' do
+          @out.should have_tag('form li fieldset legend', /Allow comments/)
+        end
+        
+        it 'should generate a fieldset containing an ordered list of two items with true and false classes' do
+          @out.should have_tag('form li fieldset ol li.true', :count => 1)
+          @out.should have_tag('form li fieldset ol li.false', :count => 1)
+        end
+                
+        it 'should generate a fieldset containing two labels' do
+          @out.should have_tag('form li fieldset ol li label', :count => 2)
+          @out.should have_tag('form li fieldset ol li label', /Yes$/)
+          @out.should have_tag('form li fieldset ol li label', /No$/)
+        end
+        
+        it 'should generate a fieldset containing two radio inputs' do
+          @out.should have_tag('form li fieldset ol li label input[@type="radio"]', :count => 2)
+          @out.should have_tag('form li fieldset ol li label input[@value="true"]')
+          @out.should have_tag('form li fieldset ol li label input[@value="false"]')
+        end
+        
+        describe 'when the value is nil' do
+          setup do 
+            @new_post.stub!(:allow_comments).and_return(nil)
+            @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
+            _erbout = ''
+            semantic_form_for(@new_post) do |builder|
+              _erbout += builder.input :allow_comments, :as => :boolean_radio
+            end
+            @out = _erbout
+          end
+          it 'should not mark either input as checked' do
+            @out.should_not have_tag('form li fieldset ol li label input[@checked="checked"]')
+          end
+        end
+        
+        describe 'when the value is true' do
+          setup do 
+            @new_post.stub!(:allow_comments).and_return(true)
+            @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
+            _erbout = ''
+            semantic_form_for(@new_post) do |builder|
+              _erbout += builder.input :allow_comments, :as => :boolean_radio
+            end
+            @out = _erbout
+          end
+          it 'should mark the true input as checked' do
+            @out.should have_tag('form li fieldset ol li label input[@value="true"][@checked="checked"]', :count => 1)
+          end
+          it 'should not mark the false input as checked' do
+            @out.should_not have_tag('form li fieldset ol li label input[@value="false"][@checked="checked"]')
+          end
+        end
+        
+        describe 'when the value is false' do
+          setup do 
+            @new_post.stub!(:allow_comments).and_return(false)
+            @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
+            _erbout = ''
+            semantic_form_for(@new_post) do |builder|
+              _erbout += builder.input :allow_comments, :as => :boolean_radio
+            end
+            @out = _erbout
+          end
+          it 'should not mark the true input as checked' do
+            @out.should_not have_tag('form li fieldset ol li.true label input[@value="true"][@checked="checked"]', :count => 1)
+          end
+          it 'should mark the false input as checked' do
+            @out.should have_tag('form li fieldset ol li.false label input[@value="false"][@checked="checked"]')
+          end
+        end
+        
+        describe 'when :true and :false options are provided' do
+          setup do 
+            @new_post.stub!(:allow_comments)
+            @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
+            _erbout = ''
+            semantic_form_for(@new_post) do |builder|
+              _erbout += builder.input :allow_comments, :as => :boolean_radio, :true => "Absolutely", :false => "No Way"
+            end
+            @out = _erbout
+          end
+          it 'should pass them down to the input labels' do
+            @out.should have_tag('form li fieldset ol li.true label', /Absolutely$/)
+            @out.should have_tag('form li fieldset ol li.false label', /No Way$/)
+          end
+        end
       end
       
       describe ':as => :boolean_select' do
@@ -870,7 +981,7 @@ describe 'Formtastic' do
           end
           
         end
-
+        
       end
 
       describe ':as => :numeric' do
