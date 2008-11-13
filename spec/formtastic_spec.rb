@@ -643,16 +643,16 @@ describe 'Formtastic' do
             end
           end
 
-          it "should mark input as checked if it's the the existing choice" do
-            _erbout = ''
+          xit "should mark input as checked if it's the the existing choice" do
             @new_post.author_id.should == @bob.id
             @new_post.author.id.should == @bob.id
             @new_post.author.should == @bob
+            _erbout = ''
             semantic_form_for(@new_post) do |builder|
               _erbout += builder.input :author_id, :as => :radio
             end
-            #_erbout.should have_tag("form li fieldset ol li label input[@checked='checked']")
-            pending("this works fine when tested in a browser, so there must be something wrong with my mocks and stubs")
+            @out = _erbout
+            @out.should have_tag("form li fieldset ol li label input[@checked='checked']")
           end
 
         end
