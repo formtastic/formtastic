@@ -1079,9 +1079,32 @@ describe 'Formtastic' do
 
       end
       
-      
     end
-        
+    
+    describe '#input_field_set' do
+      it 'should have some specs'
+    end
+    
+    describe '#button_field_set' do
+      it 'should have some specs'
+    end
+    
+    describe '#commit_button' do
+      it 'should have some specs'
+    end
+    
+    describe '#save_or_create_commit_button_text' do
+      it 'should have some specs'
+    end
+    
+    describe '#error_messages'  do
+      it 'needs to be implemented or removed'
+    end
+      
+    describe '#field_set_and_list_wrapping' do
+      it 'should have some specs'
+    end
+    
   end
 
 end
