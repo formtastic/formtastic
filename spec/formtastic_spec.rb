@@ -119,7 +119,7 @@ describe 'Formtastic' do
         end
       end
       
-      xit 'can be called with a resource-oriented style with an inline object' do
+      it 'can be called with a resource-oriented style with an inline object' do
         _erbout = ''
         semantic_form_for(Post.new) do |builder|
           builder.object.class.should == Post
