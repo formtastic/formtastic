@@ -82,7 +82,9 @@ describe 'Formtastic' do
     def new_post_path; "/posts/new"; end
     
     # Sometimes we need some classes
-    class Post; end
+    class Post; 
+      def id; end
+    end
     class Author; end
     
     # Sometimes we need a mock @post object 
