@@ -142,15 +142,7 @@ describe 'Formtastic' do
           builder.object_name.to_s.should == "post" # TODO: is this forced .to_s a bad assumption somewhere?
         end
       end
-    
-      xit 'cannot be called without an object' do
-        _erbout = ''
-        lambda { 
-          semantic_form_for(:post, :url => new_post_path) do |builder| 
-          end 
-        }.should raise_error
-      end
-    
+        
     end
     
     describe '#semantic_fields_for' do
