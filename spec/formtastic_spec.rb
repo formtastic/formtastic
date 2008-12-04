@@ -4,48 +4,43 @@ require 'justin_french/formtastic'
 module FormtasticSpecHelper
   
   def should_have_maxlength_matching_column_limit(method_name, as, column_type)
-    _erbout = ''
     semantic_form_for(@new_post) do |builder|
-      _erbout += builder.input method_name, :as => as
+      concat(builder.input(method_name, :as => as))
     end
     @new_post.column_for_attribute(method_name).limit.should == 50
-    _erbout.should have_tag("form li input[@maxlength='#{@new_post.column_for_attribute(method_name).limit}']")
+    output_buffer.should have_tag("form li input[@maxlength='#{@new_post.column_for_attribute(method_name).limit}']")
   end
   
   def should_use_default_text_size_for_columns_longer_than_default(method_name, as, column_type)
     default_size = JustinFrench::Formtastic::SemanticFormBuilder::DEFAULT_TEXT_FIELD_SIZE
     column_limit_larger_than_default = default_size * 2
     @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => column_type, :limit => column_limit_larger_than_default))
-    _erbout = ''
     semantic_form_for(@new_post) do |builder|
-      _erbout += builder.input method_name, :as => as
+      concat(builder.input(method_name, :as => as))
     end
-    _erbout.should have_tag("form li input[@size='#{default_size}']")
+    output_buffer.should have_tag("form li input[@size='#{default_size}']")
   end
   
   def should_use_the_column_size_for_columns_shorter_than_default(method_name, as, column_type)
     default_size = JustinFrench::Formtastic::SemanticFormBuilder::DEFAULT_TEXT_FIELD_SIZE
     column_limit_shorter_than_default = 1
     @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => column_type, :limit => column_limit_shorter_than_default))
-    _erbout = ''
     semantic_form_for(@new_post) do |builder|
-      _erbout += builder.input method_name, :as => as
+      concat(builder.input(method_name, :as => as))
     end
-    _erbout.should have_tag("form li input[@size='#{column_limit_shorter_than_default}']")
+    output_buffer.should have_tag("form li input[@size='#{column_limit_shorter_than_default}']")
   end
   
   def should_use_default_size_for_methods_without_columns(as)
     default_size = JustinFrench::Formtastic::SemanticFormBuilder::DEFAULT_TEXT_FIELD_SIZE
     @new_post.stub!(:method_without_column)
-    _erbout = ''
     semantic_form_for(@new_post) do |builder|
-      _erbout += builder.input :method_without_column, :as => as
+      concat(builder.input(:method_without_column, :as => as))
     end
-    _erbout.should have_tag("form li input[@size='#{default_size}']")
+    output_buffer.should have_tag("form li input[@size='#{default_size}']")
   end
   
   def default_input_type(column_type, column_name = :generic_column_name)
-    _erbout = ''
     @new_post.stub!(column_name)
     @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => column_type))
     semantic_form_for(@new_post) do |builder| 
@@ -57,6 +52,7 @@ module FormtasticSpecHelper
 end
 
 describe 'Formtastic' do
+    
   include ActionView::Helpers::FormHelper
   include ActionView::Helpers::FormTagHelper
   include ActionView::Helpers::FormOptionsHelper
@@ -69,12 +65,14 @@ describe 'Formtastic' do
   include ActionController::PolymorphicRoutes
   
   include JustinFrench::Formtastic::SemanticFormHelper
+  
+  attr_accessor :output_buffer
 
-  def protect_against_forgery?
-    false
-  end
+  def protect_against_forgery?; false; end
   
   before do 
+    @output_buffer = ''
+    
     # Resource-oriented styles like form_for(@post) will expect a path method for the object,
     # so we're defining some here.
     def post_path(o); "/posts/1"; end
@@ -93,28 +91,26 @@ describe 'Formtastic' do
     @new_post.stub!(:id).and_return(nil)
     @new_post.stub!(:new_record?).and_return(true)
     @new_post.stub!(:errors).and_return(mock('errors', :on => nil))
+    
   end
   
   describe 'SemanticFormHelper' do
   
     describe '#semantic_form_for' do  
-        
+             
       it 'yields an instance of SemanticFormBuilder' do
-        _erbout = ''
         semantic_form_for(:post, Post.new, :url => '/hello') do |builder|
           builder.class.should == JustinFrench::Formtastic::SemanticFormBuilder  
         end
       end
       
       it 'adds a class of "formtastic" to generated form' do
-        _erbout = ''
         semantic_form_for(:post, Post.new, :url => '/hello') do |builder|
         end
-        _erbout.should have_tag("form.formtastic")
+        output_buffer.should have_tag("form.formtastic")
       end
       
       it 'can be called with a resource-oriented style' do
-        _erbout = ''
         semantic_form_for(@new_post) do |builder|
           builder.object.class.should == Post
           builder.object_name.should == "post"
@@ -122,7 +118,6 @@ describe 'Formtastic' do
       end
       
       it 'can be called with a resource-oriented style with an inline object' do
-        _erbout = ''
         semantic_form_for(Post.new) do |builder|
           builder.object.class.should == Post
           builder.object_name.should == "post"
@@ -130,7 +125,6 @@ describe 'Formtastic' do
       end
         
       it 'can be called with a generic style and instance variable' do
-        _erbout = ''
         semantic_form_for(:post, @new_post, :url => new_post_path) do |builder|
           builder.object.class.should == Post
           builder.object_name.to_s.should == "post" # TODO: is this forced .to_s a bad assumption somewhere?
@@ -138,7 +132,6 @@ describe 'Formtastic' do
       end
       
       it 'can be called with a generic style and inline object' do
-        _erbout = ''
         semantic_form_for(:post, Post.new, :url => new_post_path) do |builder|
           builder.object.class.should == Post
           builder.object_name.to_s.should == "post" # TODO: is this forced .to_s a bad assumption somewhere?
@@ -149,7 +142,6 @@ describe 'Formtastic' do
     
     describe '#semantic_fields_for' do
       it 'yields an instance of SemanticFormBuilder' do
-        _erbout = ''
         semantic_fields_for(:post, Post.new, :url => '/hello') do |builder|
           builder.class.should == JustinFrench::Formtastic::SemanticFormBuilder  
         end
@@ -158,7 +150,6 @@ describe 'Formtastic' do
     
     describe '#semantic_form_remote_for' do
       it 'yields an instance of SemanticFormBuilder' do
-        _erbout = ''
         semantic_form_remote_for(:post, Post.new, :url => '/hello') do |builder|
           builder.class.should == JustinFrench::Formtastic::SemanticFormBuilder  
         end
@@ -167,7 +158,6 @@ describe 'Formtastic' do
     
     describe '#semantic_form_for_remote' do
       it 'yields an instance of SemanticFormBuilder' do
-        _erbout = ''
         semantic_form_remote_for(:post, Post.new, :url => '/hello') do |builder|
           builder.class.should == JustinFrench::Formtastic::SemanticFormBuilder  
         end
@@ -191,18 +181,16 @@ describe 'Formtastic' do
       describe 'arguments and options' do
         
         it 'should require the first argument (the method on form\'s object)' do
-          _erbout = ''
-          lambda { 
+            lambda { 
             semantic_form_for(@new_post) do |builder| 
-              builder.input # no args passed in at all
+              concat(builder.input()) # no args passed in at all
             end
           }.should raise_error(ArgumentError)
         end
         
         it 'should raise an error when the object does not respond to the method supplied in the first argument' do
-          _erbout = ''
-          semantic_form_for(@new_post) do |builder| 
-            lambda { builder.input :method_on_post_that_doesnt_exist }.should raise_error(NoMethodError)
+            semantic_form_for(@new_post) do |builder| 
+            lambda { builder.input(:method_on_post_that_doesnt_exist) }.should raise_error(NoMethodError)
           end 
         end
         
@@ -215,21 +203,19 @@ describe 'Formtastic' do
             end
 
             it 'should set a "required" class' do
-              _erbout = ''
               semantic_form_for(@new_post) do |builder| 
-                _erbout += builder.input(:title, :required => true)
+                concat(builder.input(:title, :required => true))
               end
-              _erbout.should_not have_tag('form li.optional')
-              _erbout.should have_tag('form li.required')
+              output_buffer.should_not have_tag('form li.optional')
+              output_buffer.should have_tag('form li.required')
             end
 
             it 'should append the "required" string to the label' do
               string = JustinFrench::Formtastic::SemanticFormBuilder.required_string = " required yo!" # ensure there's something in the string 
-              _erbout = ''
               semantic_form_for(@new_post) do |builder| 
-                _erbout += builder.input(:title, :required => true)
+                concat(builder.input(:title, :required => true))
               end
-              _erbout.should have_tag('form li.required label', /#{string}$/)
+              output_buffer.should have_tag('form li.required label', /#{string}$/)
             end
 
           end
@@ -241,21 +227,19 @@ describe 'Formtastic' do
             end
 
             it 'should set an "optional" class' do
-              _erbout = ''
               semantic_form_for(@new_post) do |builder| 
-                _erbout += builder.input(:title, :required => false)
+                concat(builder.input(:title, :required => false))
               end
-              _erbout.should_not have_tag('form li.required')
-              _erbout.should have_tag('form li.optional')
+              output_buffer.should_not have_tag('form li.required')
+              output_buffer.should have_tag('form li.optional')
             end
 
             it 'should append the "optional" string to the label' do 
               string = JustinFrench::Formtastic::SemanticFormBuilder.optional_string = " optional yo!" # ensure there's something in the string 
-              _erbout = ''
               semantic_form_for(@new_post) do |builder| 
-                _erbout += builder.input(:title, :required => false)
+                concat(builder.input(:title, :required => false))
               end
-              _erbout.should have_tag('form li.optional label', /#{string}$/)
+              output_buffer.should have_tag('form li.optional label', /#{string}$/)
             end
 
           end
@@ -277,12 +261,11 @@ describe 'Formtastic' do
                 end
 
                 it 'should be required' do
-                  _erbout = ''
                   semantic_form_for(@new_post) do |builder| 
-                    _erbout += builder.input(:title)
+                    concat(builder.input(:title))
                   end
-                  _erbout.should have_tag('form li.required')
-                  _erbout.should_not have_tag('form li.optional')
+                  output_buffer.should have_tag('form li.required')
+                  output_buffer.should_not have_tag('form li.optional')
                 end
 
               end
@@ -294,12 +277,11 @@ describe 'Formtastic' do
                 end
 
                 it 'should not be required' do
-                  _erbout = ''
                   semantic_form_for(@new_post) do |builder| 
-                    _erbout += builder.input(:title)
+                    concat(builder.input(:title))
                   end
-                  _erbout.should_not have_tag('form li.required')
-                  _erbout.should have_tag('form li.optional')
+                  output_buffer.should_not have_tag('form li.required')
+                  output_buffer.should have_tag('form li.optional')
                 end
 
               end
@@ -311,12 +293,11 @@ describe 'Formtastic' do
               it 'should use the default value' do
                 JustinFrench::Formtastic::SemanticFormBuilder.all_fields_required_by_default.should == true
                 JustinFrench::Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
-                _erbout = ''
                 semantic_form_for(@new_post) do |builder| 
-                  _erbout += builder.input(:title)
+                  concat(builder.input(:title))
                 end
-                _erbout.should_not have_tag('form li.required')
-                _erbout.should have_tag('form li.optional')
+                output_buffer.should_not have_tag('form li.required')
+                output_buffer.should have_tag('form li.optional')
               end
 
             end
@@ -330,7 +311,6 @@ describe 'Formtastic' do
           describe 'when not provided' do
 
             it 'should raise an error (and ask for the :as option to be specified) for methods that don\'t have a column in the database' do
-              _erbout = ''
               @new_post.stub!(:method_without_a_database_column)
               @new_post.stub!(:column_for_attribute).and_return(nil)
               semantic_form_for(@new_post) do |builder| 
@@ -386,12 +366,11 @@ describe 'Formtastic' do
 
           it 'should call the corresponding input method' do
             [:select, :radio, :password, :text, :date, :datetime, :time, :boolean, :boolean_select, :string, :numeric].each do |input_style|
-              _erbout = ''
               @new_post.stub!(:generic_column_name)
               @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
               semantic_form_for(@new_post) do |builder| 
                 builder.should_receive(:"#{input_style}_input").once.and_return("fake HTML output from #input")
-                _erbout += builder.input(:generic_column_name, :as => input_style)
+                concat(builder.input(:generic_column_name, :as => input_style))
               end
             end
           end
@@ -403,11 +382,10 @@ describe 'Formtastic' do
           describe 'when provided' do
 
             it 'should be passed down to the label tag' do
-              _erbout = ''
               semantic_form_for(@new_post) do |builder| 
-                _erbout += builder.input(:title, :label => "Kustom")
+                concat(builder.input(:title, :label => "Kustom"))
               end
-              _erbout.should have_tag("form li label", /Kustom/)
+              output_buffer.should have_tag("form li label", /Kustom/)
             end
 
           end
@@ -415,13 +393,12 @@ describe 'Formtastic' do
           describe 'when not provided' do
 
             it 'should default the method name, passing it down to the label tag' do
-              _erbout = ''
               @new_post.stub!(:meta_description) # a two word method name
               semantic_form_for(@new_post) do |builder| 
-                _erbout += builder.input(:meta_description)
+                concat(builder.input(:meta_description))
               end
-              _erbout.should have_tag("form li label", /#{'meta_description'.humanize}/)
-              _erbout.should have_tag("form li label", /Meta description/)
+              output_buffer.should have_tag("form li label", /#{'meta_description'.humanize}/)
+              output_buffer.should have_tag("form li label", /Meta description/)
             end
 
           end
@@ -433,12 +410,11 @@ describe 'Formtastic' do
           describe 'when provided' do
 
             it 'should be passed down to the paragraph tag' do
-              _erbout = ''
               hint_text = "this is the title of the post"
               semantic_form_for(@new_post) do |builder| 
-                _erbout += builder.input(:title, :hint => hint_text)
+                concat(builder.input(:title, :hint => hint_text))
               end
-              _erbout.should have_tag("form li p.inline-hints", hint_text)
+              output_buffer.should have_tag("form li p.inline-hints", hint_text)
             end
 
           end
@@ -446,12 +422,11 @@ describe 'Formtastic' do
           describe 'when not provided' do
 
             it 'should not render a hint paragraph' do
-              _erbout = ''
               hint_text = "this is the title of the post"
               semantic_form_for(@new_post) do |builder| 
-                _erbout += builder.input(:title)
+                concat(builder.input(:title))
               end
-              _erbout.should_not have_tag("form li p.inline-hints")
+              output_buffer.should_not have_tag("form li p.inline-hints")
             end
 
           end
@@ -463,12 +438,11 @@ describe 'Formtastic' do
       describe ':as any type of input' do
 
         it 'should create a list item for each input' do
-          _erbout = ''
           semantic_form_for(@new_post) do |builder| 
-            _erbout += builder.input(:title)
-            _erbout += builder.input(:body)
+            concat(builder.input(:title))
+            concat(builder.input(:body))
           end
-           _erbout.should have_tag('form li', :count => 2)
+           output_buffer.should have_tag('form li', :count => 2)
         end
         
         describe 'when there are errors on the object for this method' do
@@ -479,20 +453,17 @@ describe 'Formtastic' do
             @errors.stub!(:on).with(:title).and_return(@title_errors)
             @new_post.stub!(:errors).and_return(@errors)
           
-            _erbout = ''
             semantic_form_for(@new_post) do |builder| 
-              _erbout += builder.input(:title)
+              concat(builder.input(:title))
             end
-             
-            @out = _erbout
           end
           
           it 'should apply an errors class to the list item' do
-            @out.should have_tag('form li.error')
+            output_buffer.should have_tag('form li.error')
           end
           
           it 'should render a paragraph with the errors joined into a sentence' do
-            @out.should have_tag('form li.error p.inline-errors', @title_errors.to_sentence)
+            output_buffer.should have_tag('form li.error p.inline-errors', @title_errors.to_sentence)
           end
           
         end
@@ -500,20 +471,17 @@ describe 'Formtastic' do
         describe 'when there are no errors on the object for this method' do
           
           before do
-            _erbout = ''
             semantic_form_for(@new_post) do |builder| 
-              _erbout += builder.input(:title)
+              concat(builder.input(:title))
             end
-           
-            @out = _erbout
           end
           
           it 'should not apply an errors class to the list item' do
-            @out.should_not have_tag('form li.error')
+            output_buffer.should_not have_tag('form li.error')
           end          
           
           it 'should render a paragraph for the errors' do
-            @out.should_not have_tag('form li.error p.inline-errors')
+            output_buffer.should_not have_tag('form li.error p.inline-errors')
           end
           
         end
@@ -526,33 +494,30 @@ describe 'Formtastic' do
           @new_post.stub!(:title)
           @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 50))
         
-          _erbout = ''
           semantic_form_for(@new_post) do |builder|
-            _erbout += builder.input :title, :as => :string
+            concat(builder.input(:title, :as => :string))
           end
-          
-          @out = _erbout
         end
 
         it 'should have a string class on the wrapper' do
-          @out.should have_tag('form li.string')
+          output_buffer.should have_tag('form li.string')
         end
 
         it 'should have a post_title_input id on the wrapper' do
-          @out.should have_tag('form li#post_title_input')
+          output_buffer.should have_tag('form li#post_title_input')
         end
 
         it 'should generate a label for the input' do
-          @out.should have_tag('form li label')
-          @out.should have_tag('form li label[@for="post_title"')
-          @out.should have_tag('form li label', /Title/)
+          output_buffer.should have_tag('form li label')
+          output_buffer.should have_tag('form li label[@for="post_title"')
+          output_buffer.should have_tag('form li label', /Title/)
         end
 
         it 'should generate a text input' do
-          @out.should have_tag('form li input')
-          @out.should have_tag('form li input#post_title')
-          @out.should have_tag('form li input[@type="text"]')
-          @out.should have_tag('form li input[@name="post[title]"]')
+          output_buffer.should have_tag('form li input')
+          output_buffer.should have_tag('form li input#post_title')
+          output_buffer.should have_tag('form li input[@type="text"]')
+          output_buffer.should have_tag('form li input[@name="post[title]"]')
         end
 
         it 'should have a maxlength matching the column limit' do
@@ -594,50 +559,47 @@ describe 'Formtastic' do
         describe ':as => :radio' do
 
           before do 
-            _erbout = ''
             semantic_form_for(@new_post) do |builder|
-              _erbout += builder.input :author_id, :as => :radio
+              concat(builder.input(:author_id, :as => :radio))
             end
-
-            @out = _erbout
           end
 
           it 'should have a radio class on the wrapper' do
-            @out.should have_tag('form li.radio')
+            output_buffer.should have_tag('form li.radio')
           end
 
           it 'should have a post_author_id_input id on the wrapper' do
-            @out.should have_tag('form li#post_author_id_input')
+            output_buffer.should have_tag('form li#post_author_id_input')
           end
 
           it 'should generate a fieldset and legend containing label text for the input' do
-            @out.should have_tag('form li fieldset')
-            @out.should have_tag('form li fieldset legend')
-            @out.should have_tag('form li fieldset legend', /Author/)
+            output_buffer.should have_tag('form li fieldset')
+            output_buffer.should have_tag('form li fieldset legend')
+            output_buffer.should have_tag('form li fieldset legend', /Author/)
           end
 
           it 'should generate an ordered list with a list item for each choice' do
-            @out.should have_tag('form li fieldset ol')
-            @out.should have_tag('form li fieldset ol li', :count => Author.find(:all).size)
+            output_buffer.should have_tag('form li fieldset ol')
+            output_buffer.should have_tag('form li fieldset ol li', :count => Author.find(:all).size)
           end
 
           describe "each choice" do
 
             it 'should contain a label for the radio input with a nested input and label text' do
               Author.find(:all).each do |author|
-                @out.should have_tag('form li fieldset ol li label')
-                @out.should have_tag('form li fieldset ol li label', /#{author.to_label}/)
-                @out.should have_tag("form li fieldset ol li label[@for='post_author_id_#{author.id}']")
-                @out.should have_tag("form li fieldset ol li label input")
+                output_buffer.should have_tag('form li fieldset ol li label')
+                output_buffer.should have_tag('form li fieldset ol li label', /#{author.to_label}/)
+                output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_id_#{author.id}']")
+                output_buffer.should have_tag("form li fieldset ol li label input")
               end
             end
 
             it "should have a radio input" do
               Author.find(:all).each do |author|
-                @out.should have_tag("form li fieldset ol li label input#post_author_id_#{author.id}")
-                @out.should have_tag("form li fieldset ol li label input[@type='radio']")
-                @out.should have_tag("form li fieldset ol li label input[@value='#{author.id}']")
-                @out.should have_tag("form li fieldset ol li label input[@name='post[author_id]']")
+                output_buffer.should have_tag("form li fieldset ol li label input#post_author_id_#{author.id}")
+                output_buffer.should have_tag("form li fieldset ol li label input[@type='radio']")
+                output_buffer.should have_tag("form li fieldset ol li label input[@value='#{author.id}']")
+                output_buffer.should have_tag("form li fieldset ol li label input[@name='post[author_id]']")
               end
             end
 
@@ -645,12 +607,11 @@ describe 'Formtastic' do
               @new_post.author_id.should == @bob.id
               @new_post.author.id.should == @bob.id
               @new_post.author.should == @bob
-              _erbout = ''
               semantic_form_for(@new_post) do |builder|
-                _erbout += builder.input :author_id, :as => :radio
+                concat(builder.input_style(:author_id, :as => :radio))
               end
-              @out = _erbout
-              @out.should have_tag("form li fieldset ol li label input[@checked='checked']")
+              
+              output_buffer.should have_tag("form li fieldset ol li label input[@checked='checked']")
             end
 
           end
@@ -660,33 +621,31 @@ describe 'Formtastic' do
         describe ':as => :select' do
 
           before do
-            _erbout = ''
             semantic_form_for(@new_post) do |builder|
-              _erbout += builder.input :author_id, :as => :select
+              concat(builder.input(:author_id, :as => :select))
             end
-            @out = _erbout
           end
 
           it 'should have a select class on the wrapper' do
-            @out.should have_tag('form li.select')
+            output_buffer.should have_tag('form li.select')
           end
           
           it 'should have a post_author_id_input id on the wrapper' do
-            @out.should have_tag('form li#post_author_id_input')
+            output_buffer.should have_tag('form li#post_author_id_input')
           end
           
           it 'should have a label inside the wrapper' do
-            @out.should have_tag('form li label')
+            output_buffer.should have_tag('form li label')
           end
           
           it 'should have a select inside the wrapper' do
-            @out.should have_tag('form li select')
+            output_buffer.should have_tag('form li select')
           end
           
           it 'should have a select option for each Author' do
-            @out.should have_tag('form li select option', :count => Author.find(:all).size)
+            output_buffer.should have_tag('form li select option', :count => Author.find(:all).size)
             Author.find(:all).each do |author|
-              @out.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
+              output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
             end
           end
                     
@@ -699,34 +658,31 @@ describe 'Formtastic' do
         setup do 
           @new_post.stub!(:password_hash)
           @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 50))
-          
-          _erbout = ''
+
           semantic_form_for(@new_post) do |builder|
-            _erbout += builder.input :password_hash, :as => :password
+            concat(builder.input(:password_hash, :as => :password))
           end
-          
-          @out = _erbout
         end
 
         it 'should have a password class on the wrapper' do
-          @out.should have_tag('form li.password')
+          output_buffer.should have_tag('form li.password')
         end
 
         it 'should have a post_title_input id on the wrapper' do
-          @out.should have_tag('form li#post_password_hash_input')
+          output_buffer.should have_tag('form li#post_password_hash_input')
         end
 
         it 'should generate a label for the input' do
-          @out.should have_tag('form li label')
-          @out.should have_tag('form li label[@for="post_password_hash"')
-          @out.should have_tag('form li label', /Password hash/)
+          output_buffer.should have_tag('form li label')
+          output_buffer.should have_tag('form li label[@for="post_password_hash"')
+          output_buffer.should have_tag('form li label', /Password hash/)
         end
 
         it 'should generate a password input' do
-          @out.should have_tag('form li input')
-          @out.should have_tag('form li input#post_password_hash')
-          @out.should have_tag('form li input[@type="password"]')
-          @out.should have_tag('form li input[@name="post[password_hash]"]')
+          output_buffer.should have_tag('form li input')
+          output_buffer.should have_tag('form li input#post_password_hash')
+          output_buffer.should have_tag('form li input[@type="password"]')
+          output_buffer.should have_tag('form li input[@name="post[password_hash]"]')
         end
 
         it 'should have a maxlength matching the column limit' do
@@ -753,32 +709,29 @@ describe 'Formtastic' do
           @new_post.stub!(:body)
           @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :text))
           
-          _erbout = ''
           semantic_form_for(@new_post) do |builder|
-            _erbout += builder.input :body, :as => :text
+            concat(builder.input(:body, :as => :text))
           end
-          
-          @out = _erbout
         end
 
         it 'should have a text class on the wrapper' do
-          @out.should have_tag('form li.text')
+          output_buffer.should have_tag('form li.text')
         end
 
         it 'should have a post_title_input id on the wrapper' do
-          @out.should have_tag('form li#post_body_input')
+          output_buffer.should have_tag('form li#post_body_input')
         end
 
         it 'should generate a label for the input' do
-          @out.should have_tag('form li label')
-          @out.should have_tag('form li label[@for="post_body"')
-          @out.should have_tag('form li label', /Body/)
+          output_buffer.should have_tag('form li label')
+          output_buffer.should have_tag('form li label[@for="post_body"')
+          output_buffer.should have_tag('form li label', /Body/)
         end
 
         it 'should generate a text input' do
-         @out.should have_tag('form li textarea')
-         @out.should have_tag('form li textarea#post_body')
-         @out.should have_tag('form li textarea[@name="post[body]"]')
+         output_buffer.should have_tag('form li textarea')
+         output_buffer.should have_tag('form li textarea#post_body')
+         output_buffer.should have_tag('form li textarea[@name="post[body]"]')
         end
 
       end
@@ -801,34 +754,31 @@ describe 'Formtastic' do
           @new_post.stub!(:allow_comments)
           @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
           
-          _erbout = ''
           semantic_form_for(@new_post) do |builder|
-            _erbout += builder.input :allow_comments, :as => :boolean
+            concat(builder.input(:allow_comments, :as => :boolean))
           end
-          
-          @out = _erbout
         end
 
         it 'should have a boolean class on the wrapper' do
-          @out.should have_tag('form li.boolean')
+          output_buffer.should have_tag('form li.boolean')
         end
 
         it 'should have a post_allow_comments_input id on the wrapper' do
-          @out.should have_tag('form li#post_allow_comments_input')
+          output_buffer.should have_tag('form li#post_allow_comments_input')
         end
 
         it 'should generate a label containing the input' do
-          @out.should have_tag('form li label')
-          @out.should have_tag('form li label[@for="post_allow_comments"')
-          @out.should have_tag('form li label', /Allow comments/)
-          @out.should have_tag('form li label input[@type="checkbox"]')
+          output_buffer.should have_tag('form li label')
+          output_buffer.should have_tag('form li label[@for="post_allow_comments"')
+          output_buffer.should have_tag('form li label', /Allow comments/)
+          output_buffer.should have_tag('form li label input[@type="checkbox"]')
         end
 
         it 'should generate a checkbox input' do
-          @out.should have_tag('form li label input')
-          @out.should have_tag('form li label input#post_allow_comments')
-          @out.should have_tag('form li label input[@type="checkbox"]')
-          @out.should have_tag('form li label input[@name="post[allow_comments]"]')
+          output_buffer.should have_tag('form li label input')
+          output_buffer.should have_tag('form li label input#post_allow_comments')
+          output_buffer.should have_tag('form li label input[@type="checkbox"]')
+          output_buffer.should have_tag('form li label input[@name="post[allow_comments]"]')
         end
       
       end
@@ -839,73 +789,69 @@ describe 'Formtastic' do
           @new_post.stub!(:allow_comments)
           @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
           
-          _erbout = ''
           semantic_form_for(@new_post) do |builder|
-            _erbout += builder.input :allow_comments, :as => :boolean_radio
+            concat(builder.input(:allow_comments, :as => :boolean_radio))
           end
-          
-          @out = _erbout
         end
         
         it 'should have a boolean_radio class on the wrapper' do
-          @out.should have_tag('form li.boolean_radio')
+          output_buffer.should have_tag('form li.boolean_radio')
         end
         
         it 'should have a post_allow_comments_input id on the wrapper' do
-          @out.should have_tag('form li#post_allow_comments_input')
+          output_buffer.should have_tag('form li#post_allow_comments_input')
         end
         
         it 'should generate a fieldset containing a legend' do
-          @out.should have_tag('form li fieldset legend', /Allow comments/)
+          output_buffer.should have_tag('form li fieldset legend', /Allow comments/)
         end
         
         it 'should generate a fieldset containing an ordered list of two items with true and false classes' do
-          @out.should have_tag('form li fieldset ol li.true', :count => 1)
-          @out.should have_tag('form li fieldset ol li.false', :count => 1)
+          output_buffer.should have_tag('form li fieldset ol li.true', :count => 1)
+          output_buffer.should have_tag('form li fieldset ol li.false', :count => 1)
         end
                 
         it 'should generate a fieldset containing two labels' do
-          @out.should have_tag('form li fieldset ol li label', :count => 2)
-          @out.should have_tag('form li fieldset ol li label', /Yes$/)
-          @out.should have_tag('form li fieldset ol li label', /No$/)
+          output_buffer.should have_tag('form li fieldset ol li label', :count => 2)
+          output_buffer.should have_tag('form li fieldset ol li label', /Yes$/)
+          output_buffer.should have_tag('form li fieldset ol li label', /No$/)
         end
         
         it 'should generate a fieldset containing two radio inputs' do
-          @out.should have_tag('form li fieldset ol li label input[@type="radio"]', :count => 2)
-          @out.should have_tag('form li fieldset ol li label input[@value="true"]')
-          @out.should have_tag('form li fieldset ol li label input[@value="false"]')
+          output_buffer.should have_tag('form li fieldset ol li label input[@type="radio"]', :count => 2)
+          output_buffer.should have_tag('form li fieldset ol li label input[@value="true"]')
+          output_buffer.should have_tag('form li fieldset ol li label input[@value="false"]')
         end
         
         describe 'when the value is nil' do
           setup do 
             @new_post.stub!(:allow_comments).and_return(nil)
             @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
-            _erbout = ''
+            
             semantic_form_for(@new_post) do |builder|
-              _erbout += builder.input :allow_comments, :as => :boolean_radio
+              concat(builder.input(:allow_comments, :as => :boolean_radio))
             end
-            @out = _erbout
           end
+          
           it 'should not mark either input as checked' do
-            @out.should_not have_tag('form li fieldset ol li label input[@checked="checked"]')
+            output_buffer.should_not have_tag('form li fieldset ol li label input[@checked="checked"]')
           end
+        
         end
         
         describe 'when the value is true' do
           setup do 
             @new_post.stub!(:allow_comments).and_return(true)
             @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
-            _erbout = ''
             semantic_form_for(@new_post) do |builder|
-              _erbout += builder.input :allow_comments, :as => :boolean_radio
+              concat(builder.input(:allow_comments, :as => :boolean_radio))
             end
-            @out = _erbout
           end
           it 'should mark the true input as checked' do
-            @out.should have_tag('form li fieldset ol li label input[@value="true"][@checked="checked"]', :count => 1)
+            output_buffer.should have_tag('form li fieldset ol li label input[@value="true"][@checked="checked"]', :count => 1)
           end
           it 'should not mark the false input as checked' do
-            @out.should_not have_tag('form li fieldset ol li label input[@value="false"][@checked="checked"]')
+            output_buffer.should_not have_tag('form li fieldset ol li label input[@value="false"][@checked="checked"]')
           end
         end
         
@@ -913,17 +859,15 @@ describe 'Formtastic' do
           setup do 
             @new_post.stub!(:allow_comments).and_return(false)
             @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
-            _erbout = ''
             semantic_form_for(@new_post) do |builder|
-              _erbout += builder.input :allow_comments, :as => :boolean_radio
+              concat(builder.input(:allow_comments, :as => :boolean_radio))
             end
-            @out = _erbout
           end
           it 'should not mark the true input as checked' do
-            @out.should_not have_tag('form li fieldset ol li.true label input[@value="true"][@checked="checked"]', :count => 1)
+            output_buffer.should_not have_tag('form li fieldset ol li.true label input[@value="true"][@checked="checked"]', :count => 1)
           end
           it 'should mark the false input as checked' do
-            @out.should have_tag('form li fieldset ol li.false label input[@value="false"][@checked="checked"]')
+            output_buffer.should have_tag('form li fieldset ol li.false label input[@value="false"][@checked="checked"]')
           end
         end
         
@@ -931,15 +875,13 @@ describe 'Formtastic' do
           setup do 
             @new_post.stub!(:allow_comments)
             @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
-            _erbout = ''
             semantic_form_for(@new_post) do |builder|
-              _erbout += builder.input :allow_comments, :as => :boolean_radio, :true => "Absolutely", :false => "No Way"
+              concat(builder.input(:allow_comments, :as => :boolean_radio, :true => "Absolutely", :false => "No Way"))
             end
-            @out = _erbout
           end
           it 'should pass them down to the input labels' do
-            @out.should have_tag('form li fieldset ol li.true label', /Absolutely$/)
-            @out.should have_tag('form li fieldset ol li.false label', /No Way$/)
+            output_buffer.should have_tag('form li fieldset ol li.true label', /Absolutely$/)
+            output_buffer.should have_tag('form li fieldset ol li.false label', /No Way$/)
           end
         end
       end
@@ -950,50 +892,45 @@ describe 'Formtastic' do
           @new_post.stub!(:allow_comments)
           @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
           
-          _erbout = ''
           semantic_form_for(@new_post) do |builder|
-            _erbout += builder.input :allow_comments, :as => :boolean_select
+            concat(builder.input(:allow_comments, :as => :boolean_select))
           end
-          
-          @out = _erbout
         end
         
         it 'should have a boolean_select class on the wrapper' do
-          @out.should have_tag('form li.boolean_select')
+          output_buffer.should have_tag('form li.boolean_select')
         end
         
         it 'should have a post_allow_comments_input id on the wrapper' do
-          @out.should have_tag('form li#post_allow_comments_input')
+          output_buffer.should have_tag('form li#post_allow_comments_input')
         end
         
         it 'should generate a label containing the input' do
-          @out.should have_tag('form li label')
-          @out.should have_tag('form li label[@for="post_allow_comments"')
-          @out.should have_tag('form li label', /Allow comments/)
+          output_buffer.should have_tag('form li label')
+          output_buffer.should have_tag('form li label[@for="post_allow_comments"')
+          output_buffer.should have_tag('form li label', /Allow comments/)
         end
         
         it 'should generate a select box with two options' do
-          @out.should have_tag('form li select')
-          @out.should have_tag('form li select#post_allow_comments')
-          @out.should have_tag('form li select[@name="post[allow_comments]"]')
-          @out.should have_tag('form li select#post_allow_comments option', :count => 2)
+          output_buffer.should have_tag('form li select')
+          output_buffer.should have_tag('form li select#post_allow_comments')
+          output_buffer.should have_tag('form li select[@name="post[allow_comments]"]')
+          output_buffer.should have_tag('form li select#post_allow_comments option', :count => 2)
         end
         
         describe 'when the :true and :false options are supplied' do
           
           before do
-            _erbout = ''
             semantic_form_for(@new_post) do |builder|
-              _erbout += builder.input :allow_comments, :as => :boolean_select, :true => "Yes Please!", :false => "No Thanks!"
+              concat(builder.input(:allow_comments, :as => :boolean_select, :true => "Yes Please!", :false => "No Thanks!"))
             end
-            @out = _erbout
           end
           
           it 'should use the values as the text for the option tags' do
-            @out.should have_tag('form li select')
-            @out.should have_tag('form li select#post_allow_comments')
-            @out.should have_tag('form li select#post_allow_comments option[@value="true"]', /Yes Please\!/)
-            @out.should have_tag('form li select#post_allow_comments option[@value="false"]', /No Thanks\!/)
+            output_buffer.should have_tag('form li select')
+            output_buffer.should have_tag('form li select#post_allow_comments')
+            output_buffer.should have_tag('form li select#post_allow_comments option[@value="true"]', /Yes Please\!/)
+            output_buffer.should have_tag('form li select#post_allow_comments option[@value="false"]', /No Thanks\!/)
           end
           
         end
@@ -1001,18 +938,16 @@ describe 'Formtastic' do
         describe 'when the :true and :false options are not supplied' do
           
           before do
-            _erbout = ''
             semantic_form_for(@new_post) do |builder|
-              _erbout += builder.input :allow_comments, :as => :boolean_select
+              concat(builder.input(:allow_comments, :as => :boolean_select))
             end
-            @out = _erbout
           end
           
           it 'should use the default values' do
-            @out.should have_tag('form li select')
-            @out.should have_tag('form li select#post_allow_comments')
-            @out.should have_tag('form li select#post_allow_comments option[@value="true"]', /Yes/)
-            @out.should have_tag('form li select#post_allow_comments option[@value="false"]', /No/)
+            output_buffer.should have_tag('form li select')
+            output_buffer.should have_tag('form li select#post_allow_comments')
+            output_buffer.should have_tag('form li select#post_allow_comments option[@value="true"]', /Yes/)
+            output_buffer.should have_tag('form li select#post_allow_comments option[@value="false"]', /No/)
           end
           
         end
@@ -1025,34 +960,31 @@ describe 'Formtastic' do
           @new_post.stub!(:comments_count)
           @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :integer, :limit => 50))
           
-          _erbout = ''
           semantic_form_for(@new_post) do |builder|
-            _erbout += builder.input :comments_count, :as => :numeric
+            concat(builder.input(:comments_count, :as => :numeric))
           end
-          _erbout.should have_tag('form li.numeric')
-          
-          @out = _erbout
+          output_buffer.should have_tag('form li.numeric')          
         end
 
         it 'should have a numeric class on the wrapper' do
-          @out.should have_tag("form li.numeric")
+          output_buffer.should have_tag("form li.numeric")
         end
 
         it 'should have a comments_count_input id on the wrapper' do
-          @out.should have_tag('form li#post_comments_count_input')
+          output_buffer.should have_tag('form li#post_comments_count_input')
         end
 
         it 'should generate a label for the input' do
-          @out.should have_tag('form li label')
-          @out.should have_tag('form li label[@for="post_comments_count"')
-          @out.should have_tag('form li label', /Comments count/)
+          output_buffer.should have_tag('form li label')
+          output_buffer.should have_tag('form li label[@for="post_comments_count"')
+          output_buffer.should have_tag('form li label', /Comments count/)
         end
 
         it 'should generate a text input' do
-          @out.should have_tag('form li input')
-          @out.should have_tag('form li input#post_comments_count')
-          @out.should have_tag('form li input[@type="text"]')
-          @out.should have_tag('form li input[@name="post[comments_count]"]')
+          output_buffer.should have_tag('form li input')
+          output_buffer.should have_tag('form li input#post_comments_count')
+          output_buffer.should have_tag('form li input[@type="text"]')
+          output_buffer.should have_tag('form li input[@name="post[comments_count]"]')
         end
 
         it 'should have a maxlength matching the column limit' do
