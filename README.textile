@@ -194,7 +194,7 @@ A proof-of-concept (very much a work-in-progress) stylesheet is provided which y
 
 h2. Compatibility
 
-I'm only testing Formtastic with the latest Rails 2.1 stable release.  Bringing the specs and compatibility up to Rails 2.2 will be a strong focus for the next few weeks.
+I'm only testing Formtastic with the latest Rails 2.2.x stable release.
 
 
 h2. But it doesn't do that thing I really need!
