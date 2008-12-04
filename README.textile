@@ -101,13 +101,13 @@ h2. Status
 
 *THIS IS DEFINITELY NOT PRODUCTION-READY.  THINGS ARE GOING TO CHANGE A LOT.*
 
-It's incredibly opinionated, incomplete, a work in progress, messy around the edges, messy in the middle too, tightly coupled to the database, tightly coupled to "my way" of doing things and also incredibly lacking in unit tests so far, but I hope you try it and offer some suggestions and improvements any way.
+It's incredibly opinionated, incomplete, a work in progress, messy around the edges, messy in the middle too, tightly coupled to the database, tightly coupled to "my way" of doing things and has an incomplete (but fast-growing) test suite, but I hope you try it and offer some suggestions and improvements any way.
 
 
 h2. Roadmap
 
-* There's plenty of TODOs in the code
-* get the basic form_for implementation complete, proven and *well tested* (did I mention how laborious testing form builders is?)
+* there's plenty of TODOs in the code
+* completing the spec/test suite is a top priority
 * improve the generic, reusable, stylesheets that prove this stuff works
 * probably do a shortcut like <code><%= form.inputs :name, :login, :email, :bio %></code> for those that want the form with zero configuration 
 
@@ -194,7 +194,7 @@ A proof-of-concept (very much a work-in-progress) stylesheet is provided which y
 
 h2. Compatibility
 
-I'm only testing Formtastic with the latest Rails stable release.
+I'm only testing Formtastic with the latest Rails 2.1 stable release.  Bringing the specs and compatibility up to Rails 2.2 will be a strong focus for the next few weeks.
 
 
 h2. But it doesn't do that thing I really need!
