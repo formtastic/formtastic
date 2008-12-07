@@ -61,6 +61,7 @@ describe 'Formtastic' do
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::ActiveRecordHelper
   include ActionView::Helpers::RecordIdentificationHelper
+  include ActionView::Helpers::CaptureHelper
   include ActiveSupport
   include ActionController::PolymorphicRoutes
   
@@ -1008,7 +1009,59 @@ describe 'Formtastic' do
     end
     
     describe '#input_field_set' do
-      it 'should have some specs'
+      
+      describe 'when no options are provided' do
+        before do
+          semantic_form_for(@new_post) do |builder|
+            builder.input_field_set do
+              concat('hello')
+            end
+          end
+        end
+        it 'should render a fieldset inside the form' do
+          output_buffer.should have_tag("form fieldset")
+        end
+        it 'should render an ol inside the fieldset' do
+          output_buffer.should have_tag("form fieldset ol")
+        end
+        it 'should render the contents of the block inside the ol' do
+          output_buffer.should have_tag("form fieldset ol", /hello/)
+        end
+        it 'should not render a legend inside the fieldset' do
+          output_buffer.should_not have_tag("form fieldset legend")
+        end
+      end
+      
+      describe 'when a :name option is provided' do
+        before do
+          @legend_text = "Advanced options"
+          
+          semantic_form_for(@new_post) do |builder|
+            builder.input_field_set :name => @legend_text do
+            end
+          end
+        end
+        it 'should render a fieldset inside the form' do
+          output_buffer.should have_tag("form fieldset legend", /#{@legend_text}/)
+        end
+      end
+      
+      describe 'when other options are provided' do
+        before do
+          @id_option = 'advanced'
+          @class_option = 'wide'
+          
+          semantic_form_for(@new_post) do |builder|
+            builder.input_field_set :id => @id_option, :class => @class_option do
+            end
+          end
+        end
+        it 'should pass the options into the fieldset tag as attributes' do
+          output_buffer.should have_tag("form fieldset##{@id_option}")
+          output_buffer.should have_tag("form fieldset.#{@class_option}")
+        end
+      end
+      
     end
     
     describe '#button_field_set' do
@@ -1026,11 +1079,7 @@ describe 'Formtastic' do
     describe '#error_messages'  do
       it 'needs to be implemented or removed'
     end
-      
-    describe '#field_set_and_list_wrapping' do
-      it 'should have some specs'
-    end
-    
+          
   end
 
 end
