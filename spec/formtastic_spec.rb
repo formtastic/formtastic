@@ -1018,17 +1018,17 @@ describe 'Formtastic' do
             end
           end
         end
-        it 'should render a fieldset inside the form' do
-          output_buffer.should have_tag("form fieldset")
+        it 'should render a fieldset inside the form, with a class of "inputs"' do
+          output_buffer.should have_tag("form fieldset.inputs")
         end
         it 'should render an ol inside the fieldset' do
-          output_buffer.should have_tag("form fieldset ol")
+          output_buffer.should have_tag("form fieldset.inputs ol")
         end
         it 'should render the contents of the block inside the ol' do
-          output_buffer.should have_tag("form fieldset ol", /hello/)
+          output_buffer.should have_tag("form fieldset.inputs ol", /hello/)
         end
         it 'should not render a legend inside the fieldset' do
-          output_buffer.should_not have_tag("form fieldset legend")
+          output_buffer.should_not have_tag("form fieldset.inputs legend")
         end
       end
       

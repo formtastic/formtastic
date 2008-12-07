@@ -147,7 +147,7 @@ module JustinFrench #:nodoc:
       #
       #   <% input_field_set :name => "Advanced Options" do %>...<% end %>
       def input_field_set(field_set_html_options = {}, &block)
-        options[:class] ||= "inputs"
+        field_set_html_options[:class] ||= "inputs"
         field_set_and_list_wrapping(field_set_html_options, &block)
       end
       
