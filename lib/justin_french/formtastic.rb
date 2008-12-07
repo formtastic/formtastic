@@ -173,12 +173,6 @@ module JustinFrench #:nodoc:
         @template.submit_tag(value) 
       end
       
-      # TODO: Not implemented yet, just use Rails' standard error stuff for now.
-      def error_messages
-        raise "not implemented yet" 
-      end
-      
-      
       protected
       
       def save_or_create_commit_button_text #:nodoc:

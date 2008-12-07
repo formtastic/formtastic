@@ -1128,10 +1128,6 @@ describe 'Formtastic' do
       it 'should have some specs'
     end
     
-    describe '#error_messages'  do
-      it 'needs to be implemented or removed'
-    end
-          
   end
 
 end
