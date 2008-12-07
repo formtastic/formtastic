@@ -511,8 +511,7 @@ module JustinFrench #:nodoc:
           @template.content_tag(:fieldset, 
             legend + @template.content_tag(:ol, @template.capture(&block)),
             field_set_html_options
-          ), 
-          block.binding
+          )
         )
       end
       
