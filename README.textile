@@ -78,7 +78,7 @@ h3. One day...
 * flash-based multi-file selection
 * an interface for tagging and other has_many_through style associations
 
-In the meantime, there's nothing stopping you from mixing some old fashioned HTML and ERB for custom widgets in with the Formtastic DLS stuff in your views, and I'd love to hear what others are finding a need for.
+In the meantime, there's nothing stopping you from mixing some old fashioned HTML and ERB for custom widgets in with the Formtastic DSL stuff in your views, and I'd love to hear what others are finding a need for.
 
 h3. Fields without database columns
 
