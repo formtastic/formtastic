@@ -78,7 +78,7 @@ h3. One day...
 * flash-based multi-file selection
 * an interface for tagging and other has_many_through style associations
 
-In the meantime, there's nothing stopping you from mixing some old fashioned HTML and ERB for custom widgets in with the Formtastic DSL stuff in your views, or subclassing JustinFrench::Formtastic::SemanticFormBuilder and re-implement (or add to) the builder.  I'd love to hear what others are finding a need for.
+In the meantime, there's nothing stopping you from mixing some old fashioned HTML and ERB for custom widgets in with the Formtastic DLS stuff in your views, and I'd love to hear what others are finding a need for.
 
 h3. Fields without database columns
 
@@ -203,8 +203,6 @@ Oh noes!  It might not ever do it either.  We'll see.  This is not a silver bull
 
 I really hope the plugin will soon be clean and extensible enough to invite others to contribute more complex input types (calendars, etc) to the core.
 
-Subclassing JustinFrench::Formtastic::SemanticFormBuilder yourself or forking the project is an option too!
-
 
 
 h2. Contributors
@@ -212,11 +210,12 @@ h2. Contributors
 * "Justin French":http://justinfrench.com
 * "Xavier Shay":http://rhnh.net
 * Bin Dong
+* "Ben Hamill":http://blog.benhamill.com/
 
 
 h2. Project Info
 
-Formtastic is hosted on Github: http://github.com/justinfrench/formtastic/, where you contributions are greatly welcomed.
+Formtastic is hosted on Github: http://github.com/justinfrench/formtastic/, where your contributions, forkings, comments and feedback are greatly welcomed.
 
 
 Copyright (c) 2007 Justin French, released under the MIT license.
