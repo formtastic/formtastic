@@ -104,12 +104,15 @@ h2. Status
 It's incredibly opinionated, incomplete, a work in progress, messy around the edges, messy in the middle too, tightly coupled to the database, tightly coupled to "my way" of doing things and has an incomplete (but fast-growing) test suite, but I hope you try it and offer some suggestions and improvements any way.
 
 
-h2. Roadmap
+h2. Roadmap to 1.0
 
-* there's plenty of TODOs in the code
-* completing the spec/test suite is a top priority
-* improve the generic, reusable, stylesheets that prove this stuff works
-* probably do a shortcut like <code><%= form.inputs :name, :login, :email, :bio %></code> for those that want the form with zero configuration 
+* there's a few of TODOs left in the code, mainly around custom finders for the belongs_to associations (probably by passing in a collection as an option)
+* there's still a few pending specs
+* improve the generated sample stylesheets
+* add a shortcut method like <code><%= form.inputs :name, :login, :email, :bio %></code> for those that want the form with zero configuration 
+* reconsider the naming of button_field_set and input_field_set
+* take a look at a DSL for the validation errors heading and messages typically placed at the top of a form
+* loop through a few methods like to_s and name on ActiveRecord objects (in addition to the existing to_label) so that the belongs_to associations "just work" a little more often
 
 
 h2. Usage
@@ -218,4 +221,4 @@ h2. Project Info
 Formtastic is hosted on Github: http://github.com/justinfrench/formtastic/, where your contributions, forkings, comments and feedback are greatly welcomed.
 
 
-Copyright (c) 2007 Justin French, released under the MIT license.
+Copyright (c) 2007-2008 Justin French, released under the MIT license.
