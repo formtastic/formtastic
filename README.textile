@@ -113,7 +113,7 @@ h2. Roadmap to 1.0
 * reconsider the naming of button_field_set and input_field_set
 * take a look at a DSL for the validation errors heading and messages typically placed at the top of a form
 * loop through a few methods like to_s and name on ActiveRecord objects (in addition to the existing to_label) so that the belongs_to associations "just work" a little more often
-
+* maybe get rid of the JustinFrench:: module namespace
 
 h2. Usage
 
