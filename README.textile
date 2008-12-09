@@ -106,7 +106,7 @@ It's incredibly opinionated, incomplete, a work in progress, messy around the ed
 
 h2. Roadmap to 1.0
 
-* there's a few of TODOs left in the code, mainly around custom finders for the belongs_to associations (probably by passing in a collection as an option)
+* there's a few of TODOs left in the code
 * there's still a few pending specs
 * improve the generated sample stylesheets
 * add a shortcut method like <code><%= form.inputs :name, :login, :email, :bio %></code> for those that want the form with zero configuration 

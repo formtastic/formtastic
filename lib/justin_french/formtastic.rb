@@ -205,66 +205,101 @@ module JustinFrench #:nodoc:
       
       # Outputs a label and a select box containing options from the parent (belongs_to) association.
       #
-      #   <label for="vehicle_owner_id">Owner</label>
-      #   <select id="vehicle_owner_id" name="vehicle[owner_id]">
+      # Example:
+      #
+      #   f.input :author_id, :as => :select
+      #
+      #   <label for="book_author_id">Author</label>
+      #   <select id="book_author_id" name="book[author_id]">
       #     <option value="1">Justin French</option>
       #     <option value="2">Jane Doe</option>
       #   </select>
       #
+      # You can customize the options available in the select by passing in a collection (Array) of
+      # ActiveRecord objects through the :collection option.  If not provided, the choices are found 
+      # by inferring the parent's class name from the method name and simply calling find(:all) on 
+      # it (VehicleOwner.find(:all) in the example above).
+      #
+      # Examples:
+      #
+      #   f.input :author_id, :as => :select, :collection => @authors
+      #   f.input :author_id, :as => :select, :collection => Author.find(:all)
+      #   f.input :author_id, :as => :select, :collection => [@justin, @kate]
+      # 
       # Note: This input calls #to_label on each record in the parent association, so in the example
       # where a Post belongs_to an Author, you need to define an instance method to_label on Post, 
       # which will be used as the text for the each option in the select.  You can specify an 
       # alternate method with the :label_method option:
       #
-      #   f.input :author_id, :as => :select, :label_method => :full_name
+      # You can also customize the text label inside each option tag, by naming the correct method
+      # (:full_name, :display_name, :account_number, etc) to call on each object in the collection
+      # by passing in the :label_method option.  By default the :label_method is :to_label.
       #
-      # TODO: need ordering and conditions on the find() for the belongs_to choices, or maybe a 
-      # finder method override.
+      # Examples:
+      #
+      #   f.input :author_id, :as => :select, :label_method => :full_name
+      #   f.input :author_id, :as => :select, :label_method => :display_name
+      #   f.input :author_id, :as => :select, :label_method => :to_s
+      #   f.input :author_id, :as => :select, :label_method => :label
       def select_input(method, options)
         options[:label_method] ||= :to_label
+        options[:collection] ||= find_parent_objects_for_column(method)
 
-        parent_class = method.to_s.sub(/_id$/,'').camelize.constantize
-        choices = parent_class.find(:all).map {|o| [o.send(options[:label_method]), o.id]}
-        
+        choices = options[:collection].map {|o| [o.send(options[:label_method]), o.id]}
         input_label(method, options) + @template.select(@object_name, method, choices)
       end
       
-      
       # Outputs a fieldset containing a legend for the label text, and an ordered list (ol) of list
       # items, one for each possible choice in the belongs_to association.  Each li contains a 
-      # label and a radio input.  Example:
+      # label and a radio input.
+      #
+      # Example:
+      #
+      #   f.input :author_id, :as => :radio
       # 
+      # Output:
+      #
       #   <fieldset>
-      #     <legend><span>Owner</span></legend>
+      #     <legend><span>Author</span></legend>
       #     <ol>
       #       <li>
-      #         <label for="vehicle_owner_id_1"><input id="vehicle_owner_id_1" name="vehicle[owner_id]" type="radio" value="1" /> Justin French</label>
+      #         <label for="book_author_id_1"><input id="book_author_id_1" name="book[author_id]" type="radio" value="1" /> Justin French</label>
       #       </li>
       #       <li>
-      #         <label for="vehicle_owner_id_2"><input id="vehicle_owner_id_2" name="vehicle[owner_id]" type="radio" value="2" /> Jane Doe</label>
+      #         <label for="book_author_id_2"><input id="book_author_id_2" name="book[owner_id]" type="radio" value="2" /> Kate French</label>
       #       </li>
       #     </ol>
       #   </fieldset>
+      #
+      # You can customize the options available in the set by passing in a collection (Array) of
+      # ActiveRecord objects through the :collection option.  If not provided, the choices are found 
+      # by inferring the parent's class name from the method name and simply calling find(:all) on 
+      # it (VehicleOwner.find(:all) in the example above).
+      #
+      # Examples:
+      #
+      #   f.input :author_id, :as => :radio, :collection => @authors
+      #   f.input :author_id, :as => :radio, :collection => Author.find(:all)
+      #   f.input :author_id, :as => :radio, :collection => [@justin, @kate]
       # 
-      # Note: This input calls #to_label on each record in the parent association, so in the example
-      # where a Post belongs_to an Author, you need to define an instance method to_label on Post, 
-      # which will be used as the text for the labels next to each radio button. You can specify an 
-      # alternate method with the :label_method option:
+      # You can also customize the text label inside each option tag, by naming the correct method
+      # (:full_name, :display_name, :account_number, etc) to call on each object in the collection
+      # by passing in the :label_method option.  By default the :label_method is :to_label.
+      #
+      # Examples:
       #
       #   f.input :author_id, :as => :radio, :label_method => :full_name
-      #
-      # TODO: need ordering and conditions on the find() for the belongs_to choices, or maybe a 
-      # finder method override.
+      #   f.input :author_id, :as => :radio, :label_method => :display_name
+      #   f.input :author_id, :as => :radio, :label_method => :to_s
+      #   f.input :author_id, :as => :radio, :label_method => :label
       def radio_input(method, options)
         options[:label_method] ||= :to_label
-                
-        parent_class = method.to_s.sub(/_id$/,'').camelize.constantize
-        choices = parent_class.find(:all) # TODO
+        options[:collection] ||= find_parent_objects_for_column(method)
         
         @template.content_tag(:fieldset, 
           %{<legend><span>#{label_text(method, options)}</span></legend>} + 
           @template.content_tag(:ol, 
-            choices.map { |c| 
+            options[:collection].map { |c| 
               @template.content_tag(:li, 
                 @template.content_tag(:label, 
                   "#{@template.radio_button(@object_name, method, c.id)} #{c.send(options[:label_method])}", 
@@ -529,6 +564,14 @@ module JustinFrench #:nodoc:
         else
           raise("Cannot guess an input type for '#{method}' - please set :as option")
         end          
+      end
+      
+      # Used by belongs_to inputs (select, radio) to get a default collection from the parent object
+      # by determining the classname from the method/column name (section_id => Section) and doing a
+      # simple find(:all).
+      def find_parent_objects_for_column(column)
+        parent_class = column.to_s.sub(/_id$/,'').camelize.constantize
+        parent_class.find(:all)
       end
             
       def default_string_options(method) #:nodoc:

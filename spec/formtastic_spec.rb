@@ -616,6 +616,40 @@ describe 'Formtastic' do
             end
 
           end
+          
+          describe 'when the :collection option is not provided' do
+                        
+            it 'should perform a basic find on the parent class' do
+              Author.should_receive(:find)
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:author_id, :as => :radio))
+              end
+            end
+            
+          end
+          
+          describe 'when the :collection option is provided' do
+            
+            before do
+              @authors = Author.find(:all) * 2
+              output_buffer.replace '' # clears the output_buffer from the before block, hax!
+            end
+                  
+            it 'should not call find() on the parent class' do
+              Author.should_not_receive(:find)
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:author_id, :as => :radio, :collection => @authors))
+              end
+            end
+            
+            it 'should use the provided collection' do
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:author_id, :as => :radio, :collection => @authors))
+              end
+              output_buffer.should have_tag('form li fieldset ol li', :count => @authors.size)
+            end
+            
+          end
 
         end
         
@@ -648,6 +682,40 @@ describe 'Formtastic' do
             Author.find(:all).each do |author|
               output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
             end
+          end
+          
+          describe 'when the :collection option is not provided' do
+                        
+            it 'should perform a basic find on the parent class' do
+              Author.should_receive(:find)
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:author_id, :as => :select))
+              end
+            end
+            
+          end
+          
+          describe 'when the :collection option is provided' do
+            
+            before do
+              @authors = Author.find(:all) * 2
+              output_buffer.replace '' # clears the output_buffer from the before block, hax!
+            end
+                  
+            it 'should not call find() on the parent class' do
+              Author.should_not_receive(:find)
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:author_id, :as => :select, :collection => @authors))
+              end
+            end
+            
+            it 'should use the provided collection' do
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:author_id, :as => :select, :collection => @authors))
+              end
+              output_buffer.should have_tag('form li select option', :count => @authors.size)
+            end
+            
           end
                     
         end
