@@ -1189,13 +1189,53 @@ describe 'Formtastic' do
     end
     
     describe '#commit_button' do
-      it 'should have some specs'
+
+      
+      describe 'when used on any record' do
+        
+        before do
+          @new_post.stub!(:new_record?).and_return(false)
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.commit_button)
+          end
+        end
+        
+        it 'should render an input with a type attribute of "submit"' do
+          output_buffer.should have_tag('input[@type="submit"]')
+        end
+        
+        it 'should render an input with a name attribute of "commit"' do
+          output_buffer.should have_tag('input[@name="commit"]')
+        end
+        
+      end
+      
+      describe 'when used on an existing record' do
+        
+        it 'should render an input with a value attribute of "Save Post"' do
+          @new_post.stub!(:new_record?).and_return(false)
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.commit_button)
+          end
+          output_buffer.should have_tag('input[@value="Save Post"]')
+        end
+        
+      end
+      
+      describe 'when used on a new record' do
+        
+        it 'should render an input with a value attribute of "Create Post"' do
+          @new_post.stub!(:new_record?).and_return(true)
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.commit_button)
+          end
+          output_buffer.should have_tag('input[@value="Create Post"]')
+        end
+        
+      end
+      
     end
-    
-    describe '#save_or_create_commit_button_text' do
-      it 'should have some specs'
-    end
-    
+
   end
 
 end
