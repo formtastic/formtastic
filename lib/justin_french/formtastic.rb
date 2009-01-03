@@ -63,6 +63,8 @@ module JustinFrench #:nodoc:
       
       cattr_accessor :all_fields_required_by_default, :required_string, :optional_string
       
+      attr_accessor :template
+      
       
       # Returns a suitable form input for the given +method+, using the database column information
       # and other factors (like the method name) to figure out what you probably want.
@@ -114,7 +116,7 @@ module JustinFrench #:nodoc:
         content += inline_errors(method, options)
         content += inline_hints(method, options)
         
-        return @template.content_tag(:li, content, list_item_html_attributes(method, options))
+        return template.content_tag(:li, content, list_item_html_attributes(method, options))
       end
       
       # Creates a fieldset and ol tag wrapping for form inputs as list items.  Example:
@@ -170,7 +172,7 @@ module JustinFrench #:nodoc:
       #
       #  <%= form.commit_button "Go" %> => <input name="commit" type="submit" value="Go" />
       def commit_button(value = save_or_create_commit_button_text, options = {})
-        @template.submit_tag(value) 
+        template.submit_tag(value) 
       end
       
       protected
@@ -246,7 +248,7 @@ module JustinFrench #:nodoc:
         options[:collection] ||= find_parent_objects_for_column(method)
 
         choices = options[:collection].map {|o| [o.send(options[:label_method]), o.id]}
-        input_label(method, options) + @template.select(@object_name, method, choices)
+        input_label(method, options) + template.select(@object_name, method, choices)
       end
       
       # Outputs a fieldset containing a legend for the label text, and an ordered list (ol) of list
@@ -296,13 +298,13 @@ module JustinFrench #:nodoc:
         options[:label_method] ||= :to_label
         options[:collection] ||= find_parent_objects_for_column(method)
         
-        @template.content_tag(:fieldset, 
+        template.content_tag(:fieldset, 
           %{<legend><span>#{label_text(method, options)}</span></legend>} + 
-          @template.content_tag(:ol, 
+          template.content_tag(:ol, 
             options[:collection].map { |c| 
-              @template.content_tag(:li, 
-                @template.content_tag(:label, 
-                  "#{@template.radio_button(@object_name, method, c.id)} #{c.send(options[:label_method])}", 
+              template.content_tag(:li, 
+                template.content_tag(:label, 
+                  "#{template.radio_button(@object_name, method, c.id)} #{c.send(options[:label_method])}", 
                   :for => "#{@object_name}_#{method}_#{c.id}"
                 )
               )
@@ -315,13 +317,13 @@ module JustinFrench #:nodoc:
       # Outputs a label and a password input, nothing fancy.
       def password_input(method, options)
         input_label(method, options) + 
-        @template.password_field(@object_name, method, default_string_options(method))   
+        template.password_field(@object_name, method, default_string_options(method))   
       end
       
       
       # Outputs a label and a textarea, nothing fancy.
       def text_input(method, options)
-        input_label(method, options) + @template.text_area(@object_name, method)   
+        input_label(method, options) + template.text_area(@object_name, method)   
       end
       
       
@@ -329,14 +331,14 @@ module JustinFrench #:nodoc:
       # size and maxlength -- see default_string_options() for the low-down.
       def string_input(method, options)
         input_label(method, options) + 
-        @template.text_field(@object_name, method, default_string_options(method))
+        template.text_field(@object_name, method, default_string_options(method))
       end
       
       
       # Same as string_input for now
       def numeric_input(method, options)
         input_label(method, options) + 
-        @template.text_field(@object_name, method, default_string_options(method))
+        template.text_field(@object_name, method, default_string_options(method))
       end
        
             
@@ -413,18 +415,18 @@ module JustinFrench #:nodoc:
         (inputs + time_inputs).each do |input|
           if options["discard_#{input}".intern]
             break if time_inputs.include?(input)
-            list_items_capture << @template.hidden_field_tag("#{@object_name}[#{method}(#{position[input]}i)]", @object.send(method), :id => "#{@object_name}_#{method}_#{position[input]}i")
+            list_items_capture << template.hidden_field_tag("#{@object_name}[#{method}(#{position[input]}i)]", @object.send(method), :id => "#{@object_name}_#{method}_#{position[input]}i")
           else
-            list_items_capture << @template.content_tag(:li, 
-              @template.content_tag(:label, input.to_s.humanize, :for => "#{@object_name}_#{method}_#{position[input]}i") + 
-              @template.send("select_#{input}".intern, @object.send(method), :prefix => @object_name, :field_name => "#{method}(#{position[input]}i)")
+            list_items_capture << template.content_tag(:li, 
+              template.content_tag(:label, input.to_s.humanize, :for => "#{@object_name}_#{method}_#{position[input]}i") + 
+              template.send("select_#{input}".intern, @object.send(method), :prefix => @object_name, :field_name => "#{method}(#{position[input]}i)")
             )
           end
         end
         
-        @template.content_tag(:fieldset, 
+        template.content_tag(:fieldset, 
           %{<legend><span>#{label_text(method, options)}</span></legend>} + 
-          @template.content_tag(:ol, list_items_capture)
+          template.content_tag(:ol, list_items_capture)
         )
       end
             
@@ -432,7 +434,7 @@ module JustinFrench #:nodoc:
       # name (method name) and can be altered with the :label option.
       def boolean_input(method, options)
         input_label(method, options, 
-          @template.check_box(@object_name, method) + 
+          template.check_box(@object_name, method) + 
           label_text(method, options)
         )
       end
@@ -462,7 +464,7 @@ module JustinFrench #:nodoc:
         options[:false] ||= "No"
         
         choices = [ [options[:true],true], [options[:false],false] ]
-        input_label(method, options) + @template.select(@object_name, method, choices)
+        input_label(method, options) + template.select(@object_name, method, choices)
       end
       
       # Outputs a fieldset containing two radio buttons (with labels) for "true" and "false". The 
@@ -496,13 +498,13 @@ module JustinFrench #:nodoc:
 
         choices = [ {:label => options[:true], :value => true}, {:label => options[:false], :value => false} ]
 
-        @template.content_tag(:fieldset, 
+        template.content_tag(:fieldset, 
           %{<legend><span>#{label_text(method, options)}</span></legend>} + 
-          @template.content_tag(:ol, 
+          template.content_tag(:ol, 
             choices.map { |c| 
-              @template.content_tag(:li,
-                @template.label_tag("#{@object_name}_#{method}_#{c[:value]}", 
-                  "#{@template.radio_button_tag("#{@object_name}[#{method}]", c[:value].to_s, (@object.send(method) == c[:value]), :id => "#{@object_name}_#{method}_#{c[:value]}")} #{c[:label]}"
+              template.content_tag(:li,
+                template.label_tag("#{@object_name}_#{method}_#{c[:value]}", 
+                  "#{template.radio_button_tag("#{@object_name}[#{method}]", c[:value].to_s, (@object.send(method) == c[:value]), :id => "#{@object_name}_#{method}_#{c[:value]}")} #{c[:label]}"
                 ),
               :class => c[:value].to_s)
             }
@@ -512,11 +514,11 @@ module JustinFrench #:nodoc:
       
       def inline_errors(method, options)  #:nodoc:
         errors = @object.errors.on(method).to_a
-        errors.empty? ? '' : @template.content_tag(:p, errors.to_sentence, :class => 'inline-errors')
+        errors.empty? ? '' : template.content_tag(:p, errors.to_sentence, :class => 'inline-errors')
       end
       
       def inline_hints(method, options) #:nodoc:
-        options[:hint].blank? ? '' : @template.content_tag(:p, options[:hint], :class => 'inline-hints')
+        options[:hint].blank? ? '' : template.content_tag(:p, options[:hint], :class => 'inline-hints')
       end
       
       def label_text(method, options) #:nodoc:
@@ -525,7 +527,7 @@ module JustinFrench #:nodoc:
       
       def input_label(method, options, text = nil) #:nodoc:
         text ||= label_text(method, options)
-        @template.label(@object_name, method, text)
+        template.label(@object_name, method, text)
       end
       
       def required_or_optional_string(required) #:nodoc:
@@ -534,11 +536,11 @@ module JustinFrench #:nodoc:
       
       def field_set_and_list_wrapping(field_set_html_options, &block) #:nodoc:
         legend_text = field_set_html_options.delete(:name)
-        legend = legend_text.blank? ? "" : @template.content_tag(:legend, @template.content_tag(:span, legend_text))
+        legend = legend_text.blank? ? "" : template.content_tag(:legend, template.content_tag(:span, legend_text))
         
-        @template.concat(
-          @template.content_tag(:fieldset, 
-            legend + @template.content_tag(:ol, @template.capture(&block)),
+        template.concat(
+          template.content_tag(:fieldset, 
+            legend + template.content_tag(:ol, template.capture(&block)),
             field_set_html_options
           )
         )
