@@ -61,6 +61,7 @@ describe 'Formtastic' do
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::ActiveRecordHelper
   include ActionView::Helpers::RecordIdentificationHelper
+  include ActionView::Helpers::DateHelper
   include ActionView::Helpers::CaptureHelper
   include ActiveSupport
   include ActionController::PolymorphicRoutes
@@ -536,7 +537,7 @@ describe 'Formtastic' do
         it 'should use DEFAULT_TEXT_FIELD_SIZE for methods without database columns' do
           should_use_default_size_for_methods_without_columns(:string)
         end
-
+        
       end
       
       describe 'for belongs_to associations' do
@@ -609,7 +610,7 @@ describe 'Formtastic' do
               @new_post.author.id.should == @bob.id
               @new_post.author.should == @bob
               semantic_form_for(@new_post) do |builder|
-                concat(builder.input_style(:author_id, :as => :radio))
+                concat(builder.input(:author_id, :as => :radio))
               end
               
               output_buffer.should have_tag("form li fieldset ol li label input[@checked='checked']")
@@ -804,17 +805,130 @@ describe 'Formtastic' do
         end
 
       end
-
+            
       describe ':as => :date' do
-        it 'should have some specs!'
+        
+        setup do 
+          @new_post.stub!(:publish_at)
+          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :date))
+          
+          semantic_form_for(@new_post) do |@builder|
+            concat(@builder.input(:publish_at, :as => :date))
+          end
+        end
+        
+        it 'should have a date class on the wrapper li' do
+          output_buffer.should have_tag('form li.date')
+        end
+        
+        it 'should have a fieldset inside the li wrapper' do
+          output_buffer.should have_tag('form li.date fieldset')
+        end
+
+        it 'should have a legend containing the label text inside the fieldset' do
+          output_buffer.should have_tag('form li.date fieldset legend', /Publish at/)
+        end
+        
+        it 'should have an ordered list of three items inside the fieldset' do
+          output_buffer.should have_tag('form li.date fieldset ol')
+          output_buffer.should have_tag('form li.date fieldset ol li', :count => 3)
+        end
+        
+        it 'should have three labels for year, month and day' do
+          output_buffer.should have_tag('form li.date fieldset ol li label', :count => 3)
+          output_buffer.should have_tag('form li.date fieldset ol li label', /year/i)
+          output_buffer.should have_tag('form li.date fieldset ol li label', /month/i)
+          output_buffer.should have_tag('form li.date fieldset ol li label', /day/i)
+        end
+        
+        it 'should have three selects for year, month and day' do
+          output_buffer.should have_tag('form li.date fieldset ol li select', :count => 3)
+        end
+        
+      
       end
 
       describe ':as => :datetime' do
-        it 'should have some specs!'
+        
+        setup do 
+          @new_post.stub!(:publish_at)
+          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :datetime))
+          
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:publish_at, :as => :datetime))
+          end
+        end
+        
+        it 'should have a datetime class on the wrapper li' do
+          output_buffer.should have_tag('form li.datetime')
+        end
+        
+        it 'should have a fieldset inside the li wrapper' do
+          output_buffer.should have_tag('form li.datetime fieldset')
+        end
+
+        it 'should have a legend containing the label text inside the fieldset' do
+          output_buffer.should have_tag('form li.datetime fieldset legend', /Publish at/)
+        end
+        
+        it 'should have an ordered list of five items inside the fieldset' do
+          output_buffer.should have_tag('form li.datetime fieldset ol')
+          output_buffer.should have_tag('form li.datetime fieldset ol li', :count => 5)
+        end
+        
+        it 'should have five labels for year, month, day, hour and minute' do
+          output_buffer.should have_tag('form li.datetime fieldset ol li label', :count => 5)
+          output_buffer.should have_tag('form li.datetime fieldset ol li label', /year/i)
+          output_buffer.should have_tag('form li.datetime fieldset ol li label', /month/i)
+          output_buffer.should have_tag('form li.datetime fieldset ol li label', /day/i)
+          output_buffer.should have_tag('form li.datetime fieldset ol li label', /hour/i)
+          output_buffer.should have_tag('form li.datetime fieldset ol li label', /minute/i)
+        end
+        
+        it 'should have five selects for year, month, day, hour and minute' do
+          output_buffer.should have_tag('form li.datetime fieldset ol li select', :count => 5)
+        end
+      
       end
 
       describe ':as => :time' do
-        it 'should have some specs!'
+        
+        setup do 
+          @new_post.stub!(:publish_at)
+          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :time))
+          
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:publish_at, :as => :time))
+          end
+        end
+        
+        it 'should have a time class on the wrapper li' do
+          output_buffer.should have_tag('form li.time')
+        end
+        
+        it 'should have a fieldset inside the li wrapper' do
+          output_buffer.should have_tag('form li.time fieldset')
+        end
+
+        it 'should have a legend containing the label text inside the fieldset' do
+          output_buffer.should have_tag('form li.time fieldset legend', /Publish at/)
+        end
+        
+        it 'should have an ordered list of two items inside the fieldset' do
+          output_buffer.should have_tag('form li.time fieldset ol')
+          output_buffer.should have_tag('form li.time fieldset ol li', :count => 2)
+        end
+        
+        it 'should have five labels for hour and minute' do
+          output_buffer.should have_tag('form li.time fieldset ol li label', :count => 2)
+          output_buffer.should have_tag('form li.time fieldset ol li label', /hour/i)
+          output_buffer.should have_tag('form li.time fieldset ol li label', /minute/i)
+        end
+        
+        it 'should have five selects for hour and minute' do
+          output_buffer.should have_tag('form li.time fieldset ol li select', :count => 2)
+        end
+        
       end
       
       describe ':as => :boolean' do
@@ -1190,7 +1304,6 @@ describe 'Formtastic' do
     
     describe '#commit_button' do
 
-      
       describe 'when used on any record' do
         
         before do
