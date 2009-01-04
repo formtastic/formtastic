@@ -111,14 +111,24 @@ module JustinFrench #:nodoc:
         options[:label] ||= method.to_s.humanize
         options[:as] ||= default_input_type(@object, method)
         input_method = "#{options[:as]}_input"
-        content = ''
-        content += send(input_method, method, options) # eg string_input or select_input
-        content += inline_errors(method, options)
-        content += inline_hints(method, options)
         
-        return template.content_tag(:li, content, list_item_html_attributes(method, options))
+        html_class = [
+          options[:as].to_s, 
+          (options[:required] ? 'required' : 'optional'),
+          (@object.errors.on(method) ? 'error' : nil)
+        ].compact.join(" ")
+        
+        html_id = "#{@object_name}_#{method}_input"
+        
+        list_item_content = [
+          send(input_method, method, options),
+          inline_errors(method, options),
+          inline_hints(method, options)
+        ].compact.join("\n")
+        
+        return template.content_tag(:li, list_item_content, { :id => html_id, :class => html_class })
       end
-      
+
       # Creates a fieldset and ol tag wrapping for form inputs as list items.  Example:
       # 
       #   <% form_for @user do |form| %>
@@ -584,14 +594,7 @@ module JustinFrench #:nodoc:
           { :maxlength => column.limit, :size => [column.limit, DEFAULT_TEXT_FIELD_SIZE].min }
         end       
       end
-      
-      def list_item_html_attributes(method, options) #:nodoc:
-        classes = [options[:as].to_s]
-        classes << (options[:required] ? 'required' : 'optional')
-        classes << 'error' if @object.errors.on(method)
-        return { :id => "#{@object_name}_#{method}_input", :class => classes.join(" ") } 
-      end
-      
+            
     end
     
   end
