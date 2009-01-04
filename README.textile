@@ -107,12 +107,11 @@ It's incredibly opinionated, incomplete, a work in progress, messy around the ed
 h2. Roadmap to 1.0
 
 * there's a few of TODOs left in the code
-* there's still a few pending specs
 * improve the generated sample stylesheets
 * add a shortcut method like <code><%= form.inputs :name, :login, :email, :bio %></code> for those that want the form with zero configuration 
 * reconsider the naming of button_field_set and input_field_set
 * take a look at a DSL for the validation errors heading and messages typically placed at the top of a form
-* loop through a few methods like to_s and name on ActiveRecord objects (in addition to the existing to_label) so that the belongs_to associations "just work" a little more often
+* loop through a few methods like to_s and name on ActiveRecord objects (in addition to the existing to_label) so that the belongs_to associations "just work" a little more often, rather than depending on to_label
 * maybe get rid of the JustinFrench:: module namespace
 
 h2. Usage
