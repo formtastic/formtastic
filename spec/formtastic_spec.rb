@@ -399,8 +399,8 @@ describe 'Formtastic' do
               semantic_form_for(@new_post) do |builder| 
                 concat(builder.input(:meta_description))
               end
-              output_buffer.should have_tag("form li label", /#{'meta_description'.humanize}/)
-              output_buffer.should have_tag("form li label", /Meta description/)
+              output_buffer.should have_tag("form li label", /#{'meta_description'.titleize}/)
+              output_buffer.should have_tag("form li label", /Meta Description/)
             end
 
           end
@@ -745,7 +745,7 @@ describe 'Formtastic' do
         it 'should generate a label for the input' do
           output_buffer.should have_tag('form li label')
           output_buffer.should have_tag('form li label[@for="post_password_hash"')
-          output_buffer.should have_tag('form li label', /Password hash/)
+          output_buffer.should have_tag('form li label', /Password Hash/)
         end
 
         it 'should generate a password input' do
@@ -826,7 +826,7 @@ describe 'Formtastic' do
         end
 
         it 'should have a legend containing the label text inside the fieldset' do
-          output_buffer.should have_tag('form li.date fieldset legend', /Publish at/)
+          output_buffer.should have_tag('form li.date fieldset legend', /Publish At/)
         end
         
         it 'should have an ordered list of three items inside the fieldset' do
@@ -868,7 +868,7 @@ describe 'Formtastic' do
         end
 
         it 'should have a legend containing the label text inside the fieldset' do
-          output_buffer.should have_tag('form li.datetime fieldset legend', /Publish at/)
+          output_buffer.should have_tag('form li.datetime fieldset legend', /Publish At/)
         end
         
         it 'should have an ordered list of five items inside the fieldset' do
@@ -911,7 +911,7 @@ describe 'Formtastic' do
         end
 
         it 'should have a legend containing the label text inside the fieldset' do
-          output_buffer.should have_tag('form li.time fieldset legend', /Publish at/)
+          output_buffer.should have_tag('form li.time fieldset legend', /Publish At/)
         end
         
         it 'should have an ordered list of two items inside the fieldset' do
@@ -953,7 +953,7 @@ describe 'Formtastic' do
         it 'should generate a label containing the input' do
           output_buffer.should have_tag('form li label')
           output_buffer.should have_tag('form li label[@for="post_allow_comments"')
-          output_buffer.should have_tag('form li label', /Allow comments/)
+          output_buffer.should have_tag('form li label', /Allow Comments/)
           output_buffer.should have_tag('form li label input[@type="checkbox"]')
         end
 
@@ -986,7 +986,7 @@ describe 'Formtastic' do
         end
         
         it 'should generate a fieldset containing a legend' do
-          output_buffer.should have_tag('form li fieldset legend', /Allow comments/)
+          output_buffer.should have_tag('form li fieldset legend', /Allow Comments/)
         end
         
         it 'should generate a fieldset containing an ordered list of two items with true and false classes' do
@@ -1091,7 +1091,7 @@ describe 'Formtastic' do
         it 'should generate a label containing the input' do
           output_buffer.should have_tag('form li label')
           output_buffer.should have_tag('form li label[@for="post_allow_comments"')
-          output_buffer.should have_tag('form li label', /Allow comments/)
+          output_buffer.should have_tag('form li label', /Allow Comments/)
         end
         
         it 'should generate a select box with two options' do
@@ -1160,7 +1160,7 @@ describe 'Formtastic' do
         it 'should generate a label for the input' do
           output_buffer.should have_tag('form li label')
           output_buffer.should have_tag('form li label[@for="post_comments_count"')
-          output_buffer.should have_tag('form li label', /Comments count/)
+          output_buffer.should have_tag('form li label', /Comments Count/)
         end
 
         it 'should generate a text input' do
