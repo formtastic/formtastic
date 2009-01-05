@@ -254,10 +254,11 @@ module JustinFrench #:nodoc:
       #   f.input :author_id, :as => :select, :label_method => :to_s
       #   f.input :author_id, :as => :select, :label_method => :label
       def select_input(method, options)
-        options[:label_method] ||= :to_label
         options[:collection] ||= find_parent_objects_for_column(method)
 
-        choices = options[:collection].map { |o| collection_option(o) }
+        choices = options[:collection].map { |o|
+          collection_option(o, options[:label_method] || :to_label)
+        }
         input_label(method, options) + template.select(@object_name, method, choices)
       end
       
@@ -597,10 +598,10 @@ module JustinFrench #:nodoc:
       
       private
       
-      def collection_option(item)
+      def collection_option(item, method = :to_label)
         [
-          item.respond_to?(:to_label) ? item.to_label : item.to_s,
-          item.respond_to?(:to_label) ? item.id       : item.to_s
+          item.respond_to?(method) ? item.send(method) : item.to_s,
+          item.respond_to?(method) ? item.id           : item.to_s
         ]
       end
     end
