@@ -214,6 +214,8 @@ h2. Contributors
 * "Xavier Shay":http://rhnh.net
 * Bin Dong
 * "Ben Hamill":http://blog.benhamill.com/
+* "Pat Allan":http://github.com/freelancing-god
+* "negonicrac":http://github.com/negonicrac
 
 
 h2. Project Info
