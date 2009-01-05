@@ -108,7 +108,7 @@ module JustinFrench #:nodoc:
         raise NoMethodError unless @object.respond_to?(method)
         
         options[:required] = method_required?(method, options[:required])
-        options[:label] ||= method.to_s.humanize
+        options[:label] ||= method.to_s.titleize
         options[:as] ||= default_input_type(@object, method)
         input_method = "#{options[:as]}_input"
         
@@ -254,13 +254,12 @@ module JustinFrench #:nodoc:
       #   f.input :author_id, :as => :select, :label_method => :to_s
       #   f.input :author_id, :as => :select, :label_method => :label
       def select_input(method, options)
-        options[:label_method] ||= :to_label
         options[:collection] ||= find_parent_objects_for_column(method)
-        options[:include_blank] ||= false
-        options[:prompt] ||= nil
 
-        choices = options[:collection].map {|o| [o.send(options[:label_method]), o.id]}
-        input_label(method, options) + template.select(@object_name, method, choices, {:include_blank => options[:include_blank], :prompt => options[:prompt]})
+        choices = options[:collection].map { |o|
+          collection_option(o, options[:label_method] || :to_label)
+        }
+        input_label(method, options) + template.select(@object_name, method, choices, options)
       end
       
       # Outputs a fieldset containing a legend for the label text, and an ordered list (ol) of list
@@ -437,7 +436,7 @@ module JustinFrench #:nodoc:
           else
             list_items_capture << template.content_tag(:li, 
               template.content_tag(:label, input.to_s.humanize, :for => "#{@object_name}_#{method}_#{position[input]}i") + 
-              template.send("select_#{input}".intern, @object.send(method), :prefix => @object_name, :field_name => "#{method}(#{position[input]}i)")
+              template.send("select_#{input}".intern, @object.send(method), :prefix => @object_name, :field_name => "#{method}(#{position[input]}i)", :include_blank => options[:include_blank])
             )
           end
         end
@@ -482,7 +481,7 @@ module JustinFrench #:nodoc:
         options[:false] ||= "No"
         
         choices = [ [options[:true],true], [options[:false],false] ]
-        input_label(method, options) + template.select(@object_name, method, choices)
+        input_label(method, options) + template.select(@object_name, method, choices, options)
       end
       
       # Outputs a fieldset containing two radio buttons (with labels) for "true" and "false". The 
@@ -602,8 +601,15 @@ module JustinFrench #:nodoc:
           { :maxlength => column.limit, :size => [column.limit, DEFAULT_TEXT_FIELD_SIZE].min }
         end       
       end
-            
+      
+      private
+      
+      def collection_option(item, method = :to_label)
+        [
+          item.respond_to?(method) ? item.send(method) : item.to_s,
+          item.respond_to?(method) ? item.id           : item.to_s
+        ]
+      end
     end
-    
   end
 end

@@ -399,8 +399,8 @@ describe 'Formtastic' do
               semantic_form_for(@new_post) do |builder| 
                 concat(builder.input(:meta_description))
               end
-              output_buffer.should have_tag("form li label", /#{'meta_description'.humanize}/)
-              output_buffer.should have_tag("form li label", /Meta description/)
+              output_buffer.should have_tag("form li label", /#{'meta_description'.titleize}/)
+              output_buffer.should have_tag("form li label", /Meta Description/)
             end
 
           end
@@ -718,22 +718,23 @@ describe 'Formtastic' do
             end
             
           end
-                    
-        end
         
-        describe ':as => :select, :include_blank => true, :prompt => "choose something"' do
-          before do
-            semantic_form_for(@new_post) do |builder|
-              concat(builder.input(:author_id, :as => :select, :include_blank => true, :prompt => "choose author"))
+          describe 'when :include_blank => true, :prompt => "choose something" is set' do
+            before do
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:author_id, :as => :select, :include_blank => true, :prompt => "choose author"))
+              end
+            end
+          
+            it 'should have a blank select option' do
+              output_buffer.should have_tag("form li select option[@value='']", / /)
+            end
+            
+            it 'should have a select with prompt' do
+              output_buffer.should have_tag("form li select option[@value='']", /choose author/)
             end
           end
           
-          it 'should have a blank select option' do
-             output_buffer.should have_tag("form li select option[@value='']", / /)
-           end
-          it 'should have a select with prompt' do
-             output_buffer.should have_tag("form li select option[@value='']", /choose author/)
-           end
         end
       end
 
@@ -759,7 +760,7 @@ describe 'Formtastic' do
         it 'should generate a label for the input' do
           output_buffer.should have_tag('form li label')
           output_buffer.should have_tag('form li label[@for="post_password_hash"')
-          output_buffer.should have_tag('form li label', /Password hash/)
+          output_buffer.should have_tag('form li label', /Password Hash/)
         end
 
         it 'should generate a password input' do
@@ -840,7 +841,7 @@ describe 'Formtastic' do
         end
 
         it 'should have a legend containing the label text inside the fieldset' do
-          output_buffer.should have_tag('form li.date fieldset legend', /Publish at/)
+          output_buffer.should have_tag('form li.date fieldset legend', /Publish At/)
         end
         
         it 'should have an ordered list of three items inside the fieldset' do
@@ -859,6 +860,17 @@ describe 'Formtastic' do
           output_buffer.should have_tag('form li.date fieldset ol li select', :count => 3)
         end
         
+        describe 'when :include_blank => true is set' do
+          before do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:publish_at, :as => :date, :include_blank => true))
+            end
+          end
+        
+          it 'should have a blank select option' do
+            output_buffer.should have_tag("option[@value='']", "")
+          end
+        end
       
       end
 
@@ -882,7 +894,7 @@ describe 'Formtastic' do
         end
 
         it 'should have a legend containing the label text inside the fieldset' do
-          output_buffer.should have_tag('form li.datetime fieldset legend', /Publish at/)
+          output_buffer.should have_tag('form li.datetime fieldset legend', /Publish At/)
         end
         
         it 'should have an ordered list of five items inside the fieldset' do
@@ -901,6 +913,18 @@ describe 'Formtastic' do
         
         it 'should have five selects for year, month, day, hour and minute' do
           output_buffer.should have_tag('form li.datetime fieldset ol li select', :count => 5)
+        end
+        
+        describe 'when :include_blank => true is set' do
+          before do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:publish_at, :as => :datetime, :include_blank => true))
+            end
+          end
+        
+          it 'should have a blank select option' do
+            output_buffer.should have_tag("option[@value='']", "")
+          end
         end
       
       end
@@ -925,7 +949,7 @@ describe 'Formtastic' do
         end
 
         it 'should have a legend containing the label text inside the fieldset' do
-          output_buffer.should have_tag('form li.time fieldset legend', /Publish at/)
+          output_buffer.should have_tag('form li.time fieldset legend', /Publish At/)
         end
         
         it 'should have an ordered list of two items inside the fieldset' do
@@ -941,6 +965,18 @@ describe 'Formtastic' do
         
         it 'should have five selects for hour and minute' do
           output_buffer.should have_tag('form li.time fieldset ol li select', :count => 2)
+        end
+        
+        describe 'when :include_blank => true is set' do
+          before do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:publish_at, :as => :time, :include_blank => true))
+            end
+          end
+        
+          it 'should have a blank select option' do
+            output_buffer.should have_tag("option[@value='']", "")
+          end
         end
         
       end
@@ -967,7 +1003,7 @@ describe 'Formtastic' do
         it 'should generate a label containing the input' do
           output_buffer.should have_tag('form li label')
           output_buffer.should have_tag('form li label[@for="post_allow_comments"')
-          output_buffer.should have_tag('form li label', /Allow comments/)
+          output_buffer.should have_tag('form li label', /Allow Comments/)
           output_buffer.should have_tag('form li label input[@type="checkbox"]')
         end
 
@@ -1000,7 +1036,7 @@ describe 'Formtastic' do
         end
         
         it 'should generate a fieldset containing a legend' do
-          output_buffer.should have_tag('form li fieldset legend', /Allow comments/)
+          output_buffer.should have_tag('form li fieldset legend', /Allow Comments/)
         end
         
         it 'should generate a fieldset containing an ordered list of two items with true and false classes' do
@@ -1105,7 +1141,7 @@ describe 'Formtastic' do
         it 'should generate a label containing the input' do
           output_buffer.should have_tag('form li label')
           output_buffer.should have_tag('form li label[@for="post_allow_comments"')
-          output_buffer.should have_tag('form li label', /Allow comments/)
+          output_buffer.should have_tag('form li label', /Allow Comments/)
         end
         
         it 'should generate a select box with two options' do
@@ -1147,10 +1183,25 @@ describe 'Formtastic' do
             output_buffer.should have_tag('form li select#post_allow_comments option[@value="false"]', /No/)
           end
           
-        end
-        
-      end
+        end      
 
+        describe 'when :include_blank => true, :prompt => "choose something" is set' do
+          before do          
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:allow_comments, :as => :boolean_select, :include_blank => true, :prompt => "choose something"))
+            end
+          end
+        
+          it 'should have a blank select option' do
+             output_buffer.should have_tag("form li select option[@value='']", / /)
+           end
+          it 'should have a select with prompt' do
+            output_buffer.should have_tag("form li select option[@value='']", /choose something/)
+          end
+        end
+      
+      end
+      
       describe ':as => :numeric' do
 
         setup do 
@@ -1174,7 +1225,7 @@ describe 'Formtastic' do
         it 'should generate a label for the input' do
           output_buffer.should have_tag('form li label')
           output_buffer.should have_tag('form li label[@for="post_comments_count"')
-          output_buffer.should have_tag('form li label', /Comments count/)
+          output_buffer.should have_tag('form li label', /Comments Count/)
         end
 
         it 'should generate a text input' do
@@ -1223,7 +1274,7 @@ describe 'Formtastic' do
         it 'should generate a label for the input' do
           output_buffer.should have_tag('form li label')
           output_buffer.should have_tag('form li label[@for="post_some_file"')
-          output_buffer.should have_tag('form li label', /Some file/)
+          output_buffer.should have_tag('form li label', /Some File/)
         end
         
         it 'should generate a file input' do
