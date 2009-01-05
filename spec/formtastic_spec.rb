@@ -718,22 +718,23 @@ describe 'Formtastic' do
             end
             
           end
-                    
-        end
         
-        describe ':as => :select, :include_blank => true, :prompt => "choose something"' do
-          before do
-            semantic_form_for(@new_post) do |builder|
-              concat(builder.input(:author_id, :as => :select, :include_blank => true, :prompt => "choose author"))
+          describe 'when :include_blank => true, :prompt => "choose something" is set' do
+            before do
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:author_id, :as => :select, :include_blank => true, :prompt => "choose author"))
+              end
+            end
+          
+            it 'should have a blank select option' do
+              output_buffer.should have_tag("form li select option[@value='']", / /)
+            end
+            
+            it 'should have a select with prompt' do
+              output_buffer.should have_tag("form li select option[@value='']", /choose author/)
             end
           end
           
-          it 'should have a blank select option' do
-             output_buffer.should have_tag("form li select option[@value='']", / /)
-           end
-          it 'should have a select with prompt' do
-             output_buffer.should have_tag("form li select option[@value='']", /choose author/)
-           end
         end
       end
 
@@ -859,6 +860,17 @@ describe 'Formtastic' do
           output_buffer.should have_tag('form li.date fieldset ol li select', :count => 3)
         end
         
+        describe 'when :include_blank => true is set' do
+          before do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:publish_at, :as => :date, :include_blank => true))
+            end
+          end
+        
+          it 'should have a blank select option' do
+            output_buffer.should have_tag("option[@value='']", "")
+          end
+        end
       
       end
 
@@ -902,6 +914,18 @@ describe 'Formtastic' do
         it 'should have five selects for year, month, day, hour and minute' do
           output_buffer.should have_tag('form li.datetime fieldset ol li select', :count => 5)
         end
+        
+        describe 'when :include_blank => true is set' do
+          before do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:publish_at, :as => :datetime, :include_blank => true))
+            end
+          end
+        
+          it 'should have a blank select option' do
+            output_buffer.should have_tag("option[@value='']", "")
+          end
+        end
       
       end
 
@@ -941,6 +965,18 @@ describe 'Formtastic' do
         
         it 'should have five selects for hour and minute' do
           output_buffer.should have_tag('form li.time fieldset ol li select', :count => 2)
+        end
+        
+        describe 'when :include_blank => true is set' do
+          before do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:publish_at, :as => :time, :include_blank => true))
+            end
+          end
+        
+          it 'should have a blank select option' do
+            output_buffer.should have_tag("option[@value='']", "")
+          end
         end
         
       end
@@ -1147,10 +1183,25 @@ describe 'Formtastic' do
             output_buffer.should have_tag('form li select#post_allow_comments option[@value="false"]', /No/)
           end
           
-        end
-        
-      end
+        end      
 
+        describe 'when :include_blank => true, :prompt => "choose something" is set' do
+          before do          
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:allow_comments, :as => :boolean_select, :include_blank => true, :prompt => "choose something"))
+            end
+          end
+        
+          it 'should have a blank select option' do
+             output_buffer.should have_tag("form li select option[@value='']", / /)
+           end
+          it 'should have a select with prompt' do
+            output_buffer.should have_tag("form li select option[@value='']", /choose something/)
+          end
+        end
+      
+      end
+      
       describe ':as => :numeric' do
 
         setup do 

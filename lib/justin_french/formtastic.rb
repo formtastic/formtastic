@@ -255,13 +255,11 @@ module JustinFrench #:nodoc:
       #   f.input :author_id, :as => :select, :label_method => :label
       def select_input(method, options)
         options[:collection] ||= find_parent_objects_for_column(method)
-        options[:include_blank] ||= false
-        options[:prompt] ||= nil
 
         choices = options[:collection].map { |o|
           collection_option(o, options[:label_method] || :to_label)
         }
-        input_label(method, options) + template.select(@object_name, method, choices, {:include_blank => options[:include_blank], :prompt => options[:prompt]})
+        input_label(method, options) + template.select(@object_name, method, choices, options)
       end
       
       # Outputs a fieldset containing a legend for the label text, and an ordered list (ol) of list
@@ -438,7 +436,7 @@ module JustinFrench #:nodoc:
           else
             list_items_capture << template.content_tag(:li, 
               template.content_tag(:label, input.to_s.humanize, :for => "#{@object_name}_#{method}_#{position[input]}i") + 
-              template.send("select_#{input}".intern, @object.send(method), :prefix => @object_name, :field_name => "#{method}(#{position[input]}i)")
+              template.send("select_#{input}".intern, @object.send(method), :prefix => @object_name, :field_name => "#{method}(#{position[input]}i)", :include_blank => options[:include_blank])
             )
           end
         end
@@ -483,7 +481,7 @@ module JustinFrench #:nodoc:
         options[:false] ||= "No"
         
         choices = [ [options[:true],true], [options[:false],false] ]
-        input_label(method, options) + template.select(@object_name, method, choices)
+        input_label(method, options) + template.select(@object_name, method, choices, options)
       end
       
       # Outputs a fieldset containing two radio buttons (with labels) for "true" and "false". The 
