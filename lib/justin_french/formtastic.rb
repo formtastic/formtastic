@@ -256,9 +256,11 @@ module JustinFrench #:nodoc:
       def select_input(method, options)
         options[:label_method] ||= :to_label
         options[:collection] ||= find_parent_objects_for_column(method)
+        options[:include_blank] ||= false
+        options[:prompt] ||= nil
 
         choices = options[:collection].map {|o| [o.send(options[:label_method]), o.id]}
-        input_label(method, options) + template.select(@object_name, method, choices)
+        input_label(method, options) + template.select(@object_name, method, choices, {:include_blank => options[:include_blank], :prompt => options[:prompt]})
       end
       
       # Outputs a fieldset containing a legend for the label text, and an ordered list (ol) of list

@@ -721,6 +721,20 @@ describe 'Formtastic' do
                     
         end
         
+        describe ':as => :select, :include_blank => true, :prompt => "choose something"' do
+          before do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:author_id, :as => :select, :include_blank => true, :prompt => "choose author"))
+            end
+          end
+          
+          it 'should have a blank select option' do
+             output_buffer.should have_tag("form li select option[@value='']", / /)
+           end
+          it 'should have a select with prompt' do
+             output_buffer.should have_tag("form li select option[@value='']", /choose author/)
+           end
+        end
       end
 
       describe ':as => :password' do
