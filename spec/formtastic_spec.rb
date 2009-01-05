@@ -367,7 +367,7 @@ describe 'Formtastic' do
           end
 
           it 'should call the corresponding input method' do
-            [:select, :radio, :password, :text, :date, :datetime, :time, :boolean, :boolean_select, :string, :numeric].each do |input_style|
+            [:select, :radio, :password, :text, :date, :datetime, :time, :boolean, :boolean_select, :string, :numeric, :file].each do |input_style|
               @new_post.stub!(:generic_column_name)
               @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
               semantic_form_for(@new_post) do |builder| 
@@ -1186,6 +1186,38 @@ describe 'Formtastic' do
           should_use_default_size_for_methods_without_columns(:numeric)
         end
 
+      end
+      
+      describe ':as => :file' do
+        setup do 
+          @new_post.stub!(:some_file)
+          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 50))
+        
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:some_file, :as => :file))
+          end
+        end
+        
+        it 'should have a file class on the wrapper' do
+          output_buffer.should have_tag('form li.file')
+        end
+        
+        it 'should have a post_some_file_input id on the wrapper' do
+          output_buffer.should have_tag('form li#post_some_file_input')
+        end
+        
+        it 'should generate a label for the input' do
+          output_buffer.should have_tag('form li label')
+          output_buffer.should have_tag('form li label[@for="post_some_file"')
+          output_buffer.should have_tag('form li label', /Some file/)
+        end
+        
+        it 'should generate a file input' do
+          output_buffer.should have_tag('form li input')
+          output_buffer.should have_tag('form li input#post_some_file')
+          output_buffer.should have_tag('form li input[@type="file"]')
+          output_buffer.should have_tag('form li input[@name="post[some_file]"]')
+        end
       end
       
     end

@@ -350,6 +350,12 @@ module JustinFrench #:nodoc:
         input_label(method, options) + 
         template.text_field(@object_name, method, default_string_options(method))
       end
+      
+      # Outputs label and file field
+      def file_input(method, options)
+        input_label(method, options) + 
+        template.file_field(@object_name, method)
+      end
        
             
       # Outputs a fieldset with a legend for the method label, and a ordered list (ol) of list

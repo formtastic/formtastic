@@ -67,6 +67,7 @@ h2. The Available Inputs
 * :boolean_select (a yes/no select box)
 * :string (a text field) - default for :string column types
 * :numeric (a text field, like string) - default for :integer, :float and :decimal column types
+* :file (a file field)
 
 The documentation is pretty good for each of these (what it does, what the output is, etc) so go check it out.
 
@@ -74,7 +75,7 @@ The documentation is pretty good for each of these (what it does, what the outpu
 h3. One day...
 
 * calendars and other more humanized date/time selections
-* vanilla html file selection to work well with things like ThoughtBot's "Paperclip":http://www.thoughtbot.com/projects/paperclip
+* -vanilla html file selection to work well with things like ThoughtBot's "Paperclip":http://www.thoughtbot.com/projects/paperclip-
 * flash-based multi-file selection
 * an interface for tagging and other has_many_through style associations
 
