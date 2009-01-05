@@ -257,7 +257,7 @@ module JustinFrench #:nodoc:
         options[:label_method] ||= :to_label
         options[:collection] ||= find_parent_objects_for_column(method)
 
-        choices = options[:collection].map {|o| [o.send(options[:label_method]), o.id]}
+        choices = options[:collection].map { |o| collection_option(o) }
         input_label(method, options) + template.select(@object_name, method, choices)
       end
       
@@ -594,8 +594,15 @@ module JustinFrench #:nodoc:
           { :maxlength => column.limit, :size => [column.limit, DEFAULT_TEXT_FIELD_SIZE].min }
         end       
       end
-            
+      
+      private
+      
+      def collection_option(item)
+        [
+          item.respond_to?(:to_label) ? item.to_label : item.to_s,
+          item.respond_to?(:to_label) ? item.id       : item.to_s
+        ]
+      end
     end
-    
   end
 end
