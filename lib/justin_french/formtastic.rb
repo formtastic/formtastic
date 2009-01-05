@@ -108,7 +108,7 @@ module JustinFrench #:nodoc:
         raise NoMethodError unless @object.respond_to?(method)
         
         options[:required] = method_required?(method, options[:required])
-        options[:label] ||= method.to_s.humanize
+        options[:label] ||= method.to_s.titleize
         options[:as] ||= default_input_type(@object, method)
         input_method = "#{options[:as]}_input"
         
