@@ -97,7 +97,7 @@ module JustinFrench #:nodoc:
       # Example:
       # 
       #   <% semantic_form_for @employee do |form| %>
-      #     <% form.input_field_set do -%>
+      #     <% form.inputs do -%>
       #       <%= form.input :name, :label => "Full Name"%>
       #       <%= form.input :manager_id, :as => :radio %>
       #       <%= form.input :hired_at, :as => :date, :label => "Date Hired" %>
@@ -128,46 +128,115 @@ module JustinFrench #:nodoc:
         
         return template.content_tag(:li, list_item_content, { :id => html_id, :class => html_class })
       end
-
-      # Creates a fieldset and ol tag wrapping for form inputs as list items.  Example:
-      # 
-      #   <% form_for @user do |form| %>
-      #     <% form.input_field_set do %>
-      #       <li>form input 1</li>
-      #       <li>form input 2</li>
+      
+      # Creates an input fieldset and ol tag wrapping for use around a set of inputs.  It can be 
+      # called either with a block (in which you can do the usual Rails form stuff, HTML, ERB, etc),
+      # or with a list of fields.  These two examples are functionally equivalent:
+      #
+      #   # With a block:
+      #   <% semantic_form_for @post do |form| %>
+      #     <% form.inputs do %>
+      #       <%= form.input :title %>
+      #       <%= form.input :body %>
       #     <% end %>
       #   <% end %>
       #
-      # Output:
+      #   # With a list of fields:
+      #   <% semantic_form_for @post do |form| %>
+      #     <%= form.inputs :title, :body %>
+      #   <% end %>
+      #
+      #   # Output:
       #   <form ...>
       #     <fieldset class="inputs">
       #       <ol>
-      #         <li>form input 1</li>
-      #         <li>form input 2</li>
+      #         <li class="string">...</li>
+      #         <li class="text">...</li>
       #       </ol>
       #     </fieldset>
       #   </form>
-      # 
-      # HTML attributes for the fieldset can be passed in as a hash before the block, with the class
-      # set to "inputs" by default.  Example:
-      #   <% input_field_set :id => "main-inputs" do %>
-      #     ...
+      #
+      # === Quick Forms
+      #
+      # When called without a block or a field list, an input is rendered for each column in the
+      # model's database table, just like Rails' scaffolding.  You'll obviously want more control
+      # than this in a production application, but it's a great way to get started, then come back
+      # later to customise the form with a field list or a block of inputs.  Example:
+      #
+      #   <% semantic_form_for @post do |form| %>
+      #     <%= form.inputs %>
       #   <% end %>
       #
-      # One special option exists (:name), which is passed along to a legend tag within the 
-      # fieldset (otherwise a legend is not generated):
+      # === Options
       #
-      #   <% input_field_set :name => "Advanced Options" do %>...<% end %>
-      def input_field_set(field_set_html_options = {}, &block)
-        field_set_html_options[:class] ||= "inputs"
-        field_set_and_list_wrapping(field_set_html_options, &block)
+      # All options (with the exception of :name) are passed down to the fieldset as HTML 
+      # attributes (id, class, style, etc).  If provided, the :name option is passed into a 
+      # legend tag inside the fieldset (otherwise a legend is not generated).
+      #
+      #   # With a block:
+      #   <% semantic_form_for @post do |form| %>
+      #     <% form.inputs :name => "Create a new post", :style => "border:1px;" do %>
+      #       ...
+      #     <% end %>
+      #   <% end %>
+      #
+      #   # With a list (the options must come after the field list):
+      #   <% semantic_form_for @post do |form| %>
+      #     <%= form.inputs :title, :body, :name => "Create a new post", :style => "border:1px;" %>
+      #   <% end %>
+      #
+      # === It's basically a fieldset!
+      #
+      # Instead of hard-coding fieldsets & legends into your form to logically group related fields,
+      # use inputs:
+      #
+      #   <% semantic_form_for @post do |f| %>
+      #     <% f.inputs do %>
+      #       <%= f.input :title %>
+      #       <%= f.input :body %>
+      #     <% end %>
+      #     <% f.inputs :name => "Advanced", :id => "advanced" do %>
+      #       <%= f.input :created_at %>
+      #       <%= f.input :user_id, :label => "Author" %>
+      #     <% end %>
+      #   <% end %>
+      #
+      #   # Output:
+      #   <form ...>
+      #     <fieldset class="inputs">
+      #       <ol>
+      #         <li class="string">...</li>
+      #         <li class="text">...</li>
+      #       </ol>
+      #     </fieldset>
+      #     <fieldset class="inputs" id="advanced">
+      #       <legend><span>Advanced</span></legend>
+      #       <ol>
+      #         <li class="datetime">...</li>
+      #         <li class="select">...</li>
+      #       </ol>
+      #     </fieldset>
+      #   </form>
+      def inputs(*args, &block)
+        if block_given?
+          html_options = args.first || {}
+          html_options[:class] ||= "inputs"
+          field_set_and_list_wrapping(html_options, &block)
+        else
+          html_options = args.last.is_a?(Hash) ? args.pop : {}
+          html_options[:class] ||= "inputs"
+          args = @object.class.column_names if args.empty?
+          contents = args.map { |method| input(method.to_sym) }
+          field_set_and_list_wrapping(html_options, contents)
+        end
       end
+      alias_method :input_field_set, :inputs
       
       # Creates a fieldset and ol tag wrapping for form buttons / actions as list items.  
-      # See input_field_set documentation for a full example.  The fieldset's default class attriute
+      # See inputs documentation for a full example.  The fieldset's default class attriute
       # is set to "buttons".
       #
-      # See input_field_set for html attriutes and special options.
+      # See inputs for html attributes and special options.
       def button_field_set(field_set_html_options = {}, &block)
         field_set_html_options[:class] ||= "buttons"
         field_set_and_list_wrapping(field_set_html_options, &block)
@@ -551,16 +620,24 @@ module JustinFrench #:nodoc:
         required ? @@required_string : @@optional_string
       end
       
-      def field_set_and_list_wrapping(field_set_html_options, &block) #:nodoc:
+      def field_set_and_list_wrapping(field_set_html_options, contents = '', &block) #:nodoc:
         legend_text = field_set_html_options.delete(:name)
         legend = legend_text.blank? ? "" : template.content_tag(:legend, template.content_tag(:span, legend_text))
-        
-        template.concat(
+        if block_given?
+          contents = template.capture(&block)
+          template.concat(
+            template.content_tag(:fieldset, 
+              legend + template.content_tag(:ol, contents), 
+              field_set_html_options
+            )
+          )
+        else
           template.content_tag(:fieldset, 
-            legend + template.content_tag(:ol, template.capture(&block)),
+            legend + template.content_tag(:ol, contents), 
             field_set_html_options
           )
-        )
+        end
+        
       end
       
       # For methods that have a database column, take a best guess as to what the inout method

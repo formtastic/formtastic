@@ -1287,58 +1287,165 @@ describe 'Formtastic' do
       
     end
     
-    describe '#input_field_set' do
+    describe '#inputs' do
       
-      describe 'when no options are provided' do
-        before do
-          semantic_form_for(@new_post) do |builder|
-            builder.input_field_set do
-              concat('hello')
+      describe 'when a block is passed' do
+      
+        describe 'when no options are provided' do
+          before do
+            semantic_form_for(@new_post) do |builder|
+              builder.inputs do
+                concat('hello')
+              end
             end
           end
+          it 'should render a fieldset inside the form, with a class of "inputs"' do
+            output_buffer.should have_tag("form fieldset.inputs")
+          end
+          it 'should render an ol inside the fieldset' do
+            output_buffer.should have_tag("form fieldset.inputs ol")
+          end
+          it 'should render the contents of the block inside the ol' do
+            output_buffer.should have_tag("form fieldset.inputs ol", /hello/)
+          end
+          it 'should not render a legend inside the fieldset' do
+            output_buffer.should_not have_tag("form fieldset.inputs legend")
+          end
         end
-        it 'should render a fieldset inside the form, with a class of "inputs"' do
-          output_buffer.should have_tag("form fieldset.inputs")
+              
+        describe 'when a :name option is provided' do
+          before do
+            @legend_text = "Advanced options"
+            
+            semantic_form_for(@new_post) do |builder|
+              builder.inputs :name => @legend_text do
+              end
+            end
+          end
+          it 'should render a fieldset inside the form' do
+            output_buffer.should have_tag("form fieldset legend", /#{@legend_text}/)
+          end
         end
-        it 'should render an ol inside the fieldset' do
-          output_buffer.should have_tag("form fieldset.inputs ol")
+        
+        describe 'when other options are provided' do
+          before do
+            @id_option = 'advanced'
+            @class_option = 'wide'
+            
+            semantic_form_for(@new_post) do |builder|
+              builder.inputs :id => @id_option, :class => @class_option do
+              end
+            end
+          end
+          it 'should pass the options into the fieldset tag as attributes' do
+            output_buffer.should have_tag("form fieldset##{@id_option}")
+            output_buffer.should have_tag("form fieldset.#{@class_option}")
+          end
         end
-        it 'should render the contents of the block inside the ol' do
-          output_buffer.should have_tag("form fieldset.inputs ol", /hello/)
-        end
-        it 'should not render a legend inside the fieldset' do
-          output_buffer.should_not have_tag("form fieldset.inputs legend")
-        end
+      
       end
       
-      describe 'when a :name option is provided' do
+      describe 'without a block' do
+        
         before do
-          @legend_text = "Advanced options"
+          Post.stub!(:column_names).and_return(["title", "body", "created_at", "author_id"])
+          Author.stub!(:find).and_return([@fred, @bob])
           
-          semantic_form_for(@new_post) do |builder|
-            builder.input_field_set :name => @legend_text do
+          @new_post.stub!(:title)
+          @new_post.stub!(:body)
+          @new_post.stub!(:created_at)
+          @new_post.stub!(:author_id)
+
+          @new_post.stub!(:column_for_attribute).with(:title).and_return(mock('column', :type => :string, :limit => 255))
+          @new_post.stub!(:column_for_attribute).with(:body).and_return(mock('column', :type => :text))
+          @new_post.stub!(:column_for_attribute).with(:created_at).and_return(mock('column', :type => :datetime))
+          @new_post.stub!(:column_for_attribute).with(:author_id).and_return(mock('column', :type => :integer, :limit => 4))
+        end
+        
+        describe 'with no args' do
+          
+          before do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.inputs)
             end
           end
-        end
-        it 'should render a fieldset inside the form' do
-          output_buffer.should have_tag("form fieldset legend", /#{@legend_text}/)
-        end
-      end
-      
-      describe 'when other options are provided' do
-        before do
-          @id_option = 'advanced'
-          @class_option = 'wide'
           
-          semantic_form_for(@new_post) do |builder|
-            builder.input_field_set :id => @id_option, :class => @class_option do
+          it 'should render a form' do
+            output_buffer.should have_tag('form')
+          end
+          
+          it 'should render a fieldset inside the form' do
+            output_buffer.should have_tag('form > fieldset.inputs')
+          end
+          
+          it 'should not render a legend in the fieldset' do
+            output_buffer.should_not have_tag('form > fieldset.inputs > legend')
+          end
+          
+          it 'should render an ol in the fieldset' do
+            output_buffer.should have_tag('form > fieldset.inputs > ol')
+          end
+          
+          it 'should render a list item in the ol for each column returned by Post.column_names' do
+            output_buffer.should have_tag('form > fieldset.inputs > ol > li', :count => Post.column_names.size)
+          end
+          
+          it 'should render a string list item for title' do
+            output_buffer.should have_tag('form > fieldset.inputs > ol > li.string')
+          end
+          
+          it 'should render a text list item for body' do
+            output_buffer.should have_tag('form > fieldset.inputs > ol > li.text')
+          end
+          
+          it 'should render a datetime list item for created_at' do
+            output_buffer.should have_tag('form > fieldset.inputs > ol > li.datetime')
+          end
+          
+          it 'should render a select list item for author_id' do
+            output_buffer.should have_tag('form > fieldset.inputs > ol > li.select')
+          end
+          
+        end
+        
+        describe 'with column names as args' do
+
+          before do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.inputs(:title, :body))
             end
           end
+          
+          it 'should render a form with a fieldset containing two list items' do
+            output_buffer.should have_tag('form > fieldset.inputs > ol > li', :count => 2)
+            output_buffer.should have_tag('form > fieldset.inputs > ol > li.string')
+            output_buffer.should have_tag('form > fieldset.inputs > ol > li.text')
+          end
+
         end
-        it 'should pass the options into the fieldset tag as attributes' do
-          output_buffer.should have_tag("form fieldset##{@id_option}")
-          output_buffer.should have_tag("form fieldset.#{@class_option}")
+        
+        describe 'with column names and an options hash as args' do
+
+          before do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.inputs(:title, :body, :name => "Legendary Legend Text", :id => "my-id"))
+            end
+          end
+          
+          it 'should render a form with a fieldset containing two list items' do
+            output_buffer.should have_tag('form > fieldset.inputs > ol > li', :count => 2)
+          end
+          
+          it 'should pass the options down to the fieldset' do
+            output_buffer.should have_tag('form > fieldset#my-id.inputs')
+          end
+          
+          it 'should use the special :name option as a text for the legend tag' do
+            output_buffer.should have_tag('form > fieldset#my-id.inputs > legend', /Legendary Legend Text/)
+          end
+
         end
+        
       end
       
     end

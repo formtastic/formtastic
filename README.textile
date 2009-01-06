@@ -9,7 +9,7 @@ Hacked together forms were easy, but awesome forms with decent semantics, rich m
 <pre>
   <% semantic_form_for @article do |form| %>
   
-    <% form.input_field_set :name => "Basic" do %>
+    <% form.inputs :name => "Basic" do %>
       <%= form.input :title %>                               
       <%= form.input :body %>                                
       <%= form.input :section_id %>                          
@@ -18,7 +18,7 @@ Hacked together forms were easy, but awesome forms with decent semantics, rich m
       <%= form.input :allow_comments, :label => "Allow commenting on this article" %>                      
     <% end %>                                                
   
-    <% form.input_field_set :name => "Advanced" do %>
+    <% form.inputs :name => "Advanced" do %>
       <%= form.input :keywords, :required => false, :hint => "Example: ruby, rails, forms" %>        
       <%= form.input :extract, :required => false %>
       <%= form.input :description, :required => false %>
@@ -75,7 +75,6 @@ The documentation is pretty good for each of these (what it does, what the outpu
 h3. One day...
 
 * calendars and other more humanized date/time selections
-* -vanilla html file selection to work well with things like ThoughtBot's "Paperclip":http://www.thoughtbot.com/projects/paperclip-
 * flash-based multi-file selection
 * an interface for tagging and other has_many_through style associations
 
@@ -100,7 +99,7 @@ If you wish, put something like this in config/initializers/formtastic_config.rb
 
 h2. Status
 
-*THIS IS DEFINITELY NOT PRODUCTION-READY.  THINGS ARE GOING TO CHANGE A LOT.*
+*THIS IS DEFINITELY NOT PRODUCTION-READY.  THINGS ARE GOING TO CHANGE A BIT.*
 
 It's incredibly opinionated, incomplete, a work in progress, messy around the edges, messy in the middle too, tightly coupled to the database, tightly coupled to "my way" of doing things and has an incomplete (but fast-growing) test suite, but I hope you try it and offer some suggestions and improvements any way.
 
@@ -109,10 +108,7 @@ h2. Roadmap to 1.0
 
 * there's a few of TODOs left in the code
 * improve the generated sample stylesheets
-* add a shortcut method like <code><%= form.inputs :name, :login, :email, :bio %></code> for those that want the form with zero configuration 
-* reconsider the naming of button_field_set and input_field_set
 * take a look at a DSL for the validation errors heading and messages typically placed at the top of a form
-* loop through a few methods like to_s and name on ActiveRecord objects (in addition to the existing to_label) so that the belongs_to associations "just work" a little more often, rather than depending on to_label
 * maybe get rid of the JustinFrench:: module namespace
 
 h2. Usage
@@ -121,7 +117,7 @@ The smallest example:
 
 <pre>
   <% semantic_form_for @user do |form| %>
-    <% form.input_field_set do %>
+    <% form.inputs do %>
       <%= form.input :name %>
       <%= form.input :email %>
       <%= form.input :password %>
@@ -153,10 +149,26 @@ With an output something like:
 </form>
 </pre>
 
+If you're happy to accept the default input types and labels, there's a shorthand version too:
+
+<pre>
+  <% semantic_form_for @user do |form| %>
+    <%= form.inputs :name, :email, :password, :department_id, :date_of_birth %>
+  <% end %>
+</pre>
+
+You don't even have to specify the field list (Formtastic will simply render and input for each column in the database table):
+
+<pre>
+  <% semantic_form_for @user do |form| %>
+    <%= form.inputs %>
+  <% end %>
+</pre>
+
 
 h2. Conventions & Prerequisites
 
-In a few places (like radio or select widgets for belongs_to associations) Formtastic expects your ActiveRecord instances to respond to the <code>to_label</code> method (returning a String).  You can easily add this to your models, for example, a User object might want to return the user's first name, last name and login:
+In a few places (like radio or select widgets for belongs_to associations) Formtastic expects your ActiveRecord instances to respond to the <code>to_label</code> or <code>to_s</code> method (returning a String).  You can easily add this to your models: For example, a User object might want to return the user's first name, last name and login:
 
 <pre>
 class User < ActiveRecord::Base
