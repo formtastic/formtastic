@@ -1289,7 +1289,7 @@ describe 'Formtastic' do
     
     describe '#inputs' do
       
-      describe 'when a block is passed' do
+      describe 'with a block' do
       
         describe 'when no options are provided' do
           before do
@@ -1450,60 +1450,139 @@ describe 'Formtastic' do
       
     end
     
-    describe '#button_field_set' do
+    describe '#buttons' do
       
-      describe 'when no options are provided' do
-        before do
-          semantic_form_for(@new_post) do |builder|
-            builder.button_field_set do
-              concat('hello')
+      describe 'with a block' do
+        describe 'when no options are provided' do
+          before do
+            semantic_form_for(@new_post) do |builder|
+              builder.buttons do
+                concat('hello')
+              end
             end
           end
+          it 'should render a fieldset inside the form, with a class of "inputs"' do
+            output_buffer.should have_tag("form fieldset.buttons")
+          end
+          it 'should render an ol inside the fieldset' do
+            output_buffer.should have_tag("form fieldset.buttons ol")
+          end
+          it 'should render the contents of the block inside the ol' do
+            output_buffer.should have_tag("form fieldset.buttons ol", /hello/)
+          end
+          it 'should not render a legend inside the fieldset' do
+            output_buffer.should_not have_tag("form fieldset.buttons legend")
+          end
         end
-        it 'should render a fieldset inside the form, with a class of "inputs"' do
-          output_buffer.should have_tag("form fieldset.buttons")
+
+        describe 'when a :name option is provided' do
+          before do
+            @legend_text = "Advanced options"
+
+            semantic_form_for(@new_post) do |builder|
+              builder.buttons :name => @legend_text do
+              end
+            end
+          end
+          it 'should render a fieldset inside the form' do
+            output_buffer.should have_tag("form fieldset legend", /#{@legend_text}/)
+          end
         end
-        it 'should render an ol inside the fieldset' do
-          output_buffer.should have_tag("form fieldset.buttons ol")
+
+        describe 'when other options are provided' do
+          before do
+            @id_option = 'advanced'
+            @class_option = 'wide'
+
+            semantic_form_for(@new_post) do |builder|
+              builder.buttons :id => @id_option, :class => @class_option do
+              end
+            end
+          end
+          it 'should pass the options into the fieldset tag as attributes' do
+            output_buffer.should have_tag("form fieldset##{@id_option}")
+            output_buffer.should have_tag("form fieldset.#{@class_option}")
+          end
         end
-        it 'should render the contents of the block inside the ol' do
-          output_buffer.should have_tag("form fieldset.buttons ol", /hello/)
-        end
-        it 'should not render a legend inside the fieldset' do
-          output_buffer.should_not have_tag("form fieldset.buttons legend")
-        end
+        
       end
       
-      describe 'when a :name option is provided' do
-        before do
-          @legend_text = "Advanced options"
+      describe 'without a block' do
+        
+        describe 'with no args (default buttons)' do
           
-          semantic_form_for(@new_post) do |builder|
-            builder.button_field_set :name => @legend_text do
+          before do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.buttons)
             end
           end
-        end
-        it 'should render a fieldset inside the form' do
-          output_buffer.should have_tag("form fieldset legend", /#{@legend_text}/)
-        end
-      end
-      
-      describe 'when other options are provided' do
-        before do
-          @id_option = 'advanced'
-          @class_option = 'wide'
           
-          semantic_form_for(@new_post) do |builder|
-            builder.button_field_set :id => @id_option, :class => @class_option do
+          it 'should render a form' do
+            output_buffer.should have_tag('form')
+          end
+          
+          it 'should render a buttons fieldset inside the form' do
+            output_buffer.should have_tag('form fieldset.buttons')
+          end
+          
+          it 'should not render a legend in the fieldset' do
+            output_buffer.should_not have_tag('form fieldset.buttons legend')
+          end
+          
+          it 'should render an ol in the fieldset' do
+            output_buffer.should have_tag('form fieldset.buttons ol')
+          end
+          
+          it 'should render a list item in the ol for each default button' do
+            output_buffer.should have_tag('form fieldset.buttons ol li', :count => 1)
+          end
+          
+          it 'should render a commit list item for the commit button' do
+            output_buffer.should have_tag('form fieldset.buttons ol li.commit')
+          end
+          
+        end
+        
+        describe 'with button names as args' do
+          
+          before do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.buttons(:commit))
             end
           end
+          
+          it 'should render a form with a fieldset containing a list item for each button arg' do
+            output_buffer.should have_tag('form > fieldset.buttons > ol > li', :count => 1)
+            output_buffer.should have_tag('form > fieldset.buttons > ol > li.commit')
+          end
+          
         end
-        it 'should pass the options into the fieldset tag as attributes' do
-          output_buffer.should have_tag("form fieldset##{@id_option}")
-          output_buffer.should have_tag("form fieldset.#{@class_option}")
+        
+        describe 'with button names as args and an options hash' do
+          
+          before do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.buttons(:commit, :name => "Now click a button", :id => "my-id"))
+            end
+          end
+          
+          it 'should render a form with a fieldset containing a list item for each button arg' do
+            output_buffer.should have_tag('form > fieldset.buttons > ol > li', :count => 1)
+            output_buffer.should have_tag('form > fieldset.buttons > ol > li.commit', :count => 1)
+          end
+          
+          it 'should pass the options down to the fieldset' do
+            output_buffer.should have_tag('form > fieldset#my-id.buttons')
+          end
+          
+          it 'should use the special :name option as a text for the legend tag' do
+            output_buffer.should have_tag('form > fieldset#my-id.buttons > legend', /Now click a button/)
+          end
+          
         end
+        
       end
-      
+            
     end
     
     describe '#commit_button' do
@@ -1517,12 +1596,16 @@ describe 'Formtastic' do
           end
         end
         
+        it 'should render a commit li' do
+          output_buffer.should have_tag('li.commit')
+        end
+        
         it 'should render an input with a type attribute of "submit"' do
-          output_buffer.should have_tag('input[@type="submit"]')
+          output_buffer.should have_tag('li.commit input[@type="submit"]')
         end
         
         it 'should render an input with a name attribute of "commit"' do
-          output_buffer.should have_tag('input[@name="commit"]')
+          output_buffer.should have_tag('li.commit input[@name="commit"]')
         end
         
       end
@@ -1534,7 +1617,7 @@ describe 'Formtastic' do
           semantic_form_for(@new_post) do |builder|
             concat(builder.commit_button)
           end
-          output_buffer.should have_tag('input[@value="Save Post"]')
+          output_buffer.should have_tag('li.commit input[@value="Save Post"]')
         end
         
       end
@@ -1546,7 +1629,7 @@ describe 'Formtastic' do
           semantic_form_for(@new_post) do |builder|
             concat(builder.commit_button)
           end
-          output_buffer.should have_tag('input[@value="Create Post"]')
+          output_buffer.should have_tag('li.commit input[@value="Create Post"]')
         end
         
       end

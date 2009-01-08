@@ -25,7 +25,7 @@ Hacked together forms were easy, but awesome forms with decent semantics, rich m
       <%= form.input :url_title, :required => false %>                           
     <% end %>
 
-    <% form.button_field_set do %>                                    
+    <% form.buttons do %>                                    
       <%= form.cancel_button %>                             
       <%= form.commit_button %>                             
     <% end %>

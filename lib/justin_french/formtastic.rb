@@ -237,10 +237,20 @@ module JustinFrench #:nodoc:
       # is set to "buttons".
       #
       # See inputs for html attributes and special options.
-      def button_field_set(field_set_html_options = {}, &block)
-        field_set_html_options[:class] ||= "buttons"
-        field_set_and_list_wrapping(field_set_html_options, &block)
+      def buttons(*args, &block)
+        if block_given?
+          html_options = args.first || {}
+          html_options[:class] ||= "buttons"
+          field_set_and_list_wrapping(html_options, &block)
+        else
+          html_options = args.last.is_a?(Hash) ? args.pop : {}
+          html_options[:class] ||= "buttons"
+          args = [:commit] if args.empty?
+          contents = args.map { |button_name| send(:"#{button_name}_button") }
+          field_set_and_list_wrapping(html_options, contents)
+        end
       end
+      alias_method :button_field_set, :buttons
       
       # Creates a submit input tag with the value "Save [model name]" (for existing records) or 
       # "Create [model name]" (for new records) by default:
@@ -251,7 +261,7 @@ module JustinFrench #:nodoc:
       #
       #  <%= form.commit_button "Go" %> => <input name="commit" type="submit" value="Go" />
       def commit_button(value = save_or_create_commit_button_text, options = {})
-        template.submit_tag(value) 
+        template.content_tag(:li, template.submit_tag(value), :class => "commit")
       end
       
       protected
