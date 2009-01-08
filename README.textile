@@ -26,7 +26,6 @@ Hacked together forms were easy, but awesome forms with decent semantics, rich m
     <% end %>
 
     <% form.buttons do %>                                    
-      <%= form.cancel_button %>                             
       <%= form.commit_button %>                             
     <% end %>
 
@@ -116,54 +115,81 @@ h2. Usage
 The smallest example:
 
 <pre>
-  <% semantic_form_for @user do |form| %>
+  <% semantic_form_for @post do |form| %>
     <% form.inputs do %>
-      <%= form.input :name %>
-      <%= form.input :email %>
-      <%= form.input :password %>
-      <%= form.input :department_id, :as => :radio %>
-      <%= form.input :date_of_birth %>
+      <%= form.input :title %>
+      <%= form.input :body %>
+      <%= form.input :section_id, :as => :radio %>
+    <% end %>
+    <% form.buttons do %>
+      <%= form.commit_button %>
     <% end %>
   <% end %>
 </pre>
 
-With an output something like:
+Yes, it'll even handle belongs_to associations, rendering a radio list or select box with the right set of choices!  The output is something like:
 
 <pre>
-<form id="new-article-form" action="#" method="post">
-  <fieldset>
-    <legend><span>Create a new User</span></legend>
+  <form action="/posts" class="formtastic new_post" id="new_post" method="post">
     <fieldset class="inputs">
       <ol>
-        <li id="user_name_input" class="required string">
-          <label for="user_name">Name <abbr title="required">*</abbr></label>
-          <input type="text" id="user_name" name="user[name]" size="50" />
+        <li class="string required" id="post_title_input">
+          <label for="post_title">Title<abbr title="required">*</abbr></label>
+          <input id="post_title" maxlength="255" name="post[title]" size="50" type="text" />
         </li>
-        <li id="user_email_input" class="required string">
-          <label for="user_email">Email <abbr title="required">*</abbr></label>
-          <input type="text" id="user_email" name="user[email]" size="50" />
+        <li class="text optional" id="post_body_input">
+          <label for="post_body">Body</label>
+          <textarea cols="40" id="post_body" name="post[body]" rows="20"></textarea>
+        </li>
+        <li class="radio required" id="post_author_id_input">
+          <fieldset>
+            <legend><span>Author<abbr title="required">*</abbr></span></legend>
+            <ol>
+              <li>
+                <label for="post_author_id_37">
+                  <input id="post_author_id_37" name="post[author_id]" type="radio" value="37" />
+                  Fred Smith
+                </label>
+              </li>
+              <li>
+                <label for="post_author_id_42">
+                  <input id="post_author_id_42" name="post[author_id]" type="radio" value="42" />
+                  Bob Rock
+                </label>
+              </li>
+            </ol>
+          </fieldset>
         </li>
       </ol>
     </fieldset>
-  </fieldset>
-</form>
-</pre>
+    <fieldset class="buttons">
+      <ol>
+        <li class="commit">
+          <input name="commit" type="submit" value="Create Post" />
+        </li>
+      </ol>
+    </fieldset>
+  </form></pre>
 
 If you're happy to accept the default input types and labels, there's a shorthand version too:
 
 <pre>
   <% semantic_form_for @user do |form| %>
-    <%= form.inputs :name, :email, :password, :department_id, :date_of_birth %>
+    <%= form.inputs :title, :body, :section_id, :created_at %>
+    <%= form.buttons :commit %>
   <% end %>
 </pre>
 
-You don't even have to specify the field list (Formtastic will simply render and input for each column in the database table):
+You don't even have to specify the field list (Formtastic will simply render and input for each column in the database table) or button list (usually you only need one commit button to create/save):
 
 <pre>
   <% semantic_form_for @user do |form| %>
     <%= form.inputs %>
+    <%= form.buttons %>
   <% end %>
 </pre>
+
+Pretty soon we won't have to write any code at all ;)
 
 
 h2. Conventions & Prerequisites
