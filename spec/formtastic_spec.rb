@@ -106,10 +106,30 @@ describe 'Formtastic' do
         end
       end
       
-      it 'adds a class of "formtastic" to generated form' do
+      it 'adds classes of "formtastic", and "symbol"(object class) to generated form' do
         semantic_form_for(:post, Post.new, :url => '/hello') do |builder|
         end
         output_buffer.should have_tag("form.formtastic")
+        output_buffer.should have_tag("form.symbol")
+      end
+      
+      describe 'allows :html options' do
+        before(:each) do
+          semantic_form_for(:post, Post.new, :url => '/hello', :html => { :id => "something-special", :class => "something-extra", :multipart => true }) do |builder|
+          end
+        end
+        
+        it 'to add a id of "something-special" to generated form' do
+          output_buffer.should have_tag("form#something-special")
+        end
+        
+        it 'to add a class of "something-extra" to generated form' do
+          output_buffer.should have_tag("form.something-extra")
+        end
+      
+        it 'to add enctype="multipart/form-data"' do
+          output_buffer.should have_tag('form[@enctype="multipart/form-data"]')
+        end
       end
       
       it 'can be called with a resource-oriented style' do
