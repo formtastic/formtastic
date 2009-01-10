@@ -133,8 +133,8 @@ module JustinFrench #:nodoc:
         
         list_item_content = [
           send(input_method, method, options),
-          inline_errors(method, options),
-          inline_hints(method, options)
+          inline_hints(method, options),
+          inline_errors(method, options)
         ].compact.join("\n")
         
         return template.content_tag(:li, list_item_content, { :id => html_id, :class => html_class })
@@ -621,7 +621,13 @@ module JustinFrench #:nodoc:
       
       def inline_errors(method, options)  #:nodoc:
         errors = @object.errors.on(method).to_a
-        errors.empty? ? '' : template.content_tag(:p, errors.to_sentence, :class => 'inline-errors')
+        list_elements = []
+        unless errors.empty?
+          errors.each do |error|
+            list_elements <<  template.content_tag(:li, error)
+          end
+        end
+        list_elements.empty? ? '' : template.content_tag(:ul, list_elements.join("\n"), :class => 'errors')
       end
       
       def inline_hints(method, options) #:nodoc:

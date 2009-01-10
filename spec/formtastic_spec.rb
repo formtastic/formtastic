@@ -495,8 +495,14 @@ describe 'Formtastic' do
             output_buffer.should have_tag('form li.error')
           end
           
-          it 'should render a paragraph with the errors joined into a sentence' do
-            output_buffer.should have_tag('form li.error p.inline-errors', @title_errors.to_sentence)
+          it 'should render an unordered list with the class errors' do
+            output_buffer.should have_tag('form li.error ul.errors')
+          end
+          
+          it 'should include a list element for each of the errors within the unordered list' do
+            @title_errors.each do |error|
+              output_buffer.should have_tag('form li.error ul.errors li', error)
+            end
           end
           
         end
