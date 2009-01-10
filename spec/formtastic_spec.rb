@@ -106,11 +106,22 @@ describe 'Formtastic' do
         end
       end
       
-      it 'adds classes of "formtastic", and "symbol"(object class) to generated form' do
+      it 'adds a class of "formtastic" to the generated form' do
         semantic_form_for(:post, Post.new, :url => '/hello') do |builder|
         end
         output_buffer.should have_tag("form.formtastic")
-        output_buffer.should have_tag("form.symbol")
+      end
+      
+      it 'adds class matching the object\'s class to the generated form when a symbol is provided' do
+        semantic_form_for(:post, Post.new, :url => '/hello') do |builder|
+        end
+        output_buffer.should have_tag("form.post")
+      end
+      
+      it 'adds class matching the object\'s class to the generated form when a symbol is provided when an object is provided' do
+        semantic_form_for(@new_post) do |builder|
+        end
+        output_buffer.should have_tag("form.post")
       end
       
       describe 'allows :html options' do
