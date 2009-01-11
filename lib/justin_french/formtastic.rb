@@ -116,7 +116,8 @@ module JustinFrench #:nodoc:
       #     <% end %>
       #   <% end %>
       def input(method, options = {})
-        raise NoMethodError unless @object.respond_to?(method)
+        raise NoMethodError.new("NoMethodError: form object does not respond to \"#{method}\"") unless @object.respond_to?(method)
+        
         
         options[:required] = method_required?(method, options[:required])
         options[:label] ||= method.to_s.titleize

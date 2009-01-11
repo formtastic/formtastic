@@ -221,9 +221,9 @@ describe 'Formtastic' do
           }.should raise_error(ArgumentError)
         end
         
-        it 'should raise an error when the object does not respond to the method supplied in the first argument' do
+        it 'should raise a helpful error when the object does not respond to the method supplied in the first argument' do
             semantic_form_for(@new_post) do |builder| 
-            lambda { builder.input(:method_on_post_that_doesnt_exist) }.should raise_error(NoMethodError)
+            lambda { builder.input(:method_on_post_that_doesnt_exist) }.should raise_error(NoMethodError, /method_on_post_that_doesnt_exist/)
           end 
         end
         
