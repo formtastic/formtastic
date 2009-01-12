@@ -485,24 +485,68 @@ describe 'Formtastic' do
             @errors = mock('errors')
             @errors.stub!(:on).with(:title).and_return(@title_errors)
             @new_post.stub!(:errors).and_return(@errors)
-          
-            semantic_form_for(@new_post) do |builder| 
-              concat(builder.input(:title))
-            end
           end
           
           it 'should apply an errors class to the list item' do
+            semantic_form_for(@new_post) do |builder| 
+              concat(builder.input(:title))
+            end
             output_buffer.should have_tag('form li.error')
           end
           
-          it 'should render an unordered list with the class errors' do
-            output_buffer.should have_tag('form li.error ul.errors')
+          describe 'and the errors will be displayed as a sentence' do
+            
+            before do
+              JustinFrench::Formtastic::SemanticFormBuilder.inline_errors = :sentence
+              semantic_form_for(@new_post) do |builder| 
+                concat(builder.input(:title))
+              end
+            end
+            
+            it 'should render a paragraph with the errors joined into a sentence' do
+              output_buffer.should have_tag('form li.error p.inline-errors', @title_errors.to_sentence)
+            end
+            
           end
           
-          it 'should include a list element for each of the errors within the unordered list' do
-            @title_errors.each do |error|
-              output_buffer.should have_tag('form li.error ul.errors li', error)
+          describe 'and the errors will be displayed as a list' do
+            
+            before do
+              JustinFrench::Formtastic::SemanticFormBuilder.inline_errors = :list
+              semantic_form_for(@new_post) do |builder| 
+                concat(builder.input(:title))
+              end
             end
+            
+            it 'should render an unordered list with the class errors' do
+              output_buffer.should have_tag('form li.error ul.errors')
+            end
+            
+            it 'should include a list element for each of the errors within the unordered list' do
+              @title_errors.each do |error|
+                output_buffer.should have_tag('form li.error ul.errors li', error)
+              end
+            end
+            
+          end
+          
+          describe 'but the errors will not be shown' do
+            
+            before do
+              JustinFrench::Formtastic::SemanticFormBuilder.inline_errors = :none
+              semantic_form_for(@new_post) do |builder| 
+                concat(builder.input(:title))
+              end
+            end
+            
+            it 'should not display an error sentence' do
+              output_buffer.should_not have_tag('form li.error p.inline-errors')
+            end
+            
+            it 'should not display an error list' do
+              output_buffer.should_not have_tag('form li.error ul.errors')
+            end
+            
           end
           
         end
@@ -519,7 +563,7 @@ describe 'Formtastic' do
             output_buffer.should_not have_tag('form li.error')
           end          
           
-          it 'should render a paragraph for the errors' do
+          it 'should not render a paragraph for the errors' do
             output_buffer.should_not have_tag('form li.error p.inline-errors')
           end
           

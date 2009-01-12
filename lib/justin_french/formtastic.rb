@@ -71,8 +71,9 @@ module JustinFrench #:nodoc:
       @@all_fields_required_by_default = true
       @@required_string = %{<abbr title="required">*</abbr>}
       @@optional_string = ''
+      @@inline_errors = :sentence
       
-      cattr_accessor :all_fields_required_by_default, :required_string, :optional_string
+      cattr_accessor :all_fields_required_by_default, :required_string, :optional_string, :inline_errors
       
       attr_accessor :template
       
@@ -619,15 +620,23 @@ module JustinFrench #:nodoc:
         )
       end
       
-      def inline_errors(method, options)  #:nodoc:
+      def inline_errors(method, options) #:nodoc:
         errors = @object.errors.on(method).to_a
-        list_elements = []
         unless errors.empty?
-          errors.each do |error|
-            list_elements <<  template.content_tag(:li, error)
-          end
+          send("error_#{@@inline_errors}", errors) if [:sentence, :list].include?(@@inline_errors)
         end
-        list_elements.empty? ? '' : template.content_tag(:ul, list_elements.join("\n"), :class => 'errors')
+      end
+      
+      def error_sentence(errors) #:nodoc:
+        template.content_tag(:p, errors.to_sentence, :class => 'inline-errors')
+      end
+      
+      def error_list(errors) #:nodoc:
+        list_elements = []
+        errors.each do |error|
+          list_elements <<  template.content_tag(:li, error)
+        end
+        template.content_tag(:ul, list_elements.join("\n"), :class => 'errors')
       end
       
       def inline_hints(method, options) #:nodoc:

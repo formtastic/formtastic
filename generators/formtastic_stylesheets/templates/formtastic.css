@@ -71,6 +71,7 @@ form.formtastic fieldset ol li p.inline-hints { color:#666; margin:0.5em 0 0 25%
 
 /* INLINE ERRORS
 --------------------------------------------------------------------------------------------------*/
+form.formtastic fieldset ol li p.inline-errors { color:red; margin:0.5em 0 0 25%; }
 form.formtastic fieldset ol li ul.errors { color:red; margin:0.5em 0 0 25%; list-style:square; }
 form.formtastic fieldset ol li ul.errors li { padding:0; border:none; display:list-item; }
 
