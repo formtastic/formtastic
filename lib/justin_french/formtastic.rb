@@ -42,10 +42,10 @@ module JustinFrench #:nodoc:
     # has too many dependencies on an ActiveRecord object being present.
     module SemanticFormHelper
       [:form_for, :fields_for, :form_remote_for, :remote_form_for].each do |meth|
-        src = <<-END_SRC   
+        src = <<-END_SRC
           def semantic_#{meth}(record_or_name_or_array, *args, &proc)
             options = args.extract_options!
-            options[:builder] =  JustinFrench::Formtastic::SemanticFormBuilder
+            options[:builder] = semantic_form_builder
             options[:html] ||= {}
 
             class_names = options[:html][:class] ? options[:html][:class].split(" ") : []
@@ -59,11 +59,15 @@ module JustinFrench #:nodoc:
 
             #{meth}(record_or_name_or_array, *(args << options), &proc)
           end
+
+          def semantic_form_builder
+            JustinFrench::Formtastic::SemanticFormBuilder
+          end
         END_SRC
         module_eval src, __FILE__, __LINE__
       end
     end
-    
+
     class SemanticFormBuilder < ActionView::Helpers::FormBuilder
       
       DEFAULT_TEXT_FIELD_SIZE = 50

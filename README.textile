@@ -8,25 +8,25 @@ Hacked together forms were easy, but awesome forms with decent semantics, rich m
 
 <pre>
   <% semantic_form_for @article do |form| %>
-  
+
     <% form.inputs :name => "Basic" do %>
-      <%= form.input :title %>                               
-      <%= form.input :body %>                                
-      <%= form.input :section_id %>                          
-      <%= form.input :publication_state_id, :as => :radio %> 
-      <%= form.input :author_id, :as => :select %>                           
-      <%= form.input :allow_comments, :label => "Allow commenting on this article" %>                      
-    <% end %>                                                
-  
-    <% form.inputs :name => "Advanced" do %>
-      <%= form.input :keywords, :required => false, :hint => "Example: ruby, rails, forms" %>        
-      <%= form.input :extract, :required => false %>
-      <%= form.input :description, :required => false %>
-      <%= form.input :url_title, :required => false %>                           
+      <%= form.input :title %>
+      <%= form.input :body %>
+      <%= form.input :section_id %>
+      <%= form.input :publication_state_id, :as => :radio %>
+      <%= form.input :author_id, :as => :select %>
+      <%= form.input :allow_comments, :label => "Allow commenting on this article" %>
     <% end %>
 
-    <% form.buttons do %>                                    
-      <%= form.commit_button %>                             
+    <% form.inputs :name => "Advanced" do %>
+      <%= form.input :keywords, :required => false, :hint => "Example: ruby, rails, forms" %>
+      <%= form.input :extract, :required => false %>
+      <%= form.input :description, :required => false %>
+      <%= form.input :url_title, :required => false %>
+    <% end %>
+
+    <% form.buttons do %>
+      <%= form.commit_button %>
     <% end %>
 
   <% end %>
@@ -191,6 +191,50 @@ You don't even have to specify the field list (Formtastic will simply render and
 
 Pretty soon we won't have to write any code at all ;)
 
+h2. Extending Formtastic
+
+Adding functionality to Formtastic can be done by extending SemanticFormHelper.
+
+<pre>
+module JustinFrench #:nodoc:
+  module Formtastic #:nodoc:
+    class FancySemanticFormBuilder < SemanticFormBuilder
+
+      # new method to be added allowing full control over the label and value
+      def label_and_value(label_text, value, options = {})
+        options[:label] = label_text
+        content = text_label(label_text, options)
+        content += @template.content_tag(:span, value)
+        @template.content_tag(:li, content)
+      end
+    end
+  end
+end
+</pre>
+
+To use this builder specify the builder name when defining the form.
+
+<pre>
+  form_for(@post, :builder => JustinFrench::Formtastic::FancySemanticFormBuilder))
+</pre>
+
+The extended form builder can be placed in the RAILS_ROOT/lib directory and can be required in a Rails initializer.
+
+If you want to make the extended form builder the default for the semantic_form_* methods then the SemanticFormBuilder can overridden to specify a new semantic_form_builder.
+
+<pre>
+module JustinFrench #:nodoc:
+  module Formtastic #:nodoc:
+    module TextEnabledSemanticFormHelper
+      def semantic_form_builder
+        JustinFrench::Formtastic::TextEnabledSemanticFormBuilder
+      end
+    end
+  end
+end
+
+ActionView::Base.send :include, JustinFrench::Formtastic::TextEnabledSemanticFormHelper
+</pre>
 
 h2. Conventions & Prerequisites
 
