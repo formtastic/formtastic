@@ -201,10 +201,10 @@ module JustinFrench #:nodoc:
     class FancySemanticFormBuilder < SemanticFormBuilder
 
       # new method to be added allowing full control over the label and value
-      def label_and_value(label_text, value, options = {})
-        options[:label] = label_text
-        content = input_label(label_text, options)
-        content += @template.content_tag(:span, value)
+      def label_and_value(label, value, options = {})
+        options[:label] = label
+        content = input_label(label, options)
+        content += @template.content_tag(:span, value, :id => "#{@object_name}_#{label}")
         @template.content_tag(:li, content)
       end
     end
