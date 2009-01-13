@@ -203,7 +203,7 @@ module JustinFrench #:nodoc:
       # new method to be added allowing full control over the label and value
       def label_and_value(label_text, value, options = {})
         options[:label] = label_text
-        content = text_label(label_text, options)
+        content = input_label(label_text, options)
         content += @template.content_tag(:span, value)
         @template.content_tag(:li, content)
       end
