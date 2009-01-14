@@ -193,47 +193,41 @@ Pretty soon we won't have to write any code at all ;)
 
 h2. Extending Formtastic
 
-Adding functionality to Formtastic can be done by extending SemanticFormHelper.
+Adding functionality to Formtastic can be done by extending SemanticFormBuilder and configuring formtastic's builder.
+
+To create a new form method that displayed a star rating define the new Formtastic form builder by subclassing SemanticFormBuilder:
 
 <pre>
-module JustinFrench #:nodoc:
-  module Formtastic #:nodoc:
-    class FancySemanticFormBuilder < SemanticFormBuilder
-
-      # new method to be added allowing full control over the label and value
-      def label_and_value(label, value, options = {})
-        options[:label] = label
-        content = input_label(label, options)
-        content += @template.content_tag(:span, value, :id => "#{@object_name}_#{label}")
-        @template.content_tag(:li, content)
-      end
-    end
+# RAILS_ROOT/lib/rating_semantic_form_builder.rb
+class RatingSemanticFormBuilder < JustinFrench::Formtastic::SemanticFormBuilder
+  # new method to be added allowing full control over the label and value
+  def rating(stars, options = {})
+    options[:label] ||= 'rating'
+    content = input_label(options[:label], options)
+    content += @template.content_tag(:span, '*' * stars.to_i, :id => "#{@object_name}_#{options[:label]}")
+    @template.content_tag(:li, content)
   end
 end
 </pre>
 
-To use this builder specify the builder name when defining the form.
-
+Set Formtastic's builder to your newly defined RatingSemanticFormBuilder
 <pre>
-  form_for(@post, :builder => JustinFrench::Formtastic::FancySemanticFormBuilder))
+# RAILS_ROOT/config/initializers/override_formtastic_builder.rb
+
+require 'rating_semantic_form_builder.rb'
+
+# set the formtastic builder to a customized version of the formtastic builder
+JustinFrench::Formtastic::SemanticFormHelper.builder = RatingSemanticFormBuilder
 </pre>
 
-The extended form builder can be placed in the RAILS_ROOT/lib directory and can be required in a Rails initializer.
-
-If you want to make the extended form builder the default for the semantic_form_* methods then the SemanticFormBuilder can overridden to specify a new semantic_form_builder.
-
+Use your newly created formtastic method
 <pre>
-module JustinFrench #:nodoc:
-  module Formtastic #:nodoc:
-    module TextEnabledSemanticFormHelper
-      def semantic_form_builder
-        JustinFrench::Formtastic::TextEnabledSemanticFormBuilder
-      end
-    end
-  end
-end
-
-ActionView::Base.send :include, JustinFrench::Formtastic::TextEnabledSemanticFormHelper
+  <% semantic_form_for Project.new do |form| %>
+    <% form.input_field_set :name => "ratings" do %>
+      <%= form.rating 5 %>
+      <%= form.rating 11, :label => 'awesomeness (out of 10)' %>
+    <% end %>
+  <% end %>
 </pre>
 
 h2. Conventions & Prerequisites
