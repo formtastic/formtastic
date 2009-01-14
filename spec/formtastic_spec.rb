@@ -548,7 +548,7 @@ describe 'Formtastic' do
 
       describe ':as => :string' do
 
-        setup do
+        before do
           @new_post.stub!(:title)
           @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 50))
 
@@ -598,7 +598,7 @@ describe 'Formtastic' do
 
       describe 'for belongs_to associations' do
 
-        setup do
+        before do
           @fred = mock('user')
           @fred.stub!(:to_label).and_return('Fred Smith')
           @fred.stub!(:id).and_return(37)
@@ -796,7 +796,7 @@ describe 'Formtastic' do
 
       describe ':as => :password' do
 
-        setup do
+        before do
           @new_post.stub!(:password_hash)
           @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 50))
 
@@ -846,7 +846,7 @@ describe 'Formtastic' do
 
       describe ':as => :text' do
 
-        setup do
+        before do
           @new_post.stub!(:body)
           @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :text))
 
@@ -879,7 +879,7 @@ describe 'Formtastic' do
 
       describe ':as => :date' do
 
-        setup do
+        before do
           @new_post.stub!(:publish_at)
           @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :date))
 
@@ -932,7 +932,7 @@ describe 'Formtastic' do
 
       describe ':as => :datetime' do
 
-        setup do
+        before do
           @new_post.stub!(:publish_at)
           @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :datetime))
 
@@ -987,7 +987,7 @@ describe 'Formtastic' do
 
       describe ':as => :time' do
 
-        setup do
+        before do
           @new_post.stub!(:publish_at)
           @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :time))
 
@@ -1039,7 +1039,7 @@ describe 'Formtastic' do
 
       describe ':as => :boolean' do
 
-        setup do
+        before do
           @new_post.stub!(:allow_comments)
           @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
 
@@ -1074,7 +1074,7 @@ describe 'Formtastic' do
 
       describe ':as => :boolean_radio' do
 
-        setup do
+        before do
           @new_post.stub!(:allow_comments)
           @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
 
@@ -1113,7 +1113,7 @@ describe 'Formtastic' do
         end
 
         describe 'when the value is nil' do
-          setup do
+          before do
             @new_post.stub!(:allow_comments).and_return(nil)
             @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
 
@@ -1129,7 +1129,7 @@ describe 'Formtastic' do
         end
 
         describe 'when the value is true' do
-          setup do
+          before do
             @new_post.stub!(:allow_comments).and_return(true)
             @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
             semantic_form_for(@new_post) do |builder|
@@ -1145,7 +1145,7 @@ describe 'Formtastic' do
         end
 
         describe 'when the value is false' do
-          setup do
+          before do
             @new_post.stub!(:allow_comments).and_return(false)
             @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
             semantic_form_for(@new_post) do |builder|
@@ -1161,7 +1161,7 @@ describe 'Formtastic' do
         end
 
         describe 'when :true and :false options are provided' do
-          setup do
+          before do
             @new_post.stub!(:allow_comments)
             @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
             semantic_form_for(@new_post) do |builder|
@@ -1177,7 +1177,7 @@ describe 'Formtastic' do
 
       describe ':as => :boolean_select' do
 
-        setup do
+        before do
           @new_post.stub!(:allow_comments)
           @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
 
@@ -1260,7 +1260,7 @@ describe 'Formtastic' do
 
       describe ':as => :numeric' do
 
-        setup do
+        before do
           @new_post.stub!(:comments_count)
           @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :integer, :limit => 50))
 
@@ -1310,7 +1310,7 @@ describe 'Formtastic' do
       end
 
       describe ':as => :file' do
-        setup do
+        before do
           @new_post.stub!(:some_file)
           @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 50))
 
