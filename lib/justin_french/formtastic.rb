@@ -218,7 +218,7 @@ module JustinFrench #:nodoc:
 
       def save_or_create_commit_button_text #:nodoc:
         prefix = @object.new_record? ? "Create" : "Save"
-        "#{prefix} #{@object_name.humanize}"
+        "#{prefix} #{@object_name.to_s.humanize}"
       end
 
       # Determins if the attribute (eg :title) should be considered required or not.
