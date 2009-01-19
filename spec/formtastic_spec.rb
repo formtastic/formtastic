@@ -859,6 +859,20 @@ describe 'Formtastic' do
             end            
           end
           
+          describe 'when the :label_method option is provided' do
+            before do
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:author_id, :as => :select, :label_method => :id))
+              end
+            end
+
+            it 'should have options with text content from :id method' do
+              Author.find(:all).each do |author|
+                output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.id}/)
+              end
+            end            
+          end
+          
         end
       end
 
