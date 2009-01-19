@@ -286,7 +286,7 @@ module JustinFrench #:nodoc:
         options[:collection] ||= find_parent_objects_for_column(method)
 
         choices = options[:collection].map { |o|
-          collection_option(o, options[:label_method] || :to_label, options[:identify_method] ||= :id)
+          collection_option(o, options[:label_method] || :to_label, options[:value_method] ||= :id)
         }
         input_label(method, options) + template.select(@object_name, method, choices, options)
       end
@@ -655,10 +655,10 @@ module JustinFrench #:nodoc:
 
       private
 
-      def collection_option(item, label_method = :to_label, identify_method = :id)
+      def collection_option(item, label_method = :to_label, value_method = :id)
         [
-          item.respond_to?(label_method)    ? item.send(label_method)    : item.to_s,
-          item.respond_to?(identify_method) ? item.send(identify_method) : item.to_s
+          item.respond_to?(label_method) ? item.send(label_method) : item.to_s,
+          item.respond_to?(value_method) ? item.send(value_method) : item.to_s
         ]
       end
     end
