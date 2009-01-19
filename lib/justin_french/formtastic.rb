@@ -272,7 +272,7 @@ module JustinFrench #:nodoc:
       # which will be used as the text for the each option in the select.  You can specify an
       # alternate method with the :label_method option:
       #
-      # You can also customize the text label inside each option tag, by naming the correct method
+      # You can customize the text label inside each option tag, by naming the correct method
       # (:full_name, :display_name, :account_number, etc) to call on each object in the collection
       # by passing in the :label_method option.  By default the :label_method is :to_label.
       #
@@ -282,6 +282,16 @@ module JustinFrench #:nodoc:
       #   f.input :author_id, :as => :select, :label_method => :display_name
       #   f.input :author_id, :as => :select, :label_method => :to_s
       #   f.input :author_id, :as => :select, :label_method => :label
+      #
+      # You can also customize the value inside each option tag, by passing in the :value_method option.
+      # Usage is the same as the :label_method option
+      #
+      # Examples:
+      #
+      #   f.input :author_id, :as => :select, :value_method => :full_name
+      #   f.input :author_id, :as => :select, :value_method => :display_name
+      #   f.input :author_id, :as => :select, :value_method => :to_s
+      #   f.input :author_id, :as => :select, :value_method => :value
       def select_input(method, options)
         options[:collection] ||= find_parent_objects_for_column(method)
 
