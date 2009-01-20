@@ -293,7 +293,7 @@ h2. Contributors
 * "Pat Allan":http://github.com/freelancing-god
 * "negonicrac":http://github.com/negonicrac
 * "Andy Pearson":http://github.com/andypearson
-* "Mark Mansour":http://github.com/markmansour
+* "Mark Mansour":http://stateofflux.com
 * "Tien Dung":http://github.com/tiendung
 
 
