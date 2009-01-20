@@ -87,13 +87,20 @@ describe 'Formtastic' do
     end
     class Author; end
 
-    # Sometimes we need a mock @post object
+    # Sometimes we need a mock @post object and some Authors for belongs_to
     @new_post = mock('post')
     @new_post.stub!(:class).and_return(Post)
     @new_post.stub!(:id).and_return(nil)
     @new_post.stub!(:new_record?).and_return(true)
     @new_post.stub!(:errors).and_return(mock('errors', :on => nil))
 
+    @fred = mock('user')
+    @fred.stub!(:to_label).and_return('Fred Smith')
+    @fred.stub!(:id).and_return(37)
+    @bob = mock('user')
+    @bob.stub!(:to_label).and_return('Bob Rock')
+    @bob.stub!(:id).and_return(42)
+    Author.stub!(:find).and_return([@fred, @bob])
   end
 
   describe 'SemanticFormHelper' do
@@ -653,16 +660,6 @@ describe 'Formtastic' do
       describe 'for belongs_to associations' do
 
         before do
-          @fred = mock('user')
-          @fred.stub!(:to_label).and_return('Fred Smith')
-          @fred.stub!(:id).and_return(37)
-
-          @bob = mock('user')
-          @bob.stub!(:to_label).and_return('Bob Rock')
-          @bob.stub!(:id).and_return(42)
-
-          Author.stub!(:find).and_return([@fred, @bob])
-
           @new_post.stub!(:author).and_return(@bob)
           @new_post.stub!(:author_id).and_return(@bob.id)
           @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :integer, :limit => 255))
