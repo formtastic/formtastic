@@ -288,10 +288,13 @@ h2. Contributors
 
 * "Justin French":http://justinfrench.com
 * "Xavier Shay":http://rhnh.net
-* Bin Dong
+* "Bin Dong":http://github.com/dongbin
 * "Ben Hamill":http://blog.benhamill.com/
 * "Pat Allan":http://github.com/freelancing-god
 * "negonicrac":http://github.com/negonicrac
+* "Andy Pearson":http://github.com/andypearson
+* "Mark Mansour":http://github.com/markmansour
+* "Tien Dung":http://github.com/tiendung
 
 
 h2. Project Info
