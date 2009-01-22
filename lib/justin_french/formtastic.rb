@@ -656,6 +656,13 @@ module JustinFrench #:nodoc:
       end
 
       def default_string_options(method) #:nodoc:
+        # Use rescue to set column if @object does not have a column_for_attribute method 
+        # (eg if @object is not an ActiveRecord object)
+        begin
+          column = @object.column_for_attribute(method)
+        rescue NoMethodError
+          column = nil
+        end
         column = @object.column_for_attribute(method)
         if column.nil? || column.limit.nil?
           { :size => DEFAULT_TEXT_FIELD_SIZE }
