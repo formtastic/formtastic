@@ -92,6 +92,9 @@ If you wish, put something like this in config/initializers/formtastic_config.rb
   JustinFrench::Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
   JustinFrench::Formtastic::SemanticFormBuilder.required_string = "(required)"
   JustinFrench::Formtastic::SemanticFormBuilder.optional_string = "(optional)"
+
+  # Set the way inline errors will be displayed. Valid options are :sentence, :list and :none
+  JustinFrench::Formtastic::SemanticFormBuilder.inline_errors = :sentence
 </pre>
 
 
