@@ -295,12 +295,12 @@ module JustinFrench #:nodoc:
       def select_input(method, options)
         options[:collection] ||= find_parent_objects_for_column(method)
 
-        choices = options[:collection].map { |o|
+        choices = options[:collection].map { |o| 
           collection_option(o, options[:label_method] || :to_label, options[:value_method] ||= :id)
         }
         input_label(method, options) + template.select(@object_name, method, choices, options)
       end
-
+      
       # Outputs a fieldset containing a legend for the label text, and an ordered list (ol) of list
       # items, one for each possible choice in the belongs_to association.  Each li contains a
       # label and a radio input.
@@ -629,8 +629,8 @@ module JustinFrench #:nodoc:
       # cases it will simplify (like the case of :integer, :float & :decimal to :numeric), or do
       # something different (like :password and :select).
       #
-      # If there is no column for the method (eg "virtual columns" with an attr_accessor), an error
-      # is raised asking you to specify the :as option for the input.
+      # If there is no column for the method (eg "virtual columns" with an attr_accessor), the 
+      # default is a :string, a similar behaviour to Rails' scaffolding.
       def default_input_type(object, method) #:nodoc:
         column = object.send("column_for_attribute", method)
         if column
@@ -640,9 +640,9 @@ module JustinFrench #:nodoc:
           return :numeric if [:integer, :float, :decimal].include?(column.type)
           return :password if column.type == :string && method.to_s =~ /password/
           # otherwise assume the input name will be the same as the column type (eg string_input)
-          return column.type
+          return column.type 
         else
-          raise("Cannot guess an input type for '#{method}' - please set :as option")
+          return :string
         end
       end
 

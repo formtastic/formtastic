@@ -42,7 +42,7 @@ module FormtasticSpecHelper
 
   def default_input_type(column_type, column_name = :generic_column_name)
     @new_post.stub!(column_name)
-    @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => column_type))
+    @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => column_type)) unless column_type.nil?
     semantic_form_for(@new_post) do |builder|
       @default_type = builder.send(:default_input_type, @new_post, column_name)
     end
@@ -375,14 +375,10 @@ describe 'Formtastic' do
 
           describe 'when not provided' do
 
-            it 'should raise an error (and ask for the :as option to be specified) for methods that don\'t have a column in the database' do
+            it 'should default to a string for methods that don\'t have a column in the database (and can\'t be guessed)' do
               @new_post.stub!(:method_without_a_database_column)
               @new_post.stub!(:column_for_attribute).and_return(nil)
-              semantic_form_for(@new_post) do |builder|
-                lambda {
-                  builder.send(:default_input_type, @new_post, :method_without_a_database_column)
-                }.should raise_error("Cannot guess an input type for 'method_without_a_database_column' - please set :as option")
-              end
+              default_input_type(nil, :method_without_a_database_column).should == :string
             end
 
             it 'should default to :select for column names ending in "_id"' do
