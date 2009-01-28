@@ -96,9 +96,11 @@ describe 'Formtastic' do
 
     @fred = mock('user')
     @fred.stub!(:to_label).and_return('Fred Smith')
+    @fred.stub!(:login).and_return('fred_smith')
     @fred.stub!(:id).and_return(37)
     @bob = mock('user')
     @bob.stub!(:to_label).and_return('Bob Rock')
+    @bob.stub!(:login).and_return('bob')
     @bob.stub!(:id).and_return(42)
     Author.stub!(:find).and_return([@fred, @bob])
   end
@@ -787,7 +789,7 @@ describe 'Formtastic' do
               output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
             end
           end
-
+          
           describe 'when the :collection option is not provided' do
 
             it 'should perform a basic find on the parent class' do
@@ -841,13 +843,13 @@ describe 'Formtastic' do
           describe 'when the :value_method option is provided' do
             before do
               semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:author_id, :as => :select, :value_method => :to_label))
+                concat(builder.input(:author_id, :as => :select, :value_method => :login))
               end
             end
 
-            it 'should have options with values from :to_label method' do
+            it 'should have options with values from specified method' do
               Author.find(:all).each do |author|
-                output_buffer.should have_tag("form li select option[@value='#{author.to_label}']")
+                output_buffer.should have_tag("form li select option[@value='#{author.login}']")
               end
             end            
           end
@@ -855,13 +857,13 @@ describe 'Formtastic' do
           describe 'when the :label_method option is provided' do
             before do
               semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:author_id, :as => :select, :label_method => :id))
+                concat(builder.input(:author_id, :as => :select, :label_method => :login))
               end
             end
 
-            it 'should have options with text content from :id method' do
+            it 'should have options with text content from the specified method' do
               Author.find(:all).each do |author|
-                output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.id}/)
+                output_buffer.should have_tag("form li select option", /#{author.login}/)
               end
             end            
           end
