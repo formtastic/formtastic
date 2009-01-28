@@ -756,6 +756,54 @@ describe 'Formtastic' do
             end
 
           end
+          
+          describe 'when the :label_method option is provided' do
+            before do
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:author_id, :as => :radio, :label_method => :login))
+              end
+            end
+          
+            it 'should have options with text content from the specified method' do
+              Author.find(:all).each do |author|
+                output_buffer.should have_tag("form li fieldset ol li label", /#{author.login}/)
+              end
+            end            
+          end
+          
+          describe 'when the :label_method option is not provided' do
+            
+            describe 'when the collection objects repond to :to_label' do
+              before do
+                @fred.stub!(:respond_to?).with(:to_label).and_return(true)
+                semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:author_id, :as => :radio))
+                end
+              end
+              
+              it 'should render the options with :to_s as the label' do
+                Author.find(:all).each do |author|
+                  output_buffer.should have_tag("form li fieldset ol li label", /#{Regexp.escape(author.to_label)}/)
+                end
+              end
+            end
+            
+            describe 'when the collection objects don\'t respond to :to_label' do
+              before do
+                @fred.stub!(:respond_to?).with(:to_label).and_return(false)
+                semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:author_id, :as => :radio))
+                end
+              end
+              
+              it 'should render the options with :to_s as the label as a fallback' do
+                Author.find(:all).each do |author|
+                   output_buffer.should have_tag("form li fieldset ol li label", /#{Regexp.escape(author.to_s)}/)
+                end
+              end
+            end
+            
+          end
 
         end
 

@@ -294,7 +294,7 @@ module JustinFrench #:nodoc:
       #   f.input :author_id, :as => :select, :value_method => :value
       def select_input(method, options)
         options[:collection] ||= find_parent_objects_for_column(method)
-
+        
         choices = options[:collection].map { |o| 
           collection_option(o, options[:label_method] || :to_label, options[:value_method] ||= :id)
         }
@@ -345,8 +345,8 @@ module JustinFrench #:nodoc:
       #   f.input :author_id, :as => :radio, :label_method => :to_s
       #   f.input :author_id, :as => :radio, :label_method => :label
       def radio_input(method, options)
-        options[:label_method] ||= :to_label
         options[:collection] ||= find_parent_objects_for_column(method)
+        options[:label_method] ||= options[:collection].first.respond_to?(:to_label) ? :to_label : :to_s
 
         template.content_tag(:fieldset,
           %{<legend><span>#{label_text(method, options)}</span></legend>} +
@@ -362,8 +362,7 @@ module JustinFrench #:nodoc:
           )
         )
       end
-
-
+      
       # Outputs a label and a password input, nothing fancy.
       def password_input(method, options)
         input_label(method, options) +
