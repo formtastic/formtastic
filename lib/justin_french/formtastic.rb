@@ -642,6 +642,7 @@ module JustinFrench #:nodoc:
           # otherwise assume the input name will be the same as the column type (eg string_input)
           return column.type 
         else
+          return :password if method.to_s =~ /password/
           return :string
         end
       end

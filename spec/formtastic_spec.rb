@@ -382,7 +382,13 @@ describe 'Formtastic' do
               @new_post.stub!(:column_for_attribute).and_return(nil)
               default_input_type(nil, :method_without_a_database_column).should == :string
             end
-
+            
+            it 'should default to :password for methods that don\'t have a column in the database but "password" is in the method name' do
+              @new_post.stub!(:password_method_without_a_database_column)
+              @new_post.stub!(:column_for_attribute).and_return(nil)
+              default_input_type(nil, :password_method_without_a_database_column).should == :password
+            end
+            
             it 'should default to :select for column names ending in "_id"' do
               default_input_type(:integer, :user_id).should == :select
               default_input_type(:integer, :section_id).should == :select
