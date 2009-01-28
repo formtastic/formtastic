@@ -902,6 +902,42 @@ describe 'Formtastic' do
             end            
           end
           
+          describe 'when the :label_method option is not provided' do
+            
+            describe 'and the collection objects respond to :to_label' do
+              before do
+                output_buffer.replace ''
+                @fred.should_receive(:respond_to?).with(:to_label).and_return(true)
+                semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:author_id, :as => :select))
+                end
+              end
+              
+              it 'should use to_label as the option value' do
+                Author.find(:all).each do |author|
+                  output_buffer.should have_tag("form li select option", /#{author.to_label}/)
+                end
+              end
+            end
+            
+            describe 'and the collection objects do not respond to :to_label' do
+              before do
+                output_buffer.replace ''
+                @fred.should_receive(:respond_to?).with(:to_label).and_return(false)
+                semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:author_id, :as => :select))
+                end
+              end
+              
+              it 'should use to_s as the option value as a fallback' do
+                Author.find(:all).each do |author|
+                  output_buffer.should have_tag("form li select option", /#{Regexp.escape(author.to_s)}/)
+                end
+              end
+            end
+            
+          end
+          
           describe 'when the :label_method option is provided' do
             before do
               semantic_form_for(@new_post) do |builder|
