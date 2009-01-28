@@ -294,12 +294,13 @@ module JustinFrench #:nodoc:
       #   f.input :author_id, :as => :select, :value_method => :value
       def select_input(method, options)
         options[:collection] ||= find_parent_objects_for_column(method)
+        options[:label_method] ||= options[:collection].first.respond_to?(:to_label) ? :to_label : :to_s
+        options[:value_method] ||= :id
         
-        choices = options[:collection].map { |o| 
-          collection_option(o, options[:label_method] || :to_label, options[:value_method] ||= :id)
-        }
+        choices = options[:collection].map { |o| [o.send(options[:label_method]), o.send(options[:value_method])] }
         input_label(method, options) + template.select(@object_name, method, choices, options)
       end
+            
       
       # Outputs a fieldset containing a legend for the label text, and an ordered list (ol) of list
       # items, one for each possible choice in the belongs_to association.  Each li contains a
@@ -662,14 +663,6 @@ module JustinFrench #:nodoc:
         end
       end
 
-      private
-
-      def collection_option(item, label_method = :to_label, value_method = :id)
-        [
-          item.respond_to?(label_method) ? item.send(label_method) : item.to_s,
-          item.respond_to?(value_method) ? item.send(value_method) : item.to_s
-        ]
-      end
     end
 
     # Wrappers around form_for (etc) with :builder => SemanticFormBuilder.
