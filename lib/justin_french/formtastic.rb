@@ -632,7 +632,12 @@ module JustinFrench #:nodoc:
       # If there is no column for the method (eg "virtual columns" with an attr_accessor), the 
       # default is a :string, a similar behaviour to Rails' scaffolding.
       def default_input_type(object, method) #:nodoc:
-        column = object.send("column_for_attribute", method)
+        # rescue if object does not respond to "column_for_attribute" method
+        begin
+          column = object.send("column_for_attribute", method)
+        rescue NoMethodError
+          column = nil
+        end
         if column
           # handle the special cases where the column type doesn't map to an input method
           return :select if column.type == :integer && method.to_s =~ /_id$/
@@ -663,7 +668,6 @@ module JustinFrench #:nodoc:
         rescue NoMethodError
           column = nil
         end
-        column = @object.column_for_attribute(method)
         if column.nil? || column.limit.nil?
           { :size => DEFAULT_TEXT_FIELD_SIZE }
         else

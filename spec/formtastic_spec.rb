@@ -383,7 +383,19 @@ describe 'Formtastic' do
               default_input_type(nil, :method_without_a_database_column).should == :string
             end
             
+            it 'should default to a string for methods on objects that don\'t respond to "column_for_attribute"' do
+              @new_post.stub!(:method_without_a_database_column)
+              @new_post.stub!(:column_for_attribute).and_raise(NoMethodError)
+              default_input_type(nil, :method_without_a_database_column).should == :string
+            end
+            
             it 'should default to :password for methods that don\'t have a column in the database but "password" is in the method name' do
+              @new_post.stub!(:password_method_without_a_database_column)
+              @new_post.stub!(:column_for_attribute).and_return(nil)
+              default_input_type(nil, :password_method_without_a_database_column).should == :password
+            end
+            
+            it 'should default to :password for methods on objects that don\'t respond to "column_for_attribute" but "password" is in the method name' do
               @new_post.stub!(:password_method_without_a_database_column)
               @new_post.stub!(:column_for_attribute).and_return(nil)
               default_input_type(nil, :password_method_without_a_database_column).should == :password
@@ -657,6 +669,16 @@ describe 'Formtastic' do
 
         it 'should use DEFAULT_TEXT_FIELD_SIZE for methods without database columns' do
           should_use_default_size_for_methods_without_columns(:string)
+        end
+        
+        describe "with object that does not respond to 'column_for_attribute'" do
+          before do
+            @new_post.stub!(:column_for_attribute).and_raise(NoMethodError)
+          end
+          
+          it "should have a maxlength of DEFAULT_TEXT_FIELD_SIZE" do
+            should_use_default_size_for_methods_without_columns(:string)
+          end
         end
 
       end
@@ -1008,7 +1030,17 @@ describe 'Formtastic' do
         it 'should use DEFAULT_TEXT_FIELD_SIZE for methods without database columns' do
           should_use_default_size_for_methods_without_columns(:password)
         end
-
+        
+        describe "with object that does not respond to 'column_for_attribute'" do
+          before do
+            @new_post.stub!(:column_for_attribute).and_raise(NoMethodError)
+          end
+          
+          it "should have a maxlength of DEFAULT_TEXT_FIELD_SIZE" do
+            should_use_default_size_for_methods_without_columns(:string)
+          end
+        end
+        
       end
 
       describe ':as => :text' do
@@ -1472,6 +1504,16 @@ describe 'Formtastic' do
 
         it 'should use DEFAULT_TEXT_FIELD_SIZE for methods without database columns' do
           should_use_default_size_for_methods_without_columns(:numeric)
+        end
+        
+        describe "with object that does not respond to 'column_for_attribute'" do
+          before do
+            @new_post.stub!(:column_for_attribute).and_raise(NoMethodError)
+          end
+          
+          it "should have a maxlength of DEFAULT_TEXT_FIELD_SIZE" do
+            should_use_default_size_for_methods_without_columns(:string)
+          end
         end
 
       end
