@@ -194,6 +194,19 @@ You don't even have to specify the field list (Formtastic will simply render and
 
 Pretty soon we won't have to write any code at all ;)
 
+h2. Nested forms (Rails 2.3+)
+
+Nested forms are supported:
+
+<pre>
+  <% semantic_form_for @post do |post| %>
+    <%= post.semantic_fields_for :author do |author| %>
+      <%= author.inputs %>
+    <%= end %>
+    <%= post.buttons %>
+  <% end %>
+</pre>
+
 h2. Extending Formtastic
 
 Adding functionality to Formtastic can be done by extending SemanticFormBuilder and configuring formtastic's builder.

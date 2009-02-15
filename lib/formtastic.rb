@@ -1,3 +1,17 @@
+# Override the default ActiveRecordHelper behaviour of wrapping the input.
+# This gets taken care of semantically by adding an error class to the LI tag
+# containing the input.
+module ActionView
+  module Helpers
+    class InstanceTag
+      alias_method :error_wrapping_with_wrapping, :error_wrapping
+      def error_wrapping(html_tag, has_error)
+        html_tag
+      end
+    end
+  end
+end
+
 module Formtastic #:nodoc:
 
   class SemanticFormBuilder < ActionView::Helpers::FormBuilder
@@ -64,7 +78,7 @@ module Formtastic #:nodoc:
       html_class = [
         options[:as].to_s,
         (options[:required] ? 'required' : 'optional'),
-        (@object.errors.on(method) ? 'error' : nil)
+        (@object.errors.on(method.to_s) ? 'error' : nil)
       ].compact.join(" ")
 
       html_id = "#{@object_name}_#{method}_input"
@@ -213,7 +227,43 @@ module Formtastic #:nodoc:
       template.content_tag(:li, template.submit_tag(value), :class => "commit")
     end
 
+
+    # A thin wrapper around #fields_for to set :builder => Formtastic::SemanticFormBuilder
+    # for nesting forms:
+    #
+    #   # Example:
+    #   <% semantic_form_for @post do |post| %>
+    #     <% post.semantic_fields_for :author do |author| %>
+    #       <% author.inputs :name %>
+    #     <% end %>
+    #   <% end %>
+    #
+    #   # Output:
+    #   <form ...>
+    #     <fieldset class="inputs">
+    #       <ol>
+    #         <li class="string"><input type='text' name='post[author][name]' id='post_author_name' /></li>
+    #       </ol>
+    #     </fieldset>
+    #   </form>
+    def semantic_fields_for(record_or_name_or_array, *args, &block)
+      opts = args.extract_options!
+      opts.merge!(:builder => Formtastic::SemanticFormBuilder)
+      args.push(opts)
+      fields_for(record_or_name_or_array, *args, &block)
+    end
+
     protected
+
+    # Ensure :object => @object is set before sending the options down to the Rails layer.
+    # Also remove any Formtastic-specific options
+    def set_options(options)
+      opts = options.dup
+      [:value_method, :label_method, :collection, :required, :label, :as, :hint].each do |key|
+        opts.delete(key)
+      end
+      opts.merge(:object => @object)
+    end
 
     def save_or_create_commit_button_text #:nodoc:
       prefix = @object.new_record? ? "Create" : "Save"
@@ -295,12 +345,12 @@ module Formtastic #:nodoc:
       options[:collection] ||= find_parent_objects_for_column(method)
       options[:label_method] ||= options[:collection].first.respond_to?(:to_label) ? :to_label : :to_s
       options[:value_method] ||= :id
-      
+
       choices = options[:collection].map { |o| [o.send(options[:label_method]), o.send(options[:value_method])] }
-      input_label(method, options) + template.select(@object_name, method, choices, options)
+      input_label(method, options) + template.select(@object_name, method, choices, set_options(options))
     end
-          
-    
+
+
     # Outputs a fieldset containing a legend for the label text, and an ordered list (ol) of list
     # items, one for each possible choice in the belongs_to association.  Each li contains a
     # label and a radio input.
@@ -354,7 +404,7 @@ module Formtastic #:nodoc:
           options[:collection].map { |c|
             template.content_tag(:li,
               template.content_tag(:label,
-                "#{template.radio_button(@object_name, method, c.id)} #{c.send(options[:label_method])}",
+                "#{template.radio_button(@object_name, method, c.id, set_options(options))} #{c.send(options[:label_method])}",
                 :for => "#{@object_name}_#{method}_#{c.id}"
               )
             )
@@ -362,7 +412,7 @@ module Formtastic #:nodoc:
         )
       )
     end
-    
+
     # Outputs a label and a password input, nothing fancy.
     def password_input(method, options)
       input_label(method, options) +
@@ -372,7 +422,7 @@ module Formtastic #:nodoc:
 
     # Outputs a label and a textarea, nothing fancy.
     def text_input(method, options)
-      input_label(method, options) + template.text_area(@object_name, method)
+      input_label(method, options) + template.text_area(@object_name, method, set_options(options))
     end
 
 
@@ -393,7 +443,7 @@ module Formtastic #:nodoc:
     # Outputs label and file field
     def file_input(method, options)
       input_label(method, options) +
-      template.file_field(@object_name, method)
+      template.file_field(@object_name, method, set_options(options))
     end
 
 
@@ -472,9 +522,10 @@ module Formtastic #:nodoc:
           break if time_inputs.include?(input)
           list_items_capture << template.hidden_field_tag("#{@object_name}[#{method}(#{position[input]}i)]", @object.send(method), :id => "#{@object_name}_#{method}_#{position[input]}i")
         else
+          opts = set_options(options).merge({:prefix => @object_name, :field_name => "#{method}(#{position[input]}i)", :include_blank => options[:include_blank]})
           list_items_capture << template.content_tag(:li,
             template.content_tag(:label, input.to_s.humanize, :for => "#{@object_name}_#{method}_#{position[input]}i") +
-            template.send("select_#{input}".intern, @object.send(method), :prefix => @object_name, :field_name => "#{method}(#{position[input]}i)", :include_blank => options[:include_blank])
+            template.send("select_#{input}".intern, @object.send(method), opts)
           )
         end
       end
@@ -489,7 +540,7 @@ module Formtastic #:nodoc:
     # name (method name) and can be altered with the :label option.
     def boolean_input(method, options)
       input_label(method, options,
-        template.check_box(@object_name, method) +
+        template.check_box(@object_name, method, set_options(options)) +
         label_text(method, options)
       )
     end
@@ -519,7 +570,7 @@ module Formtastic #:nodoc:
       options[:false] ||= "No"
 
       choices = [ [options[:true],true], [options[:false],false] ]
-      input_label(method, options) + template.select(@object_name, method, choices, options)
+      input_label(method, options) + template.select(@object_name, method, choices, set_options(options))
     end
 
     # Outputs a fieldset containing two radio buttons (with labels) for "true" and "false". The
@@ -568,16 +619,16 @@ module Formtastic #:nodoc:
     end
 
     def inline_errors(method, options)  #:nodoc:
-      errors = @object.errors.on(method).to_a
+      errors = @object.errors.on(method.to_s).to_a
       unless errors.empty?
         send("error_#{@@inline_errors}", errors) if [:sentence, :list].include?(@@inline_errors)
       end
     end
-    
+
     def error_sentence(errors) #:nodoc:
       template.content_tag(:p, errors.to_sentence, :class => 'inline-errors')
     end
-    
+
     def error_list(errors) #:nodoc:
       list_elements = []
       errors.each do |error|
@@ -628,7 +679,7 @@ module Formtastic #:nodoc:
     # cases it will simplify (like the case of :integer, :float & :decimal to :numeric), or do
     # something different (like :password and :select).
     #
-    # If there is no column for the method (eg "virtual columns" with an attr_accessor), the 
+    # If there is no column for the method (eg "virtual columns" with an attr_accessor), the
     # default is a :string, a similar behaviour to Rails' scaffolding.
     def default_input_type(object, method) #:nodoc:
       # rescue if object does not respond to "column_for_attribute" method
@@ -644,7 +695,7 @@ module Formtastic #:nodoc:
         return :numeric if [:integer, :float, :decimal].include?(column.type)
         return :password if column.type == :string && method.to_s =~ /password/
         # otherwise assume the input name will be the same as the column type (eg string_input)
-        return column.type 
+        return column.type
       else
         return :password if method.to_s =~ /password/
         return :string
@@ -660,18 +711,19 @@ module Formtastic #:nodoc:
     end
 
     def default_string_options(method) #:nodoc:
-      # Use rescue to set column if @object does not have a column_for_attribute method 
+      # Use rescue to set column if @object does not have a column_for_attribute method
       # (eg if @object is not an ActiveRecord object)
       begin
         column = @object.column_for_attribute(method)
       rescue NoMethodError
         column = nil
       end
-      if column.nil? || column.limit.nil?
+      opts = if column.nil? || column.limit.nil?
         { :size => DEFAULT_TEXT_FIELD_SIZE }
       else
         { :maxlength => column.limit, :size => [column.limit, DEFAULT_TEXT_FIELD_SIZE].min }
       end
+      set_options(opts)
     end
 
   end
@@ -746,5 +798,4 @@ module Formtastic #:nodoc:
       module_eval src, __FILE__, __LINE__
     end
   end
-
 end

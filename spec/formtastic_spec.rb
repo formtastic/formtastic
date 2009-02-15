@@ -246,6 +246,28 @@ describe 'Formtastic' do
 
     end
 
+    describe 'Formtastic::SemanticFormBuilder#semantic_fields_for' do
+      before do
+        @new_post.stub!(:author).and_return(Author.new)
+      end
+
+      it 'yields an instance of SemanticFormBuilder' do
+        semantic_form_for(@new_post) do |builder|
+          builder.semantic_fields_for(:author) do |nested_builder|
+            nested_builder.class.should == Formtastic::SemanticFormBuilder
+          end
+        end
+      end
+
+      it 'nests the object name' do
+        semantic_form_for(@new_post) do |builder|
+          builder.semantic_fields_for(:author) do |nested_builder|
+            nested_builder.object_name.should == 'post[author]'
+          end
+        end
+      end
+    end
+
     describe '#input' do
 
       before do
@@ -391,25 +413,25 @@ describe 'Formtastic' do
               @new_post.stub!(:column_for_attribute).and_return(nil)
               default_input_type(nil, :method_without_a_database_column).should == :string
             end
-            
+
             it 'should default to a string for methods on objects that don\'t respond to "column_for_attribute"' do
               @new_post.stub!(:method_without_a_database_column)
               @new_post.stub!(:column_for_attribute).and_raise(NoMethodError)
               default_input_type(nil, :method_without_a_database_column).should == :string
             end
-            
+
             it 'should default to :password for methods that don\'t have a column in the database but "password" is in the method name' do
               @new_post.stub!(:password_method_without_a_database_column)
               @new_post.stub!(:column_for_attribute).and_return(nil)
               default_input_type(nil, :password_method_without_a_database_column).should == :password
             end
-            
+
             it 'should default to :password for methods on objects that don\'t respond to "column_for_attribute" but "password" is in the method name' do
               @new_post.stub!(:password_method_without_a_database_column)
               @new_post.stub!(:column_for_attribute).and_return(nil)
               default_input_type(nil, :password_method_without_a_database_column).should == :password
             end
-            
+
             it 'should default to :select for column names ending in "_id"' do
               default_input_type(:integer, :user_id).should == :select
               default_input_type(:integer, :section_id).should == :select
@@ -540,26 +562,33 @@ describe 'Formtastic' do
           before do
             @title_errors = ['must not be blank', 'must be longer than 10 characters', 'must be awesome']
             @errors = mock('errors')
-            @errors.stub!(:on).with(:title).and_return(@title_errors)
+            @errors.stub!(:on).with('title').and_return(@title_errors)
             @new_post.stub!(:errors).and_return(@errors)
           end
-          
+
           it 'should apply an errors class to the list item' do
             semantic_form_for(@new_post) do |builder|
               concat(builder.input(:title))
             end
             output_buffer.should have_tag('form li.error')
           end
-          
+
+          it 'should not wrap the input with the Rails default error wrapping' do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:title))
+            end
+            output_buffer.should_not have_tag('div.fieldWithErrors')
+          end
+
           describe 'and the errors will be displayed as a sentence' do
-            
+
             before do
               Formtastic::SemanticFormBuilder.inline_errors = :sentence
-              semantic_form_for(@new_post) do |builder| 
+              semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title))
               end
             end
-            
+
             it 'should render a paragraph with the errors joined into a sentence' do
               output_buffer.should have_tag('form li.error p.inline-errors', @title_errors.to_sentence)
             end
@@ -567,39 +596,39 @@ describe 'Formtastic' do
           end
 
           describe 'and the errors will be displayed as a list' do
-            
+
             before do
               Formtastic::SemanticFormBuilder.inline_errors = :list
-              semantic_form_for(@new_post) do |builder| 
+              semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title))
               end
             end
-            
+
             it 'should render an unordered list with the class errors' do
               output_buffer.should have_tag('form li.error ul.errors')
             end
-            
+
             it 'should include a list element for each of the errors within the unordered list' do
               @title_errors.each do |error|
                 output_buffer.should have_tag('form li.error ul.errors li', error)
               end
             end
-            
+
           end
-          
+
           describe 'but the errors will not be shown' do
-            
+
             before do
               Formtastic::SemanticFormBuilder.inline_errors = :none
-              semantic_form_for(@new_post) do |builder| 
+              semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title))
               end
             end
-            
+
             it 'should not display an error sentence' do
               output_buffer.should_not have_tag('form li.error p.inline-errors')
             end
-            
+
             it 'should not display an error list' do
               output_buffer.should_not have_tag('form li.error ul.errors')
             end
@@ -618,12 +647,12 @@ describe 'Formtastic' do
 
           it 'should not apply an errors class to the list item' do
             output_buffer.should_not have_tag('form li.error')
-          end          
-          
+          end
+
           it 'should not render a paragraph for the errors' do
             output_buffer.should_not have_tag('form li.error p.inline-errors')
           end
-          
+
           it 'should not display an error list' do
             output_buffer.should_not have_tag('form li.error ul.errors')
           end
@@ -679,12 +708,12 @@ describe 'Formtastic' do
         it 'should use DEFAULT_TEXT_FIELD_SIZE for methods without database columns' do
           should_use_default_size_for_methods_without_columns(:string)
         end
-        
+
         describe "with object that does not respond to 'column_for_attribute'" do
           before do
             @new_post.stub!(:column_for_attribute).and_raise(NoMethodError)
           end
-          
+
           it "should have a maxlength of DEFAULT_TEXT_FIELD_SIZE" do
             should_use_default_size_for_methods_without_columns(:string)
           end
@@ -793,23 +822,23 @@ describe 'Formtastic' do
             end
 
           end
-          
+
           describe 'when the :label_method option is provided' do
             before do
               semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:author_id, :as => :radio, :label_method => :login))
               end
             end
-          
+
             it 'should have options with text content from the specified method' do
               Author.find(:all).each do |author|
                 output_buffer.should have_tag("form li fieldset ol li label", /#{author.login}/)
               end
-            end            
+            end
           end
-          
+
           describe 'when the :label_method option is not provided' do
-            
+
             describe 'when the collection objects repond to :to_label' do
               before do
                 @fred.stub!(:respond_to?).with(:to_label).and_return(true)
@@ -817,14 +846,14 @@ describe 'Formtastic' do
                   concat(builder.input(:author_id, :as => :radio))
                 end
               end
-              
+
               it 'should render the options with :to_s as the label' do
                 Author.find(:all).each do |author|
                   output_buffer.should have_tag("form li fieldset ol li label", /#{Regexp.escape(author.to_label)}/)
                 end
               end
             end
-            
+
             describe 'when the collection objects don\'t respond to :to_label' do
               before do
                 @fred.stub!(:respond_to?).with(:to_label).and_return(false)
@@ -832,14 +861,14 @@ describe 'Formtastic' do
                   concat(builder.input(:author_id, :as => :radio))
                 end
               end
-              
+
               it 'should render the options with :to_s as the label as a fallback' do
                 Author.find(:all).each do |author|
                    output_buffer.should have_tag("form li fieldset ol li label", /#{Regexp.escape(author.to_s)}/)
                 end
               end
             end
-            
+
           end
 
         end
@@ -874,7 +903,7 @@ describe 'Formtastic' do
               output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
             end
           end
-          
+
           describe 'when the :collection option is not provided' do
 
             it 'should perform a basic find on the parent class' do
@@ -911,13 +940,14 @@ describe 'Formtastic' do
 
           describe 'when :include_blank => true, :prompt => "choose something" is set' do
             before do
+              @new_post.stub!(:author_id).and_return(nil)
               semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:author_id, :as => :select, :include_blank => true, :prompt => "choose author"))
               end
             end
 
             it 'should have a blank select option' do
-              output_buffer.should have_tag("form li select option[@value='']", / /)
+              output_buffer.should have_tag("form li select option[@value='']", //)
             end
 
             it 'should have a select with prompt' do
@@ -936,11 +966,11 @@ describe 'Formtastic' do
               Author.find(:all).each do |author|
                 output_buffer.should have_tag("form li select option[@value='#{author.login}']")
               end
-            end            
+            end
           end
-          
+
           describe 'when the :label_method option is not provided' do
-            
+
             describe 'and the collection objects respond to :to_label' do
               before do
                 output_buffer.replace ''
@@ -949,14 +979,14 @@ describe 'Formtastic' do
                   concat(builder.input(:author_id, :as => :select))
                 end
               end
-              
+
               it 'should use to_label as the option value' do
                 Author.find(:all).each do |author|
                   output_buffer.should have_tag("form li select option", /#{author.to_label}/)
                 end
               end
             end
-            
+
             describe 'and the collection objects do not respond to :to_label' do
               before do
                 output_buffer.replace ''
@@ -965,16 +995,16 @@ describe 'Formtastic' do
                   concat(builder.input(:author_id, :as => :select))
                 end
               end
-              
+
               it 'should use to_s as the option value as a fallback' do
                 Author.find(:all).each do |author|
                   output_buffer.should have_tag("form li select option", /#{Regexp.escape(author.to_s)}/)
                 end
               end
             end
-            
+
           end
-          
+
           describe 'when the :label_method option is provided' do
             before do
               semantic_form_for(@new_post) do |builder|
@@ -986,9 +1016,9 @@ describe 'Formtastic' do
               Author.find(:all).each do |author|
                 output_buffer.should have_tag("form li select option", /#{author.login}/)
               end
-            end            
+            end
           end
-          
+
         end
       end
 
@@ -1039,17 +1069,17 @@ describe 'Formtastic' do
         it 'should use DEFAULT_TEXT_FIELD_SIZE for methods without database columns' do
           should_use_default_size_for_methods_without_columns(:password)
         end
-        
+
         describe "with object that does not respond to 'column_for_attribute'" do
           before do
             @new_post.stub!(:column_for_attribute).and_raise(NoMethodError)
           end
-          
+
           it "should have a maxlength of DEFAULT_TEXT_FIELD_SIZE" do
             should_use_default_size_for_methods_without_columns(:string)
           end
         end
-        
+
       end
 
       describe ':as => :text' do
@@ -1514,12 +1544,12 @@ describe 'Formtastic' do
         it 'should use DEFAULT_TEXT_FIELD_SIZE for methods without database columns' do
           should_use_default_size_for_methods_without_columns(:numeric)
         end
-        
+
         describe "with object that does not respond to 'column_for_attribute'" do
           before do
             @new_post.stub!(:column_for_attribute).and_raise(NoMethodError)
           end
-          
+
           it "should have a maxlength of DEFAULT_TEXT_FIELD_SIZE" do
             should_use_default_size_for_methods_without_columns(:string)
           end
