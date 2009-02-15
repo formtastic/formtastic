@@ -1,5 +1,5 @@
 require File.dirname(__FILE__) + '/test_helper'
-require 'justin_french/formtastic'
+require 'formtastic'
 
 module FormtasticSpecHelper
 
@@ -12,7 +12,7 @@ module FormtasticSpecHelper
   end
 
   def should_use_default_text_size_for_columns_longer_than_default(method_name, as, column_type)
-    default_size = JustinFrench::Formtastic::SemanticFormBuilder::DEFAULT_TEXT_FIELD_SIZE
+    default_size = Formtastic::SemanticFormBuilder::DEFAULT_TEXT_FIELD_SIZE
     column_limit_larger_than_default = default_size * 2
     @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => column_type, :limit => column_limit_larger_than_default))
     semantic_form_for(@new_post) do |builder|
@@ -22,7 +22,7 @@ module FormtasticSpecHelper
   end
 
   def should_use_the_column_size_for_columns_shorter_than_default(method_name, as, column_type)
-    default_size = JustinFrench::Formtastic::SemanticFormBuilder::DEFAULT_TEXT_FIELD_SIZE
+    default_size = Formtastic::SemanticFormBuilder::DEFAULT_TEXT_FIELD_SIZE
     column_limit_shorter_than_default = 1
     @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => column_type, :limit => column_limit_shorter_than_default))
     semantic_form_for(@new_post) do |builder|
@@ -32,7 +32,7 @@ module FormtasticSpecHelper
   end
 
   def should_use_default_size_for_methods_without_columns(as)
-    default_size = JustinFrench::Formtastic::SemanticFormBuilder::DEFAULT_TEXT_FIELD_SIZE
+    default_size = Formtastic::SemanticFormBuilder::DEFAULT_TEXT_FIELD_SIZE
     @new_post.stub!(:method_without_column)
     semantic_form_for(@new_post) do |builder|
       concat(builder.input(:method_without_column, :as => as))
@@ -66,7 +66,7 @@ describe 'Formtastic' do
   include ActiveSupport
   include ActionController::PolymorphicRoutes
 
-  include JustinFrench::Formtastic::SemanticFormHelper
+  include Formtastic::SemanticFormHelper
 
   attr_accessor :output_buffer
 
@@ -105,13 +105,22 @@ describe 'Formtastic' do
     Author.stub!(:find).and_return([@fred, @bob])
   end
 
+  describe 'JustinFrench::Formtastic::SemanticFormBuilder' do
+    require 'justin_french/formtastic'
+    it 'should be deprecated' do
+      ::ActiveSupport::Deprecation.should_receive(:warn).with(/JustinFrench\:\:Formtastic\:\:SemanticFormBuilder/, anything())
+      form_for(@new_post, :builder => JustinFrench::Formtastic::SemanticFormBuilder) do |builder|
+      end
+    end
+  end
+
   describe 'SemanticFormHelper' do
 
     describe '#semantic_form_for' do
 
       it 'yields an instance of SemanticFormBuilder' do
         semantic_form_for(:post, Post.new, :url => '/hello') do |builder|
-          builder.class.should == JustinFrench::Formtastic::SemanticFormBuilder
+          builder.class.should == Formtastic::SemanticFormBuilder
         end
       end
 
@@ -185,7 +194,7 @@ describe 'Formtastic' do
     describe '#semantic_fields_for' do
       it 'yields an instance of SemanticFormBuilder' do
         semantic_fields_for(:post, Post.new, :url => '/hello') do |builder|
-          builder.class.should == JustinFrench::Formtastic::SemanticFormBuilder
+          builder.class.should == Formtastic::SemanticFormBuilder
         end
       end
     end
@@ -193,7 +202,7 @@ describe 'Formtastic' do
     describe '#semantic_form_remote_for' do
       it 'yields an instance of SemanticFormBuilder' do
         semantic_form_remote_for(:post, Post.new, :url => '/hello') do |builder|
-          builder.class.should == JustinFrench::Formtastic::SemanticFormBuilder
+          builder.class.should == Formtastic::SemanticFormBuilder
         end
       end
     end
@@ -201,7 +210,7 @@ describe 'Formtastic' do
     describe '#semantic_form_for_remote' do
       it 'yields an instance of SemanticFormBuilder' do
         semantic_form_remote_for(:post, Post.new, :url => '/hello') do |builder|
-          builder.class.should == JustinFrench::Formtastic::SemanticFormBuilder
+          builder.class.should == Formtastic::SemanticFormBuilder
         end
       end
     end
@@ -221,13 +230,13 @@ describe 'Formtastic' do
 
       it "can be overridden" do
 
-        class CustomFormBuilder < JustinFrench::Formtastic::SemanticFormBuilder
+        class CustomFormBuilder < Formtastic::SemanticFormBuilder
           def custom(arg1, arg2, options = {})
             [arg1, arg2, options]
           end
         end
 
-        JustinFrench::Formtastic::SemanticFormHelper.builder = CustomFormBuilder
+        Formtastic::SemanticFormHelper.builder = CustomFormBuilder
 
         semantic_form_for(@new_post) do |builder|
           builder.class.should == CustomFormBuilder
@@ -278,7 +287,7 @@ describe 'Formtastic' do
             end
 
             it 'should append the "required" string to the label' do
-              string = JustinFrench::Formtastic::SemanticFormBuilder.required_string = " required yo!" # ensure there's something in the string
+              string = Formtastic::SemanticFormBuilder.required_string = " required yo!" # ensure there's something in the string
               semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title, :required => true))
               end
@@ -302,7 +311,7 @@ describe 'Formtastic' do
             end
 
             it 'should append the "optional" string to the label' do
-              string = JustinFrench::Formtastic::SemanticFormBuilder.optional_string = " optional yo!" # ensure there's something in the string
+              string = Formtastic::SemanticFormBuilder.optional_string = " optional yo!" # ensure there's something in the string
               semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title, :required => false))
               end
@@ -358,8 +367,8 @@ describe 'Formtastic' do
             describe 'and the validation reflection plugin is not available' do
 
               it 'should use the default value' do
-                JustinFrench::Formtastic::SemanticFormBuilder.all_fields_required_by_default.should == true
-                JustinFrench::Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
+                Formtastic::SemanticFormBuilder.all_fields_required_by_default.should == true
+                Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
                 semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:title))
                 end
@@ -545,7 +554,7 @@ describe 'Formtastic' do
           describe 'and the errors will be displayed as a sentence' do
             
             before do
-              JustinFrench::Formtastic::SemanticFormBuilder.inline_errors = :sentence
+              Formtastic::SemanticFormBuilder.inline_errors = :sentence
               semantic_form_for(@new_post) do |builder| 
                 concat(builder.input(:title))
               end
@@ -560,7 +569,7 @@ describe 'Formtastic' do
           describe 'and the errors will be displayed as a list' do
             
             before do
-              JustinFrench::Formtastic::SemanticFormBuilder.inline_errors = :list
+              Formtastic::SemanticFormBuilder.inline_errors = :list
               semantic_form_for(@new_post) do |builder| 
                 concat(builder.input(:title))
               end
@@ -581,7 +590,7 @@ describe 'Formtastic' do
           describe 'but the errors will not be shown' do
             
             before do
-              JustinFrench::Formtastic::SemanticFormBuilder.inline_errors = :none
+              Formtastic::SemanticFormBuilder.inline_errors = :none
               semantic_form_for(@new_post) do |builder| 
                 concat(builder.input(:title))
               end

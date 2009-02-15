@@ -89,12 +89,12 @@ h2. Configuration
 If you wish, put something like this in config/initializers/formtastic_config.rb:
 
 <pre>
-  JustinFrench::Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
-  JustinFrench::Formtastic::SemanticFormBuilder.required_string = "(required)"
-  JustinFrench::Formtastic::SemanticFormBuilder.optional_string = "(optional)"
+  Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
+  Formtastic::SemanticFormBuilder.required_string = "(required)"
+  Formtastic::SemanticFormBuilder.optional_string = "(optional)"
 
   # Set the way inline errors will be displayed. Valid options are :sentence, :list and :none
-  JustinFrench::Formtastic::SemanticFormBuilder.inline_errors = :sentence
+  Formtastic::SemanticFormBuilder.inline_errors = :sentence
 </pre>
 
 
@@ -111,7 +111,7 @@ h2. Roadmap to 1.0
 * there's a few of TODOs left in the code
 * improve the generated sample stylesheets
 * take a look at a DSL for the validation errors heading and messages typically placed at the top of a form
-* maybe get rid of the JustinFrench:: module namespace
+* maybe get rid of the  module namespace
 
 h2. Usage
 
@@ -202,7 +202,7 @@ To create a new form method that displayed a star rating define the new Formtast
 
 <pre>
 # RAILS_ROOT/lib/rating_semantic_form_builder.rb
-class RatingSemanticFormBuilder < JustinFrench::Formtastic::SemanticFormBuilder
+class RatingSemanticFormBuilder < Formtastic::SemanticFormBuilder
   # new method to be added allowing full control over the label and value
   def rating(stars, options = {})
     options[:label] ||= 'rating'
@@ -220,7 +220,7 @@ Set Formtastic's builder to your newly defined RatingSemanticFormBuilder
 require 'rating_semantic_form_builder.rb'
 
 # set the formtastic builder to a customized version of the formtastic builder
-JustinFrench::Formtastic::SemanticFormHelper.builder = RatingSemanticFormBuilder
+Formtastic::SemanticFormHelper.builder = RatingSemanticFormBuilder
 </pre>
 
 Use your newly created formtastic method
