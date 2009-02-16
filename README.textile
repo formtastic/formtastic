@@ -94,7 +94,7 @@ If you wish, put something like this in config/initializers/formtastic_config.rb
   Formtastic::SemanticFormBuilder.optional_string = "(optional)"
 
   # Set the way inline errors will be displayed.
-  # Defaults to :string, valid options are :sentence, :list and :none
+  # Defaults to :sentence, valid options are :sentence, :list and :none
   Formtastic::SemanticFormBuilder.inline_errors = :list
 
   # Set the method to call on label text to transform or format it for human-friendly reading
