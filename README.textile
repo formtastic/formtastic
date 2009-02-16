@@ -345,7 +345,8 @@ h2. Contributors
 * "Andy Pearson":http://github.com/andypearson
 * "Mark Mansour":http://stateofflux.com
 * "Tien Dung":http://github.com/tiendung
-
+* "Sascha Hoellger":http://github.com/mitnal
+* "Jeff Smick":http://github.com/sprsquish
 
 h2. Project Info
 
