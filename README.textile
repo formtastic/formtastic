@@ -95,6 +95,9 @@ If you wish, put something like this in config/initializers/formtastic_config.rb
 
   # Set the way inline errors will be displayed. Valid options are :sentence, :list and :none
   Formtastic::SemanticFormBuilder.inline_errors = :sentence
+
+  # Set the method called on label text to determine its format (:titleize, :humanize, :to_s, etc)
+  Formtastic::SemanticFormBuilder.label_str_method = :titleize
 </pre>
 
 
@@ -205,6 +208,27 @@ Nested forms are supported:
     <%= end %>
     <%= post.buttons %>
   <% end %>
+</pre>
+
+h2. Internationalization (I18n)
+
+Supports I18n! ActiveRecord object names and attributes are, by default, taken from calling @object.human_name and @object.human_attribute_name(attr) respectively. There are a few words specific to Formtastic that can be translated.
+
+Here is an example locale file:
+
+<pre>
+en:
+  formtastic:
+    yes: 'Yes'
+    no: 'No'
+    create: 'Create'
+    save: 'Save'
+    year: 'Year'
+    month: 'Month'
+    day: 'Day'
+    hour: 'Hour'
+    minute: 'Minute'
+    second: 'Second'
 </pre>
 
 h2. Extending Formtastic

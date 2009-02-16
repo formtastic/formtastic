@@ -1,0 +1,12 @@
+en:
+  formtastic:
+    yes: 'Yes'
+    no: 'No'
+    create: 'Create'
+    save: 'Save'
+    year: 'Year'
+    month: 'Month'
+    day: 'Day'
+    hour: 'Hour'
+    minute: 'Minute'
+    second: 'Second'

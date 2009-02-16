@@ -22,8 +22,9 @@ module Formtastic #:nodoc:
     @@required_string = %{<abbr title="required">*</abbr>}
     @@optional_string = ''
     @@inline_errors = :sentence
+    @@label_str_method = :titleize
 
-    cattr_accessor :all_fields_required_by_default, :required_string, :optional_string, :inline_errors
+    cattr_accessor :all_fields_required_by_default, :required_string, :optional_string, :inline_errors, :label_str_method
 
     attr_accessor :template
 
@@ -71,7 +72,7 @@ module Formtastic #:nodoc:
 
 
       options[:required] = method_required?(method, options[:required])
-      options[:label] ||= method.to_s.titleize
+      options[:label] ||= @object.human_attribute_name(method).send(@@label_str_method)
       options[:as] ||= default_input_type(@object, method)
       input_method = "#{options[:as]}_input"
 
@@ -266,8 +267,10 @@ module Formtastic #:nodoc:
     end
 
     def save_or_create_commit_button_text #:nodoc:
-      prefix = @object.new_record? ? "Create" : "Save"
-      "#{prefix} #{@object_name.to_s.humanize}"
+      prefix = @object.new_record? ? 'create' : 'save'
+      [ I18n.t(prefix, :default => prefix, :scope => [:formtastic]),
+        @object.human_name
+      ].join(' ').send(@@label_str_method)
     end
 
     # Determins if the attribute (eg :title) should be considered required or not.
@@ -523,8 +526,9 @@ module Formtastic #:nodoc:
           list_items_capture << template.hidden_field_tag("#{@object_name}[#{method}(#{position[input]}i)]", @object.send(method), :id => "#{@object_name}_#{method}_#{position[input]}i")
         else
           opts = set_options(options).merge({:prefix => @object_name, :field_name => "#{method}(#{position[input]}i)", :include_blank => options[:include_blank]})
+          item_label_text = I18n.t(input.to_s, :default => input.to_s, :scope => [:formtastic]).send(@@label_str_method)
           list_items_capture << template.content_tag(:li,
-            template.content_tag(:label, input.to_s.humanize, :for => "#{@object_name}_#{method}_#{position[input]}i") +
+            template.content_tag(:label, item_label_text, :for => "#{@object_name}_#{method}_#{position[input]}i") +
             template.send("select_#{input}".intern, @object.send(method), opts)
           )
         end
@@ -566,8 +570,8 @@ module Formtastic #:nodoc:
     #
     # TODO: Doesn't handle :include_blank => true, but then again, neither do most of the inputs.
     def boolean_select_input(method, options)
-      options[:true] ||= "Yes"
-      options[:false] ||= "No"
+      options[:true] ||= I18n.t('yes', :default => 'yes', :scope => [:formtastic]).send(@@label_str_method)
+      options[:false] ||= I18n.t('no', :default => 'no', :scope => [:formtastic]).send(@@label_str_method)
 
       choices = [ [options[:true],true], [options[:false],false] ]
       input_label(method, options) + template.select(@object_name, method, choices, set_options(options))
@@ -599,8 +603,8 @@ module Formtastic #:nodoc:
     #    </fieldset>
     #  </li>
     def boolean_radio_input(method, options)
-      options[:true] ||= "Yes"
-      options[:false] ||= "No"
+      options[:true] ||= I18n.t('yes', :default => 'yes', :scope => [:formtastic]).send(@@label_str_method)
+      options[:false] ||= I18n.t('no', :default => 'no', :scope => [:formtastic]).send(@@label_str_method)
 
       choices = [ {:label => options[:true], :value => true}, {:label => options[:false], :value => false} ]
 

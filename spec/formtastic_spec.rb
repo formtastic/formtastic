@@ -73,6 +73,8 @@ describe 'Formtastic' do
   def protect_against_forgery?; false; end
 
   before do
+    Formtastic::SemanticFormBuilder.label_str_method = :titleize
+
     @output_buffer = ''
 
     # Resource-oriented styles like form_for(@post) will expect a path method for the object,
@@ -93,6 +95,8 @@ describe 'Formtastic' do
     @new_post.stub!(:id).and_return(nil)
     @new_post.stub!(:new_record?).and_return(true)
     @new_post.stub!(:errors).and_return(mock('errors', :on => nil))
+    @new_post.stub!(:human_attribute_name).and_return { |column_name| column_name.to_s }
+    @new_post.stub!(:human_name).and_return('Post')
 
     @fred = mock('user')
     @fred.stub!(:to_label).and_return('Fred Smith')
@@ -297,7 +301,12 @@ describe 'Formtastic' do
           describe 'when true' do
 
             before do
+              @string = Formtastic::SemanticFormBuilder.required_string = " required yo!" # ensure there's something in the string
               @new_post.class.should_not_receive(:reflect_on_all_validations)
+            end
+
+            after do
+              Formtastic::SemanticFormBuilder.required_string = %{<abbr title="required">*</abbr>}
             end
 
             it 'should set a "required" class' do
@@ -309,11 +318,10 @@ describe 'Formtastic' do
             end
 
             it 'should append the "required" string to the label' do
-              string = Formtastic::SemanticFormBuilder.required_string = " required yo!" # ensure there's something in the string
               semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title, :required => true))
               end
-              output_buffer.should have_tag('form li.required label', /#{string}$/)
+              output_buffer.should have_tag('form li.required label', /#{@string}$/)
             end
 
           end
@@ -321,7 +329,12 @@ describe 'Formtastic' do
           describe 'when false' do
 
             before do
+              @string = Formtastic::SemanticFormBuilder.optional_string = " optional yo!" # ensure there's something in the string
               @new_post.class.should_not_receive(:reflect_on_all_validations)
+            end
+
+            after do
+              Formtastic::SemanticFormBuilder.optional_string = ''
             end
 
             it 'should set an "optional" class' do
@@ -332,12 +345,11 @@ describe 'Formtastic' do
               output_buffer.should have_tag('form li.optional')
             end
 
-            it 'should append the "optional" string to the label' do
-              string = Formtastic::SemanticFormBuilder.optional_string = " optional yo!" # ensure there's something in the string
+            it 'should append the "optional" string to the label' do              
               semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title, :required => false))
               end
-              output_buffer.should have_tag('form li.optional label', /#{string}$/)
+              output_buffer.should have_tag('form li.optional label', /#{@string}$/)
             end
 
           end
@@ -503,16 +515,44 @@ describe 'Formtastic' do
           end
 
           describe 'when not provided' do
-
-            it 'should default the method name, passing it down to the label tag' do
-              @new_post.stub!(:meta_description) # a two word method name
-              semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:meta_description))
+            describe 'when the default is :titleize' do
+              before do
+                Formtastic::SemanticFormBuilder.label_str_method = :titleize
+                @new_post.stub!(:meta_description) # a two word method name
+                semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:meta_description))
+                end
               end
-              output_buffer.should have_tag("form li label", /#{'meta_description'.titleize}/)
-              output_buffer.should have_tag("form li label", /Meta Description/)
+              it 'should default the titleized method name, passing it down to the label tag' do
+                output_buffer.should have_tag("form li label", /#{'meta_description'.titleize}/)
+              end
             end
 
+            describe 'when the default is :humanize' do
+              before do
+                Formtastic::SemanticFormBuilder.label_str_method = :humanize
+                @new_post.stub!(:meta_description) # a two word method name
+                semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:meta_description))
+                end
+              end
+              it 'should default the humanized method name, passing it down to the label tag' do
+                output_buffer.should have_tag("form li label", /#{'meta_description'.humanize}/)
+              end
+            end
+
+            describe 'when the default is :to_s' do
+              before do
+                Formtastic::SemanticFormBuilder.label_str_method = :to_s
+                @new_post.stub!(:meta_description) # a two word method name
+                semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:meta_description))
+                end
+              end
+              it 'should default the humanized method name, passing it down to the label tag' do
+                output_buffer.should have_tag("form li label", /meta_description/)
+              end
+            end
           end
 
         end
@@ -1166,6 +1206,24 @@ describe 'Formtastic' do
           end
         end
 
+        describe 'when the locale changes the label text' do
+          before do
+            I18n.backend.store_translations 'en', :formtastic => {:year => 'The Year', :month => 'The Month', :day => 'The Day'}
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:publish_at, :as => :date))
+            end
+          end
+
+          after do
+            I18n.backend.store_translations 'en', :formtastic => {:year => nil, :month => nil, :day => nil}
+          end
+
+          it 'should have translated labels for year, month and day' do
+            output_buffer.should have_tag('form li.date fieldset ol li label', /The Year/)
+            output_buffer.should have_tag('form li.date fieldset ol li label', /The Month/)
+            output_buffer.should have_tag('form li.date fieldset ol li label', /The Day/)
+          end
+        end
       end
 
       describe ':as => :datetime' do
@@ -1221,6 +1279,32 @@ describe 'Formtastic' do
           end
         end
 
+        describe 'when the locale changes the label text' do
+          before do
+            I18n.backend.store_translations 'en', :formtastic => {
+              :year => 'The Year', :month => 'The Month', :day => 'The Day',
+              :hour => 'The Hour', :minute => 'The Minute'
+            }
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:publish_at, :as => :datetime))
+            end
+          end
+
+          after do
+            I18n.backend.store_translations 'en', :formtastic => {
+              :year => nil, :month => nil, :day => nil,
+              :hour => nil, :minute => nil
+            }
+          end
+
+          it 'should have translated labels for year, month, day, hour and minute' do
+            output_buffer.should have_tag('form li.datetime fieldset ol li label', /The Year/)
+            output_buffer.should have_tag('form li.datetime fieldset ol li label', /The Month/)
+            output_buffer.should have_tag('form li.datetime fieldset ol li label', /The Day/)
+            output_buffer.should have_tag('form li.datetime fieldset ol li label', /The Hour/)
+            output_buffer.should have_tag('form li.datetime fieldset ol li label', /The Minute/)
+          end
+        end
       end
 
       describe ':as => :time' do
@@ -1273,6 +1357,23 @@ describe 'Formtastic' do
           end
         end
 
+        describe 'when the locale changes the label text' do
+          before do
+            I18n.backend.store_translations 'en', :formtastic => {:hour => 'The Hour', :minute => 'The Minute'}
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:publish_at, :as => :time))
+            end
+          end
+
+          after do
+            I18n.backend.store_translations 'en', :formtastic => {:hour => nil, :minute => nil}
+          end
+
+          it 'should have translated labels for year, month, day, hour and minute' do
+            output_buffer.should have_tag('form li.time fieldset ol li label', /The Hour/)
+            output_buffer.should have_tag('form li.time fieldset ol li label', /The Minute/)
+          end
+        end
       end
 
       describe ':as => :boolean' do
@@ -1349,6 +1450,25 @@ describe 'Formtastic' do
           output_buffer.should have_tag('form li fieldset ol li label input[@value="true"]')
           output_buffer.should have_tag('form li fieldset ol li label input[@value="false"]')
         end
+
+        describe 'when the locale sets the label text' do
+          before do
+            I18n.backend.store_translations 'en', :formtastic => {:yes => 'Absolutely!', :no => 'Never!'}
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:allow_comments, :as => :boolean_radio))
+            end
+          end
+
+          after do
+            I18n.backend.store_translations 'en', :formtastic => {:yes => nil, :no => nil}
+          end
+
+          it 'should allow translation of the labels' do
+            output_buffer.should have_tag('form li fieldset ol li label', /Absolutely\!$/)
+            output_buffer.should have_tag('form li fieldset ol li label', /Never\!$/)
+          end
+        end
+
 
         describe 'when the value is nil' do
           before do
@@ -1443,6 +1563,26 @@ describe 'Formtastic' do
           output_buffer.should have_tag('form li select#post_allow_comments')
           output_buffer.should have_tag('form li select[@name="post[allow_comments]"]')
           output_buffer.should have_tag('form li select#post_allow_comments option', :count => 2)
+        end
+
+        describe 'when the locale sets the label text' do
+          before do
+            I18n.backend.store_translations 'en', :formtastic => {:yes => 'Absolutely!', :no => 'Never!'}
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:allow_comments, :as => :boolean_select))
+            end
+          end
+
+          after do
+            I18n.backend.store_translations 'en', :formtastic => {:yes => nil, :no => nil}
+          end
+
+          it 'should allow translation of the labels' do
+            output_buffer.should have_tag('form li select')
+            output_buffer.should have_tag('form li select#post_allow_comments')
+            output_buffer.should have_tag('form li select#post_allow_comments option[@value="true"]', /Absolutely\!/)
+            output_buffer.should have_tag('form li select#post_allow_comments option[@value="false"]', /Never\!/)
+          end
         end
 
         describe 'when the :true and :false options are supplied' do
@@ -1924,6 +2064,23 @@ describe 'Formtastic' do
           output_buffer.should have_tag('li.commit input[@value="Save Post"]')
         end
 
+        describe 'when the locale sets the label text' do
+          before do
+            I18n.backend.store_translations 'en', :formtastic => {:save => 'Save Changes To' }
+            @new_post.stub!(:new_record?).and_return(false)
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.commit_button)
+            end
+          end
+
+          after do
+            I18n.backend.store_translations 'en', :formtastic => {:save => nil}
+          end
+
+          it 'should allow translation of the labels' do
+            output_buffer.should have_tag('li.commit input[@value="Save Changes To Post"]')
+          end
+        end
       end
 
       describe 'when used on a new record' do
@@ -1936,6 +2093,22 @@ describe 'Formtastic' do
           output_buffer.should have_tag('li.commit input[@value="Create Post"]')
         end
 
+        describe 'when the locale sets the label text' do
+          before do
+            I18n.backend.store_translations 'en', :formtastic => {:create => 'Make' }
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.commit_button)
+            end
+          end
+
+          after do
+            I18n.backend.store_translations 'en', :formtastic => {:create => nil}
+          end
+
+          it 'should allow translation of the labels' do
+            output_buffer.should have_tag('li.commit input[@value="Make Post"]')
+          end
+        end
       end
 
     end
