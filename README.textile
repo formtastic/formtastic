@@ -121,10 +121,8 @@ It's incredibly opinionated, incomplete, a work in progress, messy around the ed
 
 h2. Roadmap to 1.0
 
-* there's a few of TODOs left in the code
-* improve the generated sample stylesheets
-* take a look at a DSL for the validation errors heading and messages typically placed at the top of a form
-* maybe get rid of the  module namespace
+"Wishlist":http://wiki.github.com/justinfrench/formtastic/wishlist on the GitHub wiki is serving as pretty good documentation for the roadmap to 1.0 and beyond right now, but I'll work on getting a real tracking system or something happening soon.
+
 
 h2. Usage
 
