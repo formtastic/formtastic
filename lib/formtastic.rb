@@ -701,6 +701,8 @@ module Formtastic #:nodoc:
         # otherwise assume the input name will be the same as the column type (eg string_input)
         return column.type
       else
+        obj = object.send(method)
+        return :file if [:file?, :public_filename].any? { |m| obj.respond_to?(m) }
         return :password if method.to_s =~ /password/
         return :string
       end

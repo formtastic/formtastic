@@ -66,7 +66,7 @@ h2. The Available Inputs
 * :boolean_select (a yes/no select box)
 * :string (a text field) - default for :string column types
 * :numeric (a text field, like string) - default for :integer, :float and :decimal column types
-* :file (a file field)
+* :file (a file field) - default for paperclip or attachment_fu attributes
 
 The documentation is pretty good for each of these (what it does, what the output is, etc) so go check it out.
 

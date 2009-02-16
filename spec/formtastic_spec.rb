@@ -49,6 +49,18 @@ module FormtasticSpecHelper
     return @default_type
   end
 
+  def attachment_input_type(method, column_name = :generic_column_name)
+    @new_post.stub!(:column_for_attribute).and_return(nil)
+    column = mock('column')
+    [:file?, :public_filename].each do |test|
+      column.stub!(:respond_to?).with(test).and_return(method == test)
+    end
+    @new_post.should_receive(column_name).and_return(column)
+    semantic_form_for(@new_post) do |builder|
+      @default_type = builder.send(:default_input_type, @new_post, column_name)
+    end
+    return @default_type
+  end
 end
 
 describe 'Formtastic' do
@@ -486,6 +498,16 @@ describe 'Formtastic' do
               default_input_type(:decimal).should == :numeric
             end
 
+            describe 'defaulting to file column' do
+              it 'should default to :file for attributes that respond to #file?' do
+                attachment_input_type(:file?).should == :file
+              end
+            
+              it 'should default to :file for attributes that respond to #public_filename' do
+                attachment_input_type(:public_filename).should == :file
+              end
+            
+            end
           end
 
           it 'should call the corresponding input method' do
