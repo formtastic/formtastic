@@ -98,6 +98,16 @@ If you wish, put something like this in config/initializers/formtastic_config.rb
 
   # Set the method called on label text to determine its format (:titleize, :humanize, :to_s, etc)
   Formtastic::SemanticFormBuilder.label_str_method = :titleize
+
+  # Set the possible methods to be called for label text
+  # Whichever method is found first on the object will be used to set the text of the label for that object
+  # So in the following object:
+  #   class User
+  #     def full_name; end
+  #     def title; end
+  #   end
+  # The #full_name method will determine what shows up in the label
+  Formtastic::SemanticFormBuilder.collection_label_methods = %w[to_label display_name full_name name title username login value to_s]
 </pre>
 
 

@@ -878,37 +878,23 @@ describe 'Formtastic' do
           end
 
           describe 'when the :label_method option is not provided' do
-
-            describe 'when the collection objects repond to :to_label' do
-              before do
-                @fred.stub!(:respond_to?).with(:to_label).and_return(true)
-                semantic_form_for(@new_post) do |builder|
-                  concat(builder.input(:author_id, :as => :radio))
+            Formtastic::SemanticFormBuilder.collection_label_methods.each do |label_method|
+              describe "when the collection objects respond to #{label_method}" do
+                before do
+                  @fred.stub!(:respond_to?).and_return { |m| m.to_s == label_method }
+                  Author.find(:all).each { |a| a.stub!(label_method).and_return('The Label Text') }
+                  semantic_form_for(@new_post) do |builder|
+                    concat(builder.input(:author_id, :as => :radio))
+                  end
                 end
-              end
 
-              it 'should render the options with :to_s as the label' do
-                Author.find(:all).each do |author|
-                  output_buffer.should have_tag("form li fieldset ol li label", /#{Regexp.escape(author.to_label)}/)
-                end
-              end
-            end
-
-            describe 'when the collection objects don\'t respond to :to_label' do
-              before do
-                @fred.stub!(:respond_to?).with(:to_label).and_return(false)
-                semantic_form_for(@new_post) do |builder|
-                  concat(builder.input(:author_id, :as => :radio))
-                end
-              end
-
-              it 'should render the options with :to_s as the label as a fallback' do
-                Author.find(:all).each do |author|
-                   output_buffer.should have_tag("form li fieldset ol li label", /#{Regexp.escape(author.to_s)}/)
+                it "should render the options with #{label_method} as the label" do
+                  Author.find(:all).each do |author|
+                    output_buffer.should have_tag("form li fieldset ol li label", /The Label Text/)
+                  end
                 end
               end
             end
-
           end
 
         end
@@ -1010,39 +996,23 @@ describe 'Formtastic' do
           end
 
           describe 'when the :label_method option is not provided' do
-
-            describe 'and the collection objects respond to :to_label' do
-              before do
-                output_buffer.replace ''
-                @fred.should_receive(:respond_to?).with(:to_label).and_return(true)
-                semantic_form_for(@new_post) do |builder|
-                  concat(builder.input(:author_id, :as => :select))
+            Formtastic::SemanticFormBuilder.collection_label_methods.each do |label_method|
+              describe "when the collection objects respond to #{label_method}" do
+                before do
+                  @fred.stub!(:respond_to?).and_return { |m| m.to_s == label_method }
+                  Author.find(:all).each { |a| a.stub!(label_method).and_return('The Label Text') }
+                  semantic_form_for(@new_post) do |builder|
+                    concat(builder.input(:author_id, :as => :select))
+                  end
                 end
-              end
 
-              it 'should use to_label as the option value' do
-                Author.find(:all).each do |author|
-                  output_buffer.should have_tag("form li select option", /#{author.to_label}/)
-                end
-              end
-            end
-
-            describe 'and the collection objects do not respond to :to_label' do
-              before do
-                output_buffer.replace ''
-                @fred.should_receive(:respond_to?).with(:to_label).and_return(false)
-                semantic_form_for(@new_post) do |builder|
-                  concat(builder.input(:author_id, :as => :select))
-                end
-              end
-
-              it 'should use to_s as the option value as a fallback' do
-                Author.find(:all).each do |author|
-                  output_buffer.should have_tag("form li select option", /#{Regexp.escape(author.to_s)}/)
+                it "should render the options with #{label_method} as the label" do
+                  Author.find(:all).each do |author|
+                    output_buffer.should have_tag("form li select option", /The Label Text/)
+                  end
                 end
               end
             end
-
           end
 
           describe 'when the :label_method option is provided' do

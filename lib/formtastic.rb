@@ -23,8 +23,9 @@ module Formtastic #:nodoc:
     @@optional_string = ''
     @@inline_errors = :sentence
     @@label_str_method = :titleize
+    @@collection_label_methods = %w[to_label display_name full_name name title username login value to_s]
 
-    cattr_accessor :all_fields_required_by_default, :required_string, :optional_string, :inline_errors, :label_str_method
+    cattr_accessor :all_fields_required_by_default, :required_string, :optional_string, :inline_errors, :label_str_method, :collection_label_methods
 
     attr_accessor :template
 
@@ -319,14 +320,12 @@ module Formtastic #:nodoc:
     #   f.input :author_id, :as => :select, :collection => Author.find(:all)
     #   f.input :author_id, :as => :select, :collection => [@justin, @kate]
     #
-    # Note: This input calls #to_label on each record in the parent association, so in the example
-    # where a Post belongs_to an Author, you need to define an instance method to_label on Post,
-    # which will be used as the text for the each option in the select.  You can specify an
-    # alternate method with the :label_method option:
+    # Note: This input looks for a label method in the parent association.
     #
     # You can customize the text label inside each option tag, by naming the correct method
     # (:full_name, :display_name, :account_number, etc) to call on each object in the collection
-    # by passing in the :label_method option.  By default the :label_method is :to_label.
+    # by passing in the :label_method option.  By default the :label_method is whichever element of
+    # Formtastic::SemanticFormBuilder.collection_label_methods is found first.
     #
     # Examples:
     #
@@ -346,7 +345,7 @@ module Formtastic #:nodoc:
     #   f.input :author_id, :as => :select, :value_method => :value
     def select_input(method, options)
       options[:collection] ||= find_parent_objects_for_column(method)
-      options[:label_method] ||= options[:collection].first.respond_to?(:to_label) ? :to_label : :to_s
+      options[:label_method] ||= @@collection_label_methods.detect { |m| options[:collection].first.respond_to?(m) }
       options[:value_method] ||= :id
 
       choices = options[:collection].map { |o| [o.send(options[:label_method]), o.send(options[:value_method])] }
@@ -389,7 +388,8 @@ module Formtastic #:nodoc:
     #
     # You can also customize the text label inside each option tag, by naming the correct method
     # (:full_name, :display_name, :account_number, etc) to call on each object in the collection
-    # by passing in the :label_method option.  By default the :label_method is :to_label.
+    # by passing in the :label_method option.  By default the :label_method is whichever element of
+    # Formtastic::SemanticFormBuilder.collection_label_methods is found first.
     #
     # Examples:
     #
@@ -399,7 +399,7 @@ module Formtastic #:nodoc:
     #   f.input :author_id, :as => :radio, :label_method => :label
     def radio_input(method, options)
       options[:collection] ||= find_parent_objects_for_column(method)
-      options[:label_method] ||= options[:collection].first.respond_to?(:to_label) ? :to_label : :to_s
+      options[:label_method] ||= @@collection_label_methods.detect { |m| options[:collection].first.respond_to?(m) }
 
       template.content_tag(:fieldset,
         %{<legend><span>#{label_text(method, options)}</span></legend>} +
