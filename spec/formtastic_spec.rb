@@ -817,6 +817,10 @@ describe 'Formtastic' do
             output_buffer.should have_tag('form li fieldset ol')
             output_buffer.should have_tag('form li fieldset ol li', :count => Author.find(:all).size)
           end
+          
+          it 'should have one option with a "selected" attribute' do
+            output_buffer.should have_tag('form li input[@checked]', :count => 1)
+          end
 
           describe "each choice" do
 
@@ -950,6 +954,10 @@ describe 'Formtastic' do
             Author.find(:all).each do |author|
               output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
             end
+          end
+          
+          it 'should have one option with a "selected" attribute' do
+            output_buffer.should have_tag('form li select option[@selected]', :count => 1)
           end
 
           describe 'when the :collection option is not provided' do
