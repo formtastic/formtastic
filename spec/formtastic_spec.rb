@@ -107,8 +107,8 @@ describe 'Formtastic' do
     @new_post.stub!(:id).and_return(nil)
     @new_post.stub!(:new_record?).and_return(true)
     @new_post.stub!(:errors).and_return(mock('errors', :on => nil))
-    @new_post.stub!(:human_attribute_name).and_return { |column_name| column_name.to_s }
-    @new_post.stub!(:human_name).and_return('Post')
+    Post.stub!(:human_attribute_name).and_return { |column_name| column_name.to_s }
+    Post.stub!(:human_name).and_return('Post')
 
     @fred = mock('user')
     @fred.stub!(:to_label).and_return('Fred Smith')

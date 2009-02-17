@@ -73,7 +73,7 @@ module Formtastic #:nodoc:
 
 
       options[:required] = method_required?(method, options[:required])
-      options[:label] ||= @object.human_attribute_name(method).send(@@label_str_method)
+      options[:label] ||= @object.class.human_attribute_name(method.to_s).send(@@label_str_method)
       options[:as] ||= default_input_type(@object, method)
       input_method = "#{options[:as]}_input"
 
@@ -270,7 +270,7 @@ module Formtastic #:nodoc:
     def save_or_create_commit_button_text #:nodoc:
       prefix = @object.new_record? ? 'create' : 'save'
       [ I18n.t(prefix, :default => prefix, :scope => [:formtastic]),
-        @object.human_name
+        @object.class.human_name
       ].join(' ').send(@@label_str_method)
     end
 
