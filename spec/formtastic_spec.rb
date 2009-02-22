@@ -888,7 +888,45 @@ describe 'Formtastic' do
               end
               output_buffer.should have_tag('form li fieldset ol li', :count => @authors.size)
             end
-
+            
+            describe 'and the :collection is an array of strings' do
+              
+              before do
+                @new_post.stub!(:category_name).and_return('')
+                @categories = [ 'General', 'Design', 'Development' ]
+              end
+              
+              it 'should use the string as the label text and value for each radio button' do
+                semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:category_name, :as => :radio, :collection => @categories))
+                end
+                @categories.each do |item|
+                  output_buffer.should have_tag('form li fieldset ol li label', /#{item}/i)
+                  output_buffer.should have_tag('form li fieldset ol li label input[@value='+item+']')
+                end
+              end
+              
+            end
+            
+            describe 'and the :collection is a hash of strings' do
+              
+              before do
+                @new_post.stub!(:category_name).and_return('')
+                @categories = { 'General' => 'gen', 'Design' => 'des','Development' => 'dev' }
+              end
+              
+              it 'should use the key as the label text and the hash value as the value attribute for each radio button' do
+                semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:category_name, :as => :radio, :collection => @categories))
+                end
+                @categories.each do |label, value|
+                  output_buffer.should have_tag('form li fieldset ol li label', /#{label}/i)
+                  output_buffer.should have_tag('form li fieldset ol li label input[@value='+value+']')
+                end
+              end
+            
+            end
+            
           end
 
           describe 'when the :label_method option is provided' do
@@ -992,6 +1030,42 @@ describe 'Formtastic' do
                 concat(builder.input(:author_id, :as => :select, :collection => @authors))
               end
               output_buffer.should have_tag('form li select option', :count => @authors.size)
+            end
+            
+            describe 'and the :collection is an array of strings' do
+              
+              before do
+                @new_post.stub!(:category_name).and_return('')
+                @categories = [ 'General', 'Design', 'Development' ]
+              end
+              
+              it 'should use the string as the text and value for each option element' do
+                semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:category_name, :as => :select, :collection => @categories))
+                end
+                @categories.each do |item|
+                  output_buffer.should have_tag('form li select option[@value='+item+']', item)
+                end
+              end
+              
+            end
+            
+            describe 'and the :collection is a hash of strings' do
+              
+              before do
+                @new_post.stub!(:category_name).and_return('')
+                @categories = { 'General' => 'gen', 'Design' => 'des','Development' => 'dev' }
+              end
+              
+              it 'should use the key as the text and the hash value as the value attribute for each option element' do
+                semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:category_name, :as => :select, :collection => @categories))
+                end
+                @categories.each do |label, value|
+                  output_buffer.should have_tag('form li select option[@value='+value+']', label)
+                end
+              end
+            
             end
 
           end

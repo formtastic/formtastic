@@ -345,13 +345,21 @@ module Formtastic #:nodoc:
     #   f.input :author_id, :as => :select, :value_method => :value
     def select_input(method, options)
       options[:collection] ||= find_parent_objects_for_column(method)
-      options[:label_method] ||= @@collection_label_methods.detect { |m| options[:collection].first.respond_to?(m) }
+      options[:label_method] ||= detect_label_method(options[:collection])
       options[:value_method] ||= :id
 
-      choices = options[:collection].map { |o| [o.send(options[:label_method]), o.send(options[:value_method])] }
+      choices = formatted_collection(options[:collection], options[:label_method], options[:value_method])
       input_label(method, options) + template.select(@object_name, method, choices, set_options(options))
     end
-
+    
+    def detect_label_method(collection) #:nodoc:
+      (!collection.instance_of?(Hash)) ? @@collection_label_methods.detect { |m| collection.first.respond_to?(m) } : nil
+    end
+    
+    def formatted_collection(collection, label_method, value_method = :id) #:nodoc:
+      return collection if (collection.instance_of?(Hash) || (collection.instance_of?(Array) && collection.first.instance_of?(String)))
+      collection.map { |o| [o.send(label_method), o.send(value_method)] }
+    end
 
     # Outputs a fieldset containing a legend for the label text, and an ordered list (ol) of list
     # items, one for each possible choice in the belongs_to association.  Each li contains a
@@ -399,16 +407,20 @@ module Formtastic #:nodoc:
     #   f.input :author_id, :as => :radio, :label_method => :label
     def radio_input(method, options)
       options[:collection] ||= find_parent_objects_for_column(method)
-      options[:label_method] ||= @@collection_label_methods.detect { |m| options[:collection].first.respond_to?(m) }
-
+      options[:label_method] ||= detect_label_method(options[:collection])
+      
+      choices = formatted_collection(options[:collection], options[:label_method])
       template.content_tag(:fieldset,
         %{<legend><span>#{label_text(method, options)}</span></legend>} +
         template.content_tag(:ol,
-          options[:collection].map { |c|
+          choices.map { |c|
+            label = (!c.instance_of?(String)) ? c.first : c
+            value = (!c.instance_of?(String)) ? c.last : c
+            
             template.content_tag(:li,
               template.content_tag(:label,
-                "#{template.radio_button(@object_name, method, c.id, set_options(options))} #{c.send(options[:label_method])}",
-                :for => "#{@object_name}_#{method}_#{c.id}"
+                "#{template.radio_button(@object_name, method, value, set_options(options))} #{label}",
+                :for => "#{@object_name}_#{method}_#{value}".downcase
               )
             )
           }
