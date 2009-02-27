@@ -297,17 +297,41 @@ module Formtastic #:nodoc:
       end
     end
 
-    # Outputs a label and a select box containing options from the parent (belongs_to) association.
+    # Outputs a label and a select box containing options from the parent
+    # (belongs_to, has_many, has_and_belongs_to_many) association. If an association
+    # is has_many or has_and_belongs_to_many the select box will be set as multi-select
+    # and size = 5
     #
-    # Example:
+    # Example (belongs_to):
     #
-    #   f.input :author_id, :as => :select
+    #   f.input :author
     #
     #   <label for="book_author_id">Author</label>
     #   <select id="book_author_id" name="book[author_id]">
     #     <option value="1">Justin French</option>
     #     <option value="2">Jane Doe</option>
     #   </select>
+    #
+    # Example (has_many):
+    #
+    #   f.input :chapters
+    #
+    #   <label for="book_chapter_ids">Chapters</label>
+    #   <select id="book_chapter_ids" name="book[chapter_ids]">
+    #     <option value="1">Chapter 1</option>
+    #     <option value="2">Chapter 2</option>
+    #   </select>
+    #
+    # Example (has_and_belongs_to_many):
+    #
+    #   f.input :authors
+    #
+    #   <label for="book_author_ids">Authors</label>
+    #   <select id="book_author_ids" name="book[author_ids]">
+    #     <option value="1">Justin French</option>
+    #     <option value="2">Jane Doe</option>
+    #   </select>
+    #
     #
     # You can customize the options available in the select by passing in a collection (Array) of
     # ActiveRecord objects through the :collection option.  If not provided, the choices are found
@@ -316,9 +340,10 @@ module Formtastic #:nodoc:
     #
     # Examples:
     #
-    #   f.input :author_id, :as => :select, :collection => @authors
-    #   f.input :author_id, :as => :select, :collection => Author.find(:all)
-    #   f.input :author_id, :as => :select, :collection => [@justin, @kate]
+    #   f.input :author, :collection => @authors
+    #   f.input :author, :collection => Author.find(:all)
+    #   f.input :author, :collection => [@justin, @kate]
+    #   f.input :author, :collection => {@justin.name => @justin.id, @kate.name => @kate.id}
     #
     # Note: This input looks for a label method in the parent association.
     #
@@ -329,27 +354,41 @@ module Formtastic #:nodoc:
     #
     # Examples:
     #
-    #   f.input :author_id, :as => :select, :label_method => :full_name
-    #   f.input :author_id, :as => :select, :label_method => :display_name
-    #   f.input :author_id, :as => :select, :label_method => :to_s
-    #   f.input :author_id, :as => :select, :label_method => :label
+    #   f.input :author, :label_method => :full_name
+    #   f.input :author, :label_method => :display_name
+    #   f.input :author, :label_method => :to_s
+    #   f.input :author, :label_method => :label
     #
     # You can also customize the value inside each option tag, by passing in the :value_method option.
     # Usage is the same as the :label_method option
     #
     # Examples:
     #
-    #   f.input :author_id, :as => :select, :value_method => :full_name
-    #   f.input :author_id, :as => :select, :value_method => :display_name
-    #   f.input :author_id, :as => :select, :value_method => :to_s
-    #   f.input :author_id, :as => :select, :value_method => :value
+    #   f.input :author, :value_method => :full_name
+    #   f.input :author, :value_method => :display_name
+    #   f.input :author, :value_method => :to_s
+    #   f.input :author, :value_method => :value
+    #
+    # You can pass html_options to the select tag using :html => {}
+    #
+    # Examples:
+    #
+    #   f.input :authors, :html => {:size => 20, :multiple => true}
     def select_input(method, options)
       options[:collection] ||= find_parent_objects_for_column(method)
       options[:label_method] ||= detect_label_method(options[:collection])
       options[:value_method] ||= :id
+      options[:html] ||= {}
 
+      input_name = generate_input_name(method)
+      if input_name =~ /_ids?$/
+        options[:html][:multiple] ||= true
+        options[:html][:size] ||= 5
+      end
+
+      html_options = options.delete(:html)
       choices = formatted_collection(options[:collection], options[:label_method], options[:value_method])
-      input_label(method, options) + template.select(@object_name, method, choices, set_options(options))
+      input_label(input_name, options) + template.select(@object_name, input_name, choices, set_options(options), html_options)
     end
     
     def detect_label_method(collection) #:nodoc:
@@ -367,7 +406,7 @@ module Formtastic #:nodoc:
     #
     # Example:
     #
-    #   f.input :author_id, :as => :radio
+    #   f.input :author, :as => :radio
     #
     # Output:
     #
@@ -390,9 +429,9 @@ module Formtastic #:nodoc:
     #
     # Examples:
     #
-    #   f.input :author_id, :as => :radio, :collection => @authors
-    #   f.input :author_id, :as => :radio, :collection => Author.find(:all)
-    #   f.input :author_id, :as => :radio, :collection => [@justin, @kate]
+    #   f.input :author, :as => :radio, :collection => @authors
+    #   f.input :author, :as => :radio, :collection => Author.find(:all)
+    #   f.input :author, :as => :radio, :collection => [@justin, @kate]
     #
     # You can also customize the text label inside each option tag, by naming the correct method
     # (:full_name, :display_name, :account_number, etc) to call on each object in the collection
@@ -401,14 +440,16 @@ module Formtastic #:nodoc:
     #
     # Examples:
     #
-    #   f.input :author_id, :as => :radio, :label_method => :full_name
-    #   f.input :author_id, :as => :radio, :label_method => :display_name
-    #   f.input :author_id, :as => :radio, :label_method => :to_s
-    #   f.input :author_id, :as => :radio, :label_method => :label
+    #   f.input :author, :as => :radio, :label_method => :full_name
+    #   f.input :author, :as => :radio, :label_method => :display_name
+    #   f.input :author, :as => :radio, :label_method => :to_s
+    #   f.input :author, :as => :radio, :label_method => :label
     def radio_input(method, options)
       options[:collection] ||= find_parent_objects_for_column(method)
       options[:label_method] ||= detect_label_method(options[:collection])
-      
+
+      input_name = generate_input_name(method)
+
       choices = formatted_collection(options[:collection], options[:label_method])
       template.content_tag(:fieldset,
         %{<legend><span>#{label_text(method, options)}</span></legend>} +
@@ -419,8 +460,8 @@ module Formtastic #:nodoc:
             
             template.content_tag(:li,
               template.content_tag(:label,
-                "#{template.radio_button(@object_name, method, value, set_options(options))} #{label}",
-                :for => "#{@object_name}_#{method}_#{value}".downcase
+                "#{template.radio_button(@object_name, input_name, value, set_options(options))} #{label}",
+                :for => "#{@object_name}_#{input_name}_#{value}".downcase
               )
             )
           }
@@ -698,14 +739,14 @@ module Formtastic #:nodoc:
     # If there is no column for the method (eg "virtual columns" with an attr_accessor), the
     # default is a :string, a similar behaviour to Rails' scaffolding.
     def default_input_type(object, method) #:nodoc:
-      # rescue if object does not respond to "column_for_attribute" method
-      begin
-        column = object.send("column_for_attribute", method)
-      rescue NoMethodError
-        column = nil
-      end
+      # Find the column object by attribute
+      column = object.column_for_attribute(method) if object.respond_to?(:column_for_attribute)
+      # Maybe the column is a reflection?
+      column = find_reflection(method) unless column
+
       if column
         # handle the special cases where the column type doesn't map to an input method
+        return :select if column.respond_to?(:macro) && column.respond_to?(:klass)
         return :select if column.type == :integer && method.to_s =~ /_id$/
         return :datetime if column.type == :timestamp
         return :numeric if [:integer, :float, :decimal].include?(column.type)
@@ -720,12 +761,33 @@ module Formtastic #:nodoc:
       end
     end
 
-    # Used by belongs_to inputs (select, radio) to get a default collection from the parent object
+    # Used by association inputs (select, radio) to get a default collection from the parent object
     # by determining the classname from the method/column name (section_id => Section) and doing a
     # simple find(:all).
     def find_parent_objects_for_column(column)
-      parent_class = column.to_s.sub(/_id$/,'').camelize.constantize
+      parent_class = if reflection = find_reflection(column)
+        reflection.klass
+      else
+        column.to_s.sub(/_id$/,'').camelize.constantize
+      end
       parent_class.find(:all)
+    end
+
+    # Used by association inputs (select, radio) to generate the name that should be used for the input
+    # belongs_to :author; f.input :author; will generate 'author_id'
+    # has_many :authors; f.input :authors; will generate 'author_ids'
+    # has_and_belongs_to_many will act like has_many
+    def generate_input_name(method)
+      if reflection = find_reflection(method)
+        method = "#{method.to_s.singularize}_id"
+        method = method.pluralize if [:has_and_belongs_to_many, :has_many].include?(reflection.macro)
+      end
+      method
+    end
+
+    # If an association method is passed in (f.input :author) try to find the reflection object
+    def find_reflection(method)
+      object.class.reflect_on_association(method) if object.class.respond_to?(:reflect_on_association)
     end
 
     def default_string_options(method) #:nodoc:

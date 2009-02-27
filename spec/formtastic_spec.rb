@@ -95,11 +95,39 @@ describe 'Formtastic' do
     def posts_path; "/posts"; end
     def new_post_path; "/posts/new"; end
 
+    def author_path(o); "/authors/1"; end
+    def authors_path; "/authors"; end
+    def new_author_path; "/authors/new"; end
+
     # Sometimes we need some classes
     class Post;
       def id; end
     end
     class Author; end
+
+    @fred = mock('user')
+    @fred.stub!(:class).and_return(Author)
+    @fred.stub!(:to_label).and_return('Fred Smith')
+    @fred.stub!(:login).and_return('fred_smith')
+    @fred.stub!(:id).and_return(37)
+    @fred.stub!(:new_record?).and_return(false)
+    @fred.stub!(:errors).and_return(mock('errors', :on => nil))
+
+    @bob = mock('user')
+    @bob.stub!(:class).and_return(Author)
+    @bob.stub!(:to_label).and_return('Bob Rock')
+    @bob.stub!(:login).and_return('bob')
+    @bob.stub!(:id).and_return(42)
+    @bob.stub!(:posts).and_return([])
+    @bob.stub!(:post_ids).and_return([])
+    @bob.stub!(:new_record?).and_return(false)
+    @bob.stub!(:errors).and_return(mock('errors', :on => nil))
+
+    Author.stub!(:find).and_return([@fred, @bob])
+    Author.stub!(:human_attribute_name).and_return { |column_name| column_name.to_s }
+    Author.stub!(:human_name).and_return('Author')
+    Author.stub!(:reflect_on_all_validations).and_return([])
+    Author.stub!(:reflect_on_association).and_return { |column_name| mock('reflection', :klass => Post, :macro => :has_many) if column_name == :posts }
 
     # Sometimes we need a mock @post object and some Authors for belongs_to
     @new_post = mock('post')
@@ -107,20 +135,32 @@ describe 'Formtastic' do
     @new_post.stub!(:id).and_return(nil)
     @new_post.stub!(:new_record?).and_return(true)
     @new_post.stub!(:errors).and_return(mock('errors', :on => nil))
+
+    @freds_post = mock('post')
+    @freds_post.stub!(:class).and_return(Post)
+    @freds_post.stub!(:to_label).and_return('Fred Smith')
+    @freds_post.stub!(:id).and_return(19)
+    @freds_post.stub!(:author).and_return(@fred)
+    @freds_post.stub!(:author_id).and_return(@fred.id)
+    @freds_post.stub!(:authors).and_return([@fred])
+    @freds_post.stub!(:author_ids).and_return([@fred.id])
+    @freds_post.stub!(:new_record?).and_return(false)
+    @freds_post.stub!(:errors).and_return(mock('errors', :on => nil))
+    @fred.stub!(:posts).and_return([@freds_post])
+    @fred.stub!(:post_ids).and_return([@freds_post.id])
+
     Post.stub!(:human_attribute_name).and_return { |column_name| column_name.to_s }
     Post.stub!(:human_name).and_return('Post')
     Post.stub!(:reflect_on_all_validations).and_return([])
-
-    @fred = mock('user')
-    @fred.stub!(:to_label).and_return('Fred Smith')
-    @fred.stub!(:login).and_return('fred_smith')
-    @fred.stub!(:id).and_return(37)
-    @bob = mock('user')
-    @bob.stub!(:to_label).and_return('Bob Rock')
-    @bob.stub!(:login).and_return('bob')
-    @bob.stub!(:id).and_return(42)
-    Author.stub!(:find).and_return([@fred, @bob])
-    Author.stub!(:reflect_on_all_validations).and_return([])
+    Post.stub!(:reflect_on_association).and_return do |column_name|
+      case column_name
+      when :author
+        mock('reflection', :klass => Author, :macro => :belongs_to)
+      when :authors
+        mock('reflection', :klass => Author, :macro => :has_and_belongs_to_many)
+      end
+    end
+    Post.stub!(:find).and_return([@freds_post])
   end
 
   describe 'JustinFrench::Formtastic::SemanticFormBuilder' do
@@ -442,7 +482,7 @@ describe 'Formtastic' do
 
             it 'should default to a string for methods on objects that don\'t respond to "column_for_attribute"' do
               @new_post.stub!(:method_without_a_database_column)
-              @new_post.stub!(:column_for_attribute).and_raise(NoMethodError)
+#              @new_post.stub!(:column_for_attribute).and_raise(NoMethodError)
               default_input_type(nil, :method_without_a_database_column).should == :string
             end
 
@@ -795,64 +835,134 @@ describe 'Formtastic' do
 
         describe ':as => :radio' do
 
-          before do
-            semantic_form_for(@new_post) do |builder|
-              concat(builder.input(:author_id, :as => :radio))
-            end
-          end
+          describe 'when using association_id' do
 
-          it 'should have a radio class on the wrapper' do
-            output_buffer.should have_tag('form li.radio')
-          end
-
-          it 'should have a post_author_id_input id on the wrapper' do
-            output_buffer.should have_tag('form li#post_author_id_input')
-          end
-
-          it 'should generate a fieldset and legend containing label text for the input' do
-            output_buffer.should have_tag('form li fieldset')
-            output_buffer.should have_tag('form li fieldset legend')
-            output_buffer.should have_tag('form li fieldset legend', /Author/)
-          end
-
-          it 'should generate an ordered list with a list item for each choice' do
-            output_buffer.should have_tag('form li fieldset ol')
-            output_buffer.should have_tag('form li fieldset ol li', :count => Author.find(:all).size)
-          end
-          
-          it 'should have one option with a "selected" attribute' do
-            output_buffer.should have_tag('form li input[@checked]', :count => 1)
-          end
-
-          describe "each choice" do
-
-            it 'should contain a label for the radio input with a nested input and label text' do
-              Author.find(:all).each do |author|
-                output_buffer.should have_tag('form li fieldset ol li label')
-                output_buffer.should have_tag('form li fieldset ol li label', /#{author.to_label}/)
-                output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_id_#{author.id}']")
-                output_buffer.should have_tag("form li fieldset ol li label input")
-              end
-            end
-
-            it "should have a radio input" do
-              Author.find(:all).each do |author|
-                output_buffer.should have_tag("form li fieldset ol li label input#post_author_id_#{author.id}")
-                output_buffer.should have_tag("form li fieldset ol li label input[@type='radio']")
-                output_buffer.should have_tag("form li fieldset ol li label input[@value='#{author.id}']")
-                output_buffer.should have_tag("form li fieldset ol li label input[@name='post[author_id]']")
-              end
-            end
-
-            xit "should mark input as checked if it's the the existing choice" do
-              @new_post.author_id.should == @bob.id
-              @new_post.author.id.should == @bob.id
-              @new_post.author.should == @bob
+            before do
               semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:author_id, :as => :radio))
               end
+            end
 
-              output_buffer.should have_tag("form li fieldset ol li label input[@checked='checked']")
+            it 'should have a radio class on the wrapper' do
+              output_buffer.should have_tag('form li.radio')
+            end
+
+            it 'should have a post_author_id_input id on the wrapper' do
+              output_buffer.should have_tag('form li#post_author_id_input')
+            end
+
+            it 'should generate a fieldset and legend containing label text for the input' do
+              output_buffer.should have_tag('form li fieldset')
+              output_buffer.should have_tag('form li fieldset legend')
+              output_buffer.should have_tag('form li fieldset legend', /Author/)
+            end
+
+            it 'should generate an ordered list with a list item for each choice' do
+              output_buffer.should have_tag('form li fieldset ol')
+              output_buffer.should have_tag('form li fieldset ol li', :count => Author.find(:all).size)
+            end
+          
+            it 'should have one option with a "selected" attribute' do
+              output_buffer.should have_tag('form li input[@checked]', :count => 1)
+            end
+
+            describe "each choice" do
+
+              it 'should contain a label for the radio input with a nested input and label text' do
+                Author.find(:all).each do |author|
+                  output_buffer.should have_tag('form li fieldset ol li label')
+                  output_buffer.should have_tag('form li fieldset ol li label', /#{author.to_label}/)
+                  output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_id_#{author.id}']")
+                  output_buffer.should have_tag("form li fieldset ol li label input")
+                end
+              end
+
+              it "should have a radio input" do
+                Author.find(:all).each do |author|
+                  output_buffer.should have_tag("form li fieldset ol li label input#post_author_id_#{author.id}")
+                  output_buffer.should have_tag("form li fieldset ol li label input[@type='radio']")
+                  output_buffer.should have_tag("form li fieldset ol li label input[@value='#{author.id}']")
+                  output_buffer.should have_tag("form li fieldset ol li label input[@name='post[author_id]']")
+                end
+              end
+
+              xit "should mark input as checked if it's the the existing choice" do
+                @new_post.author_id.should == @bob.id
+                @new_post.author.id.should == @bob.id
+                @new_post.author.should == @bob
+                semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:author_id, :as => :radio))
+                end
+
+                output_buffer.should have_tag("form li fieldset ol li label input[@checked='checked']")
+              end
+
+            end
+
+          end
+
+          describe 'when using association' do
+
+            before do
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:author, :as => :radio))
+              end
+            end
+
+            it 'should have a radio class on the wrapper' do
+              output_buffer.should have_tag('form li.radio')
+            end
+
+            it 'should have a post_author_id_input id on the wrapper' do
+              output_buffer.should have_tag('form li#post_author_input')
+            end
+
+            it 'should generate a fieldset and legend containing label text for the input' do
+              output_buffer.should have_tag('form li fieldset')
+              output_buffer.should have_tag('form li fieldset legend')
+              output_buffer.should have_tag('form li fieldset legend', /Author/)
+            end
+
+            it 'should generate an ordered list with a list item for each choice' do
+              output_buffer.should have_tag('form li fieldset ol')
+              output_buffer.should have_tag('form li fieldset ol li', :count => Author.find(:all).size)
+            end
+
+            it 'should have one option with a "selected" attribute' do
+              output_buffer.should have_tag('form li input[@checked]', :count => 1)
+            end
+
+            describe "each choice" do
+
+              it 'should contain a label for the radio input with a nested input and label text' do
+                Author.find(:all).each do |author|
+                  output_buffer.should have_tag('form li fieldset ol li label')
+                  output_buffer.should have_tag('form li fieldset ol li label', /#{author.to_label}/)
+                  output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_id_#{author.id}']")
+                  output_buffer.should have_tag("form li fieldset ol li label input")
+                end
+              end
+
+              it "should have a radio input" do
+                Author.find(:all).each do |author|
+                  output_buffer.should have_tag("form li fieldset ol li label input#post_author_id_#{author.id}")
+                  output_buffer.should have_tag("form li fieldset ol li label input[@type='radio']")
+                  output_buffer.should have_tag("form li fieldset ol li label input[@value='#{author.id}']")
+                  output_buffer.should have_tag("form li fieldset ol li label input[@name='post[author_id]']")
+                end
+              end
+
+              xit "should mark input as checked if it's the the existing choice" do
+                @new_post.author_id.should == @bob.id
+                @new_post.author.id.should == @bob.id
+                @new_post.author.should == @bob
+                semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:author_id, :as => :radio))
+                end
+
+                output_buffer.should have_tag("form li fieldset ol li label input[@checked='checked']")
+              end
+
             end
 
           end
@@ -967,45 +1077,172 @@ describe 'Formtastic' do
 
         describe ':as => :select' do
 
-          before do
-            semantic_form_for(@new_post) do |builder|
-              concat(builder.input(:author_id, :as => :select))
+          describe 'when using the association method' do
+
+            describe 'for a belongs_to association' do
+
+              before do
+                semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:author, :as => :select))
+                end
+              end
+
+              it 'should have a select class on the wrapper' do
+                output_buffer.should have_tag('form li.select')
+              end
+
+              it 'should have a post_author_id_input id on the wrapper' do
+                output_buffer.should have_tag('form li#post_author_input')
+              end
+
+              it 'should have a label inside the wrapper' do
+                output_buffer.should have_tag('form li label')
+              end
+
+              it 'should have a select inside the wrapper' do
+                output_buffer.should have_tag('form li select')
+              end
+
+              it 'should have a select option for each Author' do
+                output_buffer.should have_tag('form li select option', :count => Author.find(:all).size)
+                Author.find(:all).each do |author|
+                  output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
+                end
+              end
+          
+              it 'should have one option with a "selected" attribute' do
+                output_buffer.should have_tag('form li select option[@selected]', :count => 1)
+              end
+
             end
-          end
 
-          it 'should have a select class on the wrapper' do
-            output_buffer.should have_tag('form li.select')
-          end
+            describe 'for a has_many association' do
 
-          it 'should have a post_author_id_input id on the wrapper' do
-            output_buffer.should have_tag('form li#post_author_id_input')
-          end
+              before do
+                semantic_form_for(@fred) do |builder|
+                  concat(builder.input(:posts, :as => :select))
+                end
+              end
 
-          it 'should have a label inside the wrapper' do
-            output_buffer.should have_tag('form li label')
-          end
+              it 'should have a select class on the wrapper' do
+                output_buffer.should have_tag('form li.select')
+              end
 
-          it 'should have a select inside the wrapper' do
-            output_buffer.should have_tag('form li select')
-          end
+              it 'should have a post_author_id_input id on the wrapper' do
+                output_buffer.should have_tag('form li#author_posts_input')
+              end
 
-          it 'should have a select option for each Author' do
-            output_buffer.should have_tag('form li select option', :count => Author.find(:all).size)
-            Author.find(:all).each do |author|
-              output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
+              it 'should have a label inside the wrapper' do
+                output_buffer.should have_tag('form li label')
+              end
+
+              it 'should have a select inside the wrapper' do
+                output_buffer.should have_tag('form li select')
+              end
+
+              it 'should have a multi-select select' do
+                output_buffer.should have_tag('form li select[@multiple="multiple"]')
+              end
+
+              it 'should have a select option for each Post' do
+                output_buffer.should have_tag('form li select option', :count => Post.find(:all).size)
+                Post.find(:all).each do |post|
+                  output_buffer.should have_tag("form li select option[@value='#{post.id}']", /#{post.to_label}/)
+                end
+              end
+          
+              it 'should have one option with a "selected" attribute' do
+                output_buffer.should have_tag('form li select option[@selected]', :count => 1)
+              end
+
             end
+
+            describe 'for a has_and_belongs_to_many association' do
+
+              before do
+                semantic_form_for(@freds_post) do |builder|
+                  concat(builder.input(:authors, :as => :select))
+                end
+              end
+
+              it 'should have a select class on the wrapper' do
+                output_buffer.should have_tag('form li.select')
+              end
+
+              it 'should have a post_author_id_input id on the wrapper' do
+                output_buffer.should have_tag('form li#post_authors_input')
+              end
+
+              it 'should have a label inside the wrapper' do
+                output_buffer.should have_tag('form li label')
+              end
+
+              it 'should have a select inside the wrapper' do
+                output_buffer.should have_tag('form li select')
+              end
+
+              it 'should have a multi-select select' do
+                output_buffer.should have_tag('form li select[@multiple="multiple"]')
+              end
+
+              it 'should have a select option for each Author' do
+                output_buffer.should have_tag('form li select option', :count => Author.find(:all).size)
+                Author.find(:all).each do |author|
+                  output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
+                end
+              end
+          
+              it 'should have one option with a "selected" attribute' do
+                output_buffer.should have_tag('form li select option[@selected]', :count => 1)
+              end
+
+            end
+
+          end
+
+          describe 'when using the association_id method' do
+
+            before do
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:author_id, :as => :select))
+              end
+            end
+
+            it 'should have a select class on the wrapper' do
+              output_buffer.should have_tag('form li.select')
+            end
+
+            it 'should have a post_author_id_input id on the wrapper' do
+              output_buffer.should have_tag('form li#post_author_id_input')
+            end
+
+            it 'should have a label inside the wrapper' do
+              output_buffer.should have_tag('form li label')
+            end
+
+            it 'should have a select inside the wrapper' do
+              output_buffer.should have_tag('form li select')
+            end
+
+            it 'should have a select option for each Author' do
+              output_buffer.should have_tag('form li select option', :count => Author.find(:all).size)
+              Author.find(:all).each do |author|
+                output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
+              end
+            end
+
+            it 'should have one option with a "selected" attribute' do
+              output_buffer.should have_tag('form li select option[@selected]', :count => 1)
+            end
+
           end
           
-          it 'should have one option with a "selected" attribute' do
-            output_buffer.should have_tag('form li select option[@selected]', :count => 1)
-          end
-
           describe 'when the :collection option is not provided' do
 
             it 'should perform a basic find on the parent class' do
               Author.should_receive(:find)
               semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:author_id, :as => :select))
+                concat(builder.input(:author, :as => :select))
               end
             end
 
@@ -1021,13 +1258,13 @@ describe 'Formtastic' do
             it 'should not call find() on the parent class' do
               Author.should_not_receive(:find)
               semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:author_id, :as => :select, :collection => @authors))
+                concat(builder.input(:author, :as => :select, :collection => @authors))
               end
             end
 
             it 'should use the provided collection' do
               semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:author_id, :as => :select, :collection => @authors))
+                concat(builder.input(:author, :as => :select, :collection => @authors))
               end
               output_buffer.should have_tag('form li select option', :count => @authors.size)
             end
@@ -1074,7 +1311,7 @@ describe 'Formtastic' do
             before do
               @new_post.stub!(:author_id).and_return(nil)
               semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:author_id, :as => :select, :include_blank => true, :prompt => "choose author"))
+                concat(builder.input(:author, :as => :select, :include_blank => true, :prompt => "choose author"))
               end
             end
 
@@ -1090,7 +1327,7 @@ describe 'Formtastic' do
           describe 'when the :value_method option is provided' do
             before do
               semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:author_id, :as => :select, :value_method => :login))
+                concat(builder.input(:author, :as => :select, :value_method => :login))
               end
             end
 
@@ -1108,7 +1345,7 @@ describe 'Formtastic' do
                   @fred.stub!(:respond_to?).and_return { |m| m.to_s == label_method }
                   Author.find(:all).each { |a| a.stub!(label_method).and_return('The Label Text') }
                   semantic_form_for(@new_post) do |builder|
-                    concat(builder.input(:author_id, :as => :select))
+                    concat(builder.input(:author, :as => :select))
                   end
                 end
 
@@ -1124,7 +1361,7 @@ describe 'Formtastic' do
           describe 'when the :label_method option is provided' do
             before do
               semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:author_id, :as => :select, :label_method => :login))
+                concat(builder.input(:author, :as => :select, :label_method => :login))
               end
             end
 
