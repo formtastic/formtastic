@@ -390,11 +390,11 @@ module Formtastic #:nodoc:
       choices = formatted_collection(options[:collection], options[:label_method], options[:value_method])
       input_label(input_name, options) + template.select(@object_name, input_name, choices, set_options(options), html_options)
     end
-    
+
     def detect_label_method(collection) #:nodoc:
       (!collection.instance_of?(Hash)) ? @@collection_label_methods.detect { |m| collection.first.respond_to?(m) } : nil
     end
-    
+
     def formatted_collection(collection, label_method, value_method = :id) #:nodoc:
       return collection if (collection.instance_of?(Hash) || (collection.instance_of?(Array) && collection.first.instance_of?(String)))
       collection.map { |o| [o.send(label_method), o.send(value_method)] }
@@ -457,7 +457,7 @@ module Formtastic #:nodoc:
           choices.map { |c|
             label = (!c.instance_of?(String)) ? c.first : c
             value = (!c.instance_of?(String)) ? c.last : c
-            
+
             template.content_tag(:li,
               template.content_tag(:label,
                 "#{template.radio_button(@object_name, input_name, value, set_options(options))} #{label}",
