@@ -109,6 +109,7 @@ describe 'Formtastic' do
     @new_post.stub!(:errors).and_return(mock('errors', :on => nil))
     Post.stub!(:human_attribute_name).and_return { |column_name| column_name.to_s }
     Post.stub!(:human_name).and_return('Post')
+    Post.stub!(:reflect_on_all_validations).and_return([])
 
     @fred = mock('user')
     @fred.stub!(:to_label).and_return('Fred Smith')
@@ -119,6 +120,7 @@ describe 'Formtastic' do
     @bob.stub!(:login).and_return('bob')
     @bob.stub!(:id).and_return(42)
     Author.stub!(:find).and_return([@fred, @bob])
+    Author.stub!(:reflect_on_all_validations).and_return([])
   end
 
   describe 'JustinFrench::Formtastic::SemanticFormBuilder' do
