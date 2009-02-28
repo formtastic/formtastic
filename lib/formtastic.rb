@@ -372,7 +372,7 @@ module Formtastic #:nodoc:
     #   f.input :author, :value_method => :to_s
     #   f.input :author, :value_method => :value
     #
-    # You can pass html_options to the select tag using :html => {}
+    # You can pass html_options to the select tag using :input_html => {}
     #
     # Examples:
     #
@@ -381,15 +381,15 @@ module Formtastic #:nodoc:
       options[:collection] ||= find_parent_objects_for_column(method)
       options[:label_method] ||= detect_label_method(options[:collection])
       options[:value_method] ||= :id
-      options[:html] ||= {}
+      options[:input_html] ||= {}
 
       if (reflection = find_reflection(method)) && reflection.macro != :belongs_to
-        options[:html][:multiple] ||= true
-        options[:html][:size] ||= 5
+        options[:input_html][:multiple] ||= true
+        options[:input_html][:size] ||= 5
       end
 
       input_name = generate_association_input_name(method)
-      html_options = options.delete(:html)
+      html_options = options.delete(:input_html)
       choices = formatted_collection(options[:collection], options[:label_method], options[:value_method])
       input_label(input_name, options) + template.select(@object_name, input_name, choices, set_options(options), html_options)
     end
