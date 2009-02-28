@@ -12,9 +12,9 @@ One day, I finally had enough, so I opened up my text editor, and wrote a DSL fo
     <% form.inputs :name => "Basic" do %>
       <%= form.input :title %>
       <%= form.input :body %>
-      <%= form.input :section_id %>
-      <%= form.input :publication_state_id, :as => :radio %>
-      <%= form.input :author_id, :as => :select %>
+      <%= form.input :section %>
+      <%= form.input :publication_state, :as => :radio %>
+      <%= form.input :author %>
       <%= form.input :allow_comments, :label => "Allow commenting on this article" %>
     <% end %>
 
@@ -55,8 +55,8 @@ h2. Opinions
 
 h2. The Available Inputs
 
-* :select (a select menu for belongs_to associations) - default for columns ending in '_id'
-* :radio (a set of radio inputs for belongs_to associations) - alternative for columns ending in '_id'
+* :select (a select menu for belongs_to associations) - default for association attributes (belongs_to, has_many, has_and_belongs_to_many)
+* :radio (a set of radio inputs for belongs_to associations) - alternative association attributes (belongs_to)
 * :password (a password input) - default for :string column types with 'password' in the method name
 * :text (a textarea) - default for :text column types
 * :date (a date select) - default for :date column types
@@ -137,7 +137,7 @@ The smallest example:
     <% form.inputs do %>
       <%= form.input :title %>
       <%= form.input :body %>
-      <%= form.input :section_id, :as => :radio %>
+      <%= form.input :section, :as => :radio %>
     <% end %>
     <% form.buttons do %>
       <%= form.commit_button %>
@@ -193,7 +193,7 @@ If you're happy to accept the default input types and labels, there's a shorthan
 
 <pre>
   <% semantic_form_for @user do |form| %>
-    <%= form.inputs :title, :body, :section_id, :created_at %>
+    <%= form.inputs :title, :body, :section, :created_at %>
     <%= form.buttons :commit %>
   <% end %>
 </pre>
