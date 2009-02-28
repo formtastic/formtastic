@@ -2117,17 +2117,16 @@ describe 'Formtastic' do
       describe 'without a block' do
 
         before do
-          Post.stub!(:column_names).and_return(["title", "body", "created_at", "author_id"])
+          Post.stub!(:reflections).and_return({:author => mock('reflection')})
+          Post.stub!(:content_columns).and_return([mock('column', :name => 'title'), mock('column', :name => 'body')])
           Author.stub!(:find).and_return([@fred, @bob])
 
           @new_post.stub!(:title)
           @new_post.stub!(:body)
-          @new_post.stub!(:created_at)
           @new_post.stub!(:author_id)
 
           @new_post.stub!(:column_for_attribute).with(:title).and_return(mock('column', :type => :string, :limit => 255))
           @new_post.stub!(:column_for_attribute).with(:body).and_return(mock('column', :type => :text))
-          @new_post.stub!(:column_for_attribute).with(:created_at).and_return(mock('column', :type => :datetime))
           @new_post.stub!(:column_for_attribute).with(:author).and_return(nil)
         end
 
@@ -2156,7 +2155,7 @@ describe 'Formtastic' do
           end
 
           it 'should render a list item in the ol for each column returned by Post.column_names' do
-            output_buffer.should have_tag('form > fieldset.inputs > ol > li', :count => Post.column_names.size)
+            output_buffer.should have_tag('form > fieldset.inputs > ol > li', :count => (Post.content_columns.size + Post.reflections.size))
           end
 
           it 'should render a string list item for title' do
@@ -2165,10 +2164,6 @@ describe 'Formtastic' do
 
           it 'should render a text list item for body' do
             output_buffer.should have_tag('form > fieldset.inputs > ol > li.text')
-          end
-
-          it 'should render a datetime list item for created_at' do
-            output_buffer.should have_tag('form > fieldset.inputs > ol > li.datetime')
           end
 
           it 'should render a select list item for author_id' do

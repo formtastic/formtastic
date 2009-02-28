@@ -190,7 +190,10 @@ module Formtastic #:nodoc:
       else
         html_options = args.last.is_a?(Hash) ? args.pop : {}
         html_options[:class] ||= "inputs"
-        args = @object.class.column_names.map { |n| n.gsub(/_id$/, '') } if args.empty?
+        if args.empty?
+          args = @object.class.reflections.map { |n,_| n }
+          args += @object.class.content_columns.map(&:name)
+        end
         contents = args.map { |method| input(method.to_sym) }
         field_set_and_list_wrapping(html_options, contents)
       end
