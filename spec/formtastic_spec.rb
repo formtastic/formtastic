@@ -1106,6 +1106,14 @@ describe 'Formtastic' do
                 output_buffer.should have_tag('form li select')
               end
 
+              it 'should not create a multi-select' do
+                output_buffer.should_not have_tag('form li select[@multiple]')
+              end
+
+              it 'should create a select without size' do
+                output_buffer.should_not have_tag('form li select[@size]')
+              end
+
               it 'should have a select option for each Author' do
                 output_buffer.should have_tag('form li select option', :count => Author.find(:all).size)
                 Author.find(:all).each do |author|

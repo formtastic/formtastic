@@ -380,12 +380,12 @@ module Formtastic #:nodoc:
       options[:value_method] ||= :id
       options[:html] ||= {}
 
-      input_name = generate_association_input_name(method)
-      if input_name =~ /_ids?$/
+      if (reflection = find_reflection(method)) && reflection.macro != :belongs_to
         options[:html][:multiple] ||= true
         options[:html][:size] ||= 5
       end
 
+      input_name = generate_association_input_name(method)
       html_options = options.delete(:html)
       choices = formatted_collection(options[:collection], options[:label_method], options[:value_method])
       input_label(input_name, options) + template.select(@object_name, input_name, choices, set_options(options), html_options)
