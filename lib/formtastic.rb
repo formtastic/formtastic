@@ -380,7 +380,7 @@ module Formtastic #:nodoc:
       options[:value_method] ||= :id
       options[:html] ||= {}
 
-      input_name = generate_input_name(method)
+      input_name = generate_association_input_name(method)
       if input_name =~ /_ids?$/
         options[:html][:multiple] ||= true
         options[:html][:size] ||= 5
@@ -448,7 +448,7 @@ module Formtastic #:nodoc:
       options[:collection] ||= find_parent_objects_for_column(method)
       options[:label_method] ||= detect_label_method(options[:collection])
 
-      input_name = generate_input_name(method)
+      input_name = generate_association_input_name(method)
 
       choices = formatted_collection(options[:collection], options[:label_method])
       template.content_tag(:fieldset,
@@ -777,7 +777,7 @@ module Formtastic #:nodoc:
     # belongs_to :author; f.input :author; will generate 'author_id'
     # has_many :authors; f.input :authors; will generate 'author_ids'
     # has_and_belongs_to_many will act like has_many
-    def generate_input_name(method)
+    def generate_association_input_name(method)
       if reflection = find_reflection(method)
         method = "#{method.to_s.singularize}_id"
         method = method.pluralize if [:has_and_belongs_to_many, :has_many].include?(reflection.macro)
