@@ -35,6 +35,17 @@ One day, I finally had enough, so I opened up my text editor, and wrote a DSL fo
 I also wrote the accompanying HTML output I expected, favoring something very similar to the fieldsets, lists and other semantic elements Aaron Gustafson presented in "Learning to Love Forms":http://www.slideshare.net/AaronGustafson/learning-to-love-forms-web-directions-south-07, hacking together enough Ruby to prove it could be done.
 
 
+h2. It's better than _SomeOtherFormBuilder_ because...
+
+* it can handle ActiveRecord associations (belongs_to, has_many, has_and_belongs_to_many), rendering the appropriate form input
+* there's heaps of elements, id and class attributes for you to hook in your CSS and JS
+* it's _really_ quick to get started with a basic form in place (4 lines), then go back to add it more detail if you need it
+* it handles real world stuff line inline hints, inline error messages, help text
+* there's a bunch of people using and working on it (it's not just one developer building half a solution)
+* it's got absolutely awesome spec coverage
+* it doesn't hijack or change any of the standard Rails form inputs, so you can still use them as expected (even mix and match)
+
+
 h2. Why?
 
 * web apps = lots of forms
@@ -53,10 +64,82 @@ h2. Opinions
 * make the common things we do easy, yet still ensure uncommon things are still possible
 
 
+h2. Usage
+
+Forms are really boring to code... you want to get onto the good stuff as fast as possible.
+
+This renders a set of inputs (one for _most_ columns in the database table, and one for each ActiveRecord belongs_to, has_many or has_and_belongs_to_many association) and a submit button:
+
+<pre>
+  <% semantic_form_for @user do |form| %>
+    <%= form.inputs %>
+    <%= form.buttons %>
+  <% end %>
+</pre>
+
+If you want to specify the order of the fields, skip some of the fields or even add in fields that Formtastic couldn't detect, you can pass in a list of field names to @inputs@ and list of button names to @buttons@:
+
+<pre>
+  <% semantic_form_for @user do |form| %>
+    <%= form.inputs :title, :body, :section, :categories, :created_at %>
+    <%= form.buttons :commit %>
+  <% end %>
+</pre>
+
+If you want control over the input type Formtastic uses for each field, you can expand the @inputs@ and @buttons@ blocks.  This specifies the :section input should be a set of radio buttons (rather than the default select box), and that the :created_at field should be a string (rather than the default datetime selects):
+
+<pre>
+  <% semantic_form_for @post do |form| %>
+    <% form.inputs do %>
+      <%= form.input :title %>
+      <%= form.input :body %>
+      <%= form.input :section, :as => :radio %>
+      <%= form.input :categories %>
+      <%= form.input :created_at, :as => :string %>
+    <% end %>
+    <% form.buttons do %>
+      <%= form.commit_button %>
+    <% end %>
+  <% end %>
+</pre>
+
+If you want to customize the label text, or render some hint text below the field, specify which fields are required/option, or break the form into two fieldsets, the DSL is pretty comprehensive:
+
+<pre>
+  <% semantic_form_for @post do |form| %>
+    <% form.inputs :name => "Basic", :id => "basic" do %>
+      <%= form.input :title %>
+      <%= form.input :body %>
+    <% end %>
+    <% form.inputs :name => "Advanced Options", :id => "advanced" do %>
+      <%= form.input :slug, :label => "URL Title", :hint => "Created automatically if left blank", :required => false %>
+      <%= form.input :section, :as => :radio %>
+      <%= form.input :user, :label => "Author", :label_method => :full_name,  %>
+      <%= form.input :categories, :required => false %>
+      <%= form.input :created_at, :as => :string, :label => "Publication Date", :required => false %>
+    <% end %>
+    <% form.buttons do %>
+      <%= form.commit_button %>
+    <% end %>
+  <% end %>
+</pre>
+
+Nested forms (Rails 2.3) are also supported:
+
+<pre>
+  <% semantic_form_for @post do |post| %>
+    <%= post.semantic_fields_for :author do |author| %>
+      <%= author.inputs %>
+    <%= end %>
+    <%= post.buttons %>
+  <% end %>
+</pre>
+
+
 h2. The Available Inputs
 
-* :select (a select menu for belongs_to associations) - default for association attributes (belongs_to, has_many, has_and_belongs_to_many)
-* :radio (a set of radio inputs for belongs_to associations) - alternative association attributes (belongs_to)
+* :select (a select menu) - default for ActiveRecord associations (belongs_to, has_many, has_and_belongs_to_many)
+* :radio (a set of radio inputs) - alternative to :select for ActiveRecord belongs_to associations
 * :password (a password input) - default for :string column types with 'password' in the method name
 * :text (a textarea) - default for :text column types
 * :date (a date select) - default for :date column types
@@ -68,12 +151,7 @@ h2. The Available Inputs
 * :numeric (a text field, like string) - default for :integer, :float and :decimal column types
 * :file (a file field) - default for paperclip or attachment_fu attributes
 
-The documentation is pretty good for each of these (what it does, what the output is, etc) so go check it out.
-
-
-h3. Fields without database columns and non-ActiveRecord objects
-
-Formtastic is pretty tightly coupled to ActiveRecord database columns, but it will at least _attempt_ to play nicely with your models other methods (like a virtual column 'full_name' which is split into first_name and last_name in a before save callback), and I'd like this to continue and improve.
+The documentation is pretty good for each of these (what it does, what the output is, what the options are, etc) so go check it out.
 
 
 h2. Configuration
@@ -109,121 +187,6 @@ If you wish, put something like this in config/initializers/formtastic_config.rb
 </pre>
 
 
-h2. ValidationReflection plugin
-
-If you have the "ValidationReflection":http://github.com/redinger/validation_reflection plugin installed, you won't have to specify the :required option (it checks the validations on the model instead).
-
-
-h2. Status
-
-*THIS IS DEFINITELY NOT PRODUCTION-READY.  THINGS ARE GOING TO CHANGE A BIT BEFORE WE HIT 1.0.*
-
-It's opinionated, incomplete, a work in progress and a bit rough around the edges stiull, but I hope you try it and offer some suggestions and improvements any way.
-
-On the plus side, it has a comprehensive spec suite and contributions from at least ten independent developers.
-
-
-h2. Roadmap to 1.0
-
-"Wishlist":http://wiki.github.com/justinfrench/formtastic/wishlist on the wiki is serving as pretty good documentation for the roadmap to 1.0 and beyond right now, but I'll work on getting a real tracking system or something happening soon.
-
-
-h2. Usage
-
-The smallest example:
-
-<pre>
-  <% semantic_form_for @post do |form| %>
-    <% form.inputs do %>
-      <%= form.input :title %>
-      <%= form.input :body %>
-      <%= form.input :section, :as => :radio %>
-    <% end %>
-    <% form.buttons do %>
-      <%= form.commit_button %>
-    <% end %>
-  <% end %>
-</pre>
-
-Yes, *it'll even handle belongs_to associations*, rendering a radio list or select box with the right set of choices!  The output is something like:
-
-<pre>
-  <form action="/posts" class="formtastic new_post" id="new_post" method="post">
-    <fieldset class="inputs">
-      <ol>
-        <li class="string required" id="post_title_input">
-          <label for="post_title">Title<abbr title="required">*</abbr></label>
-          <input id="post_title" maxlength="255" name="post[title]" size="50" type="text" />
-        </li>
-        <li class="text optional" id="post_body_input">
-          <label for="post_body">Body</label>
-          <textarea cols="40" id="post_body" name="post[body]" rows="20"></textarea>
-        </li>
-        <li class="radio required" id="post_author_id_input">
-          <fieldset>
-            <legend><span>Author<abbr title="required">*</abbr></span></legend>
-            <ol>
-              <li>
-                <label for="post_author_id_37">
-                  <input id="post_author_id_37" name="post[author_id]" type="radio" value="37" />
-                  Fred Smith
-                </label>
-              </li>
-              <li>
-                <label for="post_author_id_42">
-                  <input id="post_author_id_42" name="post[author_id]" type="radio" value="42" />
-                  Bob Rock
-                </label>
-              </li>
-            </ol>
-          </fieldset>
-        </li>
-      </ol>
-    </fieldset>
-    <fieldset class="buttons">
-      <ol>
-        <li class="commit">
-          <input name="commit" type="submit" value="Create Post" />
-        </li>
-      </ol>
-    </fieldset>
-  </form></pre>
-
-If you're happy to accept the default input types and labels, there's a shorthand version too:
-
-<pre>
-  <% semantic_form_for @user do |form| %>
-    <%= form.inputs :title, :body, :section, :created_at %>
-    <%= form.buttons :commit %>
-  <% end %>
-</pre>
-
-You don't even have to specify the field list (Formtastic will simply render and input for each column in the database table) or button list (usually you only need one commit button to create/save):
-
-<pre>
-  <% semantic_form_for @user do |form| %>
-    <%= form.inputs %>
-    <%= form.buttons %>
-  <% end %>
-</pre>
-
-Pretty soon we won't have to write any code at all ;)
-
-
-h2. Nested forms (Rails 2.3+)
-
-Nested forms are supported:
-
-<pre>
-  <% semantic_form_for @post do |post| %>
-    <%= post.semantic_fields_for :author do |author| %>
-      <%= author.inputs %>
-    <%= end %>
-    <%= post.buttons %>
-  <% end %>
-</pre>
-
-
 h2. Internationalization (I18n)
 
 Supports I18n! ActiveRecord object names and attributes are, by default, taken from calling @object.human_name and @object.human_attribute_name(attr) respectively. There are a few words specific to Formtastic that can be translated.
@@ -246,9 +209,57 @@ Here is an example locale file:
 </pre>
 
 
+h2. ValidationReflection plugin
+
+If you have the "ValidationReflection":http://github.com/redinger/validation_reflection plugin installed, you won't have to specify the :required option (it checks the validations on the model instead).
+
+
+h2. Status
+
+*THINGS ARE GOING TO CHANGE A BIT BEFORE WE HIT 1.0.*
+
+It's a work in progress and a bit rough around the edges still, but I hope you try it and offer some suggestions and improvements anyway.
+
+On the plus side, it has a comprehensive spec suite and contributions from at least ten independent developers.
+
+"Wishlist":http://wiki.github.com/justinfrench/formtastic/wishlist on the wiki is serving as pretty good documentation for the roadmap to 1.0 and beyond right now, but I'll work on getting a real tracking system or something happening soon.
+
+
+h2. Dependencies
+
+There are none, but...
+
+* if you have the "ValidationReflection":http://github.com/redinger/validation_reflection plugin is installed, you won't have to specify the :required option (it checks the validations on the model instead)
+* rspec, rspec_hpricot_matchers and rcov gems (plus any of their own dependencies) are required for the test suite
+
+
+h2. Compatibility
+
+I'm only testing Formtastic with the latest Rails 2.2.x stable release, and it should be fine under Rails 2.3 as well (including nested forms).  Patches are welcome to allow backwards compatibility, but I don't have the energy!
+
+
+
+h2. What about Stylesheets?
+
+A proof-of-concept (very much a work-in-progress) stylesheet is provided which you can include in your layout.  Customisation is best achieved by overriding these styles in an additional stylesheet so that the formtastic styles can be updated without clobbering your changes.
+
+1. Use the generator to copy the formtastic.css and formtastic_changes.css into your public directory
+
+<pre>
+./script/generate formtastic_stylesheets
+</pre>
+
+2. Add both formtastic.css and formtastic_changes.css to your layout:
+
+<pre>
+<%= stylesheet_link_tag "formtastic" %>
+<%= stylesheet_link_tag "formtastic_changes" %>
+</pre>
+
+
 h2. Extending Formtastic
 
-Adding functionality to Formtastic can be done by extending SemanticFormBuilder and configuring formtastic's builder.
+Adding functionality to Formtastic can be done by subclassing SemanticFormBuilder with your own changes, then telling Formtastic to use yours instead.
 
 To create a new form method that displayed a star rating define the new builder by subclassing SemanticFormBuilder:
 
@@ -284,44 +295,6 @@ Use @semantic_form_for@ just like you would with Formtastic.
     <%= form.buttons %>
   <% end %>
 </pre>
-
-
-h2. Dependencies
-
-There are none, but...
-
-* if you have the "ValidationReflection":http://github.com/redinger/validation_reflection plugin is installed, you won't have to specify the :required option (it checks the validations on the model instead)
-* rspec, rspec_hpricot_matchers and rcov gems (plus any of their own dependencies) are required for the test suite
-
-
-h2. What about Stylesheets?
-
-A proof-of-concept (very much a work-in-progress) stylesheet is provided which you can include in your layout.  Customisation is best achieved by overriding these styles in an additional stylesheet so that the formtastic styles can be updated without clobbering your changes.
-
-1. Use the generator to copy the formtastic.css and formtastic_changes.css into your public directory
-
-<pre>
-./script/generate formtastic_stylesheets
-</pre>
-
-2. Add both formtastic.css and formtastic_changes.css to your layout:
-
-<pre>
-<%= stylesheet_link_tag "formtastic" %>
-<%= stylesheet_link_tag "formtastic_changes" %>
-</pre>
-
-
-
-h2. Compatibility
-
-I'm only testing Formtastic with the latest Rails 2.2.x stable release, and it should be fine under Rails 2.3 as well (including nested forms).
-
-
-h2. But it doesn't do that thing I really need!
-
-It might not ever do it either, there are no silver bullets.  I want to make the usual stuff easy, and the unusual stuff possible.  That might mean that some of the inputs on your form still have to be hard-coded, but some is better than all, right?
-
 
 
 h2. Many thanks to Formtastic's contributors
