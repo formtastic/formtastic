@@ -135,6 +135,7 @@ describe 'Formtastic' do
     @new_post.stub!(:id).and_return(nil)
     @new_post.stub!(:new_record?).and_return(true)
     @new_post.stub!(:errors).and_return(mock('errors', :on => nil))
+    @new_post.stub!(:author).and_return(nil)
 
     @freds_post = mock('post')
     @freds_post.stub!(:class).and_return(Post)
@@ -838,6 +839,8 @@ describe 'Formtastic' do
           describe 'when using association_id' do
 
             before do
+              # Check for deprecation message
+              ::ActiveSupport::Deprecation.should_receive(:warn).with(/association/, anything())
               semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:author_id, :as => :radio))
               end
@@ -972,7 +975,7 @@ describe 'Formtastic' do
             it 'should perform a basic find on the parent class' do
               Author.should_receive(:find)
               semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:author_id, :as => :radio))
+                concat(builder.input(:author, :as => :radio))
               end
             end
 
@@ -988,13 +991,13 @@ describe 'Formtastic' do
             it 'should not call find() on the parent class' do
               Author.should_not_receive(:find)
               semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:author_id, :as => :radio, :collection => @authors))
+                concat(builder.input(:author, :as => :radio, :collection => @authors))
               end
             end
 
             it 'should use the provided collection' do
               semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:author_id, :as => :radio, :collection => @authors))
+                concat(builder.input(:author, :as => :radio, :collection => @authors))
               end
               output_buffer.should have_tag('form li fieldset ol li', :count => @authors.size)
             end
@@ -1042,7 +1045,7 @@ describe 'Formtastic' do
           describe 'when the :label_method option is provided' do
             before do
               semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:author_id, :as => :radio, :label_method => :login))
+                concat(builder.input(:author, :as => :radio, :label_method => :login))
               end
             end
 
@@ -1060,7 +1063,7 @@ describe 'Formtastic' do
                   @fred.stub!(:respond_to?).and_return { |m| m.to_s == label_method }
                   Author.find(:all).each { |a| a.stub!(label_method).and_return('The Label Text') }
                   semantic_form_for(@new_post) do |builder|
-                    concat(builder.input(:author_id, :as => :radio))
+                    concat(builder.input(:author, :as => :radio))
                   end
                 end
 
@@ -1203,6 +1206,7 @@ describe 'Formtastic' do
           describe 'when using the association_id method' do
 
             before do
+              ::ActiveSupport::Deprecation.should_receive(:warn).with(/association/, anything())
               semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:author_id, :as => :select))
               end
@@ -2116,7 +2120,7 @@ describe 'Formtastic' do
           @new_post.stub!(:column_for_attribute).with(:title).and_return(mock('column', :type => :string, :limit => 255))
           @new_post.stub!(:column_for_attribute).with(:body).and_return(mock('column', :type => :text))
           @new_post.stub!(:column_for_attribute).with(:created_at).and_return(mock('column', :type => :datetime))
-          @new_post.stub!(:column_for_attribute).with(:author_id).and_return(mock('column', :type => :integer, :limit => 4))
+          @new_post.stub!(:column_for_attribute).with(:author).and_return(nil)
         end
 
         describe 'with no args' do

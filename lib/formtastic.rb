@@ -190,7 +190,7 @@ module Formtastic #:nodoc:
       else
         html_options = args.last.is_a?(Hash) ? args.pop : {}
         html_options[:class] ||= "inputs"
-        args = @object.class.column_names if args.empty?
+        args = @object.class.column_names.map { |n| n.gsub(/_id$/, '') } if args.empty?
         contents = args.map { |method| input(method.to_sym) }
         field_set_and_list_wrapping(html_options, contents)
       end
@@ -768,6 +768,7 @@ module Formtastic #:nodoc:
       parent_class = if reflection = find_reflection(column)
         reflection.klass
       else
+        ::ActiveSupport::Deprecation.warn("The _id way of doing things is deprecated. Please use the association method (#{column.to_s.sub(/_id$/,'')})", caller[3..-1])
         column.to_s.sub(/_id$/,'').camelize.constantize
       end
       parent_class.find(:all)
