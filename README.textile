@@ -37,13 +37,16 @@ I also wrote the accompanying HTML output I expected, favoring something very si
 
 h2. It's better than _SomeOtherFormBuilder_ because...
 
-* it can handle ActiveRecord associations (belongs_to, has_many, has_and_belongs_to_many), rendering the appropriate form input
+* it can handle @belongs_to@ associations (like Post belongs_to :author), rendering a select or set of radio inputs with choices from the parent model
+* it can handle @has_many@ and @has_and_belongs_to_many@ associations (like Post has_many :tags), rendering a multi-select with choices from the child models
+* it's Rails 2.3-ready (including nested forms)
+* it has internationalization (I18n)!
+* it's _really_ quick to get started with a basic form in place (4 lines), then go back to add in more detail if you need it
 * there's heaps of elements, id and class attributes for you to hook in your CSS and JS
-* it's _really_ quick to get started with a basic form in place (4 lines), then go back to add it more detail if you need it
 * it handles real world stuff line inline hints, inline error messages, help text
-* there's a bunch of people using and working on it (it's not just one developer building half a solution)
-* it's got absolutely awesome spec coverage
 * it doesn't hijack or change any of the standard Rails form inputs, so you can still use them as expected (even mix and match)
+* it's got absolutely awesome spec coverage
+* there's a bunch of people using and working on it (it's not just one developer building half a solution)
 
 
 h2. Why?
