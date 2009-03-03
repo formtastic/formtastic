@@ -14,7 +14,7 @@ module Formtastic #:nodoc:
     @@required_string = proc { %{<abbr title="#{I18n.t 'formtastic.required', :default => 'required'}">*</abbr>} }
     @@optional_string = ''
     @@inline_errors = :sentence
-    @@label_str_method = :titleize
+    @@label_str_method = :to_s
     @@collection_label_methods = %w[to_label display_name full_name name title username login value to_s]
 
     cattr_accessor :default_text_field_size, :all_fields_required_by_default, :required_string, :optional_string, :inline_errors, :label_str_method, :collection_label_methods
