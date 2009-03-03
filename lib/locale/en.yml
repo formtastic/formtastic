@@ -10,3 +10,4 @@ en:
     hour: 'Hour'
     minute: 'Minute'
     second: 'Second'
+    required: 'Required'
