@@ -335,6 +335,30 @@ describe 'Formtastic' do
         @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
       end
 
+      describe 'with inline order customization' do
+        it 'should allow input, hints, errors as order' do
+          Formtastic::SemanticFormBuilder.inline_order = [:input, :hints, :errors]
+
+          semantic_form_for(@new_post) do |builder|
+            builder.should_receive(:string_input).once.ordered
+            builder.should_receive(:inline_hints).once.ordered
+            builder.should_receive(:inline_errors).once.ordered
+            concat(builder.input(:title))
+          end
+        end
+
+        it 'should allow hints, input, errors as order' do
+          Formtastic::SemanticFormBuilder.inline_order = [:hints, :input, :errors]
+
+          semantic_form_for(@new_post) do |builder|
+            builder.should_receive(:inline_hints).once.ordered
+            builder.should_receive(:string_input).once.ordered
+            builder.should_receive(:inline_errors).once.ordered
+            concat(builder.input(:title))
+          end
+        end
+      end
+
       describe 'arguments and options' do
 
         it 'should require the first argument (the method on form\'s object)' do
