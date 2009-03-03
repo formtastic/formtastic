@@ -11,7 +11,7 @@ module Formtastic #:nodoc:
 
     @@default_text_field_size = 50
     @@all_fields_required_by_default = true
-    @@required_string = %{<abbr title="required">*</abbr>}
+    @@required_string = proc { %{<abbr title="#{I18n.t 'formtastic.required', :default => 'required'}">*</abbr>} }
     @@optional_string = ''
     @@inline_errors = :sentence
     @@label_str_method = :titleize
@@ -703,7 +703,13 @@ module Formtastic #:nodoc:
     end
 
     def required_or_optional_string(required) #:nodoc:
-      required ? @@required_string : @@optional_string
+      string_or_proc = required ? @@required_string : @@optional_string
+
+      if string_or_proc.is_a? Proc
+        string_or_proc.call
+      else
+        string_or_proc
+      end
     end
 
     def field_set_and_list_wrapping(field_set_html_options, contents = '', &block) #:nodoc:
