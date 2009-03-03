@@ -12,7 +12,7 @@ module FormtasticSpecHelper
   end
 
   def should_use_default_text_size_for_columns_longer_than_default(method_name, as, column_type)
-    default_size = Formtastic::SemanticFormBuilder::DEFAULT_TEXT_FIELD_SIZE
+    default_size = Formtastic::SemanticFormBuilder.default_text_field_size
     column_limit_larger_than_default = default_size * 2
     @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => column_type, :limit => column_limit_larger_than_default))
     semantic_form_for(@new_post) do |builder|
@@ -22,7 +22,7 @@ module FormtasticSpecHelper
   end
 
   def should_use_the_column_size_for_columns_shorter_than_default(method_name, as, column_type)
-    default_size = Formtastic::SemanticFormBuilder::DEFAULT_TEXT_FIELD_SIZE
+    default_size = Formtastic::SemanticFormBuilder.default_text_field_size
     column_limit_shorter_than_default = 1
     @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => column_type, :limit => column_limit_shorter_than_default))
     semantic_form_for(@new_post) do |builder|
@@ -32,7 +32,7 @@ module FormtasticSpecHelper
   end
 
   def should_use_default_size_for_methods_without_columns(as)
-    default_size = Formtastic::SemanticFormBuilder::DEFAULT_TEXT_FIELD_SIZE
+    default_size = Formtastic::SemanticFormBuilder.default_text_field_size
     @new_post.stub!(:method_without_column)
     semantic_form_for(@new_post) do |builder|
       concat(builder.input(:method_without_column, :as => as))
@@ -802,15 +802,15 @@ describe 'Formtastic' do
           should_have_maxlength_matching_column_limit(:title, :string, :string)
         end
 
-        it 'should use DEFAULT_TEXT_FIELD_SIZE for columns longer than DEFAULT_TEXT_FIELD_SIZE' do
+        it 'should use default_text_field_size for columns longer than default_text_field_size' do
           should_use_default_text_size_for_columns_longer_than_default(:title, :string, :string)
         end
 
-        it 'should use the column size for columns shorter than DEFAULT_TEXT_FIELD_SIZE' do
+        it 'should use the column size for columns shorter than default_text_field_size' do
           should_use_the_column_size_for_columns_shorter_than_default(:title, :string, :string)
         end
 
-        it 'should use DEFAULT_TEXT_FIELD_SIZE for methods without database columns' do
+        it 'should use default_text_field_size for methods without database columns' do
           should_use_default_size_for_methods_without_columns(:string)
         end
 
@@ -819,7 +819,7 @@ describe 'Formtastic' do
             @new_post.stub!(:column_for_attribute).and_raise(NoMethodError)
           end
 
-          it "should have a maxlength of DEFAULT_TEXT_FIELD_SIZE" do
+          it "should have a maxlength of default_text_field_size" do
             should_use_default_size_for_methods_without_columns(:string)
           end
         end
@@ -1423,15 +1423,15 @@ describe 'Formtastic' do
           should_have_maxlength_matching_column_limit(:password_hash, :password, :string)
         end
 
-        it 'should use DEFAULT_TEXT_FIELD_SIZE for columns longer than DEFAULT_TEXT_FIELD_SIZE' do
+        it 'should use default_text_field_size for columns longer than default_text_field_size' do
           should_use_default_text_size_for_columns_longer_than_default(:password_hash, :password, :string)
         end
 
-        it 'should use the column size for columns shorter than DEFAULT_TEXT_FIELD_SIZE' do
+        it 'should use the column size for columns shorter than default_text_field_size' do
           should_use_the_column_size_for_columns_shorter_than_default(:password_hash, :password, :string)
         end
 
-        it 'should use DEFAULT_TEXT_FIELD_SIZE for methods without database columns' do
+        it 'should use default_text_field_size for methods without database columns' do
           should_use_default_size_for_methods_without_columns(:password)
         end
 
@@ -1440,7 +1440,7 @@ describe 'Formtastic' do
             @new_post.stub!(:column_for_attribute).and_raise(NoMethodError)
           end
 
-          it "should have a maxlength of DEFAULT_TEXT_FIELD_SIZE" do
+          it "should have a maxlength of default_text_field_size" do
             should_use_default_size_for_methods_without_columns(:string)
           end
         end
@@ -1998,15 +1998,15 @@ describe 'Formtastic' do
           should_have_maxlength_matching_column_limit(:comments_count, :numeric, :integer)
         end
 
-        it 'should use DEFAULT_TEXT_FIELD_SIZE for columns longer than DEFAULT_TEXT_FIELD_SIZE' do
+        it 'should use default_text_field_size for columns longer than default_text_field_size' do
           should_use_default_text_size_for_columns_longer_than_default(:comments_count, :numeric, :integer)
         end
 
-        it 'should use the column size for columns shorter than DEFAULT_TEXT_FIELD_SIZE' do
+        it 'should use the column size for columns shorter than default_text_field_size' do
           should_use_the_column_size_for_columns_shorter_than_default(:comments_count, :numeric, :integer)
         end
 
-        it 'should use DEFAULT_TEXT_FIELD_SIZE for methods without database columns' do
+        it 'should use default_text_field_size for methods without database columns' do
           should_use_default_size_for_methods_without_columns(:numeric)
         end
 
@@ -2015,7 +2015,7 @@ describe 'Formtastic' do
             @new_post.stub!(:column_for_attribute).and_raise(NoMethodError)
           end
 
-          it "should have a maxlength of DEFAULT_TEXT_FIELD_SIZE" do
+          it "should have a maxlength of default_text_field_size" do
             should_use_default_size_for_methods_without_columns(:string)
           end
         end
