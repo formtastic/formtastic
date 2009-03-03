@@ -162,12 +162,18 @@ h2. Configuration
 If you wish, put something like this in config/initializers/formtastic_config.rb:
 
 <pre>
+  # Set the default text field size when input is a string. Default is 50
+  Formtastic::SemanticFormBuilder.default_text_field_size = 30
+
   # Should all fields be considered "required" by default
   # Defaults to true, see ValidationReflection notes below
   Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
   
   # Set the string that will be appended to the labels/fieldsets which are required
-  # Default is '<abbr title="required">*</abbr>'
+  # It accepts string or procs and the default is a localized version of
+  # '<abbr title="required">*</abbr>'. In other words, if you configure formtastic.required
+  # in your locale, it will replace the abbr title properly. But if you don't want to use
+  # abbr tag, you can simply give a string as below
   Formtastic::SemanticFormBuilder.required_string = "(required)"
   
   # Set the string that will be appended to the labels/fieldsets which are optional
@@ -179,7 +185,8 @@ If you wish, put something like this in config/initializers/formtastic_config.rb
   Formtastic::SemanticFormBuilder.inline_errors = :list
 
   # Set the method to call on label text to transform or format it for human-friendly reading
-  # Defaults to :titleize, but you might want :humanize, :to_s, etc
+  # Defaults to :to_s, because we are already using human_attribute_name when creating labels,
+  # but you might want to change for :titleize or another string method
   Formtastic::SemanticFormBuilder.label_str_method = :titleize
 
   # Set the array of methods to try calling on parent objects in :select and :radio inputs
@@ -209,6 +216,7 @@ Here is an example locale file:
       hour: 'Hour'
       minute: 'Minute'
       second: 'Second'
+      required: 'required'
 </pre>
 
 
@@ -273,6 +281,7 @@ h2. Many thanks to Formtastic's contributors
 * "Tien Dung":http://github.com/tiendung
 * "Sascha Hoellger":http://github.com/mitnal
 * "Jeff Smick":http://github.com/sprsquish
+* "José Valim":http://github.com/josevalim
 
 
 h2. Project Info
