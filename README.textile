@@ -177,7 +177,7 @@ If you wish, put something like this in config/initializers/formtastic_config.rb
   Formtastic::SemanticFormBuilder.required_string = "(required)"
   
   # Set the string that will be appended to the labels/fieldsets which are optional
-  # Defaults to an empty string ("")
+  # Defaults to an empty string ("") and also accepts procs (see required_string above)
   Formtastic::SemanticFormBuilder.optional_string = "(optional)"
 
   # Set the way inline errors will be displayed.
@@ -194,6 +194,12 @@ If you wish, put something like this in config/initializers/formtastic_config.rb
   # that is found on the object will be used.
   # Defaults to ["to_label", "display_name", "full_name", "name", "title", "username", "login", "value", "to_s"]
   Formtastic::SemanticFormBuilder.collection_label_methods = ["title_and_author", "display_name", "login", "to_s"]
+
+  # Formtastic by default renders inside li tags the input, hints and then
+  # errors messages. Sometimes you want the hints to be rendered first than
+  # the input, in the following order: hints, input and errors. You can
+  # customize it doing just as below:
+  Formtastic::SemanticFormBuilder.inline_order = [:hints, :input, :errors]
 </pre>
 
 
