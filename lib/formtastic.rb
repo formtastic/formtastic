@@ -16,8 +16,7 @@ module Formtastic #:nodoc:
 
   class SemanticFormBuilder < ActionView::Helpers::FormBuilder
 
-    DEFAULT_TEXT_FIELD_SIZE = 50
-
+    @@default_text_field_size = 50
     @@all_fields_required_by_default = true
     @@required_string = %{<abbr title="required">*</abbr>}
     @@optional_string = ''
@@ -25,7 +24,7 @@ module Formtastic #:nodoc:
     @@label_str_method = :titleize
     @@collection_label_methods = %w[to_label display_name full_name name title username login value to_s]
 
-    cattr_accessor :all_fields_required_by_default, :required_string, :optional_string, :inline_errors, :label_str_method, :collection_label_methods
+    cattr_accessor :default_text_field_size, :all_fields_required_by_default, :required_string, :optional_string, :inline_errors, :label_str_method, :collection_label_methods
 
     attr_accessor :template
 
@@ -803,9 +802,9 @@ module Formtastic #:nodoc:
         column = nil
       end
       opts = if column.nil? || column.limit.nil?
-        { :size => DEFAULT_TEXT_FIELD_SIZE }
+        { :size => @@default_text_field_size }
       else
-        { :maxlength => column.limit, :size => [column.limit, DEFAULT_TEXT_FIELD_SIZE].min }
+        { :maxlength => column.limit, :size => [column.limit, @@default_text_field_size].min }
       end
       set_options(opts)
     end
