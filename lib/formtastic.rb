@@ -16,8 +16,9 @@ module Formtastic #:nodoc:
     @@inline_errors = :sentence
     @@label_str_method = :to_s
     @@collection_label_methods = %w[to_label display_name full_name name title username login value to_s]
+    @@inline_order = [ :input, :hints, :errors ]
 
-    cattr_accessor :default_text_field_size, :all_fields_required_by_default, :required_string, :optional_string, :inline_errors, :label_str_method, :collection_label_methods
+    cattr_accessor :default_text_field_size, :all_fields_required_by_default, :required_string, :optional_string, :inline_errors, :label_str_method, :collection_label_methods, :inline_order
 
     attr_accessor :template
 
@@ -77,11 +78,13 @@ module Formtastic #:nodoc:
 
       html_id = "#{@object_name}_#{method}_input"
 
-      list_item_content = [
-        send(input_method, method, options),
-        inline_hints(method, options),
-        inline_errors(method, options)
-      ].compact.join("\n")
+      list_item_content = @@inline_order.map do |type|
+        if type == :input
+          send(input_method, method, options)
+        else
+          send(:"inline_#{type}", method, options)
+        end
+      end.compact.join("\n")
 
       return template.content_tag(:li, list_item_content, { :id => html_id, :class => html_class })
     end
