@@ -1,15 +1,8 @@
 # Override the default ActiveRecordHelper behaviour of wrapping the input.
 # This gets taken care of semantically by adding an error class to the LI tag
 # containing the input.
-module ActionView
-  module Helpers
-    class InstanceTag
-      alias_method :error_wrapping_with_wrapping, :error_wrapping
-      def error_wrapping(html_tag, has_error)
-        html_tag
-      end
-    end
-  end
+ActionView::Base.field_error_proc = proc do |html_tag, instance_tag|
+  html_tag
 end
 
 module Formtastic #:nodoc:
