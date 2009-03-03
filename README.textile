@@ -43,7 +43,7 @@ h2. It's better than _SomeOtherFormBuilder_ because...
 * it has internationalization (I18n)!
 * it's _really_ quick to get started with a basic form in place (4 lines), then go back to add in more detail if you need it
 * there's heaps of elements, id and class attributes for you to hook in your CSS and JS
-* it handles real world stuff line inline hints, inline error messages, help text
+* it handles real world stuff like inline hints, inline error messages & help text
 * it doesn't hijack or change any of the standard Rails form inputs, so you can still use them as expected (even mix and match)
 * it's got absolutely awesome spec coverage
 * there's a bunch of people using and working on it (it's not just one developer building half a solution)
