@@ -178,13 +178,12 @@ module Formtastic #:nodoc:
     #     </fieldset>
     #   </form>
     def inputs(*args, &block)
+      html_options = args.extract_options!
+      html_options[:class] ||= "inputs"
+
       if block_given?
-        html_options = args.first || {}
-        html_options[:class] ||= "inputs"
         field_set_and_list_wrapping(html_options, &block)
       else
-        html_options = args.last.is_a?(Hash) ? args.pop : {}
-        html_options[:class] ||= "inputs"
         if args.empty?
           args = @object.class.reflections.map { |n,_| n }
           args += @object.class.content_columns.map(&:name)
@@ -201,13 +200,12 @@ module Formtastic #:nodoc:
     #
     # See inputs for html attributes and special options.
     def buttons(*args, &block)
+      html_options = args.extract_options!
+      html_options[:class] ||= "buttons"
+
       if block_given?
-        html_options = args.first || {}
-        html_options[:class] ||= "buttons"
         field_set_and_list_wrapping(html_options, &block)
       else
-        html_options = args.last.is_a?(Hash) ? args.pop : {}
-        html_options[:class] ||= "buttons"
         args = [:commit] if args.empty?
         contents = args.map { |button_name| send(:"#{button_name}_button") }
         field_set_and_list_wrapping(html_options, contents)
