@@ -700,7 +700,7 @@ module Formtastic #:nodoc:
 
     def input_label(method, options, text = nil) #:nodoc:
       text ||= label_text(method, options)
-      template.label(@object_name, method, text)
+      template.label(@object_name, method, text, set_options(options))
     end
 
     def required_or_optional_string(required) #:nodoc:
