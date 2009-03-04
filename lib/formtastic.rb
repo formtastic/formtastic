@@ -853,16 +853,15 @@ module Formtastic #:nodoc:
   # object, all semantic forms *must* have an object (either Post.new or @post), as Formtastic
   # has too many dependencies on an ActiveRecord object being present.
   module SemanticFormHelper
+    @@builder = Formtastic::SemanticFormBuilder
+
+    # cattr_accessor :builder
+    def self.builder=(val)
+      @@builder = val
+    end
 
     [:form_for, :fields_for, :form_remote_for, :remote_form_for].each do |meth|
       src = <<-END_SRC
-        @@builder = Formtastic::SemanticFormBuilder
-
-        # cattr_accessor :builder
-        def self.builder=(val)
-          @@builder = val
-        end
-
         def semantic_#{meth}(record_or_name_or_array, *args, &proc)
           options = args.extract_options!
           options[:builder] = @@builder
