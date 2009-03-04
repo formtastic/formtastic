@@ -76,7 +76,7 @@ module Formtastic #:nodoc:
         (@object.errors.on(method.to_s) ? 'error' : nil)
       ].compact.join(" ")
 
-      html_id = "#{@object_name}_#{method}_input"
+      html_id = generate_html_id(method)
 
       list_item_content = @@inline_order.map do |type|
         if type == :input
@@ -807,6 +807,28 @@ module Formtastic #:nodoc:
         { :maxlength => column.limit, :size => [column.limit, @@default_text_field_size].min }
       end
       set_options(opts)
+    end
+
+    # Generate the html id for the li tag.
+    # It takes into account options[:index] and @auto_index to generate li
+    # elements with appropriate index scope. It also sanitizes the object
+    # and method names.
+    #
+    def generate_html_id(method_name)
+      if options.has_key?(:index)
+        index = "_#{options[:index]}"
+      elsif defined?(@auto_index)
+        index = "_#{@auto_index}"
+      else
+        index = ""
+      end
+      sanitized_method_name = method_name.to_s.sub(/\?$/,"")
+
+      "#{sanitized_object_name}#{index}_#{sanitized_method_name}_input"
+    end
+
+    def sanitized_object_name
+      @sanitized_object_name ||= @object_name.gsub(/\]\[|[^-a-zA-Z0-9:.]/, "_").sub(/_$/, "")
     end
 
   end

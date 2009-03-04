@@ -320,10 +320,21 @@ describe 'Formtastic' do
 
       it 'nests the object name' do
         semantic_form_for(@new_post) do |builder|
-          builder.semantic_fields_for(:author) do |nested_builder|
+          builder.semantic_fields_for(@bob) do |nested_builder|
             nested_builder.object_name.should == 'post[author]'
           end
         end
+      end
+
+      it 'should generate html id for li tag properly' do
+        @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
+        semantic_form_for(@new_post) do |builder|
+          builder.semantic_fields_for(@bob, :index => 1) do |nested_builder|
+            concat(nested_builder.inputs :login)
+          end
+        end
+        output_buffer.should have_tag('form fieldset.inputs #post_author_1_login_input')
+        output_buffer.should_not have_tag('form fieldset.inputs #post[author]_1_login_input')
       end
     end
 
