@@ -622,7 +622,7 @@ module Formtastic #:nodoc:
       options[:true]  ||= I18n.t('yes', :default => 'Yes', :scope => [:formtastic]).send(@@label_str_method)
       options[:false] ||= I18n.t('no', :default => 'No', :scope => [:formtastic]).send(@@label_str_method)
 
-      choices = [ [options[:true],true], [options[:false],false] ]
+      choices = [ [options.delete(:true),true], [options.delete(:false),false] ]
       input_label(method, options) + template.select(@object_name, method, choices, set_options(options))
     end
 
