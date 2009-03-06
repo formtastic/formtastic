@@ -1686,6 +1686,36 @@ describe 'Formtastic' do
           end
         end
 
+        describe 'inputs order' do
+          it 'should have a default' do
+            semantic_form_for(@new_post) do |builder|
+              self.should_receive(:select_year).once.ordered.and_return('')
+              self.should_receive(:select_month).once.ordered.and_return('')
+              self.should_receive(:select_day).once.ordered.and_return('')
+              builder.input(:publish_at, :as => :datetime)
+            end
+          end
+
+          it 'should be specified with :order option' do
+            I18n.backend.store_translations 'en', :date => { :order => [:month, :year, :day] }
+            semantic_form_for(@new_post) do |builder|
+              self.should_receive(:select_month).once.ordered.and_return('')
+              self.should_receive(:select_year).once.ordered.and_return('')
+              self.should_receive(:select_day).once.ordered.and_return('')
+              builder.input(:publish_at, :as => :datetime)
+            end
+          end
+
+          it 'should be changed through I18n' do
+            semantic_form_for(@new_post) do |builder|
+              self.should_receive(:select_day).once.ordered.and_return('')
+              self.should_receive(:select_month).once.ordered.and_return('')
+              self.should_receive(:select_year).once.ordered.and_return('')
+              builder.input(:publish_at, :as => :datetime, :order => [:day, :month, :year])
+            end
+          end
+        end
+
         describe 'when the locale changes the label text' do
           before do
             I18n.backend.store_translations 'en', :formtastic => {

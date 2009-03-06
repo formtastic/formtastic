@@ -567,11 +567,11 @@ module Formtastic #:nodoc:
     #   </ol>
     # </fieldset>
     #
-    # This is an absolute abomination, but so is the official Rails select_date().  Mainly
-    # missing the ability to re-order the inputs, but maybe that's fine!
+    # This is an absolute abomination, but so is the official Rails select_date().
+    #
     def date_or_datetime_input(method, options)
       position = { :year => 1, :month => 2, :day => 3, :hour => 4, :minute => 5, :second => 6 }
-      inputs = [:year, :month, :day]
+      inputs = options.delete(:order) || I18n.translate(:'date.order') || [:year, :month, :day]
       time_inputs = [:hour, :minute]
       time_inputs << [:second] if options[:include_seconds]
 
