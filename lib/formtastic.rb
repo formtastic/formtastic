@@ -458,7 +458,8 @@ module Formtastic #:nodoc:
               template.content_tag(:label,
                 "#{template.radio_button(@object_name, input_name, value, set_options(options))} #{label}",
                 :for => "#{@object_name}_#{input_name}_#{value}".downcase
-              )
+              ),
+              :class => value.to_s
             )
           }
         )
@@ -652,23 +653,11 @@ module Formtastic #:nodoc:
     #    </fieldset>
     #  </li>
     def boolean_radio_input(method, options)
-      options[:true] ||= I18n.t('yes', :default => 'yes', :scope => [:formtastic]).send(@@label_str_method)
+      options[:true]  ||= I18n.t('yes', :default => 'yes', :scope => [:formtastic]).send(@@label_str_method)
       options[:false] ||= I18n.t('no', :default => 'no', :scope => [:formtastic]).send(@@label_str_method)
 
-      choices = [ {:label => options[:true], :value => true}, {:label => options[:false], :value => false} ]
-
-      template.content_tag(:fieldset,
-        %{<legend><span>#{label_text(method, options)}</span></legend>} +
-        template.content_tag(:ol,
-          choices.map { |c|
-            template.content_tag(:li,
-              template.label_tag("#{@object_name}_#{method}_#{c[:value]}",
-                "#{template.radio_button_tag("#{@object_name}[#{method}]", c[:value].to_s, (@object.send(method) == c[:value]), :id => "#{@object_name}_#{method}_#{c[:value]}")} #{c[:label]}"
-              ),
-            :class => c[:value].to_s)
-          }
-        )
-      )
+      choices = { options.delete(:true) => true, options.delete(:false) => false }
+      radio_input(method, options.merge(:collection => choices))
     end
 
     def inline_errors(method, options)  #:nodoc:
