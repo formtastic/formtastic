@@ -1054,6 +1054,19 @@ describe 'Formtastic' do
                 end
               end
 
+              it 'should generate a sanitized label for attribute' do
+                @bob.stub!(:category_name).and_return(@categories)
+                semantic_form_for(@new_post) do |builder|
+                  builder.semantic_fields_for(@bob) do |bob_builder|
+                    concat(bob_builder.input(:category_name, :as => :radio, :collection => @categories))
+                  end
+                end
+
+                @categories.each do |item|
+                  output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_category_name_#{item.downcase}']")
+                end
+              end
+
             end
 
             describe 'and the :collection is a hash of strings' do

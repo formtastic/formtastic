@@ -462,10 +462,10 @@ module Formtastic #:nodoc:
 
             li_content = template.content_tag(:label,
               "#{template.radio_button(@object_name, input_name, value, set_options(options))} #{label}",
-              :for => generate_html_id(input_name, value)
+              :for => generate_html_id(input_name, value.to_s.downcase)
             )
 
-            li_options = value_as_class ? { :class => value.to_s } : {}
+            li_options = value_as_class ? { :class => value.to_s.downcase } : {}
             template.content_tag(:li, li_content, li_options)
           }
         )
@@ -818,7 +818,7 @@ module Formtastic #:nodoc:
       end
       sanitized_method_name = method_name.to_s.sub(/\?$/,"")
 
-      "#{sanitized_object_name}#{index}_#{sanitized_method_name}_#{value.to_s}"
+      "#{sanitized_object_name}#{index}_#{sanitized_method_name}_#{value}"
     end
 
     def sanitized_object_name
