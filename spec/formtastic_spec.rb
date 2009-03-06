@@ -1655,6 +1655,25 @@ describe 'Formtastic' do
           end
         end
 
+        describe 'when :discard_input => true is set' do
+          it 'should use default hidden value equals to 1 when attribute returns nil' do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:publish_at, :as => :datetime, :discard_day => true))
+            end
+
+            output_buffer.should have_tag("form li fieldset ol input[@type='hidden'][@value='1']")
+          end
+
+          it 'should use default attribute value when it is not nil' do
+            @new_post.stub!(:publish_at).and_return(Date.new(2007,12,27))
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:publish_at, :as => :datetime, :discard_day => true))
+            end
+
+            output_buffer.should have_tag("form li fieldset ol input[@type='hidden'][@value='27']")
+          end
+        end
+
         describe 'when :include_blank => true is set' do
           before do
             semantic_form_for(@new_post) do |builder|

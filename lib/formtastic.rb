@@ -575,13 +575,17 @@ module Formtastic #:nodoc:
       time_inputs = [:hour, :minute]
       time_inputs << [:second] if options[:include_seconds]
 
+      # Gets the datetime object. It can be a Fixnum, Date or Time, or nil.
+      datetime = @object.send(method)
+
       list_items_capture = ""
       (inputs + time_inputs).each do |input|
         html_id = generate_html_id(method, "#{position[input]}i")
 
         if options["discard_#{input}".intern]
           break if time_inputs.include?(input)
-          list_items_capture << template.hidden_field_tag("#{@object_name}[#{method}(#{position[input]}i)]", @object.send(method), :id => html_id)
+          hidden_value = datetime.respond_to?(input) ? datetime.send(input) : datetime
+          list_items_capture << template.hidden_field_tag("#{@object_name}[#{method}(#{position[input]}i)]", (hidden_value || 1), :id => html_id)
         else
           opts = set_options(options).merge(:prefix => @object_name, :field_name => "#{method}(#{position[input]}i)")
           item_label_text = I18n.t(input.to_s, :default => input.to_s, :scope => [:formtastic]).send(@@label_str_method)
