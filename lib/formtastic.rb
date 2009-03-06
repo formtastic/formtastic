@@ -440,11 +440,17 @@ module Formtastic #:nodoc:
     #   f.input :author, :as => :radio, :label_method => :display_name
     #   f.input :author, :as => :radio, :label_method => :to_s
     #   f.input :author, :as => :radio, :label_method => :label
+    #
+    # Finally, you can set :value_as_class => true if you want that LI wrappers
+    # contains a class with the wrapped radio input value. This is used by
+    # <tt>boolean_radio_input</tt> and you can see an example there.
+    #
     def radio_input(method, options)
       options[:collection] ||= find_parent_objects_for_column(method)
       options[:label_method] ||= detect_label_method(options[:collection])
 
       input_name = generate_association_input_name(method)
+      value_as_class = options.delete(:value_as_class)
 
       choices = formatted_collection(options[:collection], options[:label_method])
       template.content_tag(:fieldset,
@@ -454,13 +460,13 @@ module Formtastic #:nodoc:
             label = (!c.instance_of?(String)) ? c.first : c
             value = (!c.instance_of?(String)) ? c.last : c
 
-            template.content_tag(:li,
-              template.content_tag(:label,
-                "#{template.radio_button(@object_name, input_name, value, set_options(options))} #{label}",
-                :for => generate_html_id(input_name, value)
-              ),
-              :class => value.to_s
+            li_content = template.content_tag(:label,
+              "#{template.radio_button(@object_name, input_name, value, set_options(options))} #{label}",
+              :for => generate_html_id(input_name, value)
             )
+
+            li_options = value_as_class ? { :class => value.to_s } : {}
+            template.content_tag(:li, li_content, li_options)
           }
         )
       )
@@ -656,7 +662,7 @@ module Formtastic #:nodoc:
       options[:false] ||= I18n.t('no', :default => 'No', :scope => [:formtastic]).send(@@label_str_method)
 
       choices = { options.delete(:true) => true, options.delete(:false) => false }
-      radio_input(method, options.merge(:collection => choices))
+      radio_input(method, { :collection => choices, :value_as_class => true }.merge(options))
     end
 
     def inline_errors(method, options)  #:nodoc:
