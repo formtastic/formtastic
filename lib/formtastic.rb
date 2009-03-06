@@ -457,7 +457,7 @@ module Formtastic #:nodoc:
             template.content_tag(:li,
               template.content_tag(:label,
                 "#{template.radio_button(@object_name, input_name, value, set_options(options))} #{label}",
-                :for => "#{@object_name}_#{input_name}_#{value}".downcase
+                :for => generate_html_id(input_name, value)
               ),
               :class => value.to_s
             )
@@ -802,7 +802,7 @@ module Formtastic #:nodoc:
     # elements with appropriate index scope. It also sanitizes the object
     # and method names.
     #
-    def generate_html_id(method_name)
+    def generate_html_id(method_name, value='input')
       if options.has_key?(:index)
         index = "_#{options[:index]}"
       elsif defined?(@auto_index)
@@ -812,7 +812,7 @@ module Formtastic #:nodoc:
       end
       sanitized_method_name = method_name.to_s.sub(/\?$/,"")
 
-      "#{sanitized_object_name}#{index}_#{sanitized_method_name}_input"
+      "#{sanitized_object_name}#{index}_#{sanitized_method_name}_#{value.to_s}"
     end
 
     def sanitized_object_name
