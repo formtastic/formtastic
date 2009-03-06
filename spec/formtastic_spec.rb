@@ -1640,6 +1640,21 @@ describe 'Formtastic' do
           output_buffer.should have_tag('form li.datetime fieldset ol li select', :count => 5)
         end
 
+        it 'should generate a sanitized label for attribute' do
+          @bob.stub!(:publish_at)
+          @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :datetime))
+
+          semantic_form_for(@new_post) do |builder|
+            builder.semantic_fields_for(@bob) do |bob_builder|
+              concat(bob_builder.input(:publish_at, :as => :datetime))
+            end
+          end
+
+          1.upto(5) do |i|
+            output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_publish_at_#{i}i']")
+          end
+        end
+
         describe 'when :include_blank => true is set' do
           before do
             semantic_form_for(@new_post) do |builder|
