@@ -618,10 +618,9 @@ module Formtastic #:nodoc:
     #    </select>
     #  </li>
     #
-    # TODO: Doesn't handle :include_blank => true, but then again, neither do most of the inputs.
     def boolean_select_input(method, options)
-      options[:true] ||= I18n.t('yes', :default => 'yes', :scope => [:formtastic]).send(@@label_str_method)
-      options[:false] ||= I18n.t('no', :default => 'no', :scope => [:formtastic]).send(@@label_str_method)
+      options[:true]  ||= I18n.t('yes', :default => 'Yes', :scope => [:formtastic]).send(@@label_str_method)
+      options[:false] ||= I18n.t('no', :default => 'No', :scope => [:formtastic]).send(@@label_str_method)
 
       choices = [ [options[:true],true], [options[:false],false] ]
       input_label(method, options) + template.select(@object_name, method, choices, set_options(options))
@@ -653,8 +652,8 @@ module Formtastic #:nodoc:
     #    </fieldset>
     #  </li>
     def boolean_radio_input(method, options)
-      options[:true]  ||= I18n.t('yes', :default => 'yes', :scope => [:formtastic]).send(@@label_str_method)
-      options[:false] ||= I18n.t('no', :default => 'no', :scope => [:formtastic]).send(@@label_str_method)
+      options[:true]  ||= I18n.t('yes', :default => 'Yes', :scope => [:formtastic]).send(@@label_str_method)
+      options[:false] ||= I18n.t('no', :default => 'No', :scope => [:formtastic]).send(@@label_str_method)
 
       choices = { options.delete(:true) => true, options.delete(:false) => false }
       radio_input(method, options.merge(:collection => choices))
