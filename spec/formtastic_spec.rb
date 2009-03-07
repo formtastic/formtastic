@@ -2180,17 +2180,47 @@ describe 'Formtastic' do
               end
             end
           end
+
           it 'should render a fieldset inside the form, with a class of "inputs"' do
             output_buffer.should have_tag("form fieldset.inputs")
           end
+
           it 'should render an ol inside the fieldset' do
             output_buffer.should have_tag("form fieldset.inputs ol")
           end
+
           it 'should render the contents of the block inside the ol' do
             output_buffer.should have_tag("form fieldset.inputs ol", /hello/)
           end
+
           it 'should not render a legend inside the fieldset' do
             output_buffer.should_not have_tag("form fieldset.inputs legend")
+          end
+        end
+
+        describe 'when a :for option is provided' do
+          it 'should render nested inputs' do
+            @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
+
+            semantic_form_for(@new_post) do |builder|
+              builder.inputs :for => [:author, @bob] do |bob_builder|
+                concat(bob_builder.input :login)
+              end
+            end
+
+            output_buffer.should have_tag("form fieldset.inputs #post_author_login")
+            output_buffer.should_not have_tag("form fieldset.inputs #author_login")
+          end
+
+          it 'should raise an error if :for and block with no argument is given' do
+            semantic_form_for(@new_post) do |builder|
+              proc {
+                builder.inputs(:for => [:author, @bob]) do
+                  #
+                end
+              }.should raise_error(ArgumentError, 'You gave :for option with a block to inputs method, ' <<
+                                                  'but the block does not accept any argument.')
+            end
           end
         end
 
@@ -2203,6 +2233,7 @@ describe 'Formtastic' do
               end
             end
           end
+
           it 'should render a fieldset inside the form' do
             output_buffer.should have_tag("form fieldset legend", /#{@legend_text}/)
           end
@@ -2218,6 +2249,7 @@ describe 'Formtastic' do
               end
             end
           end
+
           it 'should pass the options into the fieldset tag as attributes' do
             output_buffer.should have_tag("form fieldset##{@id_option}")
             output_buffer.should have_tag("form fieldset.#{@class_option}")
@@ -2243,7 +2275,6 @@ describe 'Formtastic' do
         end
 
         describe 'with no args' do
-
           before do
             semantic_form_for(@new_post) do |builder|
               concat(builder.inputs)
@@ -2281,11 +2312,9 @@ describe 'Formtastic' do
           it 'should render a select list item for author_id' do
             output_buffer.should have_tag('form > fieldset.inputs > ol > li.select')
           end
-
         end
 
         describe 'with column names as args' do
-
           before do
             semantic_form_for(@new_post) do |builder|
               concat(builder.inputs(:title, :body))
@@ -2297,11 +2326,22 @@ describe 'Formtastic' do
             output_buffer.should have_tag('form > fieldset.inputs > ol > li.string')
             output_buffer.should have_tag('form > fieldset.inputs > ol > li.text')
           end
+        end
 
+        describe 'when a :for option is provided' do
+          it 'should render nested inputs' do
+            @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
+
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.inputs :login, :for => @bob)
+            end
+
+            output_buffer.should have_tag("form fieldset.inputs #post_author_login")
+            output_buffer.should_not have_tag("form fieldset.inputs #author_login")
+          end
         end
 
         describe 'with column names and an options hash as args' do
-
           before do
             semantic_form_for(@new_post) do |builder|
               concat(builder.inputs(:title, :body, :name => "Legendary Legend Text", :id => "my-id"))
@@ -2319,7 +2359,6 @@ describe 'Formtastic' do
           it 'should use the special :name option as a text for the legend tag' do
             output_buffer.should have_tag('form > fieldset#my-id.inputs > legend', /Legendary Legend Text/)
           end
-
         end
 
       end

@@ -177,18 +177,60 @@ module Formtastic #:nodoc:
     #       </ol>
     #     </fieldset>
     #   </form>
+    #
+    # === Nested attributes
+    #
+    # As in Rails, you can use semantic_fields_for to nest attributes:
+    #
+    #   <% semantic_form_for @post do |form| %>
+    #     <%= form.inputs :title, :body %>
+    #
+    #     <% form.semantic_fields_for :author, @bob do |author_form| %>
+    #       <% author_form.inputs do %>
+    #         <%= author_form.input :first_name, :required => false %>
+    #         <%= author_form.input :last_name %>
+    #       <% end %>
+    #     <% end %>
+    #   <% end %>
+    #
+    # But this does not look formtastic! This is equivalent:
+    #
+    #   <% semantic_form_for @post do |form| %>
+    #     <%= form.inputs :title, :body %>
+    #     <% form.inputs :for => [ :author, @bob ] do |author_form| %>
+    #       <%= author_form.input :first_name, :required => false %>
+    #       <%= author_form.input :last_name %>
+    #     <% end %>
+    #   <% end %>
+    #
+    # And if you don't need to give options to your input call, you could do it
+    # in just one line:
+    #
+    #   <% semantic_form_for @post do |form| %>
+    #     <%= form.inputs :title, :body %>
+    #     <%= form.inputs :first_name, :last_name, :for => @bob %>
+    #   <% end %>
+    #
+    # Just remember that calling inputs generates a new fieldset to wrap your
+    # inputs. If you have two separate models, but, semantically, on the page
+    # they are part of the same fieldset, you should use semantic_fields_for
+    # instead (just as you would do with Rails' form builder).
+    #
     def inputs(*args, &block)
       html_options = args.extract_options!
       html_options[:class] ||= "inputs"
 
-      if block_given?
+      if fields_for_object = html_options.delete(:for)
+        inputs_for_nested_attributes(fields_for_object, args << html_options, &block)
+      elsif block_given?
         field_set_and_list_wrapping(html_options, &block)
       else
         if args.empty?
-          args = @object.class.reflections.map { |n,_| n }
+          args  = @object.class.reflections.map { |n,_| n }
           args += @object.class.content_columns.map(&:name)
         end
         contents = args.map { |method| input(method.to_sym) }
+
         field_set_and_list_wrapping(html_options, contents)
       end
     end
@@ -252,6 +294,22 @@ module Formtastic #:nodoc:
     end
 
     protected
+
+    # Deals with :for option when it's supplied to inputs methods.
+    # It should raise an error if a block with arity zero is given.
+    #
+    def inputs_for_nested_attributes(fields_for_object, inputs_args, &block)
+      fields_for_block = if block_given?
+        raise ArgumentError, 'You gave :for option with a block to inputs method, ' <<
+                             'but the block does not accept any argument.' if block.arity <= 0
+
+        proc { |f| f.inputs(*inputs_args){ block.call(f) } }
+      else
+        proc { |f| f.inputs(*inputs_args) }
+      end
+
+      semantic_fields_for(*Array(fields_for_object), &fields_for_block)
+    end
 
     # Ensure :object => @object is set before sending the options down to the Rails layer.
     # Also remove any Formtastic-specific options
