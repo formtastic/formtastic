@@ -2,6 +2,30 @@ require 'rake'
 require 'rake/rdoctask'
 require 'spec/rake/spectask'
 
+begin
+  GEM = "formtastic"
+  AUTHOR = "Justin French"
+  EMAIL = "justin@indent.com.au"
+  SUMMARY = "A Rails form builder plugin/gem with semantically rich and accessible markup"
+  HOMEPAGE = "http://github.com/justinfrench/formtastic/tree/master"
+  
+  require 'jeweler'
+  Jeweler::Tasks.new do |s|
+    s.name = GEM
+    s.summary = SUMMARY
+    s.email = EMAIL
+    s.homepage = HOMEPAGE
+    s.description = SUMMARY
+    s.author = AUTHOR
+    
+    s.require_path = 'lib'
+    s.autorequire = GEM
+    s.files = %w(MIT-LICENSE README.textile Rakefile) + Dir.glob("{rails,lib,spec}/**/*")
+  end
+rescue LoadError
+  puts "Jeweler, or one of its dependencies, is not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
+end
+
 desc 'Default: run unit specs.'
 task :default => :spec
 
