@@ -708,12 +708,12 @@ module Formtastic #:nodoc:
     #  <li class="boolean_radio required" id="post_public_input">
     #    <fieldset><legend><span>make this sucker public?<abbr title="required">*</abbr></span></legend>
     #      <ol>
-    #        <li>
+    #        <li class="true">
     #          <label for="post_public_true">
     #            <input id="post_public_true" name="post[public]" type="radio" value="true" /> Yeah!
     #          </label>
     #        </li>
-    #        <li>
+    #        <li class="false">
     #          <label for="post_public_false">
     #            <input id="post_public_false" name="post[public]" type="radio" checked="checked" /> Nah!
     #          </label>
@@ -721,6 +721,7 @@ module Formtastic #:nodoc:
     #      </ol>
     #    </fieldset>
     #  </li>
+    #
     def boolean_radio_input(method, options)
       options[:true]  ||= I18n.t('yes', :default => 'Yes', :scope => [:formtastic]).send(@@label_str_method)
       options[:false] ||= I18n.t('no', :default => 'No', :scope => [:formtastic]).send(@@label_str_method)
