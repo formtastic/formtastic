@@ -1,4 +1,4 @@
-h1. Formtastic Sneaky Preview
+h1. Formtastic 0.1.x
 
 Formtastic is a Rails FormBuilder DSL (with some other goodies) to make it far easier to create beautiful, semantically rich, syntactically awesome, readily stylable and wonderfully accessible HTML forms in your Rails applications.
 
