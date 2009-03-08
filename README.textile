@@ -67,6 +67,30 @@ h2. Opinions
 * make the common things we do easy, yet still ensure uncommon things are still possible
 
 
+h2. Installation
+
+You can (and should) get it as a gem:
+
+<pre>
+  gem install justinfrench-formtastic
+</pre>
+
+And then add it as a dependency in your environment.rb file:
+
+<pre>
+  config.gem "justinfrench-formtastic", 
+    :lib     => 'formtastic', 
+    :source  => 'http://gems.github.com', 
+    :version => '0.1.0'
+</pre>
+
+If you're a little more old school, install it as a plugin:
+
+<pre>
+  ./script/install plugin git://github.com/justinfrench/formtastic.git
+</pre>
+
+
 h2. Usage
 
 Forms are really boring to code... you want to get onto the good stuff as fast as possible.
