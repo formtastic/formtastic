@@ -81,7 +81,7 @@ And then add it as a dependency in your environment.rb file:
   config.gem "justinfrench-formtastic", 
     :lib     => 'formtastic', 
     :source  => 'http://gems.github.com', 
-    :version => '0.1.0'
+    :version => '0.1.1'
 </pre>
 
 If you're a little more old school, install it as a plugin:
