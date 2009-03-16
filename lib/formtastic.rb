@@ -221,7 +221,8 @@ module Formtastic #:nodoc:
       html_options[:class] ||= "inputs"
 
       if fields_for_object = html_options.delete(:for)
-        inputs_for_nested_attributes(fields_for_object, args << html_options, &block)
+        inputs_for_nested_attributes(fields_for_object, html_options.except(:name, :id, :class),
+                                     args << html_options, &block)
       elsif block_given?
         field_set_and_list_wrapping(html_options, &block)
       else
@@ -298,7 +299,7 @@ module Formtastic #:nodoc:
     # Deals with :for option when it's supplied to inputs methods.
     # It should raise an error if a block with arity zero is given.
     #
-    def inputs_for_nested_attributes(fields_for_object, inputs_args, &block)
+    def inputs_for_nested_attributes(fields_for_object, options, inputs_args, &block)
       fields_for_block = if block_given?
         raise ArgumentError, 'You gave :for option with a block to inputs method, ' <<
                              'but the block does not accept any argument.' if block.arity <= 0
@@ -308,7 +309,7 @@ module Formtastic #:nodoc:
         proc { |f| f.inputs(*inputs_args) }
       end
 
-      semantic_fields_for(*Array(fields_for_object), &fields_for_block)
+      semantic_fields_for(*(Array(fields_for_object) << options), &fields_for_block)
     end
 
     # Ensure :object => @object is set before sending the options down to the Rails layer.

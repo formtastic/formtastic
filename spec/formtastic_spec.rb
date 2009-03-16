@@ -2222,6 +2222,16 @@ describe 'Formtastic' do
                                                   'but the block does not accept any argument.')
             end
           end
+
+          it 'should pass options down to semantic_fields_for' do
+            @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
+
+            semantic_form_for(@new_post) do |builder|
+              builder.inputs :index => 10, :for => [:author, @bob] do |bob_builder|
+                bob_builder.instance_variable_get('@default_options').should == { :index => 10 }
+              end
+            end
+          end
         end
 
         describe 'when a :name option is provided' do
