@@ -777,21 +777,16 @@ module Formtastic #:nodoc:
     def field_set_and_list_wrapping(field_set_html_options, contents = '', &block) #:nodoc:
       legend_text = field_set_html_options.delete(:name)
       legend = legend_text.blank? ? "" : template.content_tag(:legend, template.content_tag(:span, legend_text))
-      if block_given?
-        contents = template.capture(&block)
-        template.concat(
-          template.content_tag(:fieldset,
-            legend + template.content_tag(:ol, contents),
-            field_set_html_options
-          )
-        )
-      else
-        template.content_tag(:fieldset,
-          legend + template.content_tag(:ol, contents),
-          field_set_html_options
-        )
-      end
 
+      contents = template.capture(&block) if block_given?
+
+      fieldset = template.content_tag(:fieldset,
+        legend + template.content_tag(:ol, contents),
+        field_set_html_options
+      )
+
+      template.concat(fieldset) if block_given?
+      fieldset
     end
 
     # For methods that have a database column, take a best guess as to what the inout method

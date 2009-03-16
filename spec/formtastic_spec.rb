@@ -2195,11 +2195,17 @@ describe 'Formtastic' do
 
         describe 'when no options are provided' do
           before do
+            output_buffer.replace 'before_builder' # clear the output buffer and sets before_builder
             semantic_form_for(@new_post) do |builder|
-              builder.inputs do
+              @inputs_output = builder.inputs do
                 concat('hello')
               end
             end
+          end
+
+          it 'should output just the content wrapped in inputs, not the whole template' do
+            output_buffer.should      =~ /before_builder/
+            @inputs_output.should_not =~ /before_builder/
           end
 
           it 'should render a fieldset inside the form, with a class of "inputs"' do
