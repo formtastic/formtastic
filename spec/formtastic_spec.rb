@@ -2255,9 +2255,11 @@ describe 'Formtastic' do
 
             semantic_form_for(@new_post) do |builder|
               builder.inputs :for => [:author, @bob], :for_options => { :index => 10 } do |bob_builder|
-                bob_builder.instance_variable_get('@default_options').should == { :index => 10 }
+                concat(bob_builder.input :login)
               end
             end
+
+            output_buffer.should have_tag('form fieldset ol li #post_author_10_login')
           end
 
           it 'should not add builder as a fieldset attribute tag' do

@@ -446,7 +446,7 @@ module Formtastic #:nodoc:
       input_name = generate_association_input_name(method)
       html_options = options.delete(:input_html)
       choices = formatted_collection(options[:collection], options[:label_method], options[:value_method])
-      input_label(input_name, options) + template.select(@object_name, input_name, choices, set_options(options), html_options)
+      input_label(input_name, options) + self.select(input_name, choices, set_options(options), html_options)
     end
 
     def detect_label_method(collection) #:nodoc:
@@ -524,7 +524,7 @@ module Formtastic #:nodoc:
             value = (!c.instance_of?(String)) ? c.last : c
 
             li_content = template.content_tag(:label,
-              "#{template.radio_button(@object_name, input_name, value, set_options(options))} #{label}",
+              "#{self.radio_button(input_name, value, set_options(options))} #{label}",
               :for => generate_html_id(input_name, value.to_s.downcase)
             )
 
@@ -538,13 +538,13 @@ module Formtastic #:nodoc:
     # Outputs a label and a password input, nothing fancy.
     def password_input(method, options)
       input_label(method, options) +
-      template.password_field(@object_name, method, default_string_options(method))
+      self.password_field(method, default_string_options(method))
     end
 
 
     # Outputs a label and a textarea, nothing fancy.
     def text_input(method, options)
-      input_label(method, options) + template.text_area(@object_name, method, set_options(options))
+      input_label(method, options) + self.text_area(method, set_options(options))
     end
 
 
@@ -552,20 +552,20 @@ module Formtastic #:nodoc:
     # size and maxlength -- see default_string_options() for the low-down.
     def string_input(method, options)
       input_label(method, options) +
-      template.text_field(@object_name, method, default_string_options(method))
+      self.text_field(method, default_string_options(method))
     end
 
 
     # Same as string_input for now
     def numeric_input(method, options)
       input_label(method, options) +
-      template.text_field(@object_name, method, default_string_options(method))
+      self.text_field(method, default_string_options(method))
     end
 
     # Outputs label and file field
     def file_input(method, options)
       input_label(method, options) +
-      template.file_field(@object_name, method, set_options(options))
+      self.file_field(method, set_options(options))
     end
 
 
@@ -669,7 +669,7 @@ module Formtastic #:nodoc:
     # name (method name) and can be altered with the :label option.
     def boolean_input(method, options)
       input_label(method, options,
-        template.check_box(@object_name, method, set_options(options)) +
+        self.check_box(method, set_options(options)) +
         label_text(method, options)
       )
     end
@@ -698,7 +698,7 @@ module Formtastic #:nodoc:
       options[:false] ||= I18n.t('no', :default => 'No', :scope => [:formtastic]).send(@@label_str_method)
 
       choices = [ [options.delete(:true),true], [options.delete(:false),false] ]
-      input_label(method, options) + template.select(@object_name, method, choices, set_options(options))
+      input_label(method, options) + self.select(method, choices, set_options(options))
     end
 
     # Outputs a fieldset containing two radio buttons (with labels) for "true" and "false". The
@@ -764,7 +764,7 @@ module Formtastic #:nodoc:
 
     def input_label(method, options, text = nil) #:nodoc:
       text ||= label_text(method, options)
-      template.label(@object_name, method, text, set_options(options))
+      self.label(method, text, set_options(options))
     end
 
     def required_or_optional_string(required) #:nodoc:
