@@ -318,11 +318,10 @@ module Formtastic #:nodoc:
     # Ensure :object => @object is set before sending the options down to the Rails layer.
     # Also remove any Formtastic-specific options
     def set_options(options)
-      opts = options.dup
-      [:value_method, :label_method, :collection, :required, :label, :as, :hint].each do |key|
-        opts.delete(key)
-      end
-      opts.merge(:object => @object)
+      opts = options.except(:value_method, :label_method, :collection, :required,
+                            :label, :as, :hint, :input_html, :label_html, :value_as_class)
+
+      opts.merge!(:object => @object)
     end
 
     def save_or_create_commit_button_text #:nodoc:
@@ -433,31 +432,19 @@ module Formtastic #:nodoc:
     #
     #   f.input :authors, :html => {:size => 20, :multiple => true}
     def select_input(method, options)
-      options[:collection] ||= find_parent_objects_for_column(method)
-      options[:label_method] ||= detect_label_method(options[:collection])
-      options[:value_method] ||= :id
-      options[:input_html] ||= {}
+      collection = find_collection_for_column(method, options)
+      html_options = options.delete(:input_html) || {}
 
-      if (reflection = find_reflection(method)) && reflection.macro != :belongs_to
-        options[:input_html][:multiple] ||= true
-        options[:input_html][:size] ||= 5
-      end
+      reflection = find_reflection(method)
+      if reflection && [ :has_many, :has_and_belongs_to_many ].include?(reflection.macro)
+        html_options[:multiple] ||= true
+        html_options[:size]     ||= 5
+       end
 
       input_name = generate_association_input_name(method)
-      html_options = options.delete(:input_html)
-      choices = formatted_collection(options[:collection], options[:label_method], options[:value_method])
-      input_label(input_name, options) + self.select(input_name, choices, set_options(options), html_options)
+      input_label(input_name, options) + self.select(input_name, collection, set_options(options), html_options)
     end
-
-    def detect_label_method(collection) #:nodoc:
-      (!collection.instance_of?(Hash)) ? @@collection_label_methods.detect { |m| collection.first.respond_to?(m) } : nil
-    end
-
-    def formatted_collection(collection, label_method, value_method = :id) #:nodoc:
-      return collection if (collection.instance_of?(Hash) ||
-                           (collection.instance_of?(Array) && [Array, String, Fixnum].include?(collection.first.class)))
-      collection.map { |o| [o.send(label_method), o.send(value_method)] }
-    end
+    alias :boolean_select_input :select_input
 
     # Outputs a fieldset containing a legend for the label text, and an ordered list (ol) of list
     # items, one for each possible choice in the belongs_to association.  Each li contains a
@@ -505,21 +492,18 @@ module Formtastic #:nodoc:
     #   f.input :author, :as => :radio, :label_method => :label
     #
     # Finally, you can set :value_as_class => true if you want that LI wrappers
-    # contains a class with the wrapped radio input value. This is used by
-    # <tt>boolean_radio_input</tt> and you can see an example there.
+    # contains a class with the wrapped radio input value.
     #
     def radio_input(method, options)
-      options[:collection] ||= find_parent_objects_for_column(method)
-      options[:label_method] ||= detect_label_method(options[:collection])
+      collection = find_collection_for_column(method, options)
 
       input_name = generate_association_input_name(method)
       value_as_class = options.delete(:value_as_class)
 
-      choices = formatted_collection(options[:collection], options[:label_method])
       template.content_tag(:fieldset,
         %{<legend><span>#{label_text(method, options)}</span></legend>} +
         template.content_tag(:ol,
-          choices.map { |c|
+          collection.map { |c|
             label = (!c.instance_of?(String)) ? c.first : c
             value = (!c.instance_of?(String)) ? c.last : c
 
@@ -534,6 +518,7 @@ module Formtastic #:nodoc:
         )
       )
     end
+    alias :boolean_radio_input :radio_input
 
     # Outputs a label and a password input, nothing fancy.
     def password_input(method, options)
@@ -674,67 +659,6 @@ module Formtastic #:nodoc:
       )
     end
 
-    # Outputs a label and select box containing two options for "true" and "false". The visible
-    # text defaults to "Yes" and "No" respectively, but can be altered with the :true and :false
-    # options.  The label text to the column name (method name), but can be altered with the
-    # :label option. Example:
-    #
-    #  f.input :awesome, :as => :boolean_select, :true => "Yeah!", :false => "Nah!", :label => "Make this sucker public?"
-    #
-    # Returns something like:
-    #
-    #  <li class="boolean_select required" id="post_public_input">
-    #    <label for="post_public">
-    #      Make this sucker public?<abbr title="required">*</abbr>
-    #    </label>
-    #    <select id="post_public" name="post[public]">
-    #      <option value="1">Yeah!</option>
-    #      <option value="0">Nah!</option>
-    #    </select>
-    #  </li>
-    #
-    def boolean_select_input(method, options)
-      options[:true]  ||= I18n.t('yes', :default => 'Yes', :scope => [:formtastic]).send(@@label_str_method)
-      options[:false] ||= I18n.t('no', :default => 'No', :scope => [:formtastic]).send(@@label_str_method)
-
-      choices = [ [options.delete(:true),true], [options.delete(:false),false] ]
-      input_label(method, options) + self.select(method, choices, set_options(options))
-    end
-
-    # Outputs a fieldset containing two radio buttons (with labels) for "true" and "false". The
-    # visible label text for each option defaults to "Yes" and "No" respectively, but can be
-    # altered with the :true and :false options.  The fieldset legend defaults to the column name
-    # (method name), but can be altered with the :label option.  Example:
-    #
-    #  f.input :awesome, :as => :boolean_radio, :true => "Yeah!", :false => "Nah!", :label => "Awesome?"
-    #
-    # Returns something like:
-    #
-    #  <li class="boolean_radio required" id="post_public_input">
-    #    <fieldset><legend><span>make this sucker public?<abbr title="required">*</abbr></span></legend>
-    #      <ol>
-    #        <li class="true">
-    #          <label for="post_public_true">
-    #            <input id="post_public_true" name="post[public]" type="radio" value="true" /> Yeah!
-    #          </label>
-    #        </li>
-    #        <li class="false">
-    #          <label for="post_public_false">
-    #            <input id="post_public_false" name="post[public]" type="radio" checked="checked" /> Nah!
-    #          </label>
-    #        </li>
-    #      </ol>
-    #    </fieldset>
-    #  </li>
-    #
-    def boolean_radio_input(method, options)
-      options[:true]  ||= I18n.t('yes', :default => 'Yes', :scope => [:formtastic]).send(@@label_str_method)
-      options[:false] ||= I18n.t('no', :default => 'No', :scope => [:formtastic]).send(@@label_str_method)
-
-      choices = { options.delete(:true) => true, options.delete(:false) => false }
-      radio_input(method, { :collection => choices, :value_as_class => true }.merge(options))
-    end
-
     def inline_errors(method, options)  #:nodoc:
       errors = @object.errors.on(method.to_s).to_a
       unless errors.empty?
@@ -822,17 +746,59 @@ module Formtastic #:nodoc:
       end
     end
 
-    # Used by association inputs (select, radio) to get a default collection from the parent object
-    # by determining the classname from the method/column name (section_id => Section) and doing a
-    # simple find(:all).
-    def find_parent_objects_for_column(column)
-      parent_class = if reflection = find_reflection(column)
-        reflection.klass
+    # Used by select and radio inputs. The collection can be retrieved by
+    # three ways:
+    #
+    # * Explicitly provided through :collection
+    # * Retrivied through an association
+    # * Or a boolean column, which will generate a localized
+    # { "Yes" => true, "No" => false } hash.
+    #
+    # If the collection is not a hash or an array of strings, fixnums or arrays,
+    # we use label_method and value_method to retreive an array with the
+    # appropriate label and value.
+    #
+    def find_collection_for_column(column, options)
+      reflection = find_reflection(column)
+
+      collection = if options[:collection]
+        options.delete(:collection)
+      elsif reflection || column.to_s =~ /_id$/
+        parent_class = if reflection
+          reflection.klass
+        else
+          ::ActiveSupport::Deprecation.warn("The _id way of doing things is deprecated. Please use the association method (#{column.to_s.sub(/_id$/,'')})", caller[3..-1])
+          column.to_s.sub(/_id$/,'').camelize.constantize
+        end
+
+        parent_class.find(:all)
       else
-        ::ActiveSupport::Deprecation.warn("The _id way of doing things is deprecated. Please use the association method (#{column.to_s.sub(/_id$/,'')})", caller[3..-1])
-        column.to_s.sub(/_id$/,'').camelize.constantize
+        create_boolean_collection(options)
       end
-      parent_class.find(:all)
+
+      # If we have a Hash or an Array of strings, fixnums or arrays, we are done.
+      return collection if collection.instance_of?(Hash) ||
+                          (collection.instance_of?(Array) && [Array, Fixnum, String].include?(collection.first.class))
+
+      label = options.delete(:label_method) || detect_label_method(collection)
+      value = options.delete(:value_method) || :id
+
+      collection.map { |o| [o.send(label), o.send(value)] }
+    end
+
+    def detect_label_method(collection) #:nodoc:
+      @@collection_label_methods.detect { |m| collection.first.respond_to?(m) }
+    end
+
+    # Returns a hash to be used by radio and select inputs when a boolean field
+    # is provided.
+    #
+    def create_boolean_collection(options)
+      options[:true] ||= I18n.t('yes', :default => 'Yes', :scope => [:formtastic])
+      options[:false] ||= I18n.t('no', :default => 'No', :scope => [:formtastic])
+      options[:value_as_class] = true unless options.key?(:value_as_class)
+
+      { options.delete(:true) => true, options.delete(:false) => false }
     end
 
     # Used by association inputs (select, radio) to generate the name that should be used for the input
