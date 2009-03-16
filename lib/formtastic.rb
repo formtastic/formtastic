@@ -221,8 +221,8 @@ module Formtastic #:nodoc:
       html_options[:class] ||= "inputs"
 
       if fields_for_object = html_options.delete(:for)
-        inputs_for_nested_attributes(fields_for_object, html_options.except(:name, :id, :class),
-                                     args << html_options, &block)
+        inputs_for_nested_attributes(fields_for_object, args << html_options,
+                                     html_options.delete(:for_options) || {}, &block)
       elsif block_given?
         field_set_and_list_wrapping(html_options, &block)
       else
@@ -296,17 +296,20 @@ module Formtastic #:nodoc:
 
     protected
 
-    # Deals with :for option when it's supplied to inputs methods.
+    # Deals with :for option when it's supplied to inputs methods. Additional
+    # options to be passed down to :for should be supplied using :for_options
+    # key.
+    #
     # It should raise an error if a block with arity zero is given.
     #
-    def inputs_for_nested_attributes(fields_for_object, options, inputs_args, &block)
+    def inputs_for_nested_attributes(fields_for_object, inputs, options, &block)
       fields_for_block = if block_given?
         raise ArgumentError, 'You gave :for option with a block to inputs method, ' <<
                              'but the block does not accept any argument.' if block.arity <= 0
 
-        proc { |f| f.inputs(*inputs_args){ block.call(f) } }
+        proc { |f| f.inputs(*inputs){ block.call(f) } }
       else
-        proc { |f| f.inputs(*inputs_args) }
+        proc { |f| f.inputs(*inputs) }
       end
 
       semantic_fields_for(*(Array(fields_for_object) << options), &fields_for_block)

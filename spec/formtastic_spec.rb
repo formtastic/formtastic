@@ -2254,10 +2254,20 @@ describe 'Formtastic' do
             @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
 
             semantic_form_for(@new_post) do |builder|
-              builder.inputs :index => 10, :for => [:author, @bob] do |bob_builder|
+              builder.inputs :for => [:author, @bob], :for_options => { :index => 10 } do |bob_builder|
                 bob_builder.instance_variable_get('@default_options').should == { :index => 10 }
               end
             end
+          end
+
+          it 'should not add builder as a fieldset attribute tag' do
+            semantic_form_for(@new_post) do |builder|
+              builder.inputs :for => [:author, @bob], :for_options => { :index => 10 } do |bob_builder|
+                concat('input')
+              end
+            end
+
+            output_buffer.should_not have_tag('fieldset[@builder="Formtastic::SemanticFormHelper"]')
           end
         end
 
