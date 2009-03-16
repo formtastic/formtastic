@@ -577,15 +577,13 @@ describe 'Formtastic' do
             end
 
             describe 'defaulting to file column' do
-              it 'should default to :file for attributes that respond to #file?' do
-                attachment_input_type(:file?).should == :file
+              Formtastic::SemanticFormBuilder.file_methods.each do |method|
+                it "should default to :file for attributes that respond to ##{method}" do
+                  attachment_input_type(method).should == :file
+                end
               end
-
-              it 'should default to :file for attributes that respond to #public_filename' do
-                attachment_input_type(:public_filename).should == :file
-              end
-
             end
+
           end
 
           it 'should call the corresponding input method' do

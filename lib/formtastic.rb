@@ -17,8 +17,11 @@ module Formtastic #:nodoc:
     @@label_str_method = :to_s
     @@collection_label_methods = %w[to_label display_name full_name name title username login value to_s]
     @@inline_order = [ :input, :hints, :errors ]
+    @@file_methods = [ :file?, :public_filename ]
 
-    cattr_accessor :default_text_field_size, :all_fields_required_by_default, :required_string, :optional_string, :inline_errors, :label_str_method, :collection_label_methods, :inline_order
+    cattr_accessor :default_text_field_size, :all_fields_required_by_default, :required_string,
+                   :optional_string, :inline_errors, :label_str_method, :collection_label_methods,
+                   :inline_order, :file_methods
 
     attr_accessor :template
 
@@ -731,16 +734,16 @@ module Formtastic #:nodoc:
 
       if column
         # handle the special cases where the column type doesn't map to an input method
-        return :select if column.respond_to?(:macro) && column.respond_to?(:klass)
-        return :select if column.type == :integer && method.to_s =~ /_id$/
+        return :select   if column.respond_to?(:macro) && column.respond_to?(:klass)
+        return :select   if column.type == :integer && method.to_s =~ /_id$/
         return :datetime if column.type == :timestamp
-        return :numeric if [:integer, :float, :decimal].include?(column.type)
+        return :numeric  if [:integer, :float, :decimal].include?(column.type)
         return :password if column.type == :string && method.to_s =~ /password/
         # otherwise assume the input name will be the same as the column type (eg string_input)
         return column.type
       else
         obj = object.send(method)
-        return :file if [:file?, :public_filename].any? { |m| obj.respond_to?(m) }
+        return :file     if @@file_methods.any? { |m| obj.respond_to?(m) }
         return :password if method.to_s =~ /password/
         return :string
       end
