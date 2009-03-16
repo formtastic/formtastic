@@ -1080,6 +1080,27 @@ describe 'Formtastic' do
                 semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:category_name, :as => :radio, :collection => @categories))
                 end
+
+                @categories.each do |label, value|
+                  output_buffer.should have_tag('form li fieldset ol li label', /#{label}/i)
+                  output_buffer.should have_tag('form li fieldset ol li label input[@value='+value+']')
+                end
+              end
+
+            end
+
+            describe 'and the :collection is an array of arrays' do
+
+              before do
+                @new_post.stub!(:category_name).and_return('')
+                @categories = { 'General' => 'gen', 'Design' => 'des','Development' => 'dev' }.to_a
+              end
+
+              it 'should use the key as the label text and the hash value as the value attribute for each radio button' do
+                semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:category_name, :as => :radio, :collection => @categories))
+                end
+
                 @categories.each do |label, value|
                   output_buffer.should have_tag('form li fieldset ol li label', /#{label}/i)
                   output_buffer.should have_tag('form li fieldset ol li label input[@value='+value+']')

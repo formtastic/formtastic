@@ -451,7 +451,8 @@ module Formtastic #:nodoc:
     end
 
     def formatted_collection(collection, label_method, value_method = :id) #:nodoc:
-      return collection if (collection.instance_of?(Hash) || (collection.instance_of?(Array) && collection.first.instance_of?(String)))
+      return collection if (collection.instance_of?(Hash) ||
+                           (collection.instance_of?(Array) && [Array, String, Fixnum].include?(collection.first.class)))
       collection.map { |o| [o.send(label_method), o.send(value_method)] }
     end
 
