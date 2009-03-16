@@ -234,7 +234,7 @@ module Formtastic #:nodoc:
         field_set_and_list_wrapping(html_options, contents)
       end
     end
-    alias_method :input_field_set, :inputs
+    alias :input_field_set :inputs
 
     # Creates a fieldset and ol tag wrapping for form buttons / actions as list items.
     # See inputs documentation for a full example.  The fieldset's default class attriute
@@ -253,7 +253,7 @@ module Formtastic #:nodoc:
         field_set_and_list_wrapping(html_options, contents)
       end
     end
-    alias_method :button_field_set, :buttons
+    alias :button_field_set :buttons
 
     # Creates a submit input tag with the value "Save [model name]" (for existing records) or
     # "Create [model name]" (for new records) by default:
