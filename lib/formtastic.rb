@@ -325,10 +325,8 @@ module Formtastic #:nodoc:
     # Ensure :object => @object is set before sending the options down to the Rails layer.
     # Also remove any Formtastic-specific options
     def set_options(options)
-      opts = options.except(:value_method, :label_method, :collection, :required,
-                            :label, :as, :hint, :input_html, :label_html, :value_as_class)
-
-      opts.merge!(:object => @object)
+      options.except(:value_method, :label_method, :collection, :required, :label,
+                     :as, :hint, :input_html, :label_html, :value_as_class)
     end
 
     def save_or_create_commit_button_text #:nodoc:
@@ -841,9 +839,9 @@ module Formtastic #:nodoc:
       column = @object.column_for_attribute(method) if @object.respond_to?(:column_for_attribute)
 
       if column.nil? || column.limit.nil?
-        { :size => @@default_text_field_size, :object => @object }
+        { :size => @@default_text_field_size }
       else
-        { :maxlength => column.limit, :size => [column.limit, @@default_text_field_size].min, :object => @object }
+        { :maxlength => column.limit, :size => [column.limit, @@default_text_field_size].min }
       end
     end
 
