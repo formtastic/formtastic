@@ -822,18 +822,14 @@ module Formtastic #:nodoc:
     end
 
     def default_string_options(method) #:nodoc:
-      # Use rescue to set column if @object does not have a column_for_attribute method
-      # (eg if @object is not an ActiveRecord object)
-      begin
-        column = @object.column_for_attribute(method)
-      rescue NoMethodError
-        column = nil
-      end
+      column = @object.column_for_attribute(method) if @object.respond_to?(:column_for_attribute)
+
       opts = if column.nil? || column.limit.nil?
         { :size => @@default_text_field_size }
       else
         { :maxlength => column.limit, :size => [column.limit, @@default_text_field_size].min }
       end
+
       set_options(opts)
     end
 

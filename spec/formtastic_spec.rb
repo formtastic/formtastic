@@ -33,6 +33,7 @@ module FormtasticSpecHelper
 
   def should_use_default_size_for_methods_without_columns(as)
     default_size = Formtastic::SemanticFormBuilder.default_text_field_size
+    @new_post.stub!(:column_for_attribute).and_return(nil) # This is the same as not responding to it
     @new_post.stub!(:method_without_column)
     semantic_form_for(@new_post) do |builder|
       concat(builder.input(:method_without_column, :as => as))
@@ -848,10 +849,6 @@ describe 'Formtastic' do
         end
 
         describe "with object that does not respond to 'column_for_attribute'" do
-          before do
-            @new_post.stub!(:column_for_attribute).and_raise(NoMethodError)
-          end
-
           it "should have a maxlength of default_text_field_size" do
             should_use_default_size_for_methods_without_columns(:string)
           end
@@ -1503,10 +1500,6 @@ describe 'Formtastic' do
         end
 
         describe "with object that does not respond to 'column_for_attribute'" do
-          before do
-            @new_post.stub!(:column_for_attribute).and_raise(NoMethodError)
-          end
-
           it "should have a maxlength of default_text_field_size" do
             should_use_default_size_for_methods_without_columns(:string)
           end
@@ -2142,10 +2135,6 @@ describe 'Formtastic' do
         end
 
         describe "with object that does not respond to 'column_for_attribute'" do
-          before do
-            @new_post.stub!(:column_for_attribute).and_raise(NoMethodError)
-          end
-
           it "should have a maxlength of default_text_field_size" do
             should_use_default_size_for_methods_without_columns(:string)
           end
