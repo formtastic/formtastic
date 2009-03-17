@@ -588,11 +588,20 @@ describe 'Formtastic' do
           end
 
           it 'should call the corresponding input method' do
-            [:select, :radio, :password, :text, :date, :datetime, :time, :boolean, :boolean_select, :string, :numeric, :file].each do |input_style|
+            [:select, :radio, :date, :datetime, :time, :boolean, :boolean_select].each do |input_style|
               @new_post.stub!(:generic_column_name)
               @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
               semantic_form_for(@new_post) do |builder|
                 builder.should_receive(:"#{input_style}_input").once.and_return("fake HTML output from #input")
+                concat(builder.input(:generic_column_name, :as => input_style))
+              end
+            end
+
+            Formtastic::SemanticFormBuilder::INPUT_MAPPINGS.keys.each do |input_style|
+              @new_post.stub!(:generic_column_name)
+              @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
+              semantic_form_for(@new_post) do |builder|
+                builder.should_receive(:input_simple).once.and_return("fake HTML output from #input")
                 concat(builder.input(:generic_column_name, :as => input_style))
               end
             end
@@ -1652,18 +1661,19 @@ describe 'Formtastic' do
           output_buffer.should have_tag('form li.datetime fieldset ol li select', :count => 5)
         end
 
-        it 'should generate a sanitized label for attribute' do
+        it 'should generate a sanitized label and matching ids for attribute' do
           @bob.stub!(:publish_at)
           @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :datetime))
 
           semantic_form_for(@new_post) do |builder|
-            builder.semantic_fields_for(@bob) do |bob_builder|
+            builder.semantic_fields_for(@bob, :index => 10) do |bob_builder|
               concat(bob_builder.input(:publish_at, :as => :datetime))
             end
           end
 
           1.upto(5) do |i|
-            output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_publish_at_#{i}i']")
+            output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_10_publish_at_#{i}i']")
+            output_buffer.should have_tag("form li fieldset ol li #post_author_10_publish_at_#{i}i")
           end
         end
 

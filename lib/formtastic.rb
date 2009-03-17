@@ -23,6 +23,17 @@ module Formtastic #:nodoc:
                    :optional_string, :inline_errors, :label_str_method, :collection_label_methods,
                    :inline_order, :file_methods
 
+    # Keeps simple mappings in a hash
+    #
+    INPUT_MAPPINGS = {
+      :string   => :text_field,
+      :password => :password_field,
+      :numeric  => :text_field,
+      :text     => :text_area,
+      :file     => :file_field
+    }
+    STRING_MAPPINGS = [ :string, :password, :numeric ]
+
     attr_accessor :template
 
     # Returns a suitable form input for the given +method+, using the database column information
@@ -350,6 +361,35 @@ module Formtastic #:nodoc:
       end
     end
 
+    # A method that can deal with most of inputs (:string, :password, :file,
+    # :textarea, and so on).
+    #
+    # It tries to call methods in two ways. The first with two required arguments
+    # and two optionals, like:
+    #
+    #   date_select(object_name, method_name, options={}, html_options={})
+    #
+    # Or with two required arguments and one optional:
+    #
+    #   text_field(object_name, method_name, html_options={})
+    #
+    # As you noticed, this allows us to deal with several helpers through an
+    # unique interface to call them. So anyone can use their helpers
+    # wrapped nicely in formastic LI tags and labels.
+    #
+    def input_simple(type, method, options)
+      html_options = options.delete(:input_html) || {}
+      html_options = default_string_options(method).merge(html_options) if STRING_MAPPINGS.include?(type)
+
+      content = begin
+        self.send(INPUT_MAPPINGS[type], method, set_options(options), html_options)
+      rescue ArgumentError => e
+        self.send(INPUT_MAPPINGS[type], method, set_options(options).merge(html_options))
+      end
+
+      input_label(method, options.delete(:label), options) + content
+    end
+
     # Outputs a label and a select box containing options from the parent
     # (belongs_to, has_many, has_and_belongs_to_many) association. If an association
     # is has_many or has_and_belongs_to_many the select box will be set as multi-select
@@ -438,7 +478,7 @@ module Formtastic #:nodoc:
        end
 
       input_name = generate_association_input_name(method)
-      input_label(input_name, options) + self.select(input_name, collection, set_options(options), html_options)
+      input_label(input_name, options.delete(:label), options) + self.select(input_name, collection, set_options(options), html_options)
     end
     alias :boolean_select_input :select_input
 
@@ -491,20 +531,21 @@ module Formtastic #:nodoc:
     # contains a class with the wrapped radio input value.
     #
     def radio_input(method, options)
-      collection = find_collection_for_column(method, options)
+      collection   = find_collection_for_column(method, options)
+      html_options = set_options(options).merge(options.delete(:input_html) || {})
 
       input_name = generate_association_input_name(method)
       value_as_class = options.delete(:value_as_class)
 
       template.content_tag(:fieldset,
-        %{<legend><span>#{label_text(method, options)}</span></legend>} +
+        %{<legend>#{input_label(method, options.delete(:label), options, true)}</legend>} +
         template.content_tag(:ol,
           collection.map { |c|
             label = (!c.instance_of?(String)) ? c.first : c
             value = (!c.instance_of?(String)) ? c.last : c
 
             li_content = template.content_tag(:label,
-              "#{self.radio_button(input_name, value, set_options(options))} #{label}",
+              "#{self.radio_button(input_name, value, html_options)} #{label}",
               :for => generate_html_id(input_name, value.to_s.downcase)
             )
 
@@ -515,40 +556,6 @@ module Formtastic #:nodoc:
       )
     end
     alias :boolean_radio_input :radio_input
-
-    # Outputs a label and a password input, nothing fancy.
-    def password_input(method, options)
-      input_label(method, options) +
-      self.password_field(method, default_string_options(method))
-    end
-
-
-    # Outputs a label and a textarea, nothing fancy.
-    def text_input(method, options)
-      input_label(method, options) + self.text_area(method, set_options(options))
-    end
-
-
-    # Outputs a label and a text input, nothing fancy, but it does pick up some attributes like
-    # size and maxlength -- see default_string_options() for the low-down.
-    def string_input(method, options)
-      input_label(method, options) +
-      self.text_field(method, default_string_options(method))
-    end
-
-
-    # Same as string_input for now
-    def numeric_input(method, options)
-      input_label(method, options) +
-      self.text_field(method, default_string_options(method))
-    end
-
-    # Outputs label and file field
-    def file_input(method, options)
-      input_label(method, options) +
-      self.file_field(method, set_options(options))
-    end
-
 
     # Outputs a fieldset with a legend for the method label, and a ordered list (ol) of list
     # items (li), one for each fragment for the date (year, month, day).  Each li contains a label
@@ -621,6 +628,7 @@ module Formtastic #:nodoc:
 
       # Gets the datetime object. It can be a Fixnum, Date or Time, or nil.
       datetime = @object.send(method)
+      html_options = options.delete(:input_html) || {}
 
       list_items_capture = ""
       (inputs + time_inputs).each do |input|
@@ -633,15 +641,16 @@ module Formtastic #:nodoc:
         else
           opts = set_options(options).merge(:prefix => @object_name, :field_name => "#{method}(#{position[input]}i)")
           item_label_text = I18n.t(input.to_s, :default => input.to_s, :scope => [:formtastic]).send(@@label_str_method)
+
           list_items_capture << template.content_tag(:li,
             template.content_tag(:label, item_label_text, :for => html_id) +
-            template.send("select_#{input}".intern, @object.send(method), opts)
+            template.send("select_#{input}".intern, datetime, opts, html_options.merge(:id => html_id))
           )
         end
       end
 
       template.content_tag(:fieldset,
-        %{<legend><span>#{label_text(method, options)}</span></legend>} +
+        %{<legend>#{input_label(method, options.delete(:label), options, true)}</legend>} +
         template.content_tag(:ol, list_items_capture)
       )
     end
@@ -649,15 +658,22 @@ module Formtastic #:nodoc:
     # Outputs a label containing a checkbox and the label text.  The label defaults to the column
     # name (method name) and can be altered with the :label option.
     def boolean_input(method, options)
-      input_label(method, options,
-        self.check_box(method, set_options(options)) +
-        label_text(method, options)
-      )
+      html_options = options.delete(:input_html) || {}
+
+      input_label(method,
+        self.check_box(method, set_options(options).merge(html_options)) + options.delete(:label),
+        options.merge(:required => false) # required does not make sense in check box
+       )
     end
 
     def inline_input_for(method, options)
-      input_method = options.delete(:as)
-      send("#{input_method}_input", method, options)
+      input_type = options.delete(:as)
+
+      if INPUT_MAPPINGS.key?(input_type)
+        input_simple(input_type,  method, options)
+      else
+        send("#{input_type}_input", method, options)
+      end
     end
 
     def inline_errors_for(method, options)  #:nodoc:
@@ -681,13 +697,17 @@ module Formtastic #:nodoc:
       template.content_tag(:ul, list_elements.join("\n"), :class => 'errors')
     end
 
-    def label_text(method, options) #:nodoc:
-      [ options[:label], required_or_optional_string(options[:required]) ].join()
-    end
+    def input_label(method, text, options={}, as_span=false) #:nodoc:
+      label_options = options.delete(:label_html) || {}
+      text << required_or_optional_string(options.delete(:required))
 
-    def input_label(method, options, text = nil) #:nodoc:
-      text ||= label_text(method, options)
-      self.label(method, text, set_options(options))
+      if as_span
+        label_options[:class] ||= 'label'
+        template.content_tag(:span, text, options)
+      else
+        label_options[:object] ||= @object
+        self.label(method, text, options)
+      end
     end
 
     def required_or_optional_string(required) #:nodoc:
@@ -820,13 +840,11 @@ module Formtastic #:nodoc:
     def default_string_options(method) #:nodoc:
       column = @object.column_for_attribute(method) if @object.respond_to?(:column_for_attribute)
 
-      opts = if column.nil? || column.limit.nil?
-        { :size => @@default_text_field_size }
+      if column.nil? || column.limit.nil?
+        { :size => @@default_text_field_size, :object => @object }
       else
-        { :maxlength => column.limit, :size => [column.limit, @@default_text_field_size].min }
+        { :maxlength => column.limit, :size => [column.limit, @@default_text_field_size].min, :object => @object }
       end
-
-      set_options(opts)
     end
 
     # Generate the html id for the li tag.
