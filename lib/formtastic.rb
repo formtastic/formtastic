@@ -25,7 +25,6 @@ module Formtastic #:nodoc:
 
     attr_accessor :template
 
-
     # Returns a suitable form input for the given +method+, using the database column information
     # and other factors (like the method name) to figure out what you probably want.
     #
@@ -67,11 +66,9 @@ module Formtastic #:nodoc:
     def input(method, options = {})
       raise NoMethodError.new("NoMethodError: form object does not respond to \"#{method}\"") unless @object.respond_to?(method)
 
-
       options[:required] = method_required?(method, options[:required])
       options[:label] ||= @object.class.human_attribute_name(method.to_s).send(@@label_str_method)
       options[:as] ||= default_input_type(@object, method)
-      input_method = "#{options[:as]}_input"
 
       html_class = [
         options[:as].to_s,
@@ -82,11 +79,7 @@ module Formtastic #:nodoc:
       html_id = generate_html_id(method)
 
       list_item_content = @@inline_order.map do |type|
-        if type == :input
-          send(input_method, method, options)
-        else
-          send(:"inline_#{type}", method, options)
-        end
+        send(:"inline_#{type}_for", method, options)
       end.compact.join("\n")
 
       return template.content_tag(:li, list_item_content, { :id => html_id, :class => html_class })
@@ -662,11 +655,18 @@ module Formtastic #:nodoc:
       )
     end
 
-    def inline_errors(method, options)  #:nodoc:
+    def inline_input_for(method, options)
+      input_method = options.delete(:as)
+      send("#{input_method}_input", method, options)
+    end
+
+    def inline_errors_for(method, options)  #:nodoc:
       errors = @object.errors.on(method.to_s).to_a
-      unless errors.empty?
-        send("error_#{@@inline_errors}", errors) if [:sentence, :list].include?(@@inline_errors)
-      end
+      send("error_#{@@inline_errors}", errors) if !errors.empty? && [:sentence, :list].include?(@@inline_errors)
+    end
+
+    def inline_hints_for(method, options) #:nodoc:
+      options[:hint].blank? ? '' : template.content_tag(:p, options[:hint], :class => 'inline-hints')
     end
 
     def error_sentence(errors) #:nodoc:
@@ -679,10 +679,6 @@ module Formtastic #:nodoc:
         list_elements <<  template.content_tag(:li, error)
       end
       template.content_tag(:ul, list_elements.join("\n"), :class => 'errors')
-    end
-
-    def inline_hints(method, options) #:nodoc:
-      options[:hint].blank? ? '' : template.content_tag(:p, options[:hint], :class => 'inline-hints')
     end
 
     def label_text(method, options) #:nodoc:

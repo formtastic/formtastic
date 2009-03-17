@@ -352,9 +352,9 @@ describe 'Formtastic' do
           Formtastic::SemanticFormBuilder.inline_order = [:input, :hints, :errors]
 
           semantic_form_for(@new_post) do |builder|
-            builder.should_receive(:string_input).once.ordered
-            builder.should_receive(:inline_hints).once.ordered
-            builder.should_receive(:inline_errors).once.ordered
+            builder.should_receive(:inline_input_for).once.ordered
+            builder.should_receive(:inline_hints_for).once.ordered
+            builder.should_receive(:inline_errors_for).once.ordered
             concat(builder.input(:title))
           end
         end
@@ -363,9 +363,9 @@ describe 'Formtastic' do
           Formtastic::SemanticFormBuilder.inline_order = [:hints, :input, :errors]
 
           semantic_form_for(@new_post) do |builder|
-            builder.should_receive(:inline_hints).once.ordered
-            builder.should_receive(:string_input).once.ordered
-            builder.should_receive(:inline_errors).once.ordered
+            builder.should_receive(:inline_hints_for).once.ordered
+            builder.should_receive(:inline_input_for).once.ordered
+            builder.should_receive(:inline_errors_for).once.ordered
             concat(builder.input(:title))
           end
         end
