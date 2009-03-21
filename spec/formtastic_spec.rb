@@ -809,60 +809,146 @@ describe 'Formtastic' do
 
       end
 
-      describe ':as => :string' do
+      # Test string_mappings: :string, :password and :numeric
+      string_mappings = Formtastic::SemanticFormBuilder::INPUT_MAPPINGS.slice(*Formtastic::SemanticFormBuilder::STRING_MAPPINGS)
+      string_mappings.each do |input, method|
+        describe ":as => #{input.inspect}" do
 
-        before do
-          @new_post.stub!(:title)
-          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 50))
+          before do
+            @new_post.stub!(:title)
+            @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => input, :limit => 50))
 
-          semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:title, :as => :string))
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:title, :as => input))
+            end
           end
-        end
 
-        it 'should have a string class on the wrapper' do
-          output_buffer.should have_tag('form li.string')
-        end
-
-        it 'should have a post_title_input id on the wrapper' do
-          output_buffer.should have_tag('form li#post_title_input')
-        end
-
-        it 'should generate a label for the input' do
-          output_buffer.should have_tag('form li label')
-          output_buffer.should have_tag('form li label[@for="post_title"')
-          output_buffer.should have_tag('form li label', /Title/)
-        end
-
-        it 'should generate a text input' do
-          output_buffer.should have_tag('form li input')
-          output_buffer.should have_tag('form li input#post_title')
-          output_buffer.should have_tag('form li input[@type="text"]')
-          output_buffer.should have_tag('form li input[@name="post[title]"]')
-        end
-
-        it 'should have a maxlength matching the column limit' do
-          should_have_maxlength_matching_column_limit(:title, :string, :string)
-        end
-
-        it 'should use default_text_field_size for columns longer than default_text_field_size' do
-          should_use_default_text_size_for_columns_longer_than_default(:title, :string, :string)
-        end
-
-        it 'should use the column size for columns shorter than default_text_field_size' do
-          should_use_the_column_size_for_columns_shorter_than_default(:title, :string, :string)
-        end
-
-        it 'should use default_text_field_size for methods without database columns' do
-          should_use_default_size_for_methods_without_columns(:string)
-        end
-
-        describe "with object that does not respond to 'column_for_attribute'" do
-          it "should have a maxlength of default_text_field_size" do
-            should_use_default_size_for_methods_without_columns(:string)
+          it 'should have a #{input} class on the wrapper' do
+            output_buffer.should have_tag("form li.#{input}")
           end
-        end
 
+          it 'should have a post_title_input id on the wrapper' do
+            output_buffer.should have_tag('form li#post_title_input')
+          end
+
+          it 'should generate a label for the input' do
+            output_buffer.should have_tag('form li label')
+            output_buffer.should have_tag('form li label[@for="post_title"')
+            output_buffer.should have_tag('form li label', /Title/)
+          end
+
+          input_type = method.to_s.split('_').first
+          it "should generate a #{input_type} input" do
+            output_buffer.should have_tag("form li input")
+            output_buffer.should have_tag("form li input#post_title")
+            output_buffer.should have_tag("form li input[@type=\"#{input_type}\"]")
+            output_buffer.should have_tag("form li input[@name=\"post[title]\"]")
+          end
+
+          it 'should have a maxlength matching the column limit' do
+            should_have_maxlength_matching_column_limit(:title, input, input)
+          end
+
+          it 'should use default_text_field_size for columns longer than default_text_field_size' do
+            should_use_default_text_size_for_columns_longer_than_default(:title, input, input)
+          end
+
+          it 'should use the column size for columns shorter than default_text_field_size' do
+            should_use_the_column_size_for_columns_shorter_than_default(:title, input, input)
+          end
+
+          it 'should use default_text_field_size for methods without database columns' do
+            should_use_default_size_for_methods_without_columns(input)
+          end
+
+          it 'should use input_html to style inputs' do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:title, :as => input, :input_html => { :class => 'myclass' }))
+            end
+            output_buffer.should have_tag("form li input.myclass")
+          end
+
+          it 'should use label_html to style labels' do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:title, :as => input, :label_html => { :class => 'myclass' }))
+            end
+            output_buffer.should have_tag("form li label.myclass")
+          end
+
+        end
+      end
+
+      # Test other mappings that are not strings: :text and :file.
+      other_mappings = Formtastic::SemanticFormBuilder::INPUT_MAPPINGS.except(*Formtastic::SemanticFormBuilder::STRING_MAPPINGS)
+      other_mappings.each do |input, method|
+        describe ":as => #{input.inspect}" do
+
+          before do
+            @new_post.stub!(:body)
+            @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => input))
+
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:body, :as => input))
+            end
+          end
+
+          it 'should have a text class on the wrapper' do
+            output_buffer.should have_tag('form li.#{input}')
+          end
+
+          it 'should have a post_title_input id on the wrapper' do
+            output_buffer.should have_tag('form li#post_body_input')
+          end
+
+          it 'should generate a label for the input' do
+            output_buffer.should have_tag('form li label')
+            output_buffer.should have_tag('form li label[@for="post_body"')
+            output_buffer.should have_tag('form li label', /Body/)
+          end
+
+          input_type = method.to_s.gsub(/_field|_/, '')
+
+          if method.to_s =~ /_field/ # password_field
+
+            it "should generate a #{input_type} input" do
+              output_buffer.should have_tag("form li input")
+              output_buffer.should have_tag("form li input#post_body")
+              output_buffer.should have_tag("form li input[@name=\"post[body]\"]")
+              output_buffer.should have_tag("form li input[@type=\"#{input_type}\"]")
+            end
+
+            it 'should use input_html to style inputs' do
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:title, :as => input, :input_html => { :class => 'myclass' }))
+              end
+              output_buffer.should have_tag("form li input.myclass")
+            end
+
+          else # text_area
+
+            it "should generate a #{input_type} input" do
+              output_buffer.should have_tag("form li #{input_type}")
+              output_buffer.should have_tag("form li #{input_type}#post_body")
+              output_buffer.should have_tag("form li #{input_type}[@name=\"post[body]\"]")
+            end
+
+            it 'should use input_html to style inputs' do
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:title, :as => input, :input_html => { :class => 'myclass' }))
+              end
+              output_buffer.should have_tag("form li #{input_type}.myclass")
+            end
+
+          end
+
+          it 'should use label_html to style labels' do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:title, :as => input, :label_html => { :class => 'myclass' }))
+            end
+            output_buffer.should have_tag("form li label.myclass")
+          end
+
+        end
       end
 
       describe 'for belongs_to associations' do
@@ -1460,95 +1546,6 @@ describe 'Formtastic' do
         end
       end
 
-      describe ':as => :password' do
-
-        before do
-          @new_post.stub!(:password_hash)
-          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 50))
-
-          semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:password_hash, :as => :password))
-          end
-        end
-
-        it 'should have a password class on the wrapper' do
-          output_buffer.should have_tag('form li.password')
-        end
-
-        it 'should have a post_title_input id on the wrapper' do
-          output_buffer.should have_tag('form li#post_password_hash_input')
-        end
-
-        it 'should generate a label for the input' do
-          output_buffer.should have_tag('form li label')
-          output_buffer.should have_tag('form li label[@for="post_password_hash"')
-          output_buffer.should have_tag('form li label', /Password Hash/)
-        end
-
-        it 'should generate a password input' do
-          output_buffer.should have_tag('form li input')
-          output_buffer.should have_tag('form li input#post_password_hash')
-          output_buffer.should have_tag('form li input[@type="password"]')
-          output_buffer.should have_tag('form li input[@name="post[password_hash]"]')
-        end
-
-        it 'should have a maxlength matching the column limit' do
-          should_have_maxlength_matching_column_limit(:password_hash, :password, :string)
-        end
-
-        it 'should use default_text_field_size for columns longer than default_text_field_size' do
-          should_use_default_text_size_for_columns_longer_than_default(:password_hash, :password, :string)
-        end
-
-        it 'should use the column size for columns shorter than default_text_field_size' do
-          should_use_the_column_size_for_columns_shorter_than_default(:password_hash, :password, :string)
-        end
-
-        it 'should use default_text_field_size for methods without database columns' do
-          should_use_default_size_for_methods_without_columns(:password)
-        end
-
-        describe "with object that does not respond to 'column_for_attribute'" do
-          it "should have a maxlength of default_text_field_size" do
-            should_use_default_size_for_methods_without_columns(:string)
-          end
-        end
-
-      end
-
-      describe ':as => :text' do
-
-        before do
-          @new_post.stub!(:body)
-          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :text))
-
-          semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:body, :as => :text))
-          end
-        end
-
-        it 'should have a text class on the wrapper' do
-          output_buffer.should have_tag('form li.text')
-        end
-
-        it 'should have a post_title_input id on the wrapper' do
-          output_buffer.should have_tag('form li#post_body_input')
-        end
-
-        it 'should generate a label for the input' do
-          output_buffer.should have_tag('form li label')
-          output_buffer.should have_tag('form li label[@for="post_body"')
-          output_buffer.should have_tag('form li label', /Body/)
-        end
-
-        it 'should generate a text input' do
-         output_buffer.should have_tag('form li textarea')
-         output_buffer.should have_tag('form li textarea#post_body')
-         output_buffer.should have_tag('form li textarea[@name="post[body]"]')
-        end
-
-      end
-
       describe ':as => :date' do
 
         before do
@@ -2093,95 +2090,6 @@ describe 'Formtastic' do
           end
         end
 
-      end
-
-      describe ':as => :numeric' do
-
-        before do
-          @new_post.stub!(:comments_count)
-          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :integer, :limit => 50))
-
-          semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:comments_count, :as => :numeric))
-          end
-          output_buffer.should have_tag('form li.numeric')
-        end
-
-        it 'should have a numeric class on the wrapper' do
-          output_buffer.should have_tag("form li.numeric")
-        end
-
-        it 'should have a comments_count_input id on the wrapper' do
-          output_buffer.should have_tag('form li#post_comments_count_input')
-        end
-
-        it 'should generate a label for the input' do
-          output_buffer.should have_tag('form li label')
-          output_buffer.should have_tag('form li label[@for="post_comments_count"')
-          output_buffer.should have_tag('form li label', /Comments Count/)
-        end
-
-        it 'should generate a text input' do
-          output_buffer.should have_tag('form li input')
-          output_buffer.should have_tag('form li input#post_comments_count')
-          output_buffer.should have_tag('form li input[@type="text"]')
-          output_buffer.should have_tag('form li input[@name="post[comments_count]"]')
-        end
-
-        it 'should have a maxlength matching the column limit' do
-          should_have_maxlength_matching_column_limit(:comments_count, :numeric, :integer)
-        end
-
-        it 'should use default_text_field_size for columns longer than default_text_field_size' do
-          should_use_default_text_size_for_columns_longer_than_default(:comments_count, :numeric, :integer)
-        end
-
-        it 'should use the column size for columns shorter than default_text_field_size' do
-          should_use_the_column_size_for_columns_shorter_than_default(:comments_count, :numeric, :integer)
-        end
-
-        it 'should use default_text_field_size for methods without database columns' do
-          should_use_default_size_for_methods_without_columns(:numeric)
-        end
-
-        describe "with object that does not respond to 'column_for_attribute'" do
-          it "should have a maxlength of default_text_field_size" do
-            should_use_default_size_for_methods_without_columns(:string)
-          end
-        end
-
-      end
-
-      describe ':as => :file' do
-        before do
-          @new_post.stub!(:some_file)
-          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 50))
-
-          semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:some_file, :as => :file))
-          end
-        end
-
-        it 'should have a file class on the wrapper' do
-          output_buffer.should have_tag('form li.file')
-        end
-
-        it 'should have a post_some_file_input id on the wrapper' do
-          output_buffer.should have_tag('form li#post_some_file_input')
-        end
-
-        it 'should generate a label for the input' do
-          output_buffer.should have_tag('form li label')
-          output_buffer.should have_tag('form li label[@for="post_some_file"')
-          output_buffer.should have_tag('form li label', /Some File/)
-        end
-
-        it 'should generate a file input' do
-          output_buffer.should have_tag('form li input')
-          output_buffer.should have_tag('form li input#post_some_file')
-          output_buffer.should have_tag('form li input[@type="file"]')
-          output_buffer.should have_tag('form li input[@name="post[some_file]"]')
-        end
       end
 
     end
