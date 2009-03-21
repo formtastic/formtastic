@@ -701,10 +701,10 @@ module Formtastic #:nodoc:
 
       if as_span
         label_options[:class] ||= 'label'
-        template.content_tag(:span, text, options)
+        template.content_tag(:span, text, label_options)
       else
         label_options[:object] ||= @object
-        self.label(method, text, options)
+        self.label(method, text, label_options)
       end
     end
 
