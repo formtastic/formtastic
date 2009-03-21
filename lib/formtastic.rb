@@ -331,7 +331,7 @@ module Formtastic #:nodoc:
 
     def save_or_create_commit_button_text #:nodoc:
       prefix = @object.new_record? ? 'Create' : 'Save'
-      [ I18n.t(prefix, :default => prefix, :scope => [:formtastic]),
+      [ I18n.t(prefix.downcase, :default => prefix, :scope => [:formtastic]),
         @object.class.human_name
       ].join(' ').send(@@label_str_method)
     end
