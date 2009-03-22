@@ -25,9 +25,9 @@ One day, I finally had enough, so I opened up my text editor, and wrote a DSL fo
       <%= form.input :url_title, :required => false %>
     <% end %>
 
-    <% form.inputs :for => :author do |author_form| %>
-      <%= form.input :first_name %>
-      <%= form.input :last_name %>
+    <% form.inputs :name => "Author", :for => :author do |author_form| %>
+      <%= author_form.input :first_name %>
+      <%= author_form.input :last_name %>
     <% end %>
 
     <% form.buttons do %>
@@ -159,24 +159,26 @@ If you want to customize the label text, or render some hint text below the fiel
 Nested forms (Rails 2.3) are also supported. You can do it in the Rails way:
 
 <pre>
-  <% semantic_form_for @post do |post| %>
-    <%= post.inputs %>
+  <% semantic_form_for @post do |form| %>
+    <%= form.inputs :title, :body, :created_at %>
 
-    <%= post.semantic_fields_for :author do |author| %>
-      <%= author.inputs :first_name, :last_name %>
+    <%= form.semantic_fields_for :author do |author| %>
+      <%= author.inputs :first_name, :last_name, :name => 'Author' %>
     <%= end %>
 
-    <%= post.buttons %>
+    <%= form.buttons %>
   <% end %>
 </pre>
 
 Or in the formtastic way:
 
 <pre>
-  <% semantic_form_for @post do |post| %>
-    <%= post.inputs %>
-    <%= post.inputs :first_name, :last_name, :for => :author %>
-    <%= post.buttons %>
+  <% semantic_form_for @post do |form| %>
+    <%= form.inputs :title, :body, :created_at %>
+
+    <%= form.inputs :first_name, :last_name, :for => :author, :name => "Author" %>
+
+    <%= form.buttons %>
   <% end %>
 </pre>
 
