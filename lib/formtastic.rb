@@ -697,15 +697,17 @@ module Formtastic #:nodoc:
     end
 
     def input_label(method, text, options={}, as_span=false) #:nodoc:
-      label_options = options.delete(:label_html) || {}
+      # Choose label options to keep
+      options = options.slice(:required)
+
       text << required_or_optional_string(options.delete(:required))
 
       if as_span
-        label_options[:class] ||= 'label'
-        template.content_tag(:span, text, label_options)
+        options[:class] ||= 'label'
+        template.content_tag(:span, text, options)
       else
-        label_options[:object] ||= @object
-        self.label(method, text, label_options)
+        options[:object] ||= @object
+        self.label(method, text, options)
       end
     end
 

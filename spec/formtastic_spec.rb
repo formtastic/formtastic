@@ -872,13 +872,6 @@ describe 'Formtastic' do
             output_buffer.should have_tag("form li input.myclass")
           end
 
-          it 'should use label_html to style labels' do
-            semantic_form_for(@new_post) do |builder|
-              concat(builder.input(:title, :as => type, :label_html => { :class => 'myclass' }))
-            end
-            output_buffer.should have_tag("form li label.myclass")
-          end
-
           it 'should generate input and labels even if no object is given' do
             semantic_form_for(:project, :url => 'http://test.host/') do |builder|
               concat(builder.input(:title, :as => type))
@@ -958,13 +951,6 @@ describe 'Formtastic' do
               output_buffer.should have_tag("form li #{input_type}.myclass")
             end
 
-          end
-
-          it 'should use label_html to style labels' do
-            semantic_form_for(@new_post) do |builder|
-              concat(builder.input(:title, :as => type, :label_html => { :class => 'myclass' }))
-            end
-            output_buffer.should have_tag("form li label.myclass")
           end
 
           it 'should generate input and labels even if no object is given' do
