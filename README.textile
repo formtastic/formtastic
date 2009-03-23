@@ -162,9 +162,9 @@ Nested forms (Rails 2.3) are also supported. You can do it in the Rails way:
   <% semantic_form_for @post do |form| %>
     <%= form.inputs :title, :body, :created_at %>
 
-    <%= form.semantic_fields_for :author do |author| %>
+    <% form.semantic_fields_for :author do |author| %>
       <%= author.inputs :first_name, :last_name, :name => 'Author' %>
-    <%= end %>
+    <% end %>
 
     <%= form.buttons %>
   <% end %>
