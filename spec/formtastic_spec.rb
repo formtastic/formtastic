@@ -75,7 +75,7 @@ describe 'Formtastic' do
     @bob.stub!(:errors).and_return(mock('errors', :on => nil))
 
     Author.stub!(:find).and_return([@fred, @bob])
-    Author.stub!(:human_attribute_name).and_return { |column_name| column_name.to_s }
+    Author.stub!(:human_attribute_name).and_return { |column_name| column_name.humanize }
     Author.stub!(:human_name).and_return('Author')
     Author.stub!(:reflect_on_all_validations).and_return([])
     Author.stub!(:reflect_on_association).and_return { |column_name| mock('reflection', :klass => Post, :macro => :has_many) if column_name == :posts }
@@ -140,13 +140,17 @@ describe 'Formtastic' do
         output_buffer.should have_tag("form.formtastic")
       end
 
-      it 'adds class matching the object\'s class to the generated form when a symbol is provided' do
+      it 'adds class matching the object name to the generated form when a symbol is provided' do
         semantic_form_for(:post, Post.new, :url => '/hello') do |builder|
         end
         output_buffer.should have_tag("form.post")
+
+        semantic_form_for(:project, :url => '/hello') do |builder|
+        end
+        output_buffer.should have_tag("form.project")
       end
 
-      it 'adds class matching the object\'s class to the generated form when a symbol is provided when an object is provided' do
+      it 'adds class matching the object\'s class to the generated form when an object is provided' do
         semantic_form_for(@new_post) do |builder|
         end
         output_buffer.should have_tag("form.post")
@@ -173,13 +177,6 @@ describe 'Formtastic' do
 
       it 'can be called with a resource-oriented style' do
         semantic_form_for(@new_post) do |builder|
-          builder.object.class.should == Post
-          builder.object_name.should == "post"
-        end
-      end
-
-      it 'can be called with a resource-oriented style with an inline object' do
-        semantic_form_for(Post.new) do |builder|
           builder.object.class.should == Post
           builder.object_name.should == "post"
         end
@@ -277,7 +274,7 @@ describe 'Formtastic' do
         end
       end
 
-      it 'should generate html id for li tag properly' do
+      it 'should sanitize html id for li tag' do
         @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
         semantic_form_for(@new_post) do |builder|
           builder.semantic_fields_for(@bob, :index => 1) do |nested_builder|
@@ -397,58 +394,78 @@ describe 'Formtastic' do
 
           describe 'when not provided' do
 
-            describe 'and the validation reflection plugin is available' do
+            describe 'and an object was not given' do
 
-              before do
-                @new_post.class.stub!(:method_defined?).with(:reflect_on_all_validations).and_return(true)
+              it 'should use the default value' do
+                Formtastic::SemanticFormBuilder.all_fields_required_by_default.should == true
+                Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
+
+                semantic_form_for(:project, :url => 'http://test.host/') do |builder|
+                  concat(builder.input(:title))
+                end
+                output_buffer.should_not have_tag('form li.required')
+                output_buffer.should have_tag('form li.optional')
+
+                Formtastic::SemanticFormBuilder.all_fields_required_by_default = true
               end
 
-              describe 'and validates_presence_of was called for the method' do
+            end
+
+            describe 'and an object was given' do
+
+              describe 'and the validation reflection plugin is available' do
 
                 before do
-                  @new_post.class.should_receive(:reflect_on_all_validations).and_return([
-                    mock('MacroReflection', :macro => :validates_presence_of, :name => :title)
-                  ])
+                  @new_post.class.stub!(:method_defined?).with(:reflect_on_all_validations).and_return(true)
                 end
 
-                it 'should be required' do
-                  semantic_form_for(@new_post) do |builder|
-                    concat(builder.input(:title))
+                describe 'and validates_presence_of was called for the method' do
+                  before do
+                    @new_post.class.should_receive(:reflect_on_all_validations).and_return([
+                      mock('MacroReflection', :macro => :validates_presence_of, :name => :title)
+                    ])
                   end
-                  output_buffer.should have_tag('form li.required')
-                  output_buffer.should_not have_tag('form li.optional')
+
+                  it 'should be required' do
+                    semantic_form_for(@new_post) do |builder|
+                      concat(builder.input(:title))
+                    end
+                    output_buffer.should have_tag('form li.required')
+                    output_buffer.should_not have_tag('form li.optional')
+                  end
+                end
+
+                describe 'and validates_presence_of was not called for the method' do
+                  before do
+                    @new_post.class.should_receive(:reflect_on_all_validations).and_return([])
+                  end
+
+                  it 'should not be required' do
+                    semantic_form_for(@new_post) do |builder|
+                      concat(builder.input(:title))
+                    end
+                    output_buffer.should_not have_tag('form li.required')
+                    output_buffer.should have_tag('form li.optional')
+                  end
                 end
 
               end
 
-              describe 'and validates_presence_of was not called for the method' do
+              describe 'and the validation reflection plugin is not available' do
 
-                before do
-                  @new_post.class.should_receive(:reflect_on_all_validations).and_return([])
-                end
+                it 'should use the default value' do
+                  Formtastic::SemanticFormBuilder.all_fields_required_by_default.should == true
+                  Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
 
-                it 'should not be required' do
                   semantic_form_for(@new_post) do |builder|
                     concat(builder.input(:title))
                   end
                   output_buffer.should_not have_tag('form li.required')
                   output_buffer.should have_tag('form li.optional')
+
+                  Formtastic::SemanticFormBuilder.all_fields_required_by_default = true
                 end
 
-              end
-
-            end
-
-            describe 'and the validation reflection plugin is not available' do
-
-              it 'should use the default value' do
-                Formtastic::SemanticFormBuilder.all_fields_required_by_default.should == true
-                Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
-                semantic_form_for(@new_post) do |builder|
-                  concat(builder.input(:title))
-                end
-                output_buffer.should_not have_tag('form li.required')
-                output_buffer.should have_tag('form li.optional')
               end
 
             end
@@ -461,15 +478,16 @@ describe 'Formtastic' do
 
           describe 'when not provided' do
 
-            it 'should default to a string for methods that don\'t have a column in the database (and can\'t be guessed)' do
-              @new_post.stub!(:method_without_a_database_column)
-              @new_post.stub!(:column_for_attribute).and_return(nil)
-              default_input_type(nil, :method_without_a_database_column).should == :string
+            it 'should default to a string for forms without objects' do
+              semantic_form_for(:project, :url => 'http://test.host') do |builder|
+                concat(builder.input(:anything))
+              end
+              output_buffer.should have_tag('form li.string')
             end
 
             it 'should default to a string for methods on objects that don\'t respond to "column_for_attribute"' do
               @new_post.stub!(:method_without_a_database_column)
-#              @new_post.stub!(:column_for_attribute).and_raise(NoMethodError)
+              @new_post.stub!(:column_for_attribute).and_return(nil)
               default_input_type(nil, :method_without_a_database_column).should == :string
             end
 
@@ -584,19 +602,30 @@ describe 'Formtastic' do
           end
 
           describe 'when not provided' do
+            describe 'and object is not given' do
+              it 'should default the humanized method name, passing it down to the label tag' do
+                Formtastic::SemanticFormBuilder.label_str_method = :humanize
 
-            before do
-              Formtastic::SemanticFormBuilder.label_str_method = :humanize
-              @new_post.stub!(:meta_description) # a two word method name
-              semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:meta_description))
+                semantic_form_for(:project, :url => 'http://test.host') do |builder|
+                  concat(builder.input(:meta_description))
+                end
+
+                output_buffer.should have_tag("form li label", /#{'meta_description'.humanize}/)
               end
             end
 
-            it 'should default the humanized method name, passing it down to the label tag' do
-              output_buffer.should have_tag("form li label", /#{'meta_description'.humanize}/)
-            end
+            describe 'and object is given' do
+              it 'should delegate the label logic to class human attribute name and pass it down to the label tag' do
+                @new_post.stub!(:meta_description) # a two word method name
+                @new_post.class.should_receive(:human_attribute_name).with('meta_description').and_return('meta_description'.humanize)
 
+                semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:meta_description))
+                end
+
+                output_buffer.should have_tag("form li label", /#{'meta_description'.humanize}/)
+              end
+            end
           end
 
         end
@@ -737,6 +766,28 @@ describe 'Formtastic' do
           end
 
         end
+
+        describe 'when no object is provided' do
+
+          before do
+            semantic_form_for(:project, :url => 'http://test.host') do |builder|
+              concat(builder.input(:title))
+            end
+          end
+
+          it 'should not apply an errors class to the list item' do
+            output_buffer.should_not have_tag('form li.error')
+          end
+
+          it 'should not render a paragraph for the errors' do
+            output_buffer.should_not have_tag('form li.error p.inline-errors')
+          end
+
+          it 'should not display an error list' do
+            output_buffer.should_not have_tag('form li.error ul.errors')
+          end
+
+        end
       end
 
       # Test string_mappings: :string, :password and :numeric
@@ -828,6 +879,21 @@ describe 'Formtastic' do
             output_buffer.should have_tag("form li label.myclass")
           end
 
+          it 'should generate input and labels even if no object is given' do
+            semantic_form_for(:project, :url => 'http://test.host/') do |builder|
+              concat(builder.input(:title, :as => type))
+            end
+
+            output_buffer.should have_tag('form li label')
+            output_buffer.should have_tag('form li label[@for="project_title"')
+            output_buffer.should have_tag('form li label', /Title/)
+
+            output_buffer.should have_tag("form li input")
+            output_buffer.should have_tag("form li input#project_title")
+            output_buffer.should have_tag("form li input[@type=\"#{input_type}\"]")
+            output_buffer.should have_tag("form li input[@name=\"project[title]\"]")
+          end
+
         end
       end
 
@@ -899,6 +965,27 @@ describe 'Formtastic' do
               concat(builder.input(:title, :as => type, :label_html => { :class => 'myclass' }))
             end
             output_buffer.should have_tag("form li label.myclass")
+          end
+
+          it 'should generate input and labels even if no object is given' do
+            semantic_form_for(:project, :url => 'http://test.host/') do |builder|
+              concat(builder.input(:title, :as => type))
+            end
+
+            output_buffer.should have_tag('form li label')
+            output_buffer.should have_tag('form li label[@for="project_title"')
+            output_buffer.should have_tag('form li label', /Title/)
+
+            if template_method.to_s =~ /_field$/ # password_field
+              output_buffer.should have_tag("form li input")
+              output_buffer.should have_tag("form li input#project_title")
+              output_buffer.should have_tag("form li input[@type=\"#{input_type}\"]")
+              output_buffer.should have_tag("form li input[@name=\"project[title]\"]")
+            else
+              output_buffer.should have_tag("form li #{input_type}")
+              output_buffer.should have_tag("form li #{input_type}#project_title")
+              output_buffer.should have_tag("form li #{input_type}[@name=\"project[title]\"]")
+            end
           end
 
         end
@@ -973,6 +1060,7 @@ describe 'Formtastic' do
               @new_post.author_id.should == @bob.id
               @new_post.author.id.should == @bob.id
               @new_post.author.should == @bob
+
               semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:author_id, :as => :radio))
               end
@@ -980,6 +1068,28 @@ describe 'Formtastic' do
               output_buffer.should have_tag("form li fieldset ol li label input[@checked='checked']")
             end
           end
+
+          it 'should generate a fieldset, legend, labels and inputs even if no object is given' do
+            output_buffer.replace ''
+
+            semantic_form_for(:project, :url => 'http://test.host') do |builder|
+              concat(builder.input(:author_id, :as => :radio, :collection => Author.find(:all)))
+            end
+
+            output_buffer.should have_tag('form li fieldset legend', /Author/)
+            output_buffer.should have_tag('form li fieldset ol li', :count => Author.find(:all).size)
+
+            Author.find(:all).each do |author|
+              output_buffer.should have_tag('form li fieldset ol li label', /#{author.to_label}/)
+              output_buffer.should have_tag("form li fieldset ol li label[@for='project_author_id_#{author.id}']")
+
+              output_buffer.should have_tag("form li fieldset ol li label input#project_author_id_#{author.id}")
+              output_buffer.should have_tag("form li fieldset ol li label input[@type='radio']")
+              output_buffer.should have_tag("form li fieldset ol li label input[@value='#{author.id}']")
+              output_buffer.should have_tag("form li fieldset ol li label input[@name='project[author_id]']")
+            end
+          end
+
         end
 
       end
@@ -1003,16 +1113,19 @@ describe 'Formtastic' do
             output_buffer.should have_tag('form li.select')
           end
 
-          it 'should have a post_author_id_input id on the wrapper' do
+          it 'should have a post_author_input id on the wrapper' do
             output_buffer.should have_tag('form li#post_author_input')
           end
 
           it 'should have a label inside the wrapper' do
             output_buffer.should have_tag('form li label')
+            output_buffer.should have_tag('form li label', /Author/)
+            output_buffer.should have_tag("form li label[@for='post_author_id']")
           end
 
           it 'should have a select inside the wrapper' do
             output_buffer.should have_tag('form li select')
+            output_buffer.should have_tag('form li select#post_author_id')
           end
 
           it 'should not create a multi-select' do
@@ -1046,16 +1159,19 @@ describe 'Formtastic' do
             output_buffer.should have_tag('form li.select')
           end
 
-          it 'should have a post_author_id_input id on the wrapper' do
+          it 'should have a post_author_input id on the wrapper' do
             output_buffer.should have_tag('form li#author_posts_input')
           end
 
           it 'should have a label inside the wrapper' do
             output_buffer.should have_tag('form li label')
+            output_buffer.should have_tag('form li label', /Posts/)
+            output_buffer.should have_tag("form li label[@for='author_post_ids']")
           end
 
           it 'should have a select inside the wrapper' do
             output_buffer.should have_tag('form li select')
+            output_buffer.should have_tag('form li select#author_post_ids')
           end
 
           it 'should have a multi-select select' do
@@ -1085,16 +1201,19 @@ describe 'Formtastic' do
             output_buffer.should have_tag('form li.select')
           end
 
-          it 'should have a post_author_id_input id on the wrapper' do
+          it 'should have a post_author_input id on the wrapper' do
             output_buffer.should have_tag('form li#post_authors_input')
           end
 
           it 'should have a label inside the wrapper' do
             output_buffer.should have_tag('form li label')
+            output_buffer.should have_tag('form li label', /Authors/)
+            output_buffer.should have_tag("form li label[@for='post_author_ids']")
           end
 
           it 'should have a select inside the wrapper' do
             output_buffer.should have_tag('form li select')
+            output_buffer.should have_tag('form li select#post_author_ids')
           end
 
           it 'should have a multi-select select' do
@@ -1127,6 +1246,22 @@ describe 'Formtastic' do
 
           it 'should have a select with prompt' do
             output_buffer.should have_tag("form li select option[@value='']", /choose author/)
+          end
+        end
+
+        it 'should generate label, select and options even if object is not given' do
+          semantic_form_for(:project, :url => 'http://test.host') do |builder|
+            concat(builder.input(:author, :as => :select, :collection => Author.find(:all)))
+          end
+
+          output_buffer.should have_tag('form li label', /Author/)
+          output_buffer.should have_tag("form li label[@for='project_author']")
+
+          output_buffer.should have_tag('form li select#project_author')
+          output_buffer.should have_tag('form li select option', :count => Author.find(:all).size)
+
+          Author.find(:all).each do |author|
+            output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
           end
         end
       end
@@ -1465,7 +1600,6 @@ describe 'Formtastic' do
         it 'should have three selects for year, month and day' do
           output_buffer.should have_tag('form li.date fieldset ol li select', :count => 3)
         end
-
       end
 
       describe ':as => :datetime' do
@@ -1612,6 +1746,18 @@ describe 'Formtastic' do
             output_buffer.should have_tag('form li.datetime fieldset ol li label', /The Minute/)
           end
         end
+
+        it 'should have fieldset, legend, label and selects even if object is not given' do
+          output_buffer.replace ''
+
+          semantic_form_for(:project, :url => 'http://test.host') do |@builder|
+            concat(@builder.input(:publish_at, :as => :datetime))
+          end
+
+          output_buffer.should have_tag('form li.datetime fieldset legend', /Publish at/)
+          output_buffer.should have_tag('form li.datetime fieldset ol li label', :count => 5)
+          output_buffer.should have_tag('form li.datetime fieldset ol li select', :count => 5)
+        end
       end
 
       describe ':as => :time' do
@@ -1685,6 +1831,20 @@ describe 'Formtastic' do
           output_buffer.should have_tag('form li label input[@name="post[allow_comments]"]')
         end
 
+        it 'should generate a label and a checkbox even if no object is given' do
+          semantic_form_for(:project, :url => 'http://test.host') do |builder|
+            concat(builder.input(:allow_comments, :as => :boolean))
+          end
+
+          output_buffer.should have_tag('form li label[@for="project_allow_comments"')
+          output_buffer.should have_tag('form li label', /Allow comments/)
+          output_buffer.should have_tag('form li label input[@type="checkbox"]')
+
+          output_buffer.should have_tag('form li label input#project_allow_comments')
+          output_buffer.should have_tag('form li label input[@type="checkbox"]')
+          output_buffer.should have_tag('form li label input[@name="project[allow_comments]"]')
+        end
+
       end
     end
 
@@ -1722,6 +1882,16 @@ describe 'Formtastic' do
 
           it 'should not render a legend inside the fieldset' do
             output_buffer.should_not have_tag("form fieldset.inputs legend")
+          end
+
+          it 'should render a fieldset even if no object is given' do
+            semantic_form_for(:project, :url => 'http://test.host/') do |builder|
+              @inputs_output = builder.inputs do
+                concat('bye')
+              end
+            end
+
+            output_buffer.should have_tag("form fieldset.inputs ol", /bye/)
           end
         end
 
@@ -1864,29 +2034,52 @@ describe 'Formtastic' do
         end
 
         describe 'with column names as args' do
-          before do
-            semantic_form_for(@new_post) do |builder|
-              concat(builder.inputs(:title, :body))
+          describe 'and an object is given' do
+            it 'should render a form with a fieldset containing two list items' do
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.inputs(:title, :body))
+              end
+
+              output_buffer.should have_tag('form > fieldset.inputs > ol > li', :count => 2)
+              output_buffer.should have_tag('form > fieldset.inputs > ol > li.string')
+              output_buffer.should have_tag('form > fieldset.inputs > ol > li.text')
             end
           end
 
-          it 'should render a form with a fieldset containing two list items' do
-            output_buffer.should have_tag('form > fieldset.inputs > ol > li', :count => 2)
-            output_buffer.should have_tag('form > fieldset.inputs > ol > li.string')
-            output_buffer.should have_tag('form > fieldset.inputs > ol > li.text')
+          describe 'and no object is given' do
+            it 'should render a form with a fieldset containing two list items' do
+              semantic_form_for(:project, :url => 'http://test.host') do |builder|
+                concat(builder.inputs(:title, :body))
+              end
+
+              output_buffer.should have_tag('form > fieldset.inputs > ol > li.string', :count => 2)
+            end
           end
         end
 
         describe 'when a :for option is provided' do
-          it 'should render nested inputs' do
-            @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
+          describe 'and an object is given' do
+            it 'should render nested inputs' do
+              @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
 
-            semantic_form_for(@new_post) do |builder|
-              concat(builder.inputs :login, :for => @bob)
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.inputs :login, :for => @bob)
+              end
+
+              output_buffer.should have_tag("form fieldset.inputs #post_author_login")
+              output_buffer.should_not have_tag("form fieldset.inputs #author_login")
             end
+          end
 
-            output_buffer.should have_tag("form fieldset.inputs #post_author_login")
-            output_buffer.should_not have_tag("form fieldset.inputs #author_login")
+          describe 'and no object is given' do
+            it 'should render nested inputs' do
+              semantic_form_for(:project, :url => 'http://test.host/') do |builder|
+                concat(builder.inputs :login, :for => @bob)
+              end
+
+              output_buffer.should have_tag("form fieldset.inputs #project_author_login")
+              output_buffer.should_not have_tag("form fieldset.inputs #project_login")
+            end
           end
         end
 
@@ -2133,6 +2326,36 @@ describe 'Formtastic' do
             output_buffer.should have_tag('li.commit input[@value="Make Post"]')
           end
         end
+
+      end
+
+      describe 'when used without object' do
+
+        it 'should render an input with a value attribute of "Commit"' do
+          semantic_form_for(:project, :url => 'http://test.host') do |builder|
+            concat(builder.commit_button)
+          end
+
+          output_buffer.should have_tag('li.commit input[@value="Commit Project"]')
+        end
+
+        describe 'when the locale sets the label text' do
+          before do
+            I18n.backend.store_translations 'en', :formtastic => { :commit => 'Send' }
+            semantic_form_for(:project, :url => 'http://test.host') do |builder|
+              concat(builder.commit_button)
+            end
+          end
+
+          after do
+            I18n.backend.store_translations 'en', :formtastic => {:create => nil}
+          end
+
+          it 'should allow translation of the labels' do
+            output_buffer.should have_tag('li.commit input[@value="Send Project"]')
+          end
+        end
+
       end
 
     end
