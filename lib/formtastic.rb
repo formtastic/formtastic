@@ -78,7 +78,7 @@ module Formtastic #:nodoc:
       raise NoMethodError.new("NoMethodError: form object does not respond to \"#{method}\"") unless @object.respond_to?(method)
 
       options[:required] = method_required?(method, options[:required])
-      options[:label] ||= @object.class.human_attribute_name(method.to_s).send(@@label_str_method)
+      options[:label] ||= @object.class.human_attribute_name(method.to_s)
       options[:as] ||= default_input_type(@object, method)
 
       html_class = [
@@ -334,7 +334,7 @@ module Formtastic #:nodoc:
       prefix = @object.new_record? ? 'Create' : 'Save'
       [ I18n.t(prefix.downcase, :default => prefix, :scope => [:formtastic]),
         @object.class.human_name
-      ].join(' ').send(@@label_str_method)
+      ].join(' ')
     end
 
     # Determins if the attribute (eg :title) should be considered required or not.
@@ -639,7 +639,7 @@ module Formtastic #:nodoc:
           list_items_capture << template.hidden_field_tag("#{@object_name}[#{method}(#{position[input]}i)]", (hidden_value || 1), :id => html_id)
         else
           opts = set_options(options).merge(:prefix => @object_name, :field_name => "#{method}(#{position[input]}i)")
-          item_label_text = I18n.t(input.to_s, :default => input.to_s, :scope => [:formtastic]).send(@@label_str_method)
+          item_label_text = I18n.t(input.to_s, :default => input.to_s, :scope => [:formtastic])
 
           list_items_capture << template.content_tag(:li,
             template.content_tag(:label, item_label_text, :for => html_id) +
