@@ -228,9 +228,8 @@ If you wish, put something like this in config/initializers/formtastic_config.rb
   # Defaults to :sentence, valid options are :sentence, :list and :none
   Formtastic::SemanticFormBuilder.inline_errors = :list
 
-  # Set the method to call on label text to transform or format it for human-friendly reading
-  # Defaults to :to_s, because we are already using human_attribute_name when creating labels,
-  # but you might want to change for :titleize or another string method
+  # Set the method to call on label text to transform or format it for human-friendly
+  # reading when formtastic is user without object. Defaults to :humanize.
   Formtastic::SemanticFormBuilder.label_str_method = :titleize
 
   # Set the array of methods to try calling on parent objects in :select and :radio inputs
@@ -260,6 +259,7 @@ Here is an example locale file:
       no: 'No'
       create: 'Create'
       save: 'Save'
+      commit: 'Commit'
       year: 'Year'
       month: 'Month'
       day: 'Day'
