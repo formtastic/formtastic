@@ -86,7 +86,7 @@ describe 'Formtastic' do
   def protect_against_forgery?; false; end
 
   before do
-    Formtastic::SemanticFormBuilder.label_str_method = :titleize
+    Formtastic::SemanticFormBuilder.label_str_method = :humanize
 
     @output_buffer = ''
 
@@ -151,7 +151,7 @@ describe 'Formtastic' do
     @fred.stub!(:posts).and_return([@freds_post])
     @fred.stub!(:post_ids).and_return([@freds_post.id])
 
-    Post.stub!(:human_attribute_name).and_return { |column_name| column_name.to_s }
+    Post.stub!(:human_attribute_name).and_return { |column_name| column_name.humanize }
     Post.stub!(:human_name).and_return('Post')
     Post.stub!(:reflect_on_all_validations).and_return([])
     Post.stub!(:reflect_on_association).and_return do |column_name|
@@ -623,44 +623,19 @@ describe 'Formtastic' do
           end
 
           describe 'when not provided' do
-            describe 'when the default is :titleize' do
-              before do
-                Formtastic::SemanticFormBuilder.label_str_method = :titleize
-                @new_post.stub!(:meta_description) # a two word method name
-                semantic_form_for(@new_post) do |builder|
-                  concat(builder.input(:meta_description))
-                end
-              end
-              it 'should default the titleized method name, passing it down to the label tag' do
-                output_buffer.should have_tag("form li label", /#{'meta_description'.titleize}/)
+
+            before do
+              Formtastic::SemanticFormBuilder.label_str_method = :humanize
+              @new_post.stub!(:meta_description) # a two word method name
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:meta_description))
               end
             end
 
-            describe 'when the default is :humanize' do
-              before do
-                Formtastic::SemanticFormBuilder.label_str_method = :humanize
-                @new_post.stub!(:meta_description) # a two word method name
-                semantic_form_for(@new_post) do |builder|
-                  concat(builder.input(:meta_description))
-                end
-              end
-              it 'should default the humanized method name, passing it down to the label tag' do
-                output_buffer.should have_tag("form li label", /#{'meta_description'.humanize}/)
-              end
+            it 'should default the humanized method name, passing it down to the label tag' do
+              output_buffer.should have_tag("form li label", /#{'meta_description'.humanize}/)
             end
 
-            describe 'when the default is :to_s' do
-              before do
-                Formtastic::SemanticFormBuilder.label_str_method = :to_s
-                @new_post.stub!(:meta_description) # a two word method name
-                semantic_form_for(@new_post) do |builder|
-                  concat(builder.input(:meta_description))
-                end
-              end
-              it 'should default the humanized method name, passing it down to the label tag' do
-                output_buffer.should have_tag("form li label", /meta_description/)
-              end
-            end
           end
 
         end
@@ -1566,7 +1541,7 @@ describe 'Formtastic' do
         end
 
         it 'should have a legend containing the label text inside the fieldset' do
-          output_buffer.should have_tag('form li.date fieldset legend', /Publish At/)
+          output_buffer.should have_tag('form li.date fieldset legend', /Publish at/)
         end
 
         it 'should have an ordered list of three items inside the fieldset' do
@@ -1637,7 +1612,7 @@ describe 'Formtastic' do
         end
 
         it 'should have a legend containing the label text inside the fieldset' do
-          output_buffer.should have_tag('form li.datetime fieldset legend', /Publish At/)
+          output_buffer.should have_tag('form li.datetime fieldset legend', /Publish at/)
         end
 
         it 'should have an ordered list of five items inside the fieldset' do
@@ -1783,7 +1758,7 @@ describe 'Formtastic' do
         end
 
         it 'should have a legend containing the label text inside the fieldset' do
-          output_buffer.should have_tag('form li.time fieldset legend', /Publish At/)
+          output_buffer.should have_tag('form li.time fieldset legend', /Publish at/)
         end
 
         it 'should have an ordered list of two items inside the fieldset' do
@@ -1854,7 +1829,7 @@ describe 'Formtastic' do
         it 'should generate a label containing the input' do
           output_buffer.should have_tag('form li label')
           output_buffer.should have_tag('form li label[@for="post_allow_comments"')
-          output_buffer.should have_tag('form li label', /Allow Comments/)
+          output_buffer.should have_tag('form li label', /Allow comments/)
           output_buffer.should have_tag('form li label input[@type="checkbox"]')
         end
 
@@ -1887,7 +1862,7 @@ describe 'Formtastic' do
         end
 
         it 'should generate a fieldset containing a legend' do
-          output_buffer.should have_tag('form li fieldset legend', /Allow Comments/)
+          output_buffer.should have_tag('form li fieldset legend', /Allow comments/)
         end
 
         it 'should generate a fieldset containing an ordered list of two items with true and false classes' do
@@ -2011,7 +1986,7 @@ describe 'Formtastic' do
         it 'should generate a label containing the input' do
           output_buffer.should have_tag('form li label')
           output_buffer.should have_tag('form li label[@for="post_allow_comments"')
-          output_buffer.should have_tag('form li label', /Allow Comments/)
+          output_buffer.should have_tag('form li label', /Allow comments/)
         end
 
         it 'should generate a select box with two options' do
