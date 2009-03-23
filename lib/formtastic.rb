@@ -796,7 +796,7 @@ module Formtastic #:nodoc:
 
       # If we have a Hash or an Array of strings, fixnums or arrays, we are done.
       return collection if collection.instance_of?(Hash) ||
-                          (collection.instance_of?(Array) && [Array, Fixnum, String].include?(collection.first.class))
+                          (collection.instance_of?(Array) && [Array, Fixnum, String, Symbol].include?(collection.first.class))
 
       label = options.delete(:label_method) || detect_label_method(collection)
       value = options.delete(:value_method) || :id
