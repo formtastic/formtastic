@@ -228,6 +228,7 @@ module Formtastic #:nodoc:
       html_options[:class] ||= "inputs"
 
       if fields_for_object = html_options.delete(:for)
+        html_options.merge!(:parent_builder => self)
         inputs_for_nested_attributes(fields_for_object, args << html_options,
                                      html_options.delete(:for_options) || {}, &block)
       elsif block_given?
@@ -721,15 +722,17 @@ module Formtastic #:nodoc:
       end
     end
 
-    def field_set_and_list_wrapping(field_set_html_options, contents = '', &block) #:nodoc:
-      legend_text = field_set_html_options.delete(:name)
-      legend = legend_text.blank? ? "" : template.content_tag(:legend, template.content_tag(:span, legend_text))
+    def field_set_and_list_wrapping(html_options, contents = '', &block) #:nodoc:
+      # Generates the legend text allowing nested_child_index support for interpolation
+      legend_text  = html_options.delete(:name).to_s
+      legend_text %= html_options[:parent_builder].instance_variable_get('@nested_child_index').to_i + 1
+      legend       = legend_text.blank? ? "" : template.content_tag(:legend, template.content_tag(:span, legend_text))
 
       contents = template.capture(&block) if block_given?
 
       fieldset = template.content_tag(:fieldset,
         legend + template.content_tag(:ol, contents),
-        field_set_html_options
+        html_options.except(:builder, :parent_builder)
       )
 
       template.concat(fieldset) if block_given?

@@ -1927,6 +1927,17 @@ describe 'Formtastic' do
 
             output_buffer.should_not have_tag('fieldset[@builder="Formtastic::SemanticFormHelper"]')
           end
+
+          it 'should send parent_builder as an option to allow child index interpolation' do
+            semantic_form_for(@new_post) do |builder|
+              builder.should_receive(:instance_variable_get).with('@nested_child_index').and_return(0)
+              builder.inputs :for => [:author, @bob], :name => 'Author #%i' do |bob_builder|
+                concat('input')
+              end
+            end
+
+            output_buffer.should have_tag('fieldset legend', 'Author #1')
+          end
         end
 
         describe 'when a :name option is provided' do

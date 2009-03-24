@@ -182,6 +182,19 @@ Or in the formtastic way:
   <% end %>
 </pre>
 
+When working in has many association, you can even supply "%i" in your fieldset
+name that it will be properly interpolated with the child index. For example:
+
+<pre>
+  <% semantic_form_for @post do |form| %>
+    <%= form.inputs %>
+    <%= form.inputs :name => 'Category #%i', :for => :categories %>
+    <%= form.buttons %>
+  <% end %>
+</pre>
+
+Each category will be wrapped in a fieldset with legend "Category #1",
+"Category #2" and so on. But please notice that this works only with Rails 2.3.
 
 h2. The Available Inputs
 
