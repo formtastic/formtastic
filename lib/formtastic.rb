@@ -236,6 +236,7 @@ module Formtastic #:nodoc:
         if args.empty?
           args  = @object.class.reflections.map { |n,_| n }
           args += @object.class.content_columns.map(&:name)
+          args -= %w[created_at updated_at created_on updated_on]
         end
         contents = args.map { |method| input(method.to_sym) }
 
