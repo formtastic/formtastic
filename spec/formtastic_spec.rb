@@ -278,7 +278,7 @@ describe 'Formtastic' do
         @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
         semantic_form_for(@new_post) do |builder|
           builder.semantic_fields_for(@bob, :index => 1) do |nested_builder|
-            concat(nested_builder.inputs :login)
+            concat(nested_builder.inputs(:login))
           end
         end
         output_buffer.should have_tag('form fieldset.inputs #post_author_1_login_input')
@@ -1887,7 +1887,7 @@ describe 'Formtastic' do
 
             semantic_form_for(@new_post) do |builder|
               builder.inputs :for => [:author, @bob] do |bob_builder|
-                concat(bob_builder.input :login)
+                concat(bob_builder.input(:login))
               end
             end
 
@@ -1911,7 +1911,7 @@ describe 'Formtastic' do
 
             semantic_form_for(@new_post) do |builder|
               builder.inputs :for => [:author, @bob], :for_options => { :index => 10 } do |bob_builder|
-                concat(bob_builder.input :login)
+                concat(bob_builder.input(:login))
               end
             end
 
@@ -2060,7 +2060,7 @@ describe 'Formtastic' do
               @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
 
               semantic_form_for(@new_post) do |builder|
-                concat(builder.inputs :login, :for => @bob)
+                concat(builder.inputs(:login, :for => @bob))
               end
 
               output_buffer.should have_tag("form fieldset.inputs #post_author_login")
@@ -2071,7 +2071,7 @@ describe 'Formtastic' do
           describe 'and no object is given' do
             it 'should render nested inputs' do
               semantic_form_for(:project, :url => 'http://test.host/') do |builder|
-                concat(builder.inputs :login, :for => @bob)
+                concat(builder.inputs(:login, :for => @bob))
               end
 
               output_buffer.should have_tag("form fieldset.inputs #project_author_login")
