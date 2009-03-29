@@ -272,7 +272,7 @@ Here is an example locale file:
       no: 'No'
       create: 'Create'
       save: 'Save'
-      commit: 'Commit'
+      submit: 'Submit'
       year: 'Year'
       month: 'Month'
       day: 'Day'

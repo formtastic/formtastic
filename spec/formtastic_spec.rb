@@ -321,17 +321,11 @@ describe 'Formtastic' do
       describe 'arguments and options' do
 
         it 'should require the first argument (the method on form\'s object)' do
-            lambda {
+          lambda {
             semantic_form_for(@new_post) do |builder|
               concat(builder.input()) # no args passed in at all
             end
           }.should raise_error(ArgumentError)
-        end
-
-        it 'should raise a helpful error when the object does not respond to the method supplied in the first argument' do
-            semantic_form_for(@new_post) do |builder|
-            lambda { builder.input(:method_on_post_that_doesnt_exist) }.should raise_error(NoMethodError, /method_on_post_that_doesnt_exist/)
-          end
         end
 
         describe ':required option' do
@@ -2328,24 +2322,24 @@ describe 'Formtastic' do
 
       describe 'when used without object' do
 
-        it 'should render an input with a value attribute of "Commit"' do
+        it 'should render an input with a value attribute of "Submit"' do
           semantic_form_for(:project, :url => 'http://test.host') do |builder|
             concat(builder.commit_button)
           end
 
-          output_buffer.should have_tag('li.commit input[@value="Commit Project"]')
+          output_buffer.should have_tag('li.commit input[@value="Submit Project"]')
         end
 
         describe 'when the locale sets the label text' do
           before do
-            I18n.backend.store_translations 'en', :formtastic => { :commit => 'Send' }
+            I18n.backend.store_translations 'en', :formtastic => { :submit => 'Send' }
             semantic_form_for(:project, :url => 'http://test.host') do |builder|
               concat(builder.commit_button)
             end
           end
 
           after do
-            I18n.backend.store_translations 'en', :formtastic => {:create => nil}
+            I18n.backend.store_translations 'en', :formtastic => {:submit => nil}
           end
 
           it 'should allow translation of the labels' do
