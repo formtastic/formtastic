@@ -666,16 +666,20 @@ module Formtastic #:nodoc:
       field_set_and_list_wrapping_for_method(method, options, list_items_capture)
     end
 
-    # Outputs a label containing a checkbox and the label text.  The label defaults
+    # Outputs a label containing a checkbox and the label text. The label defaults
     # to the column name (method name) and can be altered with the :label option.
+    #
+    # Different from other inputs, :required options has no effect here and
+    # :checked_value and :unchecked_value options are also available.
     #
     def boolean_input(method, options)
       html_options = options.delete(:input_html) || {}
 
-      input_label(method,
-        self.check_box(method, set_options(options).merge(html_options)) + options.delete(:label),
-        :required => false # required does not make sense in check box
-       )
+      content = self.check_box(method, set_options(options).merge(html_options),
+                               options.delete(:checked_value) || '1', options.delete(:unchecked_value) || '0')
+
+      # required does not make sense in check box
+      input_label(method, content + options.delete(:label), :skip_required => true)
     end
 
     # Generates an input for the given method using the type supplied with :as.
@@ -732,7 +736,7 @@ module Formtastic #:nodoc:
     # with class label.
     #
     def input_label(method, text, options={}, as_span=false) #:nodoc:
-      text << required_or_optional_string(options.delete(:required))
+      text << required_or_optional_string(options.delete(:required)) unless options.delete(:skip_required)
 
       if as_span
         options[:class] ||= 'label'

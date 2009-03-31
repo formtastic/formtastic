@@ -1842,6 +1842,16 @@ describe 'Formtastic' do
           output_buffer.should have_tag('form li label input#post_allow_comments')
           output_buffer.should have_tag('form li label input[@type="checkbox"]')
           output_buffer.should have_tag('form li label input[@name="post[allow_comments]"]')
+          output_buffer.should have_tag('form li label input[@type="checkbox"][@value="1"]')
+        end
+
+        it 'should allow checked and unchecked values to be sent' do
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:allow_comments, :as => :boolean, :checked_value => 'checked', :unchecked_value => 'unchecked'))
+          end
+
+          output_buffer.should have_tag('form li label input[@type="checkbox"][@value="checked"]')
+          output_buffer.should have_tag('form li label input[@type="hidden"][@value="unchecked"]')
         end
 
         it 'should generate a label and a checkbox even if no object is given' do
