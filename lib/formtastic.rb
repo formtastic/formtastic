@@ -35,6 +35,7 @@ module Formtastic #:nodoc:
     STRING_MAPPINGS = [ :string, :password, :numeric ]
 
     attr_accessor :template
+    attr_writer   :nested_child_index
 
     # Returns a suitable form input for the given +method+, using the database column information
     # and other factors (like the method name) to figure out what you probably want.
@@ -77,7 +78,7 @@ module Formtastic #:nodoc:
     #
     def input(method, options = {})
       options[:required] = method_required?(method, options[:required])
-      options[:as]     ||= default_input_type(@object, method)
+      options[:as]     ||= default_input_type(method)
 
       options[:label]  ||= if @object
         @object.class.human_attribute_name(method.to_s)
@@ -758,6 +759,12 @@ module Formtastic #:nodoc:
     # And it will generate a fieldset for each task with legend 'Task #1', 'Task #2',
     # 'Task #3' and so on.
     #
+    # If you are using inputs :for, for more than one association in the same
+    # form builder, you might want to set the nested_child_index as well. You
+    # can do that doing:
+    #
+    #   f.nested_child_index = -1
+    #
     def field_set_and_list_wrapping(html_options, contents = '', &block) #:nodoc:
       # Generates the legend text allowing nested_child_index support for interpolation
       legend_text  = html_options.delete(:name).to_s
@@ -793,11 +800,11 @@ module Formtastic #:nodoc:
     # If there is no column for the method (eg "virtual columns" with an attr_accessor), the
     # default is a :string, a similar behaviour to Rails' scaffolding.
     #
-    def default_input_type(object, method) #:nodoc:
-      return :string if object.nil?
+    def default_input_type(method) #:nodoc:
+      return :string if @object.nil?
 
       # Find the column object by attribute
-      column = object.column_for_attribute(method) if object.respond_to?(:column_for_attribute)
+      column = @object.column_for_attribute(method) if @object.respond_to?(:column_for_attribute)
 
       # Associations map by default to a select
       return :select if column.nil? && find_reflection(method)
@@ -811,7 +818,7 @@ module Formtastic #:nodoc:
         # otherwise assume the input name will be the same as the column type (eg string_input)
         return column.type
       else
-        obj = object.send(method) if object.respond_to?(method)
+        obj = @object.send(method) if @object.respond_to?(method)
 
         return :file     if obj && @@file_methods.any? { |m| obj.respond_to?(m) }
         return :password if method.to_s =~ /password/

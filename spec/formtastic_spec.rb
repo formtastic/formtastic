@@ -7,7 +7,7 @@ module FormtasticSpecHelper
     @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => column_type)) unless column_type.nil?
 
     semantic_form_for(@new_post) do |builder|
-      @default_type = builder.send(:default_input_type, @new_post, column_name)
+      @default_type = builder.send(:default_input_type, column_name)
     end
 
     return @default_type
@@ -552,7 +552,7 @@ describe 'Formtastic' do
                   @new_post.should_receive(method).and_return(column)
 
                   semantic_form_for(@new_post) do |builder|
-                    builder.send(:default_input_type, @new_post, method).should == :file
+                    builder.send(:default_input_type, method).should == :file
                   end
                 end
               end
