@@ -541,8 +541,8 @@ module Formtastic #:nodoc:
       value_as_class = options.delete(:value_as_class)
 
       list_item_content = collection.map do |c|
-        label = (!c.instance_of?(String)) ? c.first : c
-        value = (!c.instance_of?(String)) ? c.last : c
+        label = c.is_a?(Array) ? c.first : c
+        value = c.is_a?(Array) ? c.last  : c
 
         li_content = template.content_tag(:label,
           "#{self.radio_button(input_name, value, html_options)} #{label}",
@@ -844,9 +844,11 @@ module Formtastic #:nodoc:
         create_boolean_collection(options)
       end
 
-      # If we have a Hash or an Array of strings, fixnums or arrays, we are done.
-      return collection if collection.instance_of?(Hash) ||
-                          (collection.instance_of?(Array) && [Array, Fixnum, String, Symbol].include?(collection.first.class))
+      collection = collection.to_a if collection.instance_of?(Hash)
+
+      # Return if we have an Array of strings, fixnums or arrays
+      return collection if collection.instance_of?(Array) &&
+                           [Array, Fixnum, String, Symbol].include?(collection.first.class)
 
       label = options.delete(:label_method) || detect_label_method(collection)
       value = options.delete(:value_method) || :id

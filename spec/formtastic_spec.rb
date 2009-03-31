@@ -1036,13 +1036,13 @@ describe 'Formtastic' do
               end
             end
 
-            xit "should mark input as checked if it's the the existing choice" do
+            it "should mark input as checked if it's the the existing choice" do
               @new_post.author_id.should == @bob.id
               @new_post.author.id.should == @bob.id
               @new_post.author.should == @bob
 
               semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:author_id, :as => :radio))
+                concat(builder.input(:author, :as => :radio))
               end
 
               output_buffer.should have_tag("form li fieldset ol li label input[@checked='checked']")
@@ -1363,6 +1363,24 @@ describe 'Formtastic' do
                   @categories.each do |label, value|
                     output_buffer.should have_tag('form li fieldset ol li label', /#{label}/i)
                     output_buffer.should have_tag('form li fieldset ol li label input[@value='+value+']')
+                  end
+                end
+              end
+
+              describe 'and the :collection is an array of symbols' do
+                before do
+                  @new_post.stub!(:category_name).and_return('')
+                  @categories = [ :General, :Design, :Development ]
+                end
+
+                it "should use the symbol as the label text and value for each #{countable}" do
+                  semantic_form_for(@new_post) do |builder|
+                    concat(builder.input(:category_name, :as => :radio, :collection => @categories))
+                  end
+
+                  @categories.each do |value|
+                    output_buffer.should have_tag('form li fieldset ol li label', /#{value}/i)
+                    output_buffer.should have_tag('form li fieldset ol li label input[@value='+value.to_s+']')
                   end
                 end
               end
