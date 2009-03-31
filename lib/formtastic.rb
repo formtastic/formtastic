@@ -85,6 +85,10 @@ module Formtastic #:nodoc:
         method.to_s.send(@@label_str_method)
       end
 
+      if [:boolean_select, :boolean_radio].include?(options[:as])
+        ::ActiveSupport::Deprecation.warn(":as => :#{options[:as]} is deprecated, use :as => :#{options[:as].to_s[8..-1]} instead", caller[3..-1])
+      end
+
       html_class = [ options[:as], (options[:required] ? :required : :optional) ].join(' ')
       html_class << ' error' if @object && @object.errors.on(method.to_s)
 

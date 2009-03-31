@@ -1796,6 +1796,21 @@ describe 'Formtastic' do
         end
       end
 
+      [:boolean_select, :boolean_radio].each do |type|
+        describe ":as => #{type.inspect}" do
+          it 'should show a deprecation warning' do
+            @new_post.stub!(:allow_comments)
+            @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
+
+            ::ActiveSupport::Deprecation.should_receive(:warn).with(/select|radio/, anything())
+
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:allow_comments, :as => type))
+            end
+          end
+        end
+      end
+
       describe ':as => :boolean' do
 
         before do
