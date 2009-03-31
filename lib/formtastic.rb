@@ -77,13 +77,12 @@ module Formtastic #:nodoc:
     #
     def input(method, options = {})
       options[:required] = method_required?(method, options[:required])
+      options[:as]     ||= default_input_type(@object, method)
 
-      if @object
-        options[:label] ||= @object.class.human_attribute_name(method.to_s)
-        options[:as]    ||= default_input_type(@object, method)
+      options[:label]  ||= if @object
+        @object.class.human_attribute_name(method.to_s)
       else
-        options[:label] ||= method.to_s.send(@@label_str_method)
-        options[:as]    ||= :string
+        method.to_s.send(@@label_str_method)
       end
 
       html_class = [ options[:as], (options[:required] ? :required : :optional) ].join(' ')
@@ -791,14 +790,16 @@ module Formtastic #:nodoc:
     # default is a :string, a similar behaviour to Rails' scaffolding.
     #
     def default_input_type(object, method) #:nodoc:
+      return :string if object.nil?
+
       # Find the column object by attribute
       column = object.column_for_attribute(method) if object.respond_to?(:column_for_attribute)
-      # Maybe the column is a reflection?
-      column = find_reflection(method) unless column
+
+      # Associations map by default to a select
+      return :select if column.nil? && find_reflection(method)
 
       if column
         # handle the special cases where the column type doesn't map to an input method
-        return :select   if column.respond_to?(:macro) && column.respond_to?(:klass)
         return :select   if column.type == :integer && method.to_s =~ /_id$/
         return :datetime if column.type == :timestamp
         return :numeric  if [:integer, :float, :decimal].include?(column.type)
@@ -806,8 +807,9 @@ module Formtastic #:nodoc:
         # otherwise assume the input name will be the same as the column type (eg string_input)
         return column.type
       else
-        obj = object.send(method)
-        return :file     if @@file_methods.any? { |m| obj.respond_to?(m) }
+        obj = object.send(method) if object.respond_to?(method)
+
+        return :file     if obj && @@file_methods.any? { |m| obj.respond_to?(m) }
         return :password if method.to_s =~ /password/
         return :string
       end
