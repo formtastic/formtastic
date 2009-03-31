@@ -2004,8 +2004,9 @@ describe 'Formtastic' do
       describe 'without a block' do
 
         before do
-          Post.stub!(:reflections).and_return({:author => mock('reflection')})
-          Post.stub!(:content_columns).and_return([mock('column', :name => 'title'), mock('column', :name => 'body')])
+          Post.stub!(:reflections).and_return({:author   => mock('reflection', :macro => :belongs_to),
+                                               :comments => mock('reflection', :macro => :has_many) })
+          Post.stub!(:content_columns).and_return([mock('column', :name => 'title'), mock('column', :name => 'body'), mock('column', :name => 'created_at')])
           Author.stub!(:find).and_return([@fred, @bob])
 
           @new_post.stub!(:title)
@@ -2014,6 +2015,7 @@ describe 'Formtastic' do
 
           @new_post.stub!(:column_for_attribute).with(:title).and_return(mock('column', :type => :string, :limit => 255))
           @new_post.stub!(:column_for_attribute).with(:body).and_return(mock('column', :type => :text))
+          @new_post.stub!(:column_for_attribute).with(:created_at).and_return(mock('column', :type => :datetime))
           @new_post.stub!(:column_for_attribute).with(:author).and_return(nil)
         end
 
@@ -2040,8 +2042,10 @@ describe 'Formtastic' do
             output_buffer.should have_tag('form > fieldset.inputs > ol')
           end
 
-          it 'should render a list item in the ol for each column returned by Post.column_names' do
-            output_buffer.should have_tag('form > fieldset.inputs > ol > li', :count => (Post.content_columns.size + Post.reflections.size))
+          it 'should render a list item in the ol for each column and reflection' do
+            # Remove the :has_many macro and :created_at column
+            count = Post.content_columns.size + Post.reflections.size - 2
+            output_buffer.should have_tag('form > fieldset.inputs > ol > li', :count => count)
           end
 
           it 'should render a string list item for title' do
@@ -2053,7 +2057,11 @@ describe 'Formtastic' do
           end
 
           it 'should render a select list item for author_id' do
-            output_buffer.should have_tag('form > fieldset.inputs > ol > li.select')
+            output_buffer.should have_tag('form > fieldset.inputs > ol > li.select', :count => 1)
+          end
+
+          it 'should not render timestamps inputs by default' do
+            output_buffer.should_not have_tag('form > fieldset.inputs > ol > li.datetime')
           end
         end
 

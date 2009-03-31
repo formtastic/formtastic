@@ -241,9 +241,14 @@ module Formtastic #:nodoc:
         field_set_and_list_wrapping(html_options, &block)
       else
         if @object && args.empty?
-          args  = @object.class.reflections.map { |n,_| n }
+          # Get all belongs_to association
+          args  = @object.class.reflections.map { |n,_| n if _.macro == :belongs_to }
+
+          # Get content columns and remove timestamps columns from it
           args += @object.class.content_columns.map(&:name)
           args -= %w[created_at updated_at created_on updated_on]
+
+          args.compact!
         end
         contents = args.map { |method| input(method.to_sym) }
 
