@@ -92,7 +92,7 @@ And then add it as a dependency in your environment.rb file:
 If you're a little more old school, install it as a plugin:
 
 <pre>
-  ./script/install plugin git://github.com/justinfrench/formtastic.git
+  ./script/plugin install git://github.com/justinfrench/formtastic.git
 </pre>
 
 
