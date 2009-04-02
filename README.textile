@@ -1,4 +1,4 @@
-h1. Formtastic 0.1.1
+h1. Formtastic 0.1.3
 
 Formtastic is a Rails FormBuilder DSL (with some other goodies) to make it far easier to create beautiful, semantically rich, syntactically awesome, readily stylable and wonderfully accessible HTML forms in your Rails applications.
 
@@ -86,7 +86,7 @@ And then add it as a dependency in your environment.rb file:
   config.gem "justinfrench-formtastic", 
     :lib     => 'formtastic', 
     :source  => 'http://gems.github.com', 
-    :version => '0.1.1'
+    :version => '0.1.3'
 </pre>
 
 If you're a little more old school, install it as a plugin:
