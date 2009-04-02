@@ -364,11 +364,15 @@ Formtastic wouldn't be as awesome as it is today if it weren't for the wonderful
 * "Jack Dempsey":http://github.com/jackdempsey/
 * "Simon Chiu":http://github.com/tolatomeow
 
+
+h2. Hey, join the Google group!
+
+Please join the "Formtastic Google Group":http://groups.google.com.au/group/formtastic, especially if you'd like to talk about a new feature, or report a bug.
+
+
 h2. Project Info
 
 Formtastic is hosted on Github: http://github.com/justinfrench/formtastic/, where your contributions, forkings, comments and feedback are greatly welcomed.
-
-There's also a newly created "Formtastic Google Group":http://groups.google.com.au/group/formtastic.
 
 
 Copyright (c) 2007-2008 Justin French, released under the MIT license.
