@@ -273,26 +273,7 @@ If you wish, put something like this in config/initializers/formtastic_config.rb
 
 h2. Internationalization (I18n)
 
-Supports I18n! ActiveRecord object names and attributes are, by default, taken from calling @object.human_name and @object.human_attribute_name(attr) respectively. There are a few words specific to Formtastic that can be translated.
-
-Here is an example locale file:
-
-<pre>
-  en:
-    formtastic:
-      yes: 'Yes'
-      no: 'No'
-      create: 'Create'
-      save: 'Save'
-      submit: 'Submit'
-      year: 'Year'
-      month: 'Month'
-      day: 'Day'
-      hour: 'Hour'
-      minute: 'Minute'
-      second: 'Second'
-      required: 'required'
-</pre>
+Supports I18n! ActiveRecord object names and attributes are, by default, taken from calling @object.human_name and @object.human_attribute_name(attr) respectively. There are a few words specific to Formtastic that can be translated.  See lib/locale/en.yml for more information.
 
 
 h2. ValidationReflection plugin
