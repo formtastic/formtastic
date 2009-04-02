@@ -343,7 +343,9 @@ A proof-of-concept (very much a work-in-progress) stylesheet is provided which y
 </pre>
 
 
-h2. Many thanks to Formtastic's contributors
+h2. Contributors
+
+Formtastic wouldn't be as awesome as it is today if it weren't for the wonderful contributions of these fine, fine coders.  An extra huge thanks goes out to "José Valim":http://github.com/josevalim for nearly 50 patches.
 
 * "Justin French":http://justinfrench.com
 * "Xavier Shay":http://rhnh.net
@@ -357,7 +359,10 @@ h2. Many thanks to Formtastic's contributors
 * "Sascha Hoellger":http://github.com/mitnal
 * "Jeff Smick":http://github.com/sprsquish
 * "José Valim":http://github.com/josevalim
-
+* "Greg Fitzgerald":http://github.com/gregf/
+* "Gareth Townsend":http://github.com/quamen
+* "Jack Dempsey":http://github.com/jackdempsey/
+* "Simon Chiu":http://github.com/tolatomeow
 
 h2. Project Info
 
