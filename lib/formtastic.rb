@@ -654,7 +654,7 @@ module Formtastic #:nodoc:
           template.hidden_field_tag("#{@object_name}[#{field_name}]", (hidden_value || 1), :id => html_id)
         else
           opts = set_options(options).merge(:prefix => @object_name, :field_name => field_name)
-          item_label_text = I18n.t(input.to_s, :default => input.to_s.humanize, :scope => [:formtastic])
+          item_label_text = I18n.t(input.to_s, :default => input.to_s.humanize, :scope => [:datetime, :prompts])
 
           template.content_tag(:li,
             template.content_tag(:label, item_label_text, :for => html_id) +

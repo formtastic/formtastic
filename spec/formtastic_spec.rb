@@ -1720,10 +1720,10 @@ describe 'Formtastic' do
 
         describe 'when the locale changes the label text' do
           before do
-            I18n.backend.store_translations 'en', :formtastic => {
+            I18n.backend.store_translations 'en', :datetime => {:prompts => {
               :year => 'The Year', :month => 'The Month', :day => 'The Day',
               :hour => 'The Hour', :minute => 'The Minute'
-            }
+            }}
             semantic_form_for(@new_post) do |builder|
               concat(builder.input(:publish_at, :as => :datetime))
             end
