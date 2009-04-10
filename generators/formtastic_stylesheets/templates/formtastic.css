@@ -53,9 +53,9 @@ form.formtastic fieldset ol li:after { content: "."; display: block; height: 0; 
 html[xmlns] form.formtastic fieldset ol li { display: block; }
 * html form.formtastic fieldset ol li { height: 1%; }
 
-form.formtastic fieldset ol li.required {  }
-form.formtastic fieldset ol li.optional {  }
-form.formtastic fieldset ol li.error { background:#FFCCCC; }
+form.formtastic fieldset ol li.required { }
+form.formtastic fieldset ol li.optional { }
+form.formtastic fieldset ol li.error { }
   
 
 /* LABELS
