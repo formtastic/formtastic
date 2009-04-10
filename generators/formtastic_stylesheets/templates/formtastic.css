@@ -45,7 +45,7 @@ html[xmlns] form.formtastic fieldset { display: block; }
 /* INPUT LIs
 --------------------------------------------------------------------------------------------------*/
 
-form.formtastic fieldset ol li { padding:5px; margin-bottom:1em; }
+form.formtastic fieldset ol li { margin-bottom:1.5em; }
 
 /* clearfixing the li's */
 form.formtastic fieldset ol li { display: inline-block; }
