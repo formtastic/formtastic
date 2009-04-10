@@ -111,10 +111,6 @@ form.formtastic fieldset ol li.datetime fieldset {}
 
 form.formtastic fieldset ol li.date fieldset legend,
 form.formtastic fieldset ol li.time fieldset legend,
-form.formtastic fieldset ol li.datetime fieldset legend,
-
-form.formtastic fieldset ol li.date fieldset legend,
-form.formtastic fieldset ol li.time fieldset legend,
 form.formtastic fieldset ol li.datetime fieldset legend { display:block; float:left; width:25%; position:relative; }
 
 form.formtastic fieldset ol li.date fieldset legend span,
