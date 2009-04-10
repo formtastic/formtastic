@@ -61,7 +61,7 @@ form.formtastic fieldset ol li.error { background:#FFCCCC; }
 /* LABELS
 --------------------------------------------------------------------------------------------------*/
   
-form.formtastic fieldset ol li label { display:block; width:25%; float:left; }
+form.formtastic fieldset ol li label { display:block; width:25%; float:left; padding-top:.2em; }
 
 
 /* INLINE HINTS
