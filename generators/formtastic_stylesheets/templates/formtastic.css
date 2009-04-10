@@ -23,16 +23,13 @@ form.formtastic input, form.formtastic textarea, form.formtastic select { font-f
 form.formtastic input, form.formtastic textarea, form.formtastic select { font-size:100%; }
 form.formtastic legend { color:#000; }
 
-/* Rails wraps error fields with divs */
-div.fieldWithErrors { display:inline; margin:0; padding:0; }
-
 
 /* FIELDSETS & LISTS
 --------------------------------------------------------------------------------------------------*/
 
 form.formtastic fieldset { }
 form.formtastic fieldset.inputs { }
-form.formtastic fieldset.buttons { }
+form.formtastic fieldset.buttons { padding-left:25%; }
 form.formtastic fieldset ol { }
 
 /* clearfixing the fieldsets */
