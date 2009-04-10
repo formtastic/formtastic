@@ -105,7 +105,8 @@ form.formtastic fieldset ol li.boolean label input { margin:0 0.5em 0 0.2em; }
 
 /* RADIO OVERRIDES
 --------------------------------------------------------------------------------------------------*/
-form.formtastic fieldset ol li.radio { padding-bottom:0; }
+form.formtastic fieldset ol li.radio { }
+form.formtastic fieldset ol li.radio fieldset ol { margin-bottom:-0.6em; }
 form.formtastic fieldset ol li.radio fieldset ol li { margin:0.1em 0 0.5em 0; }
 form.formtastic fieldset ol li.radio fieldset ol li label { float:none; width:100%; }
 form.formtastic fieldset ol li.radio fieldset ol li label input { margin-right:0.5em; }
