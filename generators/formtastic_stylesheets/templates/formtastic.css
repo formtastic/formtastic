@@ -10,10 +10,8 @@ This stylesheet forms part of the Formtastic Rails Plugin
 --------------------------------------------------------------------------------------------------*/
 
 
-/* NORMALIZE AND RESET
+/* NORMALIZE AND RESET - obviously inspired by Yahoo's reset.css, but scoped to just form.formtastic
 --------------------------------------------------------------------------------------------------*/
-
-/* obviously inspired by Yahoo's reset.css, but scoped to just form.formtastic elements that we care about */
 form.formtastic, form.formtastic ul, form.formtastic ol, form.formtastic li, form.formtastic fieldset, form.formtastic legend, form.formtastic input, form.formtastic textarea, form.formtastic select, form.formtastic p { margin:0; padding:0; }
 form.formtastic fieldset { border:0; }
 form.formtastic em, form.formtastic strong { font-style:normal; font-weight:normal; }
@@ -26,7 +24,6 @@ form.formtastic legend { color:#000; }
 
 /* FIELDSETS & LISTS
 --------------------------------------------------------------------------------------------------*/
-
 form.formtastic fieldset { }
 form.formtastic fieldset.inputs { }
 form.formtastic fieldset.buttons { padding-left:25%; }
@@ -41,7 +38,6 @@ html[xmlns] form.formtastic fieldset { display: block; }
 
 /* INPUT LIs
 --------------------------------------------------------------------------------------------------*/
-
 form.formtastic fieldset ol li { margin-bottom:1.5em; }
 
 /* clearfixing the li's */
