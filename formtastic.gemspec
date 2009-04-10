@@ -7,11 +7,11 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Justin French"]
   s.autorequire = %q{formtastic}
-  s.date = %q{2009-04-03}
+  s.date = %q{2009-04-10}
   s.description = %q{A Rails form builder plugin/gem with semantically rich and accessible markup}
   s.email = %q{justin@indent.com.au}
   s.extra_rdoc_files = ["README.textile"]
-  s.files = ["MIT-LICENSE", "README.textile", "Rakefile", "rails/init.rb", "lib/formtastic.rb", "lib/justin_french", "lib/justin_french/formtastic.rb", "lib/locale", "lib/locale/en.yml", "spec/formtastic_spec.rb", "spec/test_helper.rb"]
+  s.files = ["MIT-LICENSE", "README.textile", "Rakefile", "rails/init.rb", "lib/formtastic.rb", "lib/justin_french", "lib/justin_french/formtastic.rb", "lib/locale", "lib/locale/en.yml", "generators/formtastic_stylesheets", "generators/formtastic_stylesheets/formtastic_stylesheets_generator.rb", "generators/formtastic_stylesheets/templates", "generators/formtastic_stylesheets/templates/formtastic.css", "generators/formtastic_stylesheets/templates/formtastic_changes.css", "spec/formtastic_spec.rb", "spec/test_helper.rb"]
   s.has_rdoc = true
   s.homepage = %q{http://github.com/justinfrench/formtastic/tree/master}
   s.rdoc_options = ["--inline-source", "--charset=UTF-8"]

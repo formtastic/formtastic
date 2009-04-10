@@ -20,7 +20,7 @@ begin
     
     s.require_path = 'lib'
     s.autorequire = GEM
-    s.files = %w(MIT-LICENSE README.textile Rakefile) + Dir.glob("{rails,lib,spec}/**/*")
+    s.files = %w(MIT-LICENSE README.textile Rakefile) + Dir.glob("{rails,lib,generators,spec}/**/*")
   end
 rescue LoadError
   puts "Jeweler, or one of its dependencies, is not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
