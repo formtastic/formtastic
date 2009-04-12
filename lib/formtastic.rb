@@ -55,6 +55,7 @@ module Formtastic #:nodoc:
     # columns all map to a single numeric_input, for example).
     #
     # * :select (a select menu for associations) - default to association names
+    # * :time_zone (a select menu with time zones)
     # * :radio (a set of radio inputs for associations) - default to association names
     # * :password (a password input) - default for :string column types with 'password' in the method name
     # * :text (a textarea) - default for :text column types
@@ -489,6 +490,20 @@ module Formtastic #:nodoc:
     end
     alias :boolean_select_input :select_input
 
+    # Outputs a timezone select input as Rails' time_zone_select helper. You
+    # can give priority zones as option.
+    #
+    # Examples:
+    #
+    #   f.input :time_zone, :as => :time_zone, :priority_zones => /Australia/
+    #
+    def time_zone_input(method, options)
+      html_options = options.delete(:input_html) || {}
+
+      input_label(method, options.delete(:label), options.slice(:required)) +
+      self.time_zone_select(method, options.delete(:priority_zones), set_options(options), html_options)
+    end
+
     # Outputs a fieldset containing a legend for the label text, and an ordered list (ol) of list
     # items, one for each possible choice in the belongs_to association.  Each li contains a
     # label and a radio input.
@@ -801,7 +816,7 @@ module Formtastic #:nodoc:
       )
     end
 
-    # For methods that have a database column, take a best guess as to what the inout method
+    # For methods that have a database column, take a best guess as to what the input method
     # should be.  In most cases, it will just return the column type (eg :string), but for special
     # cases it will simplify (like the case of :integer, :float & :decimal to :numeric), or do
     # something different (like :password and :select).
@@ -812,23 +827,22 @@ module Formtastic #:nodoc:
     def default_input_type(method) #:nodoc:
       return :string if @object.nil?
 
-      # Find the column object by attribute
       column = @object.column_for_attribute(method) if @object.respond_to?(:column_for_attribute)
-
-      # Associations map by default to a select
-      return :select if column.nil? && find_reflection(method)
 
       if column
         # handle the special cases where the column type doesn't map to an input method
-        return :select   if column.type == :integer && method.to_s =~ /_id$/
-        return :datetime if column.type == :timestamp
-        return :numeric  if [:integer, :float, :decimal].include?(column.type)
-        return :password if column.type == :string && method.to_s =~ /password/
+        return :time_zone if column.type == :string && method.to_s =~ /time_?zone/
+        return :select    if column.type == :integer && method.to_s =~ /_id$/
+        return :datetime  if column.type == :timestamp
+        return :numeric   if [:integer, :float, :decimal].include?(column.type)
+        return :password  if column.type == :string && method.to_s =~ /password/
+
         # otherwise assume the input name will be the same as the column type (eg string_input)
         return column.type
       else
         obj = @object.send(method) if @object.respond_to?(method)
 
+        return :select   if find_reflection(method)
         return :file     if obj && @@file_methods.any? { |m| obj.respond_to?(m) }
         return :password if method.to_s =~ /password/
         return :string

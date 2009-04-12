@@ -561,7 +561,7 @@ describe 'Formtastic' do
           end
 
           it 'should call the corresponding input method' do
-            [:select, :radio, :date, :datetime, :time, :boolean].each do |input_style|
+            [:select, :time_zone, :radio, :date, :datetime, :time, :boolean].each do |input_style|
               @new_post.stub!(:generic_column_name)
               @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
               semantic_form_for(@new_post) do |builder|
@@ -1012,6 +1012,57 @@ describe 'Formtastic' do
         end
       end
 
+      describe ":as => :time_zone" do
+        before do
+          @new_post.stub!(:time_zone)
+          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string))
+
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:time_zone))
+          end
+        end
+
+        it "should have a time_zone class on the wrapper" do
+          output_buffer.should have_tag('form li.time_zone')
+        end
+
+        it 'should have a post_title_input id on the wrapper' do
+          output_buffer.should have_tag('form li#post_time_zone_input')
+        end
+
+        it 'should generate a label for the input' do
+          output_buffer.should have_tag('form li label')
+          output_buffer.should have_tag('form li label[@for="post_time_zone"')
+          output_buffer.should have_tag('form li label', /Time zone/)
+        end
+
+        it "should generate a select" do
+          output_buffer.should have_tag("form li select")
+          output_buffer.should have_tag("form li select#post_time_zone")
+          output_buffer.should have_tag("form li select[@name=\"post[time_zone]\"]")
+        end
+
+        it 'should use input_html to style inputs' do
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:time_zone, :input_html => { :class => 'myclass' }))
+          end
+          output_buffer.should have_tag("form li select.myclass")
+        end
+
+        it 'should generate input and labels even if no object is given' do
+          semantic_form_for(:project, :url => 'http://test.host/') do |builder|
+            concat(builder.input(:time_zone, :as => :time_zone))
+          end
+
+          output_buffer.should have_tag('form li label')
+          output_buffer.should have_tag('form li label[@for="project_time_zone"')
+          output_buffer.should have_tag('form li label', /Time zone/)
+
+          output_buffer.should have_tag("form li select")
+          output_buffer.should have_tag("form li select#project_time_zone")
+          output_buffer.should have_tag("form li select[@name=\"project[time_zone]\"]")
+        end
+      end
 
       describe ':as => :radio' do
 
