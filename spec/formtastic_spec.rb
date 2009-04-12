@@ -2322,6 +2322,16 @@ describe 'Formtastic' do
           output_buffer.should have_tag('li.commit input[@name="commit"]')
         end
 
+        it 'should pass options given in :button_html to the button' do
+          @new_post.stub!(:new_record?).and_return(false)
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.commit_button('text', :button_html => {:class => 'my_class', :id => 'my_id'}))
+          end
+
+          output_buffer.should have_tag('li.commit input#my_id')
+          output_buffer.should have_tag('li.commit input.my_class')
+        end
+
       end
 
       describe 'when used on an existing record' do
