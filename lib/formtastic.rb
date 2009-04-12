@@ -281,9 +281,10 @@ module Formtastic #:nodoc:
     #
     #  <%= form.commit_button "Go" %> => <input name="commit" type="submit" value="Go" />
     #
-    def commit_button(value=nil, options = {})
-      value ||= save_or_create_button_text
-      template.content_tag(:li, template.submit_tag(value), :class => "commit")
+    def commit_button(value=nil, options={})
+      value     ||= save_or_create_button_text
+      button_html = options.delete(:button_html) || {}
+      template.content_tag(:li, self.submit(value, button_html), :class => "commit")
     end
 
     # A thin wrapper around #fields_for to set :builder => Formtastic::SemanticFormBuilder

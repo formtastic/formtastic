@@ -168,6 +168,8 @@ wrapper you just need to specify the :input_html and :wrapper_html options hash.
     <% end %>
 </pre>
 
+To customize buttons, :button_html is available.
+
 Nested forms (Rails 2.3) are also supported. You can do it in the Rails way:
 
 <pre>
