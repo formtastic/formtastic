@@ -35,7 +35,6 @@ module Formtastic #:nodoc:
     STRING_MAPPINGS = [ :string, :password, :numeric ]
 
     attr_accessor :template
-    attr_writer   :nested_child_index
 
     # Returns a suitable form input for the given +method+, using the database column information
     # and other factors (like the method name) to figure out what you probably want.
@@ -233,21 +232,15 @@ module Formtastic #:nodoc:
       html_options = args.extract_options!
       html_options[:class] ||= "inputs"
 
-      if fields_for_object = html_options.delete(:for)
-        html_options.merge!(:parent_builder => self)
-        inputs_for_nested_attributes(fields_for_object, args << html_options,
-                                     html_options.delete(:for_options) || {}, &block)
+      if html_options[:for]
+        inputs_for_nested_attributes(args, html_options, &block)
       elsif block_given?
         field_set_and_list_wrapping(html_options, &block)
       else
         if @object && args.empty?
-          # Get all belongs_to association
           args  = @object.class.reflections.map { |n,_| n if _.macro == :belongs_to }
-
-          # Get content columns and remove timestamps columns from it
           args += @object.class.content_columns.map(&:name)
           args -= %w[created_at updated_at created_on updated_on]
-
           args.compact!
         end
         contents = args.map { |method| input(method.to_sym) }
@@ -324,17 +317,20 @@ module Formtastic #:nodoc:
     #
     # It should raise an error if a block with arity zero is given.
     #
-    def inputs_for_nested_attributes(fields_for_object, inputs, options, &block)
+    def inputs_for_nested_attributes(args, options, &block)
+      args << options.merge!(:parent => { :builder => self, :for => options[:for] })
+
       fields_for_block = if block_given?
         raise ArgumentError, 'You gave :for option with a block to inputs method, ' <<
                              'but the block does not accept any argument.' if block.arity <= 0
 
-        proc { |f| f.inputs(*inputs){ block.call(f) } }
+        proc { |f| f.inputs(*args){ block.call(f) } }
       else
-        proc { |f| f.inputs(*inputs) }
+        proc { |f| f.inputs(*args) }
       end
 
-      semantic_fields_for(*(Array(fields_for_object) << options), &fields_for_block)
+      fields_for_args = [options.delete(:for), options.delete(:for_options) || {}].flatten
+      semantic_fields_for(*fields_for_args, &fields_for_block)
     end
 
     # Remove any Formtastic-specific options before passing the down options.
@@ -768,23 +764,16 @@ module Formtastic #:nodoc:
     # And it will generate a fieldset for each task with legend 'Task #1', 'Task #2',
     # 'Task #3' and so on.
     #
-    # If you are using inputs :for, for more than one association in the same
-    # form builder, you might want to set the nested_child_index as well. You
-    # can do that doing:
-    #
-    #   f.nested_child_index = -1
-    #
-    def field_set_and_list_wrapping(html_options, contents = '', &block) #:nodoc:
-      # Generates the legend text allowing nested_child_index support for interpolation
-      legend_text  = html_options.delete(:name).to_s
-      legend_text %= html_options[:parent_builder].instance_variable_get('@nested_child_index').to_i + 1
+    def field_set_and_list_wrapping(html_options, contents='', &block) #:nodoc:
+      legend  = html_options.delete(:name).to_s
+      legend %= parent_child_index(html_options[:parent]) if html_options[:parent]
+      legend  = template.content_tag(:legend, template.content_tag(:span, legend)) unless legend.blank?
 
-      legend = legend_text.blank? ? "" : template.content_tag(:legend, template.content_tag(:span, legend_text))
       contents = template.capture(&block) if block_given?
 
       fieldset = template.content_tag(:fieldset,
         legend + template.content_tag(:ol, contents),
-        html_options.except(:builder, :parent_builder)
+        html_options.except(:builder, :parent)
       )
 
       template.concat(fieldset) if block_given?
@@ -945,6 +934,22 @@ module Formtastic #:nodoc:
       sanitized_method_name = method_name.to_s.sub(/\?$/,"")
 
       "#{sanitized_object_name}#{index}_#{sanitized_method_name}_#{value}"
+    end
+
+    # Gets the nested_child_index value from the parent builder. In Rails 2.3
+    # it always returns a fixnum. In next versions it returns a hash with each
+    # association that the parent builds.
+    #
+    def parent_child_index(parent)
+      duck = parent[:builder].instance_variable_get('@nested_child_index')
+
+      if duck.is_a?(Hash)
+        child = parent[:for]
+        child = child.first if child.respond_to?(:first)
+        duck[child].to_i + 1
+      else
+        duck.to_i + 1
+      end
     end
 
     def sanitized_object_name
