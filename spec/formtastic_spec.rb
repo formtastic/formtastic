@@ -647,6 +647,30 @@ describe 'Formtastic' do
           end
 
         end
+
+        describe ':wrapper_html option' do
+
+          describe 'when provided' do
+            it 'should be passed down to the li tag' do
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:title, :wrapper_html => {:id => :another_id, :class => :another_class}))
+              end
+              output_buffer.should have_tag("form li#another_id")
+              output_buffer.should have_tag("form li.another_class")
+            end
+          end
+
+          describe 'when not provided' do
+            it 'should use default id and class' do
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:title))
+              end
+              output_buffer.should have_tag("form li#post_title_input")
+              output_buffer.should have_tag("form li.string")
+            end
+          end
+
+        end
       end
 
       describe ':as any type of input' do

@@ -46,6 +46,7 @@ module Formtastic #:nodoc:
     # * :required - specify if the column is required (true) or not (false)
     # * :hint - provide some text to hint or help the user provide the correct information for a field
     # * :input_html - provide options that will be passed down to the generated input
+    # * :wrapper_html - provide options that will be passed down to the li wrapper
     #
     # Input Types:
     #
@@ -85,20 +86,22 @@ module Formtastic #:nodoc:
         method.to_s.send(@@label_str_method)
       end
 
+      html_class = [ options[:as], (options[:required] ? :required : :optional) ].join(' ')
+      html_class << ' error' if @object && @object.errors.on(method.to_s)
+      html_id = generate_html_id(method)
+
+      wrapper_html = options.delete(:wrapper_html) || {}
+      wrapper_html = { :id => html_id, :class => html_class }.merge(wrapper_html)
+
       if [:boolean_select, :boolean_radio].include?(options[:as])
         ::ActiveSupport::Deprecation.warn(":as => :#{options[:as]} is deprecated, use :as => :#{options[:as].to_s[8..-1]} instead", caller[3..-1])
       end
-
-      html_class = [ options[:as], (options[:required] ? :required : :optional) ].join(' ')
-      html_class << ' error' if @object && @object.errors.on(method.to_s)
-
-      html_id = generate_html_id(method)
 
       list_item_content = @@inline_order.map do |type|
         send(:"inline_#{type}_for", method, options)
       end.compact.join("\n")
 
-      return template.content_tag(:li, list_item_content, { :id => html_id, :class => html_class })
+      return template.content_tag(:li, list_item_content, wrapper_html)
     end
 
     # Creates an input fieldset and ol tag wrapping for use around a set of inputs.  It can be
