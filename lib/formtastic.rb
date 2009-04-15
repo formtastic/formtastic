@@ -701,7 +701,14 @@ module Formtastic #:nodoc:
     def inline_errors_for(method, options)  #:nodoc:
       return nil unless @object && @object.respond_to?(:errors) && [:sentence, :list].include?(@@inline_errors)
 
-      errors = @object.errors.on(method.to_s).to_a
+      # Ruby 1.9: Strings are not Enumerable, ie no String#to_a
+      errors = @object.errors.on(method.to_s)
+      unless errors.respond_to?(:to_a)
+        errors = [errors]
+      else
+        errors = errors.to_a
+      end
+
       send("error_#{@@inline_errors}", errors) unless errors.empty?
     end
 
@@ -773,6 +780,8 @@ module Formtastic #:nodoc:
 
       contents = template.capture(&block) if block_given?
 
+      # Ruby 1.9: String#to_s behavior changed, need to make an explicit join.
+      contents = contents.join if contents.respond_to?(:join)
       fieldset = template.content_tag(:fieldset,
         legend + template.content_tag(:ol, contents),
         html_options.except(:builder, :parent)
