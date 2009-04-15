@@ -1169,7 +1169,7 @@ describe 'Formtastic' do
 
           it 'should have a label inside the wrapper' do
             output_buffer.should have_tag('form li label')
-            output_buffer.should have_tag('form li label', /Posts/)
+            output_buffer.should have_tag('form li label', /Post ids/)
             output_buffer.should have_tag("form li label[@for='author_post_ids']")
           end
 
@@ -1211,7 +1211,7 @@ describe 'Formtastic' do
 
           it 'should have a label inside the wrapper' do
             output_buffer.should have_tag('form li label')
-            output_buffer.should have_tag('form li label', /Authors/)
+            output_buffer.should have_tag('form li label', /Author ids/)
             output_buffer.should have_tag("form li label[@for='post_author_ids']")
           end
 

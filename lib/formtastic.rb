@@ -80,12 +80,6 @@ module Formtastic #:nodoc:
       options[:required] = method_required?(method, options[:required])
       options[:as]     ||= default_input_type(method)
 
-      options[:label]  ||= if @object
-        @object.class.human_attribute_name(method.to_s)
-      else
-        method.to_s.send(@@label_str_method)
-      end
-
       html_class = [ options[:as], (options[:required] ? :required : :optional) ].join(' ')
       html_class << ' error' if @object && @object.errors.on(method.to_s)
       html_id = generate_html_id(method)
@@ -675,11 +669,13 @@ module Formtastic #:nodoc:
     def boolean_input(method, options)
       html_options = options.delete(:input_html) || {}
 
-      content = self.check_box(method, set_options(options).merge(html_options),
-                               options.delete(:checked_value) || '1', options.delete(:unchecked_value) || '0')
+      input = self.check_box(method, set_options(options).merge(html_options),
+                             options.delete(:checked_value) || '1', options.delete(:unchecked_value) || '0')
 
-      # required does not make sense in check box
-      input_label(method, content + options.delete(:label), :skip_required => true)
+      # Generate the label by hand because required or optional does not make sense here
+      label = options.delete(:label) || humanized_attribute_name(method)
+
+      self.label(method, input + label, options)
     end
 
     # Generates an input for the given method using the type supplied with :as.
@@ -712,7 +708,8 @@ module Formtastic #:nodoc:
     # Generates hints for the given method using the text supplied in :hint.
     #
     def inline_hints_for(method, options) #:nodoc:
-      options[:hint].blank? ? '' : template.content_tag(:p, options[:hint], :class => 'inline-hints')
+      return if options[:hint].blank?
+      template.content_tag(:p, options[:hint], :class => 'inline-hints')
     end
 
     # Creates an error sentence by calling to_sentence on the errors array.
@@ -736,7 +733,8 @@ module Formtastic #:nodoc:
     # with class label.
     #
     def input_label(method, text, options={}, as_span=false) #:nodoc:
-      text << required_or_optional_string(options.delete(:required)) unless options.delete(:skip_required)
+      text ||= humanized_attribute_name(method)
+      text  << required_or_optional_string(options.delete(:required))
 
       if as_span
         options[:class] ||= 'label'
@@ -958,6 +956,14 @@ module Formtastic #:nodoc:
 
     def sanitized_object_name
       @sanitized_object_name ||= @object_name.to_s.gsub(/\]\[|[^-a-zA-Z0-9:.]/, "_").sub(/_$/, "")
+    end
+
+    def humanized_attribute_name(method)
+      if @object
+        @object.class.human_attribute_name(method.to_s)
+      else
+        method.to_s.send(@@label_str_method)
+      end
     end
 
   end
