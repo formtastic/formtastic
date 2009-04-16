@@ -79,7 +79,7 @@ module Formtastic #:nodoc:
       options[:required] = method_required?(method, options[:required])
       options[:as]     ||= default_input_type(method)
 
-      options[:label]  ||= if @object
+      options[:label]  ||= if @object && @object.class.respond_to?(:human_attribute_name)
         @object.class.human_attribute_name(method.to_s)
       else
         method.to_s.send(@@label_str_method)
@@ -90,7 +90,7 @@ module Formtastic #:nodoc:
       end
 
       html_class = [ options[:as], (options[:required] ? :required : :optional) ].join(' ')
-      html_class << ' error' if @object && @object.errors.on(method.to_s)
+      html_class << ' error' if @object && @object.respond_to?(:errors) && @object.errors.on(method.to_s)
 
       html_id = generate_html_id(method)
 
@@ -700,7 +700,7 @@ module Formtastic #:nodoc:
     # or as sentence. If :none is set, no error is shown.
     #
     def inline_errors_for(method, options)  #:nodoc:
-      return nil unless @object && [:sentence, :list].include?(@@inline_errors)
+      return nil unless @object && @object.respond_to?(:errors) && [:sentence, :list].include?(@@inline_errors)
 
       errors = @object.errors.on(method.to_s).to_a
       send("error_#{@@inline_errors}", errors) unless errors.empty?
