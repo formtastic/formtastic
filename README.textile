@@ -214,13 +214,13 @@ h2. The Available Inputs
 
 * :select (a select menu) - default for ActiveRecord associations (belongs_to, has_many, has_and_belongs_to_many)
 * :radio (a set of radio inputs) - alternative to :select for ActiveRecord belongs_to associations
+* :time_zone (a select input) - default for :string column types with 'time_zone' in the method name
 * :password (a password input) - default for :string column types with 'password' in the method name
 * :text (a textarea) - default for :text column types
 * :date (a date select) - default for :date column types
 * :datetime (a date and time select) - default for :datetime and :timestamp column types
 * :time (a time select) - default for :time column types
 * :boolean (a checkbox) - default for :boolean column types
-* :boolean_select (a yes/no select box)
 * :string (a text field) - default for :string column types
 * :numeric (a text field, like string) - default for :integer, :float and :decimal column types
 * :file (a file field) - default for paperclip or attachment_fu attributes

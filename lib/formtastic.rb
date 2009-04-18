@@ -831,7 +831,7 @@ module Formtastic #:nodoc:
 
       if column
         # handle the special cases where the column type doesn't map to an input method
-        return :time_zone if column.type == :string && method.to_s =~ /time_?zone/
+        return :time_zone if column.type == :string && method.to_s =~ /time_zone/
         return :select    if column.type == :integer && method.to_s =~ /_id$/
         return :datetime  if column.type == :timestamp
         return :numeric   if [:integer, :float, :decimal].include?(column.type)
