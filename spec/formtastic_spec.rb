@@ -653,9 +653,26 @@ describe 'Formtastic' do
           describe 'when provided' do
             it 'should be passed down to the li tag' do
               semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:title, :wrapper_html => {:id => :another_id, :class => :another_class}))
+                concat(builder.input(:title, :wrapper_html => {:id => :another_id}))
               end
               output_buffer.should have_tag("form li#another_id")
+            end
+
+            it 'should append given classes to li default classes' do
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:title, :wrapper_html => {:class => :another_class}, :required => true))
+              end
+              output_buffer.should have_tag("form li.string")
+              output_buffer.should have_tag("form li.required")
+              output_buffer.should have_tag("form li.another_class")
+            end
+
+            it 'should allow classes to be an array' do
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:title, :wrapper_html => {:class => [ :my_class, :another_class ]}))
+              end
+              output_buffer.should have_tag("form li.string")
+              output_buffer.should have_tag("form li.my_class")
               output_buffer.should have_tag("form li.another_class")
             end
           end

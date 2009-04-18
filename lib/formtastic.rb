@@ -80,12 +80,12 @@ module Formtastic #:nodoc:
       options[:required] = method_required?(method, options[:required])
       options[:as]     ||= default_input_type(method)
 
-      html_class = [ options[:as], (options[:required] ? :required : :optional) ].join(' ')
-      html_class << ' error' if @object && @object.errors.on(method.to_s)
-      html_id = generate_html_id(method)
+      html_class = [ options[:as], (options[:required] ? :required : :optional) ]
+      html_class << 'error' if @object && @object.errors.on(method.to_s)
 
       wrapper_html = options.delete(:wrapper_html) || {}
-      wrapper_html = { :id => html_id, :class => html_class }.merge(wrapper_html)
+      wrapper_html[:id]  ||= generate_html_id(method)
+      wrapper_html[:class] = (html_class << wrapper_html[:class]).flatten.compact.join(' ')
 
       if [:boolean_select, :boolean_radio].include?(options[:as])
         ::ActiveSupport::Deprecation.warn(":as => :#{options[:as]} is deprecated, use :as => :#{options[:as].to_s[8..-1]} instead", caller[3..-1])
