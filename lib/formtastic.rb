@@ -78,7 +78,7 @@ module Formtastic #:nodoc:
     #   <% end %>
     #
     def input(method, options = {})
-      options[:required] = method_required?(method, options[:required])
+      options[:required] = method_required?(method) unless options.key?(:required)
       options[:as]     ||= default_input_type(method)
 
       html_class = [ options[:as], (options[:required] ? :required : :optional) ]
@@ -308,6 +308,25 @@ module Formtastic #:nodoc:
       fields_for(record_or_name_or_array, *args, &block)
     end
 
+    # Generates the label for the input. Accepts the same arguments as Rails
+    # label method and a fourth one that allows the label to be generated
+    # as span tag with class label.
+    #
+    # :required can be also sent as option. When true, marks a filed as required,
+    # when false marks it as optional. When nil, does nothing.
+    #
+    def label(method, text, options={}, as_span=false)
+      text ||= humanized_attribute_name(method)
+      text  << required_or_optional_string(options.delete(:required))
+
+      if as_span
+        options[:class] ||= 'label'
+        template.content_tag(:span, text, options)
+      else
+        super(method, text, options)
+      end
+    end
+
     protected
 
     # Deals with :for option when it's supplied to inputs methods. Additional
@@ -369,9 +388,7 @@ module Formtastic #:nodoc:
     # * if the :required option isn't provided, and the plugin isn't available, the value of the
     #   configuration option @@all_fields_required_by_default is used.
     #
-    def method_required?(attribute, required_option) #:nodoc:
-      return required_option unless required_option.nil?
-
+    def method_required?(attribute) #:nodoc:
       if @object && @object.class.respond_to?(:reflect_on_all_validations)
         attribute_sym = attribute.to_s.sub(/_id$/, '').to_sym
 
@@ -393,7 +410,8 @@ module Formtastic #:nodoc:
       html_options = options.delete(:input_html) || {}
       html_options = default_string_options(method).merge(html_options) if STRING_MAPPINGS.include?(type)
 
-      input_label(method, options.delete(:label), options.slice(:required)) + send(INPUT_MAPPINGS[type], method, html_options)
+      self.label(method, options.delete(:label), options.slice(:required)) +
+      self.send(INPUT_MAPPINGS[type], method, html_options)
     end
 
     # Outputs a label and a select box containing options from the parent
@@ -485,7 +503,7 @@ module Formtastic #:nodoc:
        end
 
       input_name = generate_association_input_name(method)
-      input_label(input_name, options.delete(:label), options.slice(:required)) +
+      self.label(input_name, options.delete(:label), options.slice(:required)) +
       self.select(input_name, collection, set_options(options), html_options)
     end
     alias :boolean_select_input :select_input
@@ -500,7 +518,7 @@ module Formtastic #:nodoc:
     def time_zone_input(method, options)
       html_options = options.delete(:input_html) || {}
 
-      input_label(method, options.delete(:label), options.slice(:required)) +
+      self.label(method, options.delete(:label), options.slice(:required)) +
       self.time_zone_select(method, options.delete(:priority_zones), set_options(options), html_options)
     end
 
@@ -677,8 +695,6 @@ module Formtastic #:nodoc:
 
     # Outputs a label containing a checkbox and the label text. The label defaults
     # to the column name (method name) and can be altered with the :label option.
-    #
-    # Different from other inputs, :required options has no effect here and
     # :checked_value and :unchecked_value options are also available.
     #
     def boolean_input(method, options)
@@ -687,10 +703,8 @@ module Formtastic #:nodoc:
       input = self.check_box(method, set_options(options).merge(html_options),
                              options.delete(:checked_value) || '1', options.delete(:unchecked_value) || '0')
 
-      # Generate the label by hand because required or optional does not make sense here
       label = options.delete(:label) || humanized_attribute_name(method)
-
-      self.label(method, input + label, options)
+      self.label(method, input + label, options.slice(:required))
     end
 
     # Generates an input for the given method using the type supplied with :as.
@@ -750,32 +764,23 @@ module Formtastic #:nodoc:
       template.content_tag(:ul, list_elements.join("\n"), :class => 'errors')
     end
 
-    # Generates the label for the input. Accepts the same options as Rails label
-    # method and a fourth option that allows the label to be generated as span
-    # with class label.
-    #
-    def input_label(method, text, options={}, as_span=false) #:nodoc:
-      text ||= humanized_attribute_name(method)
-      text  << required_or_optional_string(options.delete(:required))
-
-      if as_span
-        options[:class] ||= 'label'
-        template.content_tag(:span, text, options)
-      else
-        self.label(method, text, options)
-      end
-    end
-
     # Generates the required or optional string. If the value set is a proc,
     # it evaluates the proc first.
     #
     def required_or_optional_string(required) #:nodoc:
-      string_or_proc = required ? @@required_string : @@optional_string
+      string_or_proc = case required
+        when true
+          @@required_string
+        when false
+          @@optional_string
+        else
+          required
+      end
 
-      if string_or_proc.is_a? Proc
+      if string_or_proc.is_a?(Proc)
         string_or_proc.call
       else
-        string_or_proc
+        string_or_proc.to_s
       end
     end
 
@@ -811,7 +816,7 @@ module Formtastic #:nodoc:
     #
     def field_set_and_list_wrapping_for_method(method, options, contents)
       template.content_tag(:fieldset,
-        %{<legend>#{input_label(method, options.delete(:label), options.slice(:required), true)}</legend>} +
+        %{<legend>#{self.label(method, options.delete(:label), options.slice(:required), true)}</legend>} +
         template.content_tag(:ol, contents)
       )
     end
