@@ -331,21 +331,23 @@ h2. Contributors
 Formtastic wouldn't be as awesome as it is today if it weren't for the wonderful contributions of these fine, fine coders.  An extra huge thanks goes out to "José Valim":http://github.com/josevalim for nearly 50 patches.
 
 * "Justin French":http://justinfrench.com
-* "Xavier Shay":http://rhnh.net
-* "Bin Dong":http://github.com/dongbin
-* "Ben Hamill":http://blog.benhamill.com/
-* "Pat Allan":http://github.com/freelancing-god
-* "negonicrac":http://github.com/negonicrac
-* "Andy Pearson":http://github.com/andypearson
-* "Mark Mansour":http://stateofflux.com
-* "Tien Dung":http://github.com/tiendung
-* "Sascha Hoellger":http://github.com/mitnal
-* "Jeff Smick":http://github.com/sprsquish
 * "José Valim":http://github.com/josevalim
-* "Greg Fitzgerald":http://github.com/gregf/
+* "Jeff Smick":http://github.com/sprsquish
+* "Tien Dung":http://github.com/tiendung
+* "Mark Mansour":http://stateofflux.com
+* "Andy Pearson":http://github.com/andypearson
+* "negonicrac":http://github.com/negonicrac
+* "Xavier Shay":http://rhnh.net
+* "Pat Allan":http://github.com/freelancing-god
 * "Gareth Townsend":http://github.com/quamen
+* "Sascha Hoellger":http://github.com/mitnal
+* "Andrew Carpenter":http://github.com/andrewcarpenter
 * "Jack Dempsey":http://github.com/jackdempsey/
+* "Greg Fitzgerald":http://github.com/gregf/
+* "Hector E. Gomez Morales":http://github.com/hectoregm
+* "Ben Hamill":http://blog.benhamill.com/
 * "Simon Chiu":http://github.com/tolatomeow
+* "Bin Dong":http://github.com/dongbin
 
 
 h2. Hey, join the Google group!
