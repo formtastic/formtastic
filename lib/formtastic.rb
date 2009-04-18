@@ -81,7 +81,7 @@ module Formtastic #:nodoc:
       options[:as]     ||= default_input_type(method)
 
       html_class = [ options[:as], (options[:required] ? :required : :optional) ]
-      html_class << 'error' if @object && @object.errors.on(method.to_s)
+      html_class << 'error' if @object && @object.respond_to?(:errors) && @object.errors.on(method.to_s)
 
       wrapper_html = options.delete(:wrapper_html) || {}
       wrapper_html[:id]  ||= generate_html_id(method)
@@ -699,7 +699,7 @@ module Formtastic #:nodoc:
     # or as sentence. If :none is set, no error is shown.
     #
     def inline_errors_for(method, options)  #:nodoc:
-      return nil unless @object && [:sentence, :list].include?(@@inline_errors)
+      return nil unless @object && @object.respond_to?(:errors) && [:sentence, :list].include?(@@inline_errors)
 
       errors = @object.errors.on(method.to_s).to_a
       send("error_#{@@inline_errors}", errors) unless errors.empty?
@@ -904,7 +904,7 @@ module Formtastic #:nodoc:
     # reflection object.
     #
     def find_reflection(method)
-      object.class.reflect_on_association(method) if object.class.respond_to?(:reflect_on_association)
+      @object.class.reflect_on_association(method) if @object.class.respond_to?(:reflect_on_association)
     end
 
     # Generates default_string_options by retrieving column information from
@@ -959,7 +959,7 @@ module Formtastic #:nodoc:
     end
 
     def humanized_attribute_name(method)
-      if @object
+      if @object && @object.class.respond_to?(:human_attribute_name)
         @object.class.human_attribute_name(method.to_s)
       else
         method.to_s.send(@@label_str_method)
