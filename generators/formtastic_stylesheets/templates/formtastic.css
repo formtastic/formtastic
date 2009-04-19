@@ -28,6 +28,7 @@ form.formtastic fieldset { }
 form.formtastic fieldset.inputs { }
 form.formtastic fieldset.buttons { padding-left:25%; }
 form.formtastic fieldset ol { }
+form.formtastic fieldset.buttons li { float:left; padding-right:0.5em; }
 
 /* clearfixing the fieldsets */
 form.formtastic fieldset { display: inline-block; }
