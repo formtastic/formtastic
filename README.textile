@@ -135,7 +135,7 @@ If you want control over the input type Formtastic uses for each field, you can 
   <% end %>
 </pre>
 
-If you want to customize the label text, or render some hint text below the field, specify which fields are required/option, or break the form into two fieldsets, the DSL is pretty comprehensive:
+If you want to customize the label text, or render some hint text below the field, specify which fields are required/optional, or break the form into two fieldsets, the DSL is pretty comprehensive:
 
 <pre>
   <% semantic_form_for @post do |form| %>
