@@ -100,7 +100,7 @@ h2. Usage
 
 Forms are really boring to code... you want to get onto the good stuff as fast as possible.
 
-This renders a set of inputs (one for _most_ columns in the database table, and one for each ActiveRecord belongs_to, has_many or has_and_belongs_to_many association) and a submit button:
+This renders a set of inputs (one for _most_ columns in the database table, and one for each ActiveRecord belongs_to association), followed by a submit button:
 
 <pre>
   <% semantic_form_for @user do |form| %>
