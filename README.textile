@@ -160,12 +160,12 @@ If you want to customize html elements for any non button inputs and the li
 wrapper you just need to specify the :input_html and :wrapper_html options hash.
 
 <pre>
-    <% semantic_form_for @post do |form| %>
-      <%= form.input :title, :input_html => {:size => 60} %>
-      <%= form.input :body, :wrapper_html => { :class => 'body_wrapper' } %>
-      <%= form.input :created_at, :input_html => {:disabled => true} %>
-      <%= form.buttons %>
-    <% end %>
+  <% semantic_form_for @post do |form| %>
+    <%= form.input :title, :input_html => {:size => 60} %>
+    <%= form.input :body, :wrapper_html => { :class => 'body_wrapper' } %>
+    <%= form.input :created_at, :input_html => {:disabled => true} %>
+    <%= form.buttons %>
+  <% end %>
 </pre>
 
 To customize buttons, :button_html is available.
