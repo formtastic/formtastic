@@ -156,48 +156,30 @@ If you want to customize the label text, or render some hint text below the fiel
   <% end %>
 </pre>
 
-If you want to customize html elements for any non button inputs and the li
-wrapper you just need to specify the :input_html and :wrapper_html options hash.
-
-<pre>
-  <% semantic_form_for @post do |form| %>
-    <%= form.input :title, :input_html => {:size => 60} %>
-    <%= form.input :body, :wrapper_html => { :class => 'body_wrapper' } %>
-    <%= form.input :created_at, :input_html => {:disabled => true} %>
-    <%= form.buttons %>
-  <% end %>
-</pre>
-
-To customize buttons, :button_html is available.
 
 Nested forms (Rails 2.3) are also supported. You can do it in the Rails way:
 
 <pre>
   <% semantic_form_for @post do |form| %>
     <%= form.inputs :title, :body, :created_at %>
-
     <% form.semantic_fields_for :author do |author| %>
       <%= author.inputs :first_name, :last_name, :name => 'Author' %>
     <% end %>
-
     <%= form.buttons %>
   <% end %>
 </pre>
 
-Or in the formtastic way:
+Or the Formtastic way with the @:for@ option:
 
 <pre>
   <% semantic_form_for @post do |form| %>
     <%= form.inputs :title, :body, :created_at %>
-
     <%= form.inputs :first_name, :last_name, :for => :author, :name => "Author" %>
-
     <%= form.buttons %>
   <% end %>
 </pre>
 
-When working in has many association, you can even supply "%i" in your fieldset
-name that it will be properly interpolated with the child index. For example:
+When working in has many association, you can even supply "%i" in your fieldset name that it will be properly interpolated with the child index. For example:
 
 <pre>
   <% semantic_form_for @post do |form| %>
@@ -207,8 +189,41 @@ name that it will be properly interpolated with the child index. For example:
   <% end %>
 </pre>
 
-Each category will be wrapped in a fieldset with legend "Category #1",
-"Category #2" and so on. But please notice that this works only with Rails 2.3.
+
+Customize HTML attributes for any input using the @:input_html@ option.  Typically his is used to disable the input, change the size of a text field, change the rows in a textarea, or even to add a special class to an input to attach special behavior like "autogrow":http://plugins.jquery.com/project/autogrow textareas:
+
+<pre>
+  <% semantic_form_for @post do |form| %>
+    <%= form.input :title,      :input_html => { :size => 60 } %>
+    <%= form.input :body,       :input_html => { :class => 'autogrow' } %>
+    <%= form.input :created_at, :input_html => { :disabled => true } %>
+    <%= form.buttons %>
+  <% end %>
+</pre>
+
+The same can be done for buttons with the @:button_html@ option:
+
+<pre>
+  <% semantic_form_for @post do |form| %>
+    ...
+    <% form.buttons do %>
+      <%= form.commit_button :button_html => { :class => "primary" } %>
+    <% end %>
+  <% end %>
+</pre>
+
+Customize the HTML attributes for the @<li>@ wrapper around every input with the @:wrapper_html@ option hash.  There's one special key in the hash (:class), which will actually _append_ your string of classes to the existing classes provided by Formtastic (like "required string error")
+  
+<pre>
+  <% semantic_form_for @post do |form| %>
+    <%= form.input :title, :wrapper_html => { :class => "important" } %>
+    <%= form.input :body %>
+    <%= form.input :description, :wrapper_html => { :style => "display:none;" } %>
+    ...
+  <% end %>
+</pre>
+
+
 
 h2. The Available Inputs
 
