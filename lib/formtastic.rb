@@ -315,7 +315,7 @@ module Formtastic #:nodoc:
     # :required can be also sent as option. When true, marks a filed as required,
     # when false marks it as optional. When nil, does nothing.
     #
-    def label(method, text, options={}, as_span=false)
+    def label(method, text=nil, options={}, as_span=false)
       text ||= humanized_attribute_name(method)
       text  << required_or_optional_string(options.delete(:required))
 

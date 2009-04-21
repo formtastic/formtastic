@@ -286,6 +286,26 @@ describe 'Formtastic' do
       end
     end
 
+    describe '#label' do
+      it 'should humanize the given attribute' do
+        semantic_form_for(@new_post) do |builder|
+          builder.label(:login).should have_tag('label', :with => /Login/)
+        end
+      end
+
+      it 'should append required note' do
+        semantic_form_for(@new_post) do |builder|
+          builder.label(:login, nil, :required => true).should have_tag('label abbr')
+        end
+      end
+
+      it 'should be printed as span' do
+        semantic_form_for(@new_post) do |builder|
+          builder.label(:login, nil, { :required => true }, true).should have_tag('span.label abbr')
+        end
+      end
+    end
+
     describe '#input' do
 
       before do
