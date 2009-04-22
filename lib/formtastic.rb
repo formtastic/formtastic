@@ -751,7 +751,7 @@ module Formtastic #:nodoc:
     # Creates an error sentence by calling to_sentence on the errors array.
     #
     def error_sentence(errors) #:nodoc:
-      template.content_tag(:p, errors.to_sentence, :class => 'inline-errors')
+      template.content_tag(:p, errors.to_sentence.untaint, :class => 'inline-errors')
     end
 
     # Creates an error li list.
@@ -759,7 +759,7 @@ module Formtastic #:nodoc:
     def error_list(errors) #:nodoc:
       list_elements = []
       errors.each do |error|
-        list_elements <<  template.content_tag(:li, error)
+        list_elements <<  template.content_tag(:li, error.untaint)
       end
       template.content_tag(:ul, list_elements.join("\n"), :class => 'errors')
     end
