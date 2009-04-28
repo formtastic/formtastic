@@ -342,10 +342,8 @@ A proof-of-concept (very much a work-in-progress) stylesheet is provided which y
 
 h2. Contributors
 
-Formtastic wouldn't be as awesome as it is today if it weren't for the wonderful contributions of these fine, fine coders.  An extra huge thanks goes out to "José Valim":http://github.com/josevalim for nearly 50 patches.
+Formtastic is maintained by "Justin French":http://justinfrench.com and "José Valim":http://github.com/josevalim, but it wouldn't be as awesome as it is today if it weren't for the wonderful contributions of these fine, fine coders.
 
-* "Justin French":http://justinfrench.com
-* "José Valim":http://github.com/josevalim
 * "Jeff Smick":http://github.com/sprsquish
 * "Tien Dung":http://github.com/tiendung
 * "Mark Mansour":http://stateofflux.com
