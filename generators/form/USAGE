@@ -1,0 +1,15 @@
+NAME
+  form - Formtastic form generator.
+  
+DESCRIPTION
+  Generates formtastic form code based on an existing model. By default the generated code will be printed out directly in the terminal, and also copied to clipboard. Can optionally be saved into partial directly.
+  
+  Required:
+    ExistingModelName - The name of an existing model for which the generator should generate form code.
+    
+  Options:
+    --haml      Generate HAML instead of ERB.
+    --partial   Generate a form partial in the model views path, i.e. "_form.html.erb" or _form.html.haml".
+    
+EXAMPLE
+  ./script/generate form ExistingModelName [--haml] [--partial]
