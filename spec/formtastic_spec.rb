@@ -299,9 +299,27 @@ describe 'Formtastic' do
         end
       end
 
+      it 'should allow options to be given as second argument' do
+        semantic_form_for(@new_post) do |builder|
+          builder.label(:login, :required => true).should have_tag('label abbr')
+        end
+      end
+
       it 'should be printed as span' do
         semantic_form_for(@new_post) do |builder|
-          builder.label(:login, nil, { :required => true }, true).should have_tag('span.label abbr')
+          builder.label(:login, nil, { :required => true, :as_span => true }).should have_tag('span.label abbr')
+        end
+      end
+
+      it 'should allow the text to be given as label option' do
+        semantic_form_for(@new_post) do |builder|
+          builder.label(:login, :required => true, :label => 'My label').should have_tag('label', :with => /My label/)
+        end
+      end
+
+      it 'should return blank if label is false' do
+        semantic_form_for(@new_post) do |builder|
+          builder.label(:login, :label => false).should be_blank
         end
       end
     end

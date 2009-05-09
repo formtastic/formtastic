@@ -42,7 +42,7 @@ module Formtastic #:nodoc:
     # Options:
     #
     # * :as - override the input type (eg force a :string to render as a :password field)
-    # * :label - use something other than the method name as the label (or fieldset legend) text
+    # * :label - use something other than the method name as the label text, when false no label is printed
     # * :required - specify if the column is required (true) or not (false)
     # * :hint - provide some text to hint or help the user provide the correct information for a field
     # * :input_html - provide options that will be passed down to the generated input
@@ -308,18 +308,39 @@ module Formtastic #:nodoc:
       fields_for(record_or_name_or_array, *args, &block)
     end
 
-    # Generates the label for the input. Accepts the same arguments as Rails
-    # label method and a fourth one that allows the label to be generated
-    # as span tag with class label.
+    # Generates the label for the input. It also accepts the same arguments as
+    # Rails label method. It has three options that are not supported by Rails
+    # label method:
     #
-    # :required can be also sent as option. When true, marks a filed as required,
-    # when false marks it as optional. When nil, does nothing.
+    # * :required - Appends an abbr tag if :required is true
+    # * :label - An alternative form to give the label content. Whenever label
+    #            is false, a blank string is returned.
+    # * :as_span - When true returns a span tag with class label instead of a label element
     #
-    def label(method, text=nil, options={}, as_span=false)
+    # == Examples
+    #
+    #  f.label :title # like in rails, except that it searches the label on I18n API too
+    #
+    #  f.label :title, "Your post title"
+    #  f.label :title, :label => "Your post title" # Added for formtastic API
+    #
+    #  f.label :title, :required => true # Returns <label>Title<abbr title="required">*</abbr></label>
+    #
+    def label(method, options_or_text=nil, options=nil)
+      if options_or_text.is_a?(Hash)
+        return '' if options_or_text[:label] == false
+
+        options = options_or_text
+        text    = options.delete(:label)
+      else
+        text      = options_or_text
+        options ||= {}
+      end
+
       text ||= humanized_attribute_name(method)
       text  << required_or_optional_string(options.delete(:required))
 
-      if as_span
+      if options.delete(:as_span)
         options[:class] ||= 'label'
         template.content_tag(:span, text, options)
       else
@@ -410,7 +431,7 @@ module Formtastic #:nodoc:
       html_options = options.delete(:input_html) || {}
       html_options = default_string_options(method).merge(html_options) if STRING_MAPPINGS.include?(type)
 
-      self.label(method, options.delete(:label), options.slice(:required)) +
+      self.label(method, options.slice(:label, :required)) +
       self.send(INPUT_MAPPINGS[type], method, html_options)
     end
 
@@ -503,7 +524,7 @@ module Formtastic #:nodoc:
        end
 
       input_name = generate_association_input_name(method)
-      self.label(input_name, options.delete(:label), options.slice(:required)) +
+      self.label(input_name, options.slice(:label, :required)) +
       self.select(input_name, collection, set_options(options), html_options)
     end
     alias :boolean_select_input :select_input
@@ -518,7 +539,7 @@ module Formtastic #:nodoc:
     def time_zone_input(method, options)
       html_options = options.delete(:input_html) || {}
 
-      self.label(method, options.delete(:label), options.slice(:required)) +
+      self.label(method, options.slice(:label, :required)) +
       self.time_zone_select(method, options.delete(:priority_zones), set_options(options), html_options)
     end
 
@@ -816,7 +837,7 @@ module Formtastic #:nodoc:
     #
     def field_set_and_list_wrapping_for_method(method, options, contents)
       template.content_tag(:fieldset,
-        %{<legend>#{self.label(method, options.delete(:label), options.slice(:required), true)}</legend>} +
+        %{<legend>#{self.label(method, options.slice(:label, :required).merge!(:as_span => true))}</legend>} +
         template.content_tag(:ol, contents)
       )
     end
