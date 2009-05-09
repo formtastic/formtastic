@@ -55,8 +55,9 @@ module Formtastic #:nodoc:
     # columns all map to a single numeric_input, for example).
     #
     # * :select (a select menu for associations) - default to association names
+    # * :check_boxes (a set of check_box inputs for associations) - alternative to :select has_many and has_and_belongs_to_many associations
+    # * :radio (a set of radio inputs for associations) - alternative to :select belongs_to associations
     # * :time_zone (a select menu with time zones)
-    # * :radio (a set of radio inputs for associations) - default to association names
     # * :password (a password input) - default for :string column types with 'password' in the method name
     # * :text (a textarea) - default for :text column types
     # * :date (a date select) - default for :date column types

@@ -227,6 +227,7 @@ Customize the HTML attributes for the @<li>@ wrapper around every input with the
 h2. The Available Inputs
 
 * :select (a select menu) - default for ActiveRecord associations (belongs_to, has_many, has_and_belongs_to_many)
+* :check_boxes (a set of check_box inputs) - alternative to :select has_many and has_and_belongs_to_many associations
 * :radio (a set of radio inputs) - alternative to :select for ActiveRecord belongs_to associations
 * :time_zone (a select input) - default for :string column types with 'time_zone' in the method name
 * :password (a password input) - default for :string column types with 'password' in the method name
