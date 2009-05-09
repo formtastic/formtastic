@@ -1040,24 +1040,30 @@ describe 'Formtastic' do
 
           end
 
-          it 'should generate input and labels even if no object is given' do
-            semantic_form_for(:project, :url => 'http://test.host/') do |builder|
-              concat(builder.input(:title, :as => type))
+          describe 'when no object is given' do
+            before(:each) do
+              semantic_form_for(:project, :url => 'http://test.host/') do |builder|
+                concat(builder.input(:title, :as => type))
+              end
             end
 
-            output_buffer.should have_tag('form li label')
-            output_buffer.should have_tag('form li label[@for="project_title"')
-            output_buffer.should have_tag('form li label', /Title/)
+            it 'should generate input' do
+              if template_method.to_s =~ /_field$/ # password_field
+                output_buffer.should have_tag("form li input")
+                output_buffer.should have_tag("form li input#project_title")
+                output_buffer.should have_tag("form li input[@type=\"#{input_type}\"]")
+                output_buffer.should have_tag("form li input[@name=\"project[title]\"]")
+              else
+                output_buffer.should have_tag("form li #{input_type}")
+                output_buffer.should have_tag("form li #{input_type}#project_title")
+                output_buffer.should have_tag("form li #{input_type}[@name=\"project[title]\"]")
+              end
+            end
 
-            if template_method.to_s =~ /_field$/ # password_field
-              output_buffer.should have_tag("form li input")
-              output_buffer.should have_tag("form li input#project_title")
-              output_buffer.should have_tag("form li input[@type=\"#{input_type}\"]")
-              output_buffer.should have_tag("form li input[@name=\"project[title]\"]")
-            else
-              output_buffer.should have_tag("form li #{input_type}")
-              output_buffer.should have_tag("form li #{input_type}#project_title")
-              output_buffer.should have_tag("form li #{input_type}[@name=\"project[title]\"]")
+            it 'should generate labels' do
+              output_buffer.should have_tag('form li label')
+              output_buffer.should have_tag('form li label[@for="project_title"')
+              output_buffer.should have_tag('form li label', /Title/)
             end
           end
 
@@ -1101,18 +1107,24 @@ describe 'Formtastic' do
           output_buffer.should have_tag("form li select.myclass")
         end
 
-        it 'should generate input and labels even if no object is given' do
-          semantic_form_for(:project, :url => 'http://test.host/') do |builder|
-            concat(builder.input(:time_zone, :as => :time_zone))
+        describe 'when no object is given' do
+          before(:each) do
+            semantic_form_for(:project, :url => 'http://test.host/') do |builder|
+              concat(builder.input(:time_zone, :as => :time_zone))
+            end
           end
 
-          output_buffer.should have_tag('form li label')
-          output_buffer.should have_tag('form li label[@for="project_time_zone"')
-          output_buffer.should have_tag('form li label', /Time zone/)
+          it 'should generate labels' do
+            output_buffer.should have_tag('form li label')
+            output_buffer.should have_tag('form li label[@for="project_time_zone"')
+            output_buffer.should have_tag('form li label', /Time zone/)
+          end
 
-          output_buffer.should have_tag("form li select")
-          output_buffer.should have_tag("form li select#project_time_zone")
-          output_buffer.should have_tag("form li select[@name=\"project[time_zone]\"]")
+          it 'should generate select inputs' do
+            output_buffer.should have_tag("form li select")
+            output_buffer.should have_tag("form li select#project_time_zone")
+            output_buffer.should have_tag("form li select[@name=\"project[time_zone]\"]")
+          end
         end
       end
 
@@ -1191,23 +1203,36 @@ describe 'Formtastic' do
             end
           end
 
-          it 'should generate a fieldset, legend, labels and inputs even if no object is given' do
-            output_buffer.replace ''
-
-            semantic_form_for(:project, :url => 'http://test.host') do |builder|
-              concat(builder.input(:author_id, :as => :radio, :collection => Author.find(:all)))
+          describe 'and no object is given' do
+            before(:each) do
+              output_buffer.replace ''
+              semantic_form_for(:project, :url => 'http://test.host') do |builder|
+                concat(builder.input(:author_id, :as => :radio, :collection => Author.find(:all)))
+              end
             end
 
-            output_buffer.should have_tag('form li fieldset legend', /Author/)
-            output_buffer.should have_tag('form li fieldset ol li', :count => Author.find(:all).size)
+            it 'should generate a fieldset with legend' do
+              output_buffer.should have_tag('form li fieldset legend', /Author/)
+            end
 
-            Author.find(:all).each do |author|
-              output_buffer.should have_tag('form li fieldset ol li label', /#{author.to_label}/)
-              output_buffer.should have_tag("form li fieldset ol li label[@for='project_author_id_#{author.id}']")
+            it 'shold generate an li tag for each item in the collection' do
+              output_buffer.should have_tag('form li fieldset ol li', :count => Author.find(:all).size)
+            end
 
-              output_buffer.should have_tag("form li fieldset ol li label input#project_author_id_#{author.id}")
-              output_buffer.should have_tag("form li fieldset ol li label input[@type='radio'][@value='#{author.id}']")
-              output_buffer.should have_tag("form li fieldset ol li label input[@type='radio'][@name='project[author_id]']")
+            it 'should generate labels for each item' do
+              Author.find(:all).each do |author|
+                output_buffer.should have_tag('form li fieldset ol li label', /#{author.to_label}/)
+                output_buffer.should have_tag("form li fieldset ol li label[@for='project_author_id_#{author.id}']")
+              end
+            end
+
+            it 'should generate inputs for each item' do
+              Author.find(:all).each do |author|
+                output_buffer.should have_tag("form li fieldset ol li label input#project_author_id_#{author.id}")
+                output_buffer.should have_tag("form li fieldset ol li label input[@type='radio']")
+                output_buffer.should have_tag("form li fieldset ol li label input[@value='#{author.id}']")
+                output_buffer.should have_tag("form li fieldset ol li label input[@name='project[author_id]']")
+              end
             end
           end
         end
@@ -1368,19 +1393,27 @@ describe 'Formtastic' do
           end
         end
 
-        it 'should generate label, select and options even if object is not given' do
-          semantic_form_for(:project, :url => 'http://test.host') do |builder|
-            concat(builder.input(:author, :as => :select, :collection => Author.find(:all)))
+        describe 'when no object is given' do
+          before(:each) do
+            semantic_form_for(:project, :url => 'http://test.host') do |builder|
+              concat(builder.input(:author, :as => :select, :collection => Author.find(:all)))
+            end
           end
 
-          output_buffer.should have_tag('form li label', /Author/)
-          output_buffer.should have_tag("form li label[@for='project_author']")
+          it 'should generate label' do
+            output_buffer.should have_tag('form li label', /Author/)
+            output_buffer.should have_tag("form li label[@for='project_author']")
+          end
 
-          output_buffer.should have_tag('form li select#project_author')
-          output_buffer.should have_tag('form li select option', :count => Author.find(:all).size)
+          it 'should generate select inputs' do
+            output_buffer.should have_tag('form li select#project_author')
+            output_buffer.should have_tag('form li select option', :count => Author.find(:all).size)
+          end
 
-          Author.find(:all).each do |author|
-            output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
+          it 'should generate an option to each item' do
+            Author.find(:all).each do |author|
+              output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
+            end
           end
         end
       end
@@ -1449,24 +1482,36 @@ describe 'Formtastic' do
             end
           end
 
-          it 'should generate a fieldset, legend, labels and inputs even if no object is given' do
-            output_buffer.replace ''
-
-            semantic_form_for(:project, :url => 'http://test.host') do |builder|
-              concat(builder.input(:author_id, :as => :check_boxes, :collection => Author.find(:all)))
+          describe 'and no object is given' do
+            before(:each) do
+              output_buffer.replace ''
+              semantic_form_for(:project, :url => 'http://test.host') do |builder|
+                concat(builder.input(:author_id, :as => :check_boxes, :collection => Author.find(:all)))
+              end
             end
 
-            output_buffer.should have_tag('form li fieldset legend', /Author/)
-            output_buffer.should have_tag('form li fieldset ol li', :count => Author.find(:all).size)
+            it 'should generate a fieldset with legend' do
+              output_buffer.should have_tag('form li fieldset legend', /Author/)
+            end
 
-            Author.find(:all).each do |author|
-              output_buffer.should have_tag('form li fieldset ol li label', /#{author.to_label}/)
-              output_buffer.should have_tag("form li fieldset ol li label[@for='project_author_id_#{author.id}']")
+            it 'shold generate an li tag for each item in the collection' do
+              output_buffer.should have_tag('form li fieldset ol li', :count => Author.find(:all).size)
+            end
 
-              output_buffer.should have_tag("form li fieldset ol li label input#project_author_id_#{author.id}")
-              output_buffer.should have_tag("form li fieldset ol li label input[@type='checkbox']")
-              output_buffer.should have_tag("form li fieldset ol li label input[@value='#{author.id}']")
-              output_buffer.should have_tag("form li fieldset ol li label input[@name='project[author_id][#{author.id}]']")
+            it 'should generate labels for each item' do
+              Author.find(:all).each do |author|
+                output_buffer.should have_tag('form li fieldset ol li label', /#{author.to_label}/)
+                output_buffer.should have_tag("form li fieldset ol li label[@for='project_author_id_#{author.id}']")
+              end
+            end
+
+            it 'should generate inputs for each item' do
+              Author.find(:all).each do |author|
+                output_buffer.should have_tag("form li fieldset ol li label input#project_author_id_#{author.id}")
+                output_buffer.should have_tag("form li fieldset ol li label input[@type='checkbox']")
+                output_buffer.should have_tag("form li fieldset ol li label input[@value='#{author.id}']")
+                output_buffer.should have_tag("form li fieldset ol li label input[@name='project[author_id][#{author.id}]']")
+              end
             end
           end
         end
@@ -1977,16 +2022,25 @@ describe 'Formtastic' do
           end
         end
 
-        it 'should have fieldset, legend, label and selects even if object is not given' do
-          output_buffer.replace ''
-
-          semantic_form_for(:project, :url => 'http://test.host') do |@builder|
-            concat(@builder.input(:publish_at, :as => :datetime))
+        describe 'when no object is given' do
+          before(:each) do
+            output_buffer.replace ''
+            semantic_form_for(:project, :url => 'http://test.host') do |@builder|
+              concat(@builder.input(:publish_at, :as => :datetime))
+            end
           end
 
-          output_buffer.should have_tag('form li.datetime fieldset legend', /Publish at/)
-          output_buffer.should have_tag('form li.datetime fieldset ol li label', :count => 5)
-          output_buffer.should have_tag('form li.datetime fieldset ol li select', :count => 5)
+          it 'should have fieldset with legend' do
+            output_buffer.should have_tag('form li.datetime fieldset legend', /Publish at/)
+          end
+
+          it 'should have labels for each input' do
+            output_buffer.should have_tag('form li.datetime fieldset ol li label', :count => 5)
+          end
+
+          it 'should have selects for each inputs' do
+            output_buffer.should have_tag('form li.datetime fieldset ol li select', :count => 5)
+          end
         end
       end
 
