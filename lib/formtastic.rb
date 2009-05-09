@@ -587,7 +587,7 @@ module Formtastic #:nodoc:
     # You can customize the options available in the set by passing in a collection (Array) of
     # ActiveRecord objects through the :collection option.  If not provided, the choices are found
     # by inferring the parent's class name from the method name and simply calling find(:all) on
-    # it (VehicleOwner.find(:all) in the example above).
+    # it (Author.find(:all) in the example above).
     #
     # Examples:
     #
@@ -731,6 +731,91 @@ module Formtastic #:nodoc:
       end
 
       field_set_and_list_wrapping_for_method(method, options, list_items_capture)
+    end
+
+
+    # Outputs a fieldset containing a legend for the label text, and an ordered list (ol) of list
+    # items, one for each possible choice in the belongs_to association.  Each li contains a
+    # label and a check_box input.
+    #
+    # This is an alternative for has many and has and belongs to many associations.
+    #
+    # Example:
+    #
+    #   f.input :author, :as => :check_boxes
+    #
+    # Output:
+    #
+    #   <fieldset>
+    #     <legend><span>Authors</span></legend>
+    #     <ol>
+    #       <li>
+    #         <input type="hidden" name="book[author_id][1]" value="">
+    #         <label for="book_author_id_1"><input id="book_author_id_1" name="book[author_id][1]" type="checkbox" value="1" /> Justin French</label>
+    #       </li>
+    #       <li>
+    #         <input type="hidden" name="book[author_id][2]" value="">
+    #         <label for="book_author_id_2"><input id="book_author_id_2" name="book[owner_id][2]" type="checkbox" value="2" /> Kate French</label>
+    #       </li>
+    #     </ol>
+    #   </fieldset>
+    #
+    # Notice that the value of the checkbox is the same as the id and the hidden
+    # field has empty value. You can override the hidden field value using the
+    # unchecked_value option.
+    #
+    # You can customize the options available in the set by passing in a collection (Array) of
+    # ActiveRecord objects through the :collection option.  If not provided, the choices are found
+    # by inferring the parent's class name from the method name and simply calling find(:all) on
+    # it (Author.find(:all) in the example above).
+    #
+    # Examples:
+    #
+    #   f.input :author, :as => :check_boxes, :collection => @authors
+    #   f.input :author, :as => :check_boxes, :collection => Author.find(:all)
+    #   f.input :author, :as => :check_boxes, :collection => [@justin, @kate]
+    #
+    # You can also customize the text label inside each option tag, by naming the correct method
+    # (:full_name, :display_name, :account_number, etc) to call on each object in the collection
+    # by passing in the :label_method option.  By default the :label_method is whichever element of
+    # Formtastic::SemanticFormBuilder.collection_label_methods is found first.
+    #
+    # Examples:
+    #
+    #   f.input :author, :as => :check_boxes, :label_method => :full_name
+    #   f.input :author, :as => :check_boxes, :label_method => :display_name
+    #   f.input :author, :as => :check_boxes, :label_method => :to_s
+    #   f.input :author, :as => :check_boxes, :label_method => :label
+    #
+    # You can set :value_as_class => true if you want that LI wrappers contains
+    # a class with the wrapped checkbox input value.
+    #
+    def check_boxes_input(method, options)
+      collection = find_collection_for_column(method, options)
+      html_options = options.delete(:input_html) || {}
+
+      input_name = generate_association_input_name(method)
+
+      value_as_class  = options.delete(:value_as_class)
+      unchecked_value = options.delete(:unchecked_value) || ''
+ 
+      list_item_content = collection.map do |c|
+        label = c.is_a?(Array) ? c.first : c
+        value = c.is_a?(Array) ? c.last : c
+
+        html_options.merge!(:name => "#{@object_name}[#{input_name}][#{value.to_s.downcase}]",
+                            :id => generate_html_id(input_name, value.to_s.downcase))
+ 
+        li_content = template.content_tag(:label,
+          "#{self.check_box(input_name, html_options, value, unchecked_value)} #{label}",
+          :for => html_options[:id]
+        )
+
+        li_options = value_as_class ? { :class => value.to_s.downcase } : {}
+        template.content_tag(:li, li_content, li_options)
+      end
+
+      field_set_and_list_wrapping_for_method(method, options, list_item_content)
     end
 
     # Outputs a label containing a checkbox and the label text. The label defaults

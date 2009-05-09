@@ -658,7 +658,7 @@ describe 'Formtastic' do
           end
 
           it 'should call the corresponding input method' do
-            [:select, :time_zone, :radio, :date, :datetime, :time, :boolean].each do |input_style|
+            [:select, :time_zone, :radio, :date, :datetime, :time, :boolean, :check_boxes].each do |input_style|
               @new_post.stub!(:generic_column_name)
               @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
               semantic_form_for(@new_post) do |builder|
@@ -1121,7 +1121,7 @@ describe 'Formtastic' do
         before do
           @new_post.stub!(:author).and_return(@bob)
           @new_post.stub!(:author_id).and_return(@bob.id)
-          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :integer, :limit => 255))
+          Post.stub!(:reflect_on_association).and_return { |column_name| mock('reflection', :klass => Author, :macro => :belongs_to) }
         end
 
         describe 'for belongs_to association' do
@@ -1135,7 +1135,7 @@ describe 'Formtastic' do
             output_buffer.should have_tag('form li.radio')
           end
 
-          it 'should have a post_author_id_input id on the wrapper' do
+          it 'should have a post_author_input id on the wrapper' do
             output_buffer.should have_tag('form li#post_author_input')
           end
 
@@ -1150,7 +1150,7 @@ describe 'Formtastic' do
             output_buffer.should have_tag('form li fieldset ol li', :count => Author.find(:all).size)
           end
 
-          it 'should have one option with a "selected" attribute' do
+          it 'should have one option with a "checked" attribute' do
             output_buffer.should have_tag('form li input[@checked]', :count => 1)
           end
 
@@ -1158,10 +1158,8 @@ describe 'Formtastic' do
 
             it 'should contain a label for the radio input with a nested input and label text' do
               Author.find(:all).each do |author|
-                output_buffer.should have_tag('form li fieldset ol li label')
                 output_buffer.should have_tag('form li fieldset ol li label', /#{author.to_label}/)
                 output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_id_#{author.id}']")
-                output_buffer.should have_tag("form li fieldset ol li label input")
               end
             end
 
@@ -1208,14 +1206,11 @@ describe 'Formtastic' do
               output_buffer.should have_tag("form li fieldset ol li label[@for='project_author_id_#{author.id}']")
 
               output_buffer.should have_tag("form li fieldset ol li label input#project_author_id_#{author.id}")
-              output_buffer.should have_tag("form li fieldset ol li label input[@type='radio']")
-              output_buffer.should have_tag("form li fieldset ol li label input[@value='#{author.id}']")
-              output_buffer.should have_tag("form li fieldset ol li label input[@name='project[author_id]']")
+              output_buffer.should have_tag("form li fieldset ol li label input[@type='radio'][@value='#{author.id}']")
+              output_buffer.should have_tag("form li fieldset ol li label input[@type='radio'][@name='project[author_id]']")
             end
           end
-
         end
-
       end
 
       describe ':as => :select' do
@@ -1390,6 +1385,93 @@ describe 'Formtastic' do
         end
       end
 
+      describe ':as => :check_boxes' do
+
+        describe 'for a has_many association' do
+          before do
+            semantic_form_for(@fred) do |builder|
+              concat(builder.input(:posts, :as => :check_boxes, :value_as_class => true))
+            end
+          end
+
+          it 'should have a check_boxes class on the wrapper' do
+            output_buffer.should have_tag('form li.check_boxes')
+          end
+
+          it 'should have a author_posts_input id on the wrapper' do
+            output_buffer.should have_tag('form li#author_posts_input')
+          end
+
+          it 'should generate a fieldset and legend containing label text for the input' do
+            output_buffer.should have_tag('form li fieldset')
+            output_buffer.should have_tag('form li fieldset legend')
+            output_buffer.should have_tag('form li fieldset legend', /Posts/)
+          end
+
+          it 'should generate an ordered list with a list item for each choice' do
+            output_buffer.should have_tag('form li fieldset ol')
+            output_buffer.should have_tag('form li fieldset ol li', :count => Post.find(:all).size)
+          end
+
+          it 'should have one option with a "checked" attribute' do
+            output_buffer.should have_tag('form li input[@checked]', :count => 1)
+          end
+
+          it 'should generate hidden inputs with default value blank' do
+            output_buffer.should have_tag("form li fieldset ol li label input[@type='hidden'][@value='']", :count => Post.find(:all).size)
+          end
+
+          describe "each choice" do
+
+            it 'should contain a label for the radio input with a nested input and label text' do
+              Post.find(:all).each do |post|
+                output_buffer.should have_tag('form li fieldset ol li label', /#{post.to_label}/)
+                output_buffer.should have_tag("form li fieldset ol li label[@for='author_post_ids_#{post.id}']")
+              end
+            end
+
+            it 'should use values as li.class when value_as_class is true' do
+              Post.find(:all).each do |post|
+                output_buffer.should have_tag("form li fieldset ol li.#{post.id} label")
+              end
+            end
+
+            it 'should have a checkbox input for each post' do
+              Post.find(:all).each do |post|
+                output_buffer.should have_tag("form li fieldset ol li label input#author_post_ids_#{post.id}")
+                output_buffer.should have_tag("form li fieldset ol li label input[@name='author[post_ids][#{post.id}]']", :count => 2)
+              end
+            end
+
+            it "should mark input as checked if it's the the existing choice" do
+              Post.find(:all).include?(@fred.posts.first).should be_true
+              output_buffer.should have_tag("form li fieldset ol li label input[@checked='checked']")
+            end
+          end
+
+          it 'should generate a fieldset, legend, labels and inputs even if no object is given' do
+            output_buffer.replace ''
+
+            semantic_form_for(:project, :url => 'http://test.host') do |builder|
+              concat(builder.input(:author_id, :as => :check_boxes, :collection => Author.find(:all)))
+            end
+
+            output_buffer.should have_tag('form li fieldset legend', /Author/)
+            output_buffer.should have_tag('form li fieldset ol li', :count => Author.find(:all).size)
+
+            Author.find(:all).each do |author|
+              output_buffer.should have_tag('form li fieldset ol li label', /#{author.to_label}/)
+              output_buffer.should have_tag("form li fieldset ol li label[@for='project_author_id_#{author.id}']")
+
+              output_buffer.should have_tag("form li fieldset ol li label input#project_author_id_#{author.id}")
+              output_buffer.should have_tag("form li fieldset ol li label input[@type='checkbox']")
+              output_buffer.should have_tag("form li fieldset ol li label input[@value='#{author.id}']")
+              output_buffer.should have_tag("form li fieldset ol li label input[@name='project[author_id][#{author.id}]']")
+            end
+          end
+        end
+      end
+
       describe 'for collections' do
 
         before do
@@ -1398,7 +1480,7 @@ describe 'Formtastic' do
           @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :integer, :limit => 255))
         end
 
-        { :select => :option, :radio => :input }.each do |type, countable|
+        { :select => :option, :radio => :input, :check_boxes => :'input[@type="checkbox"]' }.each do |type, countable|
 
           describe ":as => #{type.inspect}" do
             describe 'when the :collection option is not provided' do
@@ -1453,9 +1535,9 @@ describe 'Formtastic' do
                     concat(builder.input(:category_name, :as => type, :collection => @categories))
                   end
 
-                  @categories.each do |item|
-                    output_buffer.should have_tag("form li.#{type}", /#{item}/)
-                    output_buffer.should have_tag("form li.#{type} #{countable}[@value=#{item}]")
+                  @categories.each do |value|
+                    output_buffer.should have_tag("form li.#{type}", /#{value}/)
+                    output_buffer.should have_tag("form li.#{type} #{countable}[@value='#{value}']")
                   end
                 end
 
@@ -1488,7 +1570,7 @@ describe 'Formtastic' do
 
                   @categories.each do |label, value|
                     output_buffer.should have_tag("form li.#{type}", /#{label}/)
-                    output_buffer.should have_tag("form li.#{type} #{countable}[@value=#{value}]")
+                    output_buffer.should have_tag("form li.#{type} #{countable}[@value='#{value}']")
                   end
                 end
               end
@@ -1501,12 +1583,13 @@ describe 'Formtastic' do
 
                 it "should use the first value as the label text and the last value as the value attribute for #{countable}" do
                   semantic_form_for(@new_post) do |builder|
-                    concat(builder.input(:category_name, :as => :radio, :collection => @categories))
+                    concat(builder.input(:category_name, :as => type, :collection => @categories))
                   end
 
-                  @categories.each do |label, value|
-                    output_buffer.should have_tag('form li fieldset ol li label', /#{label}/i)
-                    output_buffer.should have_tag('form li fieldset ol li label input[@value='+value+']')
+                  @categories.each do |text, value|
+                    label = type == :select ? :option : :label
+                    output_buffer.should have_tag("form li.#{type} #{label}", /#{text}/i)
+                    output_buffer.should have_tag("form li.#{type} #{countable}[@value='#{value.to_s}']")
                   end
                 end
               end
@@ -1519,12 +1602,13 @@ describe 'Formtastic' do
 
                 it "should use the symbol as the label text and value for each #{countable}" do
                   semantic_form_for(@new_post) do |builder|
-                    concat(builder.input(:category_name, :as => :radio, :collection => @categories))
+                    concat(builder.input(:category_name, :as => type, :collection => @categories))
                   end
 
                   @categories.each do |value|
-                    output_buffer.should have_tag('form li fieldset ol li label', /#{value}/i)
-                    output_buffer.should have_tag('form li fieldset ol li label input[@value='+value.to_s+']')
+                    label = type == :select ? :option : :label
+                    output_buffer.should have_tag("form li.#{type} #{label}", /#{value}/i)
+                    output_buffer.should have_tag("form li.#{type} #{countable}[@value='#{value.to_s}']")
                   end
                 end
               end
@@ -1581,8 +1665,15 @@ describe 'Formtastic' do
               end
 
             end
+          end
+        end
 
-            describe 'when attribute is a boolean' do
+        describe 'for boolean attributes' do
+
+          { :select => :option, :radio => :input }.each do |type, countable|
+            checked_or_selected = { :select => :selected, :radio => :checked }[type]
+
+            describe ":as => #{type.inspect}" do
 
               before do
                 @new_post.stub!(:allow_comments)
@@ -1629,8 +1720,6 @@ describe 'Formtastic' do
                   output_buffer.should have_tag("form li.#{type}", /Never\!/)
                 end
               end
-
-              checked_or_selected = { :select => :selected, :radio => :checked }[type]
 
               describe 'when the value is nil' do
                 before do
@@ -1698,7 +1787,6 @@ describe 'Formtastic' do
                 end
               end
             end
-
 
           end
         end
