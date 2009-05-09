@@ -293,33 +293,92 @@ describe 'Formtastic' do
         end
       end
 
-      it 'should append required note' do
-        semantic_form_for(@new_post) do |builder|
-          builder.label(:login, nil, :required => true).should have_tag('label abbr')
-        end
-      end
-
-      it 'should allow options to be given as second argument' do
-        semantic_form_for(@new_post) do |builder|
-          builder.label(:login, :required => true).should have_tag('label abbr')
-        end
-      end
-
       it 'should be printed as span' do
         semantic_form_for(@new_post) do |builder|
           builder.label(:login, nil, { :required => true, :as_span => true }).should have_tag('span.label abbr')
         end
       end
 
-      it 'should allow the text to be given as label option' do
-        semantic_form_for(@new_post) do |builder|
-          builder.label(:login, :required => true, :label => 'My label').should have_tag('label', :with => /My label/)
+      describe 'when required is given' do
+        it 'should append a required note' do
+          semantic_form_for(@new_post) do |builder|
+            builder.label(:login, nil, :required => true).should have_tag('label abbr')
+          end
+        end
+
+        it 'should allow require option to be given as second argument' do
+          semantic_form_for(@new_post) do |builder|
+            builder.label(:login, :required => true).should have_tag('label abbr')
+          end
         end
       end
 
-      it 'should return blank if label is false' do
-        semantic_form_for(@new_post) do |builder|
-          builder.label(:login, :label => false).should be_blank
+      describe 'when label is given' do
+        it 'should allow the text to be given as label option' do
+          semantic_form_for(@new_post) do |builder|
+            builder.label(:login, :required => true, :label => 'My label').should have_tag('label', :with => /My label/)
+          end
+        end
+
+        it 'should return nil if label is false' do
+          semantic_form_for(@new_post) do |builder|
+            builder.label(:login, :label => false).should be_nil
+          end
+        end
+      end
+    end
+
+    describe '#errors_on' do
+      before(:each) do
+        @title_errors = ['must not be blank', 'must be longer than 10 characters', 'must be awesome']
+        @errors = mock('errors')
+        @errors.stub!(:on).with('title').and_return(@title_errors)
+        @errors.stub!(:on).with('body').and_return(nil)
+        @new_post.stub!(:errors).and_return(@errors)
+      end
+
+      describe 'and the errors will be displayed as a sentence' do
+        it 'should render a paragraph with the errors joined into a sentence' do
+          Formtastic::SemanticFormBuilder.inline_errors = :sentence
+          semantic_form_for(@new_post) do |builder|
+            builder.errors_on(:title).should have_tag('p.inline-errors', @title_errors.to_sentence)
+          end
+        end
+      end
+
+      describe 'and the errors will be displayed as a list' do
+        it 'should render an unordered list with the class errors' do
+          Formtastic::SemanticFormBuilder.inline_errors = :list
+          semantic_form_for(@new_post) do |builder|
+            builder.errors_on(:title).should have_tag('ul.errors')
+          end
+        end
+
+        it 'should include a list element for each of the errors within the unordered list' do
+          Formtastic::SemanticFormBuilder.inline_errors = :list
+          semantic_form_for(@new_post) do |builder|
+            @title_errors.each do |error|
+              builder.errors_on(:title).should have_tag('ul.errors li', error)
+            end
+          end
+        end
+      end
+
+      describe 'but the errors will not be shown' do
+        it 'should return nil' do
+          Formtastic::SemanticFormBuilder.inline_errors = :none
+          semantic_form_for(@new_post) do |builder|
+            builder.errors_on(:title).should be_nil
+          end
+        end
+      end
+
+      describe 'and no error is found on the method' do
+        it 'should return nil' do
+          Formtastic::SemanticFormBuilder.inline_errors = :sentence
+          semantic_form_for(@new_post) do |builder|
+            builder.errors_on(:body).should be_nil
+          end
         end
       end
     end
@@ -739,7 +798,6 @@ describe 'Formtastic' do
         end
 
         describe 'when there are errors on the object for this method' do
-
           before do
             @title_errors = ['must not be blank', 'must be longer than 10 characters', 'must be awesome']
             @errors = mock('errors')
@@ -761,65 +819,24 @@ describe 'Formtastic' do
             output_buffer.should_not have_tag('div.fieldWithErrors')
           end
 
-          describe 'and the errors will be displayed as a sentence' do
-
-            before do
-              Formtastic::SemanticFormBuilder.inline_errors = :sentence
-              semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:title))
-              end
+          it 'should render a paragraph for the errors' do
+            Formtastic::SemanticFormBuilder.inline_errors = :sentence
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:title))
             end
-
-            it 'should render a paragraph with the errors joined into a sentence' do
-              output_buffer.should have_tag('form li.error p.inline-errors', @title_errors.to_sentence)
-            end
-
+            output_buffer.should have_tag('form li.error p.inline-errors')
           end
 
-          describe 'and the errors will be displayed as a list' do
-
-            before do
-              Formtastic::SemanticFormBuilder.inline_errors = :list
-              semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:title))
-              end
+          it 'should not display an error list' do
+            Formtastic::SemanticFormBuilder.inline_errors = :list
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:title))
             end
-
-            it 'should render an unordered list with the class errors' do
-              output_buffer.should have_tag('form li.error ul.errors')
-            end
-
-            it 'should include a list element for each of the errors within the unordered list' do
-              @title_errors.each do |error|
-                output_buffer.should have_tag('form li.error ul.errors li', error)
-              end
-            end
-
+            output_buffer.should have_tag('form li.error ul.errors')
           end
-
-          describe 'but the errors will not be shown' do
-
-            before do
-              Formtastic::SemanticFormBuilder.inline_errors = :none
-              semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:title))
-              end
-            end
-
-            it 'should not display an error sentence' do
-              output_buffer.should_not have_tag('form li.error p.inline-errors')
-            end
-
-            it 'should not display an error list' do
-              output_buffer.should_not have_tag('form li.error ul.errors')
-            end
-
-          end
-
         end
 
         describe 'when there are no errors on the object for this method' do
-
           before do
             semantic_form_for(@new_post) do |builder|
               concat(builder.input(:title))
@@ -837,11 +854,9 @@ describe 'Formtastic' do
           it 'should not display an error list' do
             output_buffer.should_not have_tag('form li.error ul.errors')
           end
-
         end
 
         describe 'when no object is provided' do
-
           before do
             semantic_form_for(:project, :url => 'http://test.host') do |builder|
               concat(builder.input(:title))
@@ -859,7 +874,6 @@ describe 'Formtastic' do
           it 'should not display an error list' do
             output_buffer.should_not have_tag('form li.error ul.errors')
           end
-
         end
       end
 

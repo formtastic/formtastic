@@ -328,7 +328,7 @@ module Formtastic #:nodoc:
     #
     def label(method, options_or_text=nil, options=nil)
       if options_or_text.is_a?(Hash)
-        return '' if options_or_text[:label] == false
+        return if options_or_text[:label] == false
 
         options = options_or_text
         text    = options.delete(:label)
@@ -347,6 +347,25 @@ module Formtastic #:nodoc:
         super(method, text, options)
       end
     end
+
+    # Generates error messages for the given method. Errors can be shown as list
+    # or as sentence. If :none is set, no error is shown.
+    #
+    # This method is also aliased as errors_on, so you can call on your custom
+    # inputs as well:
+    #
+    #   semantic_form_for :post do |f|
+    #     f.text_field(:body)
+    #     f.errors_on(:body)
+    #   end
+    #
+    def inline_errors_for(method, options=nil) #:nodoc:
+      return nil unless @object && @object.respond_to?(:errors) && [:sentence, :list].include?(@@inline_errors)
+
+      errors = @object.errors.on(method.to_s)
+      send("error_#{@@inline_errors}", Array(errors)) unless errors.blank?
+    end
+    alias :errors_on :inline_errors_for
 
     protected
 
@@ -743,23 +762,6 @@ module Formtastic #:nodoc:
       else
         send("#{input_type}_input", method, options)
       end
-    end
-
-    # Generates error messages for the given method. Errors can be shown as list
-    # or as sentence. If :none is set, no error is shown.
-    #
-    def inline_errors_for(method, options)  #:nodoc:
-      return nil unless @object && @object.respond_to?(:errors) && [:sentence, :list].include?(@@inline_errors)
-
-      # Ruby 1.9: Strings are not Enumerable, ie no String#to_a
-      errors = @object.errors.on(method.to_s)
-      unless errors.respond_to?(:to_a)
-        errors = [errors]
-      else
-        errors = errors.to_a
-      end
-
-      send("error_#{@@inline_errors}", errors) unless errors.empty?
     end
 
     # Generates hints for the given method using the text supplied in :hint.
