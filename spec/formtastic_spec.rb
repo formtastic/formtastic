@@ -1940,7 +1940,7 @@ describe 'Formtastic' do
               concat(builder.input(:publish_at, :as => :datetime, :discard_day => true))
             end
 
-            output_buffer.should have_tag("form li fieldset ol input[@type='hidden'][@value='1']")
+            output_buffer.should have_tag("form li input[@type='hidden'][@value='1']")
           end
 
           it 'should use default attribute value when it is not nil' do
@@ -1949,7 +1949,7 @@ describe 'Formtastic' do
               concat(builder.input(:publish_at, :as => :datetime, :discard_day => true))
             end
 
-            output_buffer.should have_tag("form li fieldset ol input[@type='hidden'][@value='27']")
+            output_buffer.should have_tag("form li input[@type='hidden'][@value='27']")
           end
         end
 
@@ -2077,8 +2077,9 @@ describe 'Formtastic' do
           output_buffer.should have_tag('form li.time fieldset ol li label', /minute/i)
         end
 
-        it 'should have five selects for hour and minute' do
-          output_buffer.should have_tag('form li.time fieldset ol li select', :count => 2)
+        it 'should have two selects for hour and minute' do
+          #output_buffer.should have_tag('form li.time fieldset ol li select', :count => 2)
+          output_buffer.should have_tag('form li.time fieldset ol li', :count => 2)
         end
       end
 

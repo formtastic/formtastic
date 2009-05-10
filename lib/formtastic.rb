@@ -706,6 +706,7 @@ module Formtastic #:nodoc:
       time_inputs << [:second] if options[:include_seconds]
 
       list_items_capture = ""
+      hidden_fields_capture = ""
 
       # Gets the datetime object. It can be a Fixnum, Date or Time, or nil.
       datetime     = @object ? @object.send(method) : nil
@@ -714,24 +715,23 @@ module Formtastic #:nodoc:
       (inputs + time_inputs).each do |input|
         html_id    = generate_html_id(method, "#{position[input]}i")
         field_name = "#{method}(#{position[input]}i)"
-
-        list_items_capture << if options["discard_#{input}".intern]
+        if options["discard_#{input}".intern]
           break if time_inputs.include?(input)
-
+          
           hidden_value = datetime.respond_to?(input) ? datetime.send(input) : datetime
-          template.hidden_field_tag("#{@object_name}[#{field_name}]", (hidden_value || 1), :id => html_id)
+          hidden_fields_capture << template.hidden_field_tag("#{@object_name}[#{field_name}]", (hidden_value || 1), :id => html_id)
         else
           opts = set_options(options).merge(:prefix => @object_name, :field_name => field_name)
           item_label_text = I18n.t(input.to_s, :default => input.to_s.humanize, :scope => [:datetime, :prompts])
 
-          template.content_tag(:li,
+          list_items_capture << template.content_tag(:li,
             template.content_tag(:label, item_label_text, :for => html_id) +
             template.send("select_#{input}".intern, datetime, opts, html_options.merge(:id => html_id))
           )
         end
       end
 
-      field_set_and_list_wrapping_for_method(method, options, list_items_capture)
+      hidden_fields_capture + field_set_and_list_wrapping_for_method(method, options, list_items_capture)
     end
 
 
