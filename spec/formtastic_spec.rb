@@ -1205,7 +1205,7 @@ describe 'Formtastic' do
               builder.stub!(:country_select).and_return("<select><option>...</option></select>")
               builder.should_receive(:country_select).with(:country, priority_countries, {}, {}).and_return("<select><option>...</option></select>")
               
-              concat(builder.input(:country, :as => :country, :priority_countries => priority_countries))
+              concat(builder.input(:country, :as => :country))
             end
           end
           

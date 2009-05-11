@@ -839,9 +839,10 @@ module Formtastic #:nodoc:
       raise "To use the :country input, please install a country_select plugin, like this one: http://github.com/rails/iso-3166-country-select" unless self.respond_to?(:country_select)
       
       html_options = options.delete(:input_html) || {}
+      priority_countries = options.delete(:priority_countries) || @@priority_countries
 
       self.label(method, options.slice(:label, :required)) +
-      self.country_select(method, options.delete(:priority_countries), set_options(options), html_options)
+      self.country_select(method, priority_countries, set_options(options), html_options)
     end
     
     
