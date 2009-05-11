@@ -239,6 +239,8 @@ h2. The Available Inputs
 * :string (a text field) - default for :string column types
 * :numeric (a text field, like string) - default for :integer, :float and :decimal column types
 * :file (a file field) - default for paperclip or attachment_fu attributes
+* :country (a select menu of country names) - default for :string columns named "country", requires a country_select plugin to be installed
+
 
 The documentation is pretty good for each of these (what it does, what the output is, what the options are, etc) so go check it out.
 
@@ -285,6 +287,9 @@ If you wish, put something like this in config/initializers/formtastic_config.rb
   # the input, in the following order: hints, input and errors. You can
   # customize it doing just as below:
   Formtastic::SemanticFormBuilder.inline_order = [:hints, :input, :errors]
+  
+  # Set the default "priority countries" to suit your user base when using :as => :country
+  Formtastic::SemanticFormBuilder.priority_countries = ["Australia", "New Zealand"]
 </pre>
 
 
@@ -314,6 +319,7 @@ h2. Dependencies
 There are none, but...
 
 * if you have the "ValidationReflection":http://github.com/redinger/validation_reflection plugin is installed, you won't have to specify the :required option (it checks the validations on the model instead)
+* if you want to use the :country input, you'll need to install the "iso-3166-country-select plugin":http://github.com/rails/iso-3166-country-select (or any other country_select plugin with the same API)
 * rspec, rspec_hpricot_matchers and rcov gems (plus any of their own dependencies) are required for the test suite
 
 

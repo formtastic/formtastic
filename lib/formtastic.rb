@@ -18,13 +18,13 @@ module Formtastic #:nodoc:
     @@collection_label_methods = %w[to_label display_name full_name name title username login value to_s]
     @@inline_order = [ :input, :hints, :errors ]
     @@file_methods = [ :file?, :public_filename ]
+    @@priority_countries = ["Australia", "Canada", "United Kingdom", "United States"]
 
     cattr_accessor :default_text_field_size, :all_fields_required_by_default, :required_string,
                    :optional_string, :inline_errors, :label_str_method, :collection_label_methods,
-                   :inline_order, :file_methods
+                   :inline_order, :file_methods, :priority_countries
 
     # Keeps simple mappings in a hash
-    #
     INPUT_MAPPINGS = {
       :string   => :text_field,
       :password => :password_field,
@@ -66,6 +66,7 @@ module Formtastic #:nodoc:
     # * :boolean (a checkbox) - default for :boolean column types (you can also have booleans as :select and :radio)
     # * :string (a text field) - default for :string column types
     # * :numeric (a text field, like string) - default for :integer, :float and :decimal column types
+    # * :country (a select menu of country names) - requires a country_select plugin to be installed
     #
     # Example:
     #
@@ -818,6 +819,39 @@ module Formtastic #:nodoc:
 
       field_set_and_list_wrapping_for_method(method, options, list_item_content)
     end
+    
+    
+    # Outputs a country select input, wrapping around a regular country_select helper. 
+    # Rails doesn't come with a country_select helper by default any more, so you'll need to install
+    # the "official" plugin, or, if you wish, any other country_select plugin that behaves in the
+    # same way.
+    #
+    # The Rails plugin iso-3166-country-select plugin can be found "here":http://github.com/rails/iso-3166-country-select.
+    #
+    # By default, Formtastic includes a handfull of english-speaking countries as "priority counties", 
+    # which you can change to suit your market and user base (see README for more info on config).
+    #
+    # Examples:
+    #   f.input :location, :as => :country # use Formtastic::SemanticFormBuilder.priority_countries array for the priority countries
+    #   f.input :location, :as => :country, :priority_countries => /Australia/ # set your own
+    #
+    def country_input(method, options)
+      raise "To use the :country input, please install a country_select plugin, like this one: http://github.com/rails/iso-3166-country-select" unless self.respond_to?(:country_select)
+      
+      html_options = options.delete(:input_html) || {}
+
+      self.label(method, options.slice(:label, :required)) +
+      self.country_select(method, options.delete(:priority_countries), set_options(options), html_options)
+    end
+    
+    
+    def time_zone_input(method, options)
+      html_options = options.delete(:input_html) || {}
+
+      self.label(method, options.slice(:label, :required)) +
+      self.time_zone_select(method, options.delete(:priority_zones), set_options(options), html_options)
+    end
+    
 
     # Outputs a label containing a checkbox and the label text. The label defaults
     # to the column name (method name) and can be altered with the :label option.
@@ -950,6 +984,7 @@ module Formtastic #:nodoc:
         return :datetime  if column.type == :timestamp
         return :numeric   if [:integer, :float, :decimal].include?(column.type)
         return :password  if column.type == :string && method.to_s =~ /password/
+        return :country   if column.type == :string && method.to_s =~ /country/
 
         # otherwise assume the input name will be the same as the column type (eg string_input)
         return column.type
