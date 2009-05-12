@@ -844,14 +844,6 @@ module Formtastic #:nodoc:
       self.country_select(method, priority_countries, set_options(options), html_options)
     end
     
-    
-    def time_zone_input(method, options)
-      html_options = options.delete(:input_html) || {}
-
-      self.label(method, options.slice(:label, :required)) +
-      self.time_zone_select(method, options.delete(:priority_zones), set_options(options), html_options)
-    end
-    
 
     # Outputs a label containing a checkbox and the label text. The label defaults
     # to the column name (method name) and can be altered with the :label option.
