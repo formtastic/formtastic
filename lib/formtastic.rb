@@ -796,17 +796,16 @@ module Formtastic #:nodoc:
       collection = find_collection_for_column(method, options)
       html_options = options.delete(:input_html) || {}
 
-      input_name = generate_association_input_name(method)
-
+      input_name      = generate_association_input_name(method)
       value_as_class  = options.delete(:value_as_class)
       unchecked_value = options.delete(:unchecked_value) || ''
- 
+      html_options    = { :name => "#{@object_name}[#{input_name}][]" }.merge(html_options)
+
       list_item_content = collection.map do |c|
         label = c.is_a?(Array) ? c.first : c
         value = c.is_a?(Array) ? c.last : c
 
-        html_options.merge!(:name => "#{@object_name}[#{input_name}][#{value.to_s.downcase}]",
-                            :id => generate_html_id(input_name, value.to_s.downcase))
+        html_options.merge!(:id => generate_html_id(input_name, value.to_s.downcase))
  
         li_content = template.content_tag(:label,
           "#{self.check_box(input_name, html_options, value, unchecked_value)} #{label}",

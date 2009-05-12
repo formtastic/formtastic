@@ -1557,7 +1557,7 @@ describe 'Formtastic' do
             it 'should have a checkbox input for each post' do
               Post.find(:all).each do |post|
                 output_buffer.should have_tag("form li fieldset ol li label input#author_post_ids_#{post.id}")
-                output_buffer.should have_tag("form li fieldset ol li label input[@name='author[post_ids][#{post.id}]']", :count => 2)
+                output_buffer.should have_tag("form li fieldset ol li label input[@name='author[post_ids][]']", :count => 2)
               end
             end
 
@@ -1595,7 +1595,7 @@ describe 'Formtastic' do
                 output_buffer.should have_tag("form li fieldset ol li label input#project_author_id_#{author.id}")
                 output_buffer.should have_tag("form li fieldset ol li label input[@type='checkbox']")
                 output_buffer.should have_tag("form li fieldset ol li label input[@value='#{author.id}']")
-                output_buffer.should have_tag("form li fieldset ol li label input[@name='project[author_id][#{author.id}]']")
+                output_buffer.should have_tag("form li fieldset ol li label input[@name='project[author_id][]']")
               end
             end
           end
