@@ -59,7 +59,7 @@ form.formtastic fieldset ol li li label { line-height:100%; padding-top:0; }
 form.formtastic fieldset ol li li label input { line-height:100%; vertical-align:middle; margin-top:-0.1em;}
 
 
-/* NESTED FIELDSETS AND LEGENDS (radio and date/time inputs use nested fieldsets)
+/* NESTED FIELDSETS AND LEGENDS (radio, check boxes and date/time inputs use nested fieldsets)
 --------------------------------------------------------------------------------------------------*/
 form.formtastic fieldset ol li fieldset { position:relative; }
 form.formtastic fieldset ol li fieldset legend { position:absolute; width:25%; padding-top:0.1em; }
@@ -109,6 +109,16 @@ form.formtastic fieldset ol li.radio fieldset ol { margin-bottom:-0.6em; }
 form.formtastic fieldset ol li.radio fieldset ol li { margin:0.1em 0 0.5em 0; }
 form.formtastic fieldset ol li.radio fieldset ol li label { float:none; width:100%; }
 form.formtastic fieldset ol li.radio fieldset ol li label input { margin-right:0.2em; }
+
+
+/* CHECK BOXES (COLLECTION) OVERRIDES
+--------------------------------------------------------------------------------------------------*/
+form.formtastic fieldset ol li.check_boxes { }
+form.formtastic fieldset ol li.check_boxes fieldset ol { margin-bottom:-0.6em; }
+form.formtastic fieldset ol li.check_boxes fieldset ol li { margin:0.1em 0 0.5em 0; }
+form.formtastic fieldset ol li.check_boxes fieldset ol li label { float:none; width:100%; }
+form.formtastic fieldset ol li.check_boxes fieldset ol li label input { margin-right:0.2em; }
+
 
 
 /* DATE & TIME OVERRIDES
