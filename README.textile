@@ -240,6 +240,7 @@ h2. The Available Inputs
 * :numeric (a text field, like string) - default for :integer, :float and :decimal column types
 * :file (a file field) - default for paperclip or attachment_fu attributes
 * :country (a select menu of country names) - default for :string columns named "country", requires a country_select plugin to be installed
+* :hidden (a hidden field) - creates a hidden field (added for compatibility)
 
 
 The documentation is pretty good for each of these (what it does, what the output is, what the options are, etc) so go check it out.

@@ -666,7 +666,7 @@ describe 'Formtastic' do
           end
 
           it 'should call the corresponding input method' do
-            [:select, :time_zone, :radio, :date, :datetime, :time, :boolean, :check_boxes].each do |input_style|
+            [:select, :time_zone, :radio, :date, :datetime, :time, :boolean, :check_boxes, :hidden].each do |input_style|
               @new_post.stub!(:generic_column_name)
               @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
               semantic_form_for(@new_post) do |builder|
@@ -1075,6 +1075,35 @@ describe 'Formtastic' do
             end
           end
 
+        end
+      end
+
+      describe ":as => :hidden" do
+        before do
+          @new_post.stub!(:hidden)
+          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string))
+
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:hidden, :as => :hidden))
+          end
+        end
+
+        it "should have a hidden class on the wrapper" do
+          output_buffer.should have_tag('form li.hidden')
+        end
+
+        it 'should have a post_hidden_input id on the wrapper' do
+          output_buffer.should have_tag('form li#post_hidden_input')
+        end
+
+        it 'should not generate a label for the input' do
+          output_buffer.should_not have_tag('form li label')
+        end
+
+        it "should generate a input field" do
+          output_buffer.should have_tag("form li input#post_hidden")
+          output_buffer.should have_tag("form li input[@type=\"hidden\"]")
+          output_buffer.should have_tag("form li input[@name=\"post[hidden]\"]")
         end
       end
 

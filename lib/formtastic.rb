@@ -67,6 +67,7 @@ module Formtastic #:nodoc:
     # * :string (a text field) - default for :string column types
     # * :numeric (a text field, like string) - default for :integer, :float and :decimal column types
     # * :country (a select menu of country names) - requires a country_select plugin to be installed
+    # * :hidden (a hidden field) - creates a hidden field (added for compatibility)
     #
     # Example:
     #
@@ -454,6 +455,14 @@ module Formtastic #:nodoc:
 
       self.label(method, options.slice(:label, :required)) +
       self.send(INPUT_MAPPINGS[type], method, html_options)
+    end
+
+    # Outputs a hidden field inside the wrapper, which should be hidden with CSS.
+    # Additionals options can be given and will be sent straight to hidden input
+    # element.
+    #
+    def hidden_input(method, options)
+      self.hidden_field(method, set_options(options))
     end
 
     # Outputs a label and a select box containing options from the parent

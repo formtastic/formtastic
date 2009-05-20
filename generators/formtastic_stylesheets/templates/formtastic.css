@@ -91,7 +91,12 @@ form.formtastic fieldset ol li.numeric input { width:74%; }
 form.formtastic fieldset ol li.text textarea { width:74%; }
 
 
-/* CHECKBOX OVERRIDES
+/* HIDDEN OVERRIDES
+--------------------------------------------------------------------------------------------------*/
+form.formtastic fieldset ol li.hidden { display:none; }
+
+
+/* BOOLEAN OVERRIDES
 --------------------------------------------------------------------------------------------------*/
 form.formtastic fieldset ol li.boolean label { padding-left:25%; width:auto; }
 form.formtastic fieldset ol li.boolean label input { margin:0 0.5em 0 0.2em; }
