@@ -482,6 +482,7 @@ module Formtastic #:nodoc:
     #
     #   <label for="book_author_id">Author</label>
     #   <select id="book_author_id" name="book[author_id]">
+    #     <option value=""></option>
     #     <option value="1">Justin French</option>
     #     <option value="2">Jane Doe</option>
     #   </select>
@@ -492,6 +493,7 @@ module Formtastic #:nodoc:
     #
     #   <label for="book_chapter_ids">Chapters</label>
     #   <select id="book_chapter_ids" name="book[chapter_ids]">
+    #     <option value=""></option>
     #     <option value="1">Chapter 1</option>
     #     <option value="2">Chapter 2</option>
     #   </select>
@@ -502,6 +504,7 @@ module Formtastic #:nodoc:
     #
     #   <label for="book_author_ids">Authors</label>
     #   <select id="book_author_ids" name="book[author_ids]">
+    #     <option value=""></option>
     #     <option value="1">Justin French</option>
     #     <option value="2">Jane Doe</option>
     #   </select>
@@ -549,6 +552,8 @@ module Formtastic #:nodoc:
     #
     #   f.input :authors, :input_html => {:size => 20, :multiple => true}
     #
+    # By default, all select inputs will have a blank option at the top of the list. You can add
+    # a prompt with the :prompt option, or disable the blank option with :include_blank => false.
     def select_input(method, options)
       collection = find_collection_for_column(method, options)
       html_options = options.delete(:input_html) || {}
