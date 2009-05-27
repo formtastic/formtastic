@@ -2757,7 +2757,41 @@ describe 'Formtastic' do
           output_buffer.should have_tag('li.commit input#my_id')
           output_buffer.should have_tag('li.commit input.my_class')
         end
+        
+      end
 
+      describe 'when the first option is a string and the second is a hash' do
+        
+        before do
+          @new_post.stub!(:new_record?).and_return(false)
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.commit_button("a string", :button_html => { :class => "pretty"}))
+          end
+        end
+        
+        it "should render the string as the value of the button" do
+          output_buffer.should have_tag('li input[@value="a string"]')
+        end
+        
+        it "should deal with the options hash" do
+          output_buffer.should have_tag('li input.pretty')
+        end
+        
+      end
+
+      describe 'when the first option is a hash' do
+        
+        before do
+          @new_post.stub!(:new_record?).and_return(false)
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.commit_button(:button_html => { :class => "pretty"}))
+          end
+        end
+        
+        it "should deal with the options hash" do
+          output_buffer.should have_tag('li input.pretty')
+        end
+        
       end
 
       describe 'when used on an existing record' do

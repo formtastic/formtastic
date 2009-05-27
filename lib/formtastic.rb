@@ -279,8 +279,14 @@ module Formtastic #:nodoc:
     #
     #  <%= form.commit_button "Go" %> => <input name="commit" type="submit" value="Go" />
     #
-    def commit_button(value=nil, options={})
-      value     ||= save_or_create_button_text
+    # And you can pass html atributes down to the input, with or without the button text:
+    #
+    #  <%= form.commit_button "Go" %> => <input name="commit" type="submit" value="Go" />
+    #  <%= form.commit_button :class => "pretty" %> => <input name="commit" type="submit" value="Save Post" class="pretty" />
+    
+    def commit_button(*args)
+      value = args.first.is_a?(String) ? args.shift : save_or_create_button_text
+      options = args.shift || {}
       button_html = options.delete(:button_html) || {}
       template.content_tag(:li, self.submit(value, button_html), :class => "commit")
     end
