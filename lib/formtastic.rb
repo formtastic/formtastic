@@ -546,6 +546,7 @@ module Formtastic #:nodoc:
     def select_input(method, options)
       collection = find_collection_for_column(method, options)
       html_options = options.delete(:input_html) || {}
+      options[:include_blank] ||= true
 
       reflection = find_reflection(method)
       if reflection && [ :has_many, :has_and_belongs_to_many ].include?(reflection.macro)

@@ -1395,7 +1395,7 @@ describe 'Formtastic' do
           end
 
           it 'should have a select option for each Author' do
-            output_buffer.should have_tag('form li select option', :count => Author.find(:all).size)
+            output_buffer.should have_tag('form li select option', :count => Author.find(:all).size + 1)
             Author.find(:all).each do |author|
               output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
             end
@@ -1437,7 +1437,7 @@ describe 'Formtastic' do
           end
 
           it 'should have a select option for each Post' do
-            output_buffer.should have_tag('form li select option', :count => Post.find(:all).size)
+            output_buffer.should have_tag('form li select option', :count => Post.find(:all).size + 1)
             Post.find(:all).each do |post|
               output_buffer.should have_tag("form li select option[@value='#{post.id}']", /#{post.to_label}/)
             end
@@ -1479,7 +1479,7 @@ describe 'Formtastic' do
           end
 
           it 'should have a select option for each Author' do
-            output_buffer.should have_tag('form li select option', :count => Author.find(:all).size)
+            output_buffer.should have_tag('form li select option', :count => Author.find(:all).size + 1)
             Author.find(:all).each do |author|
               output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
             end
@@ -1489,8 +1489,34 @@ describe 'Formtastic' do
             output_buffer.should have_tag('form li select option[@selected]', :count => 1)
           end
         end
-
-        describe 'when :include_blank => true, :prompt => "choose something" is set' do
+        
+        describe 'when :include_blank is not set' do
+          before do
+            @new_post.stub!(:author_id).and_return(nil)
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:author, :as => :select))
+            end
+          end
+          
+          it 'should have a blank option by default' do
+            output_buffer.should have_tag("form li select option[@value='']", //)
+          end
+        end
+        
+        describe 'when :include_blank is set to false' do
+          before do
+            @new_post.stub!(:author_id).and_return(nil)
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:author, :as => :select, :include_blank => false))
+            end
+          end
+          
+          it 'should not have a blank option' do
+            output_buffer.should have_tag("form li select option[@value='']", //)
+          end
+        end
+        
+        describe 'when :include_blank => true and :prompt => "choose something" is set' do
           before do
             @new_post.stub!(:author_id).and_return(nil)
             semantic_form_for(@new_post) do |builder|
@@ -1521,7 +1547,7 @@ describe 'Formtastic' do
 
           it 'should generate select inputs' do
             output_buffer.should have_tag('form li select#project_author')
-            output_buffer.should have_tag('form li select option', :count => Author.find(:all).size)
+            output_buffer.should have_tag('form li select option', :count => Author.find(:all).size + 1)
           end
 
           it 'should generate an option to each item' do
@@ -1680,7 +1706,7 @@ describe 'Formtastic' do
                 semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:author, :as => type, :collection => @authors))
                 end
-                output_buffer.should have_tag("form li.#{type} #{countable}", :count => @authors.size)
+                output_buffer.should have_tag("form li.#{type} #{countable}", :count => @authors.size + (type == :select ? 1 : 0))
               end
 
               describe 'and the :collection is an array of strings' do
@@ -1856,7 +1882,7 @@ describe 'Formtastic' do
               end
 
               it "should generate two #{countable}" do
-                output_buffer.should have_tag("form li.#{type} #{countable}", :count => 2)
+                output_buffer.should have_tag("form li.#{type} #{countable}", :count => (type == :select ? 3 : 2))
                 output_buffer.should have_tag(%{form li.#{type} #{countable}[@value="true"]})
                 output_buffer.should have_tag(%{form li.#{type} #{countable}[@value="false"]})
               end
