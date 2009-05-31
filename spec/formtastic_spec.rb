@@ -1511,7 +1511,7 @@ describe 'Formtastic' do
           end
           
           it 'should have a blank option by default' do
-            output_buffer.should have_tag("form li select option[@value='']", //)
+            output_buffer.should have_tag("form li select option[@value='']", "")
           end
         end
         
@@ -1524,24 +1524,24 @@ describe 'Formtastic' do
           end
           
           it 'should not have a blank option' do
-            output_buffer.should have_tag("form li select option[@value='']", //)
+            output_buffer.should_not have_tag("form li select option[@value='']", "")
           end
         end
-        
-        describe 'when :include_blank => true and :prompt => "choose something" is set' do
+
+        describe 'when :prompt => "choose something" is set' do
           before do
             @new_post.stub!(:author_id).and_return(nil)
             semantic_form_for(@new_post) do |builder|
-              concat(builder.input(:author, :as => :select, :include_blank => true, :prompt => "choose author"))
+              concat(builder.input(:author, :as => :select, :prompt => "choose author"))
             end
-          end
-
-          it 'should have a blank select option' do
-            output_buffer.should have_tag("form li select option[@value='']", //)
           end
 
           it 'should have a select with prompt' do
             output_buffer.should have_tag("form li select option[@value='']", /choose author/)
+          end
+
+          it 'should not have a blank select option' do
+            output_buffer.should_not have_tag("form li select option[@value='']", "")
           end
         end
 

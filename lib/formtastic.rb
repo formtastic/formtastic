@@ -554,10 +554,14 @@ module Formtastic #:nodoc:
     #
     # By default, all select inputs will have a blank option at the top of the list. You can add
     # a prompt with the :prompt option, or disable the blank option with :include_blank => false.
+    #
     def select_input(method, options)
       collection = find_collection_for_column(method, options)
       html_options = options.delete(:input_html) || {}
-      options[:include_blank] ||= true
+
+      unless options.key?(:include_blank) || options.key?(:prompt)
+        options[:include_blank] = true
+      end
 
       reflection = find_reflection(method)
       if reflection && [ :has_many, :has_and_belongs_to_many ].include?(reflection.macro)
