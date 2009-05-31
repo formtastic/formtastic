@@ -1081,10 +1081,14 @@ module Formtastic #:nodoc:
     #
     def generate_association_input_name(method)
       if reflection = find_reflection(method)
-        method = "#{method.to_s.singularize}_id"
-        method = method.pluralize if [:has_and_belongs_to_many, :has_many].include?(reflection.macro)
+        if [:has_and_belongs_to_many, :has_many].include?(reflection.macro)
+          "#{method.to_s.singularize}_ids"
+        else
+          "#{method}_id"
+        end
+      else
+        method
       end
-      method
     end
 
     # If an association method is passed in (f.input :author) try to find the

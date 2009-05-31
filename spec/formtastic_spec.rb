@@ -106,7 +106,7 @@ describe 'Formtastic' do
     Post.stub!(:reflect_on_all_validations).and_return([])
     Post.stub!(:reflect_on_association).and_return do |column_name|
       case column_name
-      when :author
+      when :author, :author_status
         mock('reflection', :klass => Author, :macro => :belongs_to)
       when :authors
         mock('reflection', :klass => Author, :macro => :has_and_belongs_to_many)
@@ -1403,6 +1403,18 @@ describe 'Formtastic' do
 
           it 'should have one option with a "selected" attribute' do
             output_buffer.should have_tag('form li select option[@selected]', :count => 1)
+          end
+
+          it 'should not singularize the association name' do
+            @new_post.stub!(:author_status).and_return(@bob)
+            @new_post.stub!(:author_status_id).and_return(@bob.id)
+            @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :integer, :limit => 255))
+
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:author_status, :as => :select))
+            end
+
+            output_buffer.should have_tag('form li select#post_author_status_id')
           end
         end
 
