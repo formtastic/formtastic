@@ -1128,8 +1128,8 @@ module Formtastic #:nodoc:
       else
         index = ""
       end
-      sanitized_method_name = method_name.to_s.sub(/\?$/,"")
-
+      sanitized_method_name = method_name.to_s.gsub(/[\?\/\-]$/, '')
+      
       "#{sanitized_object_name}#{index}_#{sanitized_method_name}_#{value}"
     end
 
