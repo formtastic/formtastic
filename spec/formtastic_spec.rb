@@ -78,7 +78,7 @@ describe 'Formtastic' do
     Author.stub!(:human_attribute_name).and_return { |column_name| column_name.humanize }
     Author.stub!(:human_name).and_return('Author')
     Author.stub!(:reflect_on_all_validations).and_return([])
-    Author.stub!(:reflect_on_association).and_return { |column_name| mock('reflection', :klass => Post, :macro => :has_many) if column_name == :posts }
+    Author.stub!(:reflect_on_association).and_return { |column_name| mock('reflection', :options => {}, :klass => Post, :macro => :has_many) if column_name == :posts }
 
     # Sometimes we need a mock @post object and some Authors for belongs_to
     @new_post = mock('post')
@@ -107,9 +107,9 @@ describe 'Formtastic' do
     Post.stub!(:reflect_on_association).and_return do |column_name|
       case column_name
       when :author, :author_status
-        mock('reflection', :klass => Author, :macro => :belongs_to)
+        mock('reflection', :options => {}, :klass => Author, :macro => :belongs_to)
       when :authors
-        mock('reflection', :klass => Author, :macro => :has_and_belongs_to_many)
+        mock('reflection', :options => {}, :klass => Author, :macro => :has_and_belongs_to_many)
       end
     end
     Post.stub!(:find).and_return([@freds_post])
@@ -1348,7 +1348,7 @@ describe 'Formtastic' do
         before do
           @new_post.stub!(:author).and_return(@bob)
           @new_post.stub!(:author_id).and_return(@bob.id)
-          Post.stub!(:reflect_on_association).and_return { |column_name| mock('reflection', :klass => Author, :macro => :belongs_to) }
+          Post.stub!(:reflect_on_association).and_return { |column_name| mock('reflection', :options => {}, :klass => Author, :macro => :belongs_to) }
         end
 
         describe 'for belongs_to association' do
@@ -2564,8 +2564,8 @@ describe 'Formtastic' do
       describe 'without a block' do
 
         before do
-          Post.stub!(:reflections).and_return({:author   => mock('reflection', :macro => :belongs_to),
-                                               :comments => mock('reflection', :macro => :has_many) })
+          Post.stub!(:reflections).and_return({:author   => mock('reflection', :options => {}, :macro => :belongs_to),
+                                               :comments => mock('reflection', :options => {}, :macro => :has_many) })
           Post.stub!(:content_columns).and_return([mock('column', :name => 'title'), mock('column', :name => 'body'), mock('column', :name => 'created_at')])
           Author.stub!(:find).and_return([@fred, @bob])
 
