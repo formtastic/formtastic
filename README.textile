@@ -72,6 +72,11 @@ h2. Opinions
 * make the common things we do easy, yet still ensure uncommon things are still possible
 
 
+h2. Documentation
+
+RDoc documentation _should_ be automatically generated after each commit and made available on the "rdoc.info website":http://rdoc.info/projects/justinfrench/formtastic.
+
+
 h2. Installation
 
 You can (and should) get it as a gem:
