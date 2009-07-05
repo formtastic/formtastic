@@ -510,10 +510,10 @@ module Formtastic #:nodoc:
     #   </select>
     #
     #
-    # You can customize the options available in the select by passing in a collection (Array) of
-    # ActiveRecord objects through the :collection option.  If not provided, the choices are found
-    # by inferring the parent's class name from the method name and simply calling find(:all) on
-    # it (VehicleOwner.find(:all) in the example above).
+    # You can customize the options available in the select by passing in a collection (an Array or 
+    # Hash) through the :collection option.  If not provided, the choices are found by inferring the 
+    # parent's class name from the method name and simply calling find(:all) on it 
+    # (VehicleOwner.find(:all) in the example above).
     #
     # Examples:
     #
@@ -521,6 +521,7 @@ module Formtastic #:nodoc:
     #   f.input :author, :collection => Author.find(:all)
     #   f.input :author, :collection => [@justin, @kate]
     #   f.input :author, :collection => {@justin.name => @justin.id, @kate.name => @kate.id}
+    #   f.input :author, :collection => ["Justin", "Kate", "Amelia", "Gus", "Meg"]
     #
     # Note: This input looks for a label method in the parent association.
     #
@@ -611,16 +612,17 @@ module Formtastic #:nodoc:
     #     </ol>
     #   </fieldset>
     #
-    # You can customize the options available in the set by passing in a collection (Array) of
-    # ActiveRecord objects through the :collection option.  If not provided, the choices are found
-    # by inferring the parent's class name from the method name and simply calling find(:all) on
-    # it (Author.find(:all) in the example above).
+    # You can customize the options available in the select by passing in a collection (an Array or 
+    # Hash) through the :collection option.  If not provided, the choices are found by inferring the 
+    # parent's class name from the method name and simply calling find(:all) on it 
+    # (Author.find(:all) in the example above).
     #
     # Examples:
     #
     #   f.input :author, :as => :radio, :collection => @authors
     #   f.input :author, :as => :radio, :collection => Author.find(:all)
     #   f.input :author, :as => :radio, :collection => [@justin, @kate]
+    #   f.input :author, :collection => ["Justin", "Kate", "Amelia", "Gus", "Meg"]
     #
     # You can also customize the text label inside each option tag, by naming the correct method
     # (:full_name, :display_name, :account_number, etc) to call on each object in the collection
