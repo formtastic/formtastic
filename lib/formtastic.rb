@@ -19,10 +19,16 @@ module Formtastic #:nodoc:
     @@inline_order = [ :input, :hints, :errors ]
     @@file_methods = [ :file?, :public_filename ]
     @@priority_countries = ["Australia", "Canada", "United Kingdom", "United States"]
+    @@i18n_lookups_by_default = false
 
     cattr_accessor :default_text_field_size, :all_fields_required_by_default, :required_string,
                    :optional_string, :inline_errors, :label_str_method, :collection_label_methods,
-                   :inline_order, :file_methods, :priority_countries
+                   :inline_order, :file_methods, :priority_countries,
+                   :i18n_lookups_by_default, :i18n_lookup_scopes
+
+    I18N_SCOPES = [ 'formtastic.{{type}}.{{model}}.{{action}}.{{attribute}}',
+                    'formtastic.{{type}}.{{model}}.{{attribute}}',
+                    'formtastic.{{type}}.{{attribute}}']
 
     # Keeps simple mappings in a hash
     INPUT_MAPPINGS = {
@@ -346,6 +352,7 @@ module Formtastic #:nodoc:
         options ||= {}
       end
 
+      text = localized_attribute_string(method, text, :label)
       text ||= humanized_attribute_name(method)
       text  << required_or_optional_string(options.delete(:required))
 
@@ -906,6 +913,7 @@ module Formtastic #:nodoc:
     # Generates hints for the given method using the text supplied in :hint.
     #
     def inline_hints_for(method, options) #:nodoc:
+      options[:hint] = localized_attribute_string(method, options[:hint], :hint)
       return if options[:hint].blank?
       template.content_tag(:p, options[:hint], :class => 'inline-hints')
     end
@@ -1161,6 +1169,33 @@ module Formtastic #:nodoc:
       else
         method.to_s.send(@@label_str_method)
       end
+    end
+
+    def localized_attribute_string(attr_name, attr_value, i18n_key)
+      if attr_value.is_a?(String)
+        return attr_value
+      else
+        use_i18n = attr_value.nil? ? @@i18n_lookups_by_default : attr_value
+        if use_i18n
+          type_name = i18n_key.to_s.pluralize
+          model_name = @object.class.name.underscore
+          action_name = template.params[:action].to_s rescue ''
+          attribute_name = attr_name.to_s
+          
+          I18N_SCOPES.each do |i18n_scope|
+            i18n_path = i18n_scope.dup
+            i18n_path.gsub!('{{action}}', action_name)
+            i18n_path.gsub!('{{type}}', type_name)
+            i18n_path.gsub!('{{model}}', model_name)
+            i18n_path.gsub!('{{attribute}}', attribute_name)
+            i18n_path.gsub!('..', '.')
+            
+            i18n_value = ::I18n.t(i18n_path.to_sym, :default => '')
+            return i18n_value if i18n_value.present?
+          end
+        end
+      end
+      nil
     end
 
   end
