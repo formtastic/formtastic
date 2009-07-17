@@ -36,3 +36,8 @@
 # the input, in the following order: hints, input and errors. You can
 # customize it doing just as below:
 # Formtastic::SemanticFormBuilder.inline_order = [:input, :hints, :errors]
+
+# Specifies if labels/hints for input fields automatically be looked up using I18n.
+# Default value: false. Overridden for specific fields by setting value to true,
+# i.e. :label => true, or :hint => true (or opposite depending on initialized value)
+# Formtastic::SemanticFormBuilder.i18n_lookups_by_default = false
