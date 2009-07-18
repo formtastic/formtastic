@@ -1653,13 +1653,26 @@ describe 'Formtastic' do
         describe 'when :include_blank is not set' do
           before do
             @new_post.stub!(:author_id).and_return(nil)
+          end
+          
+          it 'blank value should be included if the default value specified in config is true' do
+            Formtastic::SemanticFormBuilder.include_blank_for_select_by_default = true
             semantic_form_for(@new_post) do |builder|
               concat(builder.input(:author, :as => :select))
             end
+            output_buffer.should have_tag("form li select option[@value='']", "")
           end
           
-          it 'should have a blank option by default' do
-            output_buffer.should have_tag("form li select option[@value='']", "")
+          it 'blank value should not be included if the default value specified in config is false' do
+            Formtastic::SemanticFormBuilder.include_blank_for_select_by_default = false
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:author, :as => :select))
+            end
+            output_buffer.should_not have_tag("form li select option[@value='']", "")
+          end
+          
+          after do
+            Formtastic::SemanticFormBuilder.include_blank_for_select_by_default = true
           end
         end
         

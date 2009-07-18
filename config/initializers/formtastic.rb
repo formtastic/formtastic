@@ -1,9 +1,13 @@
-# Set the default text field size when input is a string. Default is 50
+# Set the default text field size when input is a string. Default is 50.
 # Formtastic::SemanticFormBuilder.default_text_field_size = 50
 
-# Should all fields be considered "required" by default
-# Defaults to true, see ValidationReflection notes below
+# Should all fields be considered "required" by default?
+# Defaults to true, see ValidationReflection notes below.
 # Formtastic::SemanticFormBuilder.all_fields_required_by_default = true
+
+# Should select fields have a blank option/prompt by default?
+# Defaults to true.
+# Formtastic::SemanticFormBuilder.include_blank_for_select_by_default = true
 
 # Set the string that will be appended to the labels/fieldsets which are required
 # It accepts string or procs and the default is a localized version of
@@ -25,7 +29,7 @@
 # Formtastic::SemanticFormBuilder.label_str_method = :humanize
 
 # Set the array of methods to try calling on parent objects in :select and :radio inputs
-# for the text inside each @<option>@ tag or alongside each radio @<input>@.  The first method
+# for the text inside each @<option>@ tag or alongside each radio @<input>@. The first method
 # that is found on the object will be used.
 # Defaults to ["to_label", "display_name", "full_name", "name", "title", "username", "login", "value", "to_s"]
 # Formtastic::SemanticFormBuilder.collection_label_methods = [

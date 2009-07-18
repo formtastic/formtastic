@@ -11,6 +11,7 @@ module Formtastic #:nodoc:
 
     @@default_text_field_size = 50
     @@all_fields_required_by_default = true
+    @@include_blank_for_select_by_default = true
     @@required_string = proc { %{<abbr title="#{I18n.t 'formtastic.required', :default => 'required'}">*</abbr>} }
     @@optional_string = ''
     @@inline_errors = :sentence
@@ -21,8 +22,8 @@ module Formtastic #:nodoc:
     @@priority_countries = ["Australia", "Canada", "United Kingdom", "United States"]
     @@i18n_lookups_by_default = false
 
-    cattr_accessor :default_text_field_size, :all_fields_required_by_default, :required_string,
-                   :optional_string, :inline_errors, :label_str_method, :collection_label_methods,
+    cattr_accessor :default_text_field_size, :all_fields_required_by_default, :include_blank_for_select_by_default,
+                   :required_string, :optional_string, :inline_errors, :label_str_method, :collection_label_methods,
                    :inline_order, :file_methods, :priority_countries, :i18n_lookups_by_default
 
     I18N_SCOPES = [ '{{model}}.{{action}}.{{attribute}}',
@@ -583,7 +584,7 @@ module Formtastic #:nodoc:
       html_options = options.delete(:input_html) || {}
 
       unless options.key?(:include_blank) || options.key?(:prompt)
-        options[:include_blank] = true
+        options[:include_blank] = @@include_blank_for_select_by_default
       end
 
       reflection = find_reflection(method)
