@@ -979,6 +979,9 @@ module Formtastic #:nodoc:
     # 'Task #3' and so on.
     #
     def field_set_and_list_wrapping(html_options, contents='', &block) #:nodoc:
+      html_options[:name] ||= html_options.delete(:title)
+      html_options[:name] = localized_attribute_string(html_options[:name], html_options[:name], :title) if html_options[:name].is_a?(Symbol)
+
       legend  = html_options.delete(:name).to_s
       legend %= parent_child_index(html_options[:parent]) if html_options[:parent]
       legend  = template.content_tag(:legend, template.content_tag(:span, legend)) unless legend.blank?
@@ -1213,7 +1216,8 @@ module Formtastic #:nodoc:
       if attr_value.is_a?(String)
         attr_value
       else
-        use_i18n = attr_value.nil? ? @@i18n_lookups_by_default : attr_value
+        use_i18n = attr_value.nil? ? @@i18n_lookups_by_default : (attr_value != false)
+        
         if use_i18n
           model_name = @object.class.name.underscore
           action_name = template.params[:action].to_s rescue ''

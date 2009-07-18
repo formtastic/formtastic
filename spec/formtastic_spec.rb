@@ -2574,18 +2574,49 @@ describe 'Formtastic' do
           end
         end
 
-        describe 'when a :name option is provided' do
-          before do
-            @legend_text = "Advanced options"
-
-            semantic_form_for(@new_post) do |builder|
-              builder.inputs :name => @legend_text do
+        describe 'when a :name or :title option is provided' do
+          describe 'and is a string' do
+            before do
+              @legend_text = "Advanced options"
+              @legend_text_using_title = "Advanced options 2"
+              semantic_form_for(@new_post) do |builder|
+                builder.inputs :name => @legend_text do
+                end
+                builder.inputs :title => @legend_text_using_title do
+                end
               end
             end
-          end
 
-          it 'should render a fieldset inside the form' do
-            output_buffer.should have_tag("form fieldset legend", /#{@legend_text}/)
+            it 'should render a fieldset with a legend inside the form' do
+              output_buffer.should have_tag("form fieldset legend", /#{@legend_text}/)
+              output_buffer.should have_tag("form fieldset legend", /#{@legend_text_using_title}/)
+            end
+          end
+          
+          describe 'and is a symbol' do
+            before do
+              @localized_legend_text = "Localized advanced options"
+              @localized_legend_text_using_title = "Localized advanced options 2"
+              I18n.backend.store_translations :en, :formtastic => {
+                  :titles => {
+                      :post => {
+                          :advanced_options => @localized_legend_text,
+                          :advanced_options_2 => @localized_legend_text_using_title
+                        }
+                    }
+                }
+              semantic_form_for(@new_post) do |builder|
+                builder.inputs :name => :advanced_options do
+                end
+                builder.inputs :title => :advanced_options_2 do
+                end
+              end
+            end
+
+            it 'should render a fieldset with a localized legend inside the form' do
+              output_buffer.should have_tag("form fieldset legend", /#{@localized_legend_text}/)
+              output_buffer.should have_tag("form fieldset legend", /#{@localized_legend_text_using_title}/)
+            end
           end
         end
 
