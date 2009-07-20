@@ -463,7 +463,7 @@ module Formtastic #:nodoc:
     #
     def input_simple(type, method, options)
       html_options = options.delete(:input_html) || {}
-      html_options = default_string_options(method).merge(html_options) if STRING_MAPPINGS.include?(type)
+      html_options = default_string_options(method, type).merge(html_options) if STRING_MAPPINGS.include?(type)
 
       self.label(method, options.slice(:label, :required)) +
       self.send(INPUT_MAPPINGS[type], method, html_options)
@@ -1114,10 +1114,10 @@ module Formtastic #:nodoc:
     # Generates default_string_options by retrieving column information from
     # the database.
     #
-    def default_string_options(method) #:nodoc:
+    def default_string_options(method, type) #:nodoc:
       column = @object.column_for_attribute(method) if @object.respond_to?(:column_for_attribute)
 
-      if column.nil? || column.limit.nil?
+      if type == :numeric || column.nil? || column.limit.nil?
         { :size => @@default_text_field_size }
       else
         { :maxlength => column.limit, :size => [column.limit, @@default_text_field_size].min }

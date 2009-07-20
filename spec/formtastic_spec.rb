@@ -1012,31 +1012,33 @@ describe 'Formtastic' do
             output_buffer.should have_tag("form li input[@name=\"post[title]\"]")
           end
 
-          it 'should have a maxlength matching the column limit' do
-            @new_post.column_for_attribute(:title).limit.should == 50
-            output_buffer.should have_tag("form li input[@maxlength='50']")
-          end
-
-          it 'should use default_text_field_size for columns longer than default_text_field_size' do
-            default_size = Formtastic::SemanticFormBuilder.default_text_field_size
-            @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => type, :limit => default_size * 2))
-
-            semantic_form_for(@new_post) do |builder|
-              concat(builder.input(:title, :as => type))
+          unless type == :numeric
+            it 'should have a maxlength matching the column limit' do
+              @new_post.column_for_attribute(:title).limit.should == 50
+              output_buffer.should have_tag("form li input[@maxlength='50']")
             end
 
-            output_buffer.should have_tag("form li input[@size='#{default_size}']")
-          end
+            it 'should use default_text_field_size for columns longer than default_text_field_size' do
+              default_size = Formtastic::SemanticFormBuilder.default_text_field_size
+              @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => type, :limit => default_size * 2))
 
-          it 'should use the column size for columns shorter than default_text_field_size' do
-            column_limit_shorted_than_default = 1
-            @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => type, :limit => column_limit_shorted_than_default))
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:title, :as => type))
+              end
 
-            semantic_form_for(@new_post) do |builder|
-              concat(builder.input(:title, :as => type))
+              output_buffer.should have_tag("form li input[@size='#{default_size}']")
             end
 
-            output_buffer.should have_tag("form li input[@size='#{column_limit_shorted_than_default}']")
+            it 'should use the column size for columns shorter than default_text_field_size' do
+              column_limit_shorted_than_default = 1
+              @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => type, :limit => column_limit_shorted_than_default))
+
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:title, :as => type))
+              end
+
+              output_buffer.should have_tag("form li input[@size='#{column_limit_shorted_than_default}']")
+            end
           end
 
           it 'should use default_text_field_size for methods without database columns' do
