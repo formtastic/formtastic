@@ -573,11 +573,18 @@ describe 'Formtastic' do
 
           describe 'when not provided' do
 
-            it 'should default to a string for forms without objects' do
+            it 'should default to a string for forms without objects unless column is password' do
               semantic_form_for(:project, :url => 'http://test.host') do |builder|
                 concat(builder.input(:anything))
               end
               output_buffer.should have_tag('form li.string')
+            end
+
+            it 'should default to password for forms without objects if column is password' do
+              semantic_form_for(:project, :url => 'http://test.host') do |builder|
+                concat(builder.input(:password))
+              end
+              output_buffer.should have_tag('form li.password')
             end
 
             it 'should default to a string for methods on objects that don\'t respond to "column_for_attribute"' do

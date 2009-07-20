@@ -1001,8 +1001,6 @@ module Formtastic #:nodoc:
     # default is a :string, a similar behaviour to Rails' scaffolding.
     #
     def default_input_type(method) #:nodoc:
-      return :string if @object.nil?
-
       column = @object.column_for_attribute(method) if @object.respond_to?(:column_for_attribute)
 
       if column
@@ -1017,10 +1015,13 @@ module Formtastic #:nodoc:
         # otherwise assume the input name will be the same as the column type (eg string_input)
         return column.type
       else
-        obj = @object.send(method) if @object.respond_to?(method)
+        if @object
+          return :select if find_reflection(method)
 
-        return :select   if find_reflection(method)
-        return :file     if obj && @@file_methods.any? { |m| obj.respond_to?(m) }
+          file = @object.send(method) if @object.respond_to?(method)
+          return :file   if file && @@file_methods.any? { |m| file.respond_to?(m) }
+        end
+
         return :password if method.to_s =~ /password/
         return :string
       end
