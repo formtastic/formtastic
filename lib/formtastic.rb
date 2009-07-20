@@ -23,12 +23,11 @@ module Formtastic #:nodoc:
 
     cattr_accessor :default_text_field_size, :all_fields_required_by_default, :required_string,
                    :optional_string, :inline_errors, :label_str_method, :collection_label_methods,
-                   :inline_order, :file_methods, :priority_countries,
-                   :i18n_lookups_by_default, :i18n_lookup_scopes
+                   :inline_order, :file_methods, :priority_countries, :i18n_lookups_by_default
 
-    I18N_SCOPES = [ 'formtastic.{{type}}.{{model}}.{{action}}.{{attribute}}',
-                    'formtastic.{{type}}.{{model}}.{{attribute}}',
-                    'formtastic.{{type}}.{{attribute}}']
+    I18N_SCOPES = [ '{{model}}.{{action}}.{{attribute}}',
+                    '{{model}}.{{attribute}}',
+                    '{{attribute}}']
 
     # Keeps simple mappings in a hash
     INPUT_MAPPINGS = {
@@ -1173,29 +1172,29 @@ module Formtastic #:nodoc:
 
     def localized_attribute_string(attr_name, attr_value, i18n_key)
       if attr_value.is_a?(String)
-        return attr_value
+        attr_value
       else
         use_i18n = attr_value.nil? ? @@i18n_lookups_by_default : attr_value
         if use_i18n
-          type_name = i18n_key.to_s.pluralize
           model_name = @object.class.name.underscore
           action_name = template.params[:action].to_s rescue ''
           attribute_name = attr_name.to_s
-          
-          I18N_SCOPES.each do |i18n_scope|
+
+          defaults = I18N_SCOPES.collect do |i18n_scope|
             i18n_path = i18n_scope.dup
             i18n_path.gsub!('{{action}}', action_name)
-            i18n_path.gsub!('{{type}}', type_name)
             i18n_path.gsub!('{{model}}', model_name)
             i18n_path.gsub!('{{attribute}}', attribute_name)
             i18n_path.gsub!('..', '.')
-            
-            i18n_value = ::I18n.t(i18n_path.to_sym, :default => '')
-            return i18n_value if i18n_value.present?
+            i18n_path.to_sym
           end
+          defaults << ''
+
+          i18n_value = ::I18n.t(defaults.shift, :default => defaults,
+                                :scope => "formtastic.#{i18n_key.to_s.pluralize}")
+          i18n_value.blank? ? nil : i18n_value
         end
       end
-      nil
     end
 
   end
