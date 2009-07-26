@@ -583,8 +583,10 @@ describe 'Formtastic' do
             it 'should default to password for forms without objects if column is password' do
               semantic_form_for(:project, :url => 'http://test.host') do |builder|
                 concat(builder.input(:password))
+                concat(builder.input(:password_confirmation))
+                concat(builder.input(:confirm_password))
               end
-              output_buffer.should have_tag('form li.password')
+              output_buffer.should have_tag('form li.password', :count => 3)
             end
 
             it 'should default to a string for methods on objects that don\'t respond to "column_for_attribute"' do
