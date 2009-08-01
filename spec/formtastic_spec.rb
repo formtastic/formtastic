@@ -1494,7 +1494,11 @@ describe 'Formtastic' do
           it 'should create a select without size' do
             output_buffer.should_not have_tag('form li select[@size]')
           end
-
+          
+          it 'should have a blank option' do
+            output_buffer.should have_tag("form li select option[@value='']")
+          end
+          
           it 'should have a select option for each Author' do
             output_buffer.should have_tag('form li select option', :count => Author.find(:all).size + 1)
             Author.find(:all).each do |author|
@@ -1550,10 +1554,14 @@ describe 'Formtastic' do
           end
 
           it 'should have a select option for each Post' do
-            output_buffer.should have_tag('form li select option', :count => Post.find(:all).size + 1)
+            output_buffer.should have_tag('form li select option', :count => Post.find(:all).size)
             Post.find(:all).each do |post|
               output_buffer.should have_tag("form li select option[@value='#{post.id}']", /#{post.to_label}/)
             end
+          end
+          
+          it 'should not have a blank option' do
+            output_buffer.should_not have_tag("form li select option[@value='']")
           end
 
           it 'should have one option with a "selected" attribute' do
@@ -1592,10 +1600,14 @@ describe 'Formtastic' do
           end
 
           it 'should have a select option for each Author' do
-            output_buffer.should have_tag('form li select option', :count => Author.find(:all).size + 1)
+            output_buffer.should have_tag('form li select option', :count => Author.find(:all).size)
             Author.find(:all).each do |author|
               output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
             end
+          end
+          
+          it 'should not have a blank option' do
+            output_buffer.should_not have_tag("form li select option[@value='']")
           end
 
           it 'should have one option with a "selected" attribute' do
