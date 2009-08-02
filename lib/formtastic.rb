@@ -1175,6 +1175,27 @@ module Formtastic #:nodoc:
       end
     end
 
+    # Internal generic method for looking up localized values within Formtastic
+    # using I18n, if no explicit value is set and I18n-lookups are enabled.
+    # 
+    # Enabled/Disable this by setting:
+    #
+    #   Formtastic::SemanticFormBuilder.i18n_lookups_by_default = true/false
+    #
+    # Lookup priority:
+    #
+    #   'formtastic.{{type}}.{{model}}.{{action}}.{{attribute}}'
+    #   'formtastic.{{type}}.{{model}}.{{attribute}}'
+    #   'formtastic.{{type}}.{{attribute}}'
+    # 
+    # Example:
+    #   
+    #   'formtastic.labels.post.edit.title'
+    #   'formtastic.labels.post.title'
+    #   'formtastic.labels.title'
+    # 
+    # NOTE: Generic, but only used for form input labels/hints.
+    #
     def localized_attribute_string(attr_name, attr_value, i18n_key)
       if attr_value.is_a?(String)
         attr_value

@@ -250,6 +250,123 @@ h2. The Available Inputs
 
 The documentation is pretty good for each of these (what it does, what the output is, what the options are, etc) so go check it out.
 
+h2. Internationalization (I18n)
+
+Formtastic got some neat I18n-features. ActiveRecord object names and attributes are, by default, taken from calling @object.human_name and @object.human_attribute_name(attr) respectively. There are a few words specific to Formtastic that can be translated. See lib/locale/en.yml for more information.
+
+h3. Label/Hint-localization
+
+Formtastic supports localized *labels* and *hints* using the I18n API for more advanced usage. Your forms can now be DRYer and more flexible than ever, and still fully localized. This is how:
+
+Basic localization (labels only):
+
+<pre>
+  <% semantic_form_for @post do |form| %>
+    <%= form.input :title %>        # => :label => I18n.t('activerecord.attributes.user.title')    or 'Title'
+    <%= form.input :body %>         # => :label => I18n.t('activerecord.attributes.user.body')     or 'Body'
+    <%= form.input :section %>      # => :label => I18n.t('activerecord.attributes.user.section')  or 'Section'
+  <% end %>
+</pre>
+
+*Note:* This is perfectly fine if you just want your labels to be translated using *ActiveRecord I18n attribute translations*, and you don't use input hints. But what if you do? And what if you don't want same labels in all forms?
+
+Enhanced localization (labels and hints):
+
+1. Enable I18n lookups by default (@config/initializers/formtastic.rb@):
+
+<pre>
+  Formtastic::SemanticFormBuilder.i18n_lookups_by_default = true
+</pre>
+
+2. Add some cool label-translations/variants (@config/locale/en.yml@):
+
+<pre>
+  en:
+    formtastic:
+      labels:
+        post:
+          title: "Choose a title..."
+          body: "Write something..."
+      hints:
+        post:
+          title: "Choose a good title for you post."
+          body: "Write something inspiring here."
+</pre>
+
+*Note:* We are using English here still, but you get the point.
+
+3. ...and now you'll get:
+
+<pre>
+  <% semantic_form_for @post do |form| %>
+    <%= form.input :title %>      # => :label => "Choose a title...", :hint => "Choose a good title for you post."
+    <%= form.input :body %>       # => :label => "Write something...", :hint => "Write something inspiring here."
+    <%= form.input :section %>    # => :label => I18n.t('activerecord.attributes.user.section')  or 'Section'
+  <% end %>
+</pre>
+
+4. Override I18n settings:
+
+<pre>
+  <% semantic_form_for @post do |form| %>
+    <%= form.input :title %>      # => :label => "Choose a title...", :hint => "Choose a good title for you post."
+    <%= form.input :body, :hint => false %>     # => :label => "Write something..."
+    <%= form.input :section %>    # => :label => I18n.t('activerecord.attributes.user.section')  or 'Section'
+  <% end %>
+</pre>
+
+If I18n-lookups is disabled, i.e.:
+
+<pre>
+  Formtastic::SemanticFormBuilder.i18n_lookups_by_default = false
+</pre>
+
+...then you can enable I18n within the forms instead:
+
+<pre>
+  <% semantic_form_for @post do |form| %>
+    <%= form.input :title, :label => true %>      # => :label => "Choose a title..."
+    <%= form.input :body, :label => true %>       # => :label => "Write something..."
+    <%= form.input :section, :label => true %>    # => :label => I18n.t('activerecord.attributes.user.section')  or 'Section'
+  <% end %>
+</pre>
+
+5. Advanced I18n lookups
+
+For more flexible forms; Formtastic find translations using a bottom-up approach taking the following variables in account:
+
+* @model@, e.g. "post"
+* @action@, e.g. "edit"
+* @attribute@, e.g. "title"
+
+...in the following order:
+
+1. @formtastic.{labels,hints}.MODEL.ACTION.ATTRIBUTE@       # By model and action
+2. @formtastic.{labels,hints}.MODEL.ATTRIBUTE@              # By model
+3. @formtastic.{labels,hints}.ATTRIBUTE@                    # Global default
+
+...which means that you can define translations like this:
+
+<pre>
+  en:
+    formtastic:
+      labels:
+        title: "Title"  # Default global value
+        article:
+          body: "Article content"
+        post:
+          new:
+            title: "Choose a title..."
+            body: "Write something..."
+          edit:
+            title: "Edit title"
+            body: "Edit body"
+      ...
+</pre>
+
+h2. ValidationReflection plugin
+
+If you have the "ValidationReflection":http://github.com/redinger/validation_reflection plugin installed, you won't have to specify the :required option (it checks the validations on the model instead).
 
 h2. Configuration
 
@@ -296,18 +413,12 @@ If you wish, put something like this in config/initializers/formtastic_config.rb
   
   # Set the default "priority countries" to suit your user base when using :as => :country
   Formtastic::SemanticFormBuilder.priority_countries = ["Australia", "New Zealand"]
+  
+  # Specifies if labels/hints for input fields automatically be looked up using I18n.
+  # Default value: false. Overridden for specific fields by setting value to true,
+  # i.e. :label => true, or :hint => true (or opposite depending on initialized value)
+  # Formtastic::SemanticFormBuilder.i18n_lookups_by_default = false
 </pre>
-
-
-h2. Internationalization (I18n)
-
-Supports I18n! ActiveRecord object names and attributes are, by default, taken from calling @object.human_name and @object.human_attribute_name(attr) respectively. There are a few words specific to Formtastic that can be translated.  See lib/locale/en.yml for more information.
-
-
-h2. ValidationReflection plugin
-
-If you have the "ValidationReflection":http://github.com/redinger/validation_reflection plugin installed, you won't have to specify the :required option (it checks the validations on the model instead).
-
 
 h2. Status
 
