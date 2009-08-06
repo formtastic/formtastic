@@ -1086,7 +1086,7 @@ module Formtastic #:nodoc:
       options[:false] ||= I18n.t('no', :default => 'No', :scope => [:formtastic])
       options[:value_as_class] = true unless options.key?(:value_as_class)
 
-      { options.delete(:true) => true, options.delete(:false) => false }
+      [ [ options.delete(:true), true], [ options.delete(:false), false ] ]
     end
 
     # Used by association inputs (select, radio) to generate the name that should
