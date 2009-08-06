@@ -330,6 +330,8 @@ module Formtastic #:nodoc:
     # * :label - An alternative form to give the label content. Whenever label
     #            is false, a blank string is returned.
     # * :as_span - When true returns a span tag with class label instead of a label element
+    # * :input_name - Gives the input to match for. This is needed when you want to
+    #                 to call f.label :authors but it should match :author_ids.
     #
     # == Examples
     #
@@ -343,23 +345,23 @@ module Formtastic #:nodoc:
     def label(method, options_or_text=nil, options=nil)
       if options_or_text.is_a?(Hash)
         return if options_or_text[:label] == false
-
         options = options_or_text
-        text    = options.delete(:label)
+        text = options.delete(:label)
       else
-        text      = options_or_text
+        text = options_or_text
         options ||= {}
       end
 
       text = localized_attribute_string(method, text, :label)
       text ||= humanized_attribute_name(method)
-      text  << required_or_optional_string(options.delete(:required))
+      text << required_or_optional_string(options.delete(:required))
 
+      input_name = options.delete(:input_name) || method
       if options.delete(:as_span)
         options[:class] ||= 'label'
         template.content_tag(:span, text, options)
       else
-        super(method, text, options)
+        super(input_name, text, options)
       end
     end
 
@@ -578,7 +580,7 @@ module Formtastic #:nodoc:
        end
 
       input_name = generate_association_input_name(method)
-      self.label(input_name, options.slice(:label, :required)) +
+      self.label(method, options.slice(:label, :required).merge(:input_name => input_name)) +
       self.select(input_name, collection, set_options(options), html_options)
     end
     alias :boolean_select_input :select_input
