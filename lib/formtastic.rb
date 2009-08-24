@@ -970,7 +970,7 @@ module Formtastic #:nodoc:
       legend %= parent_child_index(html_options[:parent]) if html_options[:parent]
       legend  = template.content_tag(:legend, template.content_tag(:span, legend)) unless legend.blank?
 
-      contents = template.capture(&block) if block_given?
+      contents = template.capture(self, &block) if block_given?
 
       # Ruby 1.9: String#to_s behavior changed, need to make an explicit join.
       contents = contents.join if contents.respond_to?(:join)
