@@ -326,7 +326,7 @@ describe 'Formtastic' do
 
         it 'should return nil if label is false' do
           semantic_form_for(@new_post) do |builder|
-            builder.label(:login, :label => false).should be_nil
+            builder.label(:login, :label => false).should be_blank
           end
         end
       end
@@ -704,6 +704,13 @@ describe 'Formtastic' do
                 concat(builder.input(:title, :label => "Kustom"))
               end
               output_buffer.should have_tag("form li label", /Kustom/)
+            end
+
+            it 'should not generate a label if false' do
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:title, :label => false))
+              end
+              output_buffer.should_not have_tag("form li label")
             end
 
             it 'should be dupped if frozen' do

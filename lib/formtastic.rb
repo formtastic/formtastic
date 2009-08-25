@@ -344,7 +344,7 @@ module Formtastic #:nodoc:
     #
     def label(method, options_or_text=nil, options=nil)
       if options_or_text.is_a?(Hash)
-        return if options_or_text[:label] == false
+        return "" if options_or_text[:label] == false
         options = options_or_text
         text = options.delete(:label)
       else
