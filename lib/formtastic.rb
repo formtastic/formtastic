@@ -90,7 +90,7 @@ module Formtastic #:nodoc:
       options[:as]     ||= default_input_type(method)
 
       html_class = [ options[:as], (options[:required] ? :required : :optional) ]
-      html_class << 'error' if @object && @object.respond_to?(:errors) && @object.errors.on(method.to_s)
+      html_class << 'error' if @object && @object.respond_to?(:errors) && @object.errors[method.to_sym]
 
       wrapper_html = options.delete(:wrapper_html) || {}
       wrapper_html[:id]  ||= generate_html_id(method)
@@ -98,6 +98,11 @@ module Formtastic #:nodoc:
 
       if [:boolean_select, :boolean_radio].include?(options[:as])
         ::ActiveSupport::Deprecation.warn(":as => :#{options[:as]} is deprecated, use :as => :#{options[:as].to_s[8..-1]} instead", caller[3..-1])
+      end
+
+      if options[:input_html] && options[:input_html][:id]
+        options[:label_html] ||= {}
+        options[:label_html][:for] ||= options[:input_html][:id]
       end
 
       list_item_content = @@inline_order.map do |type|
@@ -378,12 +383,18 @@ module Formtastic #:nodoc:
     def inline_errors_for(method, options=nil) #:nodoc:
       return nil unless @object && @object.respond_to?(:errors) && [:sentence, :list].include?(@@inline_errors)
 
-      errors = @object.errors.on(method.to_s)
+      errors = @object.errors[method.to_sym]
       send("error_#{@@inline_errors}", Array(errors)) unless errors.blank?
     end
     alias :errors_on :inline_errors_for
 
     protected
+
+    # Prepare options to be sent to label
+    #
+    def options_for_label(options)
+      options.slice(:label, :required).merge!(options.fetch(:label_html, {}))
+    end
 
     # Deals with :for option when it's supplied to inputs methods. Additional
     # options to be passed down to :for should be supplied using :for_options
@@ -466,7 +477,7 @@ module Formtastic #:nodoc:
       html_options = options.delete(:input_html) || {}
       html_options = default_string_options(method, type).merge(html_options) if STRING_MAPPINGS.include?(type)
 
-      self.label(method, options.slice(:label, :required)) +
+      self.label(method, options_for_label(options)) +
       self.send(INPUT_MAPPINGS[type], method, html_options)
     end
 
@@ -579,7 +590,7 @@ module Formtastic #:nodoc:
        end
 
       input_name = generate_association_input_name(method)
-      self.label(method, options.slice(:label, :required).merge(:input_name => input_name)) +
+      self.label(method, options_for_label(options).merge(:input_name => input_name)) +
       self.select(input_name, collection, set_options(options), html_options)
     end
     alias :boolean_select_input :select_input
@@ -594,7 +605,7 @@ module Formtastic #:nodoc:
     def time_zone_input(method, options)
       html_options = options.delete(:input_html) || {}
 
-      self.label(method, options.slice(:label, :required)) +
+      self.label(method, options_for_label(options)) +
       self.time_zone_select(method, options.delete(:priority_zones), set_options(options), html_options)
     end
 
@@ -875,7 +886,7 @@ module Formtastic #:nodoc:
       html_options = options.delete(:input_html) || {}
       priority_countries = options.delete(:priority_countries) || @@priority_countries
 
-      self.label(method, options.slice(:label, :required)) +
+      self.label(method, options_for_label(options)) +
       self.country_select(method, priority_countries, set_options(options), html_options)
     end
     
@@ -891,7 +902,7 @@ module Formtastic #:nodoc:
                              options.delete(:checked_value) || '1', options.delete(:unchecked_value) || '0')
 
       label = options.delete(:label) || humanized_attribute_name(method)
-      self.label(method, input + label, options.slice(:required))
+      self.label(method, input + label, options_for_label(options))
     end
 
     # Generates an input for the given method using the type supplied with :as.
@@ -989,7 +1000,7 @@ module Formtastic #:nodoc:
       contents = contents.join if contents.respond_to?(:join)
 
       template.content_tag(:fieldset,
-        %{<legend>#{self.label(method, options.slice(:label, :required).merge!(:as_span => true))}</legend>} +
+        %{<legend>#{self.label(method, options_for_label(options).merge!(:as_span => true))}</legend>} +
         template.content_tag(:ol, contents)
       )
     end
