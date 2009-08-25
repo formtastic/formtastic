@@ -705,6 +705,13 @@ describe 'Formtastic' do
               end
               output_buffer.should have_tag("form li label", /Kustom/)
             end
+
+            it 'should be dupped if frozen' do
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:title, :label => "Kustom".freeze))
+              end
+              output_buffer.should have_tag("form li label", /Kustom/)
+            end
           end
 
           describe 'when not provided' do

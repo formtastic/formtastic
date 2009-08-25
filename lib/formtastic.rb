@@ -352,9 +352,8 @@ module Formtastic #:nodoc:
         options ||= {}
       end
 
-      text = localized_attribute_string(method, text, :label)
-      text ||= humanized_attribute_name(method)
-      text << required_or_optional_string(options.delete(:required))
+      text = localized_attribute_string(method, text, :label) || humanized_attribute_name(method)
+      text += required_or_optional_string(options.delete(:required))
 
       input_name = options.delete(:input_name) || method
       if options.delete(:as_span)
