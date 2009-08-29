@@ -1202,11 +1202,11 @@ describe 'Formtastic' do
 
       describe ":as => :hidden" do
         before do
-          @new_post.stub!(:hidden)
+          @new_post.stub!(:secret)
           @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string))
 
           semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:hidden, :as => :hidden))
+            concat(builder.input(:secret, :as => :hidden))
           end
         end
 
@@ -1215,7 +1215,7 @@ describe 'Formtastic' do
         end
 
         it 'should have a post_hidden_input id on the wrapper' do
-          output_buffer.should have_tag('form li#post_hidden_input')
+          output_buffer.should have_tag('form li#post_secret_input')
         end
 
         it 'should not generate a label for the input' do
@@ -1223,10 +1223,24 @@ describe 'Formtastic' do
         end
 
         it "should generate a input field" do
-          output_buffer.should have_tag("form li input#post_hidden")
+          output_buffer.should have_tag("form li input#post_secret")
           output_buffer.should have_tag("form li input[@type=\"hidden\"]")
-          output_buffer.should have_tag("form li input[@name=\"post[hidden]\"]")
+          output_buffer.should have_tag("form li input[@name=\"post[secret]\"]")
         end
+        
+        it "should not render inline errors" do
+          @errors = mock('errors')
+          @errors.stub!(:[]).with(:secret).and_return(["foo", "bah"])
+          @new_post.stub!(:errors).and_return(@errors)
+          
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:secret, :as => :hidden))
+          end
+          
+          output_buffer.should_not have_tag("form li p.inline-errors")
+          output_buffer.should_not have_tag("form li ul.errors")
+        end
+        
       end
 
       describe ":as => :time_zone" do
