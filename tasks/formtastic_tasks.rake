@@ -1,3 +1,5 @@
+# coding: utf-8
+
 namespace :formtastic do
   
   GEM_ROOT = File.join(File.dirname(__FILE__), '..').freeze

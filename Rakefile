@@ -1,5 +1,8 @@
+# coding: utf-8
 require 'rake'
 require 'rake/rdoctask'
+
+gem 'rspec-rails', '>= 1.0.0'
 require 'spec/rake/spectask'
 
 begin
@@ -9,7 +12,9 @@ begin
   SUMMARY = "A Rails form builder plugin/gem with semantically rich and accessible markup"
   HOMEPAGE = "http://github.com/justinfrench/formtastic/tree/master"
   
+  gem 'technicalpickles-jeweler', '>= 1.0.0'
   require 'jeweler'
+  
   Jeweler::Tasks.new do |s|
     s.name = GEM
     s.summary = SUMMARY

@@ -1,3 +1,5 @@
+# coding: utf-8
+
 # Override the default ActiveRecordHelper behaviour of wrapping the input.
 # This gets taken care of semantically by adding an error class to the LI tag
 # containing the input.

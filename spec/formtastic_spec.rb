@@ -1,3 +1,4 @@
+# coding: utf-8
 require File.dirname(__FILE__) + '/test_helper'
 require 'formtastic'
 
@@ -1022,7 +1023,7 @@ describe 'Formtastic' do
 
           it 'should generate a label for the input' do
             output_buffer.should have_tag('form li label')
-            output_buffer.should have_tag('form li label[@for="post_title"')
+            output_buffer.should have_tag('form li label[@for="post_title"]')
             output_buffer.should have_tag('form li label', /Title/)
           end
 
@@ -1095,7 +1096,7 @@ describe 'Formtastic' do
             end
 
             output_buffer.should have_tag('form li label')
-            output_buffer.should have_tag('form li label[@for="project_title"')
+            output_buffer.should have_tag('form li label[@for="project_title"]')
             output_buffer.should have_tag('form li label', /Title/)
 
             output_buffer.should have_tag("form li input")
@@ -1122,7 +1123,7 @@ describe 'Formtastic' do
           end
 
           it "should have a #{type} class on the wrapper" do
-            output_buffer.should have_tag('form li.#{type}')
+            output_buffer.should have_tag('form li.#{type}') # << # FIXME: This seems to be incorrect, but passes. Eh? (grimen)
           end
 
           it 'should have a post_title_input id on the wrapper' do
@@ -1131,7 +1132,7 @@ describe 'Formtastic' do
 
           it 'should generate a label for the input' do
             output_buffer.should have_tag('form li label')
-            output_buffer.should have_tag('form li label[@for="post_body"')
+            output_buffer.should have_tag('form li label[@for="post_body"]')
             output_buffer.should have_tag('form li label', /Body/)
           end
 
@@ -1192,7 +1193,7 @@ describe 'Formtastic' do
 
             it 'should generate labels' do
               output_buffer.should have_tag('form li label')
-              output_buffer.should have_tag('form li label[@for="project_title"')
+              output_buffer.should have_tag('form li label[@for="project_title"]')
               output_buffer.should have_tag('form li label', /Title/)
             end
           end
@@ -1263,7 +1264,7 @@ describe 'Formtastic' do
 
         it 'should generate a label for the input' do
           output_buffer.should have_tag('form li label')
-          output_buffer.should have_tag('form li label[@for="post_time_zone"')
+          output_buffer.should have_tag('form li label[@for="post_time_zone"]')
           output_buffer.should have_tag('form li label', /Time zone/)
         end
 
@@ -1289,7 +1290,7 @@ describe 'Formtastic' do
 
           it 'should generate labels' do
             output_buffer.should have_tag('form li label')
-            output_buffer.should have_tag('form li label[@for="project_time_zone"')
+            output_buffer.should have_tag('form li label[@for="project_time_zone"]')
             output_buffer.should have_tag('form li label', /Time zone/)
           end
 
@@ -1339,7 +1340,7 @@ describe 'Formtastic' do
 
           it 'should generate a label for the input' do
             output_buffer.should have_tag('form li label')
-            output_buffer.should have_tag('form li label[@for="post_country"')
+            output_buffer.should have_tag('form li label[@for="post_country"]')
             output_buffer.should have_tag('form li label', /Country/)
           end
 
@@ -2156,8 +2157,9 @@ describe 'Formtastic' do
           @new_post.stub!(:publish_at)
           @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :date))
 
-          semantic_form_for(@new_post) do |@builder|
-            concat(@builder.input(:publish_at, :as => :date))
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:publish_at, :as => :date))
+            @builder = builder
           end
         end
 
@@ -2338,8 +2340,9 @@ describe 'Formtastic' do
         describe 'when no object is given' do
           before(:each) do
             output_buffer.replace ''
-            semantic_form_for(:project, :url => 'http://test.host') do |@builder|
-              concat(@builder.input(:publish_at, :as => :datetime))
+            semantic_form_for(:project, :url => 'http://test.host') do |builder|
+              concat(builder.input(:publish_at, :as => :datetime))
+              @builder = builder
             end
           end
 
@@ -2432,7 +2435,7 @@ describe 'Formtastic' do
 
         it 'should generate a label containing the input' do
           output_buffer.should have_tag('form li label')
-          output_buffer.should have_tag('form li label[@for="post_allow_comments"')
+          output_buffer.should have_tag('form li label[@for="post_allow_comments"]')
           output_buffer.should have_tag('form li label', /Allow comments/)
           output_buffer.should have_tag('form li label input[@type="checkbox"]')
         end
@@ -2459,7 +2462,7 @@ describe 'Formtastic' do
             concat(builder.input(:allow_comments, :as => :boolean))
           end
 
-          output_buffer.should have_tag('form li label[@for="project_allow_comments"')
+          output_buffer.should have_tag('form li label[@for="project_allow_comments"]')
           output_buffer.should have_tag('form li label', /Allow comments/)
           output_buffer.should have_tag('form li label input[@type="checkbox"]')
 

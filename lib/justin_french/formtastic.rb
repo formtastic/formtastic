@@ -1,3 +1,4 @@
+# coding: utf-8
 module JustinFrench #:nodoc:
   module Formtastic #:nodoc:
     class SemanticFormBuilder < ::Formtastic::SemanticFormBuilder #:nodoc:
