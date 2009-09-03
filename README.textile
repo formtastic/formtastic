@@ -494,6 +494,11 @@ A proof-of-concept (very much a work-in-progress) stylesheet is provided which y
 <%= stylesheet_link_tag "formtastic_changes" %>
 </pre>
 
+h2. Got TextMate?
+
+Well...there's a TextMate-bundle in town, dedicated to make usage of Formtastic in the TextMate editor even more of a breeze:
+
+"Formtastic.tmbundle":http://github.com/grimen/formtastic_tmbundle
 
 h2. Contributors
 

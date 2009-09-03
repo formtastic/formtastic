@@ -78,9 +78,9 @@ describe 'Formtastic' do
     Author.stub!(:find).and_return([@fred, @bob])
     Author.stub!(:human_attribute_name).and_return { |column_name| column_name.humanize }
     Author.stub!(:human_name).and_return('Author')
-    Author.stub!(:reflect_on_all_validations).and_return([])
+    Author.stub!(:reflect_on_validations_for).and_return([]) # new
     Author.stub!(:reflect_on_association).and_return { |column_name| mock('reflection', :options => {}, :klass => Post, :macro => :has_many) if column_name == :posts }
-
+    
     # Sometimes we need a mock @post object and some Authors for belongs_to
     @new_post = mock('post')
     @new_post.stub!(:class).and_return(Post)
@@ -105,6 +105,7 @@ describe 'Formtastic' do
     Post.stub!(:human_attribute_name).and_return { |column_name| column_name.humanize }
     Post.stub!(:human_name).and_return('Post')
     Post.stub!(:reflect_on_all_validations).and_return([])
+    Post.stub!(:reflect_on_validations_for).and_return([])
     Post.stub!(:reflect_on_association).and_return do |column_name|
       case column_name
       when :author, :author_status
@@ -512,28 +513,42 @@ describe 'Formtastic' do
               describe 'and the validation reflection plugin is available' do
 
                 before do
-                  @new_post.class.stub!(:method_defined?).with(:reflect_on_all_validations).and_return(true)
+                  @new_post.class.stub!(:method_defined?).with(:reflect_on_validations_for).and_return(true)
                 end
 
                 describe 'and validates_presence_of was called for the method' do
-                  before do
-                    @new_post.class.should_receive(:reflect_on_all_validations).and_return([
-                      mock('MacroReflection', :macro => :validates_presence_of, :name => :title)
-                    ])
-                  end
-
                   it 'should be required' do
+                    @new_post.class.should_receive(:reflect_on_validations_for).with(:title).and_return([
+                      mock('MacroReflection', :macro => :validates_presence_of, :name => :title, :options => nil)
+                    ])
+                    @new_post.class.should_receive(:reflect_on_validations_for).with(:body).and_return([
+                      mock('MacroReflection', :macro => :validates_presence_of, :name => :body, :options => {:if => true})
+                    ])
+
                     semantic_form_for(@new_post) do |builder|
                       concat(builder.input(:title))
+                      concat(builder.input(:body))
                     end
                     output_buffer.should have_tag('form li.required')
                     output_buffer.should_not have_tag('form li.optional')
+                  end
+
+                  it 'should be not be required if the optional :if condition is not satisifed' do
+                    @new_post.class.should_receive(:reflect_on_validations_for).with(:body).and_return([
+                      mock('MacroReflection', :macro => :validates_presence_of, :name => :body, :options => {:if => false})
+                    ])
+
+                    semantic_form_for(@new_post) do |builder|
+                      concat(builder.input(:body))
+                    end
+                    output_buffer.should have_tag('form li.optional')
+                    output_buffer.should_not have_tag('form li.required')
                   end
                 end
 
                 describe 'and validates_presence_of was not called for the method' do
                   before do
-                    @new_post.class.should_receive(:reflect_on_all_validations).and_return([])
+                    @new_post.class.should_receive(:reflect_on_validations_for).with(:title).and_return([])
                   end
 
                   it 'should not be required' do
@@ -1123,7 +1138,7 @@ describe 'Formtastic' do
           end
 
           it "should have a #{type} class on the wrapper" do
-            output_buffer.should have_tag('form li.#{type}') # << # FIXME: This seems to be incorrect, but passes. Eh? (grimen)
+            output_buffer.should have_tag("form li.#{type}")
           end
 
           it 'should have a post_title_input id on the wrapper' do

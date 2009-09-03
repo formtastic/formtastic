@@ -8,7 +8,7 @@ gem 'actionpack',                 '>= 2.3.3'
 gem 'rspec',                      '>= 1.2.6'
 gem 'rspec-rails',                '>= 1.2.6'
 gem 'rspec_hpricot_matchers',     '>= 1.0.0'
-gem 'hpricot',                    '>= 0.8.1'
+gem 'hpricot',                    '>= 0.6.1'
 
 require 'spec'
 require 'activesupport'

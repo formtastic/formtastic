@@ -463,11 +463,13 @@ module Formtastic #:nodoc:
     #   configuration option @@all_fields_required_by_default is used.
     #
     def method_required?(attribute) #:nodoc:
-      if @object && @object.class.respond_to?(:reflect_on_all_validations)
+      if @object && @object.class.respond_to?(:reflect_on_validations_for)
         attribute_sym = attribute.to_s.sub(/_id$/, '').to_sym
-
-        @object.class.reflect_on_all_validations.any? do |validation|
-          validation.macro == :validates_presence_of && validation.name == attribute_sym
+        
+        @object.class.reflect_on_validations_for(attribute_sym).any? do |validation|
+          validation.macro == :validates_presence_of &&
+          validation.name == attribute_sym &&
+          (validation.options.present? ? (validation.options[:if] == true) : true)
         end
       else
         @@all_fields_required_by_default
