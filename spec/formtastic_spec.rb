@@ -15,6 +15,12 @@ module FormtasticSpecHelper
   end
 end
 
+class Post;
+  def id; end
+end
+
+class Author; end
+
 describe 'Formtastic' do
 
   include ActionView::Helpers::FormHelper
@@ -51,14 +57,8 @@ describe 'Formtastic' do
     def authors_path; "/authors"; end
     def new_author_path; "/authors/new"; end
 
-    # Sometimes we need some classes
-    class Post;
-      def id; end
-    end
-    class Author; end
-
     @fred = mock('user')
-    @fred.stub!(:class).and_return(Author)
+    @fred.stub!(:class).and_return(::Author)
     @fred.stub!(:to_label).and_return('Fred Smith')
     @fred.stub!(:login).and_return('fred_smith')
     @fred.stub!(:id).and_return(37)
@@ -66,7 +66,7 @@ describe 'Formtastic' do
     @fred.stub!(:errors).and_return(mock('errors', :[] => nil))
 
     @bob = mock('user')
-    @bob.stub!(:class).and_return(Author)
+    @bob.stub!(:class).and_return(::Author)
     @bob.stub!(:to_label).and_return('Bob Rock')
     @bob.stub!(:login).and_return('bob')
     @bob.stub!(:id).and_return(42)
@@ -75,22 +75,22 @@ describe 'Formtastic' do
     @bob.stub!(:new_record?).and_return(false)
     @bob.stub!(:errors).and_return(mock('errors', :[] => nil))
 
-    Author.stub!(:find).and_return([@fred, @bob])
-    Author.stub!(:human_attribute_name).and_return { |column_name| column_name.humanize }
-    Author.stub!(:human_name).and_return('Author')
-    Author.stub!(:reflect_on_validations_for).and_return([]) # new
-    Author.stub!(:reflect_on_association).and_return { |column_name| mock('reflection', :options => {}, :klass => Post, :macro => :has_many) if column_name == :posts }
-    
+    ::Author.stub!(:find).and_return([@fred, @bob])
+    ::Author.stub!(:human_attribute_name).and_return { |column_name| column_name.humanize }
+    ::Author.stub!(:human_name).and_return('::Author')
+    ::Author.stub!(:reflect_on_validations_for).and_return([])
+    ::Author.stub!(:reflect_on_association).and_return { |column_name| mock('reflection', :options => {}, :klass => Post, :macro => :has_many) if column_name == :posts }
+
     # Sometimes we need a mock @post object and some Authors for belongs_to
     @new_post = mock('post')
-    @new_post.stub!(:class).and_return(Post)
+    @new_post.stub!(:class).and_return(::Post)
     @new_post.stub!(:id).and_return(nil)
     @new_post.stub!(:new_record?).and_return(true)
     @new_post.stub!(:errors).and_return(mock('errors', :[] => nil))
     @new_post.stub!(:author).and_return(nil)
 
     @freds_post = mock('post')
-    @freds_post.stub!(:class).and_return(Post)
+    @freds_post.stub!(:class).and_return(::Post)
     @freds_post.stub!(:to_label).and_return('Fred Smith')
     @freds_post.stub!(:id).and_return(19)
     @freds_post.stub!(:author).and_return(@fred)
@@ -102,19 +102,19 @@ describe 'Formtastic' do
     @fred.stub!(:posts).and_return([@freds_post])
     @fred.stub!(:post_ids).and_return([@freds_post.id])
 
-    Post.stub!(:human_attribute_name).and_return { |column_name| column_name.humanize }
-    Post.stub!(:human_name).and_return('Post')
-    Post.stub!(:reflect_on_all_validations).and_return([])
-    Post.stub!(:reflect_on_validations_for).and_return([])
-    Post.stub!(:reflect_on_association).and_return do |column_name|
+    ::Post.stub!(:human_attribute_name).and_return { |column_name| column_name.humanize }
+    ::Post.stub!(:human_name).and_return('Post')
+    ::Post.stub!(:reflect_on_all_validations).and_return([])
+    ::Post.stub!(:reflect_on_validations_for).and_return([])
+    ::Post.stub!(:reflect_on_association).and_return do |column_name|
       case column_name
       when :author, :author_status
-        mock('reflection', :options => {}, :klass => Author, :macro => :belongs_to)
+        mock('reflection', :options => {}, :klass => ::Author, :macro => :belongs_to)
       when :authors
-        mock('reflection', :options => {}, :klass => Author, :macro => :has_and_belongs_to_many)
+        mock('reflection', :options => {}, :klass => ::Author, :macro => :has_and_belongs_to_many)
       end
     end
-    Post.stub!(:find).and_return([@freds_post])
+    ::Post.stub!(:find).and_return([@freds_post])
   end
 
   describe 'JustinFrench::Formtastic::SemanticFormBuilder' do
@@ -131,19 +131,19 @@ describe 'Formtastic' do
     describe '#semantic_form_for' do
 
       it 'yields an instance of SemanticFormBuilder' do
-        semantic_form_for(:post, Post.new, :url => '/hello') do |builder|
+        semantic_form_for(:post, ::Post.new, :url => '/hello') do |builder|
           builder.class.should == Formtastic::SemanticFormBuilder
         end
       end
 
       it 'adds a class of "formtastic" to the generated form' do
-        semantic_form_for(:post, Post.new, :url => '/hello') do |builder|
+        semantic_form_for(:post, ::Post.new, :url => '/hello') do |builder|
         end
         output_buffer.should have_tag("form.formtastic")
       end
 
       it 'adds class matching the object name to the generated form when a symbol is provided' do
-        semantic_form_for(:post, Post.new, :url => '/hello') do |builder|
+        semantic_form_for(:post, ::Post.new, :url => '/hello') do |builder|
         end
         output_buffer.should have_tag("form.post")
 
@@ -160,7 +160,7 @@ describe 'Formtastic' do
 
       describe 'allows :html options' do
         before(:each) do
-          semantic_form_for(:post, Post.new, :url => '/hello', :html => { :id => "something-special", :class => "something-extra", :multipart => true }) do |builder|
+          semantic_form_for(:post, ::Post.new, :url => '/hello', :html => { :id => "something-special", :class => "something-extra", :multipart => true }) do |builder|
           end
         end
 
@@ -179,21 +179,21 @@ describe 'Formtastic' do
 
       it 'can be called with a resource-oriented style' do
         semantic_form_for(@new_post) do |builder|
-          builder.object.class.should == Post
+          builder.object.class.should == ::Post
           builder.object_name.should == "post"
         end
       end
 
       it 'can be called with a generic style and instance variable' do
         semantic_form_for(:post, @new_post, :url => new_post_path) do |builder|
-          builder.object.class.should == Post
+          builder.object.class.should == ::Post
           builder.object_name.to_s.should == "post" # TODO: is this forced .to_s a bad assumption somewhere?
         end
       end
 
       it 'can be called with a generic style and inline object' do
-        semantic_form_for(:post, Post.new, :url => new_post_path) do |builder|
-          builder.object.class.should == Post
+        semantic_form_for(:post, ::Post.new, :url => new_post_path) do |builder|
+          builder.object.class.should == ::Post
           builder.object_name.to_s.should == "post" # TODO: is this forced .to_s a bad assumption somewhere?
         end
       end
@@ -202,7 +202,7 @@ describe 'Formtastic' do
 
     describe '#semantic_fields_for' do
       it 'yields an instance of SemanticFormBuilder' do
-        semantic_fields_for(:post, Post.new, :url => '/hello') do |builder|
+        semantic_fields_for(:post, ::Post.new, :url => '/hello') do |builder|
           builder.class.should == Formtastic::SemanticFormBuilder
         end
       end
@@ -210,7 +210,7 @@ describe 'Formtastic' do
 
     describe '#semantic_form_remote_for' do
       it 'yields an instance of SemanticFormBuilder' do
-        semantic_form_remote_for(:post, Post.new, :url => '/hello') do |builder|
+        semantic_form_remote_for(:post, ::Post.new, :url => '/hello') do |builder|
           builder.class.should == Formtastic::SemanticFormBuilder
         end
       end
@@ -218,7 +218,7 @@ describe 'Formtastic' do
 
     describe '#semantic_form_for_remote' do
       it 'yields an instance of SemanticFormBuilder' do
-        semantic_form_remote_for(:post, Post.new, :url => '/hello') do |builder|
+        semantic_form_remote_for(:post, ::Post.new, :url => '/hello') do |builder|
           builder.class.should == Formtastic::SemanticFormBuilder
         end
       end
@@ -261,7 +261,7 @@ describe 'Formtastic' do
 
     describe 'Formtastic::SemanticFormBuilder#semantic_fields_for' do
       before do
-        @new_post.stub!(:author).and_return(Author.new)
+        @new_post.stub!(:author).and_return(::Author.new)
       end
 
       it 'yields an instance of SemanticFormHelper.builder' do  
@@ -1399,7 +1399,7 @@ describe 'Formtastic' do
         before do
           @new_post.stub!(:author).and_return(@bob)
           @new_post.stub!(:author_id).and_return(@bob.id)
-          Post.stub!(:reflect_on_association).and_return { |column_name| mock('reflection', :options => {}, :klass => Author, :macro => :belongs_to) }
+          ::Post.stub!(:reflect_on_association).and_return { |column_name| mock('reflection', :options => {}, :klass => ::Author, :macro => :belongs_to) }
         end
 
         describe 'for belongs_to association' do
@@ -1425,7 +1425,7 @@ describe 'Formtastic' do
 
           it 'should generate an ordered list with a list item for each choice' do
             output_buffer.should have_tag('form li fieldset ol')
-            output_buffer.should have_tag('form li fieldset ol li', :count => Author.find(:all).size)
+            output_buffer.should have_tag('form li fieldset ol li', :count => ::Author.find(:all).size)
           end
 
           it 'should have one option with a "checked" attribute' do
@@ -1435,20 +1435,20 @@ describe 'Formtastic' do
           describe "each choice" do
 
             it 'should contain a label for the radio input with a nested input and label text' do
-              Author.find(:all).each do |author|
+              ::Author.find(:all).each do |author|
                 output_buffer.should have_tag('form li fieldset ol li label', /#{author.to_label}/)
                 output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_id_#{author.id}']")
               end
             end
 
             it 'should use values as li.class when value_as_class is true' do
-              Author.find(:all).each do |author|
+              ::Author.find(:all).each do |author|
                 output_buffer.should have_tag("form li fieldset ol li.#{author.id} label")
               end
             end
 
             it "should have a radio input" do
-              Author.find(:all).each do |author|
+              ::Author.find(:all).each do |author|
                 output_buffer.should have_tag("form li fieldset ol li label input#post_author_id_#{author.id}")
                 output_buffer.should have_tag("form li fieldset ol li label input[@type='radio']")
                 output_buffer.should have_tag("form li fieldset ol li label input[@value='#{author.id}']")
@@ -1473,7 +1473,7 @@ describe 'Formtastic' do
             before(:each) do
               output_buffer.replace ''
               semantic_form_for(:project, :url => 'http://test.host') do |builder|
-                concat(builder.input(:author_id, :as => :radio, :collection => Author.find(:all)))
+                concat(builder.input(:author_id, :as => :radio, :collection => ::Author.find(:all)))
               end
             end
 
@@ -1482,18 +1482,18 @@ describe 'Formtastic' do
             end
 
             it 'shold generate an li tag for each item in the collection' do
-              output_buffer.should have_tag('form li fieldset ol li', :count => Author.find(:all).size)
+              output_buffer.should have_tag('form li fieldset ol li', :count => ::Author.find(:all).size)
             end
 
             it 'should generate labels for each item' do
-              Author.find(:all).each do |author|
+              ::Author.find(:all).each do |author|
                 output_buffer.should have_tag('form li fieldset ol li label', /#{author.to_label}/)
                 output_buffer.should have_tag("form li fieldset ol li label[@for='project_author_id_#{author.id}']")
               end
             end
 
             it 'should generate inputs for each item' do
-              Author.find(:all).each do |author|
+              ::Author.find(:all).each do |author|
                 output_buffer.should have_tag("form li fieldset ol li label input#project_author_id_#{author.id}")
                 output_buffer.should have_tag("form li fieldset ol li label input[@type='radio']")
                 output_buffer.should have_tag("form li fieldset ol li label input[@value='#{author.id}']")
@@ -1551,8 +1551,8 @@ describe 'Formtastic' do
           end
           
           it 'should have a select option for each Author' do
-            output_buffer.should have_tag('form li select option', :count => Author.find(:all).size + 1)
-            Author.find(:all).each do |author|
+            output_buffer.should have_tag('form li select option', :count => ::Author.find(:all).size + 1)
+            ::Author.find(:all).each do |author|
               output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
             end
           end
@@ -1605,8 +1605,8 @@ describe 'Formtastic' do
           end
 
           it 'should have a select option for each Post' do
-            output_buffer.should have_tag('form li select option', :count => Post.find(:all).size)
-            Post.find(:all).each do |post|
+            output_buffer.should have_tag('form li select option', :count => ::Post.find(:all).size)
+            ::Post.find(:all).each do |post|
               output_buffer.should have_tag("form li select option[@value='#{post.id}']", /#{post.to_label}/)
             end
           end
@@ -1651,8 +1651,8 @@ describe 'Formtastic' do
           end
 
           it 'should have a select option for each Author' do
-            output_buffer.should have_tag('form li select option', :count => Author.find(:all).size)
-            Author.find(:all).each do |author|
+            output_buffer.should have_tag('form li select option', :count => ::Author.find(:all).size)
+            ::Author.find(:all).each do |author|
               output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
             end
           end
@@ -1725,7 +1725,7 @@ describe 'Formtastic' do
         describe 'when no object is given' do
           before(:each) do
             semantic_form_for(:project, :url => 'http://test.host') do |builder|
-              concat(builder.input(:author, :as => :select, :collection => Author.find(:all)))
+              concat(builder.input(:author, :as => :select, :collection => ::Author.find(:all)))
             end
           end
 
@@ -1736,11 +1736,11 @@ describe 'Formtastic' do
 
           it 'should generate select inputs' do
             output_buffer.should have_tag('form li select#project_author')
-            output_buffer.should have_tag('form li select option', :count => Author.find(:all).size + 1)
+            output_buffer.should have_tag('form li select option', :count => ::Author.find(:all).size + 1)
           end
 
           it 'should generate an option to each item' do
-            Author.find(:all).each do |author|
+            ::Author.find(:all).each do |author|
               output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
             end
           end
@@ -1772,7 +1772,7 @@ describe 'Formtastic' do
 
           it 'should generate an ordered list with a list item for each choice' do
             output_buffer.should have_tag('form li fieldset ol')
-            output_buffer.should have_tag('form li fieldset ol li', :count => Post.find(:all).size)
+            output_buffer.should have_tag('form li fieldset ol li', :count => ::Post.find(:all).size)
           end
 
           it 'should have one option with a "checked" attribute' do
@@ -1780,33 +1780,33 @@ describe 'Formtastic' do
           end
 
           it 'should generate hidden inputs with default value blank' do
-            output_buffer.should have_tag("form li fieldset ol li label input[@type='hidden'][@value='']", :count => Post.find(:all).size)
+            output_buffer.should have_tag("form li fieldset ol li label input[@type='hidden'][@value='']", :count => ::Post.find(:all).size)
           end
 
           describe "each choice" do
 
             it 'should contain a label for the radio input with a nested input and label text' do
-              Post.find(:all).each do |post|
+              ::Post.find(:all).each do |post|
                 output_buffer.should have_tag('form li fieldset ol li label', /#{post.to_label}/)
                 output_buffer.should have_tag("form li fieldset ol li label[@for='author_post_ids_#{post.id}']")
               end
             end
 
             it 'should use values as li.class when value_as_class is true' do
-              Post.find(:all).each do |post|
+              ::Post.find(:all).each do |post|
                 output_buffer.should have_tag("form li fieldset ol li.#{post.id} label")
               end
             end
 
             it 'should have a checkbox input for each post' do
-              Post.find(:all).each do |post|
+              ::Post.find(:all).each do |post|
                 output_buffer.should have_tag("form li fieldset ol li label input#author_post_ids_#{post.id}")
                 output_buffer.should have_tag("form li fieldset ol li label input[@name='author[post_ids][]']", :count => 2)
               end
             end
 
             it "should mark input as checked if it's the the existing choice" do
-              Post.find(:all).include?(@fred.posts.first).should be_true
+              ::Post.find(:all).include?(@fred.posts.first).should be_true
               output_buffer.should have_tag("form li fieldset ol li label input[@checked='checked']")
             end
           end
@@ -1815,7 +1815,7 @@ describe 'Formtastic' do
             before(:each) do
               output_buffer.replace ''
               semantic_form_for(:project, :url => 'http://test.host') do |builder|
-                concat(builder.input(:author_id, :as => :check_boxes, :collection => Author.find(:all)))
+                concat(builder.input(:author_id, :as => :check_boxes, :collection => ::Author.find(:all)))
               end
             end
 
@@ -1824,18 +1824,18 @@ describe 'Formtastic' do
             end
 
             it 'shold generate an li tag for each item in the collection' do
-              output_buffer.should have_tag('form li fieldset ol li', :count => Author.find(:all).size)
+              output_buffer.should have_tag('form li fieldset ol li', :count => ::Author.find(:all).size)
             end
 
             it 'should generate labels for each item' do
-              Author.find(:all).each do |author|
+              ::Author.find(:all).each do |author|
                 output_buffer.should have_tag('form li fieldset ol li label', /#{author.to_label}/)
                 output_buffer.should have_tag("form li fieldset ol li label[@for='project_author_id_#{author.id}']")
               end
             end
 
             it 'should generate inputs for each item' do
-              Author.find(:all).each do |author|
+              ::Author.find(:all).each do |author|
                 output_buffer.should have_tag("form li fieldset ol li label input#project_author_id_#{author.id}")
                 output_buffer.should have_tag("form li fieldset ol li label input[@type='checkbox']")
                 output_buffer.should have_tag("form li fieldset ol li label input[@value='#{author.id}']")
@@ -1859,7 +1859,7 @@ describe 'Formtastic' do
           describe ":as => #{type.inspect}" do
             describe 'when the :collection option is not provided' do
               it 'should perform a basic find on the association class' do
-                Author.should_receive(:find)
+                ::Author.should_receive(:find)
 
                 semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:author, :as => type))
@@ -1870,7 +1870,7 @@ describe 'Formtastic' do
                 # Check for deprecation message
                 ::ActiveSupport::Deprecation.should_receive(:warn).with(/association/, anything())
 
-                Author.should_receive(:find)
+                ::Author.should_receive(:find)
                 semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:author_id, :as => type))
                 end
@@ -1880,12 +1880,12 @@ describe 'Formtastic' do
             describe 'when the :collection option is provided' do
 
               before do
-                @authors = Author.find(:all) * 2
+                @authors = ::Author.find(:all) * 2
                 output_buffer.replace '' # clears the output_buffer from the before block, hax!
               end
 
               it 'should not call find() on the parent class' do
-                Author.should_not_receive(:find)
+                ::Author.should_not_receive(:find)
                 semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:author, :as => type, :collection => @authors))
                 end
@@ -1995,7 +1995,7 @@ describe 'Formtastic' do
                 end
 
                 it 'should have options with text content from the specified method' do
-                  Author.find(:all).each do |author|
+                  ::Author.find(:all).each do |author|
                     output_buffer.should have_tag("form li.#{type}", /#{author.login}/)
                   end
                 end
@@ -2007,7 +2007,7 @@ describe 'Formtastic' do
                   describe "when the collection objects respond to #{label_method}" do
                     before do
                       @fred.stub!(:respond_to?).and_return { |m| m.to_s == label_method }
-                      Author.find(:all).each { |a| a.stub!(label_method).and_return('The Label Text') }
+                      ::Author.find(:all).each { |a| a.stub!(label_method).and_return('The Label Text') }
 
                       semantic_form_for(@new_post) do |builder|
                         concat(builder.input(:author, :as => type))
@@ -2015,7 +2015,7 @@ describe 'Formtastic' do
                     end
 
                     it "should render the options with #{label_method} as the label" do
-                      Author.find(:all).each do |author|
+                      ::Author.find(:all).each do |author|
                         output_buffer.should have_tag("form li.#{type}", /The Label Text/)
                       end
                     end
@@ -2032,7 +2032,7 @@ describe 'Formtastic' do
                 end
 
                 it 'should have options with values from specified method' do
-                  Author.find(:all).each do |author|
+                  ::Author.find(:all).each do |author|
                     output_buffer.should have_tag("form li.#{type} #{countable}[@value='#{author.login}']")
                   end
                 end
@@ -2673,10 +2673,10 @@ describe 'Formtastic' do
       describe 'without a block' do
 
         before do
-          Post.stub!(:reflections).and_return({:author   => mock('reflection', :options => {}, :macro => :belongs_to),
+          ::Post.stub!(:reflections).and_return({:author   => mock('reflection', :options => {}, :macro => :belongs_to),
                                                :comments => mock('reflection', :options => {}, :macro => :has_many) })
-          Post.stub!(:content_columns).and_return([mock('column', :name => 'title'), mock('column', :name => 'body'), mock('column', :name => 'created_at')])
-          Author.stub!(:find).and_return([@fred, @bob])
+          ::Post.stub!(:content_columns).and_return([mock('column', :name => 'title'), mock('column', :name => 'body'), mock('column', :name => 'created_at')])
+          ::Author.stub!(:find).and_return([@fred, @bob])
 
           @new_post.stub!(:title)
           @new_post.stub!(:body)
@@ -2713,7 +2713,7 @@ describe 'Formtastic' do
 
           it 'should render a list item in the ol for each column and reflection' do
             # Remove the :has_many macro and :created_at column
-            count = Post.content_columns.size + Post.reflections.size - 2
+            count = ::Post.content_columns.size + ::Post.reflections.size - 2
             output_buffer.should have_tag('form > fieldset.inputs > ol > li', :count => count)
           end
 
