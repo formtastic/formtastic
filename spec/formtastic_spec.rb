@@ -262,10 +262,10 @@ describe 'Formtastic' do
         @new_post.stub!(:author).and_return(Author.new)
       end
 
-      it 'yields an instance of SemanticFormBuilder' do
+      it 'yields an instance of SemanticFormHelper.builder' do  
         semantic_form_for(@new_post) do |builder|
           builder.semantic_fields_for(:author) do |nested_builder|
-            nested_builder.class.should == Formtastic::SemanticFormBuilder
+            nested_builder.class.should == Formtastic::SemanticFormHelper.builder
           end
         end
       end

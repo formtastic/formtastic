@@ -1285,6 +1285,10 @@ module Formtastic #:nodoc:
     def self.builder=(val)
       @@builder = val
     end
+    
+    def self.builder
+      @@builder
+    end
 
     [:form_for, :fields_for, :form_remote_for, :remote_form_for].each do |meth|
       src = <<-END_SRC
