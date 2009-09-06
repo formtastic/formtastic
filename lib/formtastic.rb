@@ -1280,15 +1280,7 @@ module Formtastic #:nodoc:
   #
   module SemanticFormHelper
     @@builder = Formtastic::SemanticFormBuilder
-
-    # cattr_accessor :builder
-    def self.builder=(val)
-      @@builder = val
-    end
-    
-    def self.builder
-      @@builder
-    end
+    mattr_accessor :builder
 
     [:form_for, :fields_for, :form_remote_for, :remote_form_for].each do |meth|
       src = <<-END_SRC
