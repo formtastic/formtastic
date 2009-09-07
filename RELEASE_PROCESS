@@ -1,0 +1,9 @@
+git status                              # check you have a clean working directory
+mate VERSION.yml                        # alter VERSION.yml to reflect new version number
+rake gemspec                            # to generate the new gemspec file
+git add VERSION.yml formtastic.gemspec  # stage changes
+git commit                              # commit and describe the reason for the new gem
+git git tag -am "0.2.3" 0.2.3           # tag the new version in the code base too
+git log 0.2.2..0.2.3                    # check the log since last tag
+git push                                # push to github to build the gem
+git push --tags                         # push the tags up to remote too
