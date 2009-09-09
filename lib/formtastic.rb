@@ -442,7 +442,8 @@ module Formtastic #:nodoc:
         object_name = @object_name.to_s.send(@@label_str_method)
       end
 
-      I18n.t(prefix.downcase, :default => prefix, :scope => [:formtastic]) << ' ' << object_name
+      button_text = I18n.t(prefix.downcase, :default => prefix, :scope => [:formtastic])
+      "#{button_text} #{object_name}"
     end
 
     # Determins if the attribute (eg :title) should be considered required or not.
