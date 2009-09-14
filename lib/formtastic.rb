@@ -90,7 +90,7 @@ module Formtastic #:nodoc:
       options[:as]     ||= default_input_type(method)
 
       html_class = [ options[:as], (options[:required] ? :required : :optional) ]
-      html_class << 'error' if @object && @object.respond_to?(:errors) && @object.errors.on(method.to_s)
+      html_class << 'error' if @object && @object.respond_to?(:errors) && @object.errors[method.to_sym]
 
       wrapper_html = options.delete(:wrapper_html) || {}
       wrapper_html[:id]  ||= generate_html_id(method)
@@ -100,7 +100,15 @@ module Formtastic #:nodoc:
         ::ActiveSupport::Deprecation.warn(":as => :#{options[:as]} is deprecated, use :as => :#{options[:as].to_s[8..-1]} instead", caller[3..-1])
       end
 
-      list_item_content = @@inline_order.map do |type|
+      if options[:input_html] && options[:input_html][:id]
+        options[:label_html] ||= {}
+        options[:label_html][:for] ||= options[:input_html][:id]
+      end
+
+      input_parts = @@inline_order.dup
+      input_parts.delete(:errors) if options[:as] == :hidden
+      
+      list_item_content = input_parts.map do |type|
         send(:"inline_#{type}_for", method, options)
       end.compact.join("\n")
 
@@ -317,7 +325,7 @@ module Formtastic #:nodoc:
     #
     def semantic_fields_for(record_or_name_or_array, *args, &block)
       opts = args.extract_options!
-      opts.merge!(:builder => Formtastic::SemanticFormBuilder)
+      opts.merge!(:builder => Formtastic::SemanticFormHelper.builder)
       args.push(opts)
       fields_for(record_or_name_or_array, *args, &block)
     end
@@ -344,7 +352,7 @@ module Formtastic #:nodoc:
     #
     def label(method, options_or_text=nil, options=nil)
       if options_or_text.is_a?(Hash)
-        return if options_or_text[:label] == false
+        return "" if options_or_text[:label] == false
         options = options_or_text
         text = options.delete(:label)
       else
@@ -352,9 +360,8 @@ module Formtastic #:nodoc:
         options ||= {}
       end
 
-      text = localized_attribute_string(method, text, :label)
-      text ||= humanized_attribute_name(method)
-      text << required_or_optional_string(options.delete(:required))
+      text = localized_attribute_string(method, text, :label) || humanized_attribute_name(method)
+      text += required_or_optional_string(options.delete(:required))
 
       input_name = options.delete(:input_name) || method
       if options.delete(:as_span)
@@ -379,12 +386,18 @@ module Formtastic #:nodoc:
     def inline_errors_for(method, options=nil) #:nodoc:
       return nil unless @object && @object.respond_to?(:errors) && [:sentence, :list].include?(@@inline_errors)
 
-      errors = @object.errors.on(method.to_s)
+      errors = @object.errors[method.to_sym]
       send("error_#{@@inline_errors}", Array(errors)) unless errors.blank?
     end
     alias :errors_on :inline_errors_for
 
     protected
+
+    # Prepare options to be sent to label
+    #
+    def options_for_label(options)
+      options.slice(:label, :required).merge!(options.fetch(:label_html, {}))
+    end
 
     # Deals with :for option when it's supplied to inputs methods. Additional
     # options to be passed down to :for should be supplied using :for_options
@@ -429,7 +442,8 @@ module Formtastic #:nodoc:
         object_name = @object_name.to_s.send(@@label_str_method)
       end
 
-      I18n.t(prefix.downcase, :default => prefix, :scope => [:formtastic]) << ' ' << object_name
+      button_text = I18n.t(prefix.downcase, :default => prefix, :scope => [:formtastic])
+      "#{button_text} #{object_name}"
     end
 
     # Determins if the attribute (eg :title) should be considered required or not.
@@ -467,7 +481,7 @@ module Formtastic #:nodoc:
       html_options = options.delete(:input_html) || {}
       html_options = default_string_options(method, type).merge(html_options) if STRING_MAPPINGS.include?(type)
 
-      self.label(method, options.slice(:label, :required)) +
+      self.label(method, options_for_label(options)) +
       self.send(INPUT_MAPPINGS[type], method, html_options)
     end
 
@@ -580,7 +594,7 @@ module Formtastic #:nodoc:
        end
 
       input_name = generate_association_input_name(method)
-      self.label(method, options.slice(:label, :required).merge(:input_name => input_name)) +
+      self.label(method, options_for_label(options).merge(:input_name => input_name)) +
       self.select(input_name, collection, set_options(options), html_options)
     end
     alias :boolean_select_input :select_input
@@ -595,7 +609,7 @@ module Formtastic #:nodoc:
     def time_zone_input(method, options)
       html_options = options.delete(:input_html) || {}
 
-      self.label(method, options.slice(:label, :required)) +
+      self.label(method, options_for_label(options)) +
       self.time_zone_select(method, options.delete(:priority_zones), set_options(options), html_options)
     end
 
@@ -876,7 +890,7 @@ module Formtastic #:nodoc:
       html_options = options.delete(:input_html) || {}
       priority_countries = options.delete(:priority_countries) || @@priority_countries
 
-      self.label(method, options.slice(:label, :required)) +
+      self.label(method, options_for_label(options)) +
       self.country_select(method, priority_countries, set_options(options), html_options)
     end
     
@@ -892,7 +906,7 @@ module Formtastic #:nodoc:
                              options.delete(:checked_value) || '1', options.delete(:unchecked_value) || '0')
 
       label = options.delete(:label) || humanized_attribute_name(method)
-      self.label(method, input + label, options.slice(:required))
+      self.label(method, input + label, options_for_label(options))
     end
 
     # Generates an input for the given method using the type supplied with :as.
@@ -966,6 +980,9 @@ module Formtastic #:nodoc:
     # 'Task #3' and so on.
     #
     def field_set_and_list_wrapping(html_options, contents='', &block) #:nodoc:
+      html_options[:name] ||= html_options.delete(:title)
+      html_options[:name] = localized_attribute_string(html_options[:name], html_options[:name], :title) if html_options[:name].is_a?(Symbol)
+
       legend  = html_options.delete(:name).to_s
       legend %= parent_child_index(html_options[:parent]) if html_options[:parent]
       legend  = template.content_tag(:legend, template.content_tag(:span, legend)) unless legend.blank?
@@ -990,7 +1007,7 @@ module Formtastic #:nodoc:
       contents = contents.join if contents.respond_to?(:join)
 
       template.content_tag(:fieldset,
-        %{<legend>#{self.label(method, options.slice(:label, :required).merge!(:as_span => true))}</legend>} +
+        %{<legend>#{self.label(method, options_for_label(options).merge!(:as_span => true))}</legend>} +
         template.content_tag(:ol, contents)
       )
     end
@@ -1200,7 +1217,8 @@ module Formtastic #:nodoc:
       if attr_value.is_a?(String)
         attr_value
       else
-        use_i18n = attr_value.nil? ? @@i18n_lookups_by_default : attr_value
+        use_i18n = attr_value.nil? ? @@i18n_lookups_by_default : (attr_value != false)
+        
         if use_i18n
           model_name = @object.class.name.underscore
           action_name = template.params[:action].to_s rescue ''
@@ -1267,11 +1285,7 @@ module Formtastic #:nodoc:
   #
   module SemanticFormHelper
     @@builder = Formtastic::SemanticFormBuilder
-
-    # cattr_accessor :builder
-    def self.builder=(val)
-      @@builder = val
-    end
+    mattr_accessor :builder
 
     [:form_for, :fields_for, :form_remote_for, :remote_form_for].each do |meth|
       src = <<-END_SRC

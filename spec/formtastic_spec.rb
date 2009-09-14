@@ -62,7 +62,7 @@ describe 'Formtastic' do
     @fred.stub!(:login).and_return('fred_smith')
     @fred.stub!(:id).and_return(37)
     @fred.stub!(:new_record?).and_return(false)
-    @fred.stub!(:errors).and_return(mock('errors', :on => nil))
+    @fred.stub!(:errors).and_return(mock('errors', :[] => nil))
 
     @bob = mock('user')
     @bob.stub!(:class).and_return(Author)
@@ -72,7 +72,7 @@ describe 'Formtastic' do
     @bob.stub!(:posts).and_return([])
     @bob.stub!(:post_ids).and_return([])
     @bob.stub!(:new_record?).and_return(false)
-    @bob.stub!(:errors).and_return(mock('errors', :on => nil))
+    @bob.stub!(:errors).and_return(mock('errors', :[] => nil))
 
     Author.stub!(:find).and_return([@fred, @bob])
     Author.stub!(:human_attribute_name).and_return { |column_name| column_name.humanize }
@@ -85,7 +85,7 @@ describe 'Formtastic' do
     @new_post.stub!(:class).and_return(Post)
     @new_post.stub!(:id).and_return(nil)
     @new_post.stub!(:new_record?).and_return(true)
-    @new_post.stub!(:errors).and_return(mock('errors', :on => nil))
+    @new_post.stub!(:errors).and_return(mock('errors', :[] => nil))
     @new_post.stub!(:author).and_return(nil)
 
     @freds_post = mock('post')
@@ -97,7 +97,7 @@ describe 'Formtastic' do
     @freds_post.stub!(:authors).and_return([@fred])
     @freds_post.stub!(:author_ids).and_return([@fred.id])
     @freds_post.stub!(:new_record?).and_return(false)
-    @freds_post.stub!(:errors).and_return(mock('errors', :on => nil))
+    @freds_post.stub!(:errors).and_return(mock('errors', :[] => nil))
     @fred.stub!(:posts).and_return([@freds_post])
     @fred.stub!(:post_ids).and_return([@freds_post.id])
 
@@ -262,10 +262,10 @@ describe 'Formtastic' do
         @new_post.stub!(:author).and_return(Author.new)
       end
 
-      it 'yields an instance of SemanticFormBuilder' do
+      it 'yields an instance of SemanticFormHelper.builder' do  
         semantic_form_for(@new_post) do |builder|
           builder.semantic_fields_for(:author) do |nested_builder|
-            nested_builder.class.should == Formtastic::SemanticFormBuilder
+            nested_builder.class.should == Formtastic::SemanticFormHelper.builder
           end
         end
       end
@@ -326,7 +326,7 @@ describe 'Formtastic' do
 
         it 'should return nil if label is false' do
           semantic_form_for(@new_post) do |builder|
-            builder.label(:login, :label => false).should be_nil
+            builder.label(:login, :label => false).should be_blank
           end
         end
       end
@@ -336,8 +336,8 @@ describe 'Formtastic' do
       before(:each) do
         @title_errors = ['must not be blank', 'must be longer than 10 characters', 'must be awesome']
         @errors = mock('errors')
-        @errors.stub!(:on).with('title').and_return(@title_errors)
-        @errors.stub!(:on).with('body').and_return(nil)
+        @errors.stub!(:[]).with(:title).and_return(@title_errors)
+        @errors.stub!(:[]).with(:body).and_return(nil)
         @new_post.stub!(:errors).and_return(@errors)
       end
 
@@ -705,6 +705,20 @@ describe 'Formtastic' do
               end
               output_buffer.should have_tag("form li label", /Kustom/)
             end
+
+            it 'should not generate a label if false' do
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:title, :label => false))
+              end
+              output_buffer.should_not have_tag("form li label")
+            end
+
+            it 'should be dupped if frozen' do
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:title, :label => "Kustom".freeze))
+              end
+              output_buffer.should have_tag("form li label", /Kustom/)
+            end
           end
 
           describe 'when not provided' do
@@ -908,7 +922,7 @@ describe 'Formtastic' do
           before do
             @title_errors = ['must not be blank', 'must be longer than 10 characters', 'must be awesome']
             @errors = mock('errors')
-            @errors.stub!(:on).with('title').and_return(@title_errors)
+            @errors.stub!(:[]).with(:title).and_return(@title_errors)
             @new_post.stub!(:errors).and_return(@errors)
           end
 
@@ -1068,6 +1082,13 @@ describe 'Formtastic' do
             output_buffer.should have_tag("form li input.myclass")
           end
 
+          it 'should consider input_html :id in labels' do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:title, :as => type, :input_html => { :id => 'myid' }))
+            end
+            output_buffer.should have_tag('form li label[@for="myid"]')
+          end
+
           it 'should generate input and labels even if no object is given' do
             semantic_form_for(:project, :url => 'http://test.host/') do |builder|
               concat(builder.input(:title, :as => type))
@@ -1181,11 +1202,11 @@ describe 'Formtastic' do
 
       describe ":as => :hidden" do
         before do
-          @new_post.stub!(:hidden)
+          @new_post.stub!(:secret)
           @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string))
 
           semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:hidden, :as => :hidden))
+            concat(builder.input(:secret, :as => :hidden))
           end
         end
 
@@ -1194,7 +1215,7 @@ describe 'Formtastic' do
         end
 
         it 'should have a post_hidden_input id on the wrapper' do
-          output_buffer.should have_tag('form li#post_hidden_input')
+          output_buffer.should have_tag('form li#post_secret_input')
         end
 
         it 'should not generate a label for the input' do
@@ -1202,10 +1223,24 @@ describe 'Formtastic' do
         end
 
         it "should generate a input field" do
-          output_buffer.should have_tag("form li input#post_hidden")
+          output_buffer.should have_tag("form li input#post_secret")
           output_buffer.should have_tag("form li input[@type=\"hidden\"]")
-          output_buffer.should have_tag("form li input[@name=\"post[hidden]\"]")
+          output_buffer.should have_tag("form li input[@name=\"post[secret]\"]")
         end
+        
+        it "should not render inline errors" do
+          @errors = mock('errors')
+          @errors.stub!(:[]).with(:secret).and_return(["foo", "bah"])
+          @new_post.stub!(:errors).and_return(@errors)
+          
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:secret, :as => :hidden))
+          end
+          
+          output_buffer.should_not have_tag("form li p.inline-errors")
+          output_buffer.should_not have_tag("form li ul.errors")
+        end
+        
       end
 
       describe ":as => :time_zone" do
@@ -2539,18 +2574,49 @@ describe 'Formtastic' do
           end
         end
 
-        describe 'when a :name option is provided' do
-          before do
-            @legend_text = "Advanced options"
-
-            semantic_form_for(@new_post) do |builder|
-              builder.inputs :name => @legend_text do
+        describe 'when a :name or :title option is provided' do
+          describe 'and is a string' do
+            before do
+              @legend_text = "Advanced options"
+              @legend_text_using_title = "Advanced options 2"
+              semantic_form_for(@new_post) do |builder|
+                builder.inputs :name => @legend_text do
+                end
+                builder.inputs :title => @legend_text_using_title do
+                end
               end
             end
-          end
 
-          it 'should render a fieldset inside the form' do
-            output_buffer.should have_tag("form fieldset legend", /#{@legend_text}/)
+            it 'should render a fieldset with a legend inside the form' do
+              output_buffer.should have_tag("form fieldset legend", /#{@legend_text}/)
+              output_buffer.should have_tag("form fieldset legend", /#{@legend_text_using_title}/)
+            end
+          end
+          
+          describe 'and is a symbol' do
+            before do
+              @localized_legend_text = "Localized advanced options"
+              @localized_legend_text_using_title = "Localized advanced options 2"
+              I18n.backend.store_translations :en, :formtastic => {
+                  :titles => {
+                      :post => {
+                          :advanced_options => @localized_legend_text,
+                          :advanced_options_2 => @localized_legend_text_using_title
+                        }
+                    }
+                }
+              semantic_form_for(@new_post) do |builder|
+                builder.inputs :name => :advanced_options do
+                end
+                builder.inputs :title => :advanced_options_2 do
+                end
+              end
+            end
+
+            it 'should render a fieldset with a localized legend inside the form' do
+              output_buffer.should have_tag("form fieldset legend", /#{@localized_legend_text}/)
+              output_buffer.should have_tag("form fieldset legend", /#{@localized_legend_text_using_title}/)
+            end
           end
         end
 
