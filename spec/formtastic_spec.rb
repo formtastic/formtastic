@@ -340,6 +340,7 @@ describe 'Formtastic' do
         @errors = mock('errors')
         @errors.stub!(:[]).with(:title).and_return(@title_errors)
         @errors.stub!(:[]).with(:body).and_return(nil)
+        @errors.stub!(:[]).with(:description).and_return([])
         @new_post.stub!(:errors).and_return(@errors)
       end
 
@@ -384,6 +385,15 @@ describe 'Formtastic' do
           Formtastic::SemanticFormBuilder.inline_errors = :sentence
           semantic_form_for(@new_post) do |builder|
             builder.errors_on(:body).should be_nil
+          end
+        end
+      end
+      
+      describe 'but the errors will not be shown' do
+        it 'should return nil' do
+          Formtastic::SemanticFormBuilder.inline_errors = :none
+          semantic_form_for(@new_post) do |builder|
+            builder.errors_on(:description).should be_nil
           end
         end
       end
