@@ -1081,7 +1081,7 @@ module Formtastic #:nodoc:
         create_boolean_collection(options)
       end
 
-      collection = collection.to_a if collection.instance_of?(Hash)
+      collection = collection.to_a if collection.is_a?(Hash)
 
       # Return if we have an Array of strings, fixnums or arrays
       return collection if collection.instance_of?(Array) &&

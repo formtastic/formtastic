@@ -1986,7 +1986,26 @@ describe 'Formtastic' do
                   end
                 end
               end
+              
+              describe 'and the :collection is an OrderedHash of strings' do
+                before do
+                  @new_post.stub!(:category_name).and_return('')
+                  @categories = ActiveSupport::OrderedHash.new('General' => 'gen', 'Design' => 'des','Development' => 'dev')
+                end
 
+                it "should use the key as the label text and the hash value as the value attribute for each #{countable}" do
+                  semantic_form_for(@new_post) do |builder|
+                    concat(builder.input(:category_name, :as => type, :collection => @categories))
+                  end
+
+                  @categories.each do |label, value|
+                    output_buffer.should have_tag("form li.#{type}", /#{label}/)
+                    output_buffer.should have_tag("form li.#{type} #{countable}[@value='#{value}']")
+                  end
+                end
+                
+              end
+              
               describe 'when the :label_method option is provided' do
                 before do
                   semantic_form_for(@new_post) do |builder|
