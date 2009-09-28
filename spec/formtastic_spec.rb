@@ -3078,7 +3078,7 @@ describe 'Formtastic' do
 
         describe 'when the locale sets the label text' do
           before do
-            I18n.backend.store_translations 'en', :formtastic => {:save => 'Save Changes To' }
+            I18n.backend.store_translations 'en', :formtastic => {:save => 'Save Changes To {{model}}' }
             @new_post.stub!(:new_record?).and_return(false)
             semantic_form_for(@new_post) do |builder|
               concat(builder.commit_button)
@@ -3091,6 +3091,27 @@ describe 'Formtastic' do
 
           it 'should allow translation of the labels' do
             output_buffer.should have_tag('li.commit input[@value="Save Changes To Post"]')
+          end
+        end
+
+        describe 'when the label text is set for a locale with different word order from the default' do
+          before do
+            I18n.locale = 'ja'
+            I18n.backend.store_translations 'ja', :formtastic => {:save => '{{model}}の変更を保存する'}
+            @new_post.stub!(:new_record?).and_return(false)
+            ::Post.stub!(:human_name).and_return('投稿')
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.commit_button)
+            end
+          end
+
+          after do
+            I18n.backend.store_translations 'ja', :formtastic => {:save => nil}
+            I18n.locale = 'en'
+          end
+
+          it 'should allow the translated label to have a different word order' do
+            output_buffer.should have_tag('li.commit input[@value="投稿の変更を保存する"]')
           end
         end
       end
@@ -3107,7 +3128,7 @@ describe 'Formtastic' do
 
         describe 'when the locale sets the label text' do
           before do
-            I18n.backend.store_translations 'en', :formtastic => {:create => 'Make' }
+            I18n.backend.store_translations 'en', :formtastic => {:create => 'Make {{model}}' }
             semantic_form_for(@new_post) do |builder|
               concat(builder.commit_button)
             end
@@ -3136,7 +3157,7 @@ describe 'Formtastic' do
 
         describe 'when the locale sets the label text' do
           before do
-            I18n.backend.store_translations 'en', :formtastic => { :submit => 'Send' }
+            I18n.backend.store_translations 'en', :formtastic => { :submit => 'Send {{model}}' }
             semantic_form_for(:project, :url => 'http://test.host') do |builder|
               concat(builder.commit_button)
             end

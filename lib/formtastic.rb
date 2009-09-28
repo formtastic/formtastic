@@ -425,7 +425,7 @@ module Formtastic #:nodoc:
     end
 
     # Create a default button text. If the form is working with a object, it
-    # defaults to "Create model" or "Save model" depending if we are working
+    # defaults to "Create {{model}}" or "Save {{model}}" depending if we are working
     # with a new_record or not.
     #
     # When not working with models, it defaults to "Submit object".
@@ -437,9 +437,7 @@ module Formtastic #:nodoc:
       else
         object_name = @object_name.to_s.send(@@label_str_method)
       end
-
-      button_text = I18n.t(prefix.downcase, :default => prefix, :scope => [:formtastic])
-      "#{button_text} #{object_name}"
+      I18n.t(prefix.downcase, :model => object_name, :default => "#{prefix} {{model}}", :scope => [:formtastic])
     end
 
     # Determins if the attribute (eg :title) should be considered required or not.
