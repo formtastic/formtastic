@@ -673,7 +673,7 @@ module Formtastic #:nodoc:
 
         li_content = template.content_tag(:label,
           "#{self.radio_button(input_name, value, html_options)} #{label}",
-          :for => generate_html_id(input_name, value.to_s.downcase)
+          :for => generate_html_id(input_name, value.to_s.gsub(/\s/, '_').gsub(/\W/, '').downcase)
         )
 
         li_options = value_as_class ? { :class => value.to_s.downcase } : {}
@@ -853,7 +853,7 @@ module Formtastic #:nodoc:
         label = c.is_a?(Array) ? c.first : c
         value = c.is_a?(Array) ? c.last : c
 
-        html_options.merge!(:id => generate_html_id(input_name, value.to_s.downcase))
+        html_options.merge!(:id => generate_html_id(input_name, value.to_s.gsub(/\s/, '_').gsub(/\W/, '').downcase))
  
         li_content = template.content_tag(:label,
           "#{self.check_box(input_name, html_options, value, unchecked_value)} #{label}",
