@@ -1,12 +1,5 @@
 # coding: utf-8
 
-# Override the default ActiveRecordHelper behaviour of wrapping the input.
-# This gets taken care of semantically by adding an error class to the LI tag
-# containing the input.
-ActionView::Base.field_error_proc = proc do |html_tag, instance_tag|
-  html_tag
-end
-
 module Formtastic #:nodoc:
 
   class SemanticFormBuilder < ActionView::Helpers::FormBuilder
@@ -1291,14 +1284,32 @@ module Formtastic #:nodoc:
   module SemanticFormHelper
     @@builder = Formtastic::SemanticFormBuilder
     mattr_accessor :builder
-
+    
+    @@default_field_error_proc = nil
+    
+    # Override the default ActiveRecordHelper behaviour of wrapping the input.
+    # This gets taken care of semantically by adding an error class to the LI tag
+    # containing the input.
+    #
+    FIELD_ERROR_PROC = proc do |html_tag, instance_tag|
+      html_tag
+    end
+    
+    def use_custom_field_error_proc(&block)
+      @@default_field_error_proc = ::ActionView::Base.field_error_proc
+      ::ActionView::Base.field_error_proc = FIELD_ERROR_PROC
+      result = yield
+      ::ActionView::Base.field_error_proc = @@default_field_error_proc
+      result
+    end
+    
     [:form_for, :fields_for, :form_remote_for, :remote_form_for].each do |meth|
       src = <<-END_SRC
         def semantic_#{meth}(record_or_name_or_array, *args, &proc)
           options = args.extract_options!
           options[:builder] = @@builder
           options[:html] ||= {}
-
+          
           class_names = options[:html][:class] ? options[:html][:class].split(" ") : []
           class_names << "formtastic"
           class_names << case record_or_name_or_array
@@ -1307,8 +1318,10 @@ module Formtastic #:nodoc:
             else record_or_name_or_array.class.to_s.underscore                  # @post => "post"
           end
           options[:html][:class] = class_names.join(" ")
-
-          #{meth}(record_or_name_or_array, *(args << options), &proc)
+          
+          use_custom_field_error_proc do
+            #{meth}(record_or_name_or_array, *(args << options), &proc)
+          end
         end
       END_SRC
       module_eval src, __FILE__, __LINE__

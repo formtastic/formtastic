@@ -341,6 +341,22 @@ describe 'Formtastic' do
         @new_post.stub!(:errors).and_return(@errors)
       end
       
+      describe "field error proc" do
+        it "should not be overridden globally for all form builders" do
+          current_field_error_proc = ::ActionView::Base.field_error_proc
+          
+          semantic_form_for(@new_post) do |builder|
+            ::ActionView::Base.field_error_proc.should_not == current_field_error_proc
+          end
+          
+          ::ActionView::Base.field_error_proc.should == current_field_error_proc
+          
+          form_for(@new_post) do |builder|
+            ::ActionView::Base.field_error_proc.should == current_field_error_proc
+          end
+        end
+      end
+      
       describe 'when there are errors' do
         before do
           @errors.stub!(:[]).with(:title).and_return(@title_errors)
