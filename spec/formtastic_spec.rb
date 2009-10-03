@@ -1983,7 +1983,7 @@ describe 'Formtastic' do
               describe 'and the :collection is an array of arrays' do
                 before do
                   @new_post.stub!(:category_name).and_return('')
-                  @categories = { 'General' => 'gen', 'Design' => 'des','Development' => 'dev' }.to_a
+                  @categories = { 'General' => 'gen', 'Design' => 'des', 'Development' => 'dev' }.to_a
                 end
 
                 it "should use the first value as the label text and the last value as the value attribute for #{countable}" do
@@ -1995,10 +1995,30 @@ describe 'Formtastic' do
                     label = type == :select ? :option : :label
                     output_buffer.should have_tag("form li.#{type} #{label}", /#{text}/i)
                     output_buffer.should have_tag("form li.#{type} #{countable}[@value='#{value.to_s}']")
+                    output_buffer.should have_tag("form li.#{type} #{countable}#post_category_name_#{value.to_s}") if type == :radio
                   end
                 end
               end
-
+              
+              if type == :radio
+                describe 'and the :collection is an array of arrays with boolean values' do
+                  before do
+                    @new_post.stub!(:category_name).and_return('')
+                    @choices = { 'Yeah' => true, 'Nah' => false }.to_a
+                  end
+              
+                  it "should use the first value as the label text and the last value as the value attribute for #{countable}" do
+                    semantic_form_for(@new_post) do |builder|
+                      concat(builder.input(:category_name, :as => type, :collection => @choices))
+                    end
+                    
+                    output_buffer.should have_tag("form li.#{type} #{countable}#post_category_name_true")
+                    output_buffer.should have_tag("form li.#{type} #{countable}#post_category_name_false")
+                  end
+                end
+              end
+              
+              
               describe 'and the :collection is an array of symbols' do
                 before do
                   @new_post.stub!(:category_name).and_return('')
