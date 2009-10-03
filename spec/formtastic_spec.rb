@@ -1512,7 +1512,7 @@ describe 'Formtastic' do
               output_buffer.should have_tag('form li fieldset legend', /Author/)
             end
 
-            it 'shold generate an li tag for each item in the collection' do
+            it 'should generate an li tag for each item in the collection' do
               output_buffer.should have_tag('form li fieldset ol li', :count => ::Author.find(:all).size)
             end
 
@@ -1932,7 +1932,7 @@ describe 'Formtastic' do
               describe 'and the :collection is an array of strings' do
                 before do
                   @new_post.stub!(:category_name).and_return('')
-                  @categories = [ 'General', 'Design', 'Development' ]
+                  @categories = [ 'General', 'Design', 'Development', 'Quasi-Serious Inventions' ]
                 end
 
                 it "should use the string as the label text and value for each #{countable}" do
@@ -1954,10 +1954,10 @@ describe 'Formtastic' do
                         concat(bob_builder.input(:category_name, :as => type, :collection => @categories))
                       end
                     end
-
-                    @categories.each do |item|
-                      output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_category_name_#{item.downcase}']")
-                    end
+                    output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_category_name_general']")
+                    output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_category_name_design']")
+                    output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_category_name_development']")
+                    output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_category_name_quasiserious_inventions']")
                   end
                 end
               end
