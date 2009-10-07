@@ -747,7 +747,8 @@ module Formtastic #:nodoc:
     #
     def date_or_datetime_input(method, options)
       position = { :year => 1, :month => 2, :day => 3, :hour => 4, :minute => 5, :second => 6 }
-      inputs   = options.delete(:order) || I18n.translate(:'date.order') || [:year, :month, :day]
+      i18n_date_order = I18n.translate(:'date.order').is_a? Array ? I18n.translate(:'date.order') : nil
+      inputs   = options.delete(:order) || i18n_date_order || [:year, :month, :day]
 
       time_inputs = [:hour, :minute]
       time_inputs << [:second] if options[:include_seconds]
