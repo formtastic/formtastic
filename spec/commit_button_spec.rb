@@ -43,6 +43,49 @@ describe 'SemanticFormBuilder#commit_button' do
     
   end
 
+  describe "its accesskey" do
+  
+    it 'should allow nil default' do
+      Formtastic::SemanticFormBuilder.default_commit_button_accesskey.should == nil
+      output_buffer.should_not have_tag('li.commit input[@accesskey]')
+    end
+
+    it 'should use the default if set' do
+      Formtastic::SemanticFormBuilder.default_commit_button_accesskey = 's'
+      @new_post.stub!(:new_record?).and_return(false)
+      semantic_form_for(@new_post) do |builder|
+        concat(builder.commit_button('text', :button_html => {}))
+      end
+      output_buffer.should have_tag('li.commit input[@accesskey="s"]')
+    end
+
+    it 'should use the value set in options over the default' do
+      Formtastic::SemanticFormBuilder.default_commit_button_accesskey = 's'
+      @new_post.stub!(:new_record?).and_return(false)
+      semantic_form_for(@new_post) do |builder|
+        concat(builder.commit_button('text', :accesskey => 'o'))
+      end
+      output_buffer.should_not have_tag('li.commit input[@accesskey="s"]')
+      output_buffer.should have_tag('li.commit input[@accesskey="o"]')
+    end
+
+    it 'should use the value set in button_html over options' do
+      Formtastic::SemanticFormBuilder.default_commit_button_accesskey = 's'
+      @new_post.stub!(:new_record?).and_return(false)
+      semantic_form_for(@new_post) do |builder|
+        concat(builder.commit_button('text', :accesskey => 'o', :button_html => {:accesskey => 't'}))
+      end
+      output_buffer.should_not have_tag('li.commit input[@accesskey="s"]')
+      output_buffer.should_not have_tag('li.commit input[@accesskey="o"]')
+      output_buffer.should have_tag('li.commit input[@accesskey="t"]')
+    end
+
+    after do
+      Formtastic::SemanticFormBuilder.default_commit_button_accesskey = nil
+    end
+
+  end
+
   describe 'when the first option is a string and the second is a hash' do
     
     before do
