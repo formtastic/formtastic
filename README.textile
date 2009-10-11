@@ -79,7 +79,7 @@ RDoc documentation _should_ be automatically generated after each commit and mad
 
 h2. Installation
 
-You can (and should) get it as a gem:
+You can and should get it as a gem:
 
 <pre>
   gem install justinfrench-formtastic
@@ -93,11 +93,13 @@ And then add it as a dependency in your environment.rb file:
     :source  => 'http://gems.github.com'
 </pre>
 
-If you're a little more old school, install it as a plugin:
+Run the generator to add a (commented out) Formtastic config file to your app's config/initializers/:
 
 <pre>
-  ./script/plugin install git://github.com/justinfrench/formtastic.git
+  ./script/generate formtastic_config
 </pre>
+
+See also "What about Stylesheets?"
 
 
 h2. Usage
