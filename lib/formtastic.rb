@@ -902,8 +902,7 @@ module Formtastic #:nodoc:
       input = self.check_box(method, set_options(options).merge(html_options),
                              options.delete(:checked_value) || '1', options.delete(:unchecked_value) || '0')
 
-      label = options.delete(:label) || humanized_attribute_name(method)
-      self.label(method, input + label, options_for_label(options))
+      self.label(method, input << self.label(method, options_for_label(options)), options_for_label(options))
     end
 
     # Generates an input for the given method using the type supplied with :as.

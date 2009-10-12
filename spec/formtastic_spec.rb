@@ -425,7 +425,11 @@ describe 'Formtastic' do
       before do
         @new_post.stub!(:title)
         @new_post.stub!(:body)
-        @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
+        @new_post.stub!(:published)
+        @new_post.stub!(:column_for_attribute).with(:meta_description).and_return(mock('column', :type => :string, :limit => 255))
+        @new_post.stub!(:column_for_attribute).with(:title).and_return(mock('column', :type => :string, :limit => 255))
+        @new_post.stub!(:column_for_attribute).with(:body).and_return(mock('column', :type => :text))
+        @new_post.stub!(:column_for_attribute).with(:published).and_return(mock('column', :type => :boolean))
       end
 
       describe 'with inline order customization' do
@@ -804,8 +808,10 @@ describe 'Formtastic' do
                   :formtastic => {
                       :labels => {
                         :title => @default_localized_label_text,
+                        :published => @default_localized_label_text,
                         :post => {
-                          :title => @localized_label_text
+                          :title => @localized_label_text,
+                          :published => @default_localized_label_text
                          }
                        }
                     }
@@ -815,6 +821,7 @@ describe 'Formtastic' do
               it 'should render a label with localized label (I18n)' do
                 semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:title, :label => true))
+                  concat(builder.input(:published, :as => :boolean, :label => true))
                 end
                 output_buffer.should have_tag('form li label', @localized_label_text)
               end
@@ -824,12 +831,14 @@ describe 'Formtastic' do
                   :formtastic => {
                       :labels => {
                         :post => {
-                          :title => nil
+                          :title => nil,
+                          :published => nil
                          }
                        }
                     }
                 semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:title, :label => true))
+                  concat(builder.input(:published, :as => :boolean, :label => true))
                 end
                 output_buffer.should have_tag('form li label', @default_localized_label_text)
               end
