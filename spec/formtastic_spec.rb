@@ -3117,9 +3117,9 @@ describe 'Formtastic' do
         describe 'when the label text is set for a locale with different word order from the default' do
           before do
             I18n.locale = 'ja'
-            I18n.backend.store_translations 'ja', :formtastic => {:save => '{{model}}の変更を保存する'}
+            I18n.backend.store_translations 'ja', :formtastic => {:save => 'Save {{model}}'}
             @new_post.stub!(:new_record?).and_return(false)
-            ::Post.stub!(:human_name).and_return('投稿')
+            ::Post.stub!(:human_name).and_return('Post')
             semantic_form_for(@new_post) do |builder|
               concat(builder.commit_button)
             end
@@ -3131,7 +3131,7 @@ describe 'Formtastic' do
           end
 
           it 'should allow the translated label to have a different word order' do
-            output_buffer.should have_tag('li.commit input[@value="投稿の変更を保存する"]')
+            output_buffer.should have_tag('li.commit input[@value="Save Post"]')
           end
         end
       end

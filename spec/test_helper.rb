@@ -2,7 +2,6 @@
 require 'rubygems'
 
 # To get the specs to run on Ruby 1.9.x.
-gem 'test-unit',                  '= 1.2.3'
 gem 'activesupport',              '>= 2.3.3'
 gem 'actionpack',                 '>= 2.3.3'
 gem 'rspec',                      '>= 1.2.6'
