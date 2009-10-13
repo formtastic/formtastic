@@ -569,13 +569,60 @@ describe 'Formtastic' do
                   end
 
                   it 'should be not be required if the optional :if condition is not satisifed' do
-                    @new_post.class.should_receive(:reflect_on_validations_for).with(:body).and_return([
-                      mock('MacroReflection', :macro => :validates_presence_of, :name => :body, :options => {:if => false})
-                    ])
-
-                    semantic_form_for(@new_post) do |builder|
-                      concat(builder.input(:body))
-                    end
+                    should_be_required(:required => false, :options => { :if => false })
+                  end
+                  
+                  it 'should not be required if the optional :if proc evaluates to false' do
+                    should_be_required(:required => false, :options => { :if => proc { |record| false } })
+                  end
+                  
+                  it 'should be required if the optional :if proc evaluates to true' do
+                    should_be_required(:required => true, :options => { :if => proc { |record| true } })
+                  end
+                  
+                  it 'should not be required if the optional :unless proc evaluates to true' do
+                    should_be_required(:required => false, :options => { :unless => proc { |record| true } })
+                  end
+                  
+                  it 'should be required if the optional :unless proc evaluates to false' do
+                    should_be_required(:required => true, :options => { :unless => proc { |record| false } })
+                  end
+                  
+                  it 'should be required if the optional :if with a method string evaluates to true' do
+                    @new_post.should_receive(:required_condition).and_return(true)
+                    should_be_required(:required => true, :options => { :if => :required_condition })
+                  end
+                  
+                  it 'should be required if the optional :if with a method string evaluates to false' do
+                    @new_post.should_receive(:required_condition).and_return(false)
+                    should_be_required(:required => false, :options => { :if => :required_condition })
+                  end
+                  
+                  it 'should not be required if the optional :unless with a method string evaluates to false' do
+                     @new_post.should_receive(:required_condition).and_return(false)
+                    should_be_required(:required => true, :options => { :unless => :required_condition })
+                  end
+                  
+                   it 'should be required if the optional :unless with a method string evaluates to true' do
+                     @new_post.should_receive(:required_condition).and_return(true)
+                     should_be_required(:required => false, :options => { :unless => :required_condition })
+                   end
+                end
+                
+                # TODO make a matcher for this?
+                def should_be_required(options)
+                  @new_post.class.should_receive(:reflect_on_validations_for).with(:body).and_return([
+                    mock('MacroReflection', :macro => :validates_presence_of, :name => :body, :options => options[:options])
+                  ])
+                  
+                  semantic_form_for(@new_post) do |builder|
+                    concat(builder.input(:body))
+                  end
+                  
+                  if options[:required]
+                    output_buffer.should_not have_tag('form li.optional')
+                    output_buffer.should have_tag('form li.required')
+                  else
                     output_buffer.should have_tag('form li.optional')
                     output_buffer.should_not have_tag('form li.required')
                   end

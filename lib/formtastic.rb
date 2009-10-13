@@ -460,11 +460,27 @@ module Formtastic #:nodoc:
         @object.class.reflect_on_validations_for(attribute_sym).any? do |validation|
           validation.macro == :validates_presence_of &&
           validation.name == attribute_sym &&
-          (validation.options.present? ? (validation.options[:if] == true) : true)
+          (validation.options.present? ? options_require_validation?(validation.options) : true)
         end
       else
         @@all_fields_required_by_default
       end
+    end
+    
+    # Determines whether the given options evaluate to true
+    def options_require_validation?(options) #nodoc
+      if_condition = !options[:if].nil?
+      condition = if_condition ? options[:if] : options[:unless]
+
+      condition = if condition.respond_to?(:call)
+                    condition.call(@object)
+                  elsif @object.respond_to?(condition.to_s)
+                    @object.send(condition)
+                  else
+                    condition
+                  end
+      
+      if_condition ? !!condition : !condition
     end
 
     # A method that deals with most of inputs (:string, :password, :file,
