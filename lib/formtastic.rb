@@ -557,29 +557,25 @@ module Formtastic #:nodoc:
     #   f.input :author, :collection => {@justin.name => @justin.id, @kate.name => @kate.id}
     #   f.input :author, :collection => ["Justin", "Kate", "Amelia", "Gus", "Meg"]
     #
-    # Note: This input looks for a label method in the parent association.
+    # The :label_method option allows you to customize the text label inside each option tag two ways:
     #
-    # You can customize the text label inside each option tag, by naming the correct method
-    # (:full_name, :display_name, :account_number, etc) to call on each object in the collection
-    # by passing in the :label_method option.  By default the :label_method is whichever element of
-    # Formtastic::SemanticFormBuilder.collection_label_methods is found first.
+    # * by naming the correct method to call on each object in the collection as a symbol (:name, :login, etc)
+    # * by passing a Proc that will be called on each object in the collection, allowing you to use helpers or multiple model attributes together
     #
     # Examples:
     #
     #   f.input :author, :label_method => :full_name
-    #   f.input :author, :label_method => :display_name
-    #   f.input :author, :label_method => :to_s
-    #   f.input :author, :label_method => :label
+    #   f.input :author, :label_method => :login
+    #   f.input :author, :label_method => :full_name_with_post_count
+    #   f.input :author, :label_method => Proc.new { |a| "#{a.name} (#{pluralize("post", a.posts.count)})" }
     #
-    # You can also customize the value inside each option tag, by passing in the :value_method option.
-    # Usage is the same as the :label_method option
+    # The :value_method option provides the same customization of the value attribute of each option tag.
     #
     # Examples:
     #
     #   f.input :author, :value_method => :full_name
-    #   f.input :author, :value_method => :display_name
-    #   f.input :author, :value_method => :to_s
-    #   f.input :author, :value_method => :value
+    #   f.input :author, :value_method => :login
+    #   f.input :author, :value_method => Proc.new { |a| "author_#{a.login}" }
     #
     # You can pass html_options to the select tag using :input_html => {}
     #
@@ -647,9 +643,8 @@ module Formtastic #:nodoc:
     #     </ol>
     #   </fieldset>
     #
-    # You can customize the options available in the select by passing in a collection (an Array or 
-    # Hash) through the :collection option.  If not provided, the choices are found by inferring the 
-    # parent's class name from the method name and simply calling find(:all) on it 
+    # You can customize the choices available in the radio button set by passing in a collection (an Array or 
+    # Hash) through the :collection option.  If not provided, the choices are found by reflecting on the association
     # (Author.find(:all) in the example above).
     #
     # Examples:
@@ -659,21 +654,29 @@ module Formtastic #:nodoc:
     #   f.input :author, :as => :radio, :collection => [@justin, @kate]
     #   f.input :author, :collection => ["Justin", "Kate", "Amelia", "Gus", "Meg"]
     #
-    # You can also customize the text label inside each option tag, by naming the correct method
-    # (:full_name, :display_name, :account_number, etc) to call on each object in the collection
-    # by passing in the :label_method option.  By default the :label_method is whichever element of
-    # Formtastic::SemanticFormBuilder.collection_label_methods is found first.
+    # The :label_method option allows you to customize the label for each radio button two ways:
+    #
+    # * by naming the correct method to call on each object in the collection as a symbol (:name, :login, etc)
+    # * by passing a Proc that will be called on each object in the collection, allowing you to use helpers or multiple model attributes together
     #
     # Examples:
     #
     #   f.input :author, :as => :radio, :label_method => :full_name
-    #   f.input :author, :as => :radio, :label_method => :display_name
-    #   f.input :author, :as => :radio, :label_method => :to_s
-    #   f.input :author, :as => :radio, :label_method => :label
+    #   f.input :author, :as => :radio, :label_method => :login
+    #   f.input :author, :as => :radio, :label_method => :full_name_with_post_count
+    #   f.input :author, :as => :radio, :label_method => Proc.new { |a| "#{a.name} (#{pluralize("post", a.posts.count)})" }
     #
-    # Finally, you can set :value_as_class => true if you want that LI wrappers
-    # contains a class with the wrapped radio input value.
+    # The :value_method option provides the same customization of the value attribute of each option tag.
     #
+    # Examples:
+    #
+    #   f.input :author, :as => :radio, :value_method => :full_name
+    #   f.input :author, :as => :radio, :value_method => :login
+    #   f.input :author, :as => :radio, :value_method => Proc.new { |a| "author_#{a.login}" }
+    #
+    # Finally, you can set :value_as_class => true if you want the li wrapper around each radio 
+    # button / label combination to contain a class with the value of the radio button (useful for
+    # applying specific CSS or Javascript to a particular radio button).
     def radio_input(method, options)
       collection   = find_collection_for_column(method, options)
       html_options = set_options(options).merge(options.delete(:input_html) || {})
@@ -840,21 +843,29 @@ module Formtastic #:nodoc:
     #   f.input :author, :as => :check_boxes, :collection => Author.find(:all)
     #   f.input :author, :as => :check_boxes, :collection => [@justin, @kate]
     #
-    # You can also customize the text label inside each option tag, by naming the correct method
-    # (:full_name, :display_name, :account_number, etc) to call on each object in the collection
-    # by passing in the :label_method option.  By default the :label_method is whichever element of
-    # Formtastic::SemanticFormBuilder.collection_label_methods is found first.
+    # The :label_method option allows you to customize the label for each checkbox two ways:
+    #
+    # * by naming the correct method to call on each object in the collection as a symbol (:name, :login, etc)
+    # * by passing a Proc that will be called on each object in the collection, allowing you to use helpers or multiple model attributes together
     #
     # Examples:
     #
     #   f.input :author, :as => :check_boxes, :label_method => :full_name
-    #   f.input :author, :as => :check_boxes, :label_method => :display_name
-    #   f.input :author, :as => :check_boxes, :label_method => :to_s
-    #   f.input :author, :as => :check_boxes, :label_method => :label
+    #   f.input :author, :as => :check_boxes, :label_method => :login
+    #   f.input :author, :as => :check_boxes, :label_method => :full_name_with_post_count
+    #   f.input :author, :as => :check_boxes, :label_method => Proc.new { |a| "#{a.name} (#{pluralize("post", a.posts.count)})" }
     #
-    # You can set :value_as_class => true if you want that LI wrappers contains
-    # a class with the wrapped checkbox input value.
+    # The :value_method option provides the same customization of the value attribute of each checkbox input tag.
     #
+    # Examples:
+    #
+    #   f.input :author, :as => :check_boxes, :value_method => :full_name
+    #   f.input :author, :as => :check_boxes, :value_method => :login
+    #   f.input :author, :as => :check_boxes, :value_method => Proc.new { |a| "author_#{a.login}" }
+    #
+    # Finally, you can set :value_as_class => true if you want the li wrapper around each checkbox / label 
+    # combination to contain a class with the value of the radio button (useful for applying specific 
+    # CSS or Javascript to a particular checkbox).
     def check_boxes_input(method, options)
       collection = find_collection_for_column(method, options)
       html_options = options.delete(:input_html) || {}
@@ -1103,7 +1114,7 @@ module Formtastic #:nodoc:
       label = options.delete(:label_method) || detect_label_method(collection)
       value = options.delete(:value_method) || :id
 
-      collection.map { |o| [o.send(label), o.send(value)] }
+      collection.map { |o| [send_or_call(label, o), send_or_call(value, o)] }
     end
 
     # Detected the label collection method when none is supplied using the
@@ -1256,6 +1267,14 @@ module Formtastic #:nodoc:
                                 :scope => "formtastic.#{i18n_key.to_s.pluralize}")
           i18n_value.blank? ? nil : i18n_value
         end
+      end
+    end
+    
+    def send_or_call(duck, object)
+      if duck.is_a?(Proc)
+        duck.call(object)
+      else
+        object.send(duck)
       end
     end
 

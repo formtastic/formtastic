@@ -2114,17 +2114,35 @@ describe 'Formtastic' do
               end
               
               describe 'when the :label_method option is provided' do
-                before do
-                  semantic_form_for(@new_post) do |builder|
-                    concat(builder.input(:author, :as => type, :label_method => :login))
+                
+                describe 'as a symbol' do
+                  before do
+                    semantic_form_for(@new_post) do |builder|
+                      concat(builder.input(:author, :as => type, :label_method => :login))
+                    end
                   end
-                end
 
-                it 'should have options with text content from the specified method' do
-                  ::Author.find(:all).each do |author|
-                    output_buffer.should have_tag("form li.#{type}", /#{author.login}/)
+                  it 'should have options with text content from the specified method' do
+                    ::Author.find(:all).each do |author|
+                      output_buffer.should have_tag("form li.#{type}", /#{author.login}/)
+                    end
                   end
                 end
+                
+                describe 'as a proc' do
+                  before do
+                    semantic_form_for(@new_post) do |builder|
+                      concat(builder.input(:author, :as => type, :label_method => Proc.new {|a| a.login.reverse }))
+                    end
+                  end
+                  
+                  it 'should have options with the proc applied to each' do
+                    ::Author.find(:all).each do |author|
+                      output_buffer.should have_tag("form li.#{type}", /#{author.login.reverse}/)
+                    end
+                  end
+                end
+                
               end
 
               describe 'when the :label_method option is not provided' do
@@ -2151,15 +2169,32 @@ describe 'Formtastic' do
               end
 
               describe 'when the :value_method option is provided' do
-                before do
-                  semantic_form_for(@new_post) do |builder|
-                    concat(builder.input(:author, :as => type, :value_method => :login))
+                
+                describe 'as a symbol' do
+                  before do
+                    semantic_form_for(@new_post) do |builder|
+                      concat(builder.input(:author, :as => type, :value_method => :login))
+                    end
+                  end
+                  
+                  it 'should have options with values from specified method' do
+                    ::Author.find(:all).each do |author|
+                      output_buffer.should have_tag("form li.#{type} #{countable}[@value='#{author.login}']")
+                    end
                   end
                 end
+                
+                describe 'as a proc' do
+                  before do
+                    semantic_form_for(@new_post) do |builder|
+                      concat(builder.input(:author, :as => type, :value_method => Proc.new {|a| a.login.reverse }))
+                    end
+                  end
 
-                it 'should have options with values from specified method' do
-                  ::Author.find(:all).each do |author|
-                    output_buffer.should have_tag("form li.#{type} #{countable}[@value='#{author.login}']")
+                  it 'should have options with the proc applied to each value' do
+                    ::Author.find(:all).each do |author|
+                      output_buffer.should have_tag("form li.#{type} #{countable}[@value='#{author.login.reverse}']")
+                    end
                   end
                 end
               end
