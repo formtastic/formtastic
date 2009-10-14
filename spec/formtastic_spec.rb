@@ -1,4 +1,3 @@
-# coding: utf-8
 require File.dirname(__FILE__) + '/test_helper'
 require 'formtastic'
 
