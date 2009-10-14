@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'rubygems'
 
 def smart_require(lib_name, gem_name, gem_version = '>= 0.0.0')

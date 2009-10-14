@@ -1,3 +1,4 @@
+# coding: utf-8
 # Get current OS - needed for clipboard functionality
 case RUBY_PLATFORM
 when /darwin/ then

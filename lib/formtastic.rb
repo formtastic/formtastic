@@ -1,3 +1,5 @@
+# coding: utf-8
+
 module Formtastic #:nodoc:
 
   class SemanticFormBuilder < ActionView::Helpers::FormBuilder
