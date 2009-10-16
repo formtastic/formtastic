@@ -1,4 +1,4 @@
-class FormtasticConfigGenerator < Rails::Generator::Base
+class FormtasticGenerator < Rails::Generator::Base
   
   def initialize(*runtime_args)
     super
