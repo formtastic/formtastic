@@ -12,7 +12,7 @@ begin
   SUMMARY = "A Rails form builder plugin/gem with semantically rich and accessible markup"
   HOMEPAGE = "http://github.com/justinfrench/formtastic/tree/master"
   
-  gem 'technicalpickles-jeweler', '>= 1.0.0'
+  gem 'jeweler', '>= 1.0.0'
   require 'jeweler'
   
   Jeweler::Tasks.new do |s|
