@@ -986,6 +986,7 @@ describe 'Formtastic' do
               output_buffer.should have_tag("form li.string")
               output_buffer.should have_tag("form li.required")
               output_buffer.should have_tag("form li.another_class")
+              output_buffer.should have_tag("form li.title")
             end
 
             it 'should allow classes to be an array' do
@@ -995,6 +996,7 @@ describe 'Formtastic' do
               output_buffer.should have_tag("form li.string")
               output_buffer.should have_tag("form li.my_class")
               output_buffer.should have_tag("form li.another_class")
+              output_buffer.should have_tag("form li.title")
             end
           end
 
@@ -1005,6 +1007,7 @@ describe 'Formtastic' do
               end
               output_buffer.should have_tag("form li#post_title_input")
               output_buffer.should have_tag("form li.string")
+              output_buffer.should have_tag("form li.title")
             end
           end
 
