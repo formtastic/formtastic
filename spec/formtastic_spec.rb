@@ -2700,6 +2700,12 @@ describe 'Formtastic' do
         end
 
         describe 'when a :for option is provided' do
+          
+          before do
+            @new_post.stub!(:respond_to?).and_return(true, true)
+            @new_post.stub!(:author).and_return(@bob)
+          end
+          
           it 'should render nested inputs' do
             @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
 
@@ -2709,9 +2715,49 @@ describe 'Formtastic' do
               end
             end
 
-            output_buffer.should have_tag("form fieldset.inputs #post_author_login")
+            output_buffer.should have_tag("form fieldset.inputs #post_author_attributes_login")
             output_buffer.should_not have_tag("form fieldset.inputs #author_login")
+
           end
+          
+          describe "as a symbol representing the association name" do
+            
+            it 'should nest the inputs with an _attributes suffix on the association name' do
+              semantic_form_for(@new_post) do |post|
+                post.inputs :for => :author do |author|
+                  concat(author.input(:login))
+                end
+              end
+              output_buffer.should have_tag("form input[@name='post[author_attributes][login]']")
+            end
+            
+          end
+          
+          describe 'as an array containing the a symbole for the association name and the associated object' do
+            
+            it 'should nest the inputs with an _attributes suffix on the association name' do
+              semantic_form_for(@new_post) do |post|
+                post.inputs :for => [:author, @new_post.author] do |author|
+                  concat(author.input(:login))
+                end
+              end
+              output_buffer.should have_tag("form input[@name='post[author_attributes][login]']")
+            end
+            
+          end
+            
+          describe 'as an associated object' do
+            
+            it 'should not nest the inputs with an _attributes suffix' do
+              semantic_form_for(@new_post) do |post|
+                post.inputs :for => @new_post.author do |author|
+                  concat(author.input(:login))
+                end
+              end
+              output_buffer.should have_tag("form input[@name='post[author][login]']")
+            end
+            
+          end 
 
           it 'should raise an error if :for and block with no argument is given' do
             semantic_form_for(@new_post) do |builder|
@@ -2733,7 +2779,7 @@ describe 'Formtastic' do
               end
             end
 
-            output_buffer.should have_tag('form fieldset ol li #post_author_10_login')
+            output_buffer.should have_tag('form fieldset ol li #post_author_attributes_10_login')
           end
 
           it 'should not add builder as a fieldset attribute tag' do
