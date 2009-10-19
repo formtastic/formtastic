@@ -11,6 +11,29 @@ begin
   EMAIL = "justin@indent.com.au"
   SUMMARY = "A Rails form builder plugin/gem with semantically rich and accessible markup"
   HOMEPAGE = "http://github.com/justinfrench/formtastic/tree/master"
+  INSTALL_MESSAGE = %q{
+  ========================================================================
+
+  Thanks for installing Formtastic!
+    
+  You can now (optionally) run the generater to copy some stylesheets and
+  a config initializer into your application:
+  
+    ./script/generate formtastic
+    
+  The following files will be added:
+  
+    RAILS_ROOT/public/stylesheets/formtastic.css
+    RAILS_ROOT/public/stylesheets/formtastic_changes.css
+    RAILS_ROOT/config/initializers/formtastic.rb
+  
+  Find out more and get involved:
+
+    http://github.com/justinfrench/formtastic
+    http://groups.google.com.au/group/formtastic
+  
+  ========================================================================
+  }
   
   gem 'jeweler', '>= 1.0.0'
   require 'jeweler'
@@ -22,6 +45,7 @@ begin
     s.homepage = HOMEPAGE
     s.description = SUMMARY
     s.author = AUTHOR
+    s.post_install_message = INSTALL_MESSAGE
     
     s.require_path = 'lib'
     s.autorequire = GEM
