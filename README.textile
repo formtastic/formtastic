@@ -79,29 +79,23 @@ RDoc documentation _should_ be automatically generated after each commit and mad
 
 h2. Installation
 
-You can and should get it as a gem:
+The gem is hosted on gemcutter, so if you haven't already, add it as a gem source:
 
 <pre>
-  gem install justinfrench-formtastic
+  sudo gem sources -a http://gemcutter.org/
 </pre>
 
-And then add it as a dependency in your environment.rb file:
+Then install the Formtastic gem:q
 
 <pre>
-  config.gem "justinfrench-formtastic", 
-    :lib     => 'formtastic', 
-    :source  => 'http://gems.github.com'
+  sudo gem install formtastic
 </pre>
 
-If you want, run the generator to copy the following files into your app:
+Optionally, run @./script/generate formtastic@ to copy the following files into your app:
 
 * config/initializers/formtastic.rb (a commented out Formtastic config initializer)
 * public/stylesheets/formtastic.css
 * public/stylesheets/formtastic_changes.css
-
-<pre>
-  ./script/generate formtastic
-</pre
 
 A proof-of-concept stylesheet is provided which you can include in your layout.  Customization is best achieved by overriding these styles in an additional stylesheet so that the Formtastic styles can be updated without clobbering your changes.  If you want to use these stylesheets, add both to your layout:
 
