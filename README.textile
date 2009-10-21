@@ -410,13 +410,7 @@ Run @./script/generate formtastic@ to copy a commented out config file into @con
 
 h2. Status
 
-*THINGS ARE GOING TO CHANGE A BIT BEFORE WE HIT 1.0.*
-
-It's a work in progress and a bit rough around the edges still, but I hope you try it and offer some suggestions and improvements anyway.
-
-On the plus side, it has a comprehensive spec suite and contributions from at least ten independent developers.
-
-"Wishlist":http://wiki.github.com/justinfrench/formtastic/wishlist on the wiki is serving as pretty good documentation for the roadmap to 1.0 and beyond right now, but I'll work on getting a real tracking system or something happening soon.
+Formtastic has been in active development for about a year.  We've just recently jumped to an 0.9 version number, signalling that we consider this a 1.0 release candidate, and that the API won't change significantly for the 1.x series.
 
 
 h2. Dependencies
@@ -438,6 +432,7 @@ h2. Got TextMate?
 Well...there's a TextMate-bundle in town, dedicated to make usage of Formtastic in the TextMate editor even more of a breeze:
 
 "Formtastic.tmbundle":http://github.com/grimen/formtastic_tmbundle
+
 
 h2. Contributors
 
