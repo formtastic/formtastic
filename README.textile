@@ -101,9 +101,14 @@ If you want, run the generator to copy the following files into your app:
 
 <pre>
   ./script/generate formtastic
-</pre>
+</pre
 
-See also "What about Stylesheets?"
+A proof-of-concept stylesheet is provided which you can include in your layout.  Customization is best achieved by overriding these styles in an additional stylesheet so that the Formtastic styles can be updated without clobbering your changes.  If you want to use these stylesheets, add both to your layout:
+
+<pre>
+  <%= stylesheet_link_tag "formtastic" %>
+  <%= stylesheet_link_tag "formtastic_changes" %>
+</pre>
 
 
 h2. Usage
@@ -481,24 +486,6 @@ h2. Compatibility
 
 I'm only testing Formtastic with the latest Rails 2.2.x stable release, and it should be fine under Rails 2.3 as well (including nested forms).  Patches are welcome to allow backwards compatibility, but I don't have the energy!
 
-
-
-h2. What about Stylesheets?
-
-A proof-of-concept (very much a work-in-progress) stylesheet is provided which you can include in your layout.  Customization is best achieved by overriding these styles in an additional stylesheet so that the Formtastic styles can be updated without clobbering your changes.
-
-1. Use the generator to copy the formtastic.css and formtastic_changes.css into your public directory
-
-<pre>
-./script/generate formtastic_stylesheets
-</pre>
-
-2. Add both formtastic.css and formtastic_changes.css to your layout:
-
-<pre>
-<%= stylesheet_link_tag "formtastic" %>
-<%= stylesheet_link_tag "formtastic_changes" %>
-</pre>
 
 h2. Got TextMate?
 
