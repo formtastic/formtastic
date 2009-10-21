@@ -93,10 +93,6 @@ module Formtastic #:nodoc:
       wrapper_html[:id]  ||= generate_html_id(method)
       wrapper_html[:class] = (html_class << wrapper_html[:class]).flatten.compact.join(' ')
 
-      if [:boolean_select, :boolean_radio].include?(options[:as])
-        ::ActiveSupport::Deprecation.warn(":as => :#{options[:as]} is deprecated, use :as => :#{options[:as].to_s[8..-1]} instead", caller[3..-1])
-      end
-
       if options[:input_html] && options[:input_html][:id]
         options[:label_html] ||= {}
         options[:label_html][:for] ||= options[:input_html][:id]
@@ -1093,15 +1089,8 @@ module Formtastic #:nodoc:
 
       collection = if options[:collection]
         options.delete(:collection)
-      elsif reflection || column.to_s =~ /_id$/
-        parent_class = if reflection
-          reflection.klass
-        else
-          ::ActiveSupport::Deprecation.warn("The _id way of doing things is deprecated. Please use the association method (#{column.to_s.sub(/_id$/,'')})", caller[3..-1])
-          column.to_s.sub(/_id$/,'').camelize.constantize
-        end
-
-        parent_class.find(:all)
+      elsif reflection
+        reflection.klass.find(:all)
       else
         create_boolean_collection(options)
       end

@@ -117,15 +117,6 @@ describe 'Formtastic' do
     ::Post.stub!(:find).and_return([@freds_post])
   end
 
-  describe 'JustinFrench::Formtastic::SemanticFormBuilder' do
-    require 'justin_french/formtastic'
-    it 'should be deprecated' do
-      ::ActiveSupport::Deprecation.should_receive(:warn).with(/JustinFrench\:\:Formtastic\:\:SemanticFormBuilder/, anything())
-      form_for(@new_post, :builder => JustinFrench::Formtastic::SemanticFormBuilder) do |builder|
-      end
-    end
-  end
-
   describe 'SemanticFormHelper' do
 
     describe '#semantic_form_for' do
@@ -1947,22 +1938,13 @@ describe 'Formtastic' do
         { :select => :option, :radio => :input, :check_boxes => :'input[@type="checkbox"]' }.each do |type, countable|
 
           describe ":as => #{type.inspect}" do
+            
             describe 'when the :collection option is not provided' do
               it 'should perform a basic find on the association class' do
                 ::Author.should_receive(:find)
 
                 semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:author, :as => type))
-                end
-              end
-
-              it 'should show a deprecation warning if user gives the association using _id' do
-                # Check for deprecation message
-                ::ActiveSupport::Deprecation.should_receive(:warn).with(/association/, anything())
-
-                ::Author.should_receive(:find)
-                semantic_form_for(@new_post) do |builder|
-                  concat(builder.input(:author_id, :as => type))
                 end
               end
             end
@@ -2573,23 +2555,7 @@ describe 'Formtastic' do
         end
 
         it 'should have two selects for hour and minute' do
-          #output_buffer.should have_tag('form li.time fieldset ol li select', :count => 2)
           output_buffer.should have_tag('form li.time fieldset ol li', :count => 2)
-        end
-      end
-
-      [:boolean_select, :boolean_radio].each do |type|
-        describe ":as => #{type.inspect}" do
-          it 'should show a deprecation warning' do
-            @new_post.stub!(:allow_comments)
-            @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
-
-            ::ActiveSupport::Deprecation.should_receive(:warn).with(/select|radio/, anything())
-
-            semantic_form_for(@new_post) do |builder|
-              concat(builder.input(:allow_comments, :as => type))
-            end
-          end
         end
       end
 
