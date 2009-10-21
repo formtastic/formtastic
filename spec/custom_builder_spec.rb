@@ -1,42 +1,62 @@
 # coding: utf-8
 require File.dirname(__FILE__) + '/test_helper'
 
-describe 'Custom form builders' do
+describe 'Formtastic::SemanticFormHelper.builder' do
 
   include FormtasticSpecHelper
+  
+  class MyCustomFormBuilder < Formtastic::SemanticFormBuilder
+    def awesome_input(method, options)
+      self.text_field(method)
+    end
+  end
   
   before do
     @output_buffer = ''
     mock_everything
   end
-
-  describe "@@builder" do
+  
+  it 'is the Formtastic::SemanticFormBuilder by default' do
+    Formtastic::SemanticFormHelper.builder.should == Formtastic::SemanticFormBuilder
+  end
+  
+  it 'can be configured to use your own custom form builder' do
+    # Set it to a custom builder class
+    Formtastic::SemanticFormHelper.builder = MyCustomFormBuilder
+    Formtastic::SemanticFormHelper.builder.should == MyCustomFormBuilder
+    
+    # Reset it to the default
+    Formtastic::SemanticFormHelper.builder = Formtastic::SemanticFormBuilder
+    Formtastic::SemanticFormHelper.builder.should == Formtastic::SemanticFormBuilder
+  end
+  
+  describe "when using a custom builder" do
+    
     before do
       @new_post.stub!(:title)
-      @new_post.stub!(:body)
-      @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
+      Formtastic::SemanticFormHelper.builder = MyCustomFormBuilder
     end
     
     after do
       Formtastic::SemanticFormHelper.builder = Formtastic::SemanticFormBuilder
     end
-
-    it "can be overridden" do
-
-      class CustomFormBuilder < Formtastic::SemanticFormBuilder
-        def custom(arg1, arg2, options = {})
-          [arg1, arg2, options]
+    
+    describe "semantic_form_for" do
+      
+      it "should yeild and instance of the custom builder" do
+        semantic_form_for(@new_post) do |builder|
+          builder.class.should == MyCustomFormBuilder
         end
       end
-
-      Formtastic::SemanticFormHelper.builder = CustomFormBuilder
-
-      semantic_form_for(@new_post) do |builder|
-        builder.class.should == CustomFormBuilder
-        builder.custom("one", "two").should == ["one", "two", {}]
+      
+      it "should allow me to call my custom input" do
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:title, :as => :awesome))
+        end
       end
+    
     end
-
+    
   end
 
 end
