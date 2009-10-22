@@ -132,6 +132,14 @@ module FormtasticSpecHelper
       end
     end
     ::Post.stub!(:find).and_return([@freds_post])
+    
+    @new_post.stub!(:title)
+    @new_post.stub!(:body)
+    @new_post.stub!(:published)
+    @new_post.stub!(:column_for_attribute).with(:meta_description).and_return(mock('column', :type => :string, :limit => 255))
+    @new_post.stub!(:column_for_attribute).with(:title).and_return(mock('column', :type => :string, :limit => 255))
+    @new_post.stub!(:column_for_attribute).with(:body).and_return(mock('column', :type => :text))
+    @new_post.stub!(:column_for_attribute).with(:published).and_return(mock('column', :type => :boolean))
   end
   
   def self.included(base)
