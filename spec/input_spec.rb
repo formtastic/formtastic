@@ -1333,45 +1333,6 @@ describe 'SemanticFormBuilder#input' do
         output_buffer.should have_tag('form li select option[@selected]', :count => 1)
       end
     end
-    
-    describe 'when :include_blank is not set' do
-      before do
-        @new_post.stub!(:author_id).and_return(nil)
-      end
-      
-      it 'blank value should be included if the default value specified in config is true' do
-        Formtastic::SemanticFormBuilder.include_blank_for_select_by_default = true
-        semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:author, :as => :select))
-        end
-        output_buffer.should have_tag("form li select option[@value='']", "")
-      end
-      
-      it 'blank value should not be included if the default value specified in config is false' do
-        Formtastic::SemanticFormBuilder.include_blank_for_select_by_default = false
-        semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:author, :as => :select))
-        end
-        output_buffer.should_not have_tag("form li select option[@value='']", "")
-      end
-      
-      after do
-        Formtastic::SemanticFormBuilder.include_blank_for_select_by_default = true
-      end
-    end
-    
-    describe 'when :include_blank is set to false' do
-      before do
-        @new_post.stub!(:author_id).and_return(nil)
-        semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:author, :as => :select, :include_blank => false))
-        end
-      end
-      
-      it 'should not have a blank option' do
-        output_buffer.should_not have_tag("form li select option[@value='']", "")
-      end
-    end
 
     describe 'when :prompt => "choose something" is set' do
       before do
@@ -1903,7 +1864,7 @@ describe 'SemanticFormBuilder#input' do
 
     before do
       @new_post.stub!(:publish_at)
-      @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :date))
+      #@new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :date))
 
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:publish_at, :as => :date))
@@ -2013,18 +1974,6 @@ describe 'SemanticFormBuilder#input' do
         end
 
         output_buffer.should have_tag("form li input[@type='hidden'][@value='27']")
-      end
-    end
-
-    describe 'when :include_blank => true is set' do
-      before do
-        semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:publish_at, :as => :datetime, :include_blank => true))
-        end
-      end
-
-      it 'should have a blank select option' do
-        output_buffer.should have_tag("option[@value='']", "")
       end
     end
 

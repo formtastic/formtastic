@@ -704,6 +704,9 @@ module Formtastic #:nodoc:
     #
     # Some of Rails' options for select_date are supported, but not everything yet.
     def date_input(method, options)
+      unless options.key?(:include_blank) || options.key?(:prompt)
+        options[:include_blank] = @@include_blank_for_select_by_default
+      end
       date_or_datetime_input(method, options.merge(:discard_hour => true))
     end
 
@@ -715,6 +718,9 @@ module Formtastic #:nodoc:
     #
     # Some of Rails' options for select_date are supported, but not everything yet.
     def datetime_input(method, options)
+      unless options.key?(:include_blank) || options.key?(:prompt)
+        options[:include_blank] = @@include_blank_for_select_by_default
+      end
       date_or_datetime_input(method, options)
     end
 
@@ -725,6 +731,9 @@ module Formtastic #:nodoc:
     #
     # Some of Rails' options for select_time are supported, but not everything yet.
     def time_input(method, options)
+      unless options.key?(:include_blank) || options.key?(:prompt)
+        options[:include_blank] = @@include_blank_for_select_by_default
+      end
       date_or_datetime_input(method, options.merge(:discard_year => true, :discard_month => true, :discard_day => true))
     end
 
