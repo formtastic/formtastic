@@ -586,10 +586,7 @@ module Formtastic #:nodoc:
     def select_input(method, options)
       collection = find_collection_for_column(method, options)
       html_options = options.delete(:input_html) || {}
-
-      unless options.key?(:include_blank) || options.key?(:prompt)
-        options[:include_blank] = @@include_blank_for_select_by_default
-      end
+      options = set_include_blank(options)
 
       reflection = find_reflection(method)
       if reflection && [ :has_many, :has_and_belongs_to_many ].include?(reflection.macro)
@@ -704,9 +701,7 @@ module Formtastic #:nodoc:
     #
     # Some of Rails' options for select_date are supported, but not everything yet.
     def date_input(method, options)
-      unless options.key?(:include_blank) || options.key?(:prompt)
-        options[:include_blank] = @@include_blank_for_select_by_default
-      end
+      options = set_include_blank(options)
       date_or_datetime_input(method, options.merge(:discard_hour => true))
     end
 
@@ -718,9 +713,7 @@ module Formtastic #:nodoc:
     #
     # Some of Rails' options for select_date are supported, but not everything yet.
     def datetime_input(method, options)
-      unless options.key?(:include_blank) || options.key?(:prompt)
-        options[:include_blank] = @@include_blank_for_select_by_default
-      end
+      options = set_include_blank(options)
       date_or_datetime_input(method, options)
     end
 
@@ -731,9 +724,7 @@ module Formtastic #:nodoc:
     #
     # Some of Rails' options for select_time are supported, but not everything yet.
     def time_input(method, options)
-      unless options.key?(:include_blank) || options.key?(:prompt)
-        options[:include_blank] = @@include_blank_for_select_by_default
-      end
+      options = set_include_blank(options)
       date_or_datetime_input(method, options.merge(:discard_year => true, :discard_month => true, :discard_day => true))
     end
 
@@ -1268,7 +1259,7 @@ module Formtastic #:nodoc:
         end
       end
     end
-    
+
     def send_or_call(duck, object)
       if duck.is_a?(Proc)
         duck.call(object)
@@ -1276,6 +1267,15 @@ module Formtastic #:nodoc:
         object.send(duck)
       end
     end
+
+    private
+
+      def set_include_blank(options)
+        unless options.key?(:include_blank) || options.key?(:prompt)
+          options[:include_blank] = @@include_blank_for_select_by_default
+        end
+        options
+      end
 
   end
 
