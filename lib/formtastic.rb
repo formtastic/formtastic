@@ -284,17 +284,38 @@ module Formtastic #:nodoc:
     # The value of the button text can be overridden:
     #
     #  <%= form.commit_button "Go" %> => <input name="commit" type="submit" value="Go" />
+    #  <%= form.commit_button :label => "Go" %> => <input name="commit" type="submit" value="Go" />
     #
     # And you can pass html atributes down to the input, with or without the button text:
     #
     #  <%= form.commit_button "Go" %> => <input name="commit" type="submit" value="Go" />
     #  <%= form.commit_button :class => "pretty" %> => <input name="commit" type="submit" value="Save Post" class="pretty" />
-    
+    #
     def commit_button(*args)
-      value = args.first.is_a?(String) ? args.shift : save_or_create_button_text
-      options = args.shift || {}
+      options = args.extract_options!
+      text = options.delete(:label) || args.shift
+
+      if @object
+        key = @object.new_record? ? :create : :update
+        object_name = @object.class.human_name
+
+        if key == :update
+          # Note: Fallback on :save-key (deprecated), :update makes more sense in the REST-world.
+          fallback_text = ::I18n.t(:save, :model => object_name, :default => "Save {{model}}", :scope => [:formtastic])
+          ::ActiveSupport::Deprecation.warn "Formtastic I18n: Key 'formtastic.save' is now deprecated in favor 'formtastic.update'."
+        end
+      else
+        key = :submit
+        object_name = @object_name.to_s.send(@@label_str_method)
+      end
+      fallback_text ||= "#{key.to_s.humanize} {{model}}"
+
+      text = (self.localized_string(key, text, :action, :model => object_name) ||
+              ::I18n.t(key, :model => object_name, :default => fallback_text, :scope => [:formtastic])) unless text.is_a?(::String)
+
       button_html = options.delete(:button_html) || {}
-      template.content_tag(:li, self.submit(value, button_html), :class => "commit")
+      element_class = ['commit', options.delete(:class)].compact.join(' ') # TODO: Add class reflecting on form action.
+      template.content_tag(:li, self.submit(text, button_html), :class => element_class, :name => nil)
     end
 
     # A thin wrapper around #fields_for to set :builder => Formtastic::SemanticFormBuilder
@@ -353,7 +374,7 @@ module Formtastic #:nodoc:
         options ||= {}
       end
 
-      text = localized_attribute_string(method, text, :label) || humanized_attribute_name(method)
+      text = localized_string(method, text, :label) || humanized_attribute_name(method)
       text += required_or_optional_string(options.delete(:required))
 
       input_name = options.delete(:input_name) || method
@@ -419,22 +440,6 @@ module Formtastic #:nodoc:
     def set_options(options)
       options.except(:value_method, :label_method, :collection, :required, :label,
                      :as, :hint, :input_html, :label_html, :value_as_class)
-    end
-
-    # Create a default button text. If the form is working with a object, it
-    # defaults to "Create {{model}}" or "Save {{model}}" depending if we are working
-    # with a new_record or not.
-    #
-    # When not working with models, it defaults to "Submit object".
-    #
-    def save_or_create_button_text(prefix='Submit') #:nodoc:
-      if @object
-        prefix      = @object.new_record? ? 'Create' : 'Save'
-        object_name = @object.class.human_name
-      else
-        object_name = @object_name.to_s.send(@@label_str_method)
-      end
-      I18n.t(prefix.downcase, :model => object_name, :default => "#{prefix} {{model}}", :scope => [:formtastic])
     end
 
     # Determins if the attribute (eg :title) should be considered required or not.
@@ -949,7 +954,7 @@ module Formtastic #:nodoc:
     # Generates hints for the given method using the text supplied in :hint.
     #
     def inline_hints_for(method, options) #:nodoc:
-      options[:hint] = localized_attribute_string(method, options[:hint], :hint)
+      options[:hint] = localized_string(method, options[:hint], :hint)
       return if options[:hint].blank?
       template.content_tag(:p, options[:hint], :class => 'inline-hints')
     end
@@ -1001,7 +1006,7 @@ module Formtastic #:nodoc:
     #
     def field_set_and_list_wrapping(html_options, contents='', &block) #:nodoc:
       html_options[:name] ||= html_options.delete(:title)
-      html_options[:name] = localized_attribute_string(html_options[:name], html_options[:name], :title) if html_options[:name].is_a?(Symbol)
+      html_options[:name] = localized_string(html_options[:name], html_options[:name], :title) if html_options[:name].is_a?(Symbol)
 
       legend  = html_options.delete(:name).to_s
       legend %= parent_child_index(html_options[:parent]) if html_options[:parent]
@@ -1232,16 +1237,18 @@ module Formtastic #:nodoc:
     # 
     # NOTE: Generic, but only used for form input labels/hints.
     #
-    def localized_attribute_string(attr_name, attr_value, i18n_key)
-      if attr_value.is_a?(String)
-        attr_value
+    def localized_string(key, value, type, options = {})
+      key = value if value.is_a?(::Symbol)
+
+      if value.is_a?(::String)
+        value
       else
-        use_i18n = attr_value.nil? ? @@i18n_lookups_by_default : (attr_value != false)
-        
+        use_i18n = value.nil? ? @@i18n_lookups_by_default : (value != false)
+
         if use_i18n
-          model_name = @object.class.name.underscore
+          model_name  = (@object ? @object.class.name : @object_name.to_s.send(@@label_str_method)).underscore
           action_name = template.params[:action].to_s rescue ''
-          attribute_name = attr_name.to_s
+          attribute_name = key.to_s
 
           defaults = I18N_SCOPES.collect do |i18n_scope|
             i18n_path = i18n_scope.dup
@@ -1253,8 +1260,8 @@ module Formtastic #:nodoc:
           end
           defaults << ''
 
-          i18n_value = ::I18n.t(defaults.shift, :default => defaults,
-                                :scope => "formtastic.#{i18n_key.to_s.pluralize}")
+          i18n_value = ::I18n.t(defaults.shift, options.merge(:default => defaults,
+                                :scope => :"formtastic.#{type.to_s.pluralize}"))
           i18n_value.blank? ? nil : i18n_value
         end
       end

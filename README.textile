@@ -301,6 +301,10 @@ Enhanced localization (labels + hints + titles/legends, with Formtastic):
         post:
           title: "Choose a good title for you post."
           body: "Write something inspiring here."
+      actions:
+        create: "Create my {{model}}"
+        update: "Save changes"
+        dummie: "Launch!"
 </pre>
 
 *Note:* We are using English here still, but you get the point.
@@ -308,13 +312,15 @@ Enhanced localization (labels + hints + titles/legends, with Formtastic):
 3. ...and now you'll get:
 
 <pre>
-  <% semantic_form_for @post do |form| %>
+  <% semantic_form_for Post.new do |form| %>
     <% inputs do %>
       <%= form.input :title %>      # => :label => "Choose a title...", :hint => "Choose a good title for you post."
       <%= form.input :body %>       # => :label => "Write something...", :hint => "Write something inspiring here."
       <%= form.input :section %>    # => :label => I18n.t('activerecord.attributes.user.section')  or 'Section'
     <% end %>
-    ...
+    <% buttons do %>
+      <%= form.commit_button %>     # => "Create my {{model}}"
+    <% end %>
   <% end %>
 </pre>
 
@@ -340,7 +346,9 @@ _Note: Slightly different because Formtastic can't guess how you group fields in
       <%= form.input :body, :hint => false %>                 # => :label => "Write something..."
       <%= form.input :section, :label => 'Some section' %>    # => :label => 'Some section'
     <% end %>
-    # ...
+    <% buttons do %>
+      <%= form.commit_button :dummie %>     # => "Launch!"
+    <% end %>
   <% end %>
 </pre>
 
@@ -359,7 +367,9 @@ If I18n-lookups is disabled, i.e.:
       <%= form.input :body, :label => true %>       # => :label => "Write something..."
       <%= form.input :section, :label => true %>    # => :label => I18n.t('activerecord.attributes.user.section')  or 'Section'
     <% end %>
-    # ...
+    % buttons do %>
+      <%= form.commit_button true %>                # => "Save changes" (if we are in edit that is...)
+    <% end %>
   <% end %>
 </pre>
 
@@ -369,13 +379,13 @@ For more flexible forms; Formtastic find translations using a bottom-up approach
 
 * @MODEL@, e.g. "post"
 * @ACTION@, e.g. "edit"
-* @ATTRIBUTE@, e.g. "title"
+* @KEY/ATTRIBUTE@, e.g. "title", :my_custom_key, ...
 
 ...in the following order:
 
-1. @formtastic.{titles,labels,hints}.MODEL.ACTION.ATTRIBUTE@       # By model and action
-2. @formtastic.{titles,labels,hints}.MODEL.ATTRIBUTE@              # By model
-3. @formtastic.{titles,labels,hints}.ATTRIBUTE@                    # Global default
+1. @formtastic.{titles,labels,hints,actions}.MODEL.ACTION.ATTRIBUTE@       # By model and action
+2. @formtastic.{titles,labels,hints,actions}.MODEL.ATTRIBUTE@              # By model
+3. @formtastic.{titles,labels,hints,actions}.ATTRIBUTE@                    # Global default
 
 ...which means that you can define translations like this:
 
@@ -395,7 +405,7 @@ For more flexible forms; Formtastic find translations using a bottom-up approach
             body: "Edit body"
 </pre>
 
-*Note:* For @title@: ATTRIBUTE is a KEY chosen by you, e.g. in step 4 example above: @:post_details@.
+Values for @labels@/@hints@/@actions@ are can take values: @String@ (explicit value), @Symbol@ (i18n-lookup-key relative to the current "type", e.g. actions:), @true@ (force I18n lookup), @false@ (force no I18n lookup). Titles (legends) can only take: @String@ and @Symbol@ - true/false have no meaning.
 
 
 h2. ValidationReflection plugin

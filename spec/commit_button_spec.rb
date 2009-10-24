@@ -63,7 +63,7 @@ describe 'SemanticFormBuilder#commit_button' do
   end
 
   describe 'when the first option is a hash' do
-    
+
     before do
       @new_post.stub!(:new_record?).and_return(false)
       semantic_form_for(@new_post) do |builder|
@@ -77,113 +77,225 @@ describe 'SemanticFormBuilder#commit_button' do
     
   end
 
-  describe 'when used on an existing record' do
-
-    it 'should render an input with a value attribute of "Save Post"' do
-      @new_post.stub!(:new_record?).and_return(false)
-      semantic_form_for(@new_post) do |builder|
-        concat(builder.commit_button)
-      end
-      output_buffer.should have_tag('li.commit input[@value="Save Post"]')
+  describe 'label' do
+    before do
+      ::Post.stub!(:human_name).and_return('Post')
     end
 
-    describe 'when the locale sets the label text' do
+    # No object
+    describe 'when used without object' do
+      describe 'when explicit label is provided' do
+        it 'should render an input with the explicitly specified label' do
+          semantic_form_for(:post, :url => 'http://example.com') do |builder|
+            concat(builder.commit_button "Click!")
+          end
+          output_buffer.should have_tag('li.commit input[@value="Click!"]')
+        end
+      end
+
+      describe 'when no explicit label is provided' do
+        describe 'when no I18n-localized label is provided' do
+          before do
+            ::I18n.backend.store_translations :en, :formtastic => {:submit => 'Submit {{model}}'}
+          end
+          
+          after do
+            ::I18n.backend.store_translations :en, :formtastic => {:submit => nil}
+          end
+          
+          it 'should render an input with default I18n-localized label (fallback)' do
+            semantic_form_for(:post, :url => 'http://example.com') do |builder|
+              concat(builder.commit_button)
+            end
+            output_buffer.should have_tag('li.commit input[@value="Submit Post"]')
+          end
+        end
+
+       describe 'when I18n-localized label is provided' do
+         before do
+           ::I18n.backend.store_translations :en,
+             :formtastic => {
+                 :actions => {
+                   :submit => 'Custom Submit',
+                   :post => {
+                     :submit => 'Custom Submit {{model}}'
+                    }
+                  }
+               }
+           ::Formtastic::SemanticFormBuilder.i18n_lookups_by_default = true
+         end
+
+         it 'should render an input with localized label (I18n)' do
+           semantic_form_for(:post, :url => 'http://example.com') do |builder|
+             concat(builder.commit_button)
+           end
+           output_buffer.should have_tag(%Q{li.commit input[@value="Custom Submit Post"]})
+         end
+
+         it 'should render an input with anoptional localized label (I18n) - if first is not set' do
+           ::I18n.backend.store_translations :en,
+             :formtastic => {
+                 :actions => {
+                   :post => {
+                     :submit => nil
+                    }
+                  }
+               }
+           semantic_form_for(:post, :url => 'http://example.com') do |builder|
+             concat(builder.commit_button)
+           end
+           output_buffer.should have_tag(%Q{li.commit input[@value="Custom Submit"]})
+         end
+
+       end
+      end
+    end
+
+    # New record
+    describe 'when used on a new record' do
       before do
-        I18n.backend.store_translations 'en', :formtastic => {:save => 'Save Changes To {{model}}' }
+        @new_post.stub!(:new_record?).and_return(true)
+      end
+
+      describe 'when explicit label is provided' do
+        it 'should render an input with the explicitly specified label' do
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.commit_button "Click!")
+          end
+          output_buffer.should have_tag('li.commit input[@value="Click!"]')
+        end
+      end
+
+      describe 'when no explicit label is provided' do
+        describe 'when no I18n-localized label is provided' do
+          before do
+            ::I18n.backend.store_translations :en, :formtastic => {:create => 'Create {{model}}'}
+          end
+
+          after do
+            ::I18n.backend.store_translations :en, :formtastic => {:create => nil}
+          end
+
+          it 'should render an input with default I18n-localized label (fallback)' do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.commit_button)
+            end
+            output_buffer.should have_tag('li.commit input[@value="Create Post"]')
+          end
+        end
+
+        describe 'when I18n-localized label is provided' do
+          before do
+            ::I18n.backend.store_translations :en,
+              :formtastic => {
+                  :actions => {
+                    :create => 'Custom Create',
+                    :post => {
+                      :create => 'Custom Create {{model}}'
+                     }
+                   }
+                }
+            ::Formtastic::SemanticFormBuilder.i18n_lookups_by_default = true
+          end
+
+          it 'should render an input with localized label (I18n)' do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.commit_button)
+            end
+            output_buffer.should have_tag(%Q{li.commit input[@value="Custom Create Post"]})
+          end
+
+          it 'should render an input with anoptional localized label (I18n) - if first is not set' do
+            ::I18n.backend.store_translations :en,
+              :formtastic => {
+                  :actions => {
+                    :post => {
+                      :create => nil
+                     }
+                   }
+                }
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.commit_button)
+            end
+            output_buffer.should have_tag(%Q{li.commit input[@value="Custom Create"]})
+          end
+
+        end
+      end
+    end
+
+    # Existing record
+    describe 'when used on an existing record' do
+      before do
         @new_post.stub!(:new_record?).and_return(false)
-        semantic_form_for(@new_post) do |builder|
-          concat(builder.commit_button)
+      end
+
+      describe 'when explicit label is provided' do
+        it 'should render an input with the explicitly specified label' do
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.commit_button "Click!")
+          end
+          output_buffer.should have_tag('li.commit input[@value="Click!"]')
         end
       end
 
-      after do
-        I18n.backend.store_translations 'en', :formtastic => {:save => nil}
-      end
+      describe 'when no explicit label is provided' do
+        describe 'when no I18n-localized label is provided' do
+          before do
+            ::I18n.backend.store_translations :en, :formtastic => {:update => 'Save {{model}}'}
+          end
+          
+          after do
+            ::I18n.backend.store_translations :en, :formtastic => {:update => nil}
+          end
 
-      it 'should allow translation of the labels' do
-        output_buffer.should have_tag('li.commit input[@value="Save Changes To Post"]')
-      end
-    end
+          it 'should render an input with default I18n-localized label (fallback)' do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.commit_button)
+            end
+            output_buffer.should have_tag('li.commit input[@value="Save Post"]')
+          end
+        end
 
-    describe 'when the label text is set for a locale with different word order from the default' do
-      before do
-        I18n.locale = 'ja'
-        I18n.backend.store_translations 'ja', :formtastic => {:save => 'Save {{model}}'}
-        @new_post.stub!(:new_record?).and_return(false)
-        ::Post.stub!(:human_name).and_return('Post')
-        semantic_form_for(@new_post) do |builder|
-          concat(builder.commit_button)
+        describe 'when I18n-localized label is provided' do
+          before do
+            ::I18n.backend.store_translations :en,
+              :formtastic => {
+                  :actions => {
+                    :update => 'Custom Save',
+                    :post => {
+                      :update => 'Custom Save {{model}}'
+                     }
+                   }
+                }
+            ::Formtastic::SemanticFormBuilder.i18n_lookups_by_default = true
+          end
+
+          it 'should render an input with localized label (I18n)' do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.commit_button)
+            end
+            output_buffer.should have_tag(%Q{li.commit input[@value="Custom Save Post"]})
+          end
+
+          it 'should render an input with anoptional localized label (I18n) - if first is not set' do
+            ::I18n.backend.store_translations :en,
+              :formtastic => {
+                  :actions => {
+                    :post => {
+                      :update => nil
+                     }
+                   }
+                }
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.commit_button)
+            end
+            output_buffer.should have_tag(%Q{li.commit input[@value="Custom Save"]})
+          end
+
         end
       end
-
-      after do
-        I18n.backend.store_translations 'ja', :formtastic => {:save => nil}
-        I18n.locale = 'en'
-      end
-
-      it 'should allow the translated label to have a different word order' do
-        output_buffer.should have_tag('li.commit input[@value="Save Post"]')
-      end
     end
-  end
-
-  describe 'when used on a new record' do
-
-    it 'should render an input with a value attribute of "Create Post"' do
-      @new_post.stub!(:new_record?).and_return(true)
-      semantic_form_for(@new_post) do |builder|
-        concat(builder.commit_button)
-      end
-      output_buffer.should have_tag('li.commit input[@value="Create Post"]')
-    end
-
-    describe 'when the locale sets the label text' do
-      before do
-        I18n.backend.store_translations 'en', :formtastic => {:create => 'Make {{model}}' }
-        semantic_form_for(@new_post) do |builder|
-          concat(builder.commit_button)
-        end
-      end
-
-      after do
-        I18n.backend.store_translations 'en', :formtastic => {:create => nil}
-      end
-
-      it 'should allow translation of the labels' do
-        output_buffer.should have_tag('li.commit input[@value="Make Post"]')
-      end
-    end
-
-  end
-
-  describe 'when used without object' do
-
-    it 'should render an input with a value attribute of "Submit"' do
-      semantic_form_for(:project, :url => 'http://test.host') do |builder|
-        concat(builder.commit_button)
-      end
-
-      output_buffer.should have_tag('li.commit input[@value="Submit Project"]')
-    end
-
-    describe 'when the locale sets the label text' do
-      before do
-        I18n.backend.store_translations 'en', :formtastic => { :submit => 'Send {{model}}' }
-        semantic_form_for(:project, :url => 'http://test.host') do |builder|
-          concat(builder.commit_button)
-        end
-      end
-
-      after do
-        I18n.backend.store_translations 'en', :formtastic => {:submit => nil}
-      end
-
-      it 'should allow translation of the labels' do
-        output_buffer.should have_tag('li.commit input[@value="Send Project"]')
-      end
-    end
-
   end
 
 end
-
