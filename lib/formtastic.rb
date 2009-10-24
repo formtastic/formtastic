@@ -374,10 +374,12 @@ module Formtastic #:nodoc:
         text = options_or_text
         options ||= {}
       end
-
       text = localized_string(method, text, :label) || humanized_attribute_name(method)
       text += required_or_optional_string(options.delete(:required))
-
+      
+      # special case for boolean (checkbox) labels, which have a nested input
+      text = (options.delete(:label_prefix_for_nested_input) || "") + text
+      
       input_name = options.delete(:input_name) || method
       if options.delete(:as_span)
         options[:class] ||= 'label'
@@ -931,8 +933,12 @@ module Formtastic #:nodoc:
 
       input = self.check_box(method, set_options(options).merge(html_options),
                              options.delete(:checked_value) || '1', options.delete(:unchecked_value) || '0')
-
-      self.label(method, input << self.label(method, options_for_label(options)), options_for_label(options))
+      options = options_for_label(options)
+      
+      # the label() method will insert this nested input into the label at the last minute
+      options[:label_prefix_for_nested_input] = input
+      
+      self.label(method, options)
     end
 
     # Generates an input for the given method using the type supplied with :as.

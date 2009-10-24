@@ -2115,7 +2115,7 @@ describe 'SemanticFormBuilder#input' do
     end
 
     it 'should generate a label containing the input' do
-      output_buffer.should have_tag('form li label')
+      output_buffer.should have_tag('form li label', :count => 1)
       output_buffer.should have_tag('form li label[@for="post_allow_comments"]')
       output_buffer.should have_tag('form li label', /Allow comments/)
       output_buffer.should have_tag('form li label input[@type="checkbox"]')
