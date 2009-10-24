@@ -283,13 +283,13 @@ module Formtastic #:nodoc:
     #
     # The value of the button text can be overridden:
     #
-    #  <%= form.commit_button "Go" %> => <input name="commit" type="submit" value="Go" />
-    #  <%= form.commit_button :label => "Go" %> => <input name="commit" type="submit" value="Go" />
+    #  <%= form.commit_button "Go" %> => <input name="commit" type="submit" value="Go" class="{create|update|submit}" />
+    #  <%= form.commit_button :label => "Go" %> => <input name="commit" type="submit" value="Go" class="{create|update|submit}" />
     #
     # And you can pass html atributes down to the input, with or without the button text:
     #
-    #  <%= form.commit_button "Go" %> => <input name="commit" type="submit" value="Go" />
-    #  <%= form.commit_button :class => "pretty" %> => <input name="commit" type="submit" value="Save Post" class="pretty" />
+    #  <%= form.commit_button "Go" %> => <input name="commit" type="submit" value="Go" class="{create|update|submit}" />
+    #  <%= form.commit_button :class => "pretty" %> => <input name="commit" type="submit" value="Save Post" class="pretty {create|update|submit}" />
     #
     def commit_button(*args)
       options = args.extract_options!
@@ -314,8 +314,9 @@ module Formtastic #:nodoc:
               ::I18n.t(key, :model => object_name, :default => fallback_text, :scope => [:formtastic])) unless text.is_a?(::String)
 
       button_html = options.delete(:button_html) || {}
+      button_html.merge!(:class => [button_html[:class], key].compact.join(' '))
       element_class = ['commit', options.delete(:class)].compact.join(' ') # TODO: Add class reflecting on form action.
-      template.content_tag(:li, self.submit(text, button_html), :class => element_class, :name => nil)
+      template.content_tag(:li, self.submit(text, button_html), :class => element_class)
     end
 
     # A thin wrapper around #fields_for to set :builder => Formtastic::SemanticFormBuilder

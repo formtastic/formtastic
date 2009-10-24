@@ -89,7 +89,7 @@ describe 'SemanticFormBuilder#commit_button' do
           semantic_form_for(:post, :url => 'http://example.com') do |builder|
             concat(builder.commit_button "Click!")
           end
-          output_buffer.should have_tag('li.commit input[@value="Click!"]')
+          output_buffer.should have_tag('li.commit input[@value="Click!"][@class~="submit"]')
         end
       end
 
@@ -107,7 +107,7 @@ describe 'SemanticFormBuilder#commit_button' do
             semantic_form_for(:post, :url => 'http://example.com') do |builder|
               concat(builder.commit_button)
             end
-            output_buffer.should have_tag('li.commit input[@value="Submit Post"]')
+            output_buffer.should have_tag('li.commit input[@value="Submit Post"][@class~="submit"]')
           end
         end
 
@@ -129,7 +129,7 @@ describe 'SemanticFormBuilder#commit_button' do
            semantic_form_for(:post, :url => 'http://example.com') do |builder|
              concat(builder.commit_button)
            end
-           output_buffer.should have_tag(%Q{li.commit input[@value="Custom Submit Post"]})
+           output_buffer.should have_tag(%Q{li.commit input[@value="Custom Submit Post"][@class~="submit"]})
          end
 
          it 'should render an input with anoptional localized label (I18n) - if first is not set' do
@@ -144,7 +144,7 @@ describe 'SemanticFormBuilder#commit_button' do
            semantic_form_for(:post, :url => 'http://example.com') do |builder|
              concat(builder.commit_button)
            end
-           output_buffer.should have_tag(%Q{li.commit input[@value="Custom Submit"]})
+           output_buffer.should have_tag(%Q{li.commit input[@value="Custom Submit"][@class~="submit"]})
          end
 
        end
@@ -162,7 +162,7 @@ describe 'SemanticFormBuilder#commit_button' do
           semantic_form_for(@new_post) do |builder|
             concat(builder.commit_button "Click!")
           end
-          output_buffer.should have_tag('li.commit input[@value="Click!"]')
+          output_buffer.should have_tag('li.commit input[@value="Click!"][@class~="create"]')
         end
       end
 
@@ -180,7 +180,7 @@ describe 'SemanticFormBuilder#commit_button' do
             semantic_form_for(@new_post) do |builder|
               concat(builder.commit_button)
             end
-            output_buffer.should have_tag('li.commit input[@value="Create Post"]')
+            output_buffer.should have_tag('li.commit input[@value="Create Post"][@class~="create"]')
           end
         end
 
@@ -202,7 +202,7 @@ describe 'SemanticFormBuilder#commit_button' do
             semantic_form_for(@new_post) do |builder|
               concat(builder.commit_button)
             end
-            output_buffer.should have_tag(%Q{li.commit input[@value="Custom Create Post"]})
+            output_buffer.should have_tag(%Q{li.commit input[@value="Custom Create Post"][@class~="create"]})
           end
 
           it 'should render an input with anoptional localized label (I18n) - if first is not set' do
@@ -217,7 +217,7 @@ describe 'SemanticFormBuilder#commit_button' do
             semantic_form_for(@new_post) do |builder|
               concat(builder.commit_button)
             end
-            output_buffer.should have_tag(%Q{li.commit input[@value="Custom Create"]})
+            output_buffer.should have_tag(%Q{li.commit input[@value="Custom Create"][@class~="create"]})
           end
 
         end
@@ -235,7 +235,7 @@ describe 'SemanticFormBuilder#commit_button' do
           semantic_form_for(@new_post) do |builder|
             concat(builder.commit_button "Click!")
           end
-          output_buffer.should have_tag('li.commit input[@value="Click!"]')
+          output_buffer.should have_tag('li.commit input[@value="Click!"][@class~="update"]')
         end
       end
 
@@ -253,7 +253,7 @@ describe 'SemanticFormBuilder#commit_button' do
             semantic_form_for(@new_post) do |builder|
               concat(builder.commit_button)
             end
-            output_buffer.should have_tag('li.commit input[@value="Save Post"]')
+            output_buffer.should have_tag('li.commit input[@value="Save Post"][@class~="update"]')
           end
         end
 
@@ -275,7 +275,7 @@ describe 'SemanticFormBuilder#commit_button' do
             semantic_form_for(@new_post) do |builder|
               concat(builder.commit_button)
             end
-            output_buffer.should have_tag(%Q{li.commit input[@value="Custom Save Post"]})
+            output_buffer.should have_tag(%Q{li.commit input[@value="Custom Save Post"][@class~="update"]})
           end
 
           it 'should render an input with anoptional localized label (I18n) - if first is not set' do
@@ -290,7 +290,7 @@ describe 'SemanticFormBuilder#commit_button' do
             semantic_form_for(@new_post) do |builder|
               concat(builder.commit_button)
             end
-            output_buffer.should have_tag(%Q{li.commit input[@value="Custom Save"]})
+            output_buffer.should have_tag(%Q{li.commit input[@value="Custom Save"][@class~="update"]})
           end
 
         end
