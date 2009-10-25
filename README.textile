@@ -254,12 +254,9 @@ The documentation is pretty good for each of these (what it does, what the outpu
 
 h2. Internationalization (I18n)
 
+h3. Basic Localization
+
 Formtastic got some neat I18n-features. ActiveRecord object names and attributes are, by default, taken from calling @@object.human_name@ and @@object.human_attribute_name(attr)@ respectively. There are a few words specific to Formtastic that can be translated. See @lib/locale/en.yml@ for more information.
-
-
-h3. Label/Hint-localization
-
-Formtastic supports localized *labels*, *hints*, *titles/legends*, *actions* using the I18n API for more advanced usage. Your forms can now be DRYer and more flexible than ever, and still fully localized. This is how:
 
 Basic localization (labels only, with ActiveRecord):
 
@@ -271,17 +268,19 @@ Basic localization (labels only, with ActiveRecord):
   <% end %>
 </pre>
 
-*Note:* This is perfectly fine if you just want your labels to be translated using *ActiveRecord I18n attribute translations*, and you don't use input hints. But what if you do? And what if you don't want same labels in all forms?
+*Note:* This is perfectly fine if you just want your labels/attributes and/or models to be translated using *ActiveRecord I18n attribute translations*, and you don't use input hints and legends. But what if you do? And what if you don't want same labels in all forms?
 
-Enhanced localization (labels + hints + titles/legends + actions, with Formtastic):
+h3. Enhanced Localization (Formtastic I18n API)
 
-1. Enable I18n lookups by default (@config/initializers/formtastic.rb@):
+Formtastic supports localized *labels*, *hints*, *titles/legends*, *actions* using the I18n API for more advanced usage. Your forms can now be DRYer and more flexible than ever, and still fully localized. This is how:
+
+*1. Enable I18n lookups by default (@config/initializers/formtastic.rb@):*
 
 <pre>
   Formtastic::SemanticFormBuilder.i18n_lookups_by_default = true
 </pre>
 
-2. Add some cool label-translations/variants (@config/locale/en.yml@):
+*2. Add some cool label-translations/variants (@config/locale/en.yml@):*
 
 <pre>
   en:
@@ -306,7 +305,7 @@ Enhanced localization (labels + hints + titles/legends + actions, with Formtasti
 
 *Note:* We are using English here still, but you get the point.
 
-3. ...and now you'll get:
+*3. ...and now you'll get:*
 
 <pre>
   <% semantic_form_for Post.new do |form| %>
@@ -321,7 +320,7 @@ Enhanced localization (labels + hints + titles/legends + actions, with Formtasti
   <% end %>
 </pre>
 
-4. Localized titles (a.k.a. legends):
+*4. Localized titles (a.k.a. legends):*
 
 _Note: Slightly different because Formtastic can't guess how you group fields in a form._
 
@@ -334,7 +333,7 @@ _Note: Slightly different because Formtastic can't guess how you group fields in
 <% end %>
 </pre>
 
-5. Override I18n settings:
+*5. Override I18n settings:*
 
 <pre>
   <% semantic_form_for @post do |form| %>
@@ -370,7 +369,7 @@ If I18n-lookups is disabled, i.e.:
   <% end %>
 </pre>
 
-6. Advanced I18n lookups
+*6. Advanced I18n lookups*
 
 For more flexible forms; Formtastic find translations using a bottom-up approach taking the following variables in account:
 
@@ -407,7 +406,7 @@ Values for @labels@/@hints@/@actions@ are can take values: @String@ (explicit va
 
 h2. ValidationReflection plugin
 
-If you have the "ValidationReflection":http://github.com/redinger/validation_reflection plugin installed, you won't have to specify the :required option (it checks the validations on the model instead).
+If you have the "ValidationReflection":http://github.com/redinger/validation_reflection plugin installed, you won't have to specify the @:required@ option (it checks the validations on the model instead).
 
 
 h2. Configuration
