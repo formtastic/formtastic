@@ -79,13 +79,13 @@ RDoc documentation _should_ be automatically generated after each commit and mad
 
 h2. Installation
 
-The gem is hosted on gemcutter, so if you haven't already, add it as a gem source:
+The gem is hosted on gemcutter, so *if you haven't already*, add it as a gem source:
 
 <pre>
   sudo gem sources -a http://gemcutter.org/
 </pre>
 
-Then install the Formtastic gem:q
+Then install the Formtastic gem:
 
 <pre>
   sudo gem install formtastic
@@ -93,11 +93,11 @@ Then install the Formtastic gem:q
 
 Optionally, run @./script/generate formtastic@ to copy the following files into your app:
 
-* config/initializers/formtastic.rb (a commented out Formtastic config initializer)
-* public/stylesheets/formtastic.css
-* public/stylesheets/formtastic_changes.css
+* @config/initializers/formtastic.rb@ - a commented out Formtastic config initializer
+* @public/stylesheets/formtastic.css@
+* @public/stylesheets/formtastic_changes.css@
 
-A proof-of-concept stylesheet is provided which you can include in your layout.  Customization is best achieved by overriding these styles in an additional stylesheet so that the Formtastic styles can be updated without clobbering your changes.  If you want to use these stylesheets, add both to your layout:
+A proof-of-concept stylesheet is provided which you can include in your layout. Customization is best achieved by overriding these styles in an additional stylesheet so that the Formtastic styles can be updated without clobbering your changes. If you want to use these stylesheets, add both to your layout:
 
 <pre>
   <%= stylesheet_link_tag "formtastic" %>
@@ -127,7 +127,7 @@ If you want to specify the order of the fields, skip some of the fields or even 
   <% end %>
 </pre>
 
-If you want control over the input type Formtastic uses for each field, you can expand the @inputs@ and @buttons@ blocks.  This specifies the :section input should be a set of radio buttons (rather than the default select box), and that the :created_at field should be a string (rather than the default datetime selects):
+If you want control over the input type Formtastic uses for each field, you can expand the @inputs@ and @buttons@ blocks. This specifies the :section input should be a set of radio buttons (rather than the default select box), and that the :created_at field should be a string (rather than the default datetime selects):
 
 <pre>
   <% semantic_form_for @post do |form| %>
@@ -165,14 +165,13 @@ If you want to customize the label text, or render some hint text below the fiel
   <% end %>
 </pre>
 
-
 Nested forms (Rails 2.3) are also supported. You can do it in the Rails way:
 
 <pre>
   <% semantic_form_for @post do |form| %>
     <%= form.inputs :title, :body, :created_at %>
     <% form.semantic_fields_for :author do |author| %>
-      <%= author.inputs :first_name, :last_name, :name => 'Author' %>
+      <%= author.inputs :first_name, :last_name, :name => "Author" %>
     <% end %>
     <%= form.buttons %>
   <% end %>
@@ -188,7 +187,7 @@ Or the Formtastic way with the @:for@ option:
   <% end %>
 </pre>
 
-When working in has many association, you can even supply "%i" in your fieldset name that it will be properly interpolated with the child index. For example:
+When working in has many association, you can even supply @"%i"@ in your fieldset name that it will be properly interpolated with the child index. For example:
 
 <pre>
   <% semantic_form_for @post do |form| %>
@@ -199,7 +198,7 @@ When working in has many association, you can even supply "%i" in your fieldset 
 </pre>
 
 
-Customize HTML attributes for any input using the @:input_html@ option.  Typically his is used to disable the input, change the size of a text field, change the rows in a textarea, or even to add a special class to an input to attach special behavior like "autogrow":http://plugins.jquery.com/project/autogrow textareas:
+Customize HTML attributes for any input using the @:input_html@ option. Typically his is used to disable the input, change the size of a text field, change the rows in a textarea, or even to add a special class to an input to attach special behavior like "autogrow":http://plugins.jquery.com/project/autogrow textareas:
 
 <pre>
   <% semantic_form_for @post do |form| %>
@@ -221,8 +220,8 @@ The same can be done for buttons with the @:button_html@ option:
   <% end %>
 </pre>
 
-Customize the HTML attributes for the @<li>@ wrapper around every input with the @:wrapper_html@ option hash.  There's one special key in the hash (:class), which will actually _append_ your string of classes to the existing classes provided by Formtastic (like "required string error")
-  
+Customize the HTML attributes for the @<li>@ wrapper around every input with the @:wrapper_html@ option hash. There's one special key in the hash (@:class@), which will actually _append_ your string of classes to the existing classes provided by Formtastic (like @"required string error"@)
+
 <pre>
   <% semantic_form_for @post do |form| %>
     <%= form.input :title, :wrapper_html => { :class => "important" } %>
@@ -233,36 +232,34 @@ Customize the HTML attributes for the @<li>@ wrapper around every input with the
 </pre>
 
 
-
 h2. The Available Inputs
 
-* :select (a select menu) - default for ActiveRecord associations (belongs_to, has_many, has_and_belongs_to_many)
-* :check_boxes (a set of check_box inputs) - alternative to :select has_many and has_and_belongs_to_many associations
-* :radio (a set of radio inputs) - alternative to :select for ActiveRecord belongs_to associations
-* :time_zone (a select input) - default for :string column types with 'time_zone' in the method name
-* :password (a password input) - default for :string column types with 'password' in the method name
-* :text (a textarea) - default for :text column types
-* :date (a date select) - default for :date column types
-* :datetime (a date and time select) - default for :datetime and :timestamp column types
-* :time (a time select) - default for :time column types
-* :boolean (a checkbox) - default for :boolean column types
-* :string (a text field) - default for :string column types
-* :numeric (a text field, like string) - default for :integer, :float and :decimal column types
-* :file (a file field) - default for paperclip or attachment_fu attributes
-* :country (a select menu of country names) - default for :string columns named "country", requires a country_select plugin to be installed
-* :hidden (a hidden field) - creates a hidden field (added for compatibility)
-
+* @:select@ (a select menu) - default for ActiveRecord associations (belongs_to, has_many, has_and_belongs_to_many)
+* @:check_boxes@ (a set of check_box inputs) - alternative to :select has_many and has_and_belongs_to_many associations
+* @:radio@ (a set of radio inputs) - alternative to :select for ActiveRecord belongs_to associations
+* @:time_zone@ (a select input) - default for :string column types with "time_zone" in the method name
+* @:password@ (a password input) - default for :string column types with "password" in the method name
+* @:text@ (a textarea) - default for :text column types
+* @:date@ (a date select) - default for :date column types
+* @:datetime@ (a date and time select) - default for :datetime and :timestamp column types
+* @:time@ (a time select) - default for :time column types
+* @:boolean@ (a checkbox) - default for :boolean column types
+* @:string@ (a text field) - default for :string column types
+* @:numeric@ (a text field, like string) - default for :integer, :float and :decimal column types
+* @:file@ (a file field) - default for paperclip or attachment_fu attributes
+* @:country@ (a select menu of country names) - default for :string columns named "country", requires a country_select plugin to be installed
+* @:hidden@ (a hidden field) - creates a hidden field (added for compatibility)
 
 The documentation is pretty good for each of these (what it does, what the output is, what the options are, etc) so go check it out.
 
 h2. Internationalization (I18n)
 
-Formtastic got some neat I18n-features. ActiveRecord object names and attributes are, by default, taken from calling @object.human_name and @object.human_attribute_name(attr) respectively. There are a few words specific to Formtastic that can be translated. See lib/locale/en.yml for more information.
+Formtastic got some neat I18n-features. ActiveRecord object names and attributes are, by default, taken from calling@ @object.human_name@ and @@object.human_attribute_name(attr)@ respectively. There are a few words specific to Formtastic that can be translated. See @lib/locale/en.yml@ for more information.
 
 
 h3. Label/Hint-localization
 
-Formtastic supports localized *labels* and *hints* using the I18n API for more advanced usage. Your forms can now be DRYer and more flexible than ever, and still fully localized. This is how:
+Formtastic supports localized *labels*, *hints*, *titles/legends*, *actions* using the I18n API for more advanced usage. Your forms can now be DRYer and more flexible than ever, and still fully localized. This is how:
 
 Basic localization (labels only, with ActiveRecord):
 
@@ -415,7 +412,7 @@ If you have the "ValidationReflection":http://github.com/redinger/validation_ref
 
 h2. Configuration
 
-Run @./script/generate formtastic@ to copy a commented out config file into @config/initializers/formtastic.rb@.  You can "view the configuration file on GitHub":http://github.com/justinfrench/formtastic/blob/master/generators/formtastic/templates/formtastic.rb
+Run @./script/generate formtastic@ to copy a commented out config file into @config/initializers/formtastic.rb@. You can "view the configuration file on GitHub":http://github.com/justinfrench/formtastic/blob/master/generators/formtastic/templates/formtastic.rb
 
 
 h2. Status
@@ -427,14 +424,14 @@ h2. Dependencies
 
 There are none, but...
 
-* if you have the "ValidationReflection":http://github.com/redinger/validation_reflection plugin is installed, you won't have to specify the :required option (it checks the validations on the model instead)
-* if you want to use the :country input, you'll need to install the "iso-3166-country-select plugin":http://github.com/rails/iso-3166-country-select (or any other country_select plugin with the same API)
-* rspec, rspec_hpricot_matchers and rcov gems (plus any of their own dependencies) are required for the test suite
+* if you have the "ValidationReflection":http://github.com/redinger/validation_reflection plugin is installed, you won't have to specify the :required option (it checks the validations on the model instead).
+* if you want to use the @:country@ input, you'll need to install the "iso-3166-country-select plugin":http://github.com/rails/iso-3166-country-select (or any other country_select plugin with the same API).
+* "rspec":http://github.com/dchelimsky/rspec/, "rspec_hpricot_matchers":http://rubyforge.org/projects/rspec-hpricot/ and "rcov":http://github.com/relevance/rcov gems (plus any of their own dependencies) are required for the test suite.
 
 
 h2. Compatibility
 
-I'm only testing Formtastic with the latest Rails 2.2.x stable release, and it should be fine under Rails 2.3 as well (including nested forms).  Patches are welcome to allow backwards compatibility, but I don't have the energy!
+I'm only testing Formtastic with the latest Rails 2.2.x stable release, and it should be fine under Rails 2.3 as well (including nested forms). Patches are welcome to allow backwards compatibility, but I don't have the energy!
 
 
 h2. Got TextMate?
@@ -473,7 +470,7 @@ Please join the "Formtastic Google Group":http://groups.google.com.au/group/form
 
 h2. Project Info
 
-Formtastic is hosted on Github: http://github.com/justinfrench/formtastic/, where your contributions, forkings, comments and feedback are greatly welcomed.
+Formtastic is hosted on Github: "http://github.com/justinfrench/formtastic":http://github.com/justinfrench/formtastic, where your contributions, forkings, comments and feedback are greatly welcomed.
 
 
 Copyright (c) 2007-2008 Justin French, released under the MIT license.
