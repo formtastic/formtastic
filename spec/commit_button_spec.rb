@@ -130,7 +130,7 @@ describe 'SemanticFormBuilder#commit_button' do
       describe 'when explicit label is provided' do
         it 'should render an input with the explicitly specified label' do
           semantic_form_for(:post, :url => 'http://example.com') do |builder|
-            concat(builder.commit_button "Click!")
+            concat(builder.commit_button("Click!"))
           end
           output_buffer.should have_tag('li.commit input[@value="Click!"][@class~="submit"]')
         end
@@ -203,7 +203,7 @@ describe 'SemanticFormBuilder#commit_button' do
       describe 'when explicit label is provided' do
         it 'should render an input with the explicitly specified label' do
           semantic_form_for(@new_post) do |builder|
-            concat(builder.commit_button "Click!")
+            concat(builder.commit_button("Click!"))
           end
           output_buffer.should have_tag('li.commit input[@value="Click!"][@class~="create"]')
         end
@@ -276,7 +276,7 @@ describe 'SemanticFormBuilder#commit_button' do
       describe 'when explicit label is provided' do
         it 'should render an input with the explicitly specified label' do
           semantic_form_for(@new_post) do |builder|
-            concat(builder.commit_button "Click!")
+            concat(builder.commit_button("Click!"))
           end
           output_buffer.should have_tag('li.commit input[@value="Click!"][@class~="update"]')
         end
