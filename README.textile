@@ -234,20 +234,20 @@ Customize the HTML attributes for the @<li>@ wrapper around every input with the
 
 h2. The Available Inputs
 
-* @:select@ - a select menu. Default for ActiveRecord associations (belongs_to, has_many, has_and_belongs_to_many).
-* @:check_boxes@ - a set of check_box inputs. Alternative to :select has_many and has_and_belongs_to_many associations.
-* @:radio@ - a set of radio inputs. Alternative to :select for ActiveRecord belongs_to associations.
-* @:time_zone@ - a select input. Default for :string column types with "time_zone" in the method name.
-* @:password@ - a password input. Default for :string column types with "password" in the method name.
-* @:text@ - a textarea. Default for :text column types.
-* @:date@ - a date select. Default for :date column types.
-* @:datetime@ - a date and time select. Default for :datetime and :timestamp column types.
-* @:time@ - a time select. Default for :time column types.
-* @:boolean@ - a checkbox. Default for :boolean column types.
-* @:string@ - a text field. Default for :string column types.
-* @:numeric@ - a text field, like string. Default for :integer, :float and :decimal column types.
-* @:file@ - a file field. Default for "paperclip":http://github.com/thoughtbot/paperclip/ or "attachment_fu":http://github.com/technoweenie/attachment_fu/ attributes.
-* @:country@ - a select menu of country names. Default for :string columns named "country", requires a country_select plugin to be installed.
+* @:select@ - a select menu. Default for ActiveRecord associations: @belongs_to@, @has_many@, and @has_and_belongs_to_many@.
+* @:check_boxes@ - a set of check_box inputs. Alternative to @:select@ for ActiveRecord-associations: @has_many@, and @has_and_belongs_to_many@.
+* @:radio@ - a set of radio inputs. Alternative to @:select@ for ActiveRecord-associations: @belongs_to@.
+* @:time_zone@ - a select input. Default for column types: @:string@ with name matching @"time_zone"@.
+* @:password@ - a password input. Default for column types: @:string@ with name matching @"password"@.
+* @:text@ - a textarea. Default for column types: @:text@.
+* @:date@ - a date select. Default for column types: @:date@.
+* @:datetime@ - a date and time select. Default for column types: @:datetime@ and @:timestamp@.
+* @:time@ - a time select. Default for column types: @:time@.
+* @:boolean@ - a checkbox. Default for column types: @:boolean@.
+* @:string@ - a text field. Default for column types: @:string@.
+* @:numeric@ - a text field (just like string). Default for  column types: @:integer@, @:float@, and @:decimal@.
+* @:file@ - a file field. Default for file-attachment attributes matching: "paperclip":http://github.com/thoughtbot/paperclip or "attachment_fu":http://github.com/technoweenie/attachment_fu.
+* @:country@ - a select menu of country names. Default for column types: :string with name @"country"@ - requires a *country_select* plugin to be installed.
 * @:hidden@ - a hidden field. Creates a hidden field (added for compatibility).
 
 The documentation is pretty good for each of these (what it does, what the output is, what the options are, etc.) so go check it out.
