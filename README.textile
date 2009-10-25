@@ -42,34 +42,34 @@ I also wrote the accompanying HTML output I expected, favoring something very si
 
 h2. It's better than _SomeOtherFormBuilder_ because...
 
-* it can handle @belongs_to@ associations (like Post belongs_to :author), rendering a select or set of radio inputs with choices from the parent model
-* it can handle @has_many@ and @has_and_belongs_to_many@ associations (like Post has_many :tags), rendering a multi-select with choices from the child models
-* it's Rails 2.3-ready (including nested forms)
+* it can handle @belongs_to@ associations (like Post belongs_to :author), rendering a select or set of radio inputs with choices from the parent model.
+* it can handle @has_many@ and @has_and_belongs_to_many@ associations (like: Post has_many :tags), rendering a multi-select with choices from the child models.
+* it's Rails 2.3-ready (including nested forms).
 * it has internationalization (I18n)!
-* it's _really_ quick to get started with a basic form in place (4 lines), then go back to add in more detail if you need it
-* there's heaps of elements, id and class attributes for you to hook in your CSS and JS
-* it handles real world stuff like inline hints, inline error messages & help text
-* it doesn't hijack or change any of the standard Rails form inputs, so you can still use them as expected (even mix and match)
-* it's got absolutely awesome spec coverage
-* there's a bunch of people using and working on it (it's not just one developer building half a solution)
+* it's _really_ quick to get started with a basic form in place (4 lines), then go back to add in more detail if you need it.
+* there's heaps of elements, id and class attributes for you to hook in your CSS and JS.
+* it handles real world stuff like inline hints, inline error messages & help text.
+* it doesn't hijack or change any of the standard Rails form inputs, so you can still use them as expected (even mix and match).
+* it's got absolutely awesome spec coverage.
+* there's a bunch of people using and working on it (it's not just one developer building half a solution).
 
 
 h2. Why?
 
-* web apps = lots of forms
-* forms are so friggin' boring to code
-* semantically rich & accessible forms really are possible
-* the "V" is way behind the "M" and "C" in Rails' MVC – it's the ugly sibling
-* best practices and common patterns have to start somewhere
-* i need a challenge
+* web apps = lots of forms.
+* forms are so friggin' boring to code.
+* semantically rich & accessible forms really are possible.
+* the "V" is way behind the "M" and "C" in Rails' MVC – it's the ugly sibling.
+* best practices and common patterns have to start somewhere.
+* i need a challenge.
 
 
 h2. Opinions
 
-* it should be easier to do things the right way than the wrong way
-* sometimes _more mark-up_ is better
-* elements and attribute hooks are _gold_ for stylesheet authors
-* make the common things we do easy, yet still ensure uncommon things are still possible
+* it should be easier to do things the right way than the wrong way.
+* sometimes _more mark-up_ is better.
+* elements and attribute hooks are _gold_ for stylesheet authors.
+* make the common things we do easy, yet still ensure uncommon things are still possible.
 
 
 h2. Documentation
@@ -109,7 +109,7 @@ h2. Usage
 
 Forms are really boring to code... you want to get onto the good stuff as fast as possible.
 
-This renders a set of inputs (one for _most_ columns in the database table, and one for each ActiveRecord belongs_to association), followed by a submit button:
+This renders a set of inputs (one for _most_ columns in the database table, and one for each ActiveRecord @belongs_to@-association), followed by a submit button:
 
 <pre>
   <% semantic_form_for @user do |form| %>
@@ -127,7 +127,7 @@ If you want to specify the order of the fields, skip some of the fields or even 
   <% end %>
 </pre>
 
-If you want control over the input type Formtastic uses for each field, you can expand the @inputs@ and @buttons@ blocks. This specifies the :section input should be a set of radio buttons (rather than the default select box), and that the :created_at field should be a string (rather than the default datetime selects):
+If you want control over the input type Formtastic uses for each field, you can expand the @inputs@ and @buttons@ blocks. This specifies the @:section@ input should be a set of radio buttons (rather than the default select box), and that the @:created_at@ field should be a string (rather than the default datetime selects):
 
 <pre>
   <% semantic_form_for @post do |form| %>
@@ -234,27 +234,27 @@ Customize the HTML attributes for the @<li>@ wrapper around every input with the
 
 h2. The Available Inputs
 
-* @:select@ (a select menu) - default for ActiveRecord associations (belongs_to, has_many, has_and_belongs_to_many)
-* @:check_boxes@ (a set of check_box inputs) - alternative to :select has_many and has_and_belongs_to_many associations
-* @:radio@ (a set of radio inputs) - alternative to :select for ActiveRecord belongs_to associations
-* @:time_zone@ (a select input) - default for :string column types with "time_zone" in the method name
-* @:password@ (a password input) - default for :string column types with "password" in the method name
-* @:text@ (a textarea) - default for :text column types
-* @:date@ (a date select) - default for :date column types
-* @:datetime@ (a date and time select) - default for :datetime and :timestamp column types
-* @:time@ (a time select) - default for :time column types
-* @:boolean@ (a checkbox) - default for :boolean column types
-* @:string@ (a text field) - default for :string column types
-* @:numeric@ (a text field, like string) - default for :integer, :float and :decimal column types
-* @:file@ (a file field) - default for paperclip or attachment_fu attributes
-* @:country@ (a select menu of country names) - default for :string columns named "country", requires a country_select plugin to be installed
-* @:hidden@ (a hidden field) - creates a hidden field (added for compatibility)
+* @:select@ - a select menu. Default for ActiveRecord associations (belongs_to, has_many, has_and_belongs_to_many).
+* @:check_boxes@ - a set of check_box inputs. Alternative to :select has_many and has_and_belongs_to_many associations.
+* @:radio@ - a set of radio inputs. Alternative to :select for ActiveRecord belongs_to associations.
+* @:time_zone@ - a select input. Default for :string column types with "time_zone" in the method name.
+* @:password@ - a password input. Default for :string column types with "password" in the method name.
+* @:text@ - a textarea. Default for :text column types.
+* @:date@ - a date select. Default for :date column types.
+* @:datetime@ - a date and time select. Default for :datetime and :timestamp column types.
+* @:time@ - a time select. Default for :time column types.
+* @:boolean@ - a checkbox. Default for :boolean column types.
+* @:string@ - a text field. Default for :string column types.
+* @:numeric@ - a text field, like string. Default for :integer, :float and :decimal column types.
+* @:file@ - a file field. Default for "paperclip":http://github.com/thoughtbot/paperclip/ or "attachment_fu":http://github.com/technoweenie/attachment_fu/ attributes.
+* @:country@ - a select menu of country names. Default for :string columns named "country", requires a country_select plugin to be installed.
+* @:hidden@ - a hidden field. Creates a hidden field (added for compatibility).
 
-The documentation is pretty good for each of these (what it does, what the output is, what the options are, etc) so go check it out.
+The documentation is pretty good for each of these (what it does, what the output is, what the options are, etc.) so go check it out.
 
 h2. Internationalization (I18n)
 
-Formtastic got some neat I18n-features. ActiveRecord object names and attributes are, by default, taken from calling@ @object.human_name@ and @@object.human_attribute_name(attr)@ respectively. There are a few words specific to Formtastic that can be translated. See @lib/locale/en.yml@ for more information.
+Formtastic got some neat I18n-features. ActiveRecord object names and attributes are, by default, taken from calling @@object.human_name@ and @@object.human_attribute_name(attr)@ respectively. There are a few words specific to Formtastic that can be translated. See @lib/locale/en.yml@ for more information.
 
 
 h3. Label/Hint-localization
@@ -273,7 +273,7 @@ Basic localization (labels only, with ActiveRecord):
 
 *Note:* This is perfectly fine if you just want your labels to be translated using *ActiveRecord I18n attribute translations*, and you don't use input hints. But what if you do? And what if you don't want same labels in all forms?
 
-Enhanced localization (labels + hints + titles/legends, with Formtastic):
+Enhanced localization (labels + hints + titles/legends + actions, with Formtastic):
 
 1. Enable I18n lookups by default (@config/initializers/formtastic.rb@):
 
@@ -380,9 +380,9 @@ For more flexible forms; Formtastic find translations using a bottom-up approach
 
 ...in the following order:
 
-1. @formtastic.{titles,labels,hints,actions}.MODEL.ACTION.ATTRIBUTE@       # By model and action
-2. @formtastic.{titles,labels,hints,actions}.MODEL.ATTRIBUTE@              # By model
-3. @formtastic.{titles,labels,hints,actions}.ATTRIBUTE@                    # Global default
+1. @formtastic.{titles,labels,hints,actions}.MODEL.ACTION.ATTRIBUTE@ - by model and action
+2. @formtastic.{titles,labels,hints,actions}.MODEL.ATTRIBUTE@ - by model
+3. @formtastic.{titles,labels,hints,actions}.ATTRIBUTE@ - global default
 
 ...which means that you can define translations like this:
 
@@ -417,7 +417,7 @@ Run @./script/generate formtastic@ to copy a commented out config file into @con
 
 h2. Status
 
-Formtastic has been in active development for about a year.  We've just recently jumped to an 0.9 version number, signalling that we consider this a 1.0 release candidate, and that the API won't change significantly for the 1.x series.
+Formtastic has been in active development for about a year. We've just recently jumped to an 0.9 version number, signaling that we consider this a 1.0 release candidate, and that the API won't change significantly for the 1.x series.
 
 
 h2. Dependencies
@@ -436,7 +436,7 @@ I'm only testing Formtastic with the latest Rails 2.2.x stable release, and it s
 
 h2. Got TextMate?
 
-Well...there's a TextMate-bundle in town, dedicated to make usage of Formtastic in the TextMate editor even more of a breeze:
+Well...there's a TextMate-bundle in town, dedicated to make usage of Formtastic in the "TextMate":http://macromates.com/ editor even more of a breeze:
 
 "Formtastic.tmbundle":http://github.com/grimen/formtastic_tmbundle
 
