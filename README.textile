@@ -234,6 +234,8 @@ Customize the HTML attributes for the @<li>@ wrapper around every input with the
 
 h2. The Available Inputs
 
+The Formtastic input types:
+
 * @:select@ - a select menu. Default for ActiveRecord associations: @belongs_to@, @has_many@, and @has_and_belongs_to_many@.
 * @:check_boxes@ - a set of check_box inputs. Alternative to @:select@ for ActiveRecord-associations: @has_many@, and @has_and_belongs_to_many@.
 * @:radio@ - a set of radio inputs. Alternative to @:select@ for ActiveRecord-associations: @belongs_to@.
@@ -272,7 +274,7 @@ Basic localization (labels only, with ActiveRecord):
 
 h3. Enhanced Localization (Formtastic I18n API)
 
-Formtastic supports localized *labels*, *hints*, *titles/legends*, *actions* using the I18n API for more advanced usage. Your forms can now be DRYer and more flexible than ever, and still fully localized. This is how:
+Formtastic supports localized *labels*, *hints*, *legends*, *actions* using the I18n API for more advanced usage. Your forms can now be DRYer and more flexible than ever, and still fully localized. This is how:
 
 *1. Enable I18n lookups by default (@config/initializers/formtastic.rb@):*
 
