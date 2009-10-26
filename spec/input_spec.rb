@@ -1374,6 +1374,26 @@ describe 'SemanticFormBuilder#input' do
         end
       end
     end
+  
+    describe 'when :selected is set' do
+      before do
+        @new_post.stub!(:author_id).and_return(nil)
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:author, :as => :select, :selected => @bob.id ))
+        end
+      end
+       
+      it 'should have a selected item' do
+        output_buffer.should have_tag("form li select option[@selected='selected']")
+      end
+      
+      it 'bob should be selected' do
+        output_buffer.should have_tag("form li select option[@selected='selected']", /bob/i)
+        output_buffer.should have_tag("form li select option[@selected='selected'][@value='42']")
+      end
+      
+    end
+  
   end
 
   describe ':as => :check_boxes' do
