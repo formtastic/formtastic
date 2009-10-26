@@ -1,8 +1,8 @@
 git status                              # check you have a clean working directory
-mate VERSION.yml                        # alter VERSION.yml to reflect new version number
+rake version:bump:minor                 # or patch or major, commits the change
 rake gemspec                            # to generate the new gemspec file
-git add VERSION.yml formtastic.gemspec  # stage changes
-git commit                              # commit and describe the reason for the new gem
+git add formtastic.gemspec              # stage changes
+git commit -am "new gemspec"            # commit and describe the reason for the new gem
 git tag -am "0.2.3" 0.2.3               # tag the new version in the code base too
 git log 0.2.2..0.2.3                    # check the log since last tag
 gem build formtastic.gemspec            # build the gem
