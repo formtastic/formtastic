@@ -364,7 +364,7 @@ describe 'SemanticFormBuilder#input' do
           @new_post.stub!(:generic_column_name)
           @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
           semantic_form_for(@new_post) do |builder|
-            builder.should_receive(:input_simple).once.and_return("fake HTML output from #input")
+            builder.should_receive(:basic_input_helper).once.and_return("fake HTML output from #input")
             concat(builder.input(:generic_column_name, :as => input_style))
           end
         end

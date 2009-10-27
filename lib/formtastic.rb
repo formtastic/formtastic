@@ -480,7 +480,7 @@ module Formtastic #:nodoc:
       if_condition ? !!condition : !condition
     end
 
-    def input_simple(form_helper_method, type, method, options)
+    def basic_input_helper(form_helper_method, type, method, options)
       html_options = options.delete(:input_html) || {}
       html_options = default_string_options(method, type).merge(html_options) if [:numeric, :string, :password].include?(type)
 
@@ -490,27 +490,27 @@ module Formtastic #:nodoc:
     
     # Outputs a label and standard Rails text field inside the wrapper.
     def string_input(method, options)
-      input_simple(:text_field, :string, method, options)
+      basic_input_helper(:text_field, :string, method, options)
     end
 
     # Outputs a label and standard Rails password field inside the wrapper.
     def password_input(method, options)
-      input_simple(:password_field, :password, method, options)
+      basic_input_helper(:password_field, :password, method, options)
     end
     
     # Outputs a label and standard Rails text field inside the wrapper.
     def numeric_input(method, options)
-      input_simple(:text_field, :numeric, method, options)
+      basic_input_helper(:text_field, :numeric, method, options)
     end
     
     # Ouputs a label and standard Rails text area inside the wrapper.
     def text_input(method, options)
-      input_simple(:text_area, :text, method, options)
+      basic_input_helper(:text_area, :text, method, options)
     end
     
     # Outputs a label and a standard Rails file field inside the wrapper.
     def file_input(method, options)
-      input_simple(:file_field, :file, method, options)
+      basic_input_helper(:file_field, :file, method, options)
     end
 
     # Outputs a hidden field inside the wrapper, which should be hidden with CSS.
