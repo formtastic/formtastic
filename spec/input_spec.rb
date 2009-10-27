@@ -360,7 +360,7 @@ describe 'SemanticFormBuilder#input' do
           end
         end
 
-        Formtastic::SemanticFormBuilder::INPUT_MAPPINGS.keys.each do |input_style|
+        [:string, :password, :numeric, :text, :file].each do |input_style|
           @new_post.stub!(:generic_column_name)
           @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
           semantic_form_for(@new_post) do |builder|
@@ -679,9 +679,7 @@ describe 'SemanticFormBuilder#input' do
     end
   end
 
-  # Test string_mappings: :string, :password and :numeric
-  string_mappings = Formtastic::SemanticFormBuilder::INPUT_MAPPINGS.slice(*Formtastic::SemanticFormBuilder::STRING_MAPPINGS)
-  string_mappings.each do |type, template_method|
+  { :string => :text_field, :password => :password_field, :numeric => :text_field }.each do |type, template_method|
     describe ":as => #{type.inspect}" do
 
       before do
@@ -788,9 +786,7 @@ describe 'SemanticFormBuilder#input' do
     end
   end
 
-  # Test other mappings that are not strings: :text and :file.
-  other_mappings = Formtastic::SemanticFormBuilder::INPUT_MAPPINGS.except(*Formtastic::SemanticFormBuilder::STRING_MAPPINGS)
-  other_mappings.each do |type, template_method|
+  { :text => :text_area, :file => :file_field }.each do |type, template_method|
     describe ":as => #{type.inspect}" do
 
       before do

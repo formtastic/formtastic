@@ -25,17 +25,7 @@ module Formtastic #:nodoc:
     I18N_SCOPES = [ '{{model}}.{{action}}.{{attribute}}',
                     '{{model}}.{{attribute}}',
                     '{{attribute}}']
-
-    # Keeps simple mappings in a hash
-    INPUT_MAPPINGS = {
-      :string   => :text_field,
-      :password => :password_field,
-      :numeric  => :text_field,
-      :text     => :text_area,
-      :file     => :file_field
-    }
-    STRING_MAPPINGS = [ :string, :password, :numeric ]
-
+        
     attr_accessor :template
 
     # Returns a suitable form input for the given +method+, using the database column information
@@ -490,24 +480,42 @@ module Formtastic #:nodoc:
       if_condition ? !!condition : !condition
     end
 
-    # A method that deals with most of inputs (:string, :password, :file,
-    # :textarea and :numeric). :select, :radio, :boolean and :datetime inputs
-    # are not handled by this method, since they need more detailed approach.
-    #
-    # If input_html is given as option, it's passed down to the input.
-    #
-    def input_simple(type, method, options)
+    def input_simple(form_helper_method, type, method, options)
       html_options = options.delete(:input_html) || {}
-      html_options = default_string_options(method, type).merge(html_options) if STRING_MAPPINGS.include?(type)
+      html_options = default_string_options(method, type).merge(html_options) if [:numeric, :string, :password].include?(type)
 
       self.label(method, options_for_label(options)) +
-      self.send(INPUT_MAPPINGS[type], method, html_options)
+      self.send(form_helper_method, method, html_options)
+    end
+    
+    # Outputs a label and standard Rails text field inside the wrapper.
+    def string_input(method, options)
+      input_simple(:text_field, :string, method, options)
+    end
+
+    # Outputs a label and standard Rails password field inside the wrapper.
+    def password_input(method, options)
+      input_simple(:password_field, :password, method, options)
+    end
+    
+    # Outputs a label and standard Rails text field inside the wrapper.
+    def numeric_input(method, options)
+      input_simple(:text_field, :numeric, method, options)
+    end
+    
+    # Ouputs a label and standard Rails text area inside the wrapper.
+    def text_input(method, options)
+      input_simple(:text_area, :text, method, options)
+    end
+    
+    # Outputs a label and a standard Rails file field inside the wrapper.
+    def file_input(method, options)
+      input_simple(:file_field, :file, method, options)
     end
 
     # Outputs a hidden field inside the wrapper, which should be hidden with CSS.
     # Additionals options can be given and will be sent straight to hidden input
     # element.
-    #
     def hidden_input(method, options)
       self.hidden_field(method, set_options(options))
     end
@@ -988,20 +996,8 @@ module Formtastic #:nodoc:
     end
 
     # Generates an input for the given method using the type supplied with :as.
-    #
-    # If the input is included in INPUT_MAPPINGS, it uses input_simple
-    # implementation which maps most of the inputs. All others have specific
-    # code and then a proper handler should be called (like radio_input) for
-    # :radio types.
-    #
     def inline_input_for(method, options)
-      input_type = options.delete(:as)
-
-      if INPUT_MAPPINGS.key?(input_type)
-        input_simple(input_type,  method, options)
-      else
-        send("#{input_type}_input", method, options)
-      end
+      send("#{options.delete(:as)}_input", method, options)
     end
 
     # Generates hints for the given method using the text supplied in :hint.
