@@ -34,6 +34,13 @@ describe 'SemanticFormBuilder#errors_on' do
         end
       end
     end
+
+    it 'should render a paragraph with the first error when inline_errors config is :first' do
+      Formtastic::SemanticFormBuilder.inline_errors = :first
+      semantic_form_for(@new_post) do |builder|
+        builder.errors_on(:title).should have_tag('p.inline-errors', @title_errors.first)
+      end
+    end
     
     it 'should return nil when inline_errors config is :none' do
       Formtastic::SemanticFormBuilder.inline_errors = :none

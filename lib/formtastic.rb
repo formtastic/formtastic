@@ -392,8 +392,8 @@ module Formtastic #:nodoc:
       end
     end
 
-    # Generates error messages for the given method. Errors can be shown as list
-    # or as sentence. If :none is set, no error is shown.
+    # Generates error messages for the given method. Errors can be shown as list,
+    # as sentence or just the first error can be displayed. If :none is set, no error is shown.
     #
     # This method is also aliased as errors_on, so you can call on your custom
     # inputs as well:
@@ -404,7 +404,7 @@ module Formtastic #:nodoc:
     #   end
     #
     def inline_errors_for(method, options=nil) #:nodoc:
-      return nil unless @object && @object.respond_to?(:errors) && [:sentence, :list].include?(@@inline_errors)
+      return nil unless @object && @object.respond_to?(:errors) && [:sentence, :list, :first].include?(@@inline_errors)
 
       errors = @object.errors[method.to_sym]
       send("error_#{@@inline_errors}", Array(errors)) unless errors.blank?
@@ -990,6 +990,12 @@ module Formtastic #:nodoc:
         list_elements <<  template.content_tag(:li, error.untaint)
       end
       template.content_tag(:ul, list_elements.join("\n"), :class => 'errors')
+    end
+
+    # Creates an error sentence containing only the first error
+    #
+    def error_first(errors) #:nodoc:
+      template.content_tag(:p, errors.first.untaint, :class => 'inline-errors')
     end
 
     # Generates the required or optional string. If the value set is a proc,
