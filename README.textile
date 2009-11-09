@@ -456,7 +456,7 @@ Formtastic is maintained by "Justin French":http://justinfrench.com, "José Vali
 @git shortlog -n -s --no-merges@
 
 
-h2. Hey, join the Google group!
+h2. Google Group
 
 Please join the "Formtastic Google Group":http://groups.google.com.au/group/formtastic, especially if you'd like to talk about a new feature, or report a bug.
 
