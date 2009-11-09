@@ -88,7 +88,6 @@ module Formtastic #:nodoc:
 
       html_class = [ options[:as], (options[:required] ? :required : :optional) ]
       html_class << 'error' if @object && @object.respond_to?(:errors) && !@object.errors[method.to_sym].blank?
-      html_class << method.to_s
 
       wrapper_html = options.delete(:wrapper_html) || {}
       wrapper_html[:id]  ||= generate_html_id(method)
