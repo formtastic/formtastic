@@ -439,7 +439,7 @@ There are none, but...
 
 h2. Compatibility
 
-I'm only testing Formtastic with the latest Rails 2.2.x stable release, and it should be fine under Rails 2.3 as well (including nested forms). Patches are welcome to allow backwards compatibility, but I don't have the energy!
+I'm only testing Formtastic with the latest Rails 2.4.x stable release, and it should be fine under Rails 2.3.x as well (including nested forms). Patches are welcome to allow backwards compatibility, but I don't have the energy!
 
 
 h2. Got TextMate?
