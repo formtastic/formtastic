@@ -45,3 +45,7 @@
 # Default value: false. Overridden for specific fields by setting value to true,
 # i.e. :label => true, or :hint => true (or opposite depending on initialized value)
 # Formtastic::SemanticFormBuilder.i18n_lookups_by_default = false
+
+# You can add custom inputs or override parts of Formtastic by subclassing SemanticFormBuilder and
+# specifying that class here.  Defaults to SemanticFormBuilder.
+# Formtastic::SemanticFormHelper.builder = MyCustomBuilder

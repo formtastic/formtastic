@@ -416,6 +416,13 @@ h2. Configuration
 Run @./script/generate formtastic@ to copy a commented out config file into @config/initializers/formtastic.rb@. You can "view the configuration file on GitHub":http://github.com/justinfrench/formtastic/blob/master/generators/formtastic/templates/formtastic.rb
 
 
+h2. Custom Inputs
+
+If you want to add your own input types to encapsulate your own logic or interface patterns, you can do so by subclassing SemanticFormBuilder and configuring Formtastic to use your custom builder class.
+
+@Formtastic::SemanticFormHelper.builder = MyCustomBuilder@
+
+
 h2. Status
 
 Formtastic has been in active development for about a year. We've just recently jumped to an 0.9 version number, signaling that we consider this a 1.0 release candidate, and that the API won't change significantly for the 1.x series.
