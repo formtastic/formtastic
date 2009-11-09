@@ -451,24 +451,9 @@ Well...there's a TextMate-bundle in town, dedicated to make usage of Formtastic 
 
 h2. Contributors
 
-Formtastic is maintained by "Justin French":http://justinfrench.com and "José Valim":http://github.com/josevalim, but it wouldn't be as awesome as it is today if it weren't for the wonderful contributions of these fine, fine coders.
+Formtastic is maintained by "Justin French":http://justinfrench.com, "José Valim":http://github.com/josevalim and "Jonas Grimfelt":http://github.com/grimen, but it wouldn't be as awesome as it is today without help from over 30 contributors.
 
-* "Jeff Smick":http://github.com/sprsquish
-* "Tien Dung":http://github.com/tiendung
-* "Mark Mansour":http://stateofflux.com
-* "Andy Pearson":http://github.com/andypearson
-* "negonicrac":http://github.com/negonicrac
-* "Xavier Shay":http://rhnh.net
-* "Pat Allan":http://github.com/freelancing-god
-* "Gareth Townsend":http://github.com/quamen
-* "Sascha Hoellger":http://github.com/mitnal
-* "Andrew Carpenter":http://github.com/andrewcarpenter
-* "Jack Dempsey":http://github.com/jackdempsey/
-* "Greg Fitzgerald":http://github.com/gregf/
-* "Hector E. Gomez Morales":http://github.com/hectoregm
-* "Ben Hamill":http://blog.benhamill.com/
-* "Simon Chiu":http://github.com/tolatomeow
-* "Bin Dong":http://github.com/dongbin
+@git shortlog -n -s --no-merges@
 
 
 h2. Hey, join the Google group!
