@@ -311,12 +311,12 @@ Formtastic supports localized *labels*, *hints*, *legends*, *actions* using the 
 
 <pre>
   <% semantic_form_for Post.new do |form| %>
-    <% inputs do %>
+    <% form.inputs do %>
       <%= form.input :title %>      # => :label => "Choose a title...", :hint => "Choose a good title for you post."
       <%= form.input :body %>       # => :label => "Write something...", :hint => "Write something inspiring here."
       <%= form.input :section %>    # => :label => I18n.t('activerecord.attributes.user.section')  or 'Section'
     <% end %>
-    <% buttons do %>
+    <% form.buttons do %>
       <%= form.commit_button %>     # => "Create my {{model}}"
     <% end %>
   <% end %>
@@ -328,7 +328,7 @@ _Note: Slightly different because Formtastic can't guess how you group fields in
 
 <pre>
   <% semantic_form_for @post do |form| %>
-    <% inputs :title => :post_details do %>   # => :title => "Post details"
+    <% form.inputs :title => :post_details do %>   # => :title => "Post details"
       # ...
     <% end %>
     # ...
@@ -339,12 +339,12 @@ _Note: Slightly different because Formtastic can't guess how you group fields in
 
 <pre>
   <% semantic_form_for @post do |form| %>
-    <% inputs do %>
+    <% form.inputs do %>
       <%= form.input :title %>      # => :label => "Choose a title...", :hint => "Choose a good title for you post."
       <%= form.input :body, :hint => false %>                 # => :label => "Write something..."
       <%= form.input :section, :label => 'Some section' %>    # => :label => 'Some section'
     <% end %>
-    <% buttons do %>
+    <% form.buttons do %>
       <%= form.commit_button :dummie %>     # => "Launch!"
     <% end %>
   <% end %>
@@ -360,12 +360,12 @@ If I18n-lookups is disabled, i.e.:
 
 <pre>
   <% semantic_form_for @post do |form| %>
-    <% inputs do %>
+    <% form.inputs do %>
       <%= form.input :title, :label => true %>      # => :label => "Choose a title..."
       <%= form.input :body, :label => true %>       # => :label => "Write something..."
       <%= form.input :section, :label => true %>    # => :label => I18n.t('activerecord.attributes.user.section')  or 'Section'
     <% end %>
-    % buttons do %>
+    <% form.buttons do %>
       <%= form.commit_button true %>                # => "Save changes" (if we are in edit that is...)
     <% end %>
   <% end %>
