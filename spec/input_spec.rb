@@ -1871,8 +1871,43 @@ describe 'SemanticFormBuilder#input' do
               output_buffer.should have_tag("form li.#{type}", /No Way/)
             end
           end
-        end
+          
+          describe 'when the :selected option is excluded' do
 
+            before do
+              @output_buffer = ''
+              @new_post.stub!(:allow_comments)
+              @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:allow_comments, :as => type))
+              end
+            end
+
+            it 'should not pre-select either value' do
+              output_buffer.should_not have_tag("form li.#{type} #{countable}[@#{checked_or_selected}]")
+            end
+
+          end
+          
+          describe 'when the :selected option is provided' do
+            
+            before do
+              @output_buffer = ''
+              @new_post.stub!(:allow_comments)
+              @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:allow_comments, :as => type, :selected => true))
+              end
+            end
+
+            it 'should pre-select the value' do
+              output_buffer.should have_tag("form li.#{type} #{countable}[@#{checked_or_selected}]")
+            end
+          
+          end
+        
+        end
+        
       end
     end
   end

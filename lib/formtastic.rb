@@ -684,6 +684,11 @@ module Formtastic #:nodoc:
     #   f.input :author, :as => :radio, :value_method => :full_name
     #   f.input :author, :as => :radio, :value_method => :login
     #   f.input :author, :as => :radio, :value_method => Proc.new { |a| "author_#{a.login}" }
+    # 
+    # You can force a particular radio button in the collection to be checked with the :selected option.  Example:
+    #
+    #   f.input :subscribe_to_newsletter, :as => :radio, :selected => true
+    #   f.input :subscribe_to_newsletter, :as => :radio, :collection => ["Yeah!", "Nope!"], :selected => "Nope!"
     #
     # Finally, you can set :value_as_class => true if you want the li wrapper around each radio 
     # button / label combination to contain a class with the value of the radio button (useful for
@@ -698,6 +703,7 @@ module Formtastic #:nodoc:
       list_item_content = collection.map do |c|
         label = c.is_a?(Array) ? c.first : c
         value = c.is_a?(Array) ? c.last  : c
+        html_options[:checked] = options.delete(:selected) unless options[:selected].blank?
 
         li_content = template.content_tag(:label,
           "#{self.radio_button(input_name, value, html_options)} #{label}",
