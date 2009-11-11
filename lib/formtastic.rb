@@ -1042,9 +1042,9 @@ module Formtastic #:nodoc:
 
       if block_given?
         contents = if template.respond_to?(:is_haml?) && template.is_haml?
-          template.capture_haml(&block)
+          template.capture_haml(self, &block)
         else
-          template.capture(&block)
+          template.capture(self, &block)
         end
       end
 
