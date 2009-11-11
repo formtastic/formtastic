@@ -60,6 +60,10 @@ module FormtasticSpecHelper
     end
   end
   class ::Author
+    def to_label
+    end
+  end
+  class ::Continent
   end
   
   def mock_everything
@@ -91,6 +95,17 @@ module FormtasticSpecHelper
     @bob.stub!(:post_ids).and_return([])
     @bob.stub!(:new_record?).and_return(false)
     @bob.stub!(:errors).and_return(mock('errors', :[] => nil))
+    
+    @james = mock('user')
+     @james.stub!(:class).and_return(::Author)
+     @james.stub!(:to_label).and_return('James Shock')
+     @james.stub!(:login).and_return('james')
+     @james.stub!(:id).and_return(75)
+     @james.stub!(:posts).and_return([])
+     @james.stub!(:post_ids).and_return([])
+     @james.stub!(:new_record?).and_return(false)
+     @james.stub!(:errors).and_return(mock('errors', :[] => nil))
+    
 
     ::Author.stub!(:find).and_return([@fred, @bob])
     ::Author.stub!(:human_attribute_name).and_return { |column_name| column_name.humanize }
@@ -126,7 +141,9 @@ module FormtasticSpecHelper
     ::Post.stub!(:reflect_on_association).and_return do |column_name|
       case column_name
       when :author, :author_status
-        mock('reflection', :options => {}, :klass => ::Author, :macro => :belongs_to)
+        mock = mock('reflection', :options => {}, :klass => ::Author, :macro => :belongs_to)
+        mock.stub!(:[]).with(:class_name).and_return("Author")
+        mock
       when :authors
         mock('reflection', :options => {}, :klass => ::Author, :macro => :has_and_belongs_to_many)
       end

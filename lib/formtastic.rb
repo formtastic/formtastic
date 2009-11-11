@@ -584,7 +584,7 @@ module Formtastic #:nodoc:
     #   f.input :author, :value_method => :login
     #   f.input :author, :value_method => Proc.new { |a| "author_#{a.login}" }
     #
-    # You can pre-select a specific option value by passing in the :select option.
+    # You can pre-select a specific option value by passing in the :selected option.
     # 
     # Examples:
     #  
@@ -600,8 +600,21 @@ module Formtastic #:nodoc:
     # By default, all select inputs will have a blank option at the top of the list. You can add
     # a prompt with the :prompt option, or disable the blank option with :include_blank => false.
     #
+    #
+    # You can group the options in optgroup elements by passing the :group_by option 
+    # (Note: only tested for belongs_to relations)
+    # 
+    # Examples:
+    #
+    #   f.input :author, :group_by => :continent
+    # 
+    # All the other options should work as expected. If you want to call a custom method on the 
+    # group item. You can include the option:group_label_method
+    # Examples:
+    #
+    #   f.input :author, :group_by => :continents, :group_label_method => :something_different
+    #
     def select_input(method, options)
-      collection = find_collection_for_column(method, options)
       html_options = options.delete(:input_html) || {}
       options = set_include_blank(options)
 
@@ -614,7 +627,25 @@ module Formtastic #:nodoc:
 
       input_name = generate_association_input_name(method)
       self.label(method, options_for_label(options).merge(:input_name => input_name)) +
-      self.select(input_name, collection, set_options(options), html_options)
+
+      if options[:group_by]
+        # The grouped_options_select is a bit counter intuitive and not optimised (mostly due to ActiveRecord). 
+        # The formtastic user however shouldn't notice this too much.
+        raw_collection = find_raw_collection_for_column(method, options.reverse_merge(:find_options => { :include => options[:group_by] }))
+        label, value = detect_label_and_value_method!(raw_collection)
+        group_collection = raw_collection.map { |option| option.send(options[:group_by]) }.uniq
+        group_label_method = options[:group_label_method] || detect_label_method(group_collection)
+        group_collection = group_collection.sort_by { |group_item| group_item.send(group_label_method) }
+
+        # Here comes the monster with 8 arguments
+        self.grouped_collection_select(input_name, group_collection,
+                                       method.to_s.pluralize, group_label_method,
+                                       value, label, 
+                                       set_options(options), html_options)
+      else
+        collection = find_collection_for_column(method, options)
+        self.select(input_name, collection, set_options(options), html_options)
+      end
     end
     alias :boolean_select_input :select_input
 
@@ -1118,26 +1149,43 @@ module Formtastic #:nodoc:
     # appropriate label and value.
     #
     def find_collection_for_column(column, options)
+      collection = find_raw_collection_for_column(column, options)
+
+      # Return if we have an Array of strings, fixnums or arrays
+      return collection if collection.instance_of?(Array) &&
+                           [Array, Fixnum, String, Symbol].include?(collection.first.class)
+
+      label, value = detect_label_and_value_method!(collection, options)
+
+      collection.map { |o| [send_or_call(label, o), send_or_call(value, o)] }
+    end
+    
+    # As #find_collection_for_column but returns the collection without mapping the label and value
+    #
+    def find_raw_collection_for_column(column, options) #:nodoc:
       reflection = find_reflection(column)
 
       collection = if options[:collection]
         options.delete(:collection)
       elsif reflection
-        reflection.klass.find(:all)
+        reflection.klass.find(:all, options[:find_options] || {})
       else
         create_boolean_collection(options)
       end
 
       collection = collection.to_a if collection.is_a?(Hash)
 
-      # Return if we have an Array of strings, fixnums or arrays
-      return collection if collection.instance_of?(Array) &&
-                           [Array, Fixnum, String, Symbol].include?(collection.first.class)
-
-      label = options.delete(:label_method) || detect_label_method(collection)
+      collection
+    end
+    
+    # Detects the label and value methods from a collection values set in 
+    # @@collection_label_methods. It will use and delete
+    # the options :label_method and :value_methods when present
+    #
+    def detect_label_and_value_method!(collection_or_instance, options = {}) #:nodoc
+      label = options.delete(:label_method) || detect_label_method(collection_or_instance)
       value = options.delete(:value_method) || :id
-
-      collection.map { |o| [send_or_call(label, o), send_or_call(value, o)] }
+      [label, value]
     end
 
     # Detected the label collection method when none is supplied using the

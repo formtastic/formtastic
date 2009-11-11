@@ -1169,73 +1169,127 @@ describe 'SemanticFormBuilder#input' do
     end
   end
 
+ 
   describe ':as => :select' do
 
     before do
       @new_post.stub!(:author).and_return(@bob)
       @new_post.stub!(:author_id).and_return(@bob.id)
       @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :integer, :limit => 255))
+      # instances for the group_by part
+      @continent_names = %w(Europe Africa)
+      @authors = [@bob, @fred]
+      @continents = (0..1).map { |i| mock("continent", :id => (100 - i) ) }
+      @authors[0..1].each_with_index { |author, i| author.stub!(:continent).and_return(@continents[i]) }
+    
+      @continents.each_with_index do |continent, i| 
+        continent.stub!(:to_label).and_return(@continent_names[i])
+        continent.stub!(:authors).and_return([@authors[i]])
+      end
     end
 
-    describe 'for a belongs_to association' do
+    [{}, { :group_by => :continent }].each do |options|
+      describe 'for a belongs_to association' do
+        before do
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:author, options.merge(:as => :select) ) )
+          end
+        end
+
+        it 'should have a select class on the wrapper' do
+          output_buffer.should have_tag('form li.select')
+        end
+
+        it 'should have a post_author_input id on the wrapper' do
+          output_buffer.should have_tag('form li#post_author_input')
+        end
+
+        it 'should have a label inside the wrapper' do
+          output_buffer.should have_tag('form li label')
+          output_buffer.should have_tag('form li label', /Author/)
+          output_buffer.should have_tag("form li label[@for='post_author_id']")
+        end
+
+        it 'should have a select inside the wrapper' do
+          output_buffer.should have_tag('form li select')
+          output_buffer.should have_tag('form li select#post_author_id')
+        end
+
+        it 'should not create a multi-select' do
+          output_buffer.should_not have_tag('form li select[@multiple]')
+        end
+
+        it 'should create a select without size' do
+          output_buffer.should_not have_tag('form li select[@size]')
+        end
+    
+        it 'should have a blank option' do
+          output_buffer.should have_tag("form li select option[@value='']")
+        end
+    
+        it 'should have a select option for each Author' do
+          output_buffer.should have_tag('form li select option', :count => ::Author.find(:all).size + 1)
+          ::Author.find(:all).each do |author|
+            output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
+          end
+        end
+
+
+        it 'should have one option with a "selected" attribute' do
+          output_buffer.should have_tag('form li select option[@selected]', :count => 1)
+        end
+
+        it 'should not singularize the association name' do
+          @new_post.stub!(:author_status).and_return(@bob)
+          @new_post.stub!(:author_status_id).and_return(@bob.id)
+          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :integer, :limit => 255))
+
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:author_status, :as => :select))
+          end
+
+          output_buffer.should have_tag('form li select#post_author_status_id')
+        end
+      end
+    end
+
+    describe 'for a belongs_to association and :group_by => :country' do
       before do
+        @authors = [@bob, @fred, @fred, @fred]
+        ::Author.stub!(:find).and_return(@authors)
+        
         semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:author, :as => :select))
+          concat(builder.input(:author, :as => :select, :group_by => :continent ) )
+          concat(builder.input(:author, :as => :select, :group_by => :continent, :group_label_method => :id ) )
         end
       end
 
-      it 'should have a select class on the wrapper' do
-        output_buffer.should have_tag('form li.select')
+      0.upto(1) do |i|
+        it 'should have all option groups and the right values' do
+          output_buffer.should have_tag("form li select optgroup[@label='#{@continent_names[i]}']", @authors[i].to_label)
+        end
+
+        it 'should have custom group labels' do
+          output_buffer.should have_tag("form li select optgroup[@label='#{@continents[i].id}']", @authors[i].to_label)
+        end
       end
 
-      it 'should have a post_author_input id on the wrapper' do
-        output_buffer.should have_tag('form li#post_author_input')
-      end
-
-      it 'should have a label inside the wrapper' do
-        output_buffer.should have_tag('form li label')
-        output_buffer.should have_tag('form li label', /Author/)
-        output_buffer.should have_tag("form li label[@for='post_author_id']")
-      end
-
-      it 'should have a select inside the wrapper' do
-        output_buffer.should have_tag('form li select')
-        output_buffer.should have_tag('form li select#post_author_id')
-      end
-
-      it 'should not create a multi-select' do
-        output_buffer.should_not have_tag('form li select[@multiple]')
-      end
-
-      it 'should create a select without size' do
-        output_buffer.should_not have_tag('form li select[@size]')
+      it 'should have no duplicate groups' do
+        output_buffer.should have_tag('form li select optgroup', :count => 4)
       end
       
-      it 'should have a blank option' do
-        output_buffer.should have_tag("form li select option[@value='']")
+      it 'should sort the groups on the label method' do
+        output_buffer.should have_tag("form li select optgroup:first[@label='Africa']")
+        output_buffer.should have_tag("form li select optgroup:first[@label='99']")
       end
       
-      it 'should have a select option for each Author' do
-        output_buffer.should have_tag('form li select option', :count => ::Author.find(:all).size + 1)
-        ::Author.find(:all).each do |author|
-          output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
-        end
-      end
 
-      it 'should have one option with a "selected" attribute' do
-        output_buffer.should have_tag('form li select option[@selected]', :count => 1)
-      end
-
-      it 'should not singularize the association name' do
-        @new_post.stub!(:author_status).and_return(@bob)
-        @new_post.stub!(:author_status_id).and_return(@bob.id)
-        @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :integer, :limit => 255))
+      it 'should call find with :include for more optimized queries' do
+        Author.should_receive(:find).with(:all, :include => :continent)
 
         semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:author_status, :as => :select))
+          concat(builder.input(:author, :as => :select, :group_by => :continent ) )
         end
-
-        output_buffer.should have_tag('form li select#post_author_status_id')
       end
     end
 
