@@ -1,0 +1,4 @@
+- form.inputs do
+<% attributes.each do |attribute| -%>
+  = form.input :<%= attribute.name %>, :label => '<%= attribute.name.humanize %>'
+<% end -%>

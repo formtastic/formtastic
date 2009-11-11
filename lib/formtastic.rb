@@ -1,9 +1,4 @@
-# Override the default ActiveRecordHelper behaviour of wrapping the input.
-# This gets taken care of semantically by adding an error class to the LI tag
-# containing the input.
-ActionView::Base.field_error_proc = proc do |html_tag, instance_tag|
-  html_tag
-end
+# coding: utf-8
 
 module Formtastic #:nodoc:
 
@@ -11,6 +6,7 @@ module Formtastic #:nodoc:
 
     @@default_text_field_size = 50
     @@all_fields_required_by_default = true
+    @@include_blank_for_select_by_default = true
     @@required_string = proc { %{<abbr title="#{I18n.t 'formtastic.required', :default => 'required'}">*</abbr>} }
     @@optional_string = ''
     @@inline_errors = :sentence
@@ -20,10 +16,11 @@ module Formtastic #:nodoc:
     @@file_methods = [ :file?, :public_filename ]
     @@priority_countries = ["Australia", "Canada", "United Kingdom", "United States"]
     @@i18n_lookups_by_default = false
+    @@default_commit_button_accesskey = nil 
 
-    cattr_accessor :default_text_field_size, :all_fields_required_by_default, :required_string,
-                   :optional_string, :inline_errors, :label_str_method, :collection_label_methods,
-                   :inline_order, :file_methods, :priority_countries, :i18n_lookups_by_default
+    cattr_accessor :default_text_field_size, :all_fields_required_by_default, :include_blank_for_select_by_default,
+                   :required_string, :optional_string, :inline_errors, :label_str_method, :collection_label_methods,
+                   :inline_order, :file_methods, :priority_countries, :i18n_lookups_by_default, :default_commit_button_accesskey 
 
     I18N_SCOPES = [ '{{model}}.{{action}}.{{attribute}}',
                     '{{model}}.{{attribute}}',
@@ -90,15 +87,11 @@ module Formtastic #:nodoc:
       options[:as]     ||= default_input_type(method)
 
       html_class = [ options[:as], (options[:required] ? :required : :optional) ]
-      html_class << 'error' if @object && @object.respond_to?(:errors) && @object.errors[method.to_sym]
+      html_class << 'error' if @object && @object.respond_to?(:errors) && !@object.errors[method.to_sym].blank?
 
       wrapper_html = options.delete(:wrapper_html) || {}
       wrapper_html[:id]  ||= generate_html_id(method)
       wrapper_html[:class] = (html_class << wrapper_html[:class]).flatten.compact.join(' ')
-
-      if [:boolean_select, :boolean_radio].include?(options[:as])
-        ::ActiveSupport::Deprecation.warn(":as => :#{options[:as]} is deprecated, use :as => :#{options[:as].to_s[8..-1]} instead", caller[3..-1])
-      end
 
       if options[:input_html] && options[:input_html][:id]
         options[:label_html] ||= {}
@@ -254,7 +247,7 @@ module Formtastic #:nodoc:
         if @object && args.empty?
           args  = @object.class.reflections.map { |n,_| n if _.macro == :belongs_to }
           args += @object.class.content_columns.map(&:name)
-          args -= %w[created_at updated_at created_on updated_on lock_version]
+          args -= %w[created_at updated_at created_on updated_on lock_version version]
           args.compact!
         end
         contents = args.map { |method| input(method.to_sym) }
@@ -290,18 +283,42 @@ module Formtastic #:nodoc:
     #
     # The value of the button text can be overridden:
     #
-    #  <%= form.commit_button "Go" %> => <input name="commit" type="submit" value="Go" />
+    #  <%= form.commit_button "Go" %> => <input name="commit" type="submit" value="Go" class="{create|update|submit}" />
+    #  <%= form.commit_button :label => "Go" %> => <input name="commit" type="submit" value="Go" class="{create|update|submit}" />
     #
     # And you can pass html atributes down to the input, with or without the button text:
     #
-    #  <%= form.commit_button "Go" %> => <input name="commit" type="submit" value="Go" />
-    #  <%= form.commit_button :class => "pretty" %> => <input name="commit" type="submit" value="Save Post" class="pretty" />
-    
+    #  <%= form.commit_button "Go" %> => <input name="commit" type="submit" value="Go" class="{create|update|submit}" />
+    #  <%= form.commit_button :class => "pretty" %> => <input name="commit" type="submit" value="Save Post" class="pretty {create|update|submit}" />
+    #
     def commit_button(*args)
-      value = args.first.is_a?(String) ? args.shift : save_or_create_button_text
-      options = args.shift || {}
+      options = args.extract_options!
+      text = options.delete(:label) || args.shift
+
+      if @object
+        key = @object.new_record? ? :create : :update
+        object_name = @object.class.human_name
+
+        if key == :update
+          # Note: Fallback on :save-key (deprecated), :update makes more sense in the REST-world.
+          fallback_text = ::I18n.t(:save, :model => object_name, :default => "Save {{model}}", :scope => [:formtastic])
+          ::ActiveSupport::Deprecation.warn "Formtastic I18n: Key 'formtastic.save' is now deprecated in favor 'formtastic.update'."
+        end
+      else
+        key = :submit
+        object_name = @object_name.to_s.send(@@label_str_method)
+      end
+      fallback_text ||= "#{key.to_s.humanize} {{model}}"
+
+      text = (self.localized_string(key, text, :action, :model => object_name) ||
+              ::I18n.t(key, :model => object_name, :default => fallback_text, :scope => [:formtastic])) unless text.is_a?(::String)
+
       button_html = options.delete(:button_html) || {}
-      template.content_tag(:li, self.submit(value, button_html), :class => "commit")
+      button_html.merge!(:class => [button_html[:class], key].compact.join(' '))
+      element_class = ['commit', options.delete(:class)].compact.join(' ') # TODO: Add class reflecting on form action.
+      accesskey = (options.delete(:accesskey) || @@default_commit_button_accesskey) unless button_html.has_key?(:accesskey)
+      button_html = button_html.merge(:accesskey => accesskey) if accesskey  
+      template.content_tag(:li, self.submit(text, button_html), :class => element_class)
     end
 
     # A thin wrapper around #fields_for to set :builder => Formtastic::SemanticFormBuilder
@@ -359,10 +376,12 @@ module Formtastic #:nodoc:
         text = options_or_text
         options ||= {}
       end
-
-      text = localized_attribute_string(method, text, :label) || humanized_attribute_name(method)
+      text = localized_string(method, text, :label) || humanized_attribute_name(method)
       text += required_or_optional_string(options.delete(:required))
-
+      
+      # special case for boolean (checkbox) labels, which have a nested input
+      text = (options.delete(:label_prefix_for_nested_input) || "") + text
+      
       input_name = options.delete(:input_name) || method
       if options.delete(:as_span)
         options[:class] ||= 'label'
@@ -372,8 +391,8 @@ module Formtastic #:nodoc:
       end
     end
 
-    # Generates error messages for the given method. Errors can be shown as list
-    # or as sentence. If :none is set, no error is shown.
+    # Generates error messages for the given method. Errors can be shown as list,
+    # as sentence or just the first error can be displayed. If :none is set, no error is shown.
     #
     # This method is also aliased as errors_on, so you can call on your custom
     # inputs as well:
@@ -384,7 +403,7 @@ module Formtastic #:nodoc:
     #   end
     #
     def inline_errors_for(method, options=nil) #:nodoc:
-      return nil unless @object && @object.respond_to?(:errors) && [:sentence, :list].include?(@@inline_errors)
+      return nil unless @object && @object.respond_to?(:errors) && [:sentence, :list, :first].include?(@@inline_errors)
 
       errors = @object.errors[method.to_sym]
       send("error_#{@@inline_errors}", Array(errors)) unless errors.blank?
@@ -428,24 +447,6 @@ module Formtastic #:nodoc:
                      :as, :hint, :input_html, :label_html, :value_as_class)
     end
 
-    # Create a default button text. If the form is working with a object, it
-    # defaults to "Create model" or "Save model" depending if we are working
-    # with a new_record or not.
-    #
-    # When not working with models, it defaults to "Submit object".
-    #
-    def save_or_create_button_text(prefix='Submit') #:nodoc:
-      if @object
-        prefix      = @object.new_record? ? 'Create' : 'Save'
-        object_name = @object.class.human_name
-      else
-        object_name = @object_name.to_s.send(@@label_str_method)
-      end
-
-      button_text = I18n.t(prefix.downcase, :default => prefix, :scope => [:formtastic])
-      "#{button_text} #{object_name}"
-    end
-
     # Determins if the attribute (eg :title) should be considered required or not.
     #
     # * if the :required option was provided in the options hash, the true/false value will be
@@ -460,15 +461,33 @@ module Formtastic #:nodoc:
     #   configuration option @@all_fields_required_by_default is used.
     #
     def method_required?(attribute) #:nodoc:
-      if @object && @object.class.respond_to?(:reflect_on_all_validations)
+      if @object && @object.class.respond_to?(:reflect_on_validations_for)
         attribute_sym = attribute.to_s.sub(/_id$/, '').to_sym
-
-        @object.class.reflect_on_all_validations.any? do |validation|
-          validation.macro == :validates_presence_of && validation.name == attribute_sym
+        
+        @object.class.reflect_on_validations_for(attribute_sym).any? do |validation|
+          validation.macro == :validates_presence_of &&
+          validation.name == attribute_sym &&
+          (validation.options.present? ? options_require_validation?(validation.options) : true)
         end
       else
         @@all_fields_required_by_default
       end
+    end
+
+    # Determines whether the given options evaluate to true
+    def options_require_validation?(options) #nodoc
+      if_condition = !options[:if].nil?
+      condition = if_condition ? options[:if] : options[:unless]
+
+      condition = if condition.respond_to?(:call)
+                    condition.call(@object)
+                  elsif condition.is_a?(::Symbol) && @object.respond_to?(condition)
+                    @object.send(condition)
+                  else
+                    condition
+                  end
+
+      if_condition ? !!condition : !condition
     end
 
     # A method that deals with most of inputs (:string, :password, :file,
@@ -545,29 +564,32 @@ module Formtastic #:nodoc:
     #   f.input :author, :collection => {@justin.name => @justin.id, @kate.name => @kate.id}
     #   f.input :author, :collection => ["Justin", "Kate", "Amelia", "Gus", "Meg"]
     #
-    # Note: This input looks for a label method in the parent association.
+    # The :label_method option allows you to customize the text label inside each option tag two ways:
     #
-    # You can customize the text label inside each option tag, by naming the correct method
-    # (:full_name, :display_name, :account_number, etc) to call on each object in the collection
-    # by passing in the :label_method option.  By default the :label_method is whichever element of
-    # Formtastic::SemanticFormBuilder.collection_label_methods is found first.
+    # * by naming the correct method to call on each object in the collection as a symbol (:name, :login, etc)
+    # * by passing a Proc that will be called on each object in the collection, allowing you to use helpers or multiple model attributes together
     #
     # Examples:
     #
     #   f.input :author, :label_method => :full_name
-    #   f.input :author, :label_method => :display_name
-    #   f.input :author, :label_method => :to_s
-    #   f.input :author, :label_method => :label
+    #   f.input :author, :label_method => :login
+    #   f.input :author, :label_method => :full_name_with_post_count
+    #   f.input :author, :label_method => Proc.new { |a| "#{a.name} (#{pluralize("post", a.posts.count)})" }
     #
-    # You can also customize the value inside each option tag, by passing in the :value_method option.
-    # Usage is the same as the :label_method option
+    # The :value_method option provides the same customization of the value attribute of each option tag.
     #
     # Examples:
     #
     #   f.input :author, :value_method => :full_name
-    #   f.input :author, :value_method => :display_name
-    #   f.input :author, :value_method => :to_s
-    #   f.input :author, :value_method => :value
+    #   f.input :author, :value_method => :login
+    #   f.input :author, :value_method => Proc.new { |a| "author_#{a.login}" }
+    #
+    # You can pre-select a specific option value by passing in the :select option.
+    # 
+    # Examples:
+    #  
+    #   f.input :author, :selected => current_user.id
+    #   f.input :author, :value_method => :login, :selected => current_user.login
     #
     # You can pass html_options to the select tag using :input_html => {}
     #
@@ -581,10 +603,7 @@ module Formtastic #:nodoc:
     def select_input(method, options)
       collection = find_collection_for_column(method, options)
       html_options = options.delete(:input_html) || {}
-
-      unless options.key?(:include_blank) || options.key?(:prompt)
-        options[:include_blank] = true
-      end
+      options = set_include_blank(options)
 
       reflection = find_reflection(method)
       if reflection && [ :has_many, :has_and_belongs_to_many ].include?(reflection.macro)
@@ -635,9 +654,8 @@ module Formtastic #:nodoc:
     #     </ol>
     #   </fieldset>
     #
-    # You can customize the options available in the select by passing in a collection (an Array or 
-    # Hash) through the :collection option.  If not provided, the choices are found by inferring the 
-    # parent's class name from the method name and simply calling find(:all) on it 
+    # You can customize the choices available in the radio button set by passing in a collection (an Array or 
+    # Hash) through the :collection option.  If not provided, the choices are found by reflecting on the association
     # (Author.find(:all) in the example above).
     #
     # Examples:
@@ -647,21 +665,34 @@ module Formtastic #:nodoc:
     #   f.input :author, :as => :radio, :collection => [@justin, @kate]
     #   f.input :author, :collection => ["Justin", "Kate", "Amelia", "Gus", "Meg"]
     #
-    # You can also customize the text label inside each option tag, by naming the correct method
-    # (:full_name, :display_name, :account_number, etc) to call on each object in the collection
-    # by passing in the :label_method option.  By default the :label_method is whichever element of
-    # Formtastic::SemanticFormBuilder.collection_label_methods is found first.
+    # The :label_method option allows you to customize the label for each radio button two ways:
+    #
+    # * by naming the correct method to call on each object in the collection as a symbol (:name, :login, etc)
+    # * by passing a Proc that will be called on each object in the collection, allowing you to use helpers or multiple model attributes together
     #
     # Examples:
     #
     #   f.input :author, :as => :radio, :label_method => :full_name
-    #   f.input :author, :as => :radio, :label_method => :display_name
-    #   f.input :author, :as => :radio, :label_method => :to_s
-    #   f.input :author, :as => :radio, :label_method => :label
+    #   f.input :author, :as => :radio, :label_method => :login
+    #   f.input :author, :as => :radio, :label_method => :full_name_with_post_count
+    #   f.input :author, :as => :radio, :label_method => Proc.new { |a| "#{a.name} (#{pluralize("post", a.posts.count)})" }
     #
-    # Finally, you can set :value_as_class => true if you want that LI wrappers
-    # contains a class with the wrapped radio input value.
+    # The :value_method option provides the same customization of the value attribute of each option tag.
     #
+    # Examples:
+    #
+    #   f.input :author, :as => :radio, :value_method => :full_name
+    #   f.input :author, :as => :radio, :value_method => :login
+    #   f.input :author, :as => :radio, :value_method => Proc.new { |a| "author_#{a.login}" }
+    # 
+    # You can force a particular radio button in the collection to be checked with the :selected option.  Example:
+    #
+    #   f.input :subscribe_to_newsletter, :as => :radio, :selected => true
+    #   f.input :subscribe_to_newsletter, :as => :radio, :collection => ["Yeah!", "Nope!"], :selected => "Nope!"
+    #
+    # Finally, you can set :value_as_class => true if you want the li wrapper around each radio 
+    # button / label combination to contain a class with the value of the radio button (useful for
+    # applying specific CSS or Javascript to a particular radio button).
     def radio_input(method, options)
       collection   = find_collection_for_column(method, options)
       html_options = set_options(options).merge(options.delete(:input_html) || {})
@@ -672,10 +703,11 @@ module Formtastic #:nodoc:
       list_item_content = collection.map do |c|
         label = c.is_a?(Array) ? c.first : c
         value = c.is_a?(Array) ? c.last  : c
+        html_options[:checked] = options.delete(:selected) unless options[:selected].blank?
 
         li_content = template.content_tag(:label,
           "#{self.radio_button(input_name, value, html_options)} #{label}",
-          :for => generate_html_id(input_name, value.to_s.downcase)
+          :for => generate_html_id(input_name, value.to_s.gsub(/\s/, '_').gsub(/\W/, '').downcase)
         )
 
         li_options = value_as_class ? { :class => value.to_s.downcase } : {}
@@ -692,6 +724,7 @@ module Formtastic #:nodoc:
     #
     # Some of Rails' options for select_date are supported, but not everything yet.
     def date_input(method, options)
+      options = set_include_blank(options)
       date_or_datetime_input(method, options.merge(:discard_hour => true))
     end
 
@@ -703,6 +736,7 @@ module Formtastic #:nodoc:
     #
     # Some of Rails' options for select_date are supported, but not everything yet.
     def datetime_input(method, options)
+      options = set_include_blank(options)
       date_or_datetime_input(method, options)
     end
 
@@ -713,6 +747,7 @@ module Formtastic #:nodoc:
     #
     # Some of Rails' options for select_time are supported, but not everything yet.
     def time_input(method, options)
+      options = set_include_blank(options)
       date_or_datetime_input(method, options.merge(:discard_year => true, :discard_month => true, :discard_day => true))
     end
 
@@ -751,7 +786,8 @@ module Formtastic #:nodoc:
     #
     def date_or_datetime_input(method, options)
       position = { :year => 1, :month => 2, :day => 3, :hour => 4, :minute => 5, :second => 6 }
-      inputs   = options.delete(:order) || I18n.translate(:'date.order') || [:year, :month, :day]
+      i18n_date_order = I18n.translate(:'date.order').is_a?(Array) ? I18n.translate(:'date.order') : nil
+      inputs   = options.delete(:order) || i18n_date_order || [:year, :month, :day]
 
       time_inputs = [:hour, :minute]
       time_inputs << [:second] if options[:include_seconds]
@@ -827,21 +863,29 @@ module Formtastic #:nodoc:
     #   f.input :author, :as => :check_boxes, :collection => Author.find(:all)
     #   f.input :author, :as => :check_boxes, :collection => [@justin, @kate]
     #
-    # You can also customize the text label inside each option tag, by naming the correct method
-    # (:full_name, :display_name, :account_number, etc) to call on each object in the collection
-    # by passing in the :label_method option.  By default the :label_method is whichever element of
-    # Formtastic::SemanticFormBuilder.collection_label_methods is found first.
+    # The :label_method option allows you to customize the label for each checkbox two ways:
+    #
+    # * by naming the correct method to call on each object in the collection as a symbol (:name, :login, etc)
+    # * by passing a Proc that will be called on each object in the collection, allowing you to use helpers or multiple model attributes together
     #
     # Examples:
     #
     #   f.input :author, :as => :check_boxes, :label_method => :full_name
-    #   f.input :author, :as => :check_boxes, :label_method => :display_name
-    #   f.input :author, :as => :check_boxes, :label_method => :to_s
-    #   f.input :author, :as => :check_boxes, :label_method => :label
+    #   f.input :author, :as => :check_boxes, :label_method => :login
+    #   f.input :author, :as => :check_boxes, :label_method => :full_name_with_post_count
+    #   f.input :author, :as => :check_boxes, :label_method => Proc.new { |a| "#{a.name} (#{pluralize("post", a.posts.count)})" }
     #
-    # You can set :value_as_class => true if you want that LI wrappers contains
-    # a class with the wrapped checkbox input value.
+    # The :value_method option provides the same customization of the value attribute of each checkbox input tag.
     #
+    # Examples:
+    #
+    #   f.input :author, :as => :check_boxes, :value_method => :full_name
+    #   f.input :author, :as => :check_boxes, :value_method => :login
+    #   f.input :author, :as => :check_boxes, :value_method => Proc.new { |a| "author_#{a.login}" }
+    #
+    # Finally, you can set :value_as_class => true if you want the li wrapper around each checkbox / label 
+    # combination to contain a class with the value of the radio button (useful for applying specific 
+    # CSS or Javascript to a particular checkbox).
     def check_boxes_input(method, options)
       collection = find_collection_for_column(method, options)
       html_options = options.delete(:input_html) || {}
@@ -855,7 +899,7 @@ module Formtastic #:nodoc:
         label = c.is_a?(Array) ? c.first : c
         value = c.is_a?(Array) ? c.last : c
 
-        html_options.merge!(:id => generate_html_id(input_name, value.to_s.downcase))
+        html_options.merge!(:id => generate_html_id(input_name, value.to_s.gsub(/\s/, '_').gsub(/\W/, '').downcase))
  
         li_content = template.content_tag(:label,
           "#{self.check_box(input_name, html_options, value, unchecked_value)} #{label}",
@@ -904,9 +948,12 @@ module Formtastic #:nodoc:
 
       input = self.check_box(method, set_options(options).merge(html_options),
                              options.delete(:checked_value) || '1', options.delete(:unchecked_value) || '0')
-
-      label = options.delete(:label) || humanized_attribute_name(method)
-      self.label(method, input + label, options_for_label(options))
+      options = options_for_label(options)
+      
+      # the label() method will insert this nested input into the label at the last minute
+      options[:label_prefix_for_nested_input] = input
+      
+      self.label(method, options)
     end
 
     # Generates an input for the given method using the type supplied with :as.
@@ -929,7 +976,7 @@ module Formtastic #:nodoc:
     # Generates hints for the given method using the text supplied in :hint.
     #
     def inline_hints_for(method, options) #:nodoc:
-      options[:hint] = localized_attribute_string(method, options[:hint], :hint)
+      options[:hint] = localized_string(method, options[:hint], :hint)
       return if options[:hint].blank?
       template.content_tag(:p, options[:hint], :class => 'inline-hints')
     end
@@ -948,6 +995,12 @@ module Formtastic #:nodoc:
         list_elements <<  template.content_tag(:li, error.untaint)
       end
       template.content_tag(:ul, list_elements.join("\n"), :class => 'errors')
+    end
+
+    # Creates an error sentence containing only the first error
+    #
+    def error_first(errors) #:nodoc:
+      template.content_tag(:p, errors.first.untaint, :class => 'inline-errors')
     end
 
     # Generates the required or optional string. If the value set is a proc,
@@ -981,13 +1034,19 @@ module Formtastic #:nodoc:
     #
     def field_set_and_list_wrapping(html_options, contents='', &block) #:nodoc:
       html_options[:name] ||= html_options.delete(:title)
-      html_options[:name] = localized_attribute_string(html_options[:name], html_options[:name], :title) if html_options[:name].is_a?(Symbol)
+      html_options[:name] = localized_string(html_options[:name], html_options[:name], :title) if html_options[:name].is_a?(Symbol)
 
       legend  = html_options.delete(:name).to_s
       legend %= parent_child_index(html_options[:parent]) if html_options[:parent]
       legend  = template.content_tag(:legend, template.content_tag(:span, legend)) unless legend.blank?
 
-      contents = template.capture(self, &block) if block_given?
+      if block_given?
+        contents = if template.respond_to?(:is_haml?) && template.is_haml?
+          template.capture_haml(&block)
+        else
+          template.capture(&block)
+        end
+      end
 
       # Ruby 1.9: String#to_s behavior changed, need to make an explicit join.
       contents = contents.join if contents.respond_to?(:join)
@@ -1063,20 +1122,13 @@ module Formtastic #:nodoc:
 
       collection = if options[:collection]
         options.delete(:collection)
-      elsif reflection || column.to_s =~ /_id$/
-        parent_class = if reflection
-          reflection.klass
-        else
-          ::ActiveSupport::Deprecation.warn("The _id way of doing things is deprecated. Please use the association method (#{column.to_s.sub(/_id$/,'')})", caller[3..-1])
-          column.to_s.sub(/_id$/,'').camelize.constantize
-        end
-
-        parent_class.find(:all)
+      elsif reflection
+        reflection.klass.find(:all)
       else
         create_boolean_collection(options)
       end
 
-      collection = collection.to_a if collection.instance_of?(Hash)
+      collection = collection.to_a if collection.is_a?(Hash)
 
       # Return if we have an Array of strings, fixnums or arrays
       return collection if collection.instance_of?(Array) &&
@@ -1085,7 +1137,7 @@ module Formtastic #:nodoc:
       label = options.delete(:label_method) || detect_label_method(collection)
       value = options.delete(:value_method) || :id
 
-      collection.map { |o| [o.send(label), o.send(value)] }
+      collection.map { |o| [send_or_call(label, o), send_or_call(value, o)] }
     end
 
     # Detected the label collection method when none is supplied using the
@@ -1213,16 +1265,18 @@ module Formtastic #:nodoc:
     # 
     # NOTE: Generic, but only used for form input labels/hints.
     #
-    def localized_attribute_string(attr_name, attr_value, i18n_key)
-      if attr_value.is_a?(String)
-        attr_value
+    def localized_string(key, value, type, options = {})
+      key = value if value.is_a?(::Symbol)
+
+      if value.is_a?(::String)
+        value
       else
-        use_i18n = attr_value.nil? ? @@i18n_lookups_by_default : (attr_value != false)
-        
+        use_i18n = value.nil? ? @@i18n_lookups_by_default : (value != false)
+
         if use_i18n
-          model_name = @object.class.name.underscore
+          model_name  = (@object ? @object.class.name : @object_name.to_s.send(@@label_str_method)).underscore
           action_name = template.params[:action].to_s rescue ''
-          attribute_name = attr_name.to_s
+          attribute_name = key.to_s
 
           defaults = I18N_SCOPES.collect do |i18n_scope|
             i18n_path = i18n_scope.dup
@@ -1234,12 +1288,29 @@ module Formtastic #:nodoc:
           end
           defaults << ''
 
-          i18n_value = ::I18n.t(defaults.shift, :default => defaults,
-                                :scope => "formtastic.#{i18n_key.to_s.pluralize}")
+          i18n_value = ::I18n.t(defaults.shift, options.merge(:default => defaults,
+                                :scope => :"formtastic.#{type.to_s.pluralize}"))
           i18n_value.blank? ? nil : i18n_value
         end
       end
     end
+
+    def send_or_call(duck, object)
+      if duck.is_a?(Proc)
+        duck.call(object)
+      else
+        object.send(duck)
+      end
+    end
+
+    private
+
+      def set_include_blank(options)
+        unless options.key?(:include_blank) || options.key?(:prompt)
+          options[:include_blank] = @@include_blank_for_select_by_default
+        end
+        options
+      end
 
   end
 
@@ -1286,14 +1357,32 @@ module Formtastic #:nodoc:
   module SemanticFormHelper
     @@builder = Formtastic::SemanticFormBuilder
     mattr_accessor :builder
-
-    [:form_for, :fields_for, :form_remote_for, :remote_form_for].each do |meth|
+    
+    @@default_field_error_proc = nil
+    
+    # Override the default ActiveRecordHelper behaviour of wrapping the input.
+    # This gets taken care of semantically by adding an error class to the LI tag
+    # containing the input.
+    #
+    FIELD_ERROR_PROC = proc do |html_tag, instance_tag|
+      html_tag
+    end
+    
+    def use_custom_field_error_proc(&block)
+      @@default_field_error_proc = ::ActionView::Base.field_error_proc
+      ::ActionView::Base.field_error_proc = FIELD_ERROR_PROC
+      result = yield
+      ::ActionView::Base.field_error_proc = @@default_field_error_proc
+      result
+    end
+    
+    [:form_for, :fields_for, :remote_form_for].each do |meth|
       src = <<-END_SRC
         def semantic_#{meth}(record_or_name_or_array, *args, &proc)
           options = args.extract_options!
           options[:builder] = @@builder
           options[:html] ||= {}
-
+          
           class_names = options[:html][:class] ? options[:html][:class].split(" ") : []
           class_names << "formtastic"
           class_names << case record_or_name_or_array
@@ -1302,11 +1391,15 @@ module Formtastic #:nodoc:
             else record_or_name_or_array.class.to_s.underscore                  # @post => "post"
           end
           options[:html][:class] = class_names.join(" ")
-
-          #{meth}(record_or_name_or_array, *(args << options), &proc)
+          
+          use_custom_field_error_proc do
+            #{meth}(record_or_name_or_array, *(args << options), &proc)
+          end
         end
       END_SRC
       module_eval src, __FILE__, __LINE__
     end
+    alias :semantic_form_remote_for :semantic_remote_form_for
+    
   end
 end

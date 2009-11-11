@@ -1,7 +1,7 @@
 en:
   formtastic:
-    yes: 'Yes'
-    no: 'No'
+    "yes": 'Yes'
+    "no": 'No'
     create: 'Create'
     save: 'Save'
     submit: 'Submit'
