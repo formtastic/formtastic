@@ -678,205 +678,181 @@ describe 'SemanticFormBuilder#input' do
       end
     end
   end
+  
+  describe ':as => :string' do
+    
+    before do
+      @new_post.stub!(:title)
+      @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 50))
 
-  { :string => :text_field, :password => :password_field, :numeric => :text_field }.each do |type, template_method|
-    describe ":as => #{type.inspect}" do
-
+      semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:title, :as => :string))
+      end
+    end
+        
+    it_should_have_input_wrapper_with_class(:string)
+    it_should_have_input_wrapper_with_id("post_title_input")
+    it_should_have_label_with_text(/Title/)
+    it_should_have_label_for("post_title")
+    it_should_have_input_with_id("post_title")
+    it_should_have_input_with_type(:text)
+    it_should_have_input_with_name("post[title]")
+    it_should_have_maxlength_matching_column_limit
+    it_should_use_default_text_field_size_for_columns_longer_than_default_text_field_size(:string)
+    it_should_use_column_size_for_columns_shorter_than_default_text_field_size(:string)
+    it_should_use_default_text_field_size_when_method_has_no_database_column(:string)
+    it_should_apply_custom_input_attributes_when_input_html_provided(:string)
+    it_should_apply_custom_for_to_label_when_input_html_id_provided(:string)
+    
+    describe "when no object is provided" do
       before do
-        @new_post.stub!(:title)
-        @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => type, :limit => 50))
-
-        semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:title, :as => type))
-        end
-      end
-
-      it "should have a #{type} class on the wrapper" do
-        output_buffer.should have_tag("form li.#{type}")
-      end
-
-      it 'should have a post_title_input id on the wrapper' do
-        output_buffer.should have_tag('form li#post_title_input')
-      end
-
-      it 'should generate a label for the input' do
-        output_buffer.should have_tag('form li label')
-        output_buffer.should have_tag('form li label[@for="post_title"]')
-        output_buffer.should have_tag('form li label', /Title/)
-      end
-
-      input_type = template_method.to_s.split('_').first
-
-      it "should generate a #{input_type} input" do
-        output_buffer.should have_tag("form li input")
-        output_buffer.should have_tag("form li input#post_title")
-        output_buffer.should have_tag("form li input[@type=\"#{input_type}\"]")
-        output_buffer.should have_tag("form li input[@name=\"post[title]\"]")
-      end
-
-      unless type == :numeric
-        it 'should have a maxlength matching the column limit' do
-          @new_post.column_for_attribute(:title).limit.should == 50
-          output_buffer.should have_tag("form li input[@maxlength='50']")
-        end
-
-        it 'should use default_text_field_size for columns longer than default_text_field_size' do
-          default_size = Formtastic::SemanticFormBuilder.default_text_field_size
-          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => type, :limit => default_size * 2))
-
-          semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:title, :as => type))
-          end
-
-          output_buffer.should have_tag("form li input[@size='#{default_size}']")
-        end
-
-        it 'should use the column size for columns shorter than default_text_field_size' do
-          column_limit_shorted_than_default = 1
-          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => type, :limit => column_limit_shorted_than_default))
-
-          semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:title, :as => type))
-          end
-
-          output_buffer.should have_tag("form li input[@size='#{column_limit_shorted_than_default}']")
-        end
-      end
-
-      it 'should use default_text_field_size for methods without database columns' do
-        default_size = Formtastic::SemanticFormBuilder.default_text_field_size
-        @new_post.stub!(:column_for_attribute).and_return(nil) # Return a nil column
-
-        semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:title, :as => type))
-        end
-
-        output_buffer.should have_tag("form li input[@size='#{default_size}']")
-      end
-
-      it 'should use input_html to style inputs' do
-        semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:title, :as => type, :input_html => { :class => 'myclass' }))
-        end
-        output_buffer.should have_tag("form li input.myclass")
-      end
-
-      it 'should consider input_html :id in labels' do
-        semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:title, :as => type, :input_html => { :id => 'myid' }))
-        end
-        output_buffer.should have_tag('form li label[@for="myid"]')
-      end
-
-      it 'should generate input and labels even if no object is given' do
         semantic_form_for(:project, :url => 'http://test.host/') do |builder|
-          concat(builder.input(:title, :as => type))
+          concat(builder.input(:title, :as => :string))
         end
-
-        output_buffer.should have_tag('form li label')
-        output_buffer.should have_tag('form li label[@for="project_title"]')
-        output_buffer.should have_tag('form li label', /Title/)
-
-        output_buffer.should have_tag("form li input")
-        output_buffer.should have_tag("form li input#project_title")
-        output_buffer.should have_tag("form li input[@type=\"#{input_type}\"]")
-        output_buffer.should have_tag("form li input[@name=\"project[title]\"]")
       end
-
+      
+      it_should_have_label_with_text(/Title/)
+      it_should_have_label_for("project_title")
+      it_should_have_input_with_id("project_title")
+      it_should_have_input_with_type(:text)
+      it_should_have_input_with_name("project[title]")
     end
+  
   end
+  
+  describe ':as => :password' do
+    
+    before do
+      @new_post.stub!(:title)
+      @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 50))
 
-  { :text => :text_area, :file => :file_field }.each do |type, template_method|
-    describe ":as => #{type.inspect}" do
-
+      semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:title, :as => :password))
+      end
+    end
+        
+    it_should_have_input_wrapper_with_class(:password)
+    it_should_have_input_wrapper_with_id("post_title_input")
+    it_should_have_label_with_text(/Title/)
+    it_should_have_label_for("post_title")
+    it_should_have_input_with_id("post_title")
+    it_should_have_input_with_type(:password)
+    it_should_have_input_with_name("post[title]")
+    it_should_have_maxlength_matching_column_limit
+    it_should_use_default_text_field_size_for_columns_longer_than_default_text_field_size(:string)
+    it_should_use_column_size_for_columns_shorter_than_default_text_field_size(:string)
+    it_should_use_default_text_field_size_when_method_has_no_database_column(:string)
+    it_should_apply_custom_input_attributes_when_input_html_provided(:string)
+    it_should_apply_custom_for_to_label_when_input_html_id_provided(:string)
+    
+    describe "when no object is provided" do
       before do
-        @new_post.stub!(:body)
-        @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => type))
-
-        semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:body, :as => type))
+        semantic_form_for(:project, :url => 'http://test.host/') do |builder|
+          concat(builder.input(:title, :as => :password))
         end
       end
-
-      it "should have a #{type} class on the wrapper" do
-        output_buffer.should have_tag("form li.#{type}")
-      end
-
-      it 'should have a post_title_input id on the wrapper' do
-        output_buffer.should have_tag('form li#post_body_input')
-      end
-
-      it 'should generate a label for the input' do
-        output_buffer.should have_tag('form li label')
-        output_buffer.should have_tag('form li label[@for="post_body"]')
-        output_buffer.should have_tag('form li label', /Body/)
-      end
-
-      input_type = template_method.to_s.gsub(/_field|_/, '')
-
-      if template_method.to_s =~ /_field$/ # password_field
-
-        it "should generate a #{input_type} input" do
-          output_buffer.should have_tag("form li input")
-          output_buffer.should have_tag("form li input#post_body")
-          output_buffer.should have_tag("form li input[@name=\"post[body]\"]")
-          output_buffer.should have_tag("form li input[@type=\"#{input_type}\"]")
-        end
-
-        it 'should use input_html to style inputs' do
-          semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:title, :as => type, :input_html => { :class => 'myclass' }))
-          end
-          output_buffer.should have_tag("form li input.myclass")
-        end
-
-      else # text_area
-
-        it "should generate a #{input_type} input" do
-          output_buffer.should have_tag("form li #{input_type}")
-          output_buffer.should have_tag("form li #{input_type}#post_body")
-          output_buffer.should have_tag("form li #{input_type}[@name=\"post[body]\"]")
-        end
-
-        it 'should use input_html to style inputs' do
-          semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:title, :as => type, :input_html => { :class => 'myclass' }))
-          end
-          output_buffer.should have_tag("form li #{input_type}.myclass")
-        end
-
-      end
-
-      describe 'when no object is given' do
-        before(:each) do
-          semantic_form_for(:project, :url => 'http://test.host/') do |builder|
-            concat(builder.input(:title, :as => type))
-          end
-        end
-
-        it 'should generate input' do
-          if template_method.to_s =~ /_field$/ # password_field
-            output_buffer.should have_tag("form li input")
-            output_buffer.should have_tag("form li input#project_title")
-            output_buffer.should have_tag("form li input[@type=\"#{input_type}\"]")
-            output_buffer.should have_tag("form li input[@name=\"project[title]\"]")
-          else
-            output_buffer.should have_tag("form li #{input_type}")
-            output_buffer.should have_tag("form li #{input_type}#project_title")
-            output_buffer.should have_tag("form li #{input_type}[@name=\"project[title]\"]")
-          end
-        end
-
-        it 'should generate labels' do
-          output_buffer.should have_tag('form li label')
-          output_buffer.should have_tag('form li label[@for="project_title"]')
-          output_buffer.should have_tag('form li label', /Title/)
-        end
-      end
-
+      
+      it_should_have_label_with_text(/Title/)
+      it_should_have_label_for("project_title")
+      it_should_have_input_with_id("project_title")
+      it_should_have_input_with_type(:password)
+      it_should_have_input_with_name("project[title]")
     end
+  
+  end
+  
+  describe ':as => :numeric' do
+    
+    before do
+      @new_post.stub!(:title)
+      @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :integer, :limit => 50))
+
+      semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:title, :as => :numeric))
+      end
+    end
+        
+    it_should_have_input_wrapper_with_class(:numeric)
+    it_should_have_input_wrapper_with_id("post_title_input")
+    it_should_have_label_with_text(/Title/)
+    it_should_have_label_for("post_title")
+    it_should_have_input_with_id("post_title")
+    it_should_have_input_with_type(:text)
+    it_should_have_input_with_name("post[title]")
+    it_should_use_default_text_field_size_when_method_has_no_database_column(:string)
+    it_should_apply_custom_input_attributes_when_input_html_provided(:string)
+    it_should_apply_custom_for_to_label_when_input_html_id_provided(:string)
+    
+    describe "when no object is provided" do
+      before do
+        semantic_form_for(:project, :url => 'http://test.host/') do |builder|
+          concat(builder.input(:title, :as => :numeric))
+        end
+      end
+      
+      it_should_have_label_with_text(/Title/)
+      it_should_have_label_for("project_title")
+      it_should_have_input_with_id("project_title")
+      it_should_have_input_with_type(:text)
+      it_should_have_input_with_name("project[title]")
+    end
+  
   end
 
+  describe ":as => :text" do
+    
+    before do
+      @new_post.stub!(:body)
+      @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :text))
+
+      semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:body, :as => :text))
+      end
+    end
+    
+    it_should_have_input_wrapper_with_class("text")
+    it_should_have_input_wrapper_with_id("post_body_input")
+    it_should_have_label_with_text(/Body/)
+    it_should_have_label_for("post_body")
+    it_should_have_textarea_with_id("post_body")
+    it_should_have_textarea_with_name("post[body]")
+
+    it 'should use input_html to style inputs' do
+      semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:title, :as => :text, :input_html => { :class => 'myclass' }))
+      end
+      output_buffer.should have_tag("form li textarea.myclass")
+    end
+    
+  end
+  
+  describe ":as => :file" do
+    
+    before do
+      @new_post.stub!(:body)
+      @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :file))
+
+      semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:body, :as => :file))
+      end
+    end
+    
+    it_should_have_input_wrapper_with_class("file")
+    it_should_have_input_wrapper_with_id("post_body_input")
+    it_should_have_label_with_text(/Body/)
+    it_should_have_label_for("post_body")
+    it_should_have_input_with_id("post_body")
+    it_should_have_input_with_name("post[body]")
+
+    it 'should use input_html to style inputs' do
+      semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:title, :as => :file, :input_html => { :class => 'myclass' }))
+      end
+      output_buffer.should have_tag("form li input.myclass")
+    end
+    
+  end
+  
   describe ":as => :hidden" do
     before do
       @new_post.stub!(:secret)
@@ -886,19 +862,11 @@ describe 'SemanticFormBuilder#input' do
         concat(builder.input(:secret, :as => :hidden))
       end
     end
-
-    it "should have a hidden class on the wrapper" do
-      output_buffer.should have_tag('form li.hidden')
-    end
-
-    it 'should have a post_hidden_input id on the wrapper' do
-      output_buffer.should have_tag('form li#post_secret_input')
-    end
-
-    it 'should not generate a label for the input' do
-      output_buffer.should_not have_tag('form li label')
-    end
-
+    
+    it_should_have_input_wrapper_with_class("hidden")
+    it_should_have_input_wrapper_with_id("post_secret_input")
+    it_should_not_have_a_label
+    
     it "should generate a input field" do
       output_buffer.should have_tag("form li input#post_secret")
       output_buffer.should have_tag("form li input[@type=\"hidden\"]")
@@ -929,15 +897,10 @@ describe 'SemanticFormBuilder#input' do
         concat(builder.input(:time_zone))
       end
     end
-
-    it "should have a time_zone class on the wrapper" do
-      output_buffer.should have_tag('form li.time_zone')
-    end
-
-    it 'should have a post_title_input id on the wrapper' do
-      output_buffer.should have_tag('form li#post_time_zone_input')
-    end
-
+    
+    it_should_have_input_wrapper_with_class("time_zone")
+    it_should_have_input_wrapper_with_id("post_time_zone_input")
+    
     it 'should generate a label for the input' do
       output_buffer.should have_tag('form li label')
       output_buffer.should have_tag('form li label[@for="post_time_zone"]')
@@ -1006,13 +969,8 @@ describe 'SemanticFormBuilder#input' do
         end
       end
       
-      it "should have a time_zone class on the wrapper" do
-        output_buffer.should have_tag('form li.country')
-      end
-
-      it 'should have a post_title_input id on the wrapper' do
-        output_buffer.should have_tag('form li#post_country_input')
-      end
+      it_should_have_input_wrapper_with_class("country")
+      it_should_have_input_wrapper_with_id("post_country_input")
 
       it 'should generate a label for the input' do
         output_buffer.should have_tag('form li label')
@@ -1069,17 +1027,12 @@ describe 'SemanticFormBuilder#input' do
           concat(builder.input(:author, :as => :radio, :value_as_class => true))
         end
       end
-
-      it 'should have a radio class on the wrapper' do
-        output_buffer.should have_tag('form li.radio')
-      end
-
-      it 'should have a post_author_input id on the wrapper' do
-        output_buffer.should have_tag('form li#post_author_input')
-      end
-
-      it 'should generate a fieldset and legend containing label text for the input' do
-        output_buffer.should have_tag('form li fieldset')
+      
+      it_should_have_input_wrapper_with_class("radio")
+      it_should_have_input_wrapper_with_id("post_author_input")
+      it_should_have_a_nested_fieldset
+      
+      it 'should generate a legend containing label text for the input' do
         output_buffer.should have_tag('form li fieldset legend')
         output_buffer.should have_tag('form li fieldset legend', /Author/)
       end
@@ -1191,20 +1144,12 @@ describe 'SemanticFormBuilder#input' do
             concat(builder.input(:author, options.merge(:as => :select) ) )
           end
         end
-
-        it 'should have a select class on the wrapper' do
-          output_buffer.should have_tag('form li.select')
-        end
-
-        it 'should have a post_author_input id on the wrapper' do
-          output_buffer.should have_tag('form li#post_author_input')
-        end
-
-        it 'should have a label inside the wrapper' do
-          output_buffer.should have_tag('form li label')
-          output_buffer.should have_tag('form li label', /Author/)
-          output_buffer.should have_tag("form li label[@for='post_author_id']")
-        end
+        
+        it_should_have_input_wrapper_with_class("select")
+        it_should_have_input_wrapper_with_id("post_author_input")
+        it_should_have_label_with_text(/Author/)
+        it_should_have_label_for('post_author_id')
+        
 
         it 'should have a select inside the wrapper' do
           output_buffer.should have_tag('form li select')
@@ -1229,7 +1174,6 @@ describe 'SemanticFormBuilder#input' do
             output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
           end
         end
-
 
         it 'should have one option with a "selected" attribute' do
           output_buffer.should have_tag('form li select option[@selected]', :count => 1)
@@ -1296,19 +1240,10 @@ describe 'SemanticFormBuilder#input' do
         end
       end
 
-      it 'should have a select class on the wrapper' do
-        output_buffer.should have_tag('form li.select')
-      end
-
-      it 'should have a post_author_input id on the wrapper' do
-        output_buffer.should have_tag('form li#author_posts_input')
-      end
-
-      it 'should have a label inside the wrapper' do
-        output_buffer.should have_tag('form li label')
-        output_buffer.should have_tag('form li label', /Post/)
-        output_buffer.should have_tag("form li label[@for='author_post_ids']")
-      end
+      it_should_have_input_wrapper_with_class("select")
+      it_should_have_input_wrapper_with_id("author_posts_input")
+      it_should_have_label_with_text(/Post/)
+      it_should_have_label_for('author_post_ids')
 
       it 'should have a select inside the wrapper' do
         output_buffer.should have_tag('form li select')
@@ -1341,21 +1276,12 @@ describe 'SemanticFormBuilder#input' do
           concat(builder.input(:authors, :as => :select))
         end
       end
-
-      it 'should have a select class on the wrapper' do
-        output_buffer.should have_tag('form li.select')
-      end
-
-      it 'should have a post_author_input id on the wrapper' do
-        output_buffer.should have_tag('form li#post_authors_input')
-      end
-
-      it 'should have a label inside the wrapper' do
-        output_buffer.should have_tag('form li label')
-        output_buffer.should have_tag('form li label', /Author/)
-        output_buffer.should have_tag("form li label[@for='post_author_ids']")
-      end
-
+      
+      it_should_have_input_wrapper_with_class("select")
+      it_should_have_input_wrapper_with_id("post_authors_input")
+      it_should_have_label_with_text(/Author/)
+      it_should_have_label_for('post_author_ids')
+      
       it 'should have a select inside the wrapper' do
         output_buffer.should have_tag('form li select')
         output_buffer.should have_tag('form li select#post_author_ids')
@@ -1451,17 +1377,12 @@ describe 'SemanticFormBuilder#input' do
           concat(builder.input(:posts, :as => :check_boxes, :value_as_class => true))
         end
       end
-
-      it 'should have a check_boxes class on the wrapper' do
-        output_buffer.should have_tag('form li.check_boxes')
-      end
-
-      it 'should have a author_posts_input id on the wrapper' do
-        output_buffer.should have_tag('form li#author_posts_input')
-      end
-
-      it 'should generate a fieldset and legend containing label text for the input' do
-        output_buffer.should have_tag('form li fieldset')
+      
+      it_should_have_input_wrapper_with_class("check_boxes")
+      it_should_have_input_wrapper_with_id("author_posts_input")
+      it_should_have_a_nested_fieldset
+      
+      it 'should generate a legend containing label text for the input' do
         output_buffer.should have_tag('form li fieldset legend')
         output_buffer.should have_tag('form li fieldset legend', /Posts/)
       end
@@ -1818,14 +1739,9 @@ describe 'SemanticFormBuilder#input' do
               concat(builder.input(:allow_comments, :as => type))
             end
           end
-
-          it "should have a #{type} class on the wrapper" do
-            output_buffer.should have_tag("form li.#{type}")
-          end
-
-          it 'should have a post_allow_comments_input id on the wrapper' do
-            output_buffer.should have_tag('form li#post_allow_comments_input')
-          end
+          
+          it_should_have_input_wrapper_with_class(type)
+          it_should_have_input_wrapper_with_id("post_allow_comments_input")
 
           it 'should generate a fieldset containing a legend' do
             output_buffer.should have_tag("form li.#{type}", /Allow comments/)
@@ -1974,14 +1890,10 @@ describe 'SemanticFormBuilder#input' do
       end
     end
 
-    it 'should have a date class on the wrapper li' do
-      output_buffer.should have_tag('form li.date')
-    end
-
-    it 'should have a fieldset inside the li wrapper' do
-      output_buffer.should have_tag('form li.date fieldset')
-    end
-
+    it_should_have_input_wrapper_with_class("date")
+    it_should_have_input_wrapper_with_id("post_publish_at_input")
+    it_should_have_a_nested_fieldset
+    
     it 'should have a legend containing the label text inside the fieldset' do
       output_buffer.should have_tag('form li.date fieldset legend', /Publish at/)
     end
@@ -2014,14 +1926,10 @@ describe 'SemanticFormBuilder#input' do
       end
     end
 
-    it 'should have a datetime class on the wrapper li' do
-      output_buffer.should have_tag('form li.datetime')
-    end
-
-    it 'should have a fieldset inside the li wrapper' do
-      output_buffer.should have_tag('form li.datetime fieldset')
-    end
-
+    it_should_have_input_wrapper_with_class("datetime")
+    it_should_have_input_wrapper_with_id("post_publish_at_input")
+    it_should_have_a_nested_fieldset
+    
     it 'should have a legend containing the label text inside the fieldset' do
       output_buffer.should have_tag('form li.datetime fieldset legend', /Publish at/)
     end
@@ -2168,14 +2076,10 @@ describe 'SemanticFormBuilder#input' do
         concat(builder.input(:publish_at, :as => :time))
       end
     end
-
-    it 'should have a time class on the wrapper li' do
-      output_buffer.should have_tag('form li.time')
-    end
-
-    it 'should have a fieldset inside the li wrapper' do
-      output_buffer.should have_tag('form li.time fieldset')
-    end
+    
+    it_should_have_input_wrapper_with_class("time")
+    it_should_have_input_wrapper_with_id("post_publish_at_input")
+    it_should_have_a_nested_fieldset
 
     it 'should have a legend containing the label text inside the fieldset' do
       output_buffer.should have_tag('form li.time fieldset legend', /Publish at/)
@@ -2207,15 +2111,10 @@ describe 'SemanticFormBuilder#input' do
         concat(builder.input(:allow_comments, :as => :boolean))
       end
     end
-
-    it 'should have a boolean class on the wrapper' do
-      output_buffer.should have_tag('form li.boolean')
-    end
-
-    it 'should have a post_allow_comments_input id on the wrapper' do
-      output_buffer.should have_tag('form li#post_allow_comments_input')
-    end
-
+    
+    it_should_have_input_wrapper_with_class("boolean")
+    it_should_have_input_wrapper_with_id("post_allow_comments_input")
+    
     it 'should generate a label containing the input' do
       output_buffer.should have_tag('form li label', :count => 1)
       output_buffer.should have_tag('form li label[@for="post_allow_comments"]')

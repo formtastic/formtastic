@@ -1404,7 +1404,7 @@ module Formtastic #:nodoc:
       html_tag
     end
     
-    def use_custom_field_error_proc(&block)
+    def with_custom_field_error_proc(&block)
       @@default_field_error_proc = ::ActionView::Base.field_error_proc
       ::ActionView::Base.field_error_proc = FIELD_ERROR_PROC
       result = yield
@@ -1428,7 +1428,7 @@ module Formtastic #:nodoc:
           end
           options[:html][:class] = class_names.join(" ")
           
-          use_custom_field_error_proc do
+          with_custom_field_error_proc do
             #{meth}(record_or_name_or_array, *(args << options), &proc)
           end
         end

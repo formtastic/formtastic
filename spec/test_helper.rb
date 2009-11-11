@@ -20,8 +20,11 @@ smart_require 'active_support', 'activesupport', '>= 2.3.4'
 smart_require 'action_controller', 'actionpack', '>= 2.3.4'
 smart_require 'action_view', 'actionpack', '>= 2.3.4'
 
+require 'custom_macros'
+
 Spec::Runner.configure do |config|
   config.include(RspecHpricotMatchers)
+  config.include(CustomMacros)
 end
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
