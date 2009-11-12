@@ -1095,6 +1095,7 @@ describe 'SemanticFormBuilder#input' do
       it_should_have_label_with_text(/Author/)
       it_should_have_label_for('post_author_id')
       it_should_apply_error_logic_for_input_type(:select)
+      it_should_call_find_on_association_class_when_no_collection_is_provided(:select)
 
       0.upto(1) do |i|
         it 'should have all option groups and the right values' do
@@ -1137,6 +1138,7 @@ describe 'SemanticFormBuilder#input' do
       it_should_have_label_with_text(/Post/)
       it_should_have_label_for('author_post_ids')
       it_should_apply_error_logic_for_input_type(:select)
+      it_should_call_find_on_association_class_when_no_collection_is_provided(:select)
 
       it 'should have a select inside the wrapper' do
         output_buffer.should have_tag('form li select')
@@ -1175,6 +1177,7 @@ describe 'SemanticFormBuilder#input' do
       it_should_have_label_with_text(/Author/)
       it_should_have_label_for('post_author_ids')
       it_should_apply_error_logic_for_input_type(:select)
+      it_should_call_find_on_association_class_when_no_collection_is_provided(:select)
       
       it 'should have a select inside the wrapper' do
         output_buffer.should have_tag('form li select')
@@ -1275,6 +1278,7 @@ describe 'SemanticFormBuilder#input' do
       it_should_have_input_wrapper_with_id("author_posts_input")
       it_should_have_a_nested_fieldset
       it_should_apply_error_logic_for_input_type(:check_boxes)
+      it_should_call_find_on_association_class_when_no_collection_is_provided(:check_boxes)
       
       it 'should generate a legend containing label text for the input' do
         output_buffer.should have_tag('form li fieldset legend')
@@ -1363,16 +1367,6 @@ describe 'SemanticFormBuilder#input' do
 
       describe ":as => #{type.inspect}" do
         
-        describe 'when the :collection option is not provided' do
-          it 'should perform a basic find on the association class' do
-            ::Author.should_receive(:find)
-
-            semantic_form_for(@new_post) do |builder|
-              concat(builder.input(:author, :as => type))
-            end
-          end
-        end
-
         describe 'when the :collection option is provided' do
 
           before do
@@ -1603,6 +1597,7 @@ describe 'SemanticFormBuilder#input' do
           end
 
         end
+      
       end
     end
 
