@@ -132,7 +132,88 @@ module CustomMacros
         output_buffer.should have_tag("form li input[@size='#{column_limit_shorted_than_default}']")
       end
     end
-        
+    
+    def it_should_apply_error_logic_for_input_type(type)
+      describe 'when there are errors on the object for this method' do
+        before do
+          @title_errors = ['must not be blank', 'must be longer than 10 characters', 'must be awesome']
+          @errors = mock('errors')
+          @errors.stub!(:[]).with(:title).and_return(@title_errors)
+          @new_post.stub!(:errors).and_return(@errors)
+        end
+
+        it 'should apply an errors class to the list item' do
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:title, :as => type))
+          end
+          output_buffer.should have_tag('form li.error')
+        end
+
+        it 'should not wrap the input with the Rails default error wrapping' do
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:title, :as => type))
+          end
+          output_buffer.should_not have_tag('div.fieldWithErrors')
+        end
+
+        it 'should render a paragraph for the errors' do
+          Formtastic::SemanticFormBuilder.inline_errors = :sentence
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:title, :as => type))
+          end
+          output_buffer.should have_tag('form li.error p.inline-errors')
+        end
+
+        it 'should not display an error list' do
+          Formtastic::SemanticFormBuilder.inline_errors = :list
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:title, :as => type))
+          end
+          output_buffer.should have_tag('form li.error ul.errors')
+        end
+      end
+
+      describe 'when there are no errors on the object for this method' do
+        before do
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:title, :as => type))
+          end
+        end
+
+        it 'should not apply an errors class to the list item' do
+          output_buffer.should_not have_tag('form li.error')
+        end
+
+        it 'should not render a paragraph for the errors' do
+          output_buffer.should_not have_tag('form li.error p.inline-errors')
+        end
+
+        it 'should not display an error list' do
+          output_buffer.should_not have_tag('form li.error ul.errors')
+        end
+      end
+
+      describe 'when no object is provided' do
+        before do
+          semantic_form_for(:project, :url => 'http://test.host') do |builder|
+            concat(builder.input(:title, :as => type))
+          end
+        end
+
+        it 'should not apply an errors class to the list item' do
+          output_buffer.should_not have_tag('form li.error')
+        end
+
+        it 'should not render a paragraph for the errors' do
+          output_buffer.should_not have_tag('form li.error p.inline-errors')
+        end
+
+        it 'should not display an error list' do
+          output_buffer.should_not have_tag('form li.error ul.errors')
+        end
+      end
+    end
+
   end
   
 end

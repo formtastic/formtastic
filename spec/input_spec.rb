@@ -589,88 +589,6 @@ describe 'SemanticFormBuilder#input' do
     end
   end
 
-  describe ':as any type of input' do
-
-    describe 'when there are errors on the object for this method' do
-      before do
-        @title_errors = ['must not be blank', 'must be longer than 10 characters', 'must be awesome']
-        @errors = mock('errors')
-        @errors.stub!(:[]).with(:title).and_return(@title_errors)
-        @new_post.stub!(:errors).and_return(@errors)
-      end
-
-      it 'should apply an errors class to the list item' do
-        semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:title))
-        end
-        output_buffer.should have_tag('form li.error')
-      end
-
-      it 'should not wrap the input with the Rails default error wrapping' do
-        semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:title))
-        end
-        output_buffer.should_not have_tag('div.fieldWithErrors')
-      end
-
-      it 'should render a paragraph for the errors' do
-        Formtastic::SemanticFormBuilder.inline_errors = :sentence
-        semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:title))
-        end
-        output_buffer.should have_tag('form li.error p.inline-errors')
-      end
-
-      it 'should not display an error list' do
-        Formtastic::SemanticFormBuilder.inline_errors = :list
-        semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:title))
-        end
-        output_buffer.should have_tag('form li.error ul.errors')
-      end
-    end
-
-    describe 'when there are no errors on the object for this method' do
-      before do
-        semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:title))
-        end
-      end
-
-      it 'should not apply an errors class to the list item' do
-        output_buffer.should_not have_tag('form li.error')
-      end
-
-      it 'should not render a paragraph for the errors' do
-        output_buffer.should_not have_tag('form li.error p.inline-errors')
-      end
-
-      it 'should not display an error list' do
-        output_buffer.should_not have_tag('form li.error ul.errors')
-      end
-    end
-
-    describe 'when no object is provided' do
-      before do
-        semantic_form_for(:project, :url => 'http://test.host') do |builder|
-          concat(builder.input(:title))
-        end
-      end
-
-      it 'should not apply an errors class to the list item' do
-        output_buffer.should_not have_tag('form li.error')
-      end
-
-      it 'should not render a paragraph for the errors' do
-        output_buffer.should_not have_tag('form li.error p.inline-errors')
-      end
-
-      it 'should not display an error list' do
-        output_buffer.should_not have_tag('form li.error ul.errors')
-      end
-    end
-  end
-  
   describe ':as => :string' do
     
     before do
@@ -692,6 +610,7 @@ describe 'SemanticFormBuilder#input' do
     it_should_use_default_text_field_size_when_method_has_no_database_column(:string)
     it_should_apply_custom_input_attributes_when_input_html_provided(:string)
     it_should_apply_custom_for_to_label_when_input_html_id_provided(:string)
+    it_should_apply_error_logic_for_input_type(:string)
     
     describe "when no object is provided" do
       before do
@@ -730,6 +649,7 @@ describe 'SemanticFormBuilder#input' do
     it_should_use_default_text_field_size_when_method_has_no_database_column(:string)
     it_should_apply_custom_input_attributes_when_input_html_provided(:string)
     it_should_apply_custom_for_to_label_when_input_html_id_provided(:string)
+    it_should_apply_error_logic_for_input_type(:password)
     
     describe "when no object is provided" do
       before do
@@ -765,6 +685,7 @@ describe 'SemanticFormBuilder#input' do
     it_should_use_default_text_field_size_when_method_has_no_database_column(:string)
     it_should_apply_custom_input_attributes_when_input_html_provided(:string)
     it_should_apply_custom_for_to_label_when_input_html_id_provided(:string)
+    it_should_apply_error_logic_for_input_type(:numeric)
     
     describe "when no object is provided" do
       before do
@@ -796,7 +717,8 @@ describe 'SemanticFormBuilder#input' do
     it_should_have_label_for("post_body")
     it_should_have_textarea_with_id("post_body")
     it_should_have_textarea_with_name("post[body]")
-
+    it_should_apply_error_logic_for_input_type(:numeric)
+    
     it 'should use input_html to style inputs' do
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:title, :as => :text, :input_html => { :class => 'myclass' }))
@@ -820,6 +742,7 @@ describe 'SemanticFormBuilder#input' do
     it_should_have_label_for("post_body")
     it_should_have_input_with_id("post_body")
     it_should_have_input_with_name("post[body]")
+    it_should_apply_error_logic_for_input_type(:file)
 
     it 'should use input_html to style inputs' do
       semantic_form_for(@new_post) do |builder|
@@ -840,7 +763,7 @@ describe 'SemanticFormBuilder#input' do
     it_should_have_input_wrapper_with_class("hidden")
     it_should_have_input_wrapper_with_id("post_secret_input")
     it_should_not_have_a_label
-    
+
     it "should generate a input field" do
       output_buffer.should have_tag("form li input#post_secret")
       output_buffer.should have_tag("form li input[@type=\"hidden\"]")
@@ -871,6 +794,7 @@ describe 'SemanticFormBuilder#input' do
     
     it_should_have_input_wrapper_with_class("time_zone")
     it_should_have_input_wrapper_with_id("post_time_zone_input")
+    it_should_apply_error_logic_for_input_type(:time_zone)
     
     it 'should generate a label for the input' do
       output_buffer.should have_tag('form li label')
@@ -937,6 +861,9 @@ describe 'SemanticFormBuilder#input' do
       
       it_should_have_input_wrapper_with_class("country")
       it_should_have_input_wrapper_with_id("post_country_input")
+      
+      # TODO -- needs stubbing inside the builder block, tricky!
+      #it_should_apply_error_logic_for_input_type(:country)
 
       it 'should generate a label for the input' do
         output_buffer.should have_tag('form li label')
@@ -980,7 +907,6 @@ describe 'SemanticFormBuilder#input' do
   end
   
   describe ':as => :radio' do
-
     describe 'for belongs_to association' do
       before do
         semantic_form_for(@new_post) do |builder|
@@ -991,6 +917,7 @@ describe 'SemanticFormBuilder#input' do
       it_should_have_input_wrapper_with_class("radio")
       it_should_have_input_wrapper_with_id("post_author_input")
       it_should_have_a_nested_fieldset
+      it_should_apply_error_logic_for_input_type(:radio)
       
       it 'should generate a legend containing label text for the input' do
         output_buffer.should have_tag('form li fieldset legend')
@@ -1163,6 +1090,12 @@ describe 'SemanticFormBuilder#input' do
         end
       end
 
+      it_should_have_input_wrapper_with_class("select")
+      it_should_have_input_wrapper_with_id("post_author_input")
+      it_should_have_label_with_text(/Author/)
+      it_should_have_label_for('post_author_id')
+      it_should_apply_error_logic_for_input_type(:select)
+
       0.upto(1) do |i|
         it 'should have all option groups and the right values' do
           output_buffer.should have_tag("form li select optgroup[@label='#{@continent_names[i]}']", @authors[i].to_label)
@@ -1203,6 +1136,7 @@ describe 'SemanticFormBuilder#input' do
       it_should_have_input_wrapper_with_id("author_posts_input")
       it_should_have_label_with_text(/Post/)
       it_should_have_label_for('author_post_ids')
+      it_should_apply_error_logic_for_input_type(:select)
 
       it 'should have a select inside the wrapper' do
         output_buffer.should have_tag('form li select')
@@ -1240,6 +1174,7 @@ describe 'SemanticFormBuilder#input' do
       it_should_have_input_wrapper_with_id("post_authors_input")
       it_should_have_label_with_text(/Author/)
       it_should_have_label_for('post_author_ids')
+      it_should_apply_error_logic_for_input_type(:select)
       
       it 'should have a select inside the wrapper' do
         output_buffer.should have_tag('form li select')
@@ -1329,7 +1264,6 @@ describe 'SemanticFormBuilder#input' do
   end
 
   describe ':as => :check_boxes' do
-
     describe 'for a has_many association' do
       before do
         semantic_form_for(@fred) do |builder|
@@ -1340,6 +1274,7 @@ describe 'SemanticFormBuilder#input' do
       it_should_have_input_wrapper_with_class("check_boxes")
       it_should_have_input_wrapper_with_id("author_posts_input")
       it_should_have_a_nested_fieldset
+      it_should_apply_error_logic_for_input_type(:check_boxes)
       
       it 'should generate a legend containing label text for the input' do
         output_buffer.should have_tag('form li fieldset legend')
@@ -1823,6 +1758,7 @@ describe 'SemanticFormBuilder#input' do
     it_should_have_input_wrapper_with_class("date")
     it_should_have_input_wrapper_with_id("post_publish_at_input")
     it_should_have_a_nested_fieldset
+    it_should_apply_error_logic_for_input_type(:date)
     
     it 'should have a legend containing the label text inside the fieldset' do
       output_buffer.should have_tag('form li.date fieldset legend', /Publish at/)
@@ -1856,6 +1792,7 @@ describe 'SemanticFormBuilder#input' do
     it_should_have_input_wrapper_with_class("datetime")
     it_should_have_input_wrapper_with_id("post_publish_at_input")
     it_should_have_a_nested_fieldset
+    it_should_apply_error_logic_for_input_type(:datetime)
     
     it 'should have a legend containing the label text inside the fieldset' do
       output_buffer.should have_tag('form li.datetime fieldset legend', /Publish at/)
@@ -2000,6 +1937,7 @@ describe 'SemanticFormBuilder#input' do
     it_should_have_input_wrapper_with_class("time")
     it_should_have_input_wrapper_with_id("post_publish_at_input")
     it_should_have_a_nested_fieldset
+    it_should_apply_error_logic_for_input_type(:time)
 
     it 'should have a legend containing the label text inside the fieldset' do
       output_buffer.should have_tag('form li.time fieldset legend', /Publish at/)
@@ -2031,6 +1969,7 @@ describe 'SemanticFormBuilder#input' do
     
     it_should_have_input_wrapper_with_class("boolean")
     it_should_have_input_wrapper_with_id("post_allow_comments_input")
+    it_should_apply_error_logic_for_input_type(:boolean)
     
     it 'should generate a label containing the input' do
       output_buffer.should have_tag('form li label', :count => 1)
