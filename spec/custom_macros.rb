@@ -223,6 +223,237 @@ module CustomMacros
       end
     end
     
+    def it_should_use_the_collection_when_provided(as, countable)
+      describe 'when the :collection option is provided' do
+
+        before do
+          @authors = ::Author.find(:all) * 2
+          output_buffer.replace '' # clears the output_buffer from the before block, hax!
+        end
+
+        it 'should not call find() on the parent class' do
+          ::Author.should_not_receive(:find)
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:author, :as => as, :collection => @authors))
+          end
+        end
+
+        it 'should use the provided collection' do
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:author, :as => as, :collection => @authors))
+          end
+          output_buffer.should have_tag("form li.#{as} #{countable}", :count => @authors.size + (as == :select ? 1 : 0))
+        end
+
+        describe 'and the :collection is an array of strings' do
+          before do
+            @categories = [ 'General', 'Design', 'Development', 'Quasi-Serious Inventions' ]
+          end
+
+          it "should use the string as the label text and value for each #{countable}" do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:category_name, :as => as, :collection => @categories))
+            end
+
+            @categories.each do |value|
+              output_buffer.should have_tag("form li.#{as}", /#{value}/)
+              output_buffer.should have_tag("form li.#{as} #{countable}[@value='#{value}']")
+            end
+          end
+
+          if as == :radio
+            it 'should generate a sanitized label for attribute' do
+              @bob.stub!(:category_name).and_return(@categories)
+              semantic_form_for(@new_post) do |builder|
+                builder.semantic_fields_for(@bob) do |bob_builder|
+                  concat(bob_builder.input(:category_name, :as => as, :collection => @categories))
+                end
+              end
+              output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_category_name_general']")
+              output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_category_name_design']")
+              output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_category_name_development']")
+              output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_category_name_quasiserious_inventions']")
+            end
+          end
+        end
+
+        describe 'and the :collection is a hash of strings' do
+          before do
+            @categories = { 'General' => 'gen', 'Design' => 'des','Development' => 'dev' }
+          end
+
+          it "should use the key as the label text and the hash value as the value attribute for each #{countable}" do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:category_name, :as => as, :collection => @categories))
+            end
+
+            @categories.each do |label, value|
+              output_buffer.should have_tag("form li.#{as}", /#{label}/)
+              output_buffer.should have_tag("form li.#{as} #{countable}[@value='#{value}']")
+            end
+          end
+        end
+
+        describe 'and the :collection is an array of arrays' do
+          before do
+            @categories = { 'General' => 'gen', 'Design' => 'des', 'Development' => 'dev' }.to_a
+          end
+
+          it "should use the first value as the label text and the last value as the value attribute for #{countable}" do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:category_name, :as => as, :collection => @categories))
+            end
+
+            @categories.each do |text, value|
+              label = as == :select ? :option : :label
+              output_buffer.should have_tag("form li.#{as} #{label}", /#{text}/i)
+              output_buffer.should have_tag("form li.#{as} #{countable}[@value='#{value.to_s}']")
+              output_buffer.should have_tag("form li.#{as} #{countable}#post_category_name_#{value.to_s}") if as == :radio
+            end
+          end
+        end
+        
+        if as == :radio
+          describe 'and the :collection is an array of arrays with boolean values' do
+            before do
+              @choices = { 'Yeah' => true, 'Nah' => false }.to_a
+            end
+        
+            it "should use the first value as the label text and the last value as the value attribute for #{countable}" do
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:category_name, :as => as, :collection => @choices))
+              end
+              
+              output_buffer.should have_tag("form li.#{as} #{countable}#post_category_name_true")
+              output_buffer.should have_tag("form li.#{as} #{countable}#post_category_name_false")
+            end
+          end
+        end
+        
+        describe 'and the :collection is an array of symbols' do
+          before do
+            @categories = [ :General, :Design, :Development ]
+          end
+
+          it "should use the symbol as the label text and value for each #{countable}" do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:category_name, :as => as, :collection => @categories))
+            end
+
+            @categories.each do |value|
+              label = as == :select ? :option : :label
+              output_buffer.should have_tag("form li.#{as} #{label}", /#{value}/i)
+              output_buffer.should have_tag("form li.#{as} #{countable}[@value='#{value.to_s}']")
+            end
+          end
+        end
+        
+        describe 'and the :collection is an OrderedHash of strings' do
+          before do
+            @categories = ActiveSupport::OrderedHash.new('General' => 'gen', 'Design' => 'des','Development' => 'dev')
+          end
+
+          it "should use the key as the label text and the hash value as the value attribute for each #{countable}" do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:category_name, :as => as, :collection => @categories))
+            end
+
+            @categories.each do |label, value|
+              output_buffer.should have_tag("form li.#{as}", /#{label}/)
+              output_buffer.should have_tag("form li.#{as} #{countable}[@value='#{value}']")
+            end
+          end
+          
+        end
+        
+        describe 'when the :label_method option is provided' do
+          
+          describe 'as a symbol' do
+            before do
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:author, :as => as, :label_method => :login))
+              end
+            end
+
+            it 'should have options with text content from the specified method' do
+              ::Author.find(:all).each do |author|
+                output_buffer.should have_tag("form li.#{as}", /#{author.login}/)
+              end
+            end
+          end
+          
+          describe 'as a proc' do
+            before do
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:author, :as => as, :label_method => Proc.new {|a| a.login.reverse }))
+              end
+            end
+            
+            it 'should have options with the proc applied to each' do
+              ::Author.find(:all).each do |author|
+                output_buffer.should have_tag("form li.#{as}", /#{author.login.reverse}/)
+              end
+            end
+          end
+          
+        end
+
+        describe 'when the :label_method option is not provided' do
+          Formtastic::SemanticFormBuilder.collection_label_methods.each do |label_method|
+
+            describe "when the collection objects respond to #{label_method}" do
+              before do
+                @fred.stub!(:respond_to?).and_return { |m| m.to_s == label_method }
+                ::Author.find(:all).each { |a| a.stub!(label_method).and_return('The Label Text') }
+
+                semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:author, :as => as))
+                end
+              end
+
+              it "should render the options with #{label_method} as the label" do
+                ::Author.find(:all).each do |author|
+                  output_buffer.should have_tag("form li.#{as}", /The Label Text/)
+                end
+              end
+            end
+
+          end
+        end
+
+        describe 'when the :value_method option is provided' do
+          
+          describe 'as a symbol' do
+            before do
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:author, :as => as, :value_method => :login))
+              end
+            end
+            
+            it 'should have options with values from specified method' do
+              ::Author.find(:all).each do |author|
+                output_buffer.should have_tag("form li.#{as} #{countable}[@value='#{author.login}']")
+              end
+            end
+          end
+          
+          describe 'as a proc' do
+            before do
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:author, :as => as, :value_method => Proc.new {|a| a.login.reverse }))
+              end
+            end
+
+            it 'should have options with the proc applied to each value' do
+              ::Author.find(:all).each do |author|
+                output_buffer.should have_tag("form li.#{as} #{countable}[@value='#{author.login.reverse}']")
+              end
+            end
+          end
+        end
+
+      end
+    end
 
   end
   
