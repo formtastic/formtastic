@@ -674,9 +674,6 @@ describe 'SemanticFormBuilder#input' do
   describe ':as => :string' do
     
     before do
-      @new_post.stub!(:title)
-      @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 50))
-
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:title, :as => :string))
       end
@@ -715,9 +712,6 @@ describe 'SemanticFormBuilder#input' do
   describe ':as => :password' do
     
     before do
-      @new_post.stub!(:title)
-      @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 50))
-
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:title, :as => :password))
       end
@@ -756,9 +750,6 @@ describe 'SemanticFormBuilder#input' do
   describe ':as => :numeric' do
     
     before do
-      @new_post.stub!(:title)
-      @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :integer, :limit => 50))
-
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:title, :as => :numeric))
       end
@@ -794,9 +785,6 @@ describe 'SemanticFormBuilder#input' do
   describe ":as => :text" do
     
     before do
-      @new_post.stub!(:body)
-      @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :text))
-
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:body, :as => :text))
       end
@@ -821,9 +809,6 @@ describe 'SemanticFormBuilder#input' do
   describe ":as => :file" do
     
     before do
-      @new_post.stub!(:body)
-      @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :file))
-
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:body, :as => :file))
       end
@@ -847,9 +832,6 @@ describe 'SemanticFormBuilder#input' do
   
   describe ":as => :hidden" do
     before do
-      @new_post.stub!(:secret)
-      @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string))
-
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:secret, :as => :hidden))
       end
@@ -882,9 +864,6 @@ describe 'SemanticFormBuilder#input' do
 
   describe ":as => :time_zone" do
     before do
-      @new_post.stub!(:time_zone)
-      @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string))
-
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:time_zone))
       end
@@ -934,11 +913,6 @@ describe 'SemanticFormBuilder#input' do
   end
   
   describe ":as => :country" do
-    
-    before do
-      @new_post.stub!(:country)
-      @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string))
-    end
     
     describe "when country_select is not available as a helper from a plugin" do
       
@@ -1006,12 +980,6 @@ describe 'SemanticFormBuilder#input' do
   end
   
   describe ':as => :radio' do
-
-    before do
-      @new_post.stub!(:author).and_return(@bob)
-      @new_post.stub!(:author_id).and_return(@bob.id)
-      ::Post.stub!(:reflect_on_association).and_return { |column_name| mock('reflection', :options => {}, :klass => ::Author, :macro => :belongs_to) }
-    end
 
     describe 'for belongs_to association' do
       before do
@@ -1142,7 +1110,6 @@ describe 'SemanticFormBuilder#input' do
         it_should_have_label_with_text(/Author/)
         it_should_have_label_for('post_author_id')
         
-
         it 'should have a select inside the wrapper' do
           output_buffer.should have_tag('form li select')
           output_buffer.should have_tag('form li select#post_author_id')
@@ -1185,7 +1152,7 @@ describe 'SemanticFormBuilder#input' do
       end
     end
 
-    describe 'for a belongs_to association and :group_by => :country' do
+    describe 'for a belongs_to association and :group_by => :continent' do
       before do
         @authors = [@bob, @fred, @fred, @fred]
         ::Author.stub!(:find).and_return(@authors)
@@ -1457,12 +1424,6 @@ describe 'SemanticFormBuilder#input' do
 
   describe 'for collections' do
 
-    before do
-      @new_post.stub!(:author).and_return(@bob)
-      @new_post.stub!(:author_id).and_return(@bob.id)
-      @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :integer, :limit => 255))
-    end
-
     { :select => :option, :radio => :input, :check_boxes => :'input[@type="checkbox"]' }.each do |type, countable|
 
       describe ":as => #{type.inspect}" do
@@ -1500,7 +1461,6 @@ describe 'SemanticFormBuilder#input' do
 
           describe 'and the :collection is an array of strings' do
             before do
-              @new_post.stub!(:category_name).and_return('')
               @categories = [ 'General', 'Design', 'Development', 'Quasi-Serious Inventions' ]
             end
 
@@ -1533,7 +1493,6 @@ describe 'SemanticFormBuilder#input' do
 
           describe 'and the :collection is a hash of strings' do
             before do
-              @new_post.stub!(:category_name).and_return('')
               @categories = { 'General' => 'gen', 'Design' => 'des','Development' => 'dev' }
             end
 
@@ -1551,7 +1510,6 @@ describe 'SemanticFormBuilder#input' do
 
           describe 'and the :collection is an array of arrays' do
             before do
-              @new_post.stub!(:category_name).and_return('')
               @categories = { 'General' => 'gen', 'Design' => 'des', 'Development' => 'dev' }.to_a
             end
 
@@ -1572,7 +1530,6 @@ describe 'SemanticFormBuilder#input' do
           if type == :radio
             describe 'and the :collection is an array of arrays with boolean values' do
               before do
-                @new_post.stub!(:category_name).and_return('')
                 @choices = { 'Yeah' => true, 'Nah' => false }.to_a
               end
           
@@ -1590,7 +1547,6 @@ describe 'SemanticFormBuilder#input' do
           
           describe 'and the :collection is an array of symbols' do
             before do
-              @new_post.stub!(:category_name).and_return('')
               @categories = [ :General, :Design, :Development ]
             end
 
@@ -1609,7 +1565,6 @@ describe 'SemanticFormBuilder#input' do
           
           describe 'and the :collection is an OrderedHash of strings' do
             before do
-              @new_post.stub!(:category_name).and_return('')
               @categories = ActiveSupport::OrderedHash.new('General' => 'gen', 'Design' => 'des','Development' => 'dev')
             end
 
@@ -1724,9 +1679,6 @@ describe 'SemanticFormBuilder#input' do
         describe ":as => #{type.inspect}" do
 
           before do
-            @new_post.stub!(:allow_comments)
-            @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
-
             semantic_form_for(@new_post) do |builder|
               concat(builder.input(:allow_comments, :as => type))
             end
@@ -1766,9 +1718,6 @@ describe 'SemanticFormBuilder#input' do
 
           describe 'when the value is nil' do
             before do
-              @new_post.stub!(:allow_comments).and_return(nil)
-              @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
-
               semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:allow_comments, :as => type))
               end
@@ -1782,7 +1731,6 @@ describe 'SemanticFormBuilder#input' do
           describe 'when the value is true' do
             before do
               @new_post.stub!(:allow_comments).and_return(true)
-              @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
               semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:allow_comments, :as => type))
               end
@@ -1800,7 +1748,6 @@ describe 'SemanticFormBuilder#input' do
           describe 'when the value is false' do
             before do
               @new_post.stub!(:allow_comments).and_return(false)
-              @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
               semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:allow_comments, :as => type))
               end
@@ -1818,7 +1765,6 @@ describe 'SemanticFormBuilder#input' do
           describe 'when :true and :false options are provided' do
             before do
               @new_post.stub!(:allow_comments)
-              @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
               semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:allow_comments, :as => type, :true => "Absolutely", :false => "No Way"))
               end
@@ -1834,8 +1780,6 @@ describe 'SemanticFormBuilder#input' do
 
             before do
               @output_buffer = ''
-              @new_post.stub!(:allow_comments)
-              @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
               semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:allow_comments, :as => type))
               end
@@ -1851,8 +1795,6 @@ describe 'SemanticFormBuilder#input' do
             
             before do
               @output_buffer = ''
-              @new_post.stub!(:allow_comments)
-              @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
               semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:allow_comments, :as => type, :selected => true))
               end
@@ -1873,12 +1815,8 @@ describe 'SemanticFormBuilder#input' do
   describe ':as => :date' do
 
     before do
-      @new_post.stub!(:publish_at)
-      #@new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :date))
-
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:publish_at, :as => :date))
-        @builder = builder
       end
     end
 
@@ -1910,9 +1848,6 @@ describe 'SemanticFormBuilder#input' do
   describe ':as => :datetime' do
 
     before do
-      @new_post.stub!(:publish_at)
-      @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :datetime))
-
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:publish_at, :as => :datetime))
       end
@@ -1945,18 +1880,15 @@ describe 'SemanticFormBuilder#input' do
     end
 
     it 'should generate a sanitized label and matching ids for attribute' do
-      @bob.stub!(:publish_at)
-      @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :datetime))
-
       semantic_form_for(@new_post) do |builder|
         builder.semantic_fields_for(@bob, :index => 10) do |bob_builder|
-          concat(bob_builder.input(:publish_at, :as => :datetime))
+          concat(bob_builder.input(:created_at, :as => :datetime))
         end
       end
 
       1.upto(5) do |i|
-        output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_10_publish_at_#{i}i']")
-        output_buffer.should have_tag("form li fieldset ol li #post_author_10_publish_at_#{i}i")
+        output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_10_created_at_#{i}i']")
+        output_buffer.should have_tag("form li fieldset ol li #post_author_10_created_at_#{i}i")
       end
     end
 
@@ -2041,7 +1973,6 @@ describe 'SemanticFormBuilder#input' do
         output_buffer.replace ''
         semantic_form_for(:project, :url => 'http://test.host') do |builder|
           concat(builder.input(:publish_at, :as => :datetime))
-          @builder = builder
         end
       end
 
@@ -2061,9 +1992,6 @@ describe 'SemanticFormBuilder#input' do
 
   describe ':as => :time' do
     before do
-      @new_post.stub!(:publish_at)
-      @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :time))
-
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:publish_at, :as => :time))
       end
@@ -2096,9 +2024,6 @@ describe 'SemanticFormBuilder#input' do
   describe ':as => :boolean' do
 
     before do
-      @new_post.stub!(:allow_comments)
-      @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :boolean))
-
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:allow_comments, :as => :boolean))
       end

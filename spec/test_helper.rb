@@ -93,6 +93,7 @@ module FormtasticSpecHelper
     @bob.stub!(:class).and_return(::Author)
     @bob.stub!(:to_label).and_return('Bob Rock')
     @bob.stub!(:login).and_return('bob')
+    @bob.stub!(:created_at)
     @bob.stub!(:id).and_return(42)
     @bob.stub!(:posts).and_return([])
     @bob.stub!(:post_ids).and_return([])
@@ -156,10 +157,24 @@ module FormtasticSpecHelper
     @new_post.stub!(:title)
     @new_post.stub!(:body)
     @new_post.stub!(:published)
+    @new_post.stub!(:publish_at)
+    @new_post.stub!(:secret)
+    @new_post.stub!(:time_zone)
+    @new_post.stub!(:category_name)
+    @new_post.stub!(:allow_comments)
     @new_post.stub!(:column_for_attribute).with(:meta_description).and_return(mock('column', :type => :string, :limit => 255))
-    @new_post.stub!(:column_for_attribute).with(:title).and_return(mock('column', :type => :string, :limit => 255))
+    @new_post.stub!(:column_for_attribute).with(:title).and_return(mock('column', :type => :string, :limit => 50))
     @new_post.stub!(:column_for_attribute).with(:body).and_return(mock('column', :type => :text))
     @new_post.stub!(:column_for_attribute).with(:published).and_return(mock('column', :type => :boolean))
+    @new_post.stub!(:column_for_attribute).with(:publish_at).and_return(mock('column', :type => :date))
+    @new_post.stub!(:column_for_attribute).with(:time_zone).and_return(mock('column', :type => :string))
+    @new_post.stub!(:column_for_attribute).with(:allow_comments).and_return(mock('column', :type => :boolean))
+    
+    
+
+    
+    @new_post.stub!(:author).and_return(@bob)
+    @new_post.stub!(:author_id).and_return(@bob.id)
   end
   
   def self.included(base)
