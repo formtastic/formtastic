@@ -591,14 +591,6 @@ describe 'SemanticFormBuilder#input' do
 
   describe ':as any type of input' do
 
-    it 'should create a list item for each input' do
-      semantic_form_for(@new_post) do |builder|
-        concat(builder.input(:title))
-        concat(builder.input(:body))
-      end
-       output_buffer.should have_tag('form li', :count => 2)
-    end
-
     describe 'when there are errors on the object for this method' do
       before do
         @title_errors = ['must not be blank', 'must be longer than 10 characters', 'must be awesome']
