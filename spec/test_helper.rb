@@ -170,11 +170,9 @@ module FormtasticSpecHelper
     @new_post.stub!(:column_for_attribute).with(:time_zone).and_return(mock('column', :type => :string))
     @new_post.stub!(:column_for_attribute).with(:allow_comments).and_return(mock('column', :type => :boolean))
     
-    
-
-    
     @new_post.stub!(:author).and_return(@bob)
     @new_post.stub!(:author_id).and_return(@bob.id)
+        
   end
   
   def self.included(base)
