@@ -1279,8 +1279,8 @@ describe 'SemanticFormBuilder#input' do
       end
       
       it 'should sort the groups on the label method' do
-        output_buffer.should have_tag("form li select optgroup:first[@label='Africa']")
-        output_buffer.should have_tag("form li select optgroup:first[@label='99']")
+        output_buffer.should have_tag("form li select optgroup[@label='Africa']")
+        output_buffer.should have_tag("form li select optgroup[@label='99']")
       end
       
 
