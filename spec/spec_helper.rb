@@ -189,4 +189,4 @@ module FormtasticSpecHelper
   
 end
 
-::ActiveSupport::Deprecation.silenced = true
+::ActiveSupport::Deprecation.silenced = false
