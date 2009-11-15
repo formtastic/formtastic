@@ -288,12 +288,6 @@ module Formtastic #:nodoc:
       if @object
         key = @object.new_record? ? :create : :update
         object_name = @object.class.human_name
-
-        if key == :update
-          # Note: Fallback on :save-key (deprecated), :update makes more sense in the REST-world.
-          fallback_text = ::I18n.t(:save, :model => object_name, :default => "Save {{model}}", :scope => [:formtastic])
-          ::ActiveSupport::Deprecation.warn "Formtastic I18n: Key 'formtastic.save' is now deprecated in favor 'formtastic.update'."
-        end
       else
         key = :submit
         object_name = @object_name.to_s.send(@@label_str_method)
