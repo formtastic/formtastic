@@ -43,7 +43,7 @@ Gem::Specification.new do |s|
      "spec/inputs_spec.rb",
      "spec/label_spec.rb",
      "spec/semantic_fields_for_spec.rb",
-     "spec/test_helper.rb"
+     "spec/spec_helper.rb"
   ]
   s.homepage = %q{http://github.com/justinfrench/formtastic/tree/master}
   s.post_install_message = %q{
@@ -85,7 +85,7 @@ Gem::Specification.new do |s|
      "spec/inputs_spec.rb",
      "spec/label_spec.rb",
      "spec/semantic_fields_for_spec.rb",
-     "spec/test_helper.rb"
+     "spec/spec_helper.rb"
   ]
 
   if s.respond_to? :specification_version then

@@ -1,5 +1,5 @@
 # coding: utf-8
-require File.dirname(__FILE__) + '/test_helper'
+require File.dirname(__FILE__) + '/spec_helper'
 
 describe "*select: options[:include_blank]" do
 
