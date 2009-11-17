@@ -116,6 +116,7 @@ module FormtasticSpecHelper
     ::Author.stub!(:human_name).and_return('::Author')
     ::Author.stub!(:reflect_on_validations_for).and_return([])
     ::Author.stub!(:reflect_on_association).and_return { |column_name| mock('reflection', :options => {}, :klass => Post, :macro => :has_many) if column_name == :posts }
+    ::Author.stub!(:content_columns).and_return([mock('column', :name => 'login'), mock('column', :name => 'created_at')])
 
     # Sometimes we need a mock @post object and some Authors for belongs_to
     @new_post = mock('post')
@@ -153,11 +154,13 @@ module FormtasticSpecHelper
       end
     end
     ::Post.stub!(:find).and_return([@freds_post])
+    ::Post.stub!(:content_columns).and_return([mock('column', :name => 'title'), mock('column', :name => 'body'), mock('column', :name => 'created_at')])
     
     @new_post.stub!(:title)
     @new_post.stub!(:body)
     @new_post.stub!(:published)
     @new_post.stub!(:publish_at)
+    @new_post.stub!(:created_at)
     @new_post.stub!(:secret)
     @new_post.stub!(:time_zone)
     @new_post.stub!(:category_name)

@@ -174,9 +174,12 @@ describe 'SemanticFormBuilder#inputs' do
       describe 'and is a string' do
         before do
           @legend_text = "Advanced options"
-          @legend_text_using_title = "Advanced options 2"
+          @legend_text_using_name = "Advanced options 2"
+          @legend_text_using_title = "Advanced options 3"
           semantic_form_for(@new_post) do |builder|
-            builder.inputs :name => @legend_text do
+            builder.inputs @legend_text do
+            end
+            builder.inputs :name => @legend_text_using_name do
             end
             builder.inputs :title => @legend_text_using_title do
             end
@@ -184,34 +187,40 @@ describe 'SemanticFormBuilder#inputs' do
         end
 
         it 'should render a fieldset with a legend inside the form' do
-          output_buffer.should have_tag("form fieldset legend", /#{@legend_text}/)
-          output_buffer.should have_tag("form fieldset legend", /#{@legend_text_using_title}/)
+          output_buffer.should have_tag("form fieldset legend", /^#{@legend_text}$/)
+          output_buffer.should have_tag("form fieldset legend", /^#{@legend_text_using_name}$/)
+          output_buffer.should have_tag("form fieldset legend", /^#{@legend_text_using_title}$/)
         end
       end
       
       describe 'and is a symbol' do
         before do
           @localized_legend_text = "Localized advanced options"
-          @localized_legend_text_using_title = "Localized advanced options 2"
+          @localized_legend_text_using_name = "Localized advanced options 2"
+          @localized_legend_text_using_title = "Localized advanced options 3"
           ::I18n.backend.store_translations :en, :formtastic => {
               :titles => {
                   :post => {
                       :advanced_options => @localized_legend_text,
-                      :advanced_options_2 => @localized_legend_text_using_title
+                      :advanced_options_using_name => @localized_legend_text_using_name,
+                      :advanced_options_using_title => @localized_legend_text_using_title
                     }
                 }
             }
           semantic_form_for(@new_post) do |builder|
-            builder.inputs :name => :advanced_options do
+            builder.inputs :advanced_options do
             end
-            builder.inputs :title => :advanced_options_2 do
+            builder.inputs :name => :advanced_options_using_name do
+            end
+            builder.inputs :title => :advanced_options_using_title do
             end
           end
         end
 
         it 'should render a fieldset with a localized legend inside the form' do
-          output_buffer.should have_tag("form fieldset legend", /#{@localized_legend_text}/)
-          output_buffer.should have_tag("form fieldset legend", /#{@localized_legend_text_using_title}/)
+          output_buffer.should have_tag("form fieldset legend", /^#{@localized_legend_text}$/)
+          output_buffer.should have_tag("form fieldset legend", /^#{@localized_legend_text_using_name}$/)
+          output_buffer.should have_tag("form fieldset legend", /^#{@localized_legend_text_using_title}$/)
         end
       end
     end
@@ -238,9 +247,8 @@ describe 'SemanticFormBuilder#inputs' do
   describe 'without a block' do
 
     before do
-      ::Post.stub!(:reflections).and_return({:author   => mock('reflection', :options => {}, :macro => :belongs_to),
+      ::Post.stub!(:reflections).and_return({:author => mock('reflection', :options => {}, :macro => :belongs_to),
                                            :comments => mock('reflection', :options => {}, :macro => :has_many) })
-      ::Post.stub!(:content_columns).and_return([mock('column', :name => 'title'), mock('column', :name => 'body'), mock('column', :name => 'created_at')])
       ::Author.stub!(:find).and_return([@fred, @bob])
 
       @new_post.stub!(:title)
@@ -352,12 +360,15 @@ describe 'SemanticFormBuilder#inputs' do
     describe 'with column names and an options hash as args' do
       before do
         semantic_form_for(@new_post) do |builder|
-          concat(builder.inputs(:title, :body, :name => "Legendary Legend Text", :id => "my-id"))
+          @legend_text_using_option = "Legendary Legend Text"
+          @legend_text_using_arg = "Legendary Legend Text 2"
+          concat(builder.inputs(:title, :body, :name => @legend_text_using_option, :id => "my-id"))
+          concat(builder.inputs(@legend_text_using_arg, :title, :body, :id => "my-id-2"))
         end
       end
 
       it 'should render a form with a fieldset containing two list items' do
-        output_buffer.should have_tag('form > fieldset.inputs > ol > li', :count => 2)
+        output_buffer.should have_tag('form > fieldset.inputs > ol > li', :count => 4)
       end
 
       it 'should pass the options down to the fieldset' do
@@ -365,7 +376,8 @@ describe 'SemanticFormBuilder#inputs' do
       end
 
       it 'should use the special :name option as a text for the legend tag' do
-        output_buffer.should have_tag('form > fieldset#my-id.inputs > legend', /Legendary Legend Text/)
+        output_buffer.should have_tag('form > fieldset#my-id.inputs > legend', /^#{@legend_text_using_option}$/)
+        output_buffer.should have_tag('form > fieldset#my-id-2.inputs > legend', /^#{@legend_text_using_arg}$/)
       end
     end
 

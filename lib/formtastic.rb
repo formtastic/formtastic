@@ -22,6 +22,8 @@ module Formtastic #:nodoc:
                    :required_string, :optional_string, :inline_errors, :label_str_method, :collection_label_methods,
                    :inline_order, :file_methods, :priority_countries, :i18n_lookups_by_default, :default_commit_button_accesskey 
 
+    RESERVED_COLUMNS = [:created_at, :updated_at, :created_on, :updated_on, :lock_version, :version]
+    
     I18N_SCOPES = [ '{{model}}.{{action}}.{{attribute}}',
                     '{{model}}.{{attribute}}',
                     '{{attribute}}']
@@ -136,11 +138,16 @@ module Formtastic #:nodoc:
     #     <%= form.inputs %>
     #   <% end %>
     #
+    #   With a few arguments:
+    #   <% semantic_form_for @post do |form| %>
+    #     <%= form.inputs "Post details", :title, :body %>
+    #   <% end %>
+    #
     # === Options
     #
-    # All options (with the exception of :name) are passed down to the fieldset as HTML
-    # attributes (id, class, style, etc).  If provided, the :name option is passed into a
-    # legend tag inside the fieldset (otherwise a legend is not generated).
+    # All options (with the exception of :name/:title) are passed down to the fieldset as HTML
+    # attributes (id, class, style, etc).  If provided, the :name/:title option is passed into a
+    # legend tag inside the fieldset.
     #
     #   # With a block:
     #   <% semantic_form_for @post do |form| %>
@@ -152,6 +159,11 @@ module Formtastic #:nodoc:
     #   # With a list (the options must come after the field list):
     #   <% semantic_form_for @post do |form| %>
     #     <%= form.inputs :title, :body, :name => "Create a new post", :style => "border:1px;" %>
+    #   <% end %>
+    #
+    #   # ...or the equivalent:
+    #   <% semantic_form_for @post do |form| %>
+    #     <%= form.inputs "Create a new post", :title, :body, :style => "border:1px;" %>
     #   <% end %>
     #
     # === It's basically a fieldset!
@@ -168,6 +180,9 @@ module Formtastic #:nodoc:
     #       <%= f.input :created_at %>
     #       <%= f.input :user_id, :label => "Author" %>
     #     <% end %>
+    #     <% f.inputs "Extra" do %>
+    #       <%= f.input :update_at %>
+    #     <% end %>
     #   <% end %>
     #
     #   # Output:
@@ -183,6 +198,12 @@ module Formtastic #:nodoc:
     #       <ol>
     #         <li class="datetime">...</li>
     #         <li class="select">...</li>
+    #       </ol>
+    #     </fieldset>
+    #     <fieldset class="inputs">
+    #       <legend><span>Extra</span></legend>
+    #       <ol>
+    #         <li class="datetime">...</li>
     #       </ol>
     #     </fieldset>
     #   </form>
@@ -232,17 +253,19 @@ module Formtastic #:nodoc:
       if html_options[:for]
         inputs_for_nested_attributes(args, html_options, &block)
       elsif block_given?
-        field_set_and_list_wrapping(html_options, &block)
+        field_set_and_list_wrapping(*(args << html_options), &block)
       else
         if @object && args.empty?
-          args  = @object.class.reflections.map { |n,_| n if _.macro == :belongs_to }
-          args += @object.class.content_columns.map(&:name)
-          args -= %w[created_at updated_at created_on updated_on lock_version version]
+          args  = self.association_columns(:belongs_to)
+          args += self.content_columns
+          args -= RESERVED_COLUMNS
           args.compact!
         end
-        contents = args.map { |method| input(method.to_sym) }
-
-        field_set_and_list_wrapping(html_options, contents)
+        legend = args.shift if args.first.is_a?(::String)
+        contents = args.collect { |method| input(method.to_sym) }
+        args.unshift(legend) if legend.present?
+        
+        field_set_and_list_wrapping(*(args << html_options), contents)
       end
     end
     alias :input_field_set :inputs
@@ -395,6 +418,30 @@ module Formtastic #:nodoc:
     alias :errors_on :inline_errors_for
 
     protected
+
+    # Collects content columns (non-relation columns) for the current form object class.
+    #
+    def content_columns
+      if @object.present?
+        @object.class.name.constantize.content_columns.collect { |c| c.name.to_sym }.compact
+      else
+        @object_name.to_s.classify.constantize.content_columns.collect { |c| c.name.to_sym }.compact rescue []
+      end
+    end
+
+    def association_columns(*by_associations)
+      if @object.present?
+        @object.class.reflections.collect do |name, _|
+          if by_associations.present?
+            name if by_associations.include?(_.macro)
+          else
+            name
+          end
+        end.compact
+      else
+        []
+      end
+    end
 
     # Prepare options to be sent to label
     #
@@ -1050,12 +1097,29 @@ module Formtastic #:nodoc:
     #
     #   f.inputs :name => 'Task #%i', :for => :tasks
     #
+    # or the shorter equivalent:
+    #
+    #   f.inputs 'Task #%i', :for => :tasks
+    #
     # And it will generate a fieldset for each task with legend 'Task #1', 'Task #2',
     # 'Task #3' and so on.
     #
-    def field_set_and_list_wrapping(html_options, contents='', &block) #:nodoc:
+    # Note: Special case for the inline inputs (non-block):
+    #   f.inputs "My little legend", :title, :body, :author   # Explicit legend string => "My little legend"
+    #   f.inputs :my_little_legend, :title, :body, :author    # Localized (118n) legend with I18n key => I18n.t(:my_little_legend, ...)
+    #   f.inputs :title, :body, :author                       # First argument is a column => (no legend)
+    #
+    def field_set_and_list_wrapping(*args, &block) #:nodoc:
+      contents = args.last.is_a?(::Hash) ? '' : args.pop.flatten
+      html_options = args.extract_options!
+
       html_options[:name] ||= html_options.delete(:title)
-      html_options[:name] = localized_string(html_options[:name], html_options[:name], :title) if html_options[:name].is_a?(Symbol)
+
+      valid_name_classes = [::String, ::Symbol]
+      valid_name_classes.delete(::Symbol) if !block_given? && (args.first.is_a?(::Symbol) && self.content_columns.include?(args.first))
+
+      html_options[:name] ||= args.shift if valid_name_classes.any? { |valid_name_class| args.first.is_a?(valid_name_class) }
+      html_options[:name] = localized_string(html_options[:name], html_options[:name], :title) if html_options[:name].is_a?(::Symbol)
 
       legend  = html_options.delete(:name).to_s
       legend %= parent_child_index(html_options[:parent]) if html_options[:parent]
