@@ -429,6 +429,8 @@ module Formtastic #:nodoc:
       end
     end
 
+    # Collects association columns (relation columns) for the current form object class.
+    #
     def association_columns(*by_associations)
       if @object.present?
         @object.class.reflections.collect do |name, _|
@@ -1114,11 +1116,11 @@ module Formtastic #:nodoc:
       html_options = args.extract_options!
 
       html_options[:name] ||= html_options.delete(:title)
-
-      valid_name_classes = [::String, ::Symbol]
-      valid_name_classes.delete(::Symbol) if !block_given? && (args.first.is_a?(::Symbol) && self.content_columns.include?(args.first))
-
-      html_options[:name] ||= args.shift if valid_name_classes.any? { |valid_name_class| args.first.is_a?(valid_name_class) }
+      if html_options[:name].blank?
+        valid_name_classes = [::String, ::Symbol]
+        valid_name_classes.delete(::Symbol) if !block_given? && (args.first.is_a?(::Symbol) && self.content_columns.include?(args.first))
+        html_options[:name] = args.shift if valid_name_classes.any? { |valid_name_class| args.first.is_a?(valid_name_class) }
+      end
       html_options[:name] = localized_string(html_options[:name], html_options[:name], :title) if html_options[:name].is_a?(::Symbol)
 
       legend  = html_options.delete(:name).to_s
@@ -1405,14 +1407,12 @@ module Formtastic #:nodoc:
       end
     end
 
-    private
-
-      def set_include_blank(options)
-        unless options.key?(:include_blank) || options.key?(:prompt)
-          options[:include_blank] = @@include_blank_for_select_by_default
-        end
-        options
+    def set_include_blank(options)
+      unless options.key?(:include_blank) || options.key?(:prompt)
+        options[:include_blank] = @@include_blank_for_select_by_default
       end
+      options
+    end
 
   end
 
