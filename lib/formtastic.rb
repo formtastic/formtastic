@@ -1189,8 +1189,8 @@ module Formtastic #:nodoc:
     # is provided.
     #
     def create_boolean_collection(options)
-      options[:true] ||= ::I18n.t('yes', :default => 'Yes', :scope => [:formtastic])
-      options[:false] ||= ::I18n.t('no', :default => 'No', :scope => [:formtastic])
+      options[:true] ||= ::I18n.t(:yes, :default => 'Yes', :scope => [:formtastic])
+      options[:false] ||= ::I18n.t(:no, :default => 'No', :scope => [:formtastic])
       options[:value_as_class] = true unless options.key?(:value_as_class)
 
       [ [ options.delete(:true), true], [ options.delete(:false), false ] ]
