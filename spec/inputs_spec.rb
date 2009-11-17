@@ -193,7 +193,7 @@ describe 'SemanticFormBuilder#inputs' do
         before do
           @localized_legend_text = "Localized advanced options"
           @localized_legend_text_using_title = "Localized advanced options 2"
-          I18n.backend.store_translations :en, :formtastic => {
+          ::I18n.backend.store_translations :en, :formtastic => {
               :titles => {
                   :post => {
                       :advanced_options => @localized_legend_text,

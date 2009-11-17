@@ -7,7 +7,7 @@ module Formtastic #:nodoc:
     @@default_text_field_size = 50
     @@all_fields_required_by_default = true
     @@include_blank_for_select_by_default = true
-    @@required_string = proc { %{<abbr title="#{I18n.t 'formtastic.required', :default => 'required'}">*</abbr>} }
+    @@required_string = proc { %{<abbr title="#{::I18n.t 'formtastic.required', :default => 'required'}">*</abbr>} }
     @@optional_string = ''
     @@inline_errors = :sentence
     @@label_str_method = :humanize
@@ -326,7 +326,7 @@ module Formtastic #:nodoc:
     #
     def semantic_fields_for(record_or_name_or_array, *args, &block)
       opts = args.extract_options!
-      opts.merge!(:builder => Formtastic::SemanticFormHelper.builder)
+      opts.merge!(:builder => ::Formtastic::SemanticFormHelper.builder)
       args.push(opts)
       fields_for(record_or_name_or_array, *args, &block)
     end
@@ -819,7 +819,7 @@ module Formtastic #:nodoc:
     #
     def date_or_datetime_input(method, options)
       position = { :year => 1, :month => 2, :day => 3, :hour => 4, :minute => 5, :second => 6 }
-      i18n_date_order = I18n.translate(:'date.order').is_a?(Array) ? I18n.translate(:'date.order') : nil
+      i18n_date_order = ::I18n.translate(:'date.order').is_a?(Array) ? ::I18n.translate(:'date.order') : nil
       inputs   = options.delete(:order) || i18n_date_order || [:year, :month, :day]
 
       time_inputs = [:hour, :minute]
@@ -842,7 +842,7 @@ module Formtastic #:nodoc:
           hidden_fields_capture << template.hidden_field_tag("#{@object_name}[#{field_name}]", (hidden_value || 1), :id => html_id)
         else
           opts = set_options(options).merge(:prefix => @object_name, :field_name => field_name)
-          item_label_text = I18n.t(input.to_s, :default => input.to_s.humanize, :scope => [:datetime, :prompts])
+          item_label_text = ::I18n.t(input.to_s, :default => input.to_s.humanize, :scope => [:datetime, :prompts])
 
           list_items_capture << template.content_tag(:li,
             template.content_tag(:label, item_label_text, :for => html_id) +
@@ -1189,8 +1189,8 @@ module Formtastic #:nodoc:
     # is provided.
     #
     def create_boolean_collection(options)
-      options[:true] ||= I18n.t('yes', :default => 'Yes', :scope => [:formtastic])
-      options[:false] ||= I18n.t('no', :default => 'No', :scope => [:formtastic])
+      options[:true] ||= ::I18n.t('yes', :default => 'Yes', :scope => [:formtastic])
+      options[:false] ||= ::I18n.t('no', :default => 'No', :scope => [:formtastic])
       options[:value_as_class] = true unless options.key?(:value_as_class)
 
       [ [ options.delete(:true), true], [ options.delete(:false), false ] ]
@@ -1385,7 +1385,7 @@ module Formtastic #:nodoc:
   #     ...
   #   <% end %>
   module SemanticFormHelper
-    @@builder = Formtastic::SemanticFormBuilder
+    @@builder = ::Formtastic::SemanticFormBuilder
     mattr_accessor :builder
     
     @@default_field_error_proc = nil
