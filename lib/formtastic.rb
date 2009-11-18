@@ -67,7 +67,8 @@ module Formtastic #:nodoc:
     #
     #   <% semantic_form_for @employee do |form| %>
     #     <% form.inputs do -%>
-    #       <%= form.input :name, :label => "Full Name"%>
+    #       <%= form.input :secret, :value => "Hello" %>
+    #       <%= form.input :name, :label => "Full Name" %>
     #       <%= form.input :manager_id, :as => :radio %>
     #       <%= form.input :hired_at, :as => :date, :label => "Date Hired" %>
     #       <%= form.input :phone, :required => false, :hint => "Eg: +1 555 1234" %>
@@ -559,7 +560,12 @@ module Formtastic #:nodoc:
     # Outputs a hidden field inside the wrapper, which should be hidden with CSS.
     # Additionals options can be given and will be sent straight to hidden input
     # element.
+    #
     def hidden_input(method, options)
+      options ||= {}
+      if options[:input_html].present?
+        options[:value] = options[:input_html][:value] if options[:input_html][:value].present?
+      end
       self.hidden_field(method, set_options(options))
     end
 

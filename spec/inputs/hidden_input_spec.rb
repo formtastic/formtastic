@@ -12,6 +12,7 @@ describe 'hidden input' do
     semantic_form_for(@new_post) do |builder|
       concat(builder.input(:secret, :as => :hidden))
       concat(builder.input(:author_id, :as => :hidden, :value => 99))
+      concat(builder.input(:published, :as => :hidden, :input_html => {:value => true}))
     end
   end
 
@@ -25,8 +26,13 @@ describe 'hidden input' do
     output_buffer.should have_tag("form li input#post_secret[@name=\"post[secret]\"]")
   end
   
-  it "should pass any explicitly specified value" do
-    output_buffer.should have_tag("form li input#post_author_id[@value=\"99\"]")
+  it "should pass any explicitly specified value - using :value" do
+    output_buffer.should have_tag("form li input#post_author_id[@type=\"hidden\"][@value=\"99\"]")
+  end
+  
+  # Handle Formtastic :input_html options for consistency.
+  it "should pass any explicitly specified value - using :input_html options" do
+    output_buffer.should have_tag("form li input#post_published[@type=\"hidden\"][@value=\"true\"]")
   end
   
   it "should not render inline errors" do
