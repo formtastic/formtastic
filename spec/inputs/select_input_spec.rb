@@ -2,14 +2,51 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe 'select input' do
-  
+
   include FormtasticSpecHelper
-  
+
   before do
     @output_buffer = ''
     mock_everything
   end
-  
+
+  describe 'explicit values' do
+    describe 'using an array of values' do
+      before do
+        @array_with_values = ["Title A", "Title B", "Title C"]
+        @array_with_keys_and_values = [["Title D", 1], ["Title E", 2], ["Title F", 3]]
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:title, :as => :select, :collection => @array_with_values))
+          concat(builder.input(:title, :as => :select, :collection => @array_with_keys_and_values))
+        end
+      end
+
+      it 'should have a option for each key and/or value' do
+        @array_with_values.each do |v|
+          output_buffer.should have_tag("form li select option[@value='#{v}']", /^#{v}$/)
+        end
+        @array_with_keys_and_values.each do |v|
+          output_buffer.should have_tag("form li select option[@value='#{v.second}']", /^#{v.first}$/)
+        end
+      end
+    end
+
+    describe 'using a range' do
+      before do
+        @range_with_values = 1..5
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:title, :as => :select, :collection => @range_with_values))
+        end
+      end
+
+      it 'should have an option for each value' do
+        @range_with_values.each do |v|
+          output_buffer.should have_tag("form li select option[@value='#{v}']", /^#{v}$/)
+        end
+      end
+    end
+  end
+
   describe 'for a belongs_to association' do
     before do
       semantic_form_for(@new_post) do |builder|

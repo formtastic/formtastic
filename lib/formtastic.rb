@@ -1208,7 +1208,7 @@ module Formtastic #:nodoc:
       collection = find_raw_collection_for_column(column, options)
 
       # Return if we have an Array of strings, fixnums or arrays
-      return collection if collection.instance_of?(Array) &&
+      return collection if (collection.instance_of?(Array) || collection.instance_of?(Range)) &&
                            [Array, Fixnum, String, Symbol].include?(collection.first.class)
 
       label, value = detect_label_and_value_method!(collection, options)
