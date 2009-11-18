@@ -7,7 +7,7 @@ module Formtastic #:nodoc:
     @@default_text_field_size = 50
     @@all_fields_required_by_default = true
     @@include_blank_for_select_by_default = true
-    @@required_string = proc { %{<abbr title="#{::I18n.t 'formtastic.required', :default => 'required'}">*</abbr>} }
+    @@required_string = proc { %{<abbr title="#{I18n.t 'formtastic.required', :default => 'required'}">*</abbr>} }
     @@optional_string = ''
     @@inline_errors = :sentence
     @@label_str_method = :humanize
@@ -22,8 +22,6 @@ module Formtastic #:nodoc:
                    :required_string, :optional_string, :inline_errors, :label_str_method, :collection_label_methods,
                    :inline_order, :file_methods, :priority_countries, :i18n_lookups_by_default, :default_commit_button_accesskey 
 
-    RESERVED_COLUMNS = [:created_at, :updated_at, :created_on, :updated_on, :lock_version, :version]
-    
     I18N_SCOPES = [ '{{model}}.{{action}}.{{attribute}}',
                     '{{model}}.{{attribute}}',
                     '{{attribute}}']
@@ -138,16 +136,11 @@ module Formtastic #:nodoc:
     #     <%= form.inputs %>
     #   <% end %>
     #
-    #   With a few arguments:
-    #   <% semantic_form_for @post do |form| %>
-    #     <%= form.inputs "Post details", :title, :body %>
-    #   <% end %>
-    #
     # === Options
     #
-    # All options (with the exception of :name/:title) are passed down to the fieldset as HTML
-    # attributes (id, class, style, etc).  If provided, the :name/:title option is passed into a
-    # legend tag inside the fieldset.
+    # All options (with the exception of :name) are passed down to the fieldset as HTML
+    # attributes (id, class, style, etc).  If provided, the :name option is passed into a
+    # legend tag inside the fieldset (otherwise a legend is not generated).
     #
     #   # With a block:
     #   <% semantic_form_for @post do |form| %>
@@ -159,11 +152,6 @@ module Formtastic #:nodoc:
     #   # With a list (the options must come after the field list):
     #   <% semantic_form_for @post do |form| %>
     #     <%= form.inputs :title, :body, :name => "Create a new post", :style => "border:1px;" %>
-    #   <% end %>
-    #
-    #   # ...or the equivalent:
-    #   <% semantic_form_for @post do |form| %>
-    #     <%= form.inputs "Create a new post", :title, :body, :style => "border:1px;" %>
     #   <% end %>
     #
     # === It's basically a fieldset!
@@ -180,9 +168,6 @@ module Formtastic #:nodoc:
     #       <%= f.input :created_at %>
     #       <%= f.input :user_id, :label => "Author" %>
     #     <% end %>
-    #     <% f.inputs "Extra" do %>
-    #       <%= f.input :update_at %>
-    #     <% end %>
     #   <% end %>
     #
     #   # Output:
@@ -198,12 +183,6 @@ module Formtastic #:nodoc:
     #       <ol>
     #         <li class="datetime">...</li>
     #         <li class="select">...</li>
-    #       </ol>
-    #     </fieldset>
-    #     <fieldset class="inputs">
-    #       <legend><span>Extra</span></legend>
-    #       <ol>
-    #         <li class="datetime">...</li>
     #       </ol>
     #     </fieldset>
     #   </form>
@@ -253,19 +232,17 @@ module Formtastic #:nodoc:
       if html_options[:for]
         inputs_for_nested_attributes(args, html_options, &block)
       elsif block_given?
-        field_set_and_list_wrapping(*(args << html_options), &block)
+        field_set_and_list_wrapping(html_options, &block)
       else
         if @object && args.empty?
-          args  = self.association_columns(:belongs_to)
-          args += self.content_columns
-          args -= RESERVED_COLUMNS
+          args  = @object.class.reflections.map { |n,_| n if _.macro == :belongs_to }
+          args += @object.class.content_columns.map(&:name)
+          args -= %w[created_at updated_at created_on updated_on lock_version version]
           args.compact!
         end
-        legend = args.shift if args.first.is_a?(::String)
-        contents = args.collect { |method| input(method.to_sym) }
-        args.unshift(legend) if legend.present?
-        
-        field_set_and_list_wrapping(*(args << html_options), contents)
+        contents = args.map { |method| input(method.to_sym) }
+
+        field_set_and_list_wrapping(html_options, contents)
       end
     end
     alias :input_field_set :inputs
@@ -349,7 +326,7 @@ module Formtastic #:nodoc:
     #
     def semantic_fields_for(record_or_name_or_array, *args, &block)
       opts = args.extract_options!
-      opts.merge!(:builder => ::Formtastic::SemanticFormHelper.builder)
+      opts.merge!(:builder => Formtastic::SemanticFormHelper.builder)
       args.push(opts)
       fields_for(record_or_name_or_array, *args, &block)
     end
@@ -418,32 +395,6 @@ module Formtastic #:nodoc:
     alias :errors_on :inline_errors_for
 
     protected
-
-    # Collects content columns (non-relation columns) for the current form object class.
-    #
-    def content_columns
-      if @object.present?
-        @object.class.name.constantize.content_columns.collect { |c| c.name.to_sym }.compact
-      else
-        @object_name.to_s.classify.constantize.content_columns.collect { |c| c.name.to_sym }.compact rescue []
-      end
-    end
-
-    # Collects association columns (relation columns) for the current form object class.
-    #
-    def association_columns(*by_associations)
-      if @object.present?
-        @object.class.reflections.collect do |name, _|
-          if by_associations.present?
-            name if by_associations.include?(_.macro)
-          else
-            name
-          end
-        end.compact
-      else
-        []
-      end
-    end
 
     # Prepare options to be sent to label
     #
@@ -868,7 +819,7 @@ module Formtastic #:nodoc:
     #
     def date_or_datetime_input(method, options)
       position = { :year => 1, :month => 2, :day => 3, :hour => 4, :minute => 5, :second => 6 }
-      i18n_date_order = ::I18n.translate(:'date.order').is_a?(Array) ? ::I18n.translate(:'date.order') : nil
+      i18n_date_order = I18n.translate(:'date.order').is_a?(Array) ? I18n.translate(:'date.order') : nil
       inputs   = options.delete(:order) || i18n_date_order || [:year, :month, :day]
 
       time_inputs = [:hour, :minute]
@@ -891,7 +842,7 @@ module Formtastic #:nodoc:
           hidden_fields_capture << template.hidden_field_tag("#{@object_name}[#{field_name}]", (hidden_value || 1), :id => html_id)
         else
           opts = set_options(options).merge(:prefix => @object_name, :field_name => field_name)
-          item_label_text = ::I18n.t(input.to_s, :default => input.to_s.humanize, :scope => [:datetime, :prompts])
+          item_label_text = I18n.t(input.to_s, :default => input.to_s.humanize, :scope => [:datetime, :prompts])
 
           list_items_capture << template.content_tag(:li,
             template.content_tag(:label, item_label_text, :for => html_id) +
@@ -1099,29 +1050,12 @@ module Formtastic #:nodoc:
     #
     #   f.inputs :name => 'Task #%i', :for => :tasks
     #
-    # or the shorter equivalent:
-    #
-    #   f.inputs 'Task #%i', :for => :tasks
-    #
     # And it will generate a fieldset for each task with legend 'Task #1', 'Task #2',
     # 'Task #3' and so on.
     #
-    # Note: Special case for the inline inputs (non-block):
-    #   f.inputs "My little legend", :title, :body, :author   # Explicit legend string => "My little legend"
-    #   f.inputs :my_little_legend, :title, :body, :author    # Localized (118n) legend with I18n key => I18n.t(:my_little_legend, ...)
-    #   f.inputs :title, :body, :author                       # First argument is a column => (no legend)
-    #
-    def field_set_and_list_wrapping(*args, &block) #:nodoc:
-      contents = args.last.is_a?(::Hash) ? '' : args.pop.flatten
-      html_options = args.extract_options!
-
+    def field_set_and_list_wrapping(html_options, contents='', &block) #:nodoc:
       html_options[:name] ||= html_options.delete(:title)
-      if html_options[:name].blank?
-        valid_name_classes = [::String, ::Symbol]
-        valid_name_classes.delete(::Symbol) if !block_given? && (args.first.is_a?(::Symbol) && self.content_columns.include?(args.first))
-        html_options[:name] = args.shift if valid_name_classes.any? { |valid_name_class| args.first.is_a?(valid_name_class) }
-      end
-      html_options[:name] = localized_string(html_options[:name], html_options[:name], :title) if html_options[:name].is_a?(::Symbol)
+      html_options[:name] = localized_string(html_options[:name], html_options[:name], :title) if html_options[:name].is_a?(Symbol)
 
       legend  = html_options.delete(:name).to_s
       legend %= parent_child_index(html_options[:parent]) if html_options[:parent]
@@ -1208,7 +1142,7 @@ module Formtastic #:nodoc:
       collection = find_raw_collection_for_column(column, options)
 
       # Return if we have an Array of strings, fixnums or arrays
-      return collection if (collection.instance_of?(Array) || collection.instance_of?(Range)) &&
+      return collection if collection.instance_of?(Array) &&
                            [Array, Fixnum, String, Symbol].include?(collection.first.class)
 
       label, value = detect_label_and_value_method!(collection, options)
@@ -1255,8 +1189,8 @@ module Formtastic #:nodoc:
     # is provided.
     #
     def create_boolean_collection(options)
-      options[:true] ||= ::I18n.t(:yes, :default => 'Yes', :scope => [:formtastic])
-      options[:false] ||= ::I18n.t(:no, :default => 'No', :scope => [:formtastic])
+      options[:true] ||= I18n.t('yes', :default => 'Yes', :scope => [:formtastic])
+      options[:false] ||= I18n.t('no', :default => 'No', :scope => [:formtastic])
       options[:value_as_class] = true unless options.key?(:value_as_class)
 
       [ [ options.delete(:true), true], [ options.delete(:false), false ] ]
@@ -1407,12 +1341,14 @@ module Formtastic #:nodoc:
       end
     end
 
-    def set_include_blank(options)
-      unless options.key?(:include_blank) || options.key?(:prompt)
-        options[:include_blank] = @@include_blank_for_select_by_default
+    private
+
+      def set_include_blank(options)
+        unless options.key?(:include_blank) || options.key?(:prompt)
+          options[:include_blank] = @@include_blank_for_select_by_default
+        end
+        options
       end
-      options
-    end
 
   end
 
@@ -1449,7 +1385,7 @@ module Formtastic #:nodoc:
   #     ...
   #   <% end %>
   module SemanticFormHelper
-    @@builder = ::Formtastic::SemanticFormBuilder
+    @@builder = Formtastic::SemanticFormBuilder
     mattr_accessor :builder
     
     @@default_field_error_proc = nil
