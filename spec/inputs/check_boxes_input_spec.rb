@@ -22,9 +22,9 @@ describe 'check_boxes input' do
     it_should_call_find_on_association_class_when_no_collection_is_provided(:check_boxes)
     it_should_use_the_collection_when_provided(:check_boxes, 'input[@type="checkbox"]')
     
-    it 'should generate a legend containing label text for the input' do
-      output_buffer.should have_tag('form li fieldset legend')
-      output_buffer.should have_tag('form li fieldset legend', /Posts/)
+    it 'should generate a legend - classified as a label - containing label text for the input' do
+      output_buffer.should have_tag('form li fieldset legend.label')
+      output_buffer.should have_tag('form li fieldset legend.label', /Posts/)
     end
 
     it 'should generate an ordered list with a list item for each choice' do

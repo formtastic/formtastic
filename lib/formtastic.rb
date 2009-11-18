@@ -362,7 +362,6 @@ module Formtastic #:nodoc:
     # * :required - Appends an abbr tag if :required is true
     # * :label - An alternative form to give the label content. Whenever label
     #            is false, a blank string is returned.
-    # * :as_span - When true returns a span tag with class label instead of a label element
     # * :input_name - Gives the input to match for. This is needed when you want to
     #                 to call f.label :authors but it should match :author_ids.
     #
@@ -386,17 +385,12 @@ module Formtastic #:nodoc:
       end
       text = localized_string(method, text, :label) || humanized_attribute_name(method)
       text += required_or_optional_string(options.delete(:required))
-      
+
       # special case for boolean (checkbox) labels, which have a nested input
       text = (options.delete(:label_prefix_for_nested_input) || "") + text
-      
+
       input_name = options.delete(:input_name) || method
-      if options.delete(:as_span)
-        options[:class] ||= 'label'
-        template.content_tag(:span, text, options)
-      else
-        super(input_name, text, options)
-      end
+      super(input_name, text, options)
     end
 
     # Generates error messages for the given method. Errors can be shown as list,
@@ -787,22 +781,24 @@ module Formtastic #:nodoc:
 
       input_name = generate_association_input_name(method)
       value_as_class = options.delete(:value_as_class)
-
+      input_ids = []
+      
       list_item_content = collection.map do |c|
         label = c.is_a?(Array) ? c.first : c
         value = c.is_a?(Array) ? c.last  : c
         html_options[:checked] = options.delete(:selected) unless options[:selected].blank?
 
+        input_ids << input_id = generate_html_id(input_name, value.to_s.gsub(/\s/, '_').gsub(/\W/, '').downcase)
         li_content = template.content_tag(:label,
           "#{self.radio_button(input_name, value, html_options)} #{label}",
-          :for => generate_html_id(input_name, value.to_s.gsub(/\s/, '_').gsub(/\W/, '').downcase)
+          :for => input_id
         )
 
         li_options = value_as_class ? { :class => value.to_s.downcase } : {}
         template.content_tag(:li, li_content, li_options)
       end
 
-      field_set_and_list_wrapping_for_method(method, options, list_item_content)
+      field_set_and_list_wrapping_for_method(method, options.merge(:label_for => input_ids.first), list_item_content)
     end
     alias :boolean_radio_input :radio_input
 
@@ -886,27 +882,29 @@ module Formtastic #:nodoc:
       # Gets the datetime object. It can be a Fixnum, Date or Time, or nil.
       datetime     = @object ? @object.send(method) : nil
       html_options = options.delete(:input_html) || {}
-
+      input_ids    = []
+      
       (inputs + time_inputs).each do |input|
-        html_id    = generate_html_id(method, "#{position[input]}i")
+        input_ids << input_id = generate_html_id(method, "#{position[input]}i")
+        
         field_name = "#{method}(#{position[input]}i)"
         if options["discard_#{input}".intern]
           break if time_inputs.include?(input)
           
           hidden_value = datetime.respond_to?(input) ? datetime.send(input) : datetime
-          hidden_fields_capture << template.hidden_field_tag("#{@object_name}[#{field_name}]", (hidden_value || 1), :id => html_id)
+          hidden_fields_capture << template.hidden_field_tag("#{@object_name}[#{field_name}]", (hidden_value || 1), :id => input_id)
         else
           opts = set_options(options).merge(:prefix => @object_name, :field_name => field_name)
           item_label_text = ::I18n.t(input.to_s, :default => input.to_s.humanize, :scope => [:datetime, :prompts])
 
           list_items_capture << template.content_tag(:li,
-            template.content_tag(:label, item_label_text, :for => html_id) +
-            template.send("select_#{input}".intern, datetime, opts, html_options.merge(:id => html_id))
+            template.content_tag(:label, item_label_text, :for => input_id) +
+            template.send("select_#{input}".intern, datetime, opts, html_options.merge(:id => input_id))
           )
         end
       end
 
-      hidden_fields_capture + field_set_and_list_wrapping_for_method(method, options, list_items_capture)
+      hidden_fields_capture + field_set_and_list_wrapping_for_method(method, options.merge(:label_for => input_ids.first), list_items_capture)
     end
 
 
@@ -923,7 +921,7 @@ module Formtastic #:nodoc:
     # Output:
     #
     #   <fieldset>
-    #     <legend><span>Authors</span></legend>
+    #     <legend class="label"><label>Authors</label></legend>
     #     <ol>
     #       <li>
     #         <input type="hidden" name="book[author_id][1]" value="">
@@ -982,23 +980,25 @@ module Formtastic #:nodoc:
       value_as_class  = options.delete(:value_as_class)
       unchecked_value = options.delete(:unchecked_value) || ''
       html_options    = { :name => "#{@object_name}[#{input_name}][]" }.merge(html_options)
+      input_ids       = []
 
       list_item_content = collection.map do |c|
         label = c.is_a?(Array) ? c.first : c
         value = c.is_a?(Array) ? c.last : c
 
-        html_options.merge!(:id => generate_html_id(input_name, value.to_s.gsub(/\s/, '_').gsub(/\W/, '').downcase))
- 
+        input_ids << input_id = generate_html_id(input_name, value.to_s.gsub(/\s/, '_').gsub(/\W/, '').downcase)
+        html_options.merge!(:id => input_id)
+
         li_content = template.content_tag(:label,
           "#{self.check_box(input_name, html_options, value, unchecked_value)} #{label}",
-          :for => html_options[:id]
+          :for => input_id
         )
 
         li_options = value_as_class ? { :class => value.to_s.downcase } : {}
         template.content_tag(:li, li_content, li_options)
       end
 
-      field_set_and_list_wrapping_for_method(method, options, list_item_content)
+      field_set_and_list_wrapping_for_method(method, options.merge(:label_for => input_ids.first), list_item_content)
     end
     
     
@@ -1159,9 +1159,11 @@ module Formtastic #:nodoc:
       contents = contents.join if contents.respond_to?(:join)
 
       template.content_tag(:fieldset,
-        %{<legend>#{self.label(method, options_for_label(options).merge!(:as_span => true))}</legend>} +
-        template.content_tag(:ol, contents)
-      )
+          template.content_tag(:legend,
+              self.label(method, options_for_label(options).merge(:for => options.delete(:label_for))), :class => 'label'
+            ) <<
+          template.content_tag(:ol, contents)
+        )
     end
 
     # For methods that have a database column, take a best guess as to what the input method

@@ -138,8 +138,8 @@ describe 'datetime input' do
       end
     end
 
-    it 'should have fieldset with legend' do
-      output_buffer.should have_tag('form li.datetime fieldset legend', /Publish at/)
+    it 'should have fieldset with legend - classified as a label' do
+      output_buffer.should have_tag('form li.datetime fieldset legend.label', /Publish at/)
     end
 
     it 'should have labels for each input' do

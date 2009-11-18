@@ -19,8 +19,8 @@ describe 'time input' do
   it_should_have_a_nested_fieldset
   it_should_apply_error_logic_for_input_type(:time)
 
-  it 'should have a legend containing the label text inside the fieldset' do
-    output_buffer.should have_tag('form li.time fieldset legend', /Publish at/)
+  it 'should have a legend - classified as a label - containing the label text inside the fieldset' do
+    output_buffer.should have_tag('form li.time fieldset legend.label', /Publish at/)
   end
 
   it 'should have an ordered list of two items inside the fieldset' do
