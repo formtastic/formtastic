@@ -265,7 +265,7 @@ module Formtastic #:nodoc:
         contents = args.collect { |method| input(method.to_sym) }
         args.unshift(legend) if legend.present?
         
-        field_set_and_list_wrapping(*(args << html_options), contents)
+        field_set_and_list_wrapping(*((args << html_options) << contents))
       end
     end
     alias :input_field_set :inputs
