@@ -342,7 +342,7 @@ module Formtastic #:nodoc:
     #
     def semantic_fields_for(record_or_name_or_array, *args, &block)
       opts = args.extract_options!
-      opts.merge!(:builder => Formtastic::SemanticFormHelper.builder)
+      opts[:builder] ||= Formtastic::SemanticFormHelper.builder
       args.push(opts)
       fields_for(record_or_name_or_array, *args, &block)
     end
@@ -1380,7 +1380,7 @@ module Formtastic #:nodoc:
       src = <<-END_SRC
         def semantic_#{meth}(record_or_name_or_array, *args, &proc)
           options = args.extract_options!
-          options[:builder] = @@builder
+          options[:builder] ||= @@builder
           options[:html] ||= {}
           
           class_names = options[:html][:class] ? options[:html][:class].split(" ") : []
