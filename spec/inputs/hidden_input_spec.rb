@@ -11,6 +11,7 @@ describe 'hidden input' do
     
     semantic_form_for(@new_post) do |builder|
       concat(builder.input(:secret, :as => :hidden))
+      concat(builder.input(:author_id, :as => :hidden, :value => 99))
     end
   end
 
@@ -20,8 +21,12 @@ describe 'hidden input' do
 
   it "should generate a input field" do
     output_buffer.should have_tag("form li input#post_secret")
-    output_buffer.should have_tag("form li input[@type=\"hidden\"]")
-    output_buffer.should have_tag("form li input[@name=\"post[secret]\"]")
+    output_buffer.should have_tag("form li input#post_secret[@type=\"hidden\"]")
+    output_buffer.should have_tag("form li input#post_secret[@name=\"post[secret]\"]")
+  end
+  
+  it "should pass any explicitly specified value" do
+    output_buffer.should have_tag("form li input#post_author_id[@value=\"99\"]")
   end
   
   it "should not render inline errors" do
