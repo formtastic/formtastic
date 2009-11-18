@@ -42,7 +42,7 @@ begin
     s.files = %w(MIT-LICENSE README.textile Rakefile) + Dir.glob("{rails,lib,generators,spec}/**/*")
   end
 rescue LoadError
-  puts "Jeweler, or one of its dependencies, is not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
+  puts "Jeweler, or one of its dependencies, is not available. Install it with: sudo gem install jeweler -s http://gemcutter.org"
 end
 
 desc 'Default: run unit specs.'
