@@ -16,19 +16,6 @@ describe 'SemanticFormBuilder#label' do
     end
   end
 
-  # Note: For styling purposes; making it much easier to style both: LABEL and LEGEND > LABEL
-  #it 'should have class .label (for styling purposes)' do
-  #  semantic_form_for(@new_post) do |builder|
-  #    builder.label(:login).should have_tag('label.label')
-  #  end
-  #end
-
-  #it 'should be printed as span' do
-  #  semantic_form_for(@new_post) do |builder|
-  #    builder.label(:login, nil, { :required => true, :as_span => true }).should have_tag('span.label abbr')
-  #  end
-  #end
-
   describe 'when required is given' do
     it 'should append a required note' do
       semantic_form_for(@new_post) do |builder|
