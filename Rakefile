@@ -22,10 +22,13 @@ begin
   INSTALL_MESSAGE = %q{
   ========================================================================
   Thanks for installing Formtastic!
-  ------------------------------------------------------------------------  
+  ------------------------------------------------------------------------
   You can now (optionally) run the generater to copy some stylesheets and
   a config initializer into your application:
     ./script/generate formtastic
+
+  To generate some semantic form markup for your exisiting models, just run:
+    ./script/generate form MODEL_NAME
 
   Find out more and get involved:
     http://github.com/justinfrench/formtastic

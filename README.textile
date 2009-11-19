@@ -416,6 +416,38 @@ h2. Configuration
 Run @./script/generate formtastic@ to copy a commented out config file into @config/initializers/formtastic.rb@. You can "view the configuration file on GitHub":http://github.com/justinfrench/formtastic/blob/master/generators/formtastic/templates/formtastic.rb
 
 
+h2. Form Generator
+
+There's a Formtastic form code generator to make your transition to Formtastic easier. All you have to do is to *specify an existing model name*, and optionally specify view template framework (ERB/HAML), and you are good to go. *Note:* This won't overwrite any of you stuff. This is how you use it:
+
+*Alt. 1: Generate in terminal:*
+
+<pre>
+$ ./script/generate form Post
+# ---------------------------------------------------------
+#  GENERATED FORMTASTIC CODE
+# ---------------------------------------------------------
+
+<% form.inputs do %>
+  <%= form.input :title, :label => 'Title' %>
+  <%= form.input :body, :label => 'Body' %>
+  <%= form.input :published, :label => 'Published' %>
+<% end %>
+
+# ---------------------------------------------------------
+ Copied to clipboard - just paste it!
+</pre>
+
+*Alt. 2: Generate partial:*
+
+<pre>
+$ ./script/generate form Post --partial
+      exists  app/views/posts
+      create  app/views/posts/_form.html.erb
+</pre>
+
+To generate *HAML* markup, just add the @--haml@ as argument: @./script/generate form Post --haml@
+
 h2. Custom Inputs
 
 If you want to add your own input types to encapsulate your own logic or interface patterns, you can do so by subclassing SemanticFormBuilder and configuring Formtastic to use your custom builder class.
@@ -440,7 +472,6 @@ There are none, but...
 h2. Compatibility
 
 I'm only testing Formtastic with the latest Rails 2.4.x stable release, and it should be fine under Rails 2.3.x as well (including nested forms). Patches are welcome to allow backwards compatibility, but I don't have the energy!
-
 
 h2. Got TextMate?
 
