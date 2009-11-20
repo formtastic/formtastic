@@ -108,8 +108,13 @@ describe 'select input' do
       @authors = [@bob, @fred, @fred, @fred]
       ::Author.stub!(:find).and_return(@authors)
       @continent_names = %w(Europe Africa)
-      @continents = (0..1).map { |i| mock("continent", :id => (100 - i) ) }
+      @continents = (0..1).map { |i| c = ::Continent.new; c.stub!(:id).and_return(100 - i);c }
       @authors[0..1].each_with_index { |author, i| author.stub!(:continent).and_return(@continents[i]) }
+      ::Continent.stub!(:reflect_on_all_associations).and_return {|macro| mock('reflection', :klass => Author) if macro == :has_many}
+      ::Continent.stub!(:reflect_on_association).and_return {|column_name| mock('reflection', :klass => Author) if column_name == :authors}
+      ::Author.stub!(:reflect_on_association).and_return { |column_name| mock('reflection', :options => {}, :klass => Continent, :macro => :belongs_to) if column_name == :continent }
+      
+      
       @continents.each_with_index do |continent, i| 
         continent.stub!(:to_label).and_return(@continent_names[i])
         continent.stub!(:authors).and_return([@authors[i]])

@@ -692,10 +692,11 @@ module Formtastic #:nodoc:
           group_collection = raw_collection.map { |option| option.send(options[:group_by]) }.uniq
           group_label_method = options[:group_label_method] || detect_label_method(group_collection)
           group_collection = group_collection.sort_by { |group_item| group_item.send(group_label_method) }
+          group_association = options[:group_association] || detect_group_association(method, options[:group_by])
 
           # Here comes the monster with 8 arguments
           self.grouped_collection_select(input_name, group_collection,
-                                         method.to_s.pluralize, group_label_method,
+                                         group_association, group_label_method,
                                          value, label, 
                                          strip_formtastic_options(options), html_options)
         else
@@ -1336,6 +1337,47 @@ module Formtastic #:nodoc:
       #
       def detect_label_method(collection) #:nodoc:
         @@collection_label_methods.detect { |m| collection.first.respond_to?(m) }
+      end
+
+      # Detects the method to call for fetching group members from the groups when grouping select options
+      #
+      def detect_group_association(method, group_by)
+        object_to_method_reflection = self.reflection_for(method)
+        method_class = object_to_method_reflection.klass
+        
+        method_to_group_association = method_class.reflect_on_association(group_by)
+        group_class = method_to_group_association.klass
+        
+        # This will return in the normal case
+        return method.to_s.pluralize.to_sym if group_class.reflect_on_association(method.to_s.pluralize)
+      
+        # This is for belongs_to associations named differently than their class
+        # form.input :parent, :group_by => :customer
+        # eg. 
+        # class Project
+        #   belongs_to :parent, :class_name => 'Project', :foreign_key => 'parent_id'
+        #   belongs_to :customer
+        # end
+        # class Customer
+        #   has_many :projects
+        # end
+        group_method = method_class.to_s.underscore.pluralize.to_sym
+        return group_method if group_class.reflect_on_association(group_method) # :projects
+        
+        # This is for has_many associations named differently than their class
+        # eg. 
+        # class Project
+        #   belongs_to :parent, :class_name => 'Project', :foreign_key => 'parent_id'
+        #   belongs_to :customer
+        # end
+        # class Customer
+        #   has_many :tasks, :class_name => 'Project', :foreign_key => 'customer_id'
+        # end
+        possible_associations =  group_class.reflect_on_all_associations(:has_many).find_all{|assoc| assoc.klass == object_class}
+        return possible_associations.first.name.to_sym if possible_associations.count == 1
+      
+        raise "Cannot infer group association for #{method} grouped by #{group_by}, there were #{possible_associations.empty? ? 'no' : possible_associations.size} possible associations. Please specify using :group_association"
+        
       end
 
       # Returns a hash to be used by radio and select inputs when a boolean field
