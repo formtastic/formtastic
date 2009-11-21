@@ -1,4 +1,5 @@
 # coding: utf-8
+require File.join(File.dirname(__FILE__), *%w[formtastic i18n])
 
 module Formtastic #:nodoc:
 
@@ -7,7 +8,7 @@ module Formtastic #:nodoc:
     @@default_text_field_size = 50
     @@all_fields_required_by_default = true
     @@include_blank_for_select_by_default = true
-    @@required_string = proc { %{<abbr title="#{::I18n.t 'formtastic.required', :default => 'required'}">*</abbr>} }
+    @@required_string = proc { %{content_tag(:abbr, '*', :title => ::Formtastic::I18n.t(:required))} }
     @@optional_string = ''
     @@inline_errors = :sentence
     @@label_str_method = :humanize
@@ -319,7 +320,7 @@ module Formtastic #:nodoc:
       fallback_text ||= "#{key.to_s.humanize} {{model}}"
 
       text = (self.localized_string(key, text, :action, :model => object_name) ||
-              ::I18n.t(key, :model => object_name, :default => fallback_text, :scope => [:formtastic])) unless text.is_a?(::String)
+              ::Formtastic::I18n.t(key, :model => object_name)) unless text.is_a?(::String)
 
       button_html = options.delete(:button_html) || {}
       button_html.merge!(:class => [button_html[:class], key].compact.join(' '))
@@ -870,7 +871,8 @@ module Formtastic #:nodoc:
     #
     def date_or_datetime_input(method, options)
       position = { :year => 1, :month => 2, :day => 3, :hour => 4, :minute => 5, :second => 6 }
-      i18n_date_order = ::I18n.translate(:'date.order').is_a?(Array) ? ::I18n.translate(:'date.order') : nil
+      i18n_date_order = ::I18n.t(:order, :scope => [:date])
+      i18n_date_order = nil unless i18n_date_order.is_a?(Array)
       inputs   = options.delete(:order) || i18n_date_order || [:year, :month, :day]
 
       time_inputs = [:hour, :minute]
@@ -1263,8 +1265,8 @@ module Formtastic #:nodoc:
     # is provided.
     #
     def create_boolean_collection(options)
-      options[:true] ||= ::I18n.t(:yes, :default => 'Yes', :scope => [:formtastic])
-      options[:false] ||= ::I18n.t(:no, :default => 'No', :scope => [:formtastic])
+      options[:true] ||= ::Formtastic::I18n.t(:yes)
+      options[:false] ||= ::Formtastic::I18n.t(:no)
       options[:value_as_class] = true unless options.key?(:value_as_class)
 
       [ [ options.delete(:true), true], [ options.delete(:false), false ] ]
@@ -1375,7 +1377,7 @@ module Formtastic #:nodoc:
     #   'formtastic.labels.post.title'
     #   'formtastic.labels.title'
     # 
-    # NOTE: Generic, but only used for form input labels/hints.
+    # NOTE: Generic, but only used for form input titles/labels/hints/actions (titles = legends, actions = buttons).
     #
     def localized_string(key, value, type, options = {})
       key = value if value.is_a?(::Symbol)
@@ -1400,8 +1402,8 @@ module Formtastic #:nodoc:
           end
           defaults << ''
 
-          i18n_value = ::I18n.t(defaults.shift, options.merge(:default => defaults,
-                                :scope => :"formtastic.#{type.to_s.pluralize}"))
+          i18n_value = ::Formtastic::I18n.t(defaults.shift,
+            options.merge(:default => defaults,:scope => type.to_s.pluralize.to_sym))
           i18n_value.blank? ? nil : i18n_value
         end
       end
