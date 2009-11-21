@@ -157,7 +157,7 @@ module CustomMacros
         end
 
         it 'should render a paragraph for the errors' do
-          Formtastic::SemanticFormBuilder.inline_errors = :sentence
+          ::Formtastic::SemanticFormBuilder.inline_errors = :sentence
           semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :as => type))
           end
@@ -165,7 +165,7 @@ module CustomMacros
         end
 
         it 'should not display an error list' do
-          Formtastic::SemanticFormBuilder.inline_errors = :list
+          ::Formtastic::SemanticFormBuilder.inline_errors = :list
           semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :as => type))
           end
@@ -399,7 +399,7 @@ module CustomMacros
         end
 
         describe 'when the :label_method option is not provided' do
-          Formtastic::SemanticFormBuilder.collection_label_methods.each do |label_method|
+          ::Formtastic::SemanticFormBuilder.collection_label_methods.each do |label_method|
 
             describe "when the collection objects respond to #{label_method}" do
               before do

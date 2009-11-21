@@ -84,7 +84,7 @@ describe 'datetime input' do
     end
 
     it 'should be specified with :order option' do
-      I18n.backend.store_translations 'en', :date => { :order => [:month, :year, :day] }
+      ::I18n.backend.store_translations 'en', :date => { :order => [:month, :year, :day] }
       semantic_form_for(@new_post) do |builder|
         self.should_receive(:select_month).once.ordered.and_return('')
         self.should_receive(:select_year).once.ordered.and_return('')
@@ -105,7 +105,7 @@ describe 'datetime input' do
 
   describe 'when the locale changes the label text' do
     before do
-      I18n.backend.store_translations 'en', :datetime => {:prompts => {
+      ::I18n.backend.store_translations 'en', :datetime => {:prompts => {
         :year => 'The Year', :month => 'The Month', :day => 'The Day',
         :hour => 'The Hour', :minute => 'The Minute'
       }}
@@ -115,7 +115,7 @@ describe 'datetime input' do
     end
 
     after do
-      I18n.backend.store_translations 'en', :formtastic => {
+      ::I18n.backend.store_translations 'en', :formtastic => {
         :year => nil, :month => nil, :day => nil,
         :hour => nil, :minute => nil
       }

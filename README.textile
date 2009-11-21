@@ -148,7 +148,7 @@ If you want to customize the label text, or render some hint text below the fiel
 
 <pre>
   <% semantic_form_for @post do |form| %>
-    <% form.inputs :name => "Basic", :id => "basic" do %>
+    <% form.inputs "Basic", :id => "basic" do %>
       <%= form.input :title %>
       <%= form.input :body %>
     <% end %>
@@ -324,11 +324,11 @@ Formtastic supports localized *labels*, *hints*, *legends*, *actions* using the 
 
 *4. Localized titles (a.k.a. legends):*
 
-_Note: Slightly different because Formtastic can't guess how you group fields in a form._
+_Note: Slightly different because Formtastic can't guess how you group fields in a form. Legend text can be set with first (as in the sample below) specified value, or :name/:title options - depending on what flavor is preferred._
 
 <pre>
   <% semantic_form_for @post do |form| %>
-    <% form.inputs :title => :post_details do %>   # => :title => "Post details"
+    <% form.inputs :post_details do %>   # => :title => "Post details"
       # ...
     <% end %>
     # ...

@@ -2,14 +2,51 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe 'select input' do
-  
+
   include FormtasticSpecHelper
-  
+
   before do
     @output_buffer = ''
     mock_everything
   end
-  
+
+  describe 'explicit values' do
+    describe 'using an array of values' do
+      before do
+        @array_with_values = ["Title A", "Title B", "Title C"]
+        @array_with_keys_and_values = [["Title D", 1], ["Title E", 2], ["Title F", 3]]
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:title, :as => :select, :collection => @array_with_values))
+          concat(builder.input(:title, :as => :select, :collection => @array_with_keys_and_values))
+        end
+      end
+
+      it 'should have a option for each key and/or value' do
+        @array_with_values.each do |v|
+          output_buffer.should have_tag("form li select option[@value='#{v}']", /^#{v}$/)
+        end
+        @array_with_keys_and_values.each do |v|
+          output_buffer.should have_tag("form li select option[@value='#{v.second}']", /^#{v.first}$/)
+        end
+      end
+    end
+
+    describe 'using a range' do
+      before do
+        @range_with_values = 1..5
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:title, :as => :select, :collection => @range_with_values))
+        end
+      end
+
+      it 'should have an option for each value' do
+        @range_with_values.each do |v|
+          output_buffer.should have_tag("form li select option[@value='#{v}']", /^#{v}$/)
+        end
+      end
+    end
+  end
+
   describe 'for a belongs_to association' do
     before do
       semantic_form_for(@new_post) do |builder|
@@ -259,5 +296,47 @@ describe 'select input' do
     
   end
 
-end
+  describe 'boolean select' do
+    describe 'default formtastic locale' do
+      before do
+        # Note: Works, but something like Formtastic.root.join(...) would probably be "safer".
+        ::I18n.load_path = [File.join(File.dirname(__FILE__), *%w[.. .. lib locale en.yml])]
+        ::I18n.backend.send(:init_translations)
 
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:published, :as => :select))
+        end
+      end
+
+      after do
+        ::I18n.backend.store_translations :en, {}
+      end
+
+      it 'should render a select with at least options: true/false' do
+        output_buffer.should have_tag("form li select option[@value='true']", /^Yes$/)
+        output_buffer.should have_tag("form li select option[@value='false']", /^No$/)
+      end
+    end
+    
+    describe 'custom locale' do
+      before do
+        @boolean_select_labels = {:yes => 'Yep', :no => 'Nope'}
+        ::I18n.backend.store_translations :en, :formtastic => @boolean_select_labels
+
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:published, :as => :select))
+        end
+      end
+
+      after do
+        ::I18n.backend.store_translations :en, {}
+      end
+
+      it 'should render a select with at least options: true/false' do
+        output_buffer.should have_tag("form li select option[@value='true']", /#{@boolean_select_labels[:yes]}/)
+        output_buffer.should have_tag("form li select option[@value='false']", /#{@boolean_select_labels[:no]}/)
+      end
+    end
+  end
+
+end

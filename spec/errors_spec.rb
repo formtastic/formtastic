@@ -19,14 +19,14 @@ describe 'SemanticFormBuilder#errors_on' do
     end
     
     it 'should render a paragraph with the errors joined into a sentence when inline_errors config is :sentence' do
-      Formtastic::SemanticFormBuilder.inline_errors = :sentence
+      ::Formtastic::SemanticFormBuilder.inline_errors = :sentence
       semantic_form_for(@new_post) do |builder|
         builder.errors_on(:title).should have_tag('p.inline-errors', @title_errors.to_sentence)
       end
     end
     
     it 'should render an unordered list with the class errors when inline_errors config is :list' do
-      Formtastic::SemanticFormBuilder.inline_errors = :list
+      ::Formtastic::SemanticFormBuilder.inline_errors = :list
       semantic_form_for(@new_post) do |builder|
         builder.errors_on(:title).should have_tag('ul.errors')
         @title_errors.each do |error|
@@ -36,14 +36,14 @@ describe 'SemanticFormBuilder#errors_on' do
     end
 
     it 'should render a paragraph with the first error when inline_errors config is :first' do
-      Formtastic::SemanticFormBuilder.inline_errors = :first
+      ::Formtastic::SemanticFormBuilder.inline_errors = :first
       semantic_form_for(@new_post) do |builder|
         builder.errors_on(:title).should have_tag('p.inline-errors', @title_errors.first)
       end
     end
     
     it 'should return nil when inline_errors config is :none' do
-      Formtastic::SemanticFormBuilder.inline_errors = :none
+      ::Formtastic::SemanticFormBuilder.inline_errors = :none
       semantic_form_for(@new_post) do |builder|
         builder.errors_on(:title).should be_nil
       end
@@ -58,7 +58,7 @@ describe 'SemanticFormBuilder#errors_on' do
     
     it 'should return nil when inline_errors config is :sentence, :list or :none' do
       [:sentence, :list, :none].each do |config|
-        Formtastic::SemanticFormBuilder.inline_errors = config
+        ::Formtastic::SemanticFormBuilder.inline_errors = config
         semantic_form_for(@new_post) do |builder|
           builder.errors_on(:title).should be_nil
         end
@@ -73,7 +73,7 @@ describe 'SemanticFormBuilder#errors_on' do
     
     it 'should return nil when inline_errors config is :sentence, :list or :none' do
       [:sentence, :list, :none].each do |config|
-        Formtastic::SemanticFormBuilder.inline_errors = config
+        ::Formtastic::SemanticFormBuilder.inline_errors = config
         semantic_form_for(@new_post) do |builder|
           builder.errors_on(:title).should be_nil
         end

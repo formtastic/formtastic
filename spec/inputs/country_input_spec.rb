@@ -62,7 +62,7 @@ describe 'country input' do
     end
       
     it "should default to the @@priority_countries config when absent" do 
-      priority_countries = Formtastic::SemanticFormBuilder.priority_countries
+      priority_countries = ::Formtastic::SemanticFormBuilder.priority_countries
       priority_countries.should_not be_empty
       priority_countries.should_not be_nil
       

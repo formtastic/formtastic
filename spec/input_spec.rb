@@ -12,7 +12,7 @@ describe 'SemanticFormBuilder#input' do
 
   describe 'with inline order customization' do
     it 'should allow input, hints, errors as order' do
-      Formtastic::SemanticFormBuilder.inline_order = [:input, :hints, :errors]
+      ::Formtastic::SemanticFormBuilder.inline_order = [:input, :hints, :errors]
 
       semantic_form_for(@new_post) do |builder|
         builder.should_receive(:inline_input_for).once.ordered
@@ -23,7 +23,7 @@ describe 'SemanticFormBuilder#input' do
     end
 
     it 'should allow hints, input, errors as order' do
-      Formtastic::SemanticFormBuilder.inline_order = [:hints, :input, :errors]
+      ::Formtastic::SemanticFormBuilder.inline_order = [:hints, :input, :errors]
 
       semantic_form_for(@new_post) do |builder|
         builder.should_receive(:inline_hints_for).once.ordered
@@ -49,12 +49,12 @@ describe 'SemanticFormBuilder#input' do
       describe 'when true' do
 
         before do
-          @string = Formtastic::SemanticFormBuilder.required_string = " required yo!" # ensure there's something in the string
+          @string = ::Formtastic::SemanticFormBuilder.required_string = " required yo!" # ensure there's something in the string
           @new_post.class.should_not_receive(:reflect_on_all_validations)
         end
 
         after do
-          Formtastic::SemanticFormBuilder.required_string = %{<abbr title="required">*</abbr>}
+          ::Formtastic::SemanticFormBuilder.required_string = %{<abbr title="required">*</abbr>}
         end
 
         it 'should set a "required" class' do
@@ -77,12 +77,12 @@ describe 'SemanticFormBuilder#input' do
       describe 'when false' do
 
         before do
-          @string = Formtastic::SemanticFormBuilder.optional_string = " optional yo!" # ensure there's something in the string
+          @string = ::Formtastic::SemanticFormBuilder.optional_string = " optional yo!" # ensure there's something in the string
           @new_post.class.should_not_receive(:reflect_on_all_validations)
         end
 
         after do
-          Formtastic::SemanticFormBuilder.optional_string = ''
+          ::Formtastic::SemanticFormBuilder.optional_string = ''
         end
 
         it 'should set an "optional" class' do
@@ -107,8 +107,8 @@ describe 'SemanticFormBuilder#input' do
         describe 'and an object was not given' do
 
           it 'should use the default value' do
-            Formtastic::SemanticFormBuilder.all_fields_required_by_default.should == true
-            Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
+            ::Formtastic::SemanticFormBuilder.all_fields_required_by_default.should == true
+            ::Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
 
             semantic_form_for(:project, :url => 'http://test.host/') do |builder|
               concat(builder.input(:title))
@@ -116,7 +116,7 @@ describe 'SemanticFormBuilder#input' do
             output_buffer.should_not have_tag('form li.required')
             output_buffer.should have_tag('form li.optional')
 
-            Formtastic::SemanticFormBuilder.all_fields_required_by_default = true
+            ::Formtastic::SemanticFormBuilder.all_fields_required_by_default = true
           end
 
         end
@@ -225,8 +225,8 @@ describe 'SemanticFormBuilder#input' do
           describe 'and the validation reflection plugin is not available' do
 
             it 'should use the default value' do
-              Formtastic::SemanticFormBuilder.all_fields_required_by_default.should == true
-              Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
+              ::Formtastic::SemanticFormBuilder.all_fields_required_by_default.should == true
+              ::Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
 
               semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title))
@@ -234,7 +234,7 @@ describe 'SemanticFormBuilder#input' do
               output_buffer.should_not have_tag('form li.required')
               output_buffer.should have_tag('form li.optional')
 
-              Formtastic::SemanticFormBuilder.all_fields_required_by_default = true
+              ::Formtastic::SemanticFormBuilder.all_fields_required_by_default = true
             end
 
           end
@@ -330,12 +330,12 @@ describe 'SemanticFormBuilder#input' do
         end
 
         describe 'defaulting to file column' do
-          Formtastic::SemanticFormBuilder.file_methods.each do |method|
+          ::Formtastic::SemanticFormBuilder.file_methods.each do |method|
             it "should default to :file for attributes that respond to ##{method}" do
               @new_post.stub!(:column_for_attribute).and_return(nil)
               column = mock('column')
 
-              Formtastic::SemanticFormBuilder.file_methods.each do |test|
+              ::Formtastic::SemanticFormBuilder.file_methods.each do |test|
                 column.stub!(:respond_to?).with(test).and_return(method == test)
               end
 
@@ -401,25 +401,25 @@ describe 'SemanticFormBuilder#input' do
         describe 'when localized label is NOT provided' do
           describe 'and object is not given' do
             it 'should default the humanized method name, passing it down to the label tag' do
-              Formtastic::SemanticFormBuilder.label_str_method = :humanize
-          
+              ::Formtastic::SemanticFormBuilder.label_str_method = :humanize
+
               semantic_form_for(:project, :url => 'http://test.host') do |builder|
                 concat(builder.input(:meta_description))
               end
-          
+
               output_buffer.should have_tag("form li label", /#{'meta_description'.humanize}/)
             end
           end
-          
+
           describe 'and object is given' do
             it 'should delegate the label logic to class human attribute name and pass it down to the label tag' do
               @new_post.stub!(:meta_description) # a two word method name
               @new_post.class.should_receive(:human_attribute_name).with('meta_description').and_return('meta_description'.humanize)
-          
+
               semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:meta_description))
               end
-          
+
               output_buffer.should have_tag("form li label", /#{'meta_description'.humanize}/)
             end
           end
