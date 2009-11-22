@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Justin French"]
   s.autorequire = %q{formtastic}
-  s.date = %q{2009-11-17}
+  s.date = %q{2009-11-23}
   s.description = %q{A Rails form builder plugin/gem with semantically rich and accessible markup}
   s.email = %q{justin@indent.com.au}
   s.extra_rdoc_files = [
@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
      "generators/formtastic/templates/formtastic_changes.css",
      "generators/formtastic_stylesheets/formtastic_stylesheets_generator.rb",
      "lib/formtastic.rb",
+     "lib/formtastic/i18n.rb",
      "lib/locale/en.yml",
      "rails/init.rb",
      "spec/buttons_spec.rb",
@@ -39,6 +40,7 @@ Gem::Specification.new do |s|
      "spec/error_proc_spec.rb",
      "spec/errors_spec.rb",
      "spec/form_helper_spec.rb",
+     "spec/i18n_spec.rb",
      "spec/include_blank_spec.rb",
      "spec/input_spec.rb",
      "spec/inputs/boolean_input_spec.rb",
@@ -66,10 +68,13 @@ Gem::Specification.new do |s|
   s.post_install_message = %q{
   ========================================================================
   Thanks for installing Formtastic!
-  ------------------------------------------------------------------------  
+  ------------------------------------------------------------------------
   You can now (optionally) run the generater to copy some stylesheets and
   a config initializer into your application:
     ./script/generate formtastic
+
+  To generate some semantic form markup for your exisiting models, just run:
+    ./script/generate form MODEL_NAME
 
   Find out more and get involved:
     http://github.com/justinfrench/formtastic
@@ -88,6 +93,7 @@ Gem::Specification.new do |s|
      "spec/error_proc_spec.rb",
      "spec/errors_spec.rb",
      "spec/form_helper_spec.rb",
+     "spec/i18n_spec.rb",
      "spec/include_blank_spec.rb",
      "spec/input_spec.rb",
      "spec/inputs/boolean_input_spec.rb",
@@ -116,8 +122,23 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
+      s.add_runtime_dependency(%q<activesupport>, [">= 2.3.0"])
+      s.add_runtime_dependency(%q<actionpack>, [">= 2.3.0"])
+      s.add_development_dependency(%q<rspec-rails>, [">= 1.2.6"])
+      s.add_development_dependency(%q<hpricot>, [">= 0.6.1"])
+      s.add_development_dependency(%q<rspec_hpricot_matchers>, [">= 1.0.0"])
     else
+      s.add_dependency(%q<activesupport>, [">= 2.3.0"])
+      s.add_dependency(%q<actionpack>, [">= 2.3.0"])
+      s.add_dependency(%q<rspec-rails>, [">= 1.2.6"])
+      s.add_dependency(%q<hpricot>, [">= 0.6.1"])
+      s.add_dependency(%q<rspec_hpricot_matchers>, [">= 1.0.0"])
     end
   else
+    s.add_dependency(%q<activesupport>, [">= 2.3.0"])
+    s.add_dependency(%q<actionpack>, [">= 2.3.0"])
+    s.add_dependency(%q<rspec-rails>, [">= 1.2.6"])
+    s.add_dependency(%q<hpricot>, [">= 0.6.1"])
+    s.add_dependency(%q<rspec_hpricot_matchers>, [">= 1.0.0"])
   end
 end
