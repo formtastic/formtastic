@@ -54,13 +54,15 @@ begin
     
     # Runtime dependencies: When installing Formtastic these will be checked if they are installed.
     # Will be offered to install these if they are not already installed.
-    s.add_dependency 'activesupport', '>= 2.3.0'
-    s.add_dependency 'actionpack', '>= 2.3.0'
+    s.add_dependency 'active_support', '>= 2.3.0'
+    s.add_dependency 'action_controller', '>= 2.3.0'
+    s.add_dependency 'action_view', '>= 2.3.0'
     
     # Development dependencies. Not installed by default.
     # Install with: sudo gem install formtastic --development
     s.add_development_dependency 'rspec-rails', '>= 1.2.6'
-    s.add_development_dependency 'rspec_tag_matchers', '>= 1.0.0'
+    s.add_development_dependency 'hpricot', '>= 0.6.1' # for: rspec_hpricot_matchers
+    s.add_development_dependency 'rspec_hpricot_matchers', '>= 1.0.0'
   end
   
   Jeweler::GemcutterTasks.new
