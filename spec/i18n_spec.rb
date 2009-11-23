@@ -80,4 +80,48 @@ describe 'Formtastic::I18n' do
     
   end
   
+  describe "I18n string lookups" do
+    
+    include FormtasticSpecHelper
+    
+    before do
+      @output_buffer = ''
+      mock_everything
+      
+      ::I18n.backend.store_translations :en, :formtastic => {
+          :labels => {
+              :title    => "Hello world!",
+              :post     => {:title => "Hello post!"},
+              :project  => {:title => "Hello project!"}
+            }
+        }
+      ::Formtastic::SemanticFormBuilder.i18n_lookups_by_default = true
+      
+      @new_post.stub!(:title)
+      @new_post.stub!(:column_for_attribute).with(:title).and_return(mock('column', :type => :string, :limit => 255))
+    end
+    
+    after do
+      ::I18n.backend.store_translations :en, :formtastic => nil
+      ::Formtastic::SemanticFormBuilder.i18n_lookups_by_default = false
+    end
+    
+    it "should be able to translate with namespaced object" do
+      semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:title))
+      end
+      output_buffer.should have_tag("form label", /Hello post!/)
+    end
+    
+    it "should be able to translate without form-object" do
+      semantic_form_for(:project, :url => 'http://test.host') do |builder|
+        concat(builder.input(:title))
+      end
+      output_buffer.should have_tag("form label", /Hello project!/)
+    end
+    
+    # TODO: Add spec for namespaced models?
+    
+  end
+  
 end
