@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{formtastic}
-  s.version = "0.9.3"
+  s.version = "0.9.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Justin French"]
-  s.date = %q{2009-11-23}
+  s.date = %q{2009-11-24}
   s.description = %q{A Rails form builder plugin/gem with semantically rich and accessible markup}
   s.email = %q{justin@indent.com.au}
   s.extra_rdoc_files = [
@@ -36,6 +36,7 @@ Gem::Specification.new do |s|
      "spec/commit_button_spec.rb",
      "spec/custom_builder_spec.rb",
      "spec/custom_macros.rb",
+     "spec/defaults_spec.rb",
      "spec/error_proc_spec.rb",
      "spec/errors_spec.rb",
      "spec/form_helper_spec.rb",
@@ -89,6 +90,7 @@ Gem::Specification.new do |s|
      "spec/commit_button_spec.rb",
      "spec/custom_builder_spec.rb",
      "spec/custom_macros.rb",
+     "spec/defaults_spec.rb",
      "spec/error_proc_spec.rb",
      "spec/errors_spec.rb",
      "spec/form_helper_spec.rb",
