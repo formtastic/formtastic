@@ -49,7 +49,6 @@ begin
     s.post_install_message = INSTALL_MESSAGE
     
     s.require_path = 'lib'
-    s.autorequire = GEM
     s.files = %w(MIT-LICENSE README.textile Rakefile) + Dir.glob("{rails,lib,generators,spec}/**/*")
     
     # Runtime dependencies: When installing Formtastic these will be checked if they are installed.
