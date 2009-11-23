@@ -49,12 +49,13 @@ describe 'SemanticFormBuilder#input' do
       describe 'when true' do
 
         before do
-          @string = ::Formtastic::SemanticFormBuilder.required_string = " required yo!" # ensure there's something in the string
+          @old_string = ::Formtastic::SemanticFormBuilder.required_string
+          @new_string = ::Formtastic::SemanticFormBuilder.required_string = " required yo!" # ensure there's something in the string
           @new_post.class.should_not_receive(:reflect_on_all_validations)
         end
 
         after do
-          ::Formtastic::SemanticFormBuilder.required_string = %{<abbr title="required">*</abbr>}
+          ::Formtastic::SemanticFormBuilder.required_string = @old_string
         end
 
         it 'should set a "required" class' do
@@ -69,7 +70,7 @@ describe 'SemanticFormBuilder#input' do
           semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :required => true))
           end
-          output_buffer.should have_tag('form li.required label', /#{@string}$/)
+          output_buffer.should have_tag('form li.required label', /#{@new_string}$/)
         end
 
       end
