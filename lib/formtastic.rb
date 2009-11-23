@@ -27,10 +27,6 @@ module Formtastic #:nodoc:
 
     INLINE_ERROR_TYPES = [:sentence, :list, :first]
 
-    I18N_SCOPES = [ '{{model}}.{{action}}.{{attribute}}',
-                    '{{model}}.{{attribute}}',
-                    '{{attribute}}']
-
     attr_accessor :template
 
     # Returns a suitable form input for the given +method+, using the database column information
@@ -1383,7 +1379,7 @@ module Formtastic #:nodoc:
           action_name = template.params[:action].to_s rescue ''
           attribute_name = key.to_s
 
-          defaults = I18N_SCOPES.collect do |i18n_scope|
+          defaults = ::Formtastic::I18n::SCOPES.collect do |i18n_scope|
             i18n_path = i18n_scope.dup
             i18n_path.gsub!('{{action}}', action_name)
             i18n_path.gsub!('{{model}}', model_name)

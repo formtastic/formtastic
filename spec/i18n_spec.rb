@@ -106,6 +106,10 @@ describe 'Formtastic::I18n' do
       ::Formtastic::SemanticFormBuilder.i18n_lookups_by_default = false
     end
     
+    it "lookup scopes should be defined" do
+      lambda { ::Formtastic::I18n::SCOPES }.should_not raise_error(::NameError)
+    end
+    
     it "should be able to translate with namespaced object" do
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:title))
