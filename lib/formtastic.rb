@@ -1384,7 +1384,7 @@ module Formtastic #:nodoc:
         use_i18n = value.nil? ? @@i18n_lookups_by_default : (value != false)
 
         if use_i18n
-          model_name  = (@object ? @object.class.name : @object_name.to_s.send(@@label_str_method)).underscore
+          model_name  = (@object ? @object.class.name : @object_name.to_s).underscore
           action_name = template.params[:action].to_s rescue ''
           attribute_name = key.to_s
 
