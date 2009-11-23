@@ -27,9 +27,8 @@ Spec::Runner.configure do |config|
   config.include(CustomMacros)
 end
 
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..'))
+require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic'))
 
-require 'lib/formtastic'
 
 module FormtasticSpecHelper
   include ActionView::Helpers::FormHelper
