@@ -871,8 +871,15 @@ module Formtastic #:nodoc:
       list_items_capture = ""
       hidden_fields_capture = ""
 
+      default_time = Time.now
+
+      # FIXME: Why is @object nil when running specs? Grrr...
+      if @object.present? && @object.send(method).blank?
+        @object.send(:"#{method}=", default_time)
+      end
+
       # Gets the datetime object. It can be a Fixnum, Date or Time, or nil.
-      datetime     = @object ? @object.send(method) : nil
+      datetime     = @object ? @object.send(method) : default_time
       html_options = options.delete(:input_html) || {}
       input_ids    = []
 

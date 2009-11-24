@@ -174,7 +174,10 @@ module FormtasticSpecHelper
     
     @new_post.stub!(:author).and_return(@bob)
     @new_post.stub!(:author_id).and_return(@bob.id)
-        
+    
+    @new_post.should_receive(:publish_at=).any_number_of_times
+    #@new_post.should_receive(:publish_at=).any_number_of_times
+    @new_post.should_receive(:title=).any_number_of_times
   end
   
   def self.included(base)

@@ -9,6 +9,11 @@ describe 'datetime input' do
     @output_buffer = ''
     mock_everything
     
+    @new_post.should_receive(:publish_at=).any_number_of_times
+    @new_post.should_receive(:created_at=).any_number_of_times
+    @bob.should_receive(:created_at=).any_number_of_times
+    @new_post.should_receive(:title=).any_number_of_times # Macro stuff forces this.
+    
     semantic_form_for(@new_post) do |builder|
       concat(builder.input(:publish_at, :as => :datetime))
     end
@@ -53,6 +58,8 @@ describe 'datetime input' do
       output_buffer.should have_tag("form li fieldset ol li #post_author_10_created_at_#{i}i")
     end
   end
+
+  it_should_select_existing_datetime_else_current(:year, :month, :day, :hour, :minute)
 
   describe 'when :discard_input => true is set' do
     it 'should use default hidden value equals to 1 when attribute returns nil' do

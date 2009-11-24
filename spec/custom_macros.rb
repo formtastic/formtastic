@@ -75,6 +75,7 @@ module CustomMacros
     def it_should_use_default_text_field_size_when_method_has_no_database_column(as)
       it 'should use default_text_field_size when method has no database column' do
         @new_post.stub!(:column_for_attribute).and_return(nil) # Return a nil column
+        
         semantic_form_for(@new_post) do |builder|
           concat(builder.input(:title, :as => as))
         end
@@ -222,7 +223,61 @@ module CustomMacros
         end
       end
     end
-    
+
+    def it_should_select_existing_datetime_else_current(*datetime_parts)
+      describe "default value" do
+        before do
+          @new_post.should_receive(:publish_at=).any_number_of_times
+        end
+
+        describe "when attribute value is present" do
+          before do
+            @output_buffer = ''
+            publish_at_value = 1.year.ago + 2.month + 3.day + 4.hours + 5.minutes # No comment =)
+            @new_post.stub!(:publish_at).and_return(publish_at_value)
+
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:publish_at, :as => :datetime))
+            end
+          end
+
+          it "should select the present value by default" do
+            # puts output_buffer
+            output_buffer.should have_tag("form li select#post_publish_at_1i option[@selected='selected'][@value='#{@new_post.publish_at.year}']") if datetime_parts.include?(:year)
+            output_buffer.should have_tag("form li select#post_publish_at_2i option[@selected='selected'][@value='#{@new_post.publish_at.month}']") if datetime_parts.include?(:month)
+            output_buffer.should have_tag("form li select#post_publish_at_3i option[@selected='selected'][@value='#{@new_post.publish_at.day}']") if datetime_parts.include?(:day)
+            output_buffer.should have_tag("form li select#post_publish_at_4i option[@selected='selected'][@value='#{@new_post.publish_at.strftime("%H")}']") if datetime_parts.include?(:hour)
+            output_buffer.should have_tag("form li select#post_publish_at_5i option[@selected='selected'][@value='#{@new_post.publish_at.min}']") if datetime_parts.include?(:minute)
+            # output_buffer.should have_tag("form li select#post_publish_at_6i option[@selected='selected'][@value='#{@new_post.publish_at.sec}']") if datetime_parts.include?(:second)
+          end
+        end
+
+        describe "when no attribute value is present" do
+          before do
+            @output_buffer = ''
+            @new_post.stub!(:publish_at).and_return(nil)
+            @current_time = ::Time.now
+
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:publish_at, :as => :datetime))
+            end
+          end
+
+          it "should select the current day/time by default" do
+            # puts output_buffer
+            output_buffer.should have_tag("form li select#post_publish_at_1i option[@selected='selected'][@value='#{@current_time.year}']") if datetime_parts.include?(:year)
+            output_buffer.should have_tag("form li select#post_publish_at_2i option[@selected='selected'][@value='#{@current_time.month}']") if datetime_parts.include?(:month)
+            output_buffer.should have_tag("form li select#post_publish_at_3i option[@selected='selected'][@value='#{@current_time.day}']") if datetime_parts.include?(:day)
+            output_buffer.should have_tag("form li select#post_publish_at_4i option[@selected='selected'][@value='#{@current_time.strftime("%H")}']") if datetime_parts.include?(:hour)
+            output_buffer.should have_tag("form li select#post_publish_at_5i option[@selected='selected'][@value='#{@current_time.strftime("%M")}']") if datetime_parts.include?(:minute)
+            # output_buffer.should have_tag("form li select#post_publish_at_6i option[@selected='selected'][@value='#{@current_time.sec}']") if datetime_parts.include?(:second)
+          end
+
+          # TODO: Scenario when current time is not a possible choice (because of specified date/time ranges)?
+        end
+      end
+    end
+
     def it_should_use_the_collection_when_provided(as, countable)
       describe 'when the :collection option is provided' do
 
@@ -456,6 +511,4 @@ module CustomMacros
     end
 
   end
-  
-  
 end
