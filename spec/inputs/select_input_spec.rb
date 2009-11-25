@@ -103,6 +103,17 @@ describe 'select input' do
     end
   end
   
+  describe "for a belongs_to association with :group_by => :author" do
+    it "should call author.posts" do
+      [@freds_post].each { |post| post.stub!(:to_label).and_return("Post - #{post.id}") }
+      @fred.should_receive(:posts)
+
+      semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:main_post, :as => :select, :group_by => :author ) )
+      end
+    end
+  end
+
   describe 'for a belongs_to association with :group_by => :continent' do
     before do
       @authors = [@bob, @fred, @fred, @fred]
