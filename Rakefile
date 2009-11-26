@@ -23,7 +23,7 @@ begin
   ========================================================================
   Thanks for installing Formtastic!
   ------------------------------------------------------------------------
-  You can now (optionally) run the generater to copy some stylesheets and
+  You can now (optionally) run the generator to copy some stylesheets and
   a config initializer into your application:
     ./script/generate formtastic
 
