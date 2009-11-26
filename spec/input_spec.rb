@@ -400,9 +400,8 @@ describe 'SemanticFormBuilder#input' do
 
       describe 'when not provided' do
         describe 'when localized label is NOT provided' do
-          describe 'and object is not given' do
+          describe 'and label_str_method is not provided' do
             it 'should default the humanized method name, passing it down to the label tag' do
-              ::Formtastic::SemanticFormBuilder.label_str_method = :humanize
 
               semantic_form_for(:project, :url => 'http://test.host') do |builder|
                 concat(builder.input(:meta_description))
@@ -412,16 +411,17 @@ describe 'SemanticFormBuilder#input' do
             end
           end
 
-          describe 'and object is given' do
-            it 'should delegate the label logic to class human attribute name and pass it down to the label tag' do
-              @new_post.stub!(:meta_description) # a two word method name
-              @new_post.class.should_receive(:human_attribute_name).with('meta_description').and_return('meta_description'.humanize)
+          describe 'and label_str_method is :capitalize' do
+            it 'should capitalize method name, passing it down to the label tag' do
+              old_value = ::Formtastic::SemanticFormBuilder.label_str_method
+              ::Formtastic::SemanticFormBuilder.label_str_method = :capitalize
 
-              semantic_form_for(@new_post) do |builder|
+              semantic_form_for(:project, :url => 'http://test.host') do |builder|
                 concat(builder.input(:meta_description))
               end
 
-              output_buffer.should have_tag("form li label", /#{'meta_description'.humanize}/)
+              output_buffer.should have_tag("form li label", /#{'meta_description'.capitalize}/)
+              ::Formtastic::SemanticFormBuilder.label_str_method = old_value
             end
           end
         end
