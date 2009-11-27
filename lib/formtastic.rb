@@ -416,13 +416,13 @@ module Formtastic #:nodoc:
 
       # Collects content columns (non-relation columns) for the current form object class.
       #
-      def content_columns
+      def content_columns #:nodoc:
         self.model_name.constantize.content_columns.collect { |c| c.name.to_sym }.compact rescue []
       end
 
       # Collects association columns (relation columns) for the current form object class.
       #
-      def association_columns(*by_associations)
+      def association_columns(*by_associations) #:nodoc:
         if @object.present?
           @object.class.reflections.collect do |name, _|
             if by_associations.present?
@@ -438,7 +438,7 @@ module Formtastic #:nodoc:
 
       # Prepare options to be sent to label
       #
-      def options_for_label(options)
+      def options_for_label(options) #:nodoc:
         options.slice(:label, :required).merge!(options.fetch(:label_html, {}))
       end
 
@@ -1167,7 +1167,7 @@ module Formtastic #:nodoc:
         fieldset
       end
 
-      def field_set_title_from_args(*args)
+      def field_set_title_from_args(*args) #:nodoc:
         options = args.extract_options!
         options[:name] ||= options.delete(:title)
         title = options[:name]
@@ -1184,7 +1184,7 @@ module Formtastic #:nodoc:
       # Also generates a fieldset and an ordered list but with label based in
       # method. This methods is currently used by radio and datetime inputs.
       #
-      def field_set_and_list_wrapping_for_method(method, options, contents)
+      def field_set_and_list_wrapping_for_method(method, options, contents) #:nodoc:
         contents = contents.join if contents.respond_to?(:join)
 
         template.content_tag(:fieldset,
@@ -1241,7 +1241,7 @@ module Formtastic #:nodoc:
       # we use label_method and value_method to retreive an array with the
       # appropriate label and value.
       #
-      def find_collection_for_column(column, options)
+      def find_collection_for_column(column, options) #:nodoc:
         collection = find_raw_collection_for_column(column, options)
 
         # Return if we have an Array of strings, fixnums or arrays
@@ -1291,7 +1291,7 @@ module Formtastic #:nodoc:
       # Returns a hash to be used by radio and select inputs when a boolean field
       # is provided.
       #
-      def create_boolean_collection(options)
+      def create_boolean_collection(options) #:nodoc:
         options[:true] ||= ::Formtastic::I18n.t(:yes)
         options[:false] ||= ::Formtastic::I18n.t(:no)
         options[:value_as_class] = true unless options.key?(:value_as_class)
@@ -1307,7 +1307,7 @@ module Formtastic #:nodoc:
       #   has_many :authors; f.input :authors; will generate 'author_ids'
       #   has_and_belongs_to_many will act like has_many
       #
-      def generate_association_input_name(method)
+      def generate_association_input_name(method) #:nodoc:
         if reflection = find_reflection(method)
           if [:has_and_belongs_to_many, :has_many].include?(reflection.macro)
             "#{method.to_s.singularize}_ids"
@@ -1322,7 +1322,7 @@ module Formtastic #:nodoc:
       # If an association method is passed in (f.input :author) try to find the
       # reflection object.
       #
-      def find_reflection(method)
+      def find_reflection(method) #:nodoc:
         @object.class.reflect_on_association(method) if @object.class.respond_to?(:reflect_on_association)
       end
 
@@ -1344,7 +1344,7 @@ module Formtastic #:nodoc:
       # elements with appropriate index scope. It also sanitizes the object
       # and method names.
       #
-      def generate_html_id(method_name, value='input')
+      def generate_html_id(method_name, value='input') #:nodoc:
         if options.has_key?(:index)
           index = "_#{options[:index]}"
         elsif defined?(@auto_index)
@@ -1361,7 +1361,7 @@ module Formtastic #:nodoc:
       # it always returns a fixnum. In next versions it returns a hash with each
       # association that the parent builds.
       #
-      def parent_child_index(parent)
+      def parent_child_index(parent) #:nodoc:
         duck = parent[:builder].instance_variable_get('@nested_child_index')
 
         if duck.is_a?(Hash)
@@ -1373,11 +1373,11 @@ module Formtastic #:nodoc:
         end
       end
 
-      def sanitized_object_name
+      def sanitized_object_name #:nodoc:
         @sanitized_object_name ||= @object_name.to_s.gsub(/\]\[|[^-a-zA-Z0-9:.]/, "_").sub(/_$/, "")
       end
 
-      def humanized_attribute_name(method)
+      def humanized_attribute_name(method) #:nodoc:
         if @object && @object.class.respond_to?(:human_attribute_name)
           @object.class.human_attribute_name(method.to_s)
         else
@@ -1406,7 +1406,7 @@ module Formtastic #:nodoc:
       # 
       # NOTE: Generic, but only used for form input titles/labels/hints/actions (titles = legends, actions = buttons).
       #
-      def localized_string(key, value, type, options = {})
+      def localized_string(key, value, type, options = {}) #:nodoc:
         key = value if value.is_a?(::Symbol)
 
         if value.is_a?(::String)
