@@ -8,7 +8,7 @@ describe 'time_zone input' do
   before do
     @output_buffer = ''
     mock_everything
-
+    
     semantic_form_for(@new_post) do |builder|
       concat(builder.input(:time_zone))
     end
@@ -56,4 +56,47 @@ describe 'time_zone input' do
       output_buffer.should have_tag("form li select[@name=\"project[time_zone]\"]")
     end
   end
+  
+  describe 'when :selected is set' do
+    before do
+      @output_buffer = ''
+    end
+
+    # Note: Not possible to override default selected value for time_zone input
+    # without overriding Rails time_zone_select. This Rails helper works "a bit different". =/
+    #
+    # describe "no selected items" do
+    #   before do
+    #     @new_post.stub!(:time_zone).and_return('Stockholm')
+    # 
+    #     semantic_form_for(@new_post) do |builder|
+    #       concat(builder.input(:time_zone, :as => :time_zone, :selected => nil))
+    #     end
+    #   end
+    # 
+    #   it 'should not have any selected item(s)' do
+    #     output_buffer.should_not have_tag("form li select option[@selected='selected']")
+    #   end
+    # end
+
+    describe "single selected item" do
+      before do
+        # Note: See above...only works for the "attribute is nil" case.
+        # @new_post.stub!(:time_zone).and_return('Stockholm')
+        @new_post.stub!(:time_zone).and_return(nil)
+
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:time_zone, :as => :time_zone, :selected => 'Melbourne'))
+        end
+      end
+
+      it 'should have a selected item; the specified one' do
+        output_buffer.should have_tag("form li select option[@selected='selected']", :count => 1)
+        output_buffer.should have_tag("form li select option[@selected='selected']", /Melbourne/i)
+        output_buffer.should have_tag("form li select option[@selected='selected'][@value='Melbourne']")
+      end
+    end
+
+  end
+
 end
