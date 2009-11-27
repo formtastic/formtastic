@@ -448,7 +448,7 @@ module Formtastic #:nodoc:
       #
       # It should raise an error if a block with arity zero is given.
       #
-      def inputs_for_nested_attributes(*args, &block)
+      def inputs_for_nested_attributes(*args, &block) #:nodoc:
         options = args.extract_options!
         args << options.merge!(:parent => { :builder => self, :for => options[:for] })
 
@@ -467,7 +467,7 @@ module Formtastic #:nodoc:
 
       # Remove any Formtastic-specific options before passing the down options.
       #
-      def set_options(options)
+      def strip_formtastic_options(options) #:nodoc:
         options.except(:value_method, :label_method, :collection, :required, :label,
                        :as, :hint, :input_html, :label_html, :value_as_class)
       end
@@ -515,7 +515,7 @@ module Formtastic #:nodoc:
         if_condition ? !!condition : !condition
       end
 
-      def basic_input_helper(form_helper_method, type, method, options)
+      def basic_input_helper(form_helper_method, type, method, options) #:nodoc:
         html_options = options.delete(:input_html) || {}
         html_options = default_string_options(method, type).merge(html_options) if [:numeric, :string, :password].include?(type)
 
@@ -557,7 +557,7 @@ module Formtastic #:nodoc:
         if options[:input_html].present?
           options[:value] = options[:input_html][:value] if options[:input_html][:value].present?
         end
-        self.hidden_field(method, set_options(options))
+        self.hidden_field(method, strip_formtastic_options(options))
       end
 
       # Outputs a label and a select box containing options from the parent
@@ -691,10 +691,10 @@ module Formtastic #:nodoc:
           self.grouped_collection_select(input_name, group_collection,
                                          method.to_s.pluralize, group_label_method,
                                          value, label, 
-                                         set_options(options), html_options)
+                                         strip_formtastic_options(options), html_options)
         else
           collection = find_collection_for_column(method, options)
-          self.select(input_name, collection, set_options(options), html_options)
+          self.select(input_name, collection, strip_formtastic_options(options), html_options)
         end
 
         self.label(method, options_for_label(options).merge(:input_name => input_name)) << select_html
@@ -712,7 +712,7 @@ module Formtastic #:nodoc:
         html_options = options.delete(:input_html) || {}
 
         self.label(method, options_for_label(options)) <<
-        self.time_zone_select(method, options.delete(:priority_zones), set_options(options), html_options)
+        self.time_zone_select(method, options.delete(:priority_zones), strip_formtastic_options(options), html_options)
       end
 
       # Outputs a fieldset containing a legend for the label text, and an ordered list (ol) of list
@@ -778,7 +778,7 @@ module Formtastic #:nodoc:
       # applying specific CSS or Javascript to a particular radio button).
       def radio_input(method, options)
         collection   = find_collection_for_column(method, options)
-        html_options = set_options(options).merge(options.delete(:input_html) || {})
+        html_options = strip_formtastic_options(options).merge(options.delete(:input_html) || {})
 
         input_name = generate_association_input_name(method)
         value_as_class = options.delete(:value_as_class)
@@ -900,7 +900,7 @@ module Formtastic #:nodoc:
             hidden_value = datetime.respond_to?(input) ? datetime.send(input.to_sym) : datetime
             hidden_fields_capture << template.hidden_field_tag("#{@object_name}[#{field_name}]", (hidden_value || 1), :id => input_id)
           else
-            opts = set_options(options).merge(:prefix => @object_name, :field_name => field_name)
+            opts = strip_formtastic_options(options).merge(:prefix => @object_name, :field_name => field_name)
             item_label_text = ::I18n.t(input.to_s, :default => input.to_s.humanize, :scope => [:datetime, :prompts])
 
             list_items_capture << template.content_tag(:li,
@@ -1039,7 +1039,7 @@ module Formtastic #:nodoc:
         priority_countries = options.delete(:priority_countries) || @@priority_countries
 
         self.label(method, options_for_label(options)) <<
-        self.country_select(method, priority_countries, set_options(options), html_options)
+        self.country_select(method, priority_countries, strip_formtastic_options(options), html_options)
       end
 
       # Outputs a label containing a checkbox and the label text. The label defaults
@@ -1057,7 +1057,7 @@ module Formtastic #:nodoc:
         checked = options.key?(:checked) ? options[:checked] : options[:selected]
         html_options[:checked] = checked == true if [:selected, :checked].any? { |k| options.key?(k) }
 
-        input = self.check_box(method, set_options(options).merge(html_options),
+        input = self.check_box(method, strip_formtastic_options(options).merge(html_options),
                                options.delete(:checked_value) || '1', options.delete(:unchecked_value) || '0')
         options = options_for_label(options)
 
