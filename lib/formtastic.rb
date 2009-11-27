@@ -635,6 +635,8 @@ module Formtastic #:nodoc:
     #  
     #   f.input :author, :selected => current_user.id
     #   f.input :author, :value_method => :login, :selected => current_user.login
+    #   f.input :authors, :value_method => :login, :selected => Author.most_popular.collect(&:id)
+    #   f.input :authors, :value_method => :login, :selected => nil   # override any defaults: select none
     #
     # You can pass html_options to the select tag using :input_html => {}
     #
@@ -662,13 +664,15 @@ module Formtastic #:nodoc:
     def select_input(method, options)
       html_options = options.delete(:input_html) || {}
       options = set_include_blank(options)
+      html_options[:multiple] = options.delete(:multiple) if html_options[:multiple].nil?
 
       reflection = find_reflection(method)
       if reflection && [ :has_many, :has_and_belongs_to_many ].include?(reflection.macro)
         options[:include_blank]   = false
-        html_options[:multiple] ||= true
+        html_options[:multiple] = true if html_options[:multiple].nil?
         html_options[:size]     ||= 5
       end
+      options[:selected] = options[:selected].first if options[:selected].present? && html_options[:multiple] == false
       input_name = generate_association_input_name(method)
 
       select_html = if options[:group_by]
@@ -967,9 +971,18 @@ module Formtastic #:nodoc:
     #   f.input :author, :as => :check_boxes, :value_method => :login
     #   f.input :author, :as => :check_boxes, :value_method => Proc.new { |a| "author_#{a.login}" }
     #
+    # You can pre-select/check a specific checkbox value by passing in the :selected option (alias :checked works as well).
+    # 
+    # Examples:
+    #  
+    #   f.input :authors, :as => :check_boxes, :selected => @justin
+    #   f.input :authors, :as => :check_boxes, :selected => Author.most_popular.collect(&:id)
+    #   f.input :authors, :as => :check_boxes, :selected => nil   # override any defaults: select none
+    
     # Finally, you can set :value_as_class => true if you want the li wrapper around each checkbox / label 
     # combination to contain a class with the value of the radio button (useful for applying specific 
     # CSS or Javascript to a particular checkbox).
+    #
     def check_boxes_input(method, options)
       collection = find_collection_for_column(method, options)
       html_options = options.delete(:input_html) || {}
@@ -979,6 +992,8 @@ module Formtastic #:nodoc:
       unchecked_value = options.delete(:unchecked_value) || ''
       html_options    = { :name => "#{@object_name}[#{input_name}][]" }.merge(html_options)
       input_ids       = []
+      checked_values  = options.key?(:checked) ? options[:checked] : options[:selected]
+      checked_values  = [*checked_values].compact
 
       list_item_content = collection.map do |c|
         label = c.is_a?(Array) ? c.first : c
@@ -986,6 +1001,7 @@ module Formtastic #:nodoc:
 
         input_ids << input_id = generate_html_id(input_name, value.to_s.gsub(/\s/, '_').gsub(/\W/, '').downcase)
         html_options.merge!(:id => input_id)
+        html_options[:checked] = checked_values.include?(value) if [:selected, :checked].any? { |k| options.key?(k) }
 
         li_content = template.content_tag(:label,
           "#{self.check_box(input_name, html_options, value, unchecked_value)} #{label}",

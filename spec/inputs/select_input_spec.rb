@@ -279,21 +279,75 @@ describe 'select input' do
 
   describe 'when :selected is set' do
     before do
-      @new_post.stub!(:author_id).and_return(nil)
-      semantic_form_for(@new_post) do |builder|
-        concat(builder.input(:author, :as => :select, :selected => @bob.id ))
+      @output_buffer = ''
+    end
+
+    describe "no selected items" do
+      before do
+        @new_post.stub!(:author_id).and_return(nil)
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:author, :as => :select, :selected => nil))
+        end
+      end
+
+      it 'should have a selected item; the specified one' do
+        output_buffer.should_not have_tag("form li select option[@selected='selected']")
       end
     end
-     
-    it 'should have a selected item' do
-      output_buffer.should have_tag("form li select option[@selected='selected']")
+
+    describe "single selected item" do
+      before do
+        @new_post.stub!(:author_id).and_return(nil)
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:author, :as => :select, :selected => @bob.id))
+        end
+      end
+
+      it 'should have a selected item; the specified one' do
+        output_buffer.should have_tag("form li select option[@selected='selected']", :count => 1)
+        output_buffer.should have_tag("form li select option[@selected='selected']", /bob/i)
+        output_buffer.should have_tag("form li select option[@selected='selected'][@value='#{@bob.id}']")
+      end
     end
-    
-    it 'bob should be selected' do
-      output_buffer.should have_tag("form li select option[@selected='selected']", /bob/i)
-      output_buffer.should have_tag("form li select option[@selected='selected'][@value='42']")
+
+    describe "multiple selected items" do
+
+      describe "when :multiple => false" do
+        before do
+          @new_post.stub!(:author_ids).and_return(nil)
+          
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:authors, :as => :select, :selected => [@bob.id, @fred.id], :multiple => false))
+          end
+        end
+
+        it "should only select the first value" do
+          output_buffer.should have_tag("form li select option[@selected='selected']", :count => 1)
+          output_buffer.should have_tag("form li select[^@multiple] option[@selected='selected']", /bob/i)
+          output_buffer.should have_tag("form li select[^@multiple] option[@selected='selected'][@value='#{@bob.id}']")
+        end
+      end
+
+      describe "when :multiple => true" do
+        before do
+          @new_post.stub!(:author_ids).and_return(nil)
+
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:authors, :as => :select, :selected => [@bob.id, @fred.id]))
+          end
+        end
+
+        it "should have multiple items selected; the specified ones" do
+          output_buffer.should have_tag("form li select option[@selected='selected']", :count => 2)
+          output_buffer.should have_tag("form li select[@multiple] option[@selected='selected']", /bob/i)
+          output_buffer.should have_tag("form li select[@multiple] option[@selected='selected'][@value='#{@bob.id}']")
+          output_buffer.should have_tag("form li select[@multiple] option[@selected='selected']", /fred/i)
+          output_buffer.should have_tag("form li select[@multiple] option[@selected='selected'][@value='#{@fred.id}']")
+        end
+      end
+
     end
-    
+
   end
 
   describe 'boolean select' do
