@@ -247,11 +247,13 @@ module Formtastic #:nodoc:
     # instead (just as you would do with Rails' form builder).
     #
     def inputs(*args, &block)
+      title = field_set_title_from_args(*args)
       html_options = args.extract_options!
       html_options[:class] ||= "inputs"
-
-      if html_options[:for]
-        inputs_for_nested_attributes(args, html_options, &block)
+      html_options[:name] = title
+      
+      if html_options[:for] # Nested form
+        inputs_for_nested_attributes(*(args << html_options), &block)
       elsif block_given?
         field_set_and_list_wrapping(*(args << html_options), &block)
       else
@@ -446,7 +448,8 @@ module Formtastic #:nodoc:
     #
     # It should raise an error if a block with arity zero is given.
     #
-    def inputs_for_nested_attributes(args, options, &block)
+    def inputs_for_nested_attributes(*args, &block)
+      options = args.extract_options!
       args << options.merge!(:parent => { :builder => self, :for => options[:for] })
 
       fields_for_block = if block_given?
@@ -1133,14 +1136,6 @@ module Formtastic #:nodoc:
       contents = args.last.is_a?(::Hash) ? '' : args.pop.flatten
       html_options = args.extract_options!
 
-      html_options[:name] ||= html_options.delete(:title)
-      if html_options[:name].blank?
-        valid_name_classes = [::String, ::Symbol]
-        valid_name_classes.delete(::Symbol) if !block_given? && (args.first.is_a?(::Symbol) && self.content_columns.include?(args.first))
-        html_options[:name] = args.shift if valid_name_classes.any? { |valid_name_class| args.first.is_a?(valid_name_class) }
-      end
-      html_options[:name] = localized_string(html_options[:name], html_options[:name], :title) if html_options[:name].is_a?(::Symbol)
-
       legend  = html_options.delete(:name).to_s
       legend %= parent_child_index(html_options[:parent]) if html_options[:parent]
       legend  = template.content_tag(:legend, template.content_tag(:span, legend)) unless legend.blank?
@@ -1162,6 +1157,20 @@ module Formtastic #:nodoc:
 
       template.concat(fieldset) if block_given?
       fieldset
+    end
+
+    def field_set_title_from_args(*args)
+      options = args.extract_options!
+      options[:name] ||= options.delete(:title)
+      title = options[:name]
+      
+      if title.blank?
+        valid_name_classes = [::String, ::Symbol]
+        valid_name_classes.delete(::Symbol) if !block_given? && (args.first.is_a?(::Symbol) && self.content_columns.include?(args.first))
+        title = args.shift if valid_name_classes.any? { |valid_name_class| args.first.is_a?(valid_name_class) }
+      end
+      title = localized_string(title, title, :title) if title.is_a?(::Symbol)
+      title
     end
 
     # Also generates a fieldset and an ordered list but with label based in

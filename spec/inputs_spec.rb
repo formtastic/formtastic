@@ -176,12 +176,15 @@ describe 'SemanticFormBuilder#inputs' do
           @legend_text = "Advanced options"
           @legend_text_using_name = "Advanced options 2"
           @legend_text_using_title = "Advanced options 3"
+          @nested_forms_legend_text = "This is a nested form title"
           semantic_form_for(@new_post) do |builder|
             builder.inputs @legend_text do
             end
             builder.inputs :name => @legend_text_using_name do
             end
             builder.inputs :title => @legend_text_using_title do
+            end
+            builder.inputs @nested_forms_legend_text, :for => :authors do |nf|
             end
           end
         end
@@ -190,6 +193,7 @@ describe 'SemanticFormBuilder#inputs' do
           output_buffer.should have_tag("form fieldset legend", /^#{@legend_text}$/)
           output_buffer.should have_tag("form fieldset legend", /^#{@legend_text_using_name}$/)
           output_buffer.should have_tag("form fieldset legend", /^#{@legend_text_using_title}$/)
+          output_buffer.should have_tag("form fieldset legend", /^#{@nested_forms_legend_text}$/)
         end
       end
       
@@ -198,12 +202,14 @@ describe 'SemanticFormBuilder#inputs' do
           @localized_legend_text = "Localized advanced options"
           @localized_legend_text_using_name = "Localized advanced options 2"
           @localized_legend_text_using_title = "Localized advanced options 3"
+          @localized_nested_forms_legend_text = "This is a localized nested form title"
           ::I18n.backend.store_translations :en, :formtastic => {
               :titles => {
                   :post => {
                       :advanced_options => @localized_legend_text,
                       :advanced_options_using_name => @localized_legend_text_using_name,
-                      :advanced_options_using_title => @localized_legend_text_using_title
+                      :advanced_options_using_title => @localized_legend_text_using_title,
+                      :nested_forms_title => @localized_nested_forms_legend_text
                     }
                 }
             }
@@ -214,6 +220,8 @@ describe 'SemanticFormBuilder#inputs' do
             end
             builder.inputs :title => :advanced_options_using_title do
             end
+            builder.inputs :nested_forms_title, :for => :authors do |nf|
+            end
           end
         end
 
@@ -221,6 +229,7 @@ describe 'SemanticFormBuilder#inputs' do
           output_buffer.should have_tag("form fieldset legend", /^#{@localized_legend_text}$/)
           output_buffer.should have_tag("form fieldset legend", /^#{@localized_legend_text_using_name}$/)
           output_buffer.should have_tag("form fieldset legend", /^#{@localized_legend_text_using_title}$/)
+          output_buffer.should have_tag("form fieldset legend", /^#{@localized_nested_forms_legend_text}$/)
         end
       end
     end
