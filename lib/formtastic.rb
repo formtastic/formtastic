@@ -1046,8 +1046,16 @@ module Formtastic #:nodoc:
       # to the column name (method name) and can be altered with the :label option.
       # :checked_value and :unchecked_value options are also available.
       #
+      # You can pre-select/check the boolean checkbox by passing in the :selected option (alias :checked works as well).
+      # 
+      # Examples:
+      #  
+      #   f.input :allow_comments, :as => :boolean, :selected => true   # override any default value: selected/checked
+      #
       def boolean_input(method, options)
         html_options = options.delete(:input_html) || {}
+        checked = options.key?(:checked) ? options[:checked] : options[:selected]
+        html_options[:checked] = checked == true if [:selected, :checked].any? { |k| options.key?(k) }
 
         input = self.check_box(method, set_options(options).merge(html_options),
                                options.delete(:checked_value) || '1', options.delete(:unchecked_value) || '0')

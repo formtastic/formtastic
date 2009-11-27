@@ -115,7 +115,7 @@ describe 'check_boxes input' do
           end
         end
 
-        it 'should have a selected item; the specified one' do
+        it 'should not have any selected item(s)' do
           output_buffer.should_not have_tag("form li fieldset ol li label input[@checked='checked']")
         end
       end

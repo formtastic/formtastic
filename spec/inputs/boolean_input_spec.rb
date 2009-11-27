@@ -56,5 +56,38 @@ describe 'boolean input' do
     output_buffer.should have_tag('form li label input[@name="project[allow_comments]"]')
   end
 
-end
+  describe 'when :selected is set' do
+    before do
+      @output_buffer = ''
+    end
 
+    describe "not selected" do
+      before do
+        @new_post.stub!(:allow_comments).and_return(true)
+
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:allow_comments, :as => :boolean, :selected => false))
+        end
+      end
+
+      it 'should not be selected' do
+        output_buffer.should_not have_tag("form li label input[@type='checkbox'][@checked='checked']")
+      end
+    end
+
+    describe "selected" do
+      before do
+        @new_post.stub!(:allow_comments).and_return(false)
+
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:allow_comments, :as => :boolean, :selected => true))
+        end
+      end
+
+      it 'should be selected' do
+        output_buffer.should have_tag("form li label input[@type='checkbox'][@checked='checked']")
+      end
+    end
+  end
+
+end
