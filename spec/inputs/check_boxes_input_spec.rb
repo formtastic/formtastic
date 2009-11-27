@@ -125,7 +125,7 @@ describe 'check_boxes input' do
           @new_post.stub!(:author_ids).and_return(nil)
 
           semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:authors, :as => :check_boxes, :selected => [@fred.id]))
+            concat(builder.input(:authors, :as => :check_boxes, :selected => @fred.id))
           end
         end
 

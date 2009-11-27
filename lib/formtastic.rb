@@ -778,7 +778,9 @@ module Formtastic #:nodoc:
       #   f.input :author, :as => :radio, :value_method => :login
       #   f.input :author, :as => :radio, :value_method => Proc.new { |a| "author_#{a.login}" }
       # 
-      # You can force a particular radio button in the collection to be checked with the :selected option.  Example:
+      # You can force a particular radio button in the collection to be checked with the :selected option.
+      #
+      # Examples:
       #
       #   f.input :subscribe_to_newsletter, :as => :radio, :selected => true
       #   f.input :subscribe_to_newsletter, :as => :radio, :collection => ["Yeah!", "Nope!"], :selected => "Nope!"
@@ -786,6 +788,7 @@ module Formtastic #:nodoc:
       # Finally, you can set :value_as_class => true if you want the li wrapper around each radio 
       # button / label combination to contain a class with the value of the radio button (useful for
       # applying specific CSS or Javascript to a particular radio button).
+      #
       def radio_input(method, options)
         collection   = find_collection_for_column(method, options)
         html_options = strip_formtastic_options(options).merge(options.delete(:input_html) || {})
@@ -793,13 +796,17 @@ module Formtastic #:nodoc:
         input_name = generate_association_input_name(method)
         value_as_class = options.delete(:value_as_class)
         input_ids = []
+        selected_option_is_present = [:selected, :checked].any? { |k| options.key?(k) }
+        selected_value = (options.key?(:checked) ? options[:checked] : options[:selected]) if selected_option_is_present
 
         list_item_content = collection.map do |c|
           label = c.is_a?(Array) ? c.first : c
           value = c.is_a?(Array) ? c.last  : c
-          html_options[:checked] = options.delete(:selected) unless options[:selected].blank?
+          input_id = generate_html_id(input_name, value.to_s.gsub(/\s/, '_').gsub(/\W/, '').downcase)
+          input_ids << input_id
 
-          input_ids << input_id = generate_html_id(input_name, value.to_s.gsub(/\s/, '_').gsub(/\W/, '').downcase)
+          html_options[:checked] = selected_value == value if selected_option_is_present
+
           li_content = template.content_tag(:label,
             "#{self.radio_button(input_name, value, html_options)} #{label}",
             :for => input_id
@@ -991,7 +998,7 @@ module Formtastic #:nodoc:
       #   f.input :authors, :as => :check_boxes, :selected => @justin
       #   f.input :authors, :as => :check_boxes, :selected => Author.most_popular.collect(&:id)
       #   f.input :authors, :as => :check_boxes, :selected => nil   # override any defaults: select none
-    
+      #
       # Finally, you can set :value_as_class => true if you want the li wrapper around each checkbox / label 
       # combination to contain a class with the value of the radio button (useful for applying specific 
       # CSS or Javascript to a particular checkbox).
@@ -1005,16 +1012,19 @@ module Formtastic #:nodoc:
         unchecked_value = options.delete(:unchecked_value) || ''
         html_options    = { :name => "#{@object_name}[#{input_name}][]" }.merge(html_options)
         input_ids       = []
-        checked_values  = options.key?(:checked) ? options[:checked] : options[:selected]
-        checked_values  = [*checked_values].compact
 
+        selected_option_is_present = [:selected, :checked].any? { |k| options.key?(k) }
+        selected_values = (options.key?(:checked) ? options[:checked] : options[:selected]) if selected_option_is_present
+        selected_values  = [*selected_values].compact
+        
         list_item_content = collection.map do |c|
           label = c.is_a?(Array) ? c.first : c
           value = c.is_a?(Array) ? c.last : c
+          input_id = generate_html_id(input_name, value.to_s.gsub(/\s/, '_').gsub(/\W/, '').downcase)
+          input_ids << input_id
 
-          input_ids << input_id = generate_html_id(input_name, value.to_s.gsub(/\s/, '_').gsub(/\W/, '').downcase)
-          html_options.merge!(:id => input_id)
-          html_options[:checked] = checked_values.include?(value) if [:selected, :checked].any? { |k| options.key?(k) }
+          html_options[:checked] = selected_values.include?(value) if selected_option_is_present
+          html_options[:id] = input_id
 
           li_content = template.content_tag(:label,
             "#{self.check_box(input_name, html_options, value, unchecked_value)} #{label}",
