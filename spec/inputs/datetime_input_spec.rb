@@ -59,7 +59,8 @@ describe 'datetime input' do
     end
   end
 
-  it_should_select_existing_datetime_else_current(:year, :month, :day, :hour, :minute)
+  it_should_select_existing_datetime_else_current(:year, :month, :day, :hour, :minute, :second)
+  it_should_select_explicit_default_value_if_set(:year, :month, :day, :hour, :minute, :second)
 
   describe 'when :discard_input => true is set' do
     it 'should use default attribute value when it is not nil' do

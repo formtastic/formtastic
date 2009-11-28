@@ -830,7 +830,15 @@ module Formtastic #:nodoc:
       # items (li), one for each fragment for the date (year, month, day).  Each li contains a label
       # (eg "Year") and a select box.  See date_or_datetime_input for a more detailed output example.
       #
+      # You can pre-select a specific option value by passing in the :selected option.
+      # 
+      # Examples:
+      # 
+      #   f.input :created_at, :as => :date, :selected => 1.day.ago
+      #   f.input :created_at, :as => :date, :selected => nil   # override any defaults: select none
+      #
       # Some of Rails' options for select_date are supported, but not everything yet.
+      #
       def date_input(method, options)
         options = set_include_blank(options)
         date_or_datetime_input(method, options.merge(:discard_hour => true))
@@ -841,7 +849,15 @@ module Formtastic #:nodoc:
       # contains a label (eg "Year") and a select box.  See date_or_datetime_input for a more
       # detailed output example.
       #
+      # You can pre-select a specific option value by passing in the :selected option.
+      # 
+      # Examples:
+      # 
+      #   f.input :created_at, :as => :datetime, :selected => 1.day.ago
+      #   f.input :created_at, :as => :datetime, :selected => nil   # override any defaults: select none
+      #
       # Some of Rails' options for select_date are supported, but not everything yet.
+      #
       def datetime_input(method, options)
         options = set_include_blank(options)
         date_or_datetime_input(method, options)
@@ -851,7 +867,15 @@ module Formtastic #:nodoc:
       # items (li), one for each fragment for the time (hour, minute, second).  Each li contains a label
       # (eg "Hour") and a select box.  See date_or_datetime_input for a more detailed output example.
       #
+      # You can pre-select a specific option value by passing in the :selected option.
+      # 
+      # Examples:
+      # 
+      #   f.input :created_at, :as => :time, :selected => 1.hour.ago
+      #   f.input :created_at, :as => :time, :selected => nil   # override any defaults: select none
+      #
       # Some of Rails' options for select_time are supported, but not everything yet.
+      #
       def time_input(method, options)
         options = set_include_blank(options)
         date_or_datetime_input(method, options.merge(:discard_year => true, :discard_month => true, :discard_day => true))
@@ -901,10 +925,10 @@ module Formtastic #:nodoc:
         list_items_capture = ""
         hidden_fields_capture = ""
 
-        default_time = Time.now
+        default_time = ::Time.now
 
         # Gets the datetime object. It can be a Fixnum, Date or Time, or nil.
-        datetime     = (@object ? @object.send(method) : default_time) || default_time
+        datetime = options[:selected] || (@object ? @object.send(method) : default_time) || default_time
         
         html_options = options.delete(:input_html) || {}
         input_ids    = []

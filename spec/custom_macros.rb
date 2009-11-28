@@ -247,8 +247,8 @@ module CustomMacros
             output_buffer.should have_tag("form li select#post_publish_at_2i option[@selected='selected'][@value='#{@new_post.publish_at.month}']") if datetime_parts.include?(:month)
             output_buffer.should have_tag("form li select#post_publish_at_3i option[@selected='selected'][@value='#{@new_post.publish_at.day}']") if datetime_parts.include?(:day)
             output_buffer.should have_tag("form li select#post_publish_at_4i option[@selected='selected'][@value='#{@new_post.publish_at.strftime("%H")}']") if datetime_parts.include?(:hour)
-            output_buffer.should have_tag("form li select#post_publish_at_5i option[@selected='selected'][@value='#{@new_post.publish_at.min}']") if datetime_parts.include?(:minute)
-            # output_buffer.should have_tag("form li select#post_publish_at_6i option[@selected='selected'][@value='#{@new_post.publish_at.sec}']") if datetime_parts.include?(:second)
+            output_buffer.should have_tag("form li select#post_publish_at_5i option[@selected='selected'][@value='#{@new_post.publish_at.strftime("%M")}']") if datetime_parts.include?(:minute)
+            #output_buffer.should have_tag("form li select#post_publish_at_6i option[@selected='selected'][@value='#{@new_post.publish_at.sec}']") if datetime_parts.include?(:second)
           end
         end
 
@@ -270,11 +270,58 @@ module CustomMacros
             output_buffer.should have_tag("form li select#post_publish_at_3i option[@selected='selected'][@value='#{@current_time.day}']") if datetime_parts.include?(:day)
             output_buffer.should have_tag("form li select#post_publish_at_4i option[@selected='selected'][@value='#{@current_time.strftime("%H")}']") if datetime_parts.include?(:hour)
             output_buffer.should have_tag("form li select#post_publish_at_5i option[@selected='selected'][@value='#{@current_time.strftime("%M")}']") if datetime_parts.include?(:minute)
-            #output_buffer.should have_tag("form li select#post_publish_at_6i option[@selected='selected'][@value='#{@current_time.sec}']") if datetime_parts.include?(:second)
+            #output_buffer.should have_tag("form li select#post_publish_at_6i option[@selected='selected'][@value='#{@custom_default_time.sec}']") if datetime_parts.include?(:second)
           end
 
           # TODO: Scenario when current time is not a possible choice (because of specified date/time ranges)?
         end
+      end
+    end
+
+    def it_should_select_explicit_default_value_if_set(*datetime_parts)
+      describe 'when :selected is set' do
+        before do
+          @output_buffer = ''
+        end
+
+        # Note: Not possible to override default selected value for time_zone input
+        # without overriding Rails core helper. This Rails helper works "a bit different". =/
+        #
+        describe "no selected items" do
+          before do
+            @default_time = 2.days.ago
+            @new_post.stub!(:publish_at).and_return(@default_time)
+
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:publish_at, :as => :time_zone, :selected => nil))
+            end
+          end
+
+          it 'should not have any selected item(s)' do
+            output_buffer.should_not have_tag("form li select#post_publish_at_1i option[@selected='selected']")
+          end
+        end
+
+        describe "single selected item" do
+          before do
+            @custom_default_time = 5.days.ago
+            @new_post.stub!(:publish_at).and_return(2.days.ago)
+
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:publish_at, :as => :datetime, :selected => @custom_default_time))
+            end
+          end
+
+          it "should select the specified value" do
+            output_buffer.should have_tag("form li select#post_publish_at_1i option[@selected='selected'][@value='#{@custom_default_time.year}']") if datetime_parts.include?(:year)
+            output_buffer.should have_tag("form li select#post_publish_at_2i option[@selected='selected'][@value='#{@custom_default_time.month}']") if datetime_parts.include?(:month)
+            output_buffer.should have_tag("form li select#post_publish_at_3i option[@selected='selected'][@value='#{@custom_default_time.day}']") if datetime_parts.include?(:day)
+            output_buffer.should have_tag("form li select#post_publish_at_4i option[@selected='selected'][@value='#{@custom_default_time.strftime("%H")}']") if datetime_parts.include?(:hour)
+            output_buffer.should have_tag("form li select#post_publish_at_5i option[@selected='selected'][@value='#{@custom_default_time.strftime("%M")}']") if datetime_parts.include?(:minute)
+            #output_buffer.should have_tag("form li select#post_publish_at_6i option[@selected='selected'][@value='#{@custom_default_time.sec}']") if datetime_parts.include?(:second)
+          end
+        end
+
       end
     end
 
