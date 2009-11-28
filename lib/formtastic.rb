@@ -404,15 +404,21 @@ module Formtastic #:nodoc:
     #     f.errors_on(:body)
     #   end
     #
-    def inline_errors_for(method, options=nil) #:nodoc:
-      return nil unless @object && @object.respond_to?(:errors) && INLINE_ERROR_TYPES.include?(@@inline_errors)
-
-      errors = @object.errors[method.to_sym]
-      send(:"error_#{@@inline_errors}", Array(errors)) unless errors.blank?
+    def inline_errors_for(method, options = nil) #:nodoc:
+      if render_inline_errors?
+        errors = @object.errors[method.to_sym]
+        send(:"error_#{@@inline_errors}", [*errors]) if errors.present?
+      else
+        nil
+      end
     end
     alias :errors_on :inline_errors_for
 
     protected
+
+      def render_inline_errors?
+        @object && @object.respond_to?(:errors) && INLINE_ERROR_TYPES.include?(@@inline_errors)
+      end
 
       # Collects content columns (non-relation columns) for the current form object class.
       #
@@ -669,7 +675,7 @@ module Formtastic #:nodoc:
         options = set_include_blank(options)
         html_options[:multiple] = options.delete(:multiple) if html_options[:multiple].nil?
 
-        reflection = find_reflection(method)
+        reflection = self.reflection_for(method)
         if reflection && [ :has_many, :has_and_belongs_to_many ].include?(reflection.macro)
           options[:include_blank]   = false
           html_options[:multiple] = true if html_options[:multiple].nil?
@@ -1220,9 +1226,7 @@ module Formtastic #:nodoc:
       # default is a :string, a similar behaviour to Rails' scaffolding.
       #
       def default_input_type(method) #:nodoc:
-        column = @object.column_for_attribute(method) if @object.respond_to?(:column_for_attribute)
-
-        if column
+        if column = self.column_for(method)
           # handle the special cases where the column type doesn't map to an input method
           return :time_zone if column.type == :string && method.to_s =~ /time_zone/
           return :select    if column.type == :integer && method.to_s =~ /_id$/
@@ -1235,7 +1239,7 @@ module Formtastic #:nodoc:
           return column.type
         else
           if @object
-            return :select if find_reflection(method)
+            return :select if self.reflection_for(method)
 
             file = @object.send(method) if @object.respond_to?(method)
             return :file   if file && @@file_methods.any? { |m| file.respond_to?(m) }
@@ -1265,25 +1269,21 @@ module Formtastic #:nodoc:
                              [Array, Fixnum, String, Symbol].include?(collection.first.class)
 
         label, value = detect_label_and_value_method!(collection, options)
-
         collection.map { |o| [send_or_call(label, o), send_or_call(value, o)] }
       end
 
       # As #find_collection_for_column but returns the collection without mapping the label and value
       #
       def find_raw_collection_for_column(column, options) #:nodoc:
-        reflection = find_reflection(column)
-
         collection = if options[:collection]
           options.delete(:collection)
-        elsif reflection
+        elsif reflection = self.reflection_for(column)
           reflection.klass.find(:all, options[:find_options] || {})
         else
           create_boolean_collection(options)
         end
 
         collection = collection.to_a if collection.is_a?(Hash)
-
         collection
       end
 
@@ -1324,7 +1324,7 @@ module Formtastic #:nodoc:
       #   has_and_belongs_to_many will act like has_many
       #
       def generate_association_input_name(method) #:nodoc:
-        if reflection = find_reflection(method)
+        if reflection = self.reflection_for(method)
           if [:has_and_belongs_to_many, :has_many].include?(reflection.macro)
             "#{method.to_s.singularize}_ids"
           else
@@ -1338,15 +1338,21 @@ module Formtastic #:nodoc:
       # If an association method is passed in (f.input :author) try to find the
       # reflection object.
       #
-      def find_reflection(method) #:nodoc:
+      def reflection_for(method) #:nodoc:
         @object.class.reflect_on_association(method) if @object.class.respond_to?(:reflect_on_association)
+      end
+
+      # Get a column object for a specified attribute method - if possible.
+      #
+      def column_for(method) #:nodoc:
+        @object.column_for_attribute(method) if @object.respond_to?(:column_for_attribute)
       end
 
       # Generates default_string_options by retrieving column information from
       # the database.
       #
       def default_string_options(method, type) #:nodoc:
-        column = @object.column_for_attribute(method) if @object.respond_to?(:column_for_attribute)
+        column = self.column_for(method)
 
         if type == :numeric || column.nil? || column.limit.nil?
           { :size => @@default_text_field_size }
