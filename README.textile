@@ -464,7 +464,7 @@ h2. Dependencies
 
 There are none, but...
 
-* if you have the "ValidationReflection":http://github.com/redinger/validation_reflection plugin is installed, you won't have to specify the :required option (it checks the validations on the model instead).
+* if you have the "ValidationReflection":http://github.com/redinger/validation_reflection plugin is installed, you won't have to specify the @:required@ option (it checks the validations on the model instead).
 * if you want to use the @:country@ input, you'll need to install the "iso-3166-country-select plugin":http://github.com/rails/iso-3166-country-select (or any other country_select plugin with the same API).
 * "rspec":http://github.com/dchelimsky/rspec/, "rspec_hpricot_matchers":http://rubyforge.org/projects/rspec-hpricot/ and "rcov":http://github.com/relevance/rcov gems (plus any of their own dependencies) are required for the test suite.
 
