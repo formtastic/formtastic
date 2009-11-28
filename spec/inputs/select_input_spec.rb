@@ -393,4 +393,45 @@ describe 'select input' do
     end
   end
 
+  describe "enums" do
+    describe ":collection is set" do
+      before do
+        @output_buffer = ''
+        @some_meta_descriptions = ["One", "Two", "Three"]
+        @new_post.stub!(:meta_description).any_number_of_times
+      end
+
+      describe ":as is not set" do
+        before do
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:meta_description, :collection => @some_meta_descriptions))
+          end
+          semantic_form_for(:project, :url => 'http://test.host') do |builder|
+            concat(builder.input(:meta_description, :collection => @some_meta_descriptions))
+          end
+        end
+
+        it "should render a select field" do
+          output_buffer.should have_tag("form li select", :count => 2)
+        end
+      end
+
+      describe ":as is set" do
+        before do
+          # Should not be a case, but just checking :as got highest priority in setting input type.
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:meta_description, :as => :string, :collection => @some_meta_descriptions))
+          end
+          semantic_form_for(:project, :url => 'http://test.host') do |builder|
+            concat(builder.input(:meta_description, :as => :string, :collection => @some_meta_descriptions))
+          end
+        end
+        
+        it "should render a text field" do
+          output_buffer.should have_tag("form li input[@type='text']", :count => 2)
+        end
+      end
+    end
+  end
+
 end

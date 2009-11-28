@@ -76,7 +76,7 @@ module Formtastic #:nodoc:
     #
     def input(method, options = {})
       options[:required] = method_required?(method) unless options.key?(:required)
-      options[:as]     ||= default_input_type(method)
+      options[:as]     ||= default_input_type(method, options)
 
       html_class = [ options[:as], (options[:required] ? :required : :optional) ]
       html_class << 'error' if @object && @object.respond_to?(:errors) && !@object.errors[method.to_sym].blank?
@@ -1225,27 +1225,31 @@ module Formtastic #:nodoc:
       # If there is no column for the method (eg "virtual columns" with an attr_accessor), the
       # default is a :string, a similar behaviour to Rails' scaffolding.
       #
-      def default_input_type(method) #:nodoc:
+      def default_input_type(method, options = {}) #:nodoc:
         if column = self.column_for(method)
-          # handle the special cases where the column type doesn't map to an input method
+          # Special cases where the column type doesn't map to an input method.
           return :time_zone if column.type == :string && method.to_s =~ /time_zone/
           return :select    if column.type == :integer && method.to_s =~ /_id$/
           return :datetime  if column.type == :timestamp
           return :numeric   if [:integer, :float, :decimal].include?(column.type)
           return :password  if column.type == :string && method.to_s =~ /password/
           return :country   if column.type == :string && method.to_s =~ /country/
+          
+          # Try look for hints in options hash. Quite common senario: Enum keys stored as string in the database.
+          return :select    if column.type == :string && options.key?(:collection)
 
-          # otherwise assume the input name will be the same as the column type (eg string_input)
+          # Try 3: Assume the input name will be the same as the column type (e.g. string_input).
           return column.type
         else
           if @object
-            return :select if self.reflection_for(method)
+            return :select  if self.reflection_for(method)
 
             file = @object.send(method) if @object.respond_to?(method)
-            return :file   if file && @@file_methods.any? { |m| file.respond_to?(m) }
+            return :file    if file && @@file_methods.any? { |m| file.respond_to?(m) }
           end
 
-          return :password if method.to_s =~ /password/
+          return :select    if options.key?(:collection)
+          return :password  if method.to_s =~ /password/
           return :string
         end
       end
