@@ -1228,16 +1228,22 @@ module Formtastic #:nodoc:
       def default_input_type(method, options = {}) #:nodoc:
         if column = self.column_for(method)
           # Special cases where the column type doesn't map to an input method.
-          return :time_zone if column.type == :string && method.to_s =~ /time_zone/
-          return :select    if column.type == :integer && method.to_s =~ /_id$/
-          return :datetime  if column.type == :timestamp
-          return :numeric   if [:integer, :float, :decimal].include?(column.type)
-          return :password  if column.type == :string && method.to_s =~ /password/
-          return :country   if column.type == :string && method.to_s =~ /country/
+          case column.type
+          when :string
+            return :password  if method.to_s =~ /password/
+            return :country   if method.to_s =~ /country/
+            return :time_zone if method.to_s =~ /time_zone/
+          when :integer
+            return :select    if method.to_s =~ /_id$/
+            return :numeric
+          when :float, :decimal
+            return :numeric
+          when :timestamp
+            return :datetime
+          end
           
           # Try look for hints in options hash. Quite common senario: Enum keys stored as string in the database.
           return :select    if column.type == :string && options.key?(:collection)
-
           # Try 3: Assume the input name will be the same as the column type (e.g. string_input).
           return column.type
         else
