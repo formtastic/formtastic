@@ -897,13 +897,9 @@ module Formtastic #:nodoc:
 
         default_time = Time.now
 
-        # FIXME: Why is @object nil when running specs? Grrr...
-        if @object.present? && @object.send(method).blank?
-          @object.send(:"#{method}=", default_time)
-        end
-
         # Gets the datetime object. It can be a Fixnum, Date or Time, or nil.
-        datetime     = @object ? @object.send(method) : default_time
+        datetime     = (@object ? @object.send(method) : default_time) || default_time
+        
         html_options = options.delete(:input_html) || {}
         input_ids    = []
 
@@ -917,7 +913,7 @@ module Formtastic #:nodoc:
             hidden_value = datetime.respond_to?(input) ? datetime.send(input.to_sym) : datetime
             hidden_fields_capture << template.hidden_field_tag("#{@object_name}[#{field_name}]", (hidden_value || 1), :id => input_id)
           else
-            opts = strip_formtastic_options(options).merge(:prefix => @object_name, :field_name => field_name)
+            opts = strip_formtastic_options(options).merge(:prefix => @object_name, :field_name => field_name, :default => datetime)
             item_label_text = ::I18n.t(input.to_s, :default => input.to_s.humanize, :scope => [:datetime, :prompts])
 
             list_items_capture << template.content_tag(:li,

@@ -270,7 +270,7 @@ module CustomMacros
             output_buffer.should have_tag("form li select#post_publish_at_3i option[@selected='selected'][@value='#{@current_time.day}']") if datetime_parts.include?(:day)
             output_buffer.should have_tag("form li select#post_publish_at_4i option[@selected='selected'][@value='#{@current_time.strftime("%H")}']") if datetime_parts.include?(:hour)
             output_buffer.should have_tag("form li select#post_publish_at_5i option[@selected='selected'][@value='#{@current_time.strftime("%M")}']") if datetime_parts.include?(:minute)
-            # output_buffer.should have_tag("form li select#post_publish_at_6i option[@selected='selected'][@value='#{@current_time.sec}']") if datetime_parts.include?(:second)
+            #output_buffer.should have_tag("form li select#post_publish_at_6i option[@selected='selected'][@value='#{@current_time.sec}']") if datetime_parts.include?(:second)
           end
 
           # TODO: Scenario when current time is not a possible choice (because of specified date/time ranges)?
