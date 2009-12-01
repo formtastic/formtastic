@@ -51,7 +51,7 @@ describe 'check_boxes input' do
 
       it 'should use values as li.class when value_as_class is true' do
         ::Post.find(:all).each do |post|
-          output_buffer.should have_tag("form li fieldset ol li.#{post.id} label")
+          output_buffer.should have_tag("form li fieldset ol li.post_#{post.id} label")
         end
       end
 

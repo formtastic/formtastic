@@ -819,7 +819,7 @@ module Formtastic #:nodoc:
             :for => input_id
           )
 
-          li_options = value_as_class ? { :class => value.to_s.downcase } : {}
+          li_options = value_as_class ? { :class => [method.to_s.singularize, value.to_s.downcase].join('_') } : {}
           template.content_tag(:li, li_content, li_options)
         end
 
@@ -1058,7 +1058,7 @@ module Formtastic #:nodoc:
             :for => input_id
           )
 
-          li_options = value_as_class ? { :class => value.to_s.downcase } : {}
+          li_options = value_as_class ? { :class => [method.to_s.singularize, value.to_s.downcase].join('_') } : {}
           template.content_tag(:li, li_content, li_options)
         end
 

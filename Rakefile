@@ -59,8 +59,7 @@ begin
     # Development dependencies. Not installed by default.
     # Install with: sudo gem install formtastic --development
     s.add_development_dependency 'rspec-rails', '>= 1.2.6'
-    s.add_development_dependency 'hpricot', '>= 0.6.1' # for: rspec_hpricot_matchers
-    s.add_development_dependency 'rspec_hpricot_matchers', '>= 1.0.0'
+    s.add_development_dependency 'rspec_tag_matchers', '>= 1.0.0'
   end
   
   Jeweler::GemcutterTasks.new

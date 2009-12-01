@@ -15,7 +15,7 @@ end
 smart_require 'spec', 'spec', '>= 1.2.6'
 smart_require false, 'rspec-rails', '>= 1.2.6'
 smart_require 'hpricot', 'hpricot', '>= 0.6.1'
-smart_require 'rspec_hpricot_matchers', 'rspec_hpricot_matchers', '>= 1.0.0'
+smart_require 'rspec_tag_matchers', 'rspec_tag_matchers', '>= 1.0.0'
 smart_require 'active_support', 'activesupport', '>= 2.3.4'
 smart_require 'action_controller', 'actionpack', '>= 2.3.4'
 smart_require 'action_view', 'actionpack', '>= 2.3.4'
@@ -23,7 +23,7 @@ smart_require 'action_view', 'actionpack', '>= 2.3.4'
 require 'custom_macros'
 
 Spec::Runner.configure do |config|
-  config.include(RspecHpricotMatchers)
+  config.include(RspecTagMatchers)
   config.include(CustomMacros)
 end
 
