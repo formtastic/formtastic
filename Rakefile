@@ -65,7 +65,7 @@ begin
   
   Jeweler::GemcutterTasks.new
 rescue LoadError
-  puts "[formtastic:] Jeweler - or one of it's dependencies - is not available. Install it with: sudo gem install jeweler -s http://gemcutter.org"
+  puts "[formtastic:] Jeweler - or one of its dependencies - is not available. Install it with: sudo gem install jeweler -s http://gemcutter.org"
 end
 
 desc 'Default: run unit specs.'
