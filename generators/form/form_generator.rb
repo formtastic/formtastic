@@ -86,7 +86,7 @@ class FormGenerator < Rails::Generator::NamedBase
     # Add additional model attributes if specified in args - probably not that common scenario.
     def attributes
       # Get columns for the requested model
-      existing_attributes = @class_name.constantize.content_columns.reject { |column| IGNORED_COLUMNS.include?(column.name.to_sym) }
+      existing_attributes = @class_name.split('::').last.constantize.content_columns.reject { |column| IGNORED_COLUMNS.include?(column.name.to_sym) }
       @args = super + existing_attributes
     end
     
