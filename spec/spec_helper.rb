@@ -200,6 +200,13 @@ module FormtasticSpecHelper
     end
   end
   
+  def with_config(config_method_name, value, &block)
+    old_value = ::Formtastic::SemanticFormBuilder.send(config_method_name)
+    ::Formtastic::SemanticFormBuilder.send(:"#{config_method_name}=", value)
+    yield
+    ::Formtastic::SemanticFormBuilder.send(:"#{config_method_name}=", old_value)
+  end
+  
 end
 
 ::ActiveSupport::Deprecation.silenced = false
