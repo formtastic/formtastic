@@ -415,6 +415,32 @@ module Formtastic #:nodoc:
     end
     alias :errors_on :inline_errors_for
 
+    # Generates error messages for given method names and for base.
+    # You can pass a hash with html options that will be added to ul tag
+    #
+    # == Examples
+    #
+    #  f.semantic_errors # This will show only errors on base
+    #  f.semantic_errors :state # This will show errors on base and state
+    #  f.semantic_errors :state, :class => "awesome" # errors will be rendered in ul.awesome
+    #
+    def semantic_errors(*args)
+      html_options = args.extract_options!
+      full_errors = args.inject([]) do |array, method|
+        attribute = localized_string(method, method.to_sym, :label) || humanized_attribute_name(method)
+        errors = Array(@object.errors[method.to_sym]).to_sentence
+        errors.present? ? array << [attribute, errors].join(" ") : array ||= []
+      end
+      full_errors << @object.errors.on_base
+      full_errors.flatten!
+      full_errors.compact!
+      return nil if full_errors.blank?
+      html_options[:class] ||= "errors"
+      template.content_tag(:ul, html_options) do
+        full_errors.map { |error| template.content_tag(:li, error) }.join
+      end
+    end
+
     protected
 
       def render_inline_errors?

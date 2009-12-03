@@ -406,6 +406,17 @@ For more flexible forms; Formtastic find translations using a bottom-up approach
 Values for @labels@/@hints@/@actions@ are can take values: @String@ (explicit value), @Symbol@ (i18n-lookup-key relative to the current "type", e.g. actions:), @true@ (force I18n lookup), @false@ (force no I18n lookup). Titles (legends) can only take: @String@ and @Symbol@ - true/false have no meaning.
 
 
+h2. Semantic errors
+
+You can show errors on base (by default) and any other attribute just passing it name to semantic_errors method:
+
+<pre>
+  <% semantic_form_for @post do |form| %>
+    <%= form.semantic_errors :state %>
+  <% end %>
+</pre>
+
+
 h2. ValidationReflection plugin
 
 If you have the "ValidationReflection":http://github.com/redinger/validation_reflection plugin installed, you won't have to specify the @:required@ option (it checks the validations on the model instead).

@@ -22,6 +22,12 @@ form.formtastic input, form.formtastic textarea, form.formtastic select { font-s
 form.formtastic legend { color:#000; }
 
 
+/* SEMANTIC ERRORS
+--------------------------------------------------------------------------------------------------*/
+form.formtastic ul.errors { color:#cc0000; margin:0.5em 0 1.5em 25%; list-style:square; }
+form.formtastic ul.errors li { padding:0; border:none; display:list-item; }
+
+
 /* FIELDSETS & LISTS
 --------------------------------------------------------------------------------------------------*/
 form.formtastic fieldset { }
