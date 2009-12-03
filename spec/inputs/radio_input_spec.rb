@@ -49,7 +49,7 @@ describe 'radio input' do
 
       it 'should use values as li.class when value_as_class is true' do
         ::Author.find(:all).each do |author|
-          output_buffer.should have_tag("form li fieldset ol li.#{author.id} label")
+          output_buffer.should have_tag("form li fieldset ol li.author_#{author.id} label")
         end
       end
 
@@ -109,5 +109,41 @@ describe 'radio input' do
     end
   end
 
-end
+  describe 'when :selected is set' do
+    before do
+      @output_buffer = ''
+    end
 
+    describe "no selected items" do
+      before do
+        @new_post.stub!(:author_ids).and_return(nil)
+
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:authors, :as => :radio, :selected => nil))
+        end
+      end
+
+      it 'should not have any selected item(s)' do
+        output_buffer.should_not have_tag("form li fieldset ol li label input[@checked='checked']")
+      end
+    end
+
+    describe "single selected item" do
+      before do
+        @new_post.stub!(:author_ids).and_return(nil)
+  
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:authors, :as => :radio, :selected => @fred.id))
+        end
+      end
+
+      it "should have one item selected; the specified one" do
+        output_buffer.should have_tag("form li fieldset ol li label input[@type='radio'][@checked='checked']", :count => 1)
+        output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_ids_#{@fred.id}']", /fred/i)
+        output_buffer.should have_tag("form li fieldset ol li label input[@type='radio'][@checked='checked'][@value='#{@fred.id}']")
+      end
+    end
+
+  end
+
+end

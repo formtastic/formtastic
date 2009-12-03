@@ -79,7 +79,17 @@ describe 'SemanticFormHelper' do
         builder.object_name.to_s.should == "post" # TODO: is this forced .to_s a bad assumption somewhere?
       end
     end
-
+    
+    describe "with :builder option" do
+      it "yields an instance of the given builder" do
+        class MyAwesomeCustomBuilder < ::Formtastic::SemanticFormBuilder
+        end
+        semantic_form_for(:post, ::Post.new, :url => '/hello', :builder => MyAwesomeCustomBuilder) do |builder|
+          builder.class.should == MyAwesomeCustomBuilder
+        end
+      end
+    end
+    
   end
 
   describe '#semantic_fields_for' do

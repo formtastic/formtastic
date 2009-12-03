@@ -9,7 +9,12 @@ module Formtastic
         :create         => 'Create {{model}}',
         :update         => 'Update {{model}}'
       }.freeze
-    
+    SCOPES = [
+        '{{model}}.{{action}}.{{attribute}}',
+        '{{model}}.{{attribute}}',
+        '{{attribute}}'
+      ]
+      
     class << self
       
       def translate(*args)

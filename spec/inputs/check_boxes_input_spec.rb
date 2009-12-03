@@ -51,7 +51,7 @@ describe 'check_boxes input' do
 
       it 'should use values as li.class when value_as_class is true' do
         ::Post.find(:all).each do |post|
-          output_buffer.should have_tag("form li fieldset ol li.#{post.id} label")
+          output_buffer.should have_tag("form li fieldset ol li.post_#{post.id} label")
         end
       end
 
@@ -100,6 +100,62 @@ describe 'check_boxes input' do
         end
       end
     end
+
+    describe 'when :selected is set' do
+      before do
+        @output_buffer = ''
+      end
+
+      describe "no selected items" do
+        before do
+          @new_post.stub!(:author_ids).and_return(nil)
+
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:authors, :as => :check_boxes, :selected => nil))
+          end
+        end
+
+        it 'should not have any selected item(s)' do
+          output_buffer.should_not have_tag("form li fieldset ol li label input[@checked='checked']")
+        end
+      end
+
+      describe "single selected item" do
+        before do
+          @new_post.stub!(:author_ids).and_return(nil)
+
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:authors, :as => :check_boxes, :selected => @fred.id))
+          end
+        end
+
+        it "should have one item selected; the specified one" do
+          output_buffer.should have_tag("form li fieldset ol li label input[@checked='checked']", :count => 1)
+          output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_ids_#{@fred.id}']", /fred/i)
+          output_buffer.should have_tag("form li fieldset ol li label input[@checked='checked'][@value='#{@fred.id}']")
+        end
+      end
+
+      describe "multiple selected items" do
+        before do
+          @new_post.stub!(:author_ids).and_return(nil)
+
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:authors, :as => :check_boxes, :selected => [@bob.id, @fred.id]))
+          end
+        end
+
+        it "should have multiple items selected; the specified ones" do
+          output_buffer.should have_tag("form li fieldset ol li label input[@checked='checked']", :count => 2)
+          output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_ids_#{@bob.id}']", /bob/i)
+          output_buffer.should have_tag("form li fieldset ol li label input[@checked='checked'][@value='#{@bob.id}']")
+          output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_ids_#{@fred.id}']", /fred/i)
+          output_buffer.should have_tag("form li fieldset ol li label input[@checked='checked'][@value='#{@fred.id}']")
+        end
+      end
+
+    end
+
   end
 
 end

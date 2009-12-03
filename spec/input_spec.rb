@@ -413,6 +413,7 @@ describe 'SemanticFormBuilder#input' do
 
           describe 'and label_str_method is :capitalize' do
             it 'should capitalize method name, passing it down to the label tag' do
+              old_value = ::Formtastic::SemanticFormBuilder.label_str_method
               ::Formtastic::SemanticFormBuilder.label_str_method = :capitalize
 
               semantic_form_for(:project, :url => 'http://test.host') do |builder|
@@ -420,6 +421,7 @@ describe 'SemanticFormBuilder#input' do
               end
 
               output_buffer.should have_tag("form li label", /#{'meta_description'.capitalize}/)
+              ::Formtastic::SemanticFormBuilder.label_str_method = old_value
             end
           end
         end

@@ -38,5 +38,7 @@ describe 'time input' do
     output_buffer.should have_tag('form li.time fieldset ol li', :count => 2)
   end
 
-end
+  it_should_select_existing_datetime_else_current(:hour, :minute, :second)
+  it_should_select_explicit_default_value_if_set(:hour, :minute, :second)
 
+end

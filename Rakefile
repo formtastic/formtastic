@@ -23,7 +23,7 @@ begin
   ========================================================================
   Thanks for installing Formtastic!
   ------------------------------------------------------------------------
-  You can now (optionally) run the generater to copy some stylesheets and
+  You can now (optionally) run the generator to copy some stylesheets and
   a config initializer into your application:
     ./script/generate formtastic
 
@@ -59,13 +59,12 @@ begin
     # Development dependencies. Not installed by default.
     # Install with: sudo gem install formtastic --development
     s.add_development_dependency 'rspec-rails', '>= 1.2.6'
-    s.add_development_dependency 'hpricot', '>= 0.6.1' # for: rspec_hpricot_matchers
-    s.add_development_dependency 'rspec_hpricot_matchers', '>= 1.0.0'
+    s.add_development_dependency 'rspec_tag_matchers', '>= 1.0.0'
   end
   
   Jeweler::GemcutterTasks.new
 rescue LoadError
-  puts "[formtastic:] Jeweler - or one of it's dependencies - is not available. Install it with: sudo gem install jeweler -s http://gemcutter.org"
+  puts "[formtastic:] Jeweler - or one of its dependencies - is not available. Install it with: sudo gem install jeweler -s http://gemcutter.org"
 end
 
 desc 'Default: run unit specs.'

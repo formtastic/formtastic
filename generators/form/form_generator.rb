@@ -39,10 +39,11 @@ class FormGenerator < Rails::Generator::NamedBase
   def manifest
     record do |m|
       if options[:partial]
+        controller_and_view_path = options[:controller] || File.join(controller_class_path, controller_file_name)
         # Ensure directory exists.
-        m.directory File.join(VIEWS_PATH, controller_class_path, controller_file_name)
+        m.directory File.join(VIEWS_PATH, controller_and_view_path)
         # Create a form partial for the model as "_form" in it's views path.
-        m.template "view__form.html.#{template_type}", File.join(VIEWS_PATH, controller_file_name, "_form.html.#{template_type}")
+        m.template "view__form.html.#{template_type}", File.join(VIEWS_PATH, controller_and_view_path, "_form.html.#{template_type}")
       else
         # Load template file, and render without saving to file
         template = File.read(File.join(source_root, "view__form.html.#{template_type}"))
@@ -85,7 +86,7 @@ class FormGenerator < Rails::Generator::NamedBase
     
     # Add additional model attributes if specified in args - probably not that common scenario.
     def attributes
-      # Get columns for the requested model
+      # Get columns for the requested model.
       existing_attributes = @class_name.constantize.content_columns.reject { |column| IGNORED_COLUMNS.include?(column.name.to_sym) }
       @args = super + existing_attributes
     end
@@ -104,6 +105,11 @@ class FormGenerator < Rails::Generator::NamedBase
       opt.on('--partial',
         "Save generated output directly to a form partial (app/views/{resource}/_form.html.*).") do |v|
         options[:partial] = v
+      end
+      
+      opt.on('--controller CONTROLLER_PATH',
+        "Specify a non-standard controller for the specified model (e.g. admin/posts).") do |v|
+        options[:controller] = v if v.present?
       end
     end
     

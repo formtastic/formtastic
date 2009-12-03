@@ -446,13 +446,30 @@ $ ./script/generate form Post --partial
       create  app/views/posts/_form.html.erb
 </pre>
 
-To generate *HAML* markup, just add the @--haml@ as argument: @./script/generate form Post --haml@
+To generate *HAML* markup, just add the @--haml@ as argument:
+
+<pre>
+$ ./script/generate form Post --haml
+      exists  app/views/admin/posts
+      create  app/views/admin/posts/_form.html.haml
+</pre>
+
+To specify the controller in a namespace (eg admin/posts instead of posts), use the --controller argument:
+
+<pre>
+$ ./script/generate form Post --partial --controller admin/posts
+      exists  app/views/admin/posts
+      create  app/views/admin/posts/_form.html.erb
+</pre>
+
 
 h2. Custom Inputs
 
 If you want to add your own input types to encapsulate your own logic or interface patterns, you can do so by subclassing SemanticFormBuilder and configuring Formtastic to use your custom builder class.
 
 @Formtastic::SemanticFormHelper.builder = MyCustomBuilder@
+
+
 
 
 h2. Status
@@ -464,7 +481,7 @@ h2. Dependencies
 
 There are none, but...
 
-* if you have the "ValidationReflection":http://github.com/redinger/validation_reflection plugin is installed, you won't have to specify the :required option (it checks the validations on the model instead).
+* if you have the "ValidationReflection":http://github.com/redinger/validation_reflection plugin is installed, you won't have to specify the @:required@ option (it checks the validations on the model instead).
 * if you want to use the @:country@ input, you'll need to install the "iso-3166-country-select plugin":http://github.com/rails/iso-3166-country-select (or any other country_select plugin with the same API).
 * "rspec":http://github.com/dchelimsky/rspec/, "rspec_hpricot_matchers":http://rubyforge.org/projects/rspec-hpricot/ and "rcov":http://github.com/relevance/rcov gems (plus any of their own dependencies) are required for the test suite.
 

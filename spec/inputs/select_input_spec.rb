@@ -103,13 +103,29 @@ describe 'select input' do
     end
   end
   
+  describe "for a belongs_to association with :group_by => :author" do
+    it "should call author.posts" do
+      [@freds_post].each { |post| post.stub!(:to_label).and_return("Post - #{post.id}") }
+      @fred.should_receive(:posts)
+
+      semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:main_post, :as => :select, :group_by => :author ) )
+      end
+    end
+  end
+
   describe 'for a belongs_to association with :group_by => :continent' do
     before do
       @authors = [@bob, @fred, @fred, @fred]
       ::Author.stub!(:find).and_return(@authors)
       @continent_names = %w(Europe Africa)
-      @continents = (0..1).map { |i| mock("continent", :id => (100 - i) ) }
+      @continents = (0..1).map { |i| c = ::Continent.new; c.stub!(:id).and_return(100 - i);c }
       @authors[0..1].each_with_index { |author, i| author.stub!(:continent).and_return(@continents[i]) }
+      ::Continent.stub!(:reflect_on_all_associations).and_return {|macro| mock('reflection', :klass => Author) if macro == :has_many}
+      ::Continent.stub!(:reflect_on_association).and_return {|column_name| mock('reflection', :klass => Author) if column_name == :authors}
+      ::Author.stub!(:reflect_on_association).and_return { |column_name| mock('reflection', :options => {}, :klass => Continent, :macro => :belongs_to) if column_name == :continent }
+      
+      
       @continents.each_with_index do |continent, i| 
         continent.stub!(:to_label).and_return(@continent_names[i])
         continent.stub!(:authors).and_return([@authors[i]])
@@ -279,21 +295,76 @@ describe 'select input' do
 
   describe 'when :selected is set' do
     before do
-      @new_post.stub!(:author_id).and_return(nil)
-      semantic_form_for(@new_post) do |builder|
-        concat(builder.input(:author, :as => :select, :selected => @bob.id ))
+      @output_buffer = ''
+    end
+
+    describe "no selected items" do
+      before do
+        @new_post.stub!(:author_id).and_return(nil)
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:author, :as => :select, :selected => nil))
+        end
+      end
+
+      it 'should not have any selected item(s)' do
+        output_buffer.should_not have_tag("form li select option[@selected='selected']")
       end
     end
-     
-    it 'should have a selected item' do
-      output_buffer.should have_tag("form li select option[@selected='selected']")
+
+    describe "single selected item" do
+      before do
+        @new_post.stub!(:author_id).and_return(nil)
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:author, :as => :select, :selected => @bob.id))
+        end
+      end
+
+      it 'should have a selected item; the specified one' do
+        output_buffer.should have_tag("form li select option[@selected='selected']", :count => 1)
+        output_buffer.should have_tag("form li select option[@selected='selected']", /bob/i)
+        output_buffer.should have_tag("form li select option[@selected='selected'][@value='#{@bob.id}']")
+      end
     end
-    
-    it 'bob should be selected' do
-      output_buffer.should have_tag("form li select option[@selected='selected']", /bob/i)
-      output_buffer.should have_tag("form li select option[@selected='selected'][@value='42']")
+
+    describe "multiple selected items" do
+
+      describe "when :multiple => false" do
+        before do
+          @new_post.stub!(:author_ids).and_return(nil)
+          
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:authors, :as => :select, :selected => [@bob.id, @fred.id], :multiple => false))
+          end
+        end
+
+        it "should only select the first value" do
+          output_buffer.should have_tag("form li select option[@selected='selected']", :count => 1)
+          # FIXME: Not supported by Nokogiri.
+          # output_buffer.should have_tag("form li select:not([@multiple]) option[@selected='selected']", /bob/i)
+          # output_buffer.should have_tag("form li select:not([@multiple]) option[@selected='selected'][@value='#{@bob.id}']")
+        end
+      end
+
+      describe "when :multiple => true" do
+        before do
+          @new_post.stub!(:author_ids).and_return(nil)
+
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:authors, :as => :select, :selected => [@bob.id, @fred.id]))
+          end
+        end
+
+        it "should have multiple items selected; the specified ones" do
+          output_buffer.should have_tag("form li select option[@selected='selected']", :count => 2)
+          output_buffer.should have_tag("form li select[@multiple] option[@selected='selected']", /bob/i)
+          output_buffer.should have_tag("form li select[@multiple] option[@selected='selected'][@value='#{@bob.id}']")
+          output_buffer.should have_tag("form li select[@multiple] option[@selected='selected']", /fred/i)
+          output_buffer.should have_tag("form li select[@multiple] option[@selected='selected'][@value='#{@fred.id}']")
+        end
+      end
+
     end
-    
+
   end
 
   describe 'boolean select' do
@@ -335,6 +406,47 @@ describe 'select input' do
       it 'should render a select with at least options: true/false' do
         output_buffer.should have_tag("form li select option[@value='true']", /#{@boolean_select_labels[:yes]}/)
         output_buffer.should have_tag("form li select option[@value='false']", /#{@boolean_select_labels[:no]}/)
+      end
+    end
+  end
+
+  describe "enums" do
+    describe ":collection is set" do
+      before do
+        @output_buffer = ''
+        @some_meta_descriptions = ["One", "Two", "Three"]
+        @new_post.stub!(:meta_description).any_number_of_times
+      end
+
+      describe ":as is not set" do
+        before do
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:meta_description, :collection => @some_meta_descriptions))
+          end
+          semantic_form_for(:project, :url => 'http://test.host') do |builder|
+            concat(builder.input(:meta_description, :collection => @some_meta_descriptions))
+          end
+        end
+
+        it "should render a select field" do
+          output_buffer.should have_tag("form li select", :count => 2)
+        end
+      end
+
+      describe ":as is set" do
+        before do
+          # Should not be a case, but just checking :as got highest priority in setting input type.
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:meta_description, :as => :string, :collection => @some_meta_descriptions))
+          end
+          semantic_form_for(:project, :url => 'http://test.host') do |builder|
+            concat(builder.input(:meta_description, :as => :string, :collection => @some_meta_descriptions))
+          end
+        end
+        
+        it "should render a text field" do
+          output_buffer.should have_tag("form li input[@type='text']", :count => 2)
+        end
       end
     end
   end

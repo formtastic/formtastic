@@ -39,5 +39,7 @@ describe 'date input' do
     output_buffer.should have_tag('form li.date fieldset ol li select', :count => 3)
   end
 
-end
+  it_should_select_existing_datetime_else_current(:year, :month, :day)
+  it_should_select_explicit_default_value_if_set(:year, :month, :day)
 
+end

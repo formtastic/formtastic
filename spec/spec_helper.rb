@@ -15,7 +15,7 @@ end
 smart_require 'spec', 'spec', '>= 1.2.6'
 smart_require false, 'rspec-rails', '>= 1.2.6'
 smart_require 'hpricot', 'hpricot', '>= 0.6.1'
-smart_require 'rspec_hpricot_matchers', 'rspec_hpricot_matchers', '>= 1.0.0'
+smart_require 'rspec_tag_matchers', 'rspec_tag_matchers', '>= 1.0.0'
 smart_require 'active_support', 'activesupport', '>= 2.3.4'
 smart_require 'action_controller', 'actionpack', '>= 2.3.4'
 smart_require 'action_view', 'actionpack', '>= 2.3.4'
@@ -23,7 +23,7 @@ smart_require 'action_view', 'actionpack', '>= 2.3.4'
 require 'custom_macros'
 
 Spec::Runner.configure do |config|
-  config.include(RspecHpricotMatchers)
+  config.include(RspecTagMatchers)
   config.include(CustomMacros)
 end
 
@@ -124,6 +124,8 @@ module FormtasticSpecHelper
     @new_post.stub!(:new_record?).and_return(true)
     @new_post.stub!(:errors).and_return(mock('errors', :[] => nil))
     @new_post.stub!(:author).and_return(nil)
+    @new_post.stub!(:main_post).and_return(nil)
+    @new_post.stub!(:sub_posts).and_return([]) #TODO should be a mock with methods for adding sub posts
 
     @freds_post = mock('post')
     @freds_post.stub!(:class).and_return(::Post)
@@ -150,7 +152,12 @@ module FormtasticSpecHelper
         mock
       when :authors
         mock('reflection', :options => {}, :klass => ::Author, :macro => :has_and_belongs_to_many)
+      when :sub_posts
+        mock('reflection', :options => {}, :klass => ::Post, :macro => :has_many)
+      when :main_post
+        mock('reflection', :options => {}, :klass => ::Post, :macro => :belongs_to)
       end
+      
     end
     ::Post.stub!(:find).and_return([@freds_post])
     ::Post.stub!(:content_columns).and_return([mock('column', :name => 'title'), mock('column', :name => 'body'), mock('column', :name => 'created_at')])
@@ -174,6 +181,10 @@ module FormtasticSpecHelper
     
     @new_post.stub!(:author).and_return(@bob)
     @new_post.stub!(:author_id).and_return(@bob.id)
+
+    @new_post.should_receive(:publish_at=).any_number_of_times
+    @new_post.should_receive(:title=).any_number_of_times
+    @new_post.stub!(:main_post_id).and_return(nil)
         
   end
   
