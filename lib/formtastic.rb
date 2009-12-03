@@ -673,7 +673,8 @@ module Formtastic #:nodoc:
       def select_input(method, options)
         html_options = options.delete(:input_html) || {}
         options = set_include_blank(options)
-        html_options[:multiple] = options.delete(:multiple) if html_options[:multiple].nil?
+        html_options[:multiple] = html_options[:multiple] || options.delete(:multiple)
+        html_options.delete(:multiple) if html_options[:multiple].nil?
 
         reflection = self.reflection_for(method)
         if reflection && [ :has_many, :has_and_belongs_to_many ].include?(reflection.macro)
@@ -701,6 +702,7 @@ module Formtastic #:nodoc:
                                          strip_formtastic_options(options), html_options)
         else
           collection = find_collection_for_column(method, options)
+
           self.select(input_name, collection, strip_formtastic_options(options), html_options)
         end
 
@@ -1476,7 +1478,11 @@ module Formtastic #:nodoc:
       end
 
       def humanized_attribute_name(method) #:nodoc:
-        method.to_s.send(@@label_str_method)
+        if @object && @object.class.respond_to?(:human_attribute_name)
+          @object.class.human_attribute_name(method.to_s)
+        else
+          method.to_s.send(@@label_str_method)
+        end
       end
 
       # Internal generic method for looking up localized values within Formtastic
