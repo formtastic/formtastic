@@ -424,6 +424,19 @@ describe 'SemanticFormBuilder#input' do
               output_buffer.should have_tag("form li label", /#{'meta_description'.humanize}/)
             end
           end
+          
+          describe 'and object is given with label_str_method set to :capitalize' do
+            it 'should capitalize method name, passing it down to the label tag' do
+              ::Formtastic::SemanticFormBuilder.label_str_method = :capitalize
+              @new_post.stub!(:meta_description)
+            
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:meta_description))
+              end
+            
+              output_buffer.should have_tag("form li label", /#{'meta_description'.capitalize}/)
+            end
+          end
         end
         
         describe 'when localized label is provided' do

@@ -1478,7 +1478,7 @@ module Formtastic #:nodoc:
       end
 
       def humanized_attribute_name(method) #:nodoc:
-        if @object && @object.class.respond_to?(:human_attribute_name)
+        if @object && @object.class.respond_to?(:human_attribute_name) && @@label_str_method == :humanize
           @object.class.human_attribute_name(method.to_s)
         else
           method.to_s.send(@@label_str_method)
