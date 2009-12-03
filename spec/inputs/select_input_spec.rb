@@ -53,7 +53,7 @@ describe 'select input' do
         concat(builder.input(:author, :as => :select))
       end
     end
-    
+
     it_should_have_input_wrapper_with_class("select")
     it_should_have_input_wrapper_with_id("post_author_input")
     it_should_have_label_with_text(/Author/)
@@ -61,10 +61,15 @@ describe 'select input' do
     it_should_apply_error_logic_for_input_type(:select)
     it_should_call_find_on_association_class_when_no_collection_is_provided(:select)
     it_should_use_the_collection_when_provided(:select, 'option')
-    
+
     it 'should have a select inside the wrapper' do
       output_buffer.should have_tag('form li select')
       output_buffer.should have_tag('form li select#post_author_id')
+    end
+
+    it 'should have a valid name' do
+      output_buffer.should have_tag("form li select[@name='post[author_id]']")
+      output_buffer.should_not have_tag("form li select[@name='post[author_id][]']")
     end
 
     it 'should not create a multi-select' do
