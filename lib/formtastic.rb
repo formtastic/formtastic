@@ -1478,7 +1478,11 @@ module Formtastic #:nodoc:
       end
 
       def humanized_attribute_name(method) #:nodoc:
-        method.to_s.send(@@label_str_method)
+        if @object && @object.class.respond_to?(:human_attribute_name)
+          @object.class.human_attribute_name(method.to_s)
+        else
+          method.to_s.send(@@label_str_method)
+        end
       end
 
       # Internal generic method for looking up localized values within Formtastic
