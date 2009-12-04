@@ -399,6 +399,26 @@ describe 'SemanticFormBuilder#input' do
       end
 
       describe 'when not provided' do
+        describe 'when localized label is provided' do 
+          describe 'and object is given' do 
+            describe 'and label_str_method not default' do
+              it 'should render a label with localized label (I18n)' do
+                with_config :label_str_method, :capitalize do
+                  @localized_label_text = 'Localized title'
+                  @new_post.stub!(:meta_description)
+                  @new_post.class.should_receive(:human_attribute_name).with('meta_description').and_return(@localized_label_text)
+                
+                  semantic_form_for(@new_post) do |builder|
+                    concat(builder.input(:meta_description))
+                  end
+                
+                  output_buffer.should have_tag('form li label', @localized_label_text)
+                end
+              end
+            end
+          end
+        end
+        
         describe 'when localized label is NOT provided' do
           describe 'and object is not given' do
             it 'should default the humanized method name, passing it down to the label tag' do
