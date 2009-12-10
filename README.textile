@@ -104,7 +104,6 @@ A proof-of-concept stylesheet is provided which you can include in your layout. 
   <%= stylesheet_link_tag "formtastic_changes" %>
 </pre>
 
-
 h2. Usage
 
 Forms are really boring to code... you want to get onto the good stuff as fast as possible.
@@ -253,6 +252,17 @@ The Formtastic input types:
 * @:hidden@ - a hidden field. Creates a hidden field (added for compatibility).
 
 The documentation is pretty good for each of these (what it does, what the output is, what the options are, etc.) so go check it out.
+
+h2. Delegation for label lookups
+
+Formtastic decides which label to use in the following order:
+
+<pre>
+  1. :label             # :label => "Choose Title"
+  2. Formtastic i18n    # if either :label => true || i18n_lookups_by_default = true (see Internationalization)
+  3. Activerecord i18n  # if localization file found for the given attribute
+  4. label_str_method   # if nothing provided this defaults to :humanize but can be set to a custom method 
+</pre>
 
 h2. Internationalization (I18n)
 
