@@ -439,10 +439,10 @@ $ ./script/generate form Post
 #  GENERATED FORMTASTIC CODE
 # ---------------------------------------------------------
 
-<% form.inputs do %>
-  <%= form.input :title, :label => 'Title' %>
-  <%= form.input :body, :label => 'Body' %>
-  <%= form.input :published, :label => 'Published' %>
+<% f.inputs do %>
+  <%= f.input :title, :label => 'Title' %>
+  <%= f.input :body, :label => 'Body' %>
+  <%= f.input :published, :label => 'Published' %>
 <% end %>
 
 # ---------------------------------------------------------
