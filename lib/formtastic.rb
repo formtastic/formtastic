@@ -311,7 +311,7 @@ module Formtastic #:nodoc:
       options = args.extract_options!
       text = options.delete(:label) || args.shift
 
-      if @object
+      if @object && @object.respond_to?(:new_record?)
         key = @object.new_record? ? :create : :update
         object_name = @object.class.human_name
       else
