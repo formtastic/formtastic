@@ -6,6 +6,7 @@ module Formtastic #:nodoc:
   class SemanticFormBuilder < ActionView::Helpers::FormBuilder
 
     @@default_text_field_size = 50
+    @@default_text_area_height = 20
     @@all_fields_required_by_default = true
     @@include_blank_for_select_by_default = true
     @@required_string = proc { %{<abbr title="#{::Formtastic::I18n.t(:required)}">*</abbr>} }
@@ -19,7 +20,7 @@ module Formtastic #:nodoc:
     @@i18n_lookups_by_default = false
     @@default_commit_button_accesskey = nil 
 
-    cattr_accessor :default_text_field_size, :all_fields_required_by_default, :include_blank_for_select_by_default,
+    cattr_accessor :default_text_field_size, :default_text_area_height, :all_fields_required_by_default, :include_blank_for_select_by_default,
                    :required_string, :optional_string, :inline_errors, :label_str_method, :collection_label_methods,
                    :inline_order, :file_methods, :priority_countries, :i18n_lookups_by_default, :default_commit_button_accesskey 
 
@@ -523,7 +524,7 @@ module Formtastic #:nodoc:
 
       def basic_input_helper(form_helper_method, type, method, options) #:nodoc:
         html_options = options.delete(:input_html) || {}
-        html_options = default_string_options(method, type).merge(html_options) if [:numeric, :string, :password].include?(type)
+        html_options = default_string_options(method, type).merge(html_options) if [:numeric, :string, :password, :text].include?(type)
 
         self.label(method, options_for_label(options)) <<
         self.send(form_helper_method, method, html_options)
@@ -1432,7 +1433,9 @@ module Formtastic #:nodoc:
       def default_string_options(method, type) #:nodoc:
         column = self.column_for(method)
 
-        if type == :numeric || column.nil? || column.limit.nil?
+        if type == :text
+          { :cols => @@default_text_field_size, :rows => @@default_text_area_height }
+        elsif type == :numeric || column.nil? || column.limit.nil?
           { :size => @@default_text_field_size }
         else
           { :maxlength => column.limit, :size => [column.limit, @@default_text_field_size].min }
