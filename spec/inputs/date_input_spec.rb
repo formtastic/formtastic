@@ -41,5 +41,20 @@ describe 'date input' do
 
   it_should_select_existing_datetime_else_current(:year, :month, :day)
   it_should_select_explicit_default_value_if_set(:year, :month, :day)
-
+  
+  describe "when :selected is nil" do
+    
+    before(:each) do
+      output_buffer.replace ''
+      semantic_form_for(:project, :url => 'http://test.host') do |builder|
+        concat(builder.input(:publish_at, :as => :datetime, :selected => nil))
+      end
+    end
+    
+    it "should not pre-select any options" do
+      output_buffer.should_not have_tag("form li.datetime li select option[@selected]")
+    end
+    
+  end
+  
 end

@@ -928,8 +928,8 @@ module Formtastic #:nodoc:
         list_items_capture = ""
         hidden_fields_capture = ""
 
-        default_time = ::Time.now
-
+        default_time = options.has_key?(:selected) ? options[:selected] : ::Time.now
+        
         # Gets the datetime object. It can be a Fixnum, Date or Time, or nil.
         datetime = options[:selected] || (@object ? @object.send(method) : default_time) || default_time
         
