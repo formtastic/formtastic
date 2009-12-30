@@ -40,6 +40,12 @@ describe 'SemanticFormHelper' do
       output_buffer.should have_tag("form.post")
     end
 
+    it 'adds a namespaced class to the generated form' do
+      semantic_form_for(::Namespaced::Post.new, :url => '/hello') do |builder|
+      end
+      output_buffer.should have_tag("form.namespaced_post")
+    end
+
     describe 'allows :html options' do
       before(:each) do
         semantic_form_for(:post, ::Post.new, :url => '/hello', :html => { :id => "something-special", :class => "something-extra", :multipart => true }) do |builder|

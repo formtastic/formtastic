@@ -61,6 +61,12 @@ module FormtasticSpecHelper
     def id
     end
   end
+  module ::Namespaced
+    class Post
+      def id
+      end
+    end
+  end
   class ::Author
     def to_label
     end

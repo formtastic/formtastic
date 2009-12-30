@@ -1617,13 +1617,13 @@ module Formtastic #:nodoc:
           options = args.extract_options!
           options[:builder] ||= @@builder
           options[:html] ||= {}
-          
+
           class_names = options[:html][:class] ? options[:html][:class].split(" ") : []
           class_names << "formtastic"
           class_names << case record_or_name_or_array
             when String, Symbol then record_or_name_or_array.to_s               # :post => "post"
-            when Array then record_or_name_or_array.last.class.to_s.underscore  # [@post, @comment] # => "comment"
-            else record_or_name_or_array.class.to_s.underscore                  # @post => "post"
+            when Array then ActionController::RecordIdentifier.singular_class_name(record_or_name_or_array.last.class)  # [@post, @comment] # => "comment"
+            else ActionController::RecordIdentifier.singular_class_name(record_or_name_or_array.class)                  # @post => "post"
           end
           options[:html][:class] = class_names.join(" ")
           
