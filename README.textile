@@ -519,7 +519,7 @@ For significant changes, you may wish to discuss your idea on the Formtastic Goo
 
 h2. Maintainers & Contributors
 
-Formtastic is maintained by "Justin French":http://justinfrench.com, "José Valim":http://github.com/josevalim and "Jonas Grimfelt":http://github.com/grimen, but it wouldn't be as awesome as it is today without help from over 30 contributors.
+Formtastic is maintained by "Justin French":http://justinfrench.com, "José Valim":http://github.com/josevalim and "Jonas Grimfelt":http://github.com/grimen, but it wouldn't be as awesome as it is today without help from over 40 contributors.
 
 @git shortlog -n -s --no-merges@
 
