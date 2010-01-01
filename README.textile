@@ -517,7 +517,7 @@ Please also keep your commits *atomic* so that they are more likely to apply cle
 For significant changes, you may wish to discuss your idea on the Formtastic Google group before coding to ensure that your change is likely to be accepted.  Formtastic relies heavily on i18n, so if you're unsure of the impact this has on your changes, please discuss them with the group.
 
 
-h2. Contributors
+h2. Maintainers & Contributors
 
 Formtastic is maintained by "Justin French":http://justinfrench.com, "José Valim":http://github.com/josevalim and "Jonas Grimfelt":http://github.com/grimen, but it wouldn't be as awesome as it is today without help from over 30 contributors.
 
