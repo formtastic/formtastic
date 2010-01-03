@@ -313,7 +313,7 @@ module Formtastic #:nodoc:
 
       if @object && @object.respond_to?(:new_record?)
         key = @object.new_record? ? :create : :update
-        object_name = @object.class.human_name
+        object_name = @object.class.name.underscore.humanize # TODO Rails Bug: should be able to call @object.class.human_name, see http://github.com/justinfrench/formtastic/issues/#issue/153 revisit for Rails 3
       else
         key = :submit
         object_name = @object_name.to_s.send(@@label_str_method)
