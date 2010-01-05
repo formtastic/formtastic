@@ -50,7 +50,7 @@ describe 'SemanticFormBuilder#semantic_errors' do
 
     it 'should render an unordered list' do
       semantic_form_for(@new_post) do |builder|
-        title_name = builder.send(:localized_string, :title, :title, :label)
+        title_name = builder.send(:localized_string, :title, :title, :label) || builder.send(:humanized_attribute_name, :title)
         builder.semantic_errors(:title).should have_tag('ul.errors li', title_name << " " << @title_errors.to_sentence)
       end
     end
@@ -64,7 +64,7 @@ describe 'SemanticFormBuilder#semantic_errors' do
 
     it 'should render an unordered list' do
       semantic_form_for(@new_post) do |builder|
-        title_name = builder.send(:localized_string, :title, :title, :label)
+        title_name = builder.send(:localized_string, :title, :title, :label) || builder.send(:humanized_attribute_name, :title)
         builder.semantic_errors(:title).should have_tag('ul.errors li', title_name << " " << @title_errors.to_sentence)
         builder.semantic_errors(:title).should have_tag('ul.errors li', @base_error)
       end
