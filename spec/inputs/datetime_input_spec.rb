@@ -59,9 +59,6 @@ describe 'datetime input' do
     end
   end
 
-  it_should_select_existing_datetime_else_current(:year, :month, :day, :hour, :minute, :second)
-  it_should_select_explicit_default_value_if_set(:year, :month, :day, :hour, :minute, :second)
-
   describe 'when :discard_input => true is set' do
     it 'should use default attribute value when it is not nil' do
       @new_post.stub!(:publish_at).and_return(Date.new(2007,12,27))
@@ -150,20 +147,82 @@ describe 'datetime input' do
       output_buffer.should have_tag('form li.datetime fieldset ol li select', :count => 5)
     end
   end
-
-  describe "when :selected is nil" do
+  
+  describe ':default option' do
     
-    before(:each) do
-      output_buffer.replace ''
-      semantic_form_for(:project, :url => 'http://test.host') do |builder|
-        concat(builder.input(:publish_at, :as => :datetime, :selected => nil))
+    describe "when the object has a value" do
+      it "should select the object value (ignoring :default)" do
+        output_buffer.replace ''
+        @new_post.stub!(:created_at => Time.mktime(2012))
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:created_at, :as => :datetime, :default => Time.mktime(1999)))
+        end
+        output_buffer.should have_tag("form li ol li select#post_created_at_1i option[@selected]", :count => 1)
+        output_buffer.should have_tag("form li ol li select#post_created_at_1i option[@value='2012'][@selected]", :count => 1)
       end
     end
     
-    it "should not pre-select any options" do
-      output_buffer.should_not have_tag("form li.datetime li select option[@selected]")
+    describe 'when the object has no value' do
+      it "should select the :default if provided as a Date" do
+        output_buffer.replace ''
+        @new_post.stub!(:created_at => nil)
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:created_at, :as => :datetime, :default => Date.new(1999)))
+        end
+        output_buffer.should have_tag("form li ol li select#post_created_at_1i option[@selected]", :count => 1)
+        output_buffer.should have_tag("form li ol li select#post_created_at_1i option[@value='1999'][@selected]", :count => 1)
+      end
+      
+      it "should select the :default if provided as a Time" do
+        output_buffer.replace ''
+        @new_post.stub!(:created_at => nil)
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:created_at, :as => :datetime, :default => Time.mktime(1999)))
+        end
+        output_buffer.should have_tag("form li ol li select#post_created_at_1i option[@selected]", :count => 1)
+        output_buffer.should have_tag("form li ol li select#post_created_at_1i option[@value='1999'][@selected]", :count => 1)
+      end
+      
+      it "should not select an option if the :default is provided as nil" do
+        output_buffer.replace ''
+        @new_post.stub!(:created_at => nil)
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:created_at, :as => :datetime, :default => nil))
+        end
+        output_buffer.should_not have_tag("form li ol li select#post_created_at_1i option[@selected]")
+      end
+      
+      it "should select Time.now if a :default is not provided" do
+        output_buffer.replace ''
+        @new_post.stub!(:created_at => nil)
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:created_at, :as => :datetime))
+        end
+        output_buffer.should have_tag("form li ol li select#post_created_at_1i option[@selected]", :count => 1)
+        output_buffer.should have_tag("form li ol li select#post_created_at_1i option[@value='#{Time.now.year}'][@selected]", :count => 1)
+        
+      end
+    end
+    
+    it 'should warn about :selected deprecation' do
+      with_deprecation_silenced do
+        ::ActiveSupport::Deprecation.should_receive(:warn)
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:created_at, :as => :date, :selected => Time.mktime(1999)))
+        end
+      end
     end
     
   end
+  
+  it 'should warn about :selected deprecation' do
+    with_deprecation_silenced do
+      ::ActiveSupport::Deprecation.should_receive(:warn)
+      semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:created_at, :as => :datetime, :selected => Time.mktime(1999)))
+      end
+    end
+  end
+  
 end
 
