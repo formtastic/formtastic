@@ -215,6 +215,12 @@ module FormtasticSpecHelper
     ::Formtastic::SemanticFormBuilder.send(:"#{config_method_name}=", old_value)
   end
   
+  def with_deprecation_silenced(&block)
+    ::ActiveSupport::Deprecation.silenced = true
+    yield
+    ::ActiveSupport::Deprecation.silenced = false
+  end
+  
 end
 
 ::ActiveSupport::Deprecation.silenced = false
