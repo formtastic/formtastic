@@ -867,8 +867,8 @@ module Formtastic #:nodoc:
       #   f.input :created_at, :as => :date, :selected => 1.day.ago
       #   f.input :created_at, :as => :date, :selected => nil   # override any defaults: select none
       #
-      # Some of Rails' options for select_date are supported, but not everything yet.
-      #
+      # Some of Rails' options for select_date are supported, but not everything yet, see 
+      # documentation of date_or_datetime_input() for more information.
       def date_input(method, options)
         options = set_include_blank(options)
         date_or_datetime_input(method, options.merge(:discard_hour => true))
@@ -886,8 +886,8 @@ module Formtastic #:nodoc:
       #   f.input :created_at, :as => :datetime, :selected => 1.day.ago
       #   f.input :created_at, :as => :datetime, :selected => nil   # override any defaults: select none
       #
-      # Some of Rails' options for select_date are supported, but not everything yet.
-      #
+      # Some of Rails' options for select_date are supported, but not everything yet, see 
+      # documentation of date_or_datetime_input() for more information.
       def datetime_input(method, options)
         options = set_include_blank(options)
         date_or_datetime_input(method, options)
@@ -904,13 +904,17 @@ module Formtastic #:nodoc:
       #   f.input :created_at, :as => :time, :selected => 1.hour.ago
       #   f.input :created_at, :as => :time, :selected => nil   # override any defaults: select none
       #
-      # Some of Rails' options for select_time are supported, but not everything yet.
-      #
+      # Some of Rails' options for select_time are supported, but not everything yet, see 
+      # documentation of date_or_datetime_input() for more information.
       def time_input(method, options)
         options = set_include_blank(options)
         date_or_datetime_input(method, options.merge(:discard_year => true, :discard_month => true, :discard_day => true))
       end
-
+      
+      # Helper method used by :as => (:date|:datetime|:time).  Generates a fieldset containing a 
+      # legend (for what would normally be considered the label), and an ordered list of list items 
+      # for year, month, day, hour, etc, each containing a label and a select.  Example:
+      #
       # <fieldset>
       #   <legend>Created At</legend>
       #   <ol>
@@ -943,6 +947,15 @@ module Formtastic #:nodoc:
       #
       # This is an absolute abomination, but so is the official Rails select_date().
       #
+      # Options:
+      #
+      #   * @:order => [:month, :day, :year]@
+      #   * @:include_seconds@ => true@
+      #   * @:selected => Time.mktime(2008)@
+      #   * @:selected => Date.new(2008)@
+      #   * @:selected => nil@
+      #   * @:discard_(year|month|day|hour|minute) => true@
+      #   * @:include_blank => true@
       def date_or_datetime_input(method, options)
         position = { :year => 1, :month => 2, :day => 3, :hour => 4, :minute => 5, :second => 6 }
         i18n_date_order = ::I18n.t(:order, :scope => [:date])
