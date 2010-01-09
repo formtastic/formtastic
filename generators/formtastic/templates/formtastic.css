@@ -19,7 +19,7 @@ form.formtastic ol, form.formtastic ul { list-style:none; }
 form.formtastic abbr, form.formtastic acronym { border:0; font-variant:normal; }
 form.formtastic input, form.formtastic textarea, form.formtastic select { font-family:inherit; font-size:inherit; font-weight:inherit; }
 form.formtastic input, form.formtastic textarea, form.formtastic select { font-size:100%; }
-form.formtastic legend { color:#000; }
+form.formtastic legend { white-space:normal; color:#000; }
 
 
 /* SEMANTIC ERRORS
@@ -68,7 +68,7 @@ form.formtastic fieldset > ol > li > li label input { line-height:100%; vertical
 /* NESTED FIELDSETS AND LEGENDS (radio, check boxes and date/time inputs use nested fieldsets)
 --------------------------------------------------------------------------------------------------*/
 form.formtastic fieldset > ol > li fieldset { position:relative; }
-form.formtastic fieldset > ol > li fieldset legend { position:absolute; width:25%; padding-top:0.1em; }
+form.formtastic fieldset > ol > li fieldset legend { position:absolute; width:100%; padding-top:0.1em; left 0px}
 form.formtastic fieldset > ol > li fieldset legend span { position:absolute; }
 form.formtastic fieldset > ol > li fieldset legend.label label { position:absolute; }
 form.formtastic fieldset > ol > li fieldset ol { float:left; width:74%; margin:0; padding:0 0 0 25%; }

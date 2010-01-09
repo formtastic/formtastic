@@ -7,4 +7,8 @@ For example, to make the inline hint paragraphs a little darker in color than th
 
 form.formtastic fieldset > ol > li p.inline-hints { color:#333; }
 
+HINT:
+The following style may be *conditionally* included for improved support on older versions of IE(<8)
+form.formtastic fieldset ol li fieldset legend { margin-left: -6px;}
+
 --------------------------------------------------------------------------------------------------*/
