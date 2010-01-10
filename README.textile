@@ -103,11 +103,14 @@ Optionally, run @./script/generate formtastic@ to copy the following files into 
 * @public/stylesheets/formtastic.css@
 * @public/stylesheets/formtastic_changes.css@
 
-A proof-of-concept stylesheet is provided which you can include in your layout. Customization is best achieved by overriding these styles in an additional stylesheet so that the Formtastic styles can be updated without clobbering your changes. If you want to use these stylesheets, add both to your layout:
+A proof-of-concept stylesheet is provided which you can include in your layout. Customization is best achieved by overriding these styles in an additional stylesheet so that the Formtastic styles can be updated without clobbering your changes. If you want to use these stylesheets, add both to your layout with this helper:
 
 <pre>
-  <%= stylesheet_link_tag "formtastic" %>
-  <%= stylesheet_link_tag "formtastic_changes" %>
+  <head>
+    ...
+    <%= formtastic_stylesheet_link_tag %>
+    ...
+  </head>
 </pre>
 
 h2. Usage
