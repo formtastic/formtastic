@@ -73,7 +73,7 @@ Gem::Specification.new do |s|
   a config initializer into your application:
     ./script/generate formtastic
 
-  To generate some semantic form markup for your exisiting models, just run:
+  To generate some semantic form markup for your existing models, just run:
     ./script/generate form MODEL_NAME
 
   Find out more and get involved:
