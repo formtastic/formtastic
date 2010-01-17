@@ -2,9 +2,9 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
 describe 'SemanticFormBuilder#input' do
-  
+
   include FormtasticSpecHelper
-  
+
   before do
     @output_buffer = ''
     mock_everything
@@ -150,54 +150,54 @@ describe 'SemanticFormBuilder#input' do
               it 'should be not be required if the optional :if condition is not satisifed' do
                 should_be_required(:required => false, :options => { :if => false })
               end
-              
+
               it 'should not be required if the optional :if proc evaluates to false' do
                 should_be_required(:required => false, :options => { :if => proc { |record| false } })
               end
-              
+
               it 'should be required if the optional :if proc evaluates to true' do
                 should_be_required(:required => true, :options => { :if => proc { |record| true } })
               end
-              
+
               it 'should not be required if the optional :unless proc evaluates to true' do
                 should_be_required(:required => false, :options => { :unless => proc { |record| true } })
               end
-              
+
               it 'should be required if the optional :unless proc evaluates to false' do
                 should_be_required(:required => true, :options => { :unless => proc { |record| false } })
               end
-              
+
               it 'should be required if the optional :if with a method string evaluates to true' do
                 @new_post.should_receive(:required_condition).and_return(true)
                 should_be_required(:required => true, :options => { :if => :required_condition })
               end
-              
+
               it 'should be required if the optional :if with a method string evaluates to false' do
                 @new_post.should_receive(:required_condition).and_return(false)
                 should_be_required(:required => false, :options => { :if => :required_condition })
               end
-              
+
               it 'should not be required if the optional :unless with a method string evaluates to false' do
                  @new_post.should_receive(:required_condition).and_return(false)
                 should_be_required(:required => true, :options => { :unless => :required_condition })
               end
-              
+
                it 'should be required if the optional :unless with a method string evaluates to true' do
                  @new_post.should_receive(:required_condition).and_return(true)
                  should_be_required(:required => false, :options => { :unless => :required_condition })
                end
             end
-            
+
             # TODO make a matcher for this?
             def should_be_required(options)
               @new_post.class.should_receive(:reflect_on_validations_for).with(:body).and_return([
                 mock('MacroReflection', :macro => :validates_presence_of, :name => :body, :options => options[:options])
               ])
-              
+
               semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:body))
               end
-              
+
               if options[:required]
                 output_buffer.should_not have_tag('form li.optional')
                 output_buffer.should have_tag('form li.required')
@@ -325,9 +325,13 @@ describe 'SemanticFormBuilder#input' do
           default_input_type(:float).should == :numeric
           default_input_type(:decimal).should == :numeric
         end
-        
+
         it 'should default to :country for :string columns named country' do
           default_input_type(:string, :country).should == :country
+        end
+
+        it 'should default to :currency for :string columns named currency' do
+          default_input_type(:string, :currency).should == :currency
         end
 
         describe 'defaulting to file column' do
@@ -374,7 +378,7 @@ describe 'SemanticFormBuilder#input' do
     end
 
     describe ':label option' do
-      
+
       describe 'when provided' do
         it 'should be passed down to the label tag' do
           semantic_form_for(@new_post) do |builder|
@@ -399,26 +403,26 @@ describe 'SemanticFormBuilder#input' do
       end
 
       describe 'when not provided' do
-        describe 'when localized label is provided' do 
-          describe 'and object is given' do 
+        describe 'when localized label is provided' do
+          describe 'and object is given' do
             describe 'and label_str_method not default' do
               it 'should render a label with localized label (I18n)' do
                 with_config :label_str_method, :capitalize do
                   @localized_label_text = 'Localized title'
                   @new_post.stub!(:meta_description)
                   @new_post.class.should_receive(:human_attribute_name).with('meta_description').and_return(@localized_label_text)
-                
+
                   semantic_form_for(@new_post) do |builder|
                     concat(builder.input(:meta_description))
                   end
-                
+
                   output_buffer.should have_tag('form li label', @localized_label_text)
                 end
               end
             end
           end
         end
-        
+
         describe 'when localized label is NOT provided' do
           describe 'and object is not given' do
             it 'should default the humanized method name, passing it down to the label tag' do
@@ -444,22 +448,22 @@ describe 'SemanticFormBuilder#input' do
               output_buffer.should have_tag("form li label", /#{'meta_description'.humanize}/)
             end
           end
-          
+
           describe 'and object is given with label_str_method set to :capitalize' do
             it 'should capitalize method name, passing it down to the label tag' do
               with_config :label_str_method, :capitalize do
                 @new_post.stub!(:meta_description)
-            
+
                 semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:meta_description))
                 end
-            
+
                 output_buffer.should have_tag("form li label", /#{'meta_description'.capitalize}/)
               end
             end
           end
         end
-        
+
         describe 'when localized label is provided' do
           before do
             @localized_label_text = 'Localized title'
@@ -504,7 +508,7 @@ describe 'SemanticFormBuilder#input' do
           end
         end
       end
-      
+
     end
 
     describe ':hint option' do
@@ -535,7 +539,7 @@ describe 'SemanticFormBuilder#input' do
                 }
             ::Formtastic::SemanticFormBuilder.i18n_lookups_by_default = false
           end
-          
+
           describe 'when provided value (hint value) is set to TRUE' do
             it 'should render a hint paragraph containing a localized hint (I18n)' do
               semantic_form_for(@new_post) do |builder|
@@ -543,7 +547,7 @@ describe 'SemanticFormBuilder#input' do
               end
               output_buffer.should have_tag('form li p.inline-hints', @localized_hint_text)
             end
-            
+
             it 'should render a hint paragraph containing an optional localized hint (I18n) if first is not set' do
               ::I18n.backend.store_translations :en,
               :formtastic => {
@@ -559,7 +563,7 @@ describe 'SemanticFormBuilder#input' do
               output_buffer.should have_tag('form li p.inline-hints', @default_localized_hint_text)
             end
           end
-          
+
           describe 'when provided value (label value) is set to FALSE' do
             it 'should not render a hint paragraph' do
               semantic_form_for(@new_post) do |builder|
@@ -569,7 +573,7 @@ describe 'SemanticFormBuilder#input' do
             end
           end
         end
-        
+
         describe 'when localized hint (I18n) is not provided' do
           it 'should not render a hint paragraph' do
             semantic_form_for(@new_post) do |builder|
