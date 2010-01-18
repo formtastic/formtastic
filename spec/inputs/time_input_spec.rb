@@ -79,7 +79,7 @@ describe 'time input' do
           concat(builder.input(:created_at, :as => :time))
         end
         output_buffer.should have_tag("form li ol li select#post_created_at_4i option[@selected]", :count => 1)
-        output_buffer.should have_tag("form li ol li select#post_created_at_4i option[@value='#{Time.now.hour}'][@selected]", :count => 1)
+        output_buffer.should have_tag("form li ol li select#post_created_at_4i option[@value='#{Time.now.hour.to_s.rjust(2,'0')}'][@selected]", :count => 1)
       end
     end
     
