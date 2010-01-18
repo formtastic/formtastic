@@ -5,6 +5,6 @@ This will allow you to update formtastic.css with new releases without clobberin
 
 For example, to make the inline hint paragraphs a little darker in color than the standard #666:
 
-form.formtastic fieldset ol li p.inline-hints { color:#333; }
+form.formtastic fieldset > ol > li p.inline-hints { color:#333; }
 
 --------------------------------------------------------------------------------------------------*/
