@@ -1479,7 +1479,7 @@ module Formtastic #:nodoc:
           if [:has_and_belongs_to_many, :has_many].include?(reflection.macro)
             "#{method.to_s.singularize}_ids"
           else
-            reflection.options[:foreign_key] || "#{method}_id"
+            reflection.options[:foreign_key] || reflection.options[:class_name].try(:foreign_key) || "#{method}_id"
           end
         else
           method
