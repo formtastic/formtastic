@@ -1704,7 +1704,7 @@ module Formtastic #:nodoc:
     end
 
     [:form_for, :fields_for, :remote_form_for].each do |meth|
-      src = <<-END_SRC
+      module_eval <<-END_SRC, __FILE__, __LINE__ + 1
         def semantic_#{meth}(record_or_name_or_array, *args, &proc)
           options = args.extract_options!
           options[:builder] ||= @@builder
@@ -1724,7 +1724,6 @@ module Formtastic #:nodoc:
           end
         end
       END_SRC
-      module_eval src, __FILE__, __LINE__
     end
     alias :semantic_form_remote_for :semantic_remote_form_for
 
