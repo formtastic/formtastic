@@ -344,9 +344,8 @@ describe 'select input' do
 
         it "should only select the first value" do
           output_buffer.should have_tag("form li select option[@selected='selected']", :count => 1)
-          # FIXME: Not supported by Nokogiri.
-          # output_buffer.should have_tag("form li select:not([@multiple]) option[@selected='selected']", /bob/i)
-          # output_buffer.should have_tag("form li select:not([@multiple]) option[@selected='selected'][@value='#{@bob.id}']")
+          output_buffer.should have_tag("form li select:not([@multiple]) option[@selected='selected']", /bob/i)
+          output_buffer.should have_tag("form li select:not([@multiple]) option[@selected='selected'][@value='#{@bob.id}']")
         end
       end
 
