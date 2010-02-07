@@ -256,7 +256,7 @@ describe 'select input' do
       output_buffer.should have_tag('form li select option[@selected]', :count => 1)
     end
   end
-
+  
   describe 'when :prompt => "choose something" is set' do
     before do
       @new_post.stub!(:author_id).and_return(nil)
@@ -371,7 +371,7 @@ describe 'select input' do
 
   end
 
-  describe 'boolean select' do
+  describe 'for boolean columns' do
     describe 'default formtastic locale' do
       before do
         # Note: Works, but something like Formtastic.root.join(...) would probably be "safer".
