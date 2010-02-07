@@ -7,7 +7,7 @@ class FormtasticGenerator < Rails::Generator::Base
   def manifest
     record do |m|
       m.directory File.join('config', 'initializers')
-      m.template 'formtastic_config.rb',   File.join('config', 'initializers', 'formtastic_config.rb')
+      m.template 'formtastic.rb',   File.join('config', 'initializers', 'formtastic.rb')
 
       m.directory File.join('public', 'stylesheets')
       m.template 'formtastic.css',   File.join('public', 'stylesheets', 'formtastic.css')
@@ -18,7 +18,7 @@ class FormtasticGenerator < Rails::Generator::Base
   protected
   
   def banner
-    %{Usage: #{$0} #{spec.name}\nCopies formtastic.css and formtastic_changes.css to public/stylesheets/ and a config initializer to config/initializers/formtastic_config.rb}
+    %{Usage: #{$0} #{spec.name}\nCopies formtastic.css and formtastic_changes.css to public/stylesheets/ and a config initializer to config/initializers/formtastic.rb}
   end
   
 end

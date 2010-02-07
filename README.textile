@@ -99,7 +99,7 @@ And add it to your environment.rb configuration as a gem dependency:
 
 Optionally, run @./script/generate formtastic@ to copy the following files into your app:
 
-* @config/initializers/formtastic_config.rb@ - a commented out Formtastic config initializer
+* @config/initializers/formtastic.rb@ - a commented out Formtastic config initializer
 * @public/stylesheets/formtastic.css@
 * @public/stylesheets/formtastic_changes.css@
 
