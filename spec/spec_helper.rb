@@ -1,24 +1,18 @@
 # coding: utf-8
 require 'rubygems'
 
-def smart_require(lib_name, gem_name, gem_version = '>= 0.0.0')
-  begin
-    require lib_name if lib_name
-  rescue LoadError
-    if gem_name
-      gem gem_name, gem_version
-      require lib_name if lib_name
-    end
-  end
-end
+gem 'activesupport', '2.3.5'
+gem 'actionpack', '2.3.5'
+require 'active_support'
+require 'action_pack'
+require 'action_view'
+require 'action_controller'
 
-smart_require 'spec', 'spec', '>= 1.2.6'
-smart_require false, 'rspec-rails', '>= 1.2.6'
-smart_require 'hpricot', 'hpricot', '>= 0.6.1'
-smart_require 'rspec_tag_matchers', 'rspec_tag_matchers', '>= 1.0.0'
-smart_require 'active_support', 'activesupport', '>= 2.3.4'
-smart_require 'action_controller', 'actionpack', '>= 2.3.4'
-smart_require 'action_view', 'actionpack', '>= 2.3.4'
+gem 'rspec', '>= 1.2.6'
+gem 'rspec-rails', '>= 1.2.6'
+gem 'hpricot', '>= 0.6.1'
+gem 'rspec_tag_matchers', '>= 1.0.0'
+require 'rspec_tag_matchers'
 
 require 'custom_macros'
 
