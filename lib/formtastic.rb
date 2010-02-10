@@ -686,9 +686,9 @@ module Formtastic #:nodoc:
       #   </select>
       #
       #
-      # You can customize the options available in the select by passing in a collection (an Array or 
-      # Hash) through the :collection option.  If not provided, the choices are found by inferring the 
-      # parent's class name from the method name and simply calling all on it 
+      # You can customize the options available in the select by passing in a collection. A collection can be given
+      # as an Array, a Hash or as a String (containing pre-rendered HTML options). If not provided, the choices are
+      # found by inferring the parent's class name from the method name and simply calling all on it
       # (VehicleOwner.all in the example above).
       #
       # Examples:
@@ -698,6 +698,7 @@ module Formtastic #:nodoc:
       #   f.input :author, :collection => [@justin, @kate]
       #   f.input :author, :collection => {@justin.name => @justin.id, @kate.name => @kate.id}
       #   f.input :author, :collection => ["Justin", "Kate", "Amelia", "Gus", "Meg"]
+      #   f.input :author, :collection => grouped_options_for_select(["North America",[["United States","US"],["Canada","CA"]]])
       #
       # The :label_method option allows you to customize the text label inside each option tag two ways:
       #
@@ -1477,6 +1478,9 @@ module Formtastic #:nodoc:
       #
       def find_collection_for_column(column, options) #:nodoc:
         collection = find_raw_collection_for_column(column, options)
+
+        # Return if we have a plain string
+        return collection if collection.instance_of?(String)
 
         # Return if we have an Array of strings, fixnums or arrays
         return collection if (collection.instance_of?(Array) || collection.instance_of?(Range)) &&

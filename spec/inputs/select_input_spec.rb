@@ -47,6 +47,22 @@ describe 'select input' do
         end
       end
     end
+
+    describe 'using a string' do
+      before do
+        @string ="<option value='0'>0</option><option value='1'>1</option>"
+        @form = semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:title, :as => :select, :collection => @string))
+        end
+      end
+
+      it 'should render select options using provided HTML string' do
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        2.times do |v|
+          output_buffer.should have_tag("form li select option[@value='#{v}']", /^#{v}$/)
+        end
+      end
+    end
   end
 
   describe 'for boolean columns' do
