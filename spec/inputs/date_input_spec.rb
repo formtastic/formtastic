@@ -19,8 +19,12 @@ describe 'date input' do
   it_should_have_a_nested_fieldset
   it_should_apply_error_logic_for_input_type(:date)
   
-  it 'should have a legend - classified as a label - containing the label text inside the fieldset' do
-    output_buffer.should have_tag('form li.date fieldset legend.label', /Publish at/)
+  it 'should have a legend and label with the label text inside the fieldset' do
+    output_buffer.should have_tag('form li.date fieldset legend.label label', /Publish at/)
+  end
+  
+  it 'should associate the legend label with the first select' do
+    output_buffer.should have_tag('form li.date fieldset legend.label label[@for="post_publish_at_1i"]')
   end
 
   it 'should have an ordered list of three items inside the fieldset' do
