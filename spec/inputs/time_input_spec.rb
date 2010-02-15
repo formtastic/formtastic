@@ -88,7 +88,34 @@ describe 'time input' do
     end
     
   end
-  
+
+  describe ':labels option' do
+    fields = [:hour, :minute]
+    fields.each do |field|
+      it "should replace the #{field} label with the specified text if :labels[:#{field}] is set" do
+        output_buffer.replace ''
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:created_at, :as => :time, :labels => { field => "another #{field} label" }))
+        end
+        output_buffer.should have_tag('form li.time fieldset ol li label', :count => fields.length)
+        fields.each do |f|
+          output_buffer.should have_tag('form li.time fieldset ol li label', f == field ? /another #{f} label/i : /#{f}/i)
+        end
+      end
+
+      it "should not display the label for the #{field} field when :labels[:#{field}] is blank" do
+        output_buffer.replace ''
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:created_at, :as => :time, :labels => { field => "" }))
+        end
+        output_buffer.should have_tag('form li.time fieldset ol li label', :count => fields.length-1)
+        fields.each do |f|
+          output_buffer.should have_tag('form li.time fieldset ol li label', /#{f}/i) unless field == f
+        end
+      end
+    end
+  end
+
   it 'should warn about :selected deprecation' do
     with_deprecation_silenced do
       ::ActiveSupport::Deprecation.should_receive(:warn)
