@@ -867,7 +867,9 @@ module Formtastic #:nodoc:
 
       # Outputs a fieldset with a legend for the method label, and a ordered list (ol) of list
       # items (li), one for each fragment for the date (year, month, day).  Each li contains a label
-      # (eg "Year") and a select box.  See date_or_datetime_input for a more detailed output example.
+      # (eg "Year") and a select box. Overwriting the label is possible by adding the :labels option.
+      # :labels should be a hash with the field (e.g. day) as key and the label text as value.
+      # See date_or_datetime_input for a more detailed output example.
       #
       # You can pre-select a specific option value by passing in the :selected option.
       #
@@ -875,6 +877,7 @@ module Formtastic #:nodoc:
       #
       #   f.input :created_at, :as => :date, :selected => 1.day.ago
       #   f.input :created_at, :as => :date, :selected => nil   # override any defaults: select none
+      #   f.input :created_at, :as => :date, :labels => { :year => "Year", :month => "Month", :day => "Day" }
       #
       # Some of Rails' options for select_date are supported, but not everything yet, see
       # documentation of date_or_datetime_input() for more information.
@@ -885,8 +888,9 @@ module Formtastic #:nodoc:
 
       # Outputs a fieldset with a legend for the method label, and a ordered list (ol) of list
       # items (li), one for each fragment for the date (year, month, day, hour, min, sec).  Each li
-      # contains a label (eg "Year") and a select box.  See date_or_datetime_input for a more
-      # detailed output example.
+      # contains a label (eg "Year") and a select box. Overwriting the label is possible by adding
+      # the :labels option. :labels should be a hash with the field (e.g. day) as key and the label
+      # text as value.  See date_or_datetime_input for a more detailed output example.
       #
       # You can pre-select a specific option value by passing in the :selected option.
       #
@@ -894,6 +898,8 @@ module Formtastic #:nodoc:
       #
       #   f.input :created_at, :as => :datetime, :selected => 1.day.ago
       #   f.input :created_at, :as => :datetime, :selected => nil   # override any defaults: select none
+      #   f.input :created_at, :as => :date, :labels => { :year => "Year", :month => "Month", :day => "Day",
+      #                                                   :hour => "Hour", :minute => "Minute" }
       #
       # Some of Rails' options for select_date are supported, but not everything yet, see
       # documentation of date_or_datetime_input() for more information.
@@ -904,7 +910,9 @@ module Formtastic #:nodoc:
 
       # Outputs a fieldset with a legend for the method label, and a ordered list (ol) of list
       # items (li), one for each fragment for the time (hour, minute, second).  Each li contains a label
-      # (eg "Hour") and a select box.  See date_or_datetime_input for a more detailed output example.
+      # (eg "Hour") and a select box. Overwriting the label is possible by adding the :labels option.
+      # :labels should be a hash with the field (e.g. day) as key and the label text as value.
+      # See date_or_datetime_input for a more detailed output example.
       #
       # You can pre-select a specific option value by passing in the :selected option.
       #
@@ -912,6 +920,7 @@ module Formtastic #:nodoc:
       #
       #   f.input :created_at, :as => :time, :selected => 1.hour.ago
       #   f.input :created_at, :as => :time, :selected => nil   # override any defaults: select none
+      #   f.input :created_at, :as => :date, :labels => { :hour => "Hour", :minute => "Minute" }
       #
       # Some of Rails' options for select_time are supported, but not everything yet, see
       # documentation of date_or_datetime_input() for more information.
@@ -965,6 +974,7 @@ module Formtastic #:nodoc:
       #   * @:selected => nil@
       #   * @:discard_(year|month|day|hour|minute) => true@
       #   * @:include_blank => true@
+      #   * @:labels => {}@
       def date_or_datetime_input(method, options)
         if options.key?(:selected)
           ::ActiveSupport::Deprecation.warn(":selected is deprecated (and may still have changed behavior) in #{options[:as]} inputs, use :default instead, see commit 09fc6b4 and issue #152 on github.com/justinfrench/formtastic")
