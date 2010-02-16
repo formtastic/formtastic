@@ -314,7 +314,15 @@ module Formtastic #:nodoc:
 
       if @object && @object.respond_to?(:new_record?)
         key = @object.new_record? ? :create : :update
-        object_name = @object.class.name.underscore.humanize # TODO Rails Bug: should be able to call @object.class.human_name, see http://github.com/justinfrench/formtastic/issues/#issue/153 revisit for Rails 3
+        
+        # Deal with some complications with ActiveRecord::Base.human_name and two name models (eg UserPost)
+        # ActiveRecord::Base.human_name falls back to ActiveRecord::Base.name.humanize ("Userpost") 
+        # if there's no i18n, which is pretty crappy.  In this circumstance we want to detect this
+        # fall back (human_name == name.humanize) and do our own thing name.underscore.humanize ("User Post")
+        object_human_name = @object.class.human_name                # default is UserPost => "Userpost", but i18n may do better ("User post")
+        crappy_human_name = @object.class.name.humanize             # UserPost => "Userpost"
+        decent_human_name = @object.class.name.underscore.humanize  # UserPost => "User post"
+        object_name = (object_human_name == crappy_human_name) ? decent_human_name : object_human_name
       else
         key = :submit
         object_name = @object_name.to_s.send(@@label_str_method)

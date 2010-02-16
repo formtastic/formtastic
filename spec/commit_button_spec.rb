@@ -121,9 +121,6 @@ describe 'SemanticFormBuilder#commit_button' do
   end
 
   describe 'label' do
-    before do
-      ::Post.stub!(:human_name).and_return('Post')
-    end
 
     # No object
     describe 'when used without object' do
@@ -351,7 +348,7 @@ describe 'SemanticFormBuilder#commit_button' do
   describe 'when the model is two words' do
     before do
       output_buffer = ''
-      class ::UserPost; def id; end; end
+      class ::UserPost; def id; end; def self.human_name; "Userpost"; end; end # Rails does crappy human_name
       @new_user_post = ::UserPost.new
       
       @new_user_post.stub!(:new_record?).and_return(true)
@@ -365,5 +362,57 @@ describe 'SemanticFormBuilder#commit_button' do
     end
     
   end
+  
+#  describe 'with i18n' do
+#    
+#    before do
+#      ::I18n.backend.store_translations :en, :activerecord => { 
+#        :models => { 
+#          :post => { 
+#            :one => 'Article', 
+#            :many => 'Articles', 
+#            :other => "{{count}} Articles" }, 
+#          :big_post => { 
+#            :one => 'Feature Article', 
+#            :many => 'Feature Articles', 
+#            :other => "{{count}} Feature Articles" } } }
+#      #@new_post.class.stub!(:human_name => I18n.t("activerecord.models.post.one"))
+#    end
+#    
+#    after do
+#      ::I18n.backend.store_translations :en, :models => nil
+#    end
+#    
+#    it 'should translate a single word model' do
+#      output_buffer.replace ''
+#      semantic_form_for(@new_post) do |builder|
+#        concat(builder.commit_button())
+#      end
+#      
+#      output_buffer.should have_tag('input[@value="Create Article"]')
+#    end
+#    
+#    it 'should translate a multiple word model' do
+#      
+#    end
+#    
+#    
+#    #before do
+#    #  output_buffer = ''
+#    #  class ::UserPost; def id; end; end
+#    #  @new_user_post = ::UserPost.new
+#    #  
+#    #  @new_user_post.stub!(:new_record?).and_return(true)
+#    #  semantic_form_for(@new_user_post, :url => '') do |builder|
+#    #    concat(builder.commit_button())
+#    #  end
+#    #end
+#    #
+#    #it "should render the string as the value of the button" do
+#    #  output_buffer.should have_tag('li input[@value="Create User post"]')
+#    #end
+#    
+#  end
+#  
   
 end
