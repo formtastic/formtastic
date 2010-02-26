@@ -177,6 +177,61 @@ describe 'check_boxes input' do
     end
     
 
+    describe 'when :disabled is set' do
+      before do
+        @output_buffer = ''
+      end
+
+      describe "no disabled items" do
+        before do
+          @new_post.stub!(:author_ids).and_return(nil)
+
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:authors, :as => :check_boxes, :disabled => nil))
+          end
+        end
+
+        it 'should not have any disabled item(s)' do
+          output_buffer.should_not have_tag("form li fieldset ol li label input[@disabled='disabled']")
+        end
+      end
+
+      describe "single disabled item" do
+        before do
+          @new_post.stub!(:author_ids).and_return(nil)
+
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:authors, :as => :check_boxes, :disabled => @fred.id))
+          end
+        end
+
+        it "should have one item disabled; the specified one" do
+          output_buffer.should have_tag("form li fieldset ol li label input[@disabled='disabled']", :count => 1)
+          output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_ids_#{@fred.id}']", /fred/i)
+          output_buffer.should have_tag("form li fieldset ol li label input[@disabled='disabled'][@value='#{@fred.id}']")
+        end
+      end
+
+      describe "multiple disabled items" do
+        before do
+          @new_post.stub!(:author_ids).and_return(nil)
+
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:authors, :as => :check_boxes, :disabled => [@bob.id, @fred.id]))
+          end
+        end
+
+        it "should have multiple items disabled; the specified ones" do
+          output_buffer.should have_tag("form li fieldset ol li label input[@disabled='disabled']", :count => 2)
+          output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_ids_#{@bob.id}']", /bob/i)
+          output_buffer.should have_tag("form li fieldset ol li label input[@disabled='disabled'][@value='#{@bob.id}']")
+          output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_ids_#{@fred.id}']", /fred/i)
+          output_buffer.should have_tag("form li fieldset ol li label input[@disabled='disabled'][@value='#{@fred.id}']")
+        end
+      end
+
+    end
+
   end
   
   

@@ -1110,7 +1110,10 @@ module Formtastic #:nodoc:
         selected_option_is_present = [:selected, :checked].any? { |k| options.key?(k) }
         selected_values = (options.key?(:checked) ? options[:checked] : options[:selected]) if selected_option_is_present
         selected_values  = [*selected_values].compact
-        
+
+        disabled_option_is_present = options.key?(:disabled)
+        disabled_values = [*options[:disabled]] if disabled_option_is_present
+
         list_item_content = collection.map do |c|
           label = c.is_a?(Array) ? c.first : c
           value = c.is_a?(Array) ? c.last : c
@@ -1118,6 +1121,7 @@ module Formtastic #:nodoc:
           input_ids << input_id
 
           html_options[:checked] = selected_values.include?(value) if selected_option_is_present
+          html_options[:disabled] = disabled_values.include?(value) if disabled_option_is_present
           html_options[:id] = input_id
 
           li_content = template.content_tag(:label,
