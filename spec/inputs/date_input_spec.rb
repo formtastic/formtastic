@@ -24,6 +24,9 @@ describe 'date input' do
   end
   
   it 'should associate the legend label with the first select' do
+    output_buffer.should have_tag('form li.date fieldset legend.label')
+    output_buffer.should have_tag('form li.date fieldset legend.label label')
+    output_buffer.should have_tag('form li.date fieldset legend.label label[@for]')
     output_buffer.should have_tag('form li.date fieldset legend.label label[@for="post_publish_at_1i"]')
   end
 
