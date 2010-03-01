@@ -354,7 +354,7 @@ describe 'select input' do
       end
     end
   end
-
+  
   describe 'when :selected is set' do
     before do
       @output_buffer = ''
@@ -363,11 +363,13 @@ describe 'select input' do
     describe "no selected items" do
       before do
         @new_post.stub!(:author_id).and_return(nil)
-        semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:author, :as => :select, :selected => nil))
+        with_deprecation_silenced do
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:author, :as => :select, :selected => nil))
+          end
         end
       end
-
+      
       it 'should not have any selected item(s)' do
         output_buffer.should_not have_tag("form li select option[@selected='selected']")
       end
@@ -376,8 +378,10 @@ describe 'select input' do
     describe "single selected item" do
       before do
         @new_post.stub!(:author_id).and_return(nil)
-        semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:author, :as => :select, :selected => @bob.id))
+        with_deprecation_silenced do
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:author, :as => :select, :selected => @bob.id))
+          end
         end
       end
 
@@ -394,8 +398,10 @@ describe 'select input' do
         before do
           @new_post.stub!(:author_ids).and_return(nil)
           
-          semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:authors, :as => :select, :selected => [@bob.id, @fred.id], :multiple => false))
+          with_deprecation_silenced do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:authors, :as => :select, :selected => [@bob.id, @fred.id], :multiple => false))
+            end
           end
         end
 
@@ -410,8 +416,10 @@ describe 'select input' do
         before do
           @new_post.stub!(:author_ids).and_return(nil)
 
-          semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:authors, :as => :select, :selected => [@bob.id, @fred.id]))
+          with_deprecation_silenced do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:authors, :as => :select, :selected => [@bob.id, @fred.id]))
+            end
           end
         end
 
@@ -427,7 +435,7 @@ describe 'select input' do
     end
 
   end
-
+  
   describe "enum" do
     before do
       @output_buffer = ''
@@ -466,5 +474,16 @@ describe 'select input' do
       end
     end
   end
-
+  
+  it 'should warn about :selected deprecation' do
+    with_deprecation_silenced do
+      ::ActiveSupport::Deprecation.should_receive(:warn).any_number_of_times
+      semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:author_id, :as => :select, :selected => @bob.id))
+      end
+    end
+  end
+  
+  
+  
 end

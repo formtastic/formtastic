@@ -65,8 +65,10 @@ describe 'boolean input' do
       before do
         @new_post.stub!(:allow_comments).and_return(true)
 
-        semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:allow_comments, :as => :boolean, :selected => false))
+        with_deprecation_silenced do
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:allow_comments, :as => :boolean, :selected => false))
+          end
         end
       end
 
@@ -78,9 +80,11 @@ describe 'boolean input' do
     describe "selected" do
       before do
         @new_post.stub!(:allow_comments).and_return(false)
-
-        semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:allow_comments, :as => :boolean, :selected => true))
+        
+        with_deprecation_silenced do
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:allow_comments, :as => :boolean, :selected => true))
+          end
         end
       end
 

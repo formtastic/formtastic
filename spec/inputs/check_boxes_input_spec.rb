@@ -115,8 +115,10 @@ describe 'check_boxes input' do
         before do
           @new_post.stub!(:author_ids).and_return(nil)
 
-          semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:authors, :as => :check_boxes, :selected => nil))
+          with_deprecation_silenced do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:authors, :as => :check_boxes, :selected => nil))
+            end
           end
         end
 
@@ -129,8 +131,10 @@ describe 'check_boxes input' do
         before do
           @new_post.stub!(:author_ids).and_return(nil)
 
-          semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:authors, :as => :check_boxes, :selected => @fred.id))
+          with_deprecation_silenced do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:authors, :as => :check_boxes, :selected => @fred.id))
+            end
           end
         end
 
@@ -144,9 +148,11 @@ describe 'check_boxes input' do
       describe "multiple selected items" do
         before do
           @new_post.stub!(:author_ids).and_return(nil)
-
-          semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:authors, :as => :check_boxes, :selected => [@bob.id, @fred.id]))
+          
+          with_deprecation_silenced do
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:authors, :as => :check_boxes, :selected => [@bob.id, @fred.id]))
+            end
           end
         end
 
@@ -160,8 +166,20 @@ describe 'check_boxes input' do
       end
 
     end
+    
+    it 'should warn about :selected deprecation' do
+      with_deprecation_silenced do
+        ::ActiveSupport::Deprecation.should_receive(:warn).any_number_of_times
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:authors, :as => :check_boxes, :selected => @bob.id))
+        end
+      end
+    end
+    
 
   end
+  
+  
 
 end
 

@@ -120,9 +120,11 @@ describe 'radio input' do
     describe "no selected items" do
       before do
         @new_post.stub!(:author_ids).and_return(nil)
-
-        semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:authors, :as => :radio, :selected => nil))
+        
+        with_deprecation_silenced do
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:authors, :as => :radio, :selected => nil))
+          end
         end
       end
 
@@ -134,9 +136,10 @@ describe 'radio input' do
     describe "single selected item" do
       before do
         @new_post.stub!(:author_ids).and_return(nil)
-  
-        semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:authors, :as => :radio, :selected => @fred.id))
+        with_deprecation_silenced do
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:authors, :as => :radio, :selected => @fred.id))
+          end
         end
       end
 

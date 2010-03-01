@@ -85,8 +85,10 @@ describe 'time_zone input' do
         # @new_post.stub!(:time_zone).and_return('Stockholm')
         @new_post.stub!(:time_zone).and_return(nil)
 
-        semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:time_zone, :as => :time_zone, :selected => 'Melbourne'))
+        with_deprecation_silenced do
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:time_zone, :as => :time_zone, :selected => 'Melbourne'))
+          end
         end
       end
 

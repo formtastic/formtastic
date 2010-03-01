@@ -77,6 +77,14 @@ module Formtastic #:nodoc:
     #   <% end %>
     #
     def input(method, options = {})
+      if options.key?(:selected) || options.key?(:checked) || options.key?(:default)
+        ::ActiveSupport::Deprecation.warn(
+          "The :selected, :checked (and :default) options are deprecated in Formtastic and will be removed from 1.0. " <<
+          "Please set default values in your models (using an after_initialize callback) or in your controller set-up. " <<
+          "See http://api.rubyonrails.org/classes/ActiveRecord/Callbacks.html for more information.", caller)
+      end
+      
+      
       options[:required] = method_required?(method) unless options.key?(:required)
       options[:as]     ||= default_input_type(method, options)
 

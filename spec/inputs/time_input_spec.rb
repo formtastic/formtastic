@@ -48,8 +48,10 @@ describe 'time input' do
       it "should select the object value (ignoring :default)" do
         output_buffer.replace ''
         @new_post.stub!(:created_at => Time.mktime(2012, 11, 30, 21, 45))
-        semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:created_at, :as => :time, :default => Time.mktime(1999, 12, 31, 22, 59)))
+        with_deprecation_silenced do 
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:created_at, :as => :time, :default => Time.mktime(1999, 12, 31, 22, 59)))
+          end
         end
         output_buffer.should have_tag("form li ol li select#post_created_at_4i option[@selected]", :count => 1)
         output_buffer.should have_tag("form li ol li select#post_created_at_4i option[@value='21'][@selected]", :count => 1)
@@ -60,8 +62,10 @@ describe 'time input' do
       it "should select the :default if provided as a Time" do
         output_buffer.replace ''
         @new_post.stub!(:created_at => nil)
-        semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:created_at, :as => :time, :default => Time.mktime(1999, 12, 31, 22, 59)))
+        with_deprecation_silenced do
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:created_at, :as => :time, :default => Time.mktime(1999, 12, 31, 22, 59)))
+          end
         end
         output_buffer.should have_tag("form li ol li select#post_created_at_4i option[@selected]", :count => 1)
         output_buffer.should have_tag("form li ol li select#post_created_at_4i option[@value='22'][@selected]", :count => 1)
@@ -70,8 +74,10 @@ describe 'time input' do
       it "should not select an option if the :default is provided as nil" do
         output_buffer.replace ''
         @new_post.stub!(:created_at => nil)
-        semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:created_at, :as => :time, :default => nil))
+        with_deprecation_silenced do 
+          semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:created_at, :as => :time, :default => nil))
+          end
         end
         output_buffer.should_not have_tag("form li ol li select#post_created_at_4i option[@selected]")
       end
@@ -118,7 +124,7 @@ describe 'time input' do
 
   it 'should warn about :selected deprecation' do
     with_deprecation_silenced do
-      ::ActiveSupport::Deprecation.should_receive(:warn)
+      ::ActiveSupport::Deprecation.should_receive(:warn).any_number_of_times
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:created_at, :as => :time, :selected => Time.mktime(1999)))
       end
