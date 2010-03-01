@@ -84,7 +84,6 @@ module Formtastic #:nodoc:
           "See http://api.rubyonrails.org/classes/ActiveRecord/Callbacks.html for more information.", caller)
       end
       
-      
       options[:required] = method_required?(method) unless options.key?(:required)
       options[:as]     ||= default_input_type(method, options)
 
@@ -984,11 +983,6 @@ module Formtastic #:nodoc:
       #   * @:include_blank => true@
       #   * @:labels => {}@
       def date_or_datetime_input(method, options)
-        if options.key?(:selected)
-          ::ActiveSupport::Deprecation.warn(":selected is deprecated (and may still have changed behavior) in #{options[:as]} inputs, use :default instead, see commit 09fc6b4 and issue #152 on github.com/justinfrench/formtastic")
-          options[:default] = options[:selected]
-        end
-        
         position = { :year => 1, :month => 2, :day => 3, :hour => 4, :minute => 5, :second => 6 }
         i18n_date_order = ::I18n.t(:order, :scope => [:date])
         i18n_date_order = nil unless i18n_date_order.is_a?(Array)
@@ -1001,8 +995,8 @@ module Formtastic #:nodoc:
         list_items_capture = ""
         hidden_fields_capture = ""
 
-        datetime = options.key?(:default) ? options[:default] : Time.now # can't do an || because nil is an important value
-        datetime = @object.send(method) if @object && @object.send(method) # object trumps :default
+        datetime = options.key?(:selected) ? options[:selected] : Time.now # can't do an || because nil is an important value
+        datetime = @object.send(method) if @object && @object.send(method) # object trumps :selected
 
         html_options = options.delete(:input_html) || {}
         input_ids    = []

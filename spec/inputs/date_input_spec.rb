@@ -46,15 +46,15 @@ describe 'date input' do
     output_buffer.should have_tag('form li.date fieldset ol li select', :count => 3)
   end
     
-  describe ':default option' do
+  describe ':selected option' do
     
     describe "when the object has a value" do
-      it "should select the object value (ignoring :default)" do
+      it "should select the object value (ignoring :selected)" do
         output_buffer.replace ''
         @new_post.stub!(:created_at => Time.mktime(2012))
         with_deprecation_silenced do
           semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:created_at, :as => :date, :default => Time.mktime(1999)))
+            concat(builder.input(:created_at, :as => :date, :selected => Time.mktime(1999)))
           end
         end
         output_buffer.should have_tag("form li ol li select#post_created_at_1i option[@selected]", :count => 1)
@@ -63,42 +63,42 @@ describe 'date input' do
     end
     
     describe 'when the object has no value' do
-      it "should select the :default if provided as a Date" do
+      it "should select the :selected if provided as a Date" do
         output_buffer.replace ''
         @new_post.stub!(:created_at => nil)
         with_deprecation_silenced do
           semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:created_at, :as => :date, :default => Date.new(1999)))
+            concat(builder.input(:created_at, :as => :date, :selected => Date.new(1999)))
           end
         end
         output_buffer.should have_tag("form li ol li select#post_created_at_1i option[@selected]", :count => 1)
         output_buffer.should have_tag("form li ol li select#post_created_at_1i option[@value='1999'][@selected]", :count => 1)
       end
       
-      it "should select the :default if provided as a Time" do
+      it "should select the :selected if provided as a Time" do
         output_buffer.replace ''
         @new_post.stub!(:created_at => nil)
         with_deprecation_silenced do
           semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:created_at, :as => :date, :default => Time.mktime(1999)))
+            concat(builder.input(:created_at, :as => :date, :selected => Time.mktime(1999)))
           end
         end
         output_buffer.should have_tag("form li ol li select#post_created_at_1i option[@selected]", :count => 1)
         output_buffer.should have_tag("form li ol li select#post_created_at_1i option[@value='1999'][@selected]", :count => 1)
       end
       
-      it "should not select an option if the :default is provided as nil" do
+      it "should not select an option if the :selected is provided as nil" do
         output_buffer.replace ''
         @new_post.stub!(:created_at => nil)
         with_deprecation_silenced do
           semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:created_at, :as => :date, :default => nil))
+            concat(builder.input(:created_at, :as => :date, :selected => nil))
           end
         end
         output_buffer.should_not have_tag("form li ol li select#post_created_at_1i option[@selected]")
       end
       
-      it "should select Time.now if a :default is not provided" do
+      it "should select Time.now if a :selected is not provided" do
         output_buffer.replace ''
         @new_post.stub!(:created_at => nil)
         semantic_form_for(@new_post) do |builder|
