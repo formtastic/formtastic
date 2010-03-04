@@ -25,6 +25,14 @@ describe 'SemanticFormHelper' do
       output_buffer.should have_tag("form.formtastic")
     end
 
+    it 'adds a class of "xyz" to the generated form' do
+      ::Formtastic::SemanticFormHelper.default_form_class = 'xyz'
+      form = semantic_form_for(::Post.new, :as => :post, :url => '/hello') do |builder|
+      end
+      output_buffer.concat(form) if Formtastic::Util.rails3?
+      output_buffer.should have_tag("form.xyz")
+    end
+
     it 'adds class matching the object name to the generated form when a symbol is provided' do
       form = semantic_form_for(@new_post, :url => '/hello') do |builder|
       end
