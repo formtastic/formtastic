@@ -145,6 +145,7 @@ module FormtasticSpecHelper
     @new_post.stub!(:author).and_return(nil)
     @new_post.stub!(:main_post).and_return(nil)
     @new_post.stub!(:sub_posts).and_return([]) #TODO should be a mock with methods for adding sub posts
+    @new_post.stub!(:to_model).and_return(@new_post)
 
     @freds_post = mock('post')
     @freds_post.stub!(:class).and_return(::Post)
