@@ -6,7 +6,7 @@ describe 'boolean input' do
   include FormtasticSpecHelper
   
   before do
-    @output_buffer = ''
+    @output_buffer = ActiveSupport::SafeBuffer.new
     mock_everything
     
     semantic_form_for(@new_post) do |builder|
@@ -58,7 +58,7 @@ describe 'boolean input' do
 
   describe 'when :selected is set' do
     before do
-      @output_buffer = ''
+      @output_buffer = ActiveSupport::SafeBuffer.new
     end
 
     describe "not selected" do

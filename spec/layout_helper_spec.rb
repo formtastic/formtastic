@@ -7,7 +7,7 @@ describe 'LayoutHelper' do
   include Formtastic::LayoutHelper
   
   before do
-    @output_buffer = ''
+    @output_buffer = ActiveSupport::SafeBuffer.new
   end
   
   describe '#formtastic_stylesheet_link_tag' do

@@ -6,7 +6,7 @@ describe 'select input' do
   include FormtasticSpecHelper
 
   before do
-    @output_buffer = ''
+    @output_buffer = ActiveSupport::SafeBuffer.new
     mock_everything
   end
 
@@ -343,7 +343,7 @@ describe 'select input' do
   
   describe 'when :selected is set' do
     before do
-      @output_buffer = ''
+      @output_buffer = ActiveSupport::SafeBuffer.new
     end
 
     describe "no selected items" do
@@ -424,7 +424,7 @@ describe 'select input' do
   
   describe "enum" do
     before do
-      @output_buffer = ''
+      @output_buffer = ActiveSupport::SafeBuffer.new
       @some_meta_descriptions = ["One", "Two", "Three"]
       @new_post.stub!(:meta_description).any_number_of_times
     end

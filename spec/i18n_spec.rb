@@ -85,7 +85,7 @@ describe 'Formtastic::I18n' do
     include FormtasticSpecHelper
     
     before do
-      @output_buffer = ''
+      @output_buffer = ActiveSupport::SafeBuffer.new
       mock_everything
       
       ::I18n.backend.store_translations :en, :formtastic => {

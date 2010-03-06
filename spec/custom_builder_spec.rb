@@ -12,7 +12,7 @@ describe 'Formtastic::SemanticFormHelper.builder' do
   end
   
   before do
-    @output_buffer = ''
+    @output_buffer = ActiveSupport::SafeBuffer.new
     mock_everything
   end
   

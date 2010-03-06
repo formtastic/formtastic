@@ -7,7 +7,7 @@ describe 'check_boxes input' do
   
   describe 'for a has_many association' do
     before do
-      @output_buffer = ''
+      @output_buffer = ActiveSupport::SafeBuffer.new
       mock_everything
       
       semantic_form_for(@fred) do |builder|
@@ -108,7 +108,7 @@ describe 'check_boxes input' do
 
     describe 'when :selected is set' do
       before do
-        @output_buffer = ''
+        @output_buffer = ActiveSupport::SafeBuffer.new
       end
 
       describe "no selected items" do

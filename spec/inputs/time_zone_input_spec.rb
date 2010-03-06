@@ -6,7 +6,7 @@ describe 'time_zone input' do
   include FormtasticSpecHelper
   
   before do
-    @output_buffer = ''
+    @output_buffer = ActiveSupport::SafeBuffer.new
     mock_everything
     
     semantic_form_for(@new_post) do |builder|
@@ -59,7 +59,7 @@ describe 'time_zone input' do
   
   describe 'when :selected is set' do
     before do
-      @output_buffer = ''
+      @output_buffer = ActiveSupport::SafeBuffer.new
     end
 
     # Note: Not possible to override default selected value for time_zone input

@@ -6,7 +6,7 @@ describe "*select: options[:include_blank]" do
   include FormtasticSpecHelper
 
   before do
-    @output_buffer = ''
+    @output_buffer = ActiveSupport::SafeBuffer.new
     mock_everything
 
     @new_post.stub!(:author_id).and_return(nil)

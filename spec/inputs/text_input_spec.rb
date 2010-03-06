@@ -6,7 +6,7 @@ describe 'text input' do
   include FormtasticSpecHelper
   
   before do
-    @output_buffer = ''
+    @output_buffer = ActiveSupport::SafeBuffer.new
     mock_everything
     
     semantic_form_for(@new_post) do |builder|
