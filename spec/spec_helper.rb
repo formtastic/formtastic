@@ -10,17 +10,18 @@ require 'action_view'
 require 'action_controller'
 require 'active_model'
 
-gem 'rspec', '>= 1.2.6'
-gem 'rspec-rails', '>= 1.2.6'
+gem 'rspec', '>= 2.0.0.beta.2'
+gem 'rspec-rails', '>= 2.0.0.beta.2'
 gem 'hpricot', '>= 0.6.1'
 gem 'rspec_tag_matchers', '>= 1.0.0'
 require 'rspec_tag_matchers'
 
 require 'custom_macros'
 
-Spec::Runner.configure do |config|
-  config.include(RspecTagMatchers)
-  config.include(CustomMacros)
+Rspec.configure do |config|
+  config.include RspecTagMatchers
+  config.include CustomMacros
+  config.mock_with :rspec
 end
 
 require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic'))
