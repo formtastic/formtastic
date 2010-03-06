@@ -1,12 +1,14 @@
 # coding: utf-8
 require 'rubygems'
 
-gem 'activesupport', '2.3.5'
-gem 'actionpack', '2.3.5'
+gem 'activesupport', '3.0.0.beta'
+gem 'actionpack', '3.0.0.beta'
+gem 'activemodel', '3.0.0.beta'
 require 'active_support'
 require 'action_pack'
 require 'action_view'
 require 'action_controller'
+require 'active_model'
 
 gem 'rspec', '>= 1.2.6'
 gem 'rspec-rails', '>= 1.2.6'
@@ -26,13 +28,14 @@ require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic/la
 
 
 module FormtasticSpecHelper
+  include ActionView::Context
   include ActionView::Helpers::FormHelper
   include ActionView::Helpers::FormTagHelper
   include ActionView::Helpers::FormOptionsHelper
   include ActionView::Helpers::UrlHelper
   include ActionView::Helpers::TagHelper
   include ActionView::Helpers::TextHelper
-  include ActionView::Helpers::ActiveRecordHelper
+  include ActionView::Helpers::ActiveModelHelper
   include ActionView::Helpers::RecordIdentificationHelper
   include ActionView::Helpers::DateHelper
   include ActionView::Helpers::CaptureHelper
@@ -54,20 +57,34 @@ module FormtasticSpecHelper
   end
   
   class ::Post
+    extend ActiveModel::Naming
+    include ActiveModel::Conversion
+    
     def id
     end
   end
+  
   module ::Namespaced
     class Post
+      extend ActiveModel::Naming
+      include ActiveModel::Conversion
+      
       def id
       end
     end
   end
+  
   class ::Author
+    extend ActiveModel::Naming
+    include ActiveModel::Conversion
+    
     def to_label
     end
   end
+  
   class ::Continent
+    extend ActiveModel::Naming
+    include ActiveModel::Conversion    
   end
   
   def mock_everything
