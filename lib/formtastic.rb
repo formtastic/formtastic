@@ -1639,15 +1639,11 @@ module Formtastic #:nodoc:
   #
   # * semantic_form_for(@post)
   # * semantic_fields_for(@post)
-  # * semantic_form_remote_for(@post)
-  # * semantic_remote_form_for(@post)
   #
   # Each of which are the equivalent of:
   #
   # * form_for(@post, :builder => Formtastic::SemanticFormBuilder))
   # * fields_for(@post, :builder => Formtastic::SemanticFormBuilder))
-  # * form_remote_for(@post, :builder => Formtastic::SemanticFormBuilder))
-  # * remote_form_for(@post, :builder => Formtastic::SemanticFormBuilder))
   #
   # Example Usage:
   #
@@ -1688,8 +1684,7 @@ module Formtastic #:nodoc:
       ::ActionView::Base.field_error_proc = @@default_field_error_proc
       result
     end
-    
-    [:form_for, :fields_for, :remote_form_for].each do |meth|
+    [:form_for, :fields_for].each do |meth|
       module_eval <<-END_SRC, __FILE__, __LINE__ + 1
         def semantic_#{meth}(record_or_name_or_array, *args, &proc)
           options = args.extract_options!
@@ -1711,7 +1706,5 @@ module Formtastic #:nodoc:
         end
       END_SRC
     end
-    alias :semantic_form_remote_for :semantic_remote_form_for
-    
   end
 end
