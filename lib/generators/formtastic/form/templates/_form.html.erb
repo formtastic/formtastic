@@ -1,0 +1,5 @@
+<%% f.inputs do %>
+<% columns.each do |column| -%>
+  <%%= f.input :<%= column.name %>, :label => '<%= column.name.humanize %>' %>
+<% end -%>
+<%% end %>
