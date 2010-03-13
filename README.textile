@@ -261,7 +261,8 @@ The Formtastic input types:
 * @:currency@ - a select menu of currencies. Default for column types: :string with name @"currency"@ - requires a *currency_select* plugin to be installed.
 * @:hidden@ - a hidden field. Creates a hidden field (added for compatibility).
 
-The documentation is pretty good for each of these (what it does, what the output is, what the options are, etc.) so go check it out.
+The comments in the code are pretty good for each of these (what it does, what the output is, what the options are, etc.) so go check it out.
+
 
 h2. Delegation for label lookups
 
