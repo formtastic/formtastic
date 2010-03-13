@@ -8,38 +8,44 @@ describe 'time input' do
   before do
     @output_buffer = ''
     mock_everything
-    
-    semantic_form_for(@new_post) do |builder|
-      concat(builder.input(:publish_at, :as => :time))
-    end
-  end
-   
-  it_should_have_input_wrapper_with_class("time")
-  it_should_have_input_wrapper_with_id("post_publish_at_input")
-  it_should_have_a_nested_fieldset
-  it_should_apply_error_logic_for_input_type(:time)
-
-  it 'should have a legend and label with the label text inside the fieldset' do
-    output_buffer.should have_tag('form li.time fieldset legend.label label', /Publish at/)
   end
   
-  it 'should associate the legend label with the first select' do
-    output_buffer.should have_tag('form li.time fieldset legend.label label[@for="post_publish_at_2i"]')
-  end
-
-  it 'should have an ordered list of two items inside the fieldset' do
-    output_buffer.should have_tag('form li.time fieldset ol')
-    output_buffer.should have_tag('form li.time fieldset ol li', :count => 2)
-  end
-
-  it 'should have five labels for hour and minute' do
-    output_buffer.should have_tag('form li.time fieldset ol li label', :count => 2)
-    output_buffer.should have_tag('form li.time fieldset ol li label', /hour/i)
-    output_buffer.should have_tag('form li.time fieldset ol li label', /minute/i)
-  end
-
-  it 'should have two selects for hour and minute' do
-    output_buffer.should have_tag('form li.time fieldset ol li', :count => 2)
+  describe "general" do
+  
+    before do
+      output_buffer.replace ''
+      semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:publish_at, :as => :time))
+      end
+    end
+     
+    it_should_have_input_wrapper_with_class("time")
+    it_should_have_input_wrapper_with_id("post_publish_at_input")
+    it_should_have_a_nested_fieldset
+    it_should_apply_error_logic_for_input_type(:time)
+    
+    it 'should have a legend and label with the label text inside the fieldset' do
+      output_buffer.should have_tag('form li.time fieldset legend.label label', /Publish at/)
+    end
+    
+    it 'should associate the legend label with the first select' do
+      output_buffer.should have_tag('form li.time fieldset legend.label label[@for="post_publish_at_1i"]')
+    end
+    
+    it 'should have an ordered list of two items inside the fieldset' do
+      output_buffer.should have_tag('form li.time fieldset ol')
+      output_buffer.should have_tag('form li.time fieldset ol li', :count => 2)
+    end
+    
+    it 'should have five labels for hour and minute' do
+      output_buffer.should have_tag('form li.time fieldset ol li label', :count => 2)
+      output_buffer.should have_tag('form li.time fieldset ol li label', /hour/i)
+      output_buffer.should have_tag('form li.time fieldset ol li label', /minute/i)
+    end
+    
+    it 'should have two selects for hour and minute' do
+      output_buffer.should have_tag('form li.time fieldset ol li', :count => 2)
+    end
   end
   
   describe ':selected option' do
@@ -94,7 +100,7 @@ describe 'time input' do
     end
     
   end
-
+  
   describe ':labels option' do
     fields = [:hour, :minute]
     fields.each do |field|
@@ -108,7 +114,7 @@ describe 'time input' do
           output_buffer.should have_tag('form li.time fieldset ol li label', f == field ? /another #{f} label/i : /#{f}/i)
         end
       end
-
+  
       it "should not display the label for the #{field} field when :labels[:#{field}] is blank" do
         output_buffer.replace ''
         semantic_form_for(@new_post) do |builder|
@@ -121,7 +127,7 @@ describe 'time input' do
       end
     end
   end
-
+  
   it 'should warn about :selected deprecation' do
     with_deprecation_silenced do
       ::ActiveSupport::Deprecation.should_receive(:warn).any_number_of_times
@@ -130,5 +136,5 @@ describe 'time input' do
       end
     end
   end
-
+  
 end
