@@ -990,7 +990,7 @@ module Formtastic #:nodoc:
         labels   = options.delete(:labels) || {}
 
         time_inputs = [:hour, :minute]
-        time_inputs << [:second] if options[:include_seconds]
+        time_inputs << :second if options[:include_seconds]
 
         list_items_capture = ""
         hidden_fields_capture = ""
