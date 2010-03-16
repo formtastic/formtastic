@@ -173,7 +173,7 @@ If you want to customize the label text, or render some hint text below the fiel
   <% end %>
 </pre>
 
-Nested forms (Rails 2.3) are also supported. You can do it in the Rails way:
+Nested forms (Rails 2.3) are also supported (don't forget your models need to be setup correctly with accepts_nested_attributes_for – search the Rails docs). You can do it in the Rails way:
 
 <pre>
   <% semantic_form_for @post do |form| %>
