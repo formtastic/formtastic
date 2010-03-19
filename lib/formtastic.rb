@@ -100,7 +100,7 @@ module Formtastic #:nodoc:
       end
 
       input_parts = @@inline_order.dup
-      input_parts.delete(:errors) if options[:as] == :hidden
+      input_parts = input_parts - [:errors, :hints] if options[:as] == :hidden
 
       list_item_content = input_parts.map do |type|
         send(:"inline_#{type}_for", method, options)
