@@ -47,6 +47,15 @@ describe 'hidden input' do
     output_buffer.should_not have_tag("form li p.inline-errors")
     output_buffer.should_not have_tag("form li ul.errors")
   end
+
+  it "should not render inline hints" do
+    semantic_form_for(@new_post) do |builder|
+      concat(builder.input(:secret, :as => :hidden, :hint => "all your base are belong to use"))
+    end
+
+    output_buffer.should_not have_tag("form li p.inline-hints")
+    output_buffer.should_not have_tag("form li ul.hints")
+  end
     
 end
 
