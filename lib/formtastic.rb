@@ -1283,7 +1283,7 @@ module Formtastic #:nodoc:
           html_options.except(:builder, :parent)
         )
 
-        template.concat(fieldset) if block_given?
+        template.concat(fieldset) if block_given? && (!defined?(Rails::VERSION) || Rails::VERSION::MAJOR == 2)
         fieldset
       end
 
