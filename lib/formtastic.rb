@@ -107,7 +107,7 @@ module Formtastic #:nodoc:
         send(:"inline_#{type}_for", method, options)
       end.compact.join("\n")
 
-      return template.content_tag(:li, list_item_content, wrapper_html)
+      return template.content_tag(:li, list_item_content.to_s.html_safe, wrapper_html)
     end
 
     # Creates an input fieldset and ol tag wrapping for use around a set of inputs.  It can be
@@ -344,7 +344,7 @@ module Formtastic #:nodoc:
       element_class = ['commit', options.delete(:class)].compact.join(' ') # TODO: Add class reflecting on form action.
       accesskey = (options.delete(:accesskey) || @@default_commit_button_accesskey) unless button_html.has_key?(:accesskey)
       button_html = button_html.merge(:accesskey => accesskey) if accesskey  
-      template.content_tag(:li, self.submit(text, button_html), :class => element_class)
+      template.content_tag(:li, self.submit(text, button_html).to_s.html_safe, :class => element_class)
     end
 
     # A thin wrapper around #fields_for to set :builder => Formtastic::SemanticFormBuilder
@@ -408,7 +408,7 @@ module Formtastic #:nodoc:
       text = (options.delete(:label_prefix_for_nested_input) || "") + text
 
       input_name = options.delete(:input_name) || method
-      super(input_name, text, options)
+      super(input_name, text.to_s.html_safe, options)
     end
 
     # Generates error messages for the given method. Errors can be shown as list,
@@ -454,7 +454,7 @@ module Formtastic #:nodoc:
       return nil if full_errors.blank?
       html_options[:class] ||= "errors"
       template.content_tag(:ul, html_options) do
-        full_errors.map { |error| template.content_tag(:li, error) }.join
+        full_errors.map { |error| template.content_tag(:li, error.to_s.html_safe) }.join.to_s.html_safe
       end
     end
 
@@ -861,12 +861,12 @@ module Formtastic #:nodoc:
           html_options[:checked] = selected_value == value if selected_option_is_present
 
           li_content = template.content_tag(:label,
-            "#{self.radio_button(input_name, value, html_options)} #{label}",
+            "#{self.radio_button(input_name, value, html_options)} #{label}".to_s.html_safe,
             :for => input_id
           )
 
           li_options = value_as_class ? { :class => [method.to_s.singularize, value.to_s.downcase].join('_') } : {}
-          template.content_tag(:li, li_content, li_options)
+          template.content_tag(:li, li_content.to_s.html_safe, li_options)
         end
 
         field_set_and_list_wrapping_for_method(method, options, list_item_content)
@@ -1016,9 +1016,9 @@ module Formtastic #:nodoc:
             item_label_text = labels[input] || ::I18n.t(input.to_s, :default => input.to_s.humanize, :scope => [:datetime, :prompts])
 
             list_items_capture << template.content_tag(:li, [
-                !item_label_text.blank? ? template.content_tag(:label, item_label_text, :for => input_id) : "",
+                !item_label_text.blank? ? template.content_tag(:label, item_label_text.to_s.html_safe, :for => input_id) : "",
                 template.send(:"select_#{input}", datetime, opts, html_options.merge(:id => input_id))
-              ].join("")
+              ].join("").to_s.html_safe
             )
           end
         end
@@ -1127,12 +1127,12 @@ module Formtastic #:nodoc:
           html_options[:id] = input_id
 
           li_content = template.content_tag(:label,
-            "#{self.check_box(input_name, html_options, value, unchecked_value)} #{label}",
+            "#{self.check_box(input_name, html_options, value, unchecked_value)} #{label}".to_s.html_safe,
             :for => input_id
           )
 
           li_options = value_as_class ? { :class => [method.to_s.singularize, value.to_s.downcase].join('_') } : {}
-          template.content_tag(:li, li_content, li_options)
+          template.content_tag(:li, li_content.to_s.html_safe, li_options)
         end
 
         field_set_and_list_wrapping_for_method(method, options, list_item_content)
@@ -1197,13 +1197,13 @@ module Formtastic #:nodoc:
       def inline_hints_for(method, options) #:nodoc:
         options[:hint] = localized_string(method, options[:hint], :hint)
         return if options[:hint].blank?
-        template.content_tag(:p, options[:hint], :class => 'inline-hints')
+        template.content_tag(:p, options[:hint].to_s.html_safe, :class => 'inline-hints')
       end
 
       # Creates an error sentence by calling to_sentence on the errors array.
       #
       def error_sentence(errors) #:nodoc:
-        template.content_tag(:p, errors.to_sentence.untaint, :class => 'inline-errors')
+        template.content_tag(:p, errors.to_sentence.untaint.to_s.html_safe, :class => 'inline-errors')
       end
 
       # Creates an error li list.
@@ -1211,15 +1211,15 @@ module Formtastic #:nodoc:
       def error_list(errors) #:nodoc:
         list_elements = []
         errors.each do |error|
-          list_elements <<  template.content_tag(:li, error.untaint)
+          list_elements <<  template.content_tag(:li, error.untaint.to_s.html_safe)
         end
-        template.content_tag(:ul, list_elements.join("\n"), :class => 'errors')
+        template.content_tag(:ul, list_elements.join("\n").to_s.html_safe, :class => 'errors')
       end
 
       # Creates an error sentence containing only the first error
       #
       def error_first(errors) #:nodoc:
-        template.content_tag(:p, errors.first.untaint, :class => 'inline-errors')
+        template.content_tag(:p, errors.first.untaint.to_s.html_safe, :class => 'inline-errors')
       end
 
       # Generates the required or optional string. If the value set is a proc,
@@ -1266,7 +1266,7 @@ module Formtastic #:nodoc:
 
         legend  = html_options.delete(:name).to_s
         legend %= parent_child_index(html_options[:parent]) if html_options[:parent]
-        legend  = template.content_tag(:legend, template.content_tag(:span, legend)) unless legend.blank?
+        legend  = template.content_tag(:legend, template.content_tag(:span, legend.to_s.html_safe)) unless legend.blank?
 
         if block_given?
           contents = if template.respond_to?(:is_haml?) && template.is_haml?
@@ -1279,7 +1279,7 @@ module Formtastic #:nodoc:
         # Ruby 1.9: String#to_s behavior changed, need to make an explicit join.
         contents = contents.join if contents.respond_to?(:join)
         fieldset = template.content_tag(:fieldset,
-          legend << template.content_tag(:ol, contents),
+          legend.to_s.html_safe << template.content_tag(:ol, contents.to_s.html_safe),
           html_options.except(:builder, :parent)
         )
 
@@ -1311,7 +1311,7 @@ module Formtastic #:nodoc:
             template.content_tag(:legend,
                 self.label(method, options_for_label(options).merge(:for => options.delete(:label_for))), :class => 'label'
               ) <<
-            template.content_tag(:ol, contents)
+            template.content_tag(:ol, contents.to_s.html_safe)
           )
       end
 
