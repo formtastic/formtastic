@@ -149,20 +149,6 @@ describe 'select input' do
 
       output_buffer.should have_tag('form li select#post_author_status_id')
     end
-
-    it 'should use the "class_name" option' do
-      @new_post.stub!(:status).and_return(@bob)
-      @new_post.stub!(:author_status_id).and_return(@bob.id)
-   
-      ::Post.stub!(:reflect_on_association).with(:status).and_return(
-        mock('reflection', :options => {:class_name => 'AuthorStatus'}, :klass => ::Author, :macro => :belongs_to))
-
-      semantic_form_for(@new_post) do |builder|
-        concat(builder.input(:status, :as => :select))
-      end
-
-      output_buffer.should have_tag('form li select#post_author_status_id')
-    end
   end
   
   describe "for a belongs_to association with :group_by => :author" do
