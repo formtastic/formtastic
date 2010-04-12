@@ -1,9 +1,9 @@
 # coding: utf-8
 require 'rubygems'
 
-gem 'activesupport', '3.0.0.beta'
-gem 'actionpack', '3.0.0.beta'
-gem 'activemodel', '3.0.0.beta'
+gem 'activesupport', '3.0.0.beta2'
+gem 'actionpack', '3.0.0.beta2'
+gem 'activemodel', '3.0.0.beta2'
 require 'active_support'
 require 'action_pack'
 require 'action_view'
