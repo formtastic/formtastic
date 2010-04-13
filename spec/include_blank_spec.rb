@@ -24,9 +24,10 @@ describe "*select: options[:include_blank]" do
     it 'blank value should be included if the default value specified in config is true' do
       ::Formtastic::SemanticFormBuilder.include_blank_for_select_by_default = true
       @select_input_types.each do |as, attribute|
-        semantic_form_for(@new_post) do |builder|
+        form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(attribute, :as => as))
         end
+        output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
         output_buffer.should have_tag("form li select option[@value='']", "")
       end
     end
@@ -34,9 +35,10 @@ describe "*select: options[:include_blank]" do
     it 'blank value should not be included if the default value specified in config is false' do
       ::Formtastic::SemanticFormBuilder.include_blank_for_select_by_default = false
       @select_input_types.each do |as, attribute|
-        semantic_form_for(@new_post) do |builder|
+        form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(attribute, :as => as))
         end
+        output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
         output_buffer.should_not have_tag("form li select option[@value='']", "")
       end
     end
@@ -49,9 +51,10 @@ describe "*select: options[:include_blank]" do
   describe 'when :include_blank is set to false' do
     it 'should not have a blank option' do
       @select_input_types.each do |as, attribute|
-        semantic_form_for(@new_post) do |builder|
+        form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(attribute, :as => as, :include_blank => false))
         end
+        output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
         output_buffer.should_not have_tag("form li select option[@value='']", "")
       end
     end
@@ -60,9 +63,10 @@ describe "*select: options[:include_blank]" do
   describe 'when :include_blank => true is set' do
     it 'should have a blank select option' do
       @select_input_types.each do |as, attribute|
-        semantic_form_for(@new_post) do |builder|
+        form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(attribute, :as => as, :include_blank => true))
         end
+        output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
         output_buffer.should have_tag("form li select option[@value='']", "")
       end
     end

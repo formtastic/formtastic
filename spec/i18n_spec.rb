@@ -108,16 +108,18 @@ describe 'Formtastic::I18n' do
     end
     
     it "should be able to translate with namespaced object" do
-      semantic_form_for(@new_post) do |builder|
+      form = semantic_form_for(@new_post) do |builder|
         concat(builder.input(:title))
       end
+      output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag("form label", /Hello post!/)
     end
     
     it "should be able to translate without form-object" do
-      semantic_form_for(:project, :url => 'http://test.host') do |builder|
+      form = semantic_form_for(:project, :url => 'http://test.host') do |builder|
         concat(builder.input(:title))
       end
+      output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag("form label", /Hello project!/)
     end
     

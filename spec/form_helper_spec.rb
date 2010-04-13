@@ -19,48 +19,56 @@ describe 'SemanticFormHelper' do
     end
 
     it 'adds a class of "formtastic" to the generated form' do
-      semantic_form_for(:post, ::Post.new, :url => '/hello') do |builder|
+      form = semantic_form_for(:post, ::Post.new, :url => '/hello') do |builder|
       end
+      output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag("form.formtastic")
     end
 
     it 'adds class matching the object name to the generated form when a symbol is provided' do
-      semantic_form_for(:post, ::Post.new, :url => '/hello') do |builder|
+      form = semantic_form_for(:post, ::Post.new, :url => '/hello') do |builder|
       end
+      output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag("form.post")
 
-      semantic_form_for(:project, :url => '/hello') do |builder|
+      form = semantic_form_for(:project, :url => '/hello') do |builder|
       end
+      output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag("form.project")
     end
 
     it 'adds class matching the object\'s class to the generated form when an object is provided' do
-      semantic_form_for(@new_post) do |builder|
+      form = semantic_form_for(@new_post) do |builder|
       end
+      output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag("form.post")
     end
 
     it 'adds a namespaced class to the generated form' do
-      semantic_form_for(::Namespaced::Post.new, :url => '/hello') do |builder|
+      form = semantic_form_for(::Namespaced::Post.new, :url => '/hello') do |builder|
       end
+      output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag("form.namespaced_post")
     end
 
     describe 'allows :html options' do
       before(:each) do
-        semantic_form_for(:post, ::Post.new, :url => '/hello', :html => { :id => "something-special", :class => "something-extra", :multipart => true }) do |builder|
+         @form = semantic_form_for(:post, ::Post.new, :url => '/hello', :html => { :id => "something-special", :class => "something-extra", :multipart => true }) do |builder|
         end
       end
 
       it 'to add a id of "something-special" to generated form' do
+        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
         output_buffer.should have_tag("form#something-special")
       end
 
       it 'to add a class of "something-extra" to generated form' do
+        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
         output_buffer.should have_tag("form.something-extra")
       end
 
       it 'to add enctype="multipart/form-data"' do
+        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
         output_buffer.should have_tag('form[@enctype="multipart/form-data"]')
       end
     end

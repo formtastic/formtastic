@@ -29,11 +29,12 @@ describe 'SemanticFormBuilder#semantic_fields_for' do
   
   it 'should sanitize html id for li tag' do
     @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
-    semantic_form_for(@new_post) do |builder|
-      builder.semantic_fields_for(@bob, :index => 1) do |nested_builder|
+    form = semantic_form_for(@new_post) do |builder|
+      concat(builder.semantic_fields_for(@bob, :index => 1) do |nested_builder|
         concat(nested_builder.inputs(:login))
-      end
+      end)
     end
+    output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
     output_buffer.should have_tag('form fieldset.inputs #post_author_1_login_input')
     # Not valid selector, so using good ol' regex
     output_buffer.should_not =~ /id="post\[author\]_1_login_input"/

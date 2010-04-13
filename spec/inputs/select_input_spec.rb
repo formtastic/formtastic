@@ -15,13 +15,14 @@ describe 'select input' do
       before do
         @array_with_values = ["Title A", "Title B", "Title C"]
         @array_with_keys_and_values = [["Title D", 1], ["Title E", 2], ["Title F", 3]]
-        semantic_form_for(@new_post) do |builder|
+        @form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(:title, :as => :select, :collection => @array_with_values))
           concat(builder.input(:title, :as => :select, :collection => @array_with_keys_and_values))
         end
       end
 
       it 'should have a option for each key and/or value' do
+        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
         @array_with_values.each do |v|
           output_buffer.should have_tag("form li select option[@value='#{v}']", /^#{v}$/)
         end
@@ -34,12 +35,13 @@ describe 'select input' do
     describe 'using a range' do
       before do
         @range_with_values = 1..5
-        semantic_form_for(@new_post) do |builder|
+        @form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(:title, :as => :select, :collection => @range_with_values))
         end
       end
 
       it 'should have an option for each value' do
+        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
         @range_with_values.each do |v|
           output_buffer.should have_tag("form li select option[@value='#{v}']", /^#{v}$/)
         end
@@ -54,7 +56,7 @@ describe 'select input' do
         ::I18n.load_path = [File.join(File.dirname(__FILE__), *%w[.. .. lib locale en.yml])]
         ::I18n.backend.send(:init_translations)
 
-        semantic_form_for(@new_post) do |builder|
+        @form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(:published, :as => :select))
         end
       end
@@ -64,6 +66,7 @@ describe 'select input' do
       end
 
       it 'should render a select with at least options: true/false' do
+        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
         output_buffer.should have_tag("form li select option[@value='true']", /^Yes$/)
         output_buffer.should have_tag("form li select option[@value='false']", /^No$/)
       end
@@ -74,7 +77,7 @@ describe 'select input' do
         @boolean_select_labels = {:yes => 'Yep', :no => 'Nope'}
         ::I18n.backend.store_translations :en, :formtastic => @boolean_select_labels
 
-        semantic_form_for(@new_post) do |builder|
+        @form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(:published, :as => :select))
         end
       end
@@ -84,6 +87,7 @@ describe 'select input' do
       end
 
       it 'should render a select with at least options: true/false' do
+        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
         output_buffer.should have_tag("form li select option[@value='true']", /#{@boolean_select_labels[:yes]}/)
         output_buffer.should have_tag("form li select option[@value='false']", /#{@boolean_select_labels[:no]}/)
       end
@@ -92,7 +96,7 @@ describe 'select input' do
 
   describe 'for a belongs_to association' do
     before do
-      semantic_form_for(@new_post) do |builder|
+      @form = semantic_form_for(@new_post) do |builder|
         concat(builder.input(:author, :as => :select))
       end
     end
@@ -106,28 +110,34 @@ describe 'select input' do
     it_should_use_the_collection_when_provided(:select, 'option')
 
     it 'should have a select inside the wrapper' do
+      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag('form li select')
       output_buffer.should have_tag('form li select#post_author_id')
     end
 
     it 'should have a valid name' do
+      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag("form li select[@name='post[author_id]']")
       output_buffer.should_not have_tag("form li select[@name='post[author_id][]']")
     end
 
     it 'should not create a multi-select' do
+      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should_not have_tag('form li select[@multiple]')
     end
 
     it 'should create a select without size' do
+      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should_not have_tag('form li select[@size]')
     end
 
     it 'should have a blank option' do
+      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag("form li select option[@value='']")
     end
 
     it 'should have a select option for each Author' do
+      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag('form li select option', :count => ::Author.find(:all).size + 1)
       ::Author.find(:all).each do |author|
         output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
@@ -135,6 +145,7 @@ describe 'select input' do
     end
 
     it 'should have one option with a "selected" attribute' do
+      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag('form li select option[@selected]', :count => 1)
     end
 
@@ -143,10 +154,11 @@ describe 'select input' do
       @new_post.stub!(:author_status_id).and_return(@bob.id)
       @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :integer, :limit => 255))
 
-      semantic_form_for(@new_post) do |builder|
+      form = semantic_form_for(@new_post) do |builder|
         concat(builder.input(:author_status, :as => :select))
       end
 
+      output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag('form li select#post_author_status_id')
     end
   end
@@ -179,7 +191,7 @@ describe 'select input' do
         continent.stub!(:authors).and_return([@authors[i]])
       end
       
-      semantic_form_for(@new_post) do |builder|
+      @form = semantic_form_for(@new_post) do |builder|
         concat(builder.input(:author, :as => :select, :group_by => :continent ) )
         concat(builder.input(:author, :as => :select, :group_by => :continent, :group_label_method => :id ) )
       end
@@ -194,19 +206,23 @@ describe 'select input' do
 
     0.upto(1) do |i|
       it 'should have all option groups and the right values' do
+        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
         output_buffer.should have_tag("form li select optgroup[@label='#{@continent_names[i]}']", @authors[i].to_label)
       end
 
       it 'should have custom group labels' do
+        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
         output_buffer.should have_tag("form li select optgroup[@label='#{@continents[i].id}']", @authors[i].to_label)
       end
     end
 
     it 'should have no duplicate groups' do
+      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag('form li select optgroup', :count => 4)
     end
     
     it 'should sort the groups on the label method' do
+      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag("form li select optgroup[@label='Africa']")
       output_buffer.should have_tag("form li select optgroup[@label='99']")
     end
@@ -222,7 +238,7 @@ describe 'select input' do
 
   describe 'for a has_many association' do
     before do
-      semantic_form_for(@fred) do |builder|
+      @form = semantic_form_for(@fred) do |builder|
         concat(builder.input(:posts, :as => :select))
       end
     end
@@ -236,15 +252,18 @@ describe 'select input' do
     it_should_use_the_collection_when_provided(:select, 'option')
 
     it 'should have a select inside the wrapper' do
+      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag('form li select')
       output_buffer.should have_tag('form li select#author_post_ids')
     end
 
     it 'should have a multi-select select' do
+      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag('form li select[@multiple="multiple"]')
     end
 
     it 'should have a select option for each Post' do
+      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag('form li select option', :count => ::Post.find(:all).size)
       ::Post.find(:all).each do |post|
         output_buffer.should have_tag("form li select option[@value='#{post.id}']", /#{post.to_label}/)
@@ -252,17 +271,19 @@ describe 'select input' do
     end
     
     it 'should not have a blank option' do
+      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should_not have_tag("form li select option[@value='']")
     end
 
     it 'should have one option with a "selected" attribute' do
+      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag('form li select option[@selected]', :count => 1)
     end
   end
 
   describe 'for a has_and_belongs_to_many association' do
     before do
-      semantic_form_for(@freds_post) do |builder|
+      @form = semantic_form_for(@freds_post) do |builder|
         concat(builder.input(:authors, :as => :select))
       end
     end
@@ -276,15 +297,18 @@ describe 'select input' do
     it_should_use_the_collection_when_provided(:select, 'option')
     
     it 'should have a select inside the wrapper' do
+      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag('form li select')
       output_buffer.should have_tag('form li select#post_author_ids')
     end
 
     it 'should have a multi-select select' do
+      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag('form li select[@multiple="multiple"]')
     end
 
     it 'should have a select option for each Author' do
+      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag('form li select option', :count => ::Author.find(:all).size)
       ::Author.find(:all).each do |author|
         output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
@@ -292,10 +316,12 @@ describe 'select input' do
     end
     
     it 'should not have a blank option' do
+      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should_not have_tag("form li select option[@value='']")
     end
 
     it 'should have one option with a "selected" attribute' do
+      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag('form li select option[@selected]', :count => 1)
     end
   end
@@ -303,38 +329,43 @@ describe 'select input' do
   describe 'when :prompt => "choose something" is set' do
     before do
       @new_post.stub!(:author_id).and_return(nil)
-      semantic_form_for(@new_post) do |builder|
+      @form = semantic_form_for(@new_post) do |builder|
         concat(builder.input(:author, :as => :select, :prompt => "choose author"))
       end
     end
 
     it 'should have a select with prompt' do
+      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag("form li select option[@value='']", /choose author/)
     end
 
     it 'should not have a blank select option' do
+      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should_not have_tag("form li select option[@value='']", "")
     end
   end
 
   describe 'when no object is given' do
     before(:each) do
-      semantic_form_for(:project, :url => 'http://test.host') do |builder|
+      @form = semantic_form_for(:project, :url => 'http://test.host') do |builder|
         concat(builder.input(:author, :as => :select, :collection => ::Author.find(:all)))
       end
     end
 
     it 'should generate label' do
+      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag('form li label', /Author/)
       output_buffer.should have_tag("form li label[@for='project_author']")
     end
 
     it 'should generate select inputs' do
+      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag('form li select#project_author')
       output_buffer.should have_tag('form li select option', :count => ::Author.find(:all).size + 1)
     end
 
     it 'should generate an option to each item' do
+      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
       ::Author.find(:all).each do |author|
         output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
       end
@@ -350,13 +381,14 @@ describe 'select input' do
       before do
         @new_post.stub!(:author_id).and_return(nil)
         with_deprecation_silenced do
-          semantic_form_for(@new_post) do |builder|
+          @form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:author, :as => :select, :selected => nil))
           end
         end
       end
       
       it 'should not have any selected item(s)' do
+        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
         output_buffer.should_not have_tag("form li select option[@selected='selected']")
       end
     end
@@ -365,13 +397,14 @@ describe 'select input' do
       before do
         @new_post.stub!(:author_id).and_return(nil)
         with_deprecation_silenced do
-          semantic_form_for(@new_post) do |builder|
+          @form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:author, :as => :select, :selected => @bob.id))
           end
         end
       end
 
       it 'should have a selected item; the specified one' do
+        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
         output_buffer.should have_tag("form li select option[@selected='selected']", :count => 1)
         output_buffer.should have_tag("form li select option[@selected='selected']", /bob/i)
         output_buffer.should have_tag("form li select option[@selected='selected'][@value='#{@bob.id}']")
@@ -385,13 +418,14 @@ describe 'select input' do
           @new_post.stub!(:author_ids).and_return(nil)
           
           with_deprecation_silenced do
-            semantic_form_for(@new_post) do |builder|
+            @form = semantic_form_for(@new_post) do |builder|
               concat(builder.input(:authors, :as => :select, :selected => [@bob.id, @fred.id], :multiple => false))
             end
           end
         end
 
         it "should only select the first value" do
+          output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
           output_buffer.should have_tag("form li select option[@selected='selected']", :count => 1)
           output_buffer.should have_tag("form li select:not([@multiple]) option[@selected='selected']", /bob/i)
           output_buffer.should have_tag("form li select:not([@multiple]) option[@selected='selected'][@value='#{@bob.id}']")
@@ -403,13 +437,14 @@ describe 'select input' do
           @new_post.stub!(:author_ids).and_return(nil)
 
           with_deprecation_silenced do
-            semantic_form_for(@new_post) do |builder|
+            @form = semantic_form_for(@new_post) do |builder|
               concat(builder.input(:authors, :as => :select, :selected => [@bob.id, @fred.id]))
             end
           end
         end
 
         it "should have multiple items selected; the specified ones" do
+          output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
           output_buffer.should have_tag("form li select option[@selected='selected']", :count => 2)
           output_buffer.should have_tag("form li select[@multiple] option[@selected='selected']", /bob/i)
           output_buffer.should have_tag("form li select[@multiple] option[@selected='selected'][@value='#{@bob.id}']")
@@ -431,15 +466,18 @@ describe 'select input' do
   
     describe ":as is not set" do
       before do
-        semantic_form_for(@new_post) do |builder|
+        @form_new_post = semantic_form_for(@new_post) do |builder|
           concat(builder.input(:meta_description, :collection => @some_meta_descriptions))
         end
-        semantic_form_for(:project, :url => 'http://test.host') do |builder|
+        @form_project = semantic_form_for(:project, :url => 'http://test.host') do |builder|
           concat(builder.input(:meta_description, :collection => @some_meta_descriptions))
         end
+        
       end
   
       it "should render a select field" do
+        output_buffer.concat(@form_new_post) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form_project) if defined?(ActiveSupport::SafeBuffer)
         output_buffer.should have_tag("form li select", :count => 2)
       end
     end
@@ -447,15 +485,17 @@ describe 'select input' do
     describe ":as is set" do
       before do
         # Should not be a case, but just checking :as got highest priority in setting input type.
-        semantic_form_for(@new_post) do |builder|
+        @form_new_post = semantic_form_for(@new_post) do |builder|
           concat(builder.input(:meta_description, :as => :string, :collection => @some_meta_descriptions))
         end
-        semantic_form_for(:project, :url => 'http://test.host') do |builder|
+        @form_project = semantic_form_for(:project, :url => 'http://test.host') do |builder|
           concat(builder.input(:meta_description, :as => :string, :collection => @some_meta_descriptions))
         end
       end
       
       it "should render a text field" do
+        output_buffer.concat(@form_new_post) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form_project) if defined?(ActiveSupport::SafeBuffer)
         output_buffer.should have_tag("form li input[@type='text']", :count => 2)
       end
     end

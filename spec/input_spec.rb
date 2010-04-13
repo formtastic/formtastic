@@ -38,7 +38,7 @@ describe 'SemanticFormBuilder#input' do
 
     it 'should require the first argument (the method on form\'s object)' do
       lambda {
-        semantic_form_for(@new_post) do |builder|
+        @form = semantic_form_for(@new_post) do |builder|
           concat(builder.input()) # no args passed in at all
         end
       }.should raise_error(ArgumentError)
@@ -59,17 +59,19 @@ describe 'SemanticFormBuilder#input' do
         end
 
         it 'should set a "required" class' do
-          semantic_form_for(@new_post) do |builder|
+          form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :required => true))
           end
+          output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
           output_buffer.should_not have_tag('form li.optional')
           output_buffer.should have_tag('form li.required')
         end
 
         it 'should append the "required" string to the label' do
-          semantic_form_for(@new_post) do |builder|
+          form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :required => true))
           end
+          output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
           output_buffer.should have_tag('form li.required label', /#{@new_string}$/)
         end
 
@@ -87,17 +89,19 @@ describe 'SemanticFormBuilder#input' do
         end
 
         it 'should set an "optional" class' do
-          semantic_form_for(@new_post) do |builder|
+          form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :required => false))
           end
+          output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
           output_buffer.should_not have_tag('form li.required')
           output_buffer.should have_tag('form li.optional')
         end
 
         it 'should append the "optional" string to the label' do
-          semantic_form_for(@new_post) do |builder|
+          form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :required => false))
           end
+          output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
           output_buffer.should have_tag('form li.optional label', /#{@string}$/)
         end
 
@@ -111,9 +115,10 @@ describe 'SemanticFormBuilder#input' do
             ::Formtastic::SemanticFormBuilder.all_fields_required_by_default.should == true
             ::Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
 
-            semantic_form_for(:project, :url => 'http://test.host/') do |builder|
+            form = semantic_form_for(:project, :url => 'http://test.host/') do |builder|
               concat(builder.input(:title))
             end
+            output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
             output_buffer.should_not have_tag('form li.required')
             output_buffer.should have_tag('form li.optional')
 
@@ -139,10 +144,11 @@ describe 'SemanticFormBuilder#input' do
                   mock('MacroReflection', :macro => :validates_presence_of, :name => :body, :options => {:if => true})
                 ])
 
-                semantic_form_for(@new_post) do |builder|
+                form = semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:title))
                   concat(builder.input(:body))
                 end
+                output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
                 output_buffer.should have_tag('form li.required')
                 output_buffer.should_not have_tag('form li.optional')
               end
@@ -194,9 +200,11 @@ describe 'SemanticFormBuilder#input' do
                 mock('MacroReflection', :macro => :validates_presence_of, :name => :body, :options => options[:options])
               ])
               
-              semantic_form_for(@new_post) do |builder|
+              form = semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:body))
               end
+
+              output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
               
               if options[:required]
                 output_buffer.should_not have_tag('form li.optional')
@@ -213,9 +221,10 @@ describe 'SemanticFormBuilder#input' do
               end
 
               it 'should not be required' do
-                semantic_form_for(@new_post) do |builder|
+                form = semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:title))
                 end
+                output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
                 output_buffer.should_not have_tag('form li.required')
                 output_buffer.should have_tag('form li.optional')
               end
@@ -229,9 +238,10 @@ describe 'SemanticFormBuilder#input' do
               ::Formtastic::SemanticFormBuilder.all_fields_required_by_default.should == true
               ::Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
 
-              semantic_form_for(@new_post) do |builder|
+              form = semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title))
               end
+              output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
               output_buffer.should_not have_tag('form li.required')
               output_buffer.should have_tag('form li.optional')
 
@@ -251,18 +261,20 @@ describe 'SemanticFormBuilder#input' do
       describe 'when not provided' do
 
         it 'should default to a string for forms without objects unless column is password' do
-          semantic_form_for(:project, :url => 'http://test.host') do |builder|
+          form = semantic_form_for(:project, :url => 'http://test.host') do |builder|
             concat(builder.input(:anything))
           end
+          output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
           output_buffer.should have_tag('form li.string')
         end
 
         it 'should default to password for forms without objects if column is password' do
-          semantic_form_for(:project, :url => 'http://test.host') do |builder|
+          form = semantic_form_for(:project, :url => 'http://test.host') do |builder|
             concat(builder.input(:password))
             concat(builder.input(:password_confirmation))
             concat(builder.input(:confirm_password))
           end
+          output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
           output_buffer.should have_tag('form li.password', :count => 3)
         end
 
@@ -337,7 +349,8 @@ describe 'SemanticFormBuilder#input' do
               column = mock('column')
 
               ::Formtastic::SemanticFormBuilder.file_methods.each do |test|
-                column.stub!(:respond_to?).with(test).and_return(method == test)
+                ### TODO: Check if this is ok
+                column.stub!(method).with(test).and_return(method == test)
               end
 
               @new_post.should_receive(method).and_return(column)
@@ -377,23 +390,27 @@ describe 'SemanticFormBuilder#input' do
       
       describe 'when provided' do
         it 'should be passed down to the label tag' do
-          semantic_form_for(@new_post) do |builder|
+          form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :label => "Kustom"))
           end
+
+          output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
           output_buffer.should have_tag("form li label", /Kustom/)
         end
 
         it 'should not generate a label if false' do
-          semantic_form_for(@new_post) do |builder|
+          form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :label => false))
           end
+          output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
           output_buffer.should_not have_tag("form li label")
         end
 
         it 'should be dupped if frozen' do
-          semantic_form_for(@new_post) do |builder|
+          form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :label => "Kustom".freeze))
           end
+          output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
           output_buffer.should have_tag("form li label", /Kustom/)
         end
       end
@@ -408,10 +425,11 @@ describe 'SemanticFormBuilder#input' do
                   @new_post.stub!(:meta_description)
                   @new_post.class.should_receive(:human_attribute_name).with('meta_description').and_return(@localized_label_text)
                 
-                  semantic_form_for(@new_post) do |builder|
+                  form = semantic_form_for(@new_post) do |builder|
                     concat(builder.input(:meta_description))
                   end
                 
+                  output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
                   output_buffer.should have_tag('form li label', @localized_label_text)
                 end
               end
@@ -424,10 +442,11 @@ describe 'SemanticFormBuilder#input' do
             it 'should default the humanized method name, passing it down to the label tag' do
               ::Formtastic::SemanticFormBuilder.label_str_method = :humanize
 
-              semantic_form_for(:project, :url => 'http://test.host') do |builder|
+              form = semantic_form_for(:project, :url => 'http://test.host') do |builder|
                 concat(builder.input(:meta_description))
               end
 
+              output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
               output_buffer.should have_tag("form li label", /#{'meta_description'.humanize}/)
             end
           end
@@ -437,10 +456,11 @@ describe 'SemanticFormBuilder#input' do
               @new_post.stub!(:meta_description) # a two word method name
               @new_post.class.should_receive(:human_attribute_name).with('meta_description').and_return('meta_description'.humanize)
 
-              semantic_form_for(@new_post) do |builder|
+              form = semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:meta_description))
               end
 
+              output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
               output_buffer.should have_tag("form li label", /#{'meta_description'.humanize}/)
             end
           end
@@ -450,10 +470,11 @@ describe 'SemanticFormBuilder#input' do
               with_config :label_str_method, :capitalize do
                 @new_post.stub!(:meta_description)
             
-                semantic_form_for(@new_post) do |builder|
+                form = semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:meta_description))
                 end
             
+                output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
                 output_buffer.should have_tag("form li label", /#{'meta_description'.capitalize}/)
               end
             end
@@ -479,10 +500,11 @@ describe 'SemanticFormBuilder#input' do
           end
 
           it 'should render a label with localized label (I18n)' do
-            semantic_form_for(@new_post) do |builder|
+            form = semantic_form_for(@new_post) do |builder|
               concat(builder.input(:title, :label => true))
               concat(builder.input(:published, :as => :boolean, :label => true))
             end
+            output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
             output_buffer.should have_tag('form li label', @localized_label_text)
           end
 
@@ -496,10 +518,11 @@ describe 'SemanticFormBuilder#input' do
                      }
                    }
                 }
-            semantic_form_for(@new_post) do |builder|
+            form = semantic_form_for(@new_post) do |builder|
               concat(builder.input(:title, :label => true))
               concat(builder.input(:published, :as => :boolean, :label => true))
             end
+            output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
             output_buffer.should have_tag('form li label', @default_localized_label_text)
           end
         end
@@ -512,9 +535,10 @@ describe 'SemanticFormBuilder#input' do
       describe 'when provided' do
         it 'should be passed down to the paragraph tag' do
           hint_text = "this is the title of the post"
-          semantic_form_for(@new_post) do |builder|
+          form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :hint => hint_text))
           end
+          output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
           output_buffer.should have_tag("form li p.inline-hints", hint_text)
         end
       end
@@ -528,43 +552,47 @@ describe 'SemanticFormBuilder#input' do
               :formtastic => {
                   :hints => {
                     :title => @default_localized_hint_text,
+                   }
+                }
+            ::Formtastic::SemanticFormBuilder.i18n_lookups_by_default = false
+          end
+
+          after do
+            ::I18n.backend.reload!
+          end
+
+          describe 'when provided value (hint value) is set to TRUE' do
+            it 'should render a hint paragraph containing a localized hint (I18n)' do
+              ::I18n.backend.store_translations :en,
+              :formtastic => {
+                  :hints => {
                     :post => {
                       :title => @localized_hint_text
                      }
                    }
                 }
-            ::Formtastic::SemanticFormBuilder.i18n_lookups_by_default = false
-          end
-          
-          describe 'when provided value (hint value) is set to TRUE' do
-            it 'should render a hint paragraph containing a localized hint (I18n)' do
-              semantic_form_for(@new_post) do |builder|
+              form = semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title, :hint => true))
               end
+              output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
               output_buffer.should have_tag('form li p.inline-hints', @localized_hint_text)
             end
             
             it 'should render a hint paragraph containing an optional localized hint (I18n) if first is not set' do
-              ::I18n.backend.store_translations :en,
-              :formtastic => {
-                  :hints => {
-                    :post => {
-                      :title => nil
-                     }
-                   }
-                }
-              semantic_form_for(@new_post) do |builder|
+              form = semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title, :hint => true))
               end
+              output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
               output_buffer.should have_tag('form li p.inline-hints', @default_localized_hint_text)
             end
           end
           
           describe 'when provided value (label value) is set to FALSE' do
             it 'should not render a hint paragraph' do
-              semantic_form_for(@new_post) do |builder|
+              form = semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title, :hint => false))
               end
+              output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
               output_buffer.should_not have_tag('form li p.inline-hints', @localized_hint_text)
             end
           end
@@ -572,9 +600,10 @@ describe 'SemanticFormBuilder#input' do
         
         describe 'when localized hint (I18n) is not provided' do
           it 'should not render a hint paragraph' do
-            semantic_form_for(@new_post) do |builder|
+            form = semantic_form_for(@new_post) do |builder|
               concat(builder.input(:title))
             end
+            output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
             output_buffer.should_not have_tag('form li p.inline-hints')
           end
         end
@@ -586,25 +615,28 @@ describe 'SemanticFormBuilder#input' do
 
       describe 'when provided' do
         it 'should be passed down to the li tag' do
-          semantic_form_for(@new_post) do |builder|
+          form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :wrapper_html => {:id => :another_id}))
           end
+          output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
           output_buffer.should have_tag("form li#another_id")
         end
 
         it 'should append given classes to li default classes' do
-          semantic_form_for(@new_post) do |builder|
+          form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :wrapper_html => {:class => :another_class}, :required => true))
           end
+          output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
           output_buffer.should have_tag("form li.string")
           output_buffer.should have_tag("form li.required")
           output_buffer.should have_tag("form li.another_class")
         end
 
         it 'should allow classes to be an array' do
-          semantic_form_for(@new_post) do |builder|
+          form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :wrapper_html => {:class => [ :my_class, :another_class ]}))
           end
+          output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
           output_buffer.should have_tag("form li.string")
           output_buffer.should have_tag("form li.my_class")
           output_buffer.should have_tag("form li.another_class")
@@ -613,9 +645,10 @@ describe 'SemanticFormBuilder#input' do
 
       describe 'when not provided' do
         it 'should use default id and class' do
-          semantic_form_for(@new_post) do |builder|
+          form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title))
           end
+          output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
           output_buffer.should have_tag("form li#post_title_input")
           output_buffer.should have_tag("form li.string")
         end

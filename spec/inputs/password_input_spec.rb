@@ -9,7 +9,7 @@ describe 'password input' do
     @output_buffer = ''
     mock_everything
     
-    semantic_form_for(@new_post) do |builder|
+    @form = semantic_form_for(@new_post) do |builder|
       concat(builder.input(:title, :as => :password))
     end
   end
@@ -31,7 +31,7 @@ describe 'password input' do
   
   describe "when no object is provided" do
     before do
-      semantic_form_for(:project, :url => 'http://test.host/') do |builder|
+      @form = semantic_form_for(:project, :url => 'http://test.host/') do |builder|
         concat(builder.input(:title, :as => :password))
       end
     end

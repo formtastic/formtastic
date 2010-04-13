@@ -25,8 +25,8 @@ describe 'country input' do
   describe "when country_select is available as a helper (from a plugin)" do
     
     before do
-      semantic_form_for(@new_post) do |builder|
-        builder.stub!(:country_select).and_return("<select><option>...</option></select>")
+      @form = semantic_form_for(@new_post) do |builder|
+        builder.stub!(:country_select).and_return(Formtastic::Util.html_safe("<select><option>...</option></select>"))
         concat(builder.input(:country, :as => :country))
       end
     end
@@ -38,12 +38,14 @@ describe 'country input' do
     #it_should_apply_error_logic_for_input_type(:country)
 
     it 'should generate a label for the input' do
+      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag('form li label')
       output_buffer.should have_tag('form li label[@for="post_country"]')
       output_buffer.should have_tag('form li label', /Country/)
     end
 
     it "should generate a select" do
+      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag("form li select")
     end
     

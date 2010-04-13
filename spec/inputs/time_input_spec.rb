@@ -18,7 +18,7 @@ describe 'time input' do
 
     describe "without seconds" do
       before do
-        semantic_form_for(@new_post) do |builder|
+        @form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(:publish_at, :as => :time))
         end
       end
@@ -29,37 +29,43 @@ describe 'time input' do
       it_should_apply_error_logic_for_input_type(:time)
     
       it 'should have a legend and label with the label text inside the fieldset' do
+        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
         output_buffer.should have_tag('form li.time fieldset legend.label label', /Publish at/)
       end
     
       it 'should associate the legend label with the first select' do
+        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
         output_buffer.should have_tag('form li.time fieldset legend.label label[@for="post_publish_at_1i"]')
       end
     
       it 'should have an ordered list of two items inside the fieldset' do
+        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
         output_buffer.should have_tag('form li.time fieldset ol')
         output_buffer.should have_tag('form li.time fieldset ol li', :count => 2)
       end
 
       it 'should have five labels for hour and minute' do
+        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
         output_buffer.should have_tag('form li.time fieldset ol li label', :count => 2)
         output_buffer.should have_tag('form li.time fieldset ol li label', /hour/i)
         output_buffer.should have_tag('form li.time fieldset ol li label', /minute/i)
       end
     
       it 'should have two selects for hour and minute' do
+        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
         output_buffer.should have_tag('form li.time fieldset ol li', :count => 2)
       end
     end
 
     describe "with seconds" do
       before do
-        semantic_form_for(@new_post) do |builder|
+        @form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(:publish_at, :as => :time, :include_seconds => true))
         end
       end
     
       it 'should have five labels for hour and minute' do
+        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
         output_buffer.should have_tag('form li.time fieldset ol li label', :count => 3)
         output_buffer.should have_tag('form li.time fieldset ol li label', /hour/i)
         output_buffer.should have_tag('form li.time fieldset ol li label', /minute/i)
@@ -67,10 +73,12 @@ describe 'time input' do
       end
 
       it 'should have three selects for hour, minute and seconds' do
+        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
         output_buffer.should have_tag('form li.time fieldset ol li', :count => 3)
       end
 
       it 'should generate a sanitized label and matching ids for attribute' do
+        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
         4.upto(6) do |i|
           output_buffer.should have_tag("form li fieldset ol li label[@for='post_publish_at_#{i}i']")
           output_buffer.should have_tag("form li fieldset ol li #post_publish_at_#{i}i")
@@ -86,10 +94,11 @@ describe 'time input' do
         output_buffer.replace ''
         @new_post.stub!(:created_at => Time.mktime(2012, 11, 30, 21, 45))
         with_deprecation_silenced do 
-          semantic_form_for(@new_post) do |builder|
+          @form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:created_at, :as => :time, :selected => Time.mktime(1999, 12, 31, 22, 59)))
           end
         end
+        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
         output_buffer.should have_tag("form li ol li select#post_created_at_4i option[@selected]", :count => 1)
         output_buffer.should have_tag("form li ol li select#post_created_at_4i option[@value='21'][@selected]", :count => 1)
       end
@@ -100,10 +109,11 @@ describe 'time input' do
         output_buffer.replace ''
         @new_post.stub!(:created_at => nil)
         with_deprecation_silenced do
-          semantic_form_for(@new_post) do |builder|
+          @form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:created_at, :as => :time, :selected => Time.mktime(1999, 12, 31, 22, 59)))
           end
         end
+        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
         output_buffer.should have_tag("form li ol li select#post_created_at_4i option[@selected]", :count => 1)
         output_buffer.should have_tag("form li ol li select#post_created_at_4i option[@value='22'][@selected]", :count => 1)
       end
@@ -112,19 +122,21 @@ describe 'time input' do
         output_buffer.replace ''
         @new_post.stub!(:created_at => nil)
         with_deprecation_silenced do 
-          semantic_form_for(@new_post) do |builder|
+          @form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:created_at, :as => :time, :selected => nil))
           end
         end
+        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
         output_buffer.should_not have_tag("form li ol li select#post_created_at_4i option[@selected]")
       end
       
       it "should select Time.now if a :selected is not provided" do
         output_buffer.replace ''
         @new_post.stub!(:created_at => nil)
-        semantic_form_for(@new_post) do |builder|
+        form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(:created_at, :as => :time))
         end
+        output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
         output_buffer.should have_tag("form li ol li select#post_created_at_4i option[@selected]", :count => 1)
         output_buffer.should have_tag("form li ol li select#post_created_at_4i option[@value='#{Time.now.hour.to_s.rjust(2,'0')}'][@selected]", :count => 1)
       end
@@ -137,9 +149,10 @@ describe 'time input' do
     fields.each do |field|
       it "should replace the #{field} label with the specified text if :labels[:#{field}] is set" do
         output_buffer.replace ''
-        semantic_form_for(@new_post) do |builder|
+        form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(:created_at, :as => :time, :include_seconds => true, :labels => { field => "another #{field} label" }))
         end
+        output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
         output_buffer.should have_tag('form li.time fieldset ol li label', :count => fields.length)
         fields.each do |f|
           output_buffer.should have_tag('form li.time fieldset ol li label', f == field ? /another #{f} label/i : /#{f}/i)
@@ -148,9 +161,10 @@ describe 'time input' do
   
       it "should not display the label for the #{field} field when :labels[:#{field}] is blank" do
         output_buffer.replace ''
-        semantic_form_for(@new_post) do |builder|
+        form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(:created_at, :as => :time, :include_seconds => true, :labels => { field => "" }))
         end
+        output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
         output_buffer.should have_tag('form li.time fieldset ol li label', :count => fields.length-1)
         fields.each do |f|
           output_buffer.should have_tag('form li.time fieldset ol li label', /#{f}/i) unless field == f
