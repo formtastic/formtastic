@@ -1,12 +1,18 @@
 # coding: utf-8
 require 'rubygems'
 
-gem 'activesupport', '2.3.5'
-gem 'actionpack', '2.3.5'
+gem 'activesupport', '>= 2.3.5'
+gem 'actionpack', '>= 2.3.5'
 require 'active_support'
 require 'action_pack'
 require 'action_view'
 require 'action_controller'
+
+begin
+  gem 'activemodel', '>= 3.0.0.beta'
+  require 'active_model'
+rescue Exception
+end
 
 gem 'rspec', '>= 1.2.6'
 gem 'rspec-rails', '>= 1.2.6'
@@ -16,23 +22,37 @@ require 'rspec_tag_matchers'
 
 require 'custom_macros'
 
-Spec::Runner.configure do |config|
-  config.include(RspecTagMatchers)
-  config.include(CustomMacros)
+begin
+  Spec::Runner.configure do |config|
+    config.include(RspecTagMatchers)
+    config.include(CustomMacros)
+  end
+rescue
+  Rspec.configure do |config|
+    config.include RspecTagMatchers
+    config.include CustomMacros
+    config.mock_with :rspec
+  end
 end
 
 require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic'))
 require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic/layout_helper'))
 
+module ActionView
+  class OutputBuffer < Formtastic::Util.rails_safe_buffer_class
+  end
+end
 
 module FormtasticSpecHelper
+  include ActionView::Context if defined?(ActionView::Context)
   include ActionView::Helpers::FormHelper
   include ActionView::Helpers::FormTagHelper
   include ActionView::Helpers::FormOptionsHelper
   include ActionView::Helpers::UrlHelper
   include ActionView::Helpers::TagHelper
   include ActionView::Helpers::TextHelper
-  include ActionView::Helpers::ActiveRecordHelper
+  include ActionView::Helpers::ActiveRecordHelper if defined?(ActionView::Helpers::ActiveRecordHelper)
+  include ActionView::Helpers::ActiveModelHelper if defined?(ActionView::Helpers::ActiveModelHelper)
   include ActionView::Helpers::RecordIdentificationHelper
   include ActionView::Helpers::DateHelper
   include ActionView::Helpers::CaptureHelper
@@ -54,20 +74,37 @@ module FormtasticSpecHelper
   end
   
   class ::Post
+    extend ActiveModel::Naming if defined?(ActiveModel::Naming)
+    include ActiveModel::Conversion if defined?(ActiveModel::Conversion)
+
     def id
+    end
+
+    def persisted?
     end
   end
   module ::Namespaced
     class Post
+      extend ActiveModel::Naming if defined?(ActiveModel::Naming)
+      include ActiveModel::Conversion if defined?(ActiveModel::Conversion)
+
       def id
+      end
+
+      def persisted?
       end
     end
   end
   class ::Author
+    extend ActiveModel::Naming if defined?(ActiveModel::Naming)
+    include ActiveModel::Conversion if defined?(ActiveModel::Conversion)
+
     def to_label
     end
   end
   class ::Continent
+    extend ActiveModel::Naming if defined?(ActiveModel::Naming)
+    include ActiveModel::Conversion if defined?(ActiveModel::Conversion)
   end
   
   def mock_everything
@@ -89,6 +126,8 @@ module FormtasticSpecHelper
     @fred.stub!(:id).and_return(37)
     @fred.stub!(:new_record?).and_return(false)
     @fred.stub!(:errors).and_return(mock('errors', :[] => nil))
+    @fred.stub!(:to_key).and_return(nil)
+    @fred.stub!(:persisted?).and_return(nil)
 
     @bob = mock('user')
     @bob.stub!(:class).and_return(::Author)
@@ -100,16 +139,20 @@ module FormtasticSpecHelper
     @bob.stub!(:post_ids).and_return([])
     @bob.stub!(:new_record?).and_return(false)
     @bob.stub!(:errors).and_return(mock('errors', :[] => nil))
+    @bob.stub!(:to_key).and_return(nil)
+    @bob.stub!(:persisted?).and_return(nil)
     
     @james = mock('user')
-     @james.stub!(:class).and_return(::Author)
-     @james.stub!(:to_label).and_return('James Shock')
-     @james.stub!(:login).and_return('james')
-     @james.stub!(:id).and_return(75)
-     @james.stub!(:posts).and_return([])
-     @james.stub!(:post_ids).and_return([])
-     @james.stub!(:new_record?).and_return(false)
-     @james.stub!(:errors).and_return(mock('errors', :[] => nil))
+    @james.stub!(:class).and_return(::Author)
+    @james.stub!(:to_label).and_return('James Shock')
+    @james.stub!(:login).and_return('james')
+    @james.stub!(:id).and_return(75)
+    @james.stub!(:posts).and_return([])
+    @james.stub!(:post_ids).and_return([])
+    @james.stub!(:new_record?).and_return(false)
+    @james.stub!(:errors).and_return(mock('errors', :[] => nil))
+    @james.stub!(:to_key).and_return(nil)
+    @james.stub!(:persisted?).and_return(nil)
     
 
     ::Author.stub!(:find).and_return([@fred, @bob])
@@ -118,6 +161,8 @@ module FormtasticSpecHelper
     ::Author.stub!(:reflect_on_validations_for).and_return([])
     ::Author.stub!(:reflect_on_association).and_return { |column_name| mock('reflection', :options => {}, :klass => Post, :macro => :has_many) if column_name == :posts }
     ::Author.stub!(:content_columns).and_return([mock('column', :name => 'login'), mock('column', :name => 'created_at')])
+    ::Author.stub!(:to_key).and_return(nil)
+    ::Author.stub!(:persisted?).and_return(nil)
 
     # Sometimes we need a mock @post object and some Authors for belongs_to
     @new_post = mock('post')
@@ -128,6 +173,9 @@ module FormtasticSpecHelper
     @new_post.stub!(:author).and_return(nil)
     @new_post.stub!(:main_post).and_return(nil)
     @new_post.stub!(:sub_posts).and_return([]) #TODO should be a mock with methods for adding sub posts
+    @new_post.stub!(:to_key).and_return(nil)
+    @new_post.stub!(:to_model).and_return(@new_post)
+    @new_post.stub!(:persisted?).and_return(nil)
 
     @freds_post = mock('post')
     @freds_post.stub!(:class).and_return(::Post)
@@ -139,6 +187,8 @@ module FormtasticSpecHelper
     @freds_post.stub!(:author_ids).and_return([@fred.id])
     @freds_post.stub!(:new_record?).and_return(false)
     @freds_post.stub!(:errors).and_return(mock('errors', :[] => nil))
+    @freds_post.stub!(:to_key).and_return(nil)
+    @freds_post.stub!(:persisted?).and_return(nil)
     @fred.stub!(:posts).and_return([@freds_post])
     @fred.stub!(:post_ids).and_return([@freds_post.id])
 
@@ -163,6 +213,8 @@ module FormtasticSpecHelper
     end
     ::Post.stub!(:find).and_return([@freds_post])
     ::Post.stub!(:content_columns).and_return([mock('column', :name => 'title'), mock('column', :name => 'body'), mock('column', :name => 'created_at')])
+    ::Post.stub!(:to_key).and_return(nil)
+    ::Post.stub!(:persisted?).and_return(nil)
     
     @new_post.stub!(:title)
     @new_post.stub!(:body)
