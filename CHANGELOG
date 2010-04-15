@@ -4,6 +4,7 @@
 * Changed the behaviour of associations with a :class_name option to be more consistent with what Rails expects
 * Fixed issues with Ruby 1.9.1 and Haml
 * Add the :disabled option to check_boxes input
+* Fixed inputs_for_nested_attributes only appending to the output buffer
 
 0.9.8
 
