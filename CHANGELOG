@@ -1,3 +1,6 @@
+(HEAD)
+* Added railtie to perform initialization tasks after the rails framework is available (rails3)
+
 0.9.8
 
 * Deprecated :selected/:checked options, see http://wiki.github.com/justinfrench/formtastic/deprecation-of-selected-option
