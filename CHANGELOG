@@ -1,5 +1,6 @@
 (HEAD)
-* Added railtie to perform initialization tasks after the rails framework is available (rails3)
+* Added railtie to perform initialization tasks after the rails git framework is available (rails3)
+* Fixed inputs_for_nested_attributes only appending to the output buffer
 
 0.9.8
 
