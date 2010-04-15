@@ -1,13 +1,17 @@
 # coding: utf-8
+require 'rubygems'
 require 'rake'
 require 'rake/rdoctask'
 
 begin
+  gem 'rspec', '>= 1.2.6'
+  gem 'rspec-rails', '>= 1.2.6'
+  require 'spec'
   require 'spec/rake/spectask'
 rescue LoadError
   begin
-    gem 'rspec-rails', '>= 1.0.0'
-    require 'spec/rake/spectask'
+    require 'rspec/core/rake_task.rb'
+    require 'rspec/core/version'
   rescue LoadError
     puts "[formtastic:] RSpec - or one of it's dependencies - is not available. Install it with: sudo gem install rspec-rails"
   end
@@ -95,6 +99,25 @@ if defined?(Spec)
   desc "Run all examples with RCov"
   Spec::Rake::SpecTask.new('examples_with_rcov') do |t|
     t.spec_files = FileList['spec/**/*_spec.rb']
+    t.rcov = true
+    t.rcov_opts = ['--exclude', 'spec,Library']
+  end
+end
+
+if defined?(Rspec)
+  desc 'Test the formtastic plugin.'
+  Rspec::Core::RakeTask.new('spec') do |t|
+    t.pattern = FileList['spec/**/*_spec.rb']
+  end
+
+  desc 'Test the formtastic plugin with specdoc formatting and colors'
+  Rspec::Core::RakeTask.new('specdoc') do |t|
+    t.pattern = FileList['spec/**/*_spec.rb']
+  end
+
+  desc "Run all examples with RCov"
+  Rspec::Core::RakeTask.new('examples_with_rcov') do |t|
+    t.pattern = FileList['spec/**/*_spec.rb']
     t.rcov = true
     t.rcov_opts = ['--exclude', 'spec,Library']
   end

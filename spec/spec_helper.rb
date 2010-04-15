@@ -28,7 +28,8 @@ begin
     config.include(CustomMacros)
   end
 rescue
-  Rspec.configure do |config|
+  require 'rspec/core'
+  Rspec::Core.configure do |config|
     config.include RspecTagMatchers
     config.include CustomMacros
     config.mock_with :rspec
