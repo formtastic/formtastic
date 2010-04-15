@@ -1,4 +1,5 @@
 (HEAD)
+* Changed I18n handling in spec tests to use I18n.backend.reload! instead of assigning nil
 * Changed semantic_remote_form_for to allow for unobstrusive javascript / :remote option (rails3)
 * Changed spec_helper to support Rails 2 with Rspec od Rails 3 with Rspec 3 environments
 * Changed Rakefile to initalize the correct testing framework for the enviroment
