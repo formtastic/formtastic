@@ -1,8 +1,10 @@
 (HEAD)
-* Added railtie to perform initialization tasks after the rails git framework is available (rails3)
+* Changed semantic_remote_form_for to allow for unobstrusive javascript / :remote option (rails3)
+* Changed spec_helper to support Rails 2 with Rspec od Rails 3 with Rspec 3 environments
+* Changed Rakefile to initalize the correct testing framework for the enviroment
 * Fixed inputs_for_nested_attributes only appending to the output buffer
-* Mark strings as HTML safe depending on environment, adapted from haml 2.2 solution (rails3)
-* Wrap semantic_remote_form_for to allow for unobstrusive javascript (rails3)
+* Added railtie to perform initialization tasks after the rails git framework is available (rails3)
+* Added helper to mark strings as HTML safe depending on environment, adapted from haml 2.2 solution (rails3)
 
 0.9.8
 
