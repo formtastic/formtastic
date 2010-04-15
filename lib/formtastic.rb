@@ -1685,6 +1685,16 @@ module Formtastic #:nodoc:
       result
     end
     
+    def semantic_remote_form_for_wrapper(record_or_name_or_array, *args, &proc)
+      options = args.extract_options!
+      if self.respond_to? :remote_form_for
+        semantic_remote_form_for_real(record_or_name_or_array, *(args << options), &proc)
+      else
+        options[:remote] = true
+        semantic_form_for(record_or_name_or_array, *(args << options), &proc)
+      end
+    end
+
     [:form_for, :fields_for, :remote_form_for].each do |meth|
       module_eval <<-END_SRC, __FILE__, __LINE__ + 1
         def semantic_#{meth}(record_or_name_or_array, *args, &proc)
@@ -1707,6 +1717,8 @@ module Formtastic #:nodoc:
         end
       END_SRC
     end
+    alias :semantic_remote_form_for_real :semantic_remote_form_for
+    alias :semantic_remote_form_for :semantic_remote_form_for_wrapper    
     alias :semantic_form_remote_for :semantic_remote_form_for
     
   end

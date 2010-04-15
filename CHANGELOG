@@ -1,6 +1,8 @@
 (HEAD)
 * Added railtie to perform initialization tasks after the rails git framework is available (rails3)
 * Fixed inputs_for_nested_attributes only appending to the output buffer
+* Mark strings as HTML safe depending on environment, adapted from haml 2.2 solution (rails3)
+* Wrap semantic_remote_form_for to allow for unobstrusive javascript (rails3)
 
 0.9.8
 
