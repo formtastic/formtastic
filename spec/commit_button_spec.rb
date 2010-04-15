@@ -6,7 +6,7 @@ describe 'SemanticFormBuilder#commit_button' do
   include FormtasticSpecHelper
   
   before do
-    @output_buffer = ActiveSupport::SafeBuffer.new
+    @output_buffer = ''
     mock_everything
   end
 
@@ -348,18 +348,7 @@ describe 'SemanticFormBuilder#commit_button' do
   describe 'when the model is two words' do
     before do
       output_buffer = ''
-
-      class ::UserPost
-        extend ActiveModel::Naming
-        
-        def id
-        end
-        
-        def self.human_name
-          "Userpost" # Rails does crappy human_name
-        end
-      end
-      
+      class ::UserPost; def id; end; def self.human_name; "Userpost"; end; end # Rails does crappy human_name
       @new_user_post = ::UserPost.new
       
       @new_user_post.stub!(:new_record?).and_return(true)

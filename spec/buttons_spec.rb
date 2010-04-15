@@ -6,7 +6,7 @@ describe 'SemanticFormBuilder#buttons' do
   include FormtasticSpecHelper
   
   before do
-    @output_buffer = ActiveSupport::SafeBuffer.new
+    @output_buffer = ''
     mock_everything
   end
 

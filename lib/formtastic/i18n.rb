@@ -1,4 +1,3 @@
-# coding: utf-8
 module Formtastic
   module I18n
     

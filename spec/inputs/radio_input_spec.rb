@@ -6,7 +6,7 @@ describe 'radio input' do
   include FormtasticSpecHelper
   
   before do
-    @output_buffer = ActiveSupport::SafeBuffer.new
+    @output_buffer = ''
     mock_everything
   end
 
@@ -114,7 +114,7 @@ describe 'radio input' do
 
   describe 'when :selected is set' do
     before do
-      @output_buffer = ActiveSupport::SafeBuffer.new
+      @output_buffer = ''
     end
 
     describe "no selected items" do

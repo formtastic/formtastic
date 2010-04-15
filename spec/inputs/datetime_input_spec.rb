@@ -6,7 +6,7 @@ describe 'datetime input' do
   include FormtasticSpecHelper
   
   before do
-    @output_buffer = ActiveSupport::SafeBuffer.new
+    @output_buffer = ''
     mock_everything
     
     @new_post.should_receive(:publish_at=).any_number_of_times

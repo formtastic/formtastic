@@ -6,7 +6,7 @@ describe 'SemanticFormBuilder#semantic_fields_for' do
   include FormtasticSpecHelper
   
   before do
-    @output_buffer = ActiveSupport::SafeBuffer.new
+    @output_buffer = ''
     mock_everything
     @new_post.stub!(:author).and_return(::Author.new)
   end

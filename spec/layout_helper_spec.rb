@@ -7,7 +7,7 @@ describe 'LayoutHelper' do
   include Formtastic::LayoutHelper
   
   before do
-    @output_buffer = ActiveSupport::SafeBuffer.new
+    @output_buffer = ''
   end
   
   describe '#formtastic_stylesheet_link_tag' do
@@ -25,18 +25,5 @@ describe 'LayoutHelper' do
     end
     
   end
-
-  # FIXME: Rspec issue?
-  def controller
-    mock('controller')
-  end
-
-  # FIXME: Rspec issue?
-  def config
-    returning mock('config') do |config|
-      config.stub!(:assets_dir).and_return('')
-    end
-  end
-
 end
 

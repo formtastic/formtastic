@@ -6,7 +6,7 @@ describe 'SemanticFormBuilder#semantic_errors' do
   include FormtasticSpecHelper
 
   before do
-    @output_buffer = ActiveSupport::SafeBuffer.new
+    @output_buffer = ''
     mock_everything
     @title_errors = ['must not be blank', 'must be awesome']
     @base_errors = ['base error message', 'nasty error']

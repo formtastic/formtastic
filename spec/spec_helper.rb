@@ -1,28 +1,24 @@
 # coding: utf-8
 require 'rubygems'
 
-gem 'activesupport', '3.0.0.beta2'
-gem 'actionpack', '3.0.0.beta2'
-gem 'activemodel', '3.0.0.beta2'
+gem 'activesupport', '2.3.5'
+gem 'actionpack', '2.3.5'
 require 'active_support'
 require 'action_pack'
 require 'action_view'
 require 'action_controller'
-require 'active_model'
 
-gem 'rspec', '>= 2.0.0.beta.6'
-require 'rspec'
-gem 'rspec-rails', '>= 2.0.0.beta.6'
+gem 'rspec', '>= 1.2.6'
+gem 'rspec-rails', '>= 1.2.6'
 gem 'hpricot', '>= 0.6.1'
 gem 'rspec_tag_matchers', '>= 1.0.0'
 require 'rspec_tag_matchers'
 
 require 'custom_macros'
 
-Rspec.configure do |config|
-  config.include RspecTagMatchers
-  config.include CustomMacros
-  config.mock_with :rspec
+Spec::Runner.configure do |config|
+  config.include(RspecTagMatchers)
+  config.include(CustomMacros)
 end
 
 require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic'))
@@ -30,14 +26,13 @@ require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic/la
 
 
 module FormtasticSpecHelper
-  include ActionView::Context
   include ActionView::Helpers::FormHelper
   include ActionView::Helpers::FormTagHelper
   include ActionView::Helpers::FormOptionsHelper
   include ActionView::Helpers::UrlHelper
   include ActionView::Helpers::TagHelper
   include ActionView::Helpers::TextHelper
-  include ActionView::Helpers::ActiveModelHelper
+  include ActionView::Helpers::ActiveRecordHelper
   include ActionView::Helpers::RecordIdentificationHelper
   include ActionView::Helpers::DateHelper
   include ActionView::Helpers::CaptureHelper
@@ -59,34 +54,20 @@ module FormtasticSpecHelper
   end
   
   class ::Post
-    extend ActiveModel::Naming
-    include ActiveModel::Conversion
-    
     def id
     end
   end
-  
   module ::Namespaced
     class Post
-      extend ActiveModel::Naming
-      include ActiveModel::Conversion
-      
       def id
       end
     end
   end
-  
   class ::Author
-    extend ActiveModel::Naming
-    include ActiveModel::Conversion
-    
     def to_label
     end
   end
-  
   class ::Continent
-    extend ActiveModel::Naming
-    include ActiveModel::Conversion    
   end
   
   def mock_everything
@@ -147,7 +128,6 @@ module FormtasticSpecHelper
     @new_post.stub!(:author).and_return(nil)
     @new_post.stub!(:main_post).and_return(nil)
     @new_post.stub!(:sub_posts).and_return([]) #TODO should be a mock with methods for adding sub posts
-    @new_post.stub!(:to_model).and_return(@new_post)
 
     @freds_post = mock('post')
     @freds_post.stub!(:class).and_return(::Post)

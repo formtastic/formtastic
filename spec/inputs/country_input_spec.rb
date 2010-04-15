@@ -6,7 +6,7 @@ describe 'country input' do
   include FormtasticSpecHelper
   
   before do
-    @output_buffer = ActiveSupport::SafeBuffer.new
+    @output_buffer = ''
     mock_everything
   end
 
@@ -26,7 +26,7 @@ describe 'country input' do
     
     before do
       semantic_form_for(@new_post) do |builder|
-        builder.stub!(:country_select).and_return(ActiveSupport::SafeBuffer.new("<select><option>...</option></select>"))
+        builder.stub!(:country_select).and_return("<select><option>...</option></select>")
         concat(builder.input(:country, :as => :country))
       end
     end

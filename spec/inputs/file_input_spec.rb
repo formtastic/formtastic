@@ -6,7 +6,7 @@ describe 'file input' do
   include FormtasticSpecHelper
   
   before do
-    @output_buffer = ActiveSupport::SafeBuffer.new
+    @output_buffer = ''
     mock_everything
     
     semantic_form_for(@new_post) do |builder|
