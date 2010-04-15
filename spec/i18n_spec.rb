@@ -24,7 +24,6 @@ describe 'Formtastic::I18n' do
     
     before do
       @formtastic_strings = {
-          :required       => 'Default Required',
           :yes            => 'Default Yes',
           :no             => 'Default No',
           :create         => 'Default Create {{model}}',
@@ -36,8 +35,13 @@ describe 'Formtastic::I18n' do
         }
       ::I18n.backend.store_translations :en, :formtastic => @formtastic_strings
     end
+
+    after do
+      ::I18n.backend.reload!
+    end
     
     it "should translate core strings correctly" do
+      ::I18n.backend.store_translations :en, {:formtastic => {:required => 'Default Required'}}
       ::Formtastic::I18n.t(:required).should  == "Default Required"
       ::Formtastic::I18n.t(:yes).should       == "Default Yes"
       ::Formtastic::I18n.t(:no).should        == "Default No"
@@ -54,7 +58,6 @@ describe 'Formtastic::I18n' do
     end
     
     it "should be possible to override default values" do
-      ::I18n.backend.store_translations :en, {:formtastic => {:required => nil}}
       ::Formtastic::I18n.t(:required, :default => 'Nothing found!').should == 'Nothing found!'
     end
     
@@ -63,15 +66,9 @@ describe 'Formtastic::I18n' do
   describe "when no I18n locales are available" do
     
     before do
-      ::I18n.backend.store_translations :en, :formtastic => {
-          :required => nil,
-          :yes => nil,
-          :no => nil,
-          :create => nil,
-          :update => nil
-        }
+      ::I18n.backend.reload!
     end
-    
+
     it "should use default strings" do
       (::Formtastic::I18n::DEFAULT_VALUES.keys).each do |key|
         ::Formtastic::I18n.t(key, :model => '{{model}}').should == ::Formtastic::I18n::DEFAULT_VALUES[key]
@@ -102,7 +99,7 @@ describe 'Formtastic::I18n' do
     end
     
     after do
-      ::I18n.backend.store_translations :en, :formtastic => nil
+      ::I18n.backend.reload!
       ::Formtastic::SemanticFormBuilder.i18n_lookups_by_default = false
     end
     

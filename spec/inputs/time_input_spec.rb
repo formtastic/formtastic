@@ -12,6 +12,7 @@ describe 'time input' do
   
   describe "general" do
     before do
+      ::I18n.backend.reload!
       output_buffer.replace ''
     end
 

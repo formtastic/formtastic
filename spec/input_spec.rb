@@ -528,16 +528,25 @@ describe 'SemanticFormBuilder#input' do
               :formtastic => {
                   :hints => {
                     :title => @default_localized_hint_text,
-                    :post => {
-                      :title => @localized_hint_text
-                     }
                    }
                 }
             ::Formtastic::SemanticFormBuilder.i18n_lookups_by_default = false
           end
           
+          after do
+            ::I18n.backend.reload!
+          end
+          
           describe 'when provided value (hint value) is set to TRUE' do
             it 'should render a hint paragraph containing a localized hint (I18n)' do
+              ::I18n.backend.store_translations :en,
+              :formtastic => {
+                  :hints => {
+                    :post => {
+                      :title => @localized_hint_text
+                     }
+                   }
+                }
               semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title, :hint => true))
               end
@@ -545,14 +554,6 @@ describe 'SemanticFormBuilder#input' do
             end
             
             it 'should render a hint paragraph containing an optional localized hint (I18n) if first is not set' do
-              ::I18n.backend.store_translations :en,
-              :formtastic => {
-                  :hints => {
-                    :post => {
-                      :title => nil
-                     }
-                   }
-                }
               semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title, :hint => true))
               end
