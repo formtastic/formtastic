@@ -29,7 +29,7 @@ begin
   end
 rescue
   require 'rspec/core'
-  Rspec::Core.configure do |config|
+  Rspec.configure do |config|
     config.include RspecTagMatchers
     config.include CustomMacros
     config.mock_with :rspec
