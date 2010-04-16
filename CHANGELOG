@@ -6,6 +6,7 @@
 * Fixed inputs_for_nested_attributes only appending to the output buffer
 * Added railtie to perform initialization tasks after the rails git framework is available (rails3)
 * Added helper to mark strings as HTML safe depending on environment, adapted from haml 2.2 solution (rails3)
+* Added compatible install and form helpers (rails3)
 
 0.9.8
 
