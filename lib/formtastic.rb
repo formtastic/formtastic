@@ -11,7 +11,7 @@ module Formtastic #:nodoc:
     @@default_text_area_height = 20
     @@all_fields_required_by_default = true
     @@include_blank_for_select_by_default = true
-    @@required_string = proc { Formtastic::Util.html_safe(%{<abbr title="#{::Formtastic::I18n.t(:required)}">*</abbr>}) }
+    @@required_string = proc { %{<abbr title="#{::Formtastic::I18n.t(:required)}">*</abbr>} }
     @@optional_string = ''
     @@inline_errors = :sentence
     @@label_str_method = :humanize
