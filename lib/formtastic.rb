@@ -400,14 +400,18 @@ module Formtastic #:nodoc:
         text = options_or_text
         options ||= {}
       end
+
       text = localized_string(method, text, :label) || humanized_attribute_name(method)
       text += required_or_optional_string(options.delete(:required))
+      text = Formtastic::Util.html_safe(text)
 
       # special case for boolean (checkbox) labels, which have a nested input
-      text = (options.delete(:label_prefix_for_nested_input) || "") + text
+      if options.key?(:label_prefix_for_nested_input)
+        text = options.delete(:label_prefix_for_nested_input) + text
+      end
 
       input_name = options.delete(:input_name) || method
-      super(input_name, Formtastic::Util.html_safe(text), options)
+      super(input_name, text, options)
     end
 
     # Generates error messages for the given method. Errors can be shown as list,
