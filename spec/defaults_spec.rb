@@ -14,6 +14,12 @@ describe 'Formtastic::SemanticFormBuilder-defaults' do
       required_string = required_string.is_a?(::Proc) ? required_string.call : required_string.to_s
       required_string.should == %{<abbr title="Haha!">*</abbr>}
     end
+
+    it "should render a html_safe string" do
+      required_string = Formtastic::SemanticFormBuilder.required_string
+      required_string = required_string.is_a?(::Proc) ? required_string.call : required_string.to_s
+      required_string.should be_html_safe
+    end
     
   end
   
