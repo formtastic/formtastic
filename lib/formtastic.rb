@@ -1000,8 +1000,8 @@ module Formtastic #:nodoc:
         list_items_capture = ""
         hidden_fields_capture = ""
 
-        datetime = options.key?(:selected) ? options[:selected] : Time.now # can't do an || because nil is an important value
-        datetime = @object.send(method) if @object && @object.send(method) # object trumps :selected
+        datetime = options[:selected]
+        datetime = @object.send(method) if @object && @object.send(method) # object value trumps :selected value
 
         html_options = options.delete(:input_html) || {}
         input_ids    = []

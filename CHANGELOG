@@ -8,6 +8,13 @@
 * Added helper to mark strings as HTML safe depending on environment, adapted from haml 2.2 solution (rails3)
 * Added compatible install and form helpers (rails3)
 
+0.9.9 [unreleased]
+
+* Changed date/time inputs to default to nil instead of Time.now when the object has no value (due to deprecation warning, #240)
+* Changed the behaviour of associations with a :class_name option to be more consistent with what Rails expects
+* Fixed issues with Ruby 1.9.1 and Haml
+* Add the :disabled option to check_boxes input
+
 0.9.8
 
 * Deprecated :selected/:checked options, see http://wiki.github.com/justinfrench/formtastic/deprecation-of-selected-option

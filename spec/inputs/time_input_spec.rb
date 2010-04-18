@@ -104,7 +104,7 @@ describe 'time input' do
       end
     end
     
-    describe 'when the object has no value' do
+    describe 'when the object has no value (nil)' do
       it "should select the :selected if provided as a Time" do
         output_buffer.replace ''
         @new_post.stub!(:created_at => nil)
@@ -130,15 +130,14 @@ describe 'time input' do
         output_buffer.should_not have_tag("form li ol li select#post_created_at_4i option[@selected]")
       end
       
-      it "should select Time.now if a :selected is not provided" do
+      it "should select nothing if a :selected is not provided" do
         output_buffer.replace ''
         @new_post.stub!(:created_at => nil)
         form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(:created_at, :as => :time))
         end
         output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
-        output_buffer.should have_tag("form li ol li select#post_created_at_4i option[@selected]", :count => 1)
-        output_buffer.should have_tag("form li ol li select#post_created_at_4i option[@value='#{Time.now.hour.to_s.rjust(2,'0')}'][@selected]", :count => 1)
+        output_buffer.should_not have_tag("form li ol li select option[@selected]")
       end
     end
     
