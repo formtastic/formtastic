@@ -327,10 +327,14 @@ module Formtastic #:nodoc:
         # ActiveRecord::Base.human_name falls back to ActiveRecord::Base.name.humanize ("Userpost") 
         # if there's no i18n, which is pretty crappy.  In this circumstance we want to detect this
         # fall back (human_name == name.humanize) and do our own thing name.underscore.humanize ("User Post")
-        object_human_name = @object.class.human_name                # default is UserPost => "Userpost", but i18n may do better ("User post")
-        crappy_human_name = @object.class.name.humanize             # UserPost => "Userpost"
-        decent_human_name = @object.class.name.underscore.humanize  # UserPost => "User post"
-        object_name = (object_human_name == crappy_human_name) ? decent_human_name : object_human_name
+        if @object.class.respond_to?(:human)
+          object_name = @object.class.human
+        else
+          object_human_name = @object.class.human_name                # default is UserPost => "Userpost", but i18n may do better ("User post")
+          crappy_human_name = @object.class.name.humanize             # UserPost => "Userpost"
+          decent_human_name = @object.class.name.underscore.humanize  # UserPost => "User post"
+          object_name = (object_human_name == crappy_human_name) ? decent_human_name : object_human_name
+        end
       else
         key = :submit
         object_name = @object_name.to_s.send(@@label_str_method)

@@ -4,6 +4,7 @@
 * Changed spec_helper to support Rails 2 with Rspec od Rails 3 with Rspec 3 environments
 * Changed Rakefile to initalize the correct testing framework for the enviroment
 * Fixed inputs_for_nested_attributes only appending to the output buffer
+* Fixed use of model_name.human instead of model_name.human_name (rails3)
 * Added railtie to perform initialization tasks after the rails git framework is available (rails3)
 * Added helper to mark strings as HTML safe depending on environment, adapted from haml 2.2 solution (rails3)
 * Added compatible install and form helpers (rails3)
