@@ -456,7 +456,7 @@ module Formtastic #:nodoc:
         errors = Array(@object.errors[method.to_sym]).to_sentence
         errors.present? ? array << [attribute, errors].join(" ") : array ||= []
       end
-      full_errors << @object.errors.on_base
+      full_errors << @object.errors[:base]
       full_errors.flatten!
       full_errors.compact!
       return nil if full_errors.blank?
