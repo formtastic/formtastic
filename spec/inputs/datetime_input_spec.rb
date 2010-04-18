@@ -163,6 +163,21 @@ describe 'datetime input' do
     end
   end
   
+  #describe 'when an object is given and the attribute value is nil' do
+  #  before(:each) do
+  #    @new_post.stub!(:publish_at).and_return(nil)
+  #    output_buffer.replace ''
+  #    semantic_form_for(@new_post) do |builder|
+  #      concat(builder.input(:publish_at, :as => :datetime))
+  #    end
+  #  end
+  #  
+  #  it 'should not select a value' do
+  #    output_buffer.should_not have_tag('form li.datetime option[@selected]')
+  #  end
+  #  
+  #end
+  
   describe ':selected option' do
     
     describe "when the object has a value" do
@@ -215,15 +230,13 @@ describe 'datetime input' do
         output_buffer.should_not have_tag("form li ol li select#post_created_at_1i option[@selected]")
       end
       
-      it "should select Time.now if a :selected is not provided" do
+      it "should select nothing if a :selected is not provided" do
         output_buffer.replace ''
         @new_post.stub!(:created_at => nil)
         semantic_form_for(@new_post) do |builder|
           concat(builder.input(:created_at, :as => :datetime))
         end
-        output_buffer.should have_tag("form li ol li select#post_created_at_1i option[@selected]", :count => 1)
-        output_buffer.should have_tag("form li ol li select#post_created_at_1i option[@value='#{Time.now.year}'][@selected]", :count => 1)
-        
+        output_buffer.should_not have_tag("form li ol li select option[@selected]")
       end
     end
     
