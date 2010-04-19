@@ -45,6 +45,7 @@ module ActionView
 end
 
 module FormtasticSpecHelper
+  include ActionPack
   include ActionView::Context if defined?(ActionView::Context)
   include ActionView::Helpers::FormHelper
   include ActionView::Helpers::FormTagHelper
@@ -62,6 +63,14 @@ module FormtasticSpecHelper
   include ActionController::PolymorphicRoutes
   
   include Formtastic::SemanticFormHelper
+  
+  def rails3?
+    ActionPack::VERSION::MAJOR > 2
+  end
+
+  def rails2?
+    ActionPack::VERSION::MAJOR == 2
+  end
   
   def default_input_type(column_type, column_name = :generic_column_name)
     @new_post.stub!(column_name)

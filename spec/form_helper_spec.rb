@@ -13,20 +13,20 @@ describe 'SemanticFormHelper' do
   describe '#semantic_form_for' do
 
     it 'yields an instance of SemanticFormBuilder' do
-      semantic_form_for(:post, ::Post.new, :url => '/hello') do |builder|
+      semantic_form_for(@new_post, :url => '/hello') do |builder|
         builder.class.should == ::Formtastic::SemanticFormBuilder
       end
     end
 
     it 'adds a class of "formtastic" to the generated form' do
-      form = semantic_form_for(:post, ::Post.new, :url => '/hello') do |builder|
+      form = semantic_form_for(@new_post, :url => '/hello') do |builder|
       end
       output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag("form.formtastic")
     end
 
     it 'adds class matching the object name to the generated form when a symbol is provided' do
-      form = semantic_form_for(:post, ::Post.new, :url => '/hello') do |builder|
+      form = semantic_form_for(@new_post, :url => '/hello') do |builder|
       end
       output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag("form.post")
@@ -53,7 +53,7 @@ describe 'SemanticFormHelper' do
 
     describe 'allows :html options' do
       before(:each) do
-         @form = semantic_form_for(:post, ::Post.new, :url => '/hello', :html => { :id => "something-special", :class => "something-extra", :multipart => true }) do |builder|
+         @form = semantic_form_for(@new_post, :url => '/hello', :html => { :id => "something-special", :class => "something-extra", :multipart => true }) do |builder|
         end
       end
 
@@ -79,16 +79,24 @@ describe 'SemanticFormHelper' do
         builder.object_name.should == "post"
       end
     end
-
+    
     it 'can be called with a generic style and instance variable' do
-      semantic_form_for(:post, @new_post, :url => new_post_path) do |builder|
-        builder.object.class.should == ::Post
-        builder.object_name.to_s.should == "post" # TODO: is this forced .to_s a bad assumption somewhere?
+      if rails3?
+        semantic_form_for(@new_post, :as => :post, :url => new_post_path) do |builder|
+          builder.object.class.should == ::Post
+          builder.object_name.to_s.should == "post" # TODO: is this forced .to_s a bad assumption somewhere?
+        end
+      end
+      if rails2?
+        semantic_form_for(:post, @new_post, :url => new_post_path) do |builder|
+          builder.object.class.should == ::Post
+          builder.object_name.to_s.should == "post" # TODO: is this forced .to_s a bad assumption somewhere?
+        end
       end
     end
 
     it 'can be called with a generic style and inline object' do
-      semantic_form_for(:post, ::Post.new, :url => new_post_path) do |builder|
+      semantic_form_for(@new_post, :url => new_post_path) do |builder|
         builder.object.class.should == ::Post
         builder.object_name.to_s.should == "post" # TODO: is this forced .to_s a bad assumption somewhere?
       end
@@ -98,7 +106,7 @@ describe 'SemanticFormHelper' do
       it "yields an instance of the given builder" do
         class MyAwesomeCustomBuilder < ::Formtastic::SemanticFormBuilder
         end
-        semantic_form_for(:post, ::Post.new, :url => '/hello', :builder => MyAwesomeCustomBuilder) do |builder|
+        semantic_form_for(@new_post, :url => '/hello', :builder => MyAwesomeCustomBuilder) do |builder|
           builder.class.should == MyAwesomeCustomBuilder
         end
       end
@@ -108,7 +116,7 @@ describe 'SemanticFormHelper' do
 
   describe '#semantic_fields_for' do
     it 'yields an instance of SemanticFormBuilder' do
-      semantic_fields_for(:post, ::Post.new, :url => '/hello') do |builder|
+      semantic_fields_for(@new_post, :url => '/hello') do |builder|
         builder.class.should == ::Formtastic::SemanticFormBuilder
       end
     end
@@ -116,7 +124,7 @@ describe 'SemanticFormHelper' do
 
   describe '#semantic_form_remote_for' do
     it 'yields an instance of SemanticFormBuilder' do
-      semantic_form_remote_for(:post, ::Post.new, :url => '/hello') do |builder|
+      semantic_form_remote_for(@new_post, :url => '/hello') do |builder|
         builder.class.should == ::Formtastic::SemanticFormBuilder
       end
     end
@@ -124,7 +132,7 @@ describe 'SemanticFormHelper' do
 
   describe '#semantic_form_for_remote' do
     it 'yields an instance of SemanticFormBuilder' do
-      semantic_remote_form_for(:post, ::Post.new, :url => '/hello') do |builder|
+      semantic_remote_form_for(@new_post, :url => '/hello') do |builder|
         builder.class.should == ::Formtastic::SemanticFormBuilder
       end
     end
