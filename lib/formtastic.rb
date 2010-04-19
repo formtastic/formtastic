@@ -327,7 +327,7 @@ module Formtastic #:nodoc:
         # ActiveRecord::Base.human_name falls back to ActiveRecord::Base.name.humanize ("Userpost") 
         # if there's no i18n, which is pretty crappy.  In this circumstance we want to detect this
         # fall back (human_name == name.humanize) and do our own thing name.underscore.humanize ("User Post")
-        if @object.class.respond_to?(:model_name)
+        if @object.class.model_name.respond_to?(:human)
           object_name = @object.class.model_name.human
         else
           object_human_name = @object.class.human_name                # default is UserPost => "Userpost", but i18n may do better ("User post")
