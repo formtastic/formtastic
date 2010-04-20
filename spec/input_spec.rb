@@ -133,21 +133,17 @@ describe 'SemanticFormBuilder#input' do
 
             before do
               @new_post.class.stub!(:method_defined?).with(:validators_on).and_return(true)
-              @title_validation = mock('ActiveModel::Validations::PresenceValidator', :attributes => [:title], :options => {})
-              @title_validation.stub!(:kind).and_return(:presence)
-              @body_validation = mock('ActiveModel::Validations::PresenceValidator', :attributes => [:body], :options => {:if => true})
-              @body_validation.stub!(:kind).and_return(:presence)
             end
 
             describe 'and validates_presence_of was called for the method' do
               it 'should be required' do
 
                 @new_post.class.should_receive(:validators_on).with(:title).and_return([
-                  @title_validation
+                  active_model_presence_validator([:title])
                 ])
 
                 @new_post.class.should_receive(:validators_on).with(:body).and_return([
-                  @body_validation
+                  active_model_presence_validator([:body], {:if => true})
                 ])
 
                 form = semantic_form_for(@new_post) do |builder|
@@ -202,10 +198,8 @@ describe 'SemanticFormBuilder#input' do
             
             # TODO make a matcher for this?
             def should_be_required(options)
-              body_validation = mock('ActiveModel::Validations::PresenceValidator', :attributes => [:body], :options => options[:options])
-              body_validation.stub!(:kind).and_return(:presence)
               @new_post.class.should_receive(:validators_on).with(:body).and_return([
-                body_validation
+                active_model_presence_validator([:body], options[:options])
               ])
               
               form = semantic_form_for(@new_post) do |builder|
