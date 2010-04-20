@@ -535,12 +535,12 @@ module Formtastic #:nodoc:
       # * if the :required option was provided in the options hash, the true/false value will be
       #   returned immediately, allowing the view to override any guesswork that follows:
       #
-      # * if the :required option isn't provided in the options hash, and the ValidationReflection
-      #   plugin is installed (http://github.com/redinger/validation_reflection), true is returned
+      # * if the :required option isn't provided in the options hash, and the object is an ActiveModel,
+      #   true is returned
       #   if the validates_presence_of macro has been used in the class for this attribute, or false
       #   otherwise.
       #
-      # * if the :required option isn't provided, and the plugin isn't available, the value of the
+      # * if the :required option isn't provided, and the object isn't an ActiveModel, the value of the
       #   configuration option @@all_fields_required_by_default is used.
       #
       def method_required?(attribute) #:nodoc:
