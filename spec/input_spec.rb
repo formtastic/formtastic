@@ -129,19 +129,25 @@ describe 'SemanticFormBuilder#input' do
 
         describe 'and an object was given' do
 
-          describe 'and the validation reflection plugin is available' do
+          describe 'and its a ActiveModel' do
 
             before do
-              @new_post.class.stub!(:method_defined?).with(:reflect_on_validations_for).and_return(true)
+              @new_post.class.stub!(:method_defined?).with(:validators_on).and_return(true)
+              @title_validation = mock('ActiveModel::Validations::PresenceValidator', :attributes => [:title], :options => {})
+              @title_validation.stub!(:kind).and_return(:presence)
+              @body_validation = mock('ActiveModel::Validations::PresenceValidator', :attributes => [:body], :options => {:if => true})
+              @body_validation.stub!(:kind).and_return(:presence)
             end
 
             describe 'and validates_presence_of was called for the method' do
               it 'should be required' do
-                @new_post.class.should_receive(:reflect_on_validations_for).with(:title).and_return([
-                  mock('MacroReflection', :macro => :validates_presence_of, :name => :title, :options => nil)
+
+                @new_post.class.should_receive(:validators_on).with(:title).and_return([
+                  @title_validation
                 ])
-                @new_post.class.should_receive(:reflect_on_validations_for).with(:body).and_return([
-                  mock('MacroReflection', :macro => :validates_presence_of, :name => :body, :options => {:if => true})
+
+                @new_post.class.should_receive(:validators_on).with(:body).and_return([
+                  @body_validation
                 ])
 
                 form = semantic_form_for(@new_post) do |builder|
@@ -196,8 +202,10 @@ describe 'SemanticFormBuilder#input' do
             
             # TODO make a matcher for this?
             def should_be_required(options)
-              @new_post.class.should_receive(:reflect_on_validations_for).with(:body).and_return([
-                mock('MacroReflection', :macro => :validates_presence_of, :name => :body, :options => options[:options])
+              body_validation = mock('ActiveModel::Validations::PresenceValidator', :attributes => [:body], :options => options[:options])
+              body_validation.stub!(:kind).and_return(:presence)
+              @new_post.class.should_receive(:validators_on).with(:body).and_return([
+                body_validation
               ])
               
               form = semantic_form_for(@new_post) do |builder|
@@ -217,7 +225,7 @@ describe 'SemanticFormBuilder#input' do
 
             describe 'and validates_presence_of was not called for the method' do
               before do
-                @new_post.class.should_receive(:reflect_on_validations_for).with(:title).and_return([])
+                @new_post.class.should_receive(:validators_on).with(:title).and_return([])
               end
 
               it 'should not be required' do
