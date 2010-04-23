@@ -136,9 +136,11 @@ describe 'SemanticFormBuilder#input' do
               @new_post.class.stub!(:method_defined?).with(:reflect_on_validations_for).and_return(true)
             end
 
-            after do
-              ::Post.unstub(:reflect_on_validations_for)
-              @new_post.class.stub!(:method_defined?).with(:reflect_on_validations_for).and_return(false)
+            unless defined?(Rspec)
+              after do
+                ::Post.unstub!(:reflect_on_validations_for)
+                @new_post.class.stub!(:method_defined?).with(:reflect_on_validations_for).and_return(false)
+              end
             end
 
             describe 'and validates_presence_of was called for the method' do
@@ -238,114 +240,115 @@ describe 'SemanticFormBuilder#input' do
 
           end
 
-          describe 'and its a ActiveModel' do
+          unless defined?(Rspec)
+            describe 'and its a ActiveModel' do
+              before do
+                ::Post.stub!(:validators_on).and_return([])
+                @new_post.class.stub!(:method_defined?).with(:validators_on).and_return(true)
+              end
 
-            before do
-              ::Post.stub!(:validators_on).and_return([])
-              @new_post.class.stub!(:method_defined?).with(:validators_on).and_return(true)
-            end
+              after do
+                ::Post.unstub!(:validators_on)
+                @new_post.class.stub!(:method_defined?).with(:validators_on).and_return(false)
+              end
+              describe 'and validates_presence_of was called for the method' do
+                it 'should be required' do
 
-            after do
-              ::Post.unstub!(:validators_on)
-              @new_post.class.stub!(:method_defined?).with(:validators_on).and_return(false)
-            end
-            describe 'and validates_presence_of was called for the method' do
-              it 'should be required' do
+                  @new_post.class.should_receive(:validators_on).with(:title).and_return([
+                    active_model_presence_validator([:title])
+                  ])
 
-                @new_post.class.should_receive(:validators_on).with(:title).and_return([
-                  active_model_presence_validator([:title])
-                ])
+                  @new_post.class.should_receive(:validators_on).with(:body).and_return([
+                    active_model_presence_validator([:body], {:if => true})
+                  ])
 
+                  form = semantic_form_for(@new_post) do |builder|
+                    concat(builder.input(:title))
+                    concat(builder.input(:body))
+                  end
+                  output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
+                  output_buffer.should have_tag('form li.required')
+                  output_buffer.should_not have_tag('form li.optional')
+                end
+
+                it 'should be not be required if the optional :if condition is not satisifed' do
+                  should_be_required(:required => false, :options => { :if => false })
+                end
+
+                it 'should not be required if the optional :if proc evaluates to false' do
+                  should_be_required(:required => false, :options => { :if => proc { |record| false } })
+                end
+
+                it 'should be required if the optional :if proc evaluates to true' do
+                  should_be_required(:required => true, :options => { :if => proc { |record| true } })
+                end
+
+                it 'should not be required if the optional :unless proc evaluates to true' do
+                  should_be_required(:required => false, :options => { :unless => proc { |record| true } })
+                end
+
+                it 'should be required if the optional :unless proc evaluates to false' do
+                  should_be_required(:required => true, :options => { :unless => proc { |record| false } })
+                end
+
+                it 'should be required if the optional :if with a method string evaluates to true' do
+                  @new_post.should_receive(:required_condition).and_return(true)
+                  should_be_required(:required => true, :options => { :if => :required_condition })
+                end
+
+                it 'should be required if the optional :if with a method string evaluates to false' do
+                  @new_post.should_receive(:required_condition).and_return(false)
+                  should_be_required(:required => false, :options => { :if => :required_condition })
+                end
+
+                it 'should not be required if the optional :unless with a method string evaluates to false' do
+                   @new_post.should_receive(:required_condition).and_return(false)
+                  should_be_required(:required => true, :options => { :unless => :required_condition })
+                end
+
+                 it 'should be required if the optional :unless with a method string evaluates to true' do
+                   @new_post.should_receive(:required_condition).and_return(true)
+                   should_be_required(:required => false, :options => { :unless => :required_condition })
+                 end
+              end
+
+              # TODO make a matcher for this?
+              def should_be_required(options)
                 @new_post.class.should_receive(:validators_on).with(:body).and_return([
-                  active_model_presence_validator([:body], {:if => true})
+                  active_model_presence_validator([:body], options[:options])
                 ])
 
                 form = semantic_form_for(@new_post) do |builder|
-                  concat(builder.input(:title))
                   concat(builder.input(:body))
                 end
+
                 output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
-                output_buffer.should have_tag('form li.required')
-                output_buffer.should_not have_tag('form li.optional')
-              end
 
-              it 'should be not be required if the optional :if condition is not satisifed' do
-                should_be_required(:required => false, :options => { :if => false })
-              end
-              
-              it 'should not be required if the optional :if proc evaluates to false' do
-                should_be_required(:required => false, :options => { :if => proc { |record| false } })
-              end
-              
-              it 'should be required if the optional :if proc evaluates to true' do
-                should_be_required(:required => true, :options => { :if => proc { |record| true } })
-              end
-              
-              it 'should not be required if the optional :unless proc evaluates to true' do
-                should_be_required(:required => false, :options => { :unless => proc { |record| true } })
-              end
-              
-              it 'should be required if the optional :unless proc evaluates to false' do
-                should_be_required(:required => true, :options => { :unless => proc { |record| false } })
-              end
-              
-              it 'should be required if the optional :if with a method string evaluates to true' do
-                @new_post.should_receive(:required_condition).and_return(true)
-                should_be_required(:required => true, :options => { :if => :required_condition })
-              end
-              
-              it 'should be required if the optional :if with a method string evaluates to false' do
-                @new_post.should_receive(:required_condition).and_return(false)
-                should_be_required(:required => false, :options => { :if => :required_condition })
-              end
-              
-              it 'should not be required if the optional :unless with a method string evaluates to false' do
-                 @new_post.should_receive(:required_condition).and_return(false)
-                should_be_required(:required => true, :options => { :unless => :required_condition })
-              end
-              
-               it 'should be required if the optional :unless with a method string evaluates to true' do
-                 @new_post.should_receive(:required_condition).and_return(true)
-                 should_be_required(:required => false, :options => { :unless => :required_condition })
-               end
-            end
-            
-            # TODO make a matcher for this?
-            def should_be_required(options)
-              @new_post.class.should_receive(:validators_on).with(:body).and_return([
-                active_model_presence_validator([:body], options[:options])
-              ])
-              
-              form = semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:body))
-              end
-
-              output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
-              
-              if options[:required]
-                output_buffer.should_not have_tag('form li.optional')
-                output_buffer.should have_tag('form li.required')
-              else
-                output_buffer.should have_tag('form li.optional')
-                output_buffer.should_not have_tag('form li.required')
-              end
-            end
-
-            describe 'and validates_presence_of was not called for the method' do
-              before do
-                @new_post.class.should_receive(:validators_on).with(:title).and_return([])
-              end
-
-              it 'should not be required' do
-                form = semantic_form_for(@new_post) do |builder|
-                  concat(builder.input(:title))
+                if options[:required]
+                  output_buffer.should_not have_tag('form li.optional')
+                  output_buffer.should have_tag('form li.required')
+                else
+                  output_buffer.should have_tag('form li.optional')
+                  output_buffer.should_not have_tag('form li.required')
                 end
-                output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
-                output_buffer.should_not have_tag('form li.required')
-                output_buffer.should have_tag('form li.optional')
               end
-            end
 
+              describe 'and validates_presence_of was not called for the method' do
+                before do
+                  @new_post.class.should_receive(:validators_on).with(:title).and_return([])
+                end
+
+                it 'should not be required' do
+                  form = semantic_form_for(@new_post) do |builder|
+                    concat(builder.input(:title))
+                  end
+                  output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
+                  output_buffer.should_not have_tag('form li.required')
+                  output_buffer.should have_tag('form li.optional')
+                end
+              end
+
+            end
           end
 
           describe 'and the validation reflection plugin is not available' do
