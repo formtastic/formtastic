@@ -211,6 +211,7 @@ module FormtasticSpecHelper
     ::Post.stub!(:human_name).and_return('Post')
     ::Post.stub!(:reflect_on_all_validations).and_return([])
     ::Post.stub!(:reflect_on_validations_for).and_return([]) if defined?(Rspec)
+    ::Post.stub!(:reflections).and_return({})
     ::Post.stub!(:reflect_on_association).and_return do |column_name|
       case column_name
       when :author, :author_status
@@ -247,6 +248,7 @@ module FormtasticSpecHelper
     @new_post.stub!(:column_for_attribute).with(:publish_at).and_return(mock('column', :type => :date))
     @new_post.stub!(:column_for_attribute).with(:time_zone).and_return(mock('column', :type => :string))
     @new_post.stub!(:column_for_attribute).with(:allow_comments).and_return(mock('column', :type => :boolean))
+    @new_post.stub!(:column_for_attribute).with(:author).and_return(mock('column', :type => :integer))
     
     @new_post.stub!(:author).and_return(@bob)
     @new_post.stub!(:author_id).and_return(@bob.id)
