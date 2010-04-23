@@ -91,9 +91,10 @@ describe 'SemanticFormBuilder#errors_on' do
       @errors.stub!(:[]).with(:author).and_return(['must not be blank'])
       @errors.stub!(:[]).with(:author_id).and_return(['is already taken', 'must not be blank']) # note the duplicate of association
       
-      semantic_form_for(@new_post) do |builder|
+      form = semantic_form_for(@new_post) do |builder|
         concat(builder.input(:author))
       end
+      output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
       output_buffer.should have_tag("ul.errors li", /must not be blank/, :count => 1)
       output_buffer.should have_tag("ul.errors li", /is already taken/, :count => 1)
     end
