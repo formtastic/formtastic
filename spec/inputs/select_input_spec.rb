@@ -162,6 +162,34 @@ describe 'select input' do
     end
   end
 
+  describe "for a belongs_to association with :conditions" do
+    before do
+      ::Post.stub!(:reflect_on_association).with(:author).and_return do
+        mock = mock('reflection', :options => {:conditions => {:active => true}}, :klass => ::Author, :macro => :belongs_to)
+        mock.stub!(:[]).with(:class_name).and_return("Author")
+        mock
+      end
+    end
+
+    it "should call author.find with association conditions" do
+      ::Author.should_receive(:merge_conditions).with({:active => true}, nil).and_return(:active => true)
+      ::Author.should_receive(:find).with(:all, :conditions => {:active => true})
+
+      semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:author, :as => :select))
+      end
+    end
+
+    it "should call author.find with association conditions and find_options conditions" do
+      ::Author.should_receive(:merge_conditions).with({:active => true}, {:publisher => true}).and_return(:active => true, :publisher => true)
+      ::Author.should_receive(:find).with(:all, :conditions => {:active => true, :publisher => true})
+
+      semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:author, :as => :select, :find_options => {:conditions => {:publisher => true}}))
+      end
+    end
+  end
+
   describe 'for a belongs_to association with :group_by => :continent' do
     before do
       @authors = [@bob, @fred, @fred, @fred]

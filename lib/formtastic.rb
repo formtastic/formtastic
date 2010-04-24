@@ -1398,7 +1398,13 @@ module Formtastic #:nodoc:
         collection = if options[:collection]
           options.delete(:collection)
         elsif reflection = self.reflection_for(column)
-          reflection.klass.find(:all, options[:find_options] || {})
+          options[:find_options] ||= {}
+
+          if conditions = reflection.options[:conditions]
+            options[:find_options][:conditions] = reflection.klass.merge_conditions(conditions, options[:find_options][:conditions])
+          end
+
+          reflection.klass.find(:all, options[:find_options])
         else
           create_boolean_collection(options)
         end
