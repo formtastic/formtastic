@@ -94,6 +94,7 @@ describe 'select input' do
     before do
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:author, :as => :select))
+				concat(builder.input(:reviewer, :as => :select))
       end
     end
 
@@ -108,11 +109,13 @@ describe 'select input' do
     it 'should have a select inside the wrapper' do
       output_buffer.should have_tag('form li select')
       output_buffer.should have_tag('form li select#post_author_id')
+			output_buffer.should have_tag('form li select#post_reviewer_id')
     end
 
     it 'should have a valid name' do
       output_buffer.should have_tag("form li select[@name='post[author_id]']")
       output_buffer.should_not have_tag("form li select[@name='post[author_id][]']")
+			output_buffer.should_not have_tag("form li select[@name='post[reviewer_id][]']")
     end
 
     it 'should not create a multi-select' do
@@ -128,14 +131,14 @@ describe 'select input' do
     end
 
     it 'should have a select option for each Author' do
-      output_buffer.should have_tag('form li select option', :count => ::Author.find(:all).size + 1)
+      output_buffer.should have_tag("form li select[@name='post[author_id]'] option", :count => ::Author.find(:all).size + 1)
       ::Author.find(:all).each do |author|
         output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
       end
     end
 
     it 'should have one option with a "selected" attribute' do
-      output_buffer.should have_tag('form li select option[@selected]', :count => 1)
+      output_buffer.should have_tag("form li select[@name='post[author_id]'] option[@selected]", :count => 1)
     end
 
     it 'should not singularize the association name' do
