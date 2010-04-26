@@ -149,8 +149,12 @@ module FormtasticSpecHelper
     ::Post.stub!(:reflect_on_validations_for).and_return([])
     ::Post.stub!(:reflect_on_association).and_return do |column_name|
       case column_name
-      when :author, :author_status, :reviewer
+      when :author, :author_status
         mock = mock('reflection', :options => {}, :klass => ::Author, :macro => :belongs_to)
+        mock.stub!(:[]).with(:class_name).and_return("Author")
+        mock
+			when :reviewer
+				mock = mock('reflection', :options => {:class_name => 'Author'}, :klass => ::Author, :macro => :belongs_to)
         mock.stub!(:[]).with(:class_name).and_return("Author")
         mock
       when :authors
