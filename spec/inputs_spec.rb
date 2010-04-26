@@ -391,5 +391,4 @@ describe 'SemanticFormBuilder#inputs' do
     end
 
   end
-
 end
