@@ -126,6 +126,7 @@ module FormtasticSpecHelper
     @new_post.stub!(:new_record?).and_return(true)
     @new_post.stub!(:errors).and_return(mock('errors', :[] => nil))
     @new_post.stub!(:author).and_return(nil)
+		@new_post.stub!(:reviewer).and_return(nil)
     @new_post.stub!(:main_post).and_return(nil)
     @new_post.stub!(:sub_posts).and_return([]) #TODO should be a mock with methods for adding sub posts
 
@@ -151,6 +152,10 @@ module FormtasticSpecHelper
       case column_name
       when :author, :author_status
         mock = mock('reflection', :options => {}, :klass => ::Author, :macro => :belongs_to)
+        mock.stub!(:[]).with(:class_name).and_return("Author")
+        mock
+			when :reviewer
+				mock = mock('reflection', :options => {:class_name => 'Author'}, :klass => ::Author, :macro => :belongs_to)
         mock.stub!(:[]).with(:class_name).and_return("Author")
         mock
       when :authors
@@ -185,6 +190,9 @@ module FormtasticSpecHelper
     
     @new_post.stub!(:author).and_return(@bob)
     @new_post.stub!(:author_id).and_return(@bob.id)
+
+		@new_post.stub!(:reviewer).and_return(@fred)
+		@new_post.stub!(:reviewer_id).and_return(@fred.id)
 
     @new_post.should_receive(:publish_at=).any_number_of_times
     @new_post.should_receive(:title=).any_number_of_times
