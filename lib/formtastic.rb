@@ -1341,7 +1341,7 @@ module Formtastic #:nodoc:
           case column.type
           when :string
             return :password  if method.to_s =~ /password/
-            return :country   if method.to_s =~ /country/
+            return :country   if method.to_s =~ /country$/
             return :time_zone if method.to_s =~ /time_zone/
           when :integer
             return :select    if method.to_s =~ /_id$/
