@@ -206,7 +206,7 @@ When working in has many association, you can even supply @"%i"@ in your fieldse
 </pre>
 
 
-Customize HTML attributes for any input using the @:input_html@ option. Typically his is used to disable the input, change the size of a text field, change the rows in a textarea, or even to add a special class to an input to attach special behavior like "autogrow":http://plugins.jquery.com/project/autogrow textareas:
+Customize HTML attributes for any input using the @:input_html@ option. Typically this is used to disable the input, change the size of a text field, change the rows in a textarea, or even to add a special class to an input to attach special behavior like "autogrow":http://plugins.jquery.com/project/autogrow textareas:
 
 <pre>
   <% semantic_form_for @post do |form| %>

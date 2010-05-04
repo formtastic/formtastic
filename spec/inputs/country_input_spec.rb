@@ -77,6 +77,42 @@ describe 'country input' do
     end
     
   end
-
+  
+  describe "matching" do
+    
+    describe "when the attribute is 'country'" do
+      
+      before do
+        @form = semantic_form_for(@new_post) do |builder|
+          builder.stub!(:country_select).and_return("<select><option>...</option></select>")
+          concat(builder.input(:country))
+        end
+      end
+      
+      it "should render a country input" do
+        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.should have_tag "form li.country"
+      end
+    end
+    
+    describe "whent the attribute is 'country_something'" do
+      
+      before do
+        @form = semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:country_subdivision))
+          concat(builder.input(:country_code))
+        end
+      end
+      
+      it "should render a country input" do
+        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.should_not have_tag "form li.country"
+        output_buffer.should have_tag "form li.string", :count => 2
+      end
+      
+    end
+    
+  end
+  
 end
 
