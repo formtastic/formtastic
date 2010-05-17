@@ -28,7 +28,7 @@
 # Formtastic::SemanticFormBuilder.inline_errors = :sentence
 
 # Set the method to call on label text to transform or format it for human-friendly
-# reading when formtastic is user without object. Defaults to :humanize.
+# reading when formtastic is used without object. Defaults to :humanize.
 # Formtastic::SemanticFormBuilder.label_str_method = :humanize
 
 # Set the array of methods to try calling on parent objects in :select and :radio inputs
