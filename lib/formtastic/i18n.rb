@@ -11,8 +11,11 @@ module Formtastic
         :update         => 'Update {{model}}'
       }.freeze
     SCOPES = [
+        '{{model}}.{{nested_model}}.{{action}}.{{attribute}}',
         '{{model}}.{{action}}.{{attribute}}',
+        '{{model}}.{{nested_model}}.{{attribute}}',
         '{{model}}.{{attribute}}',
+        '{{nested_model}}.{{attribute}}',
         '{{attribute}}'
       ]
       

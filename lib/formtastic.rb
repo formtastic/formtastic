@@ -1616,7 +1616,7 @@ module Formtastic #:nodoc:
           use_i18n = value.nil? ? @@i18n_lookups_by_default : (value != false)
 
           if use_i18n
-            model_name  = self.model_name.underscore
+            model_name, nested_model_name  = normalize_model_name(self.model_name.underscore)
             action_name = template.params[:action].to_s rescue ''
             attribute_name = key.to_s
 
@@ -1624,6 +1624,7 @@ module Formtastic #:nodoc:
               i18n_path = i18n_scope.dup
               i18n_path.gsub!('{{action}}', action_name)
               i18n_path.gsub!('{{model}}', model_name)
+              i18n_path.gsub!('{{nested_model}}', nested_model_name) unless nested_model_name.nil?
               i18n_path.gsub!('{{attribute}}', attribute_name)
               i18n_path.gsub!('..', '.')
               i18n_path.to_sym
@@ -1639,6 +1640,14 @@ module Formtastic #:nodoc:
 
       def model_name
         @object.present? ? @object.class.name : @object_name.to_s.classify
+      end
+
+      def normalize_model_name(name)
+        if name =~ /(.+)\[(.+)\]/
+          [$1, $2]
+        else
+          [name]
+        end
       end
 
       def send_or_call(duck, object)
