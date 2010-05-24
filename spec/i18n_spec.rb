@@ -26,11 +26,11 @@ describe 'Formtastic::I18n' do
       @formtastic_strings = {
           :yes            => 'Default Yes',
           :no             => 'Default No',
-          :create         => 'Default Create {{model}}',
-          :update         => 'Default Update {{model}}',
+          :create         => 'Default Create %{model}',
+          :update         => 'Default Update %{model}',
           :custom_scope   => {
               :duck           => 'Duck',
-              :duck_pond      => '{{ducks}} ducks in a pond'
+              :duck_pond      => '%{ducks} ducks in a pond'
             }
         }
       ::I18n.backend.store_translations :en, :formtastic => @formtastic_strings
@@ -71,7 +71,7 @@ describe 'Formtastic::I18n' do
 
     it "should use default strings" do
       (::Formtastic::I18n::DEFAULT_VALUES.keys).each do |key|
-        ::Formtastic::I18n.t(key, :model => '{{model}}').should == ::Formtastic::I18n::DEFAULT_VALUES[key]
+        ::Formtastic::I18n.t(key, :model => '%{model}').should == ::Formtastic::I18n::DEFAULT_VALUES[key]
       end
     end
     
@@ -89,7 +89,8 @@ describe 'Formtastic::I18n' do
           :labels => {
               :title    => "Hello world!",
               :post     => {:title => "Hello post!"},
-              :project  => {:title => "Hello project!"}
+              :project  => {:title => "Hello project!", :task => {:name => "Hello task name!"}},
+              :line_item => {:name => "Hello line item name!"}
             }
         }
       ::Formtastic::SemanticFormBuilder.i18n_lookups_by_default = true
@@ -123,6 +124,25 @@ describe 'Formtastic::I18n' do
       output_buffer.should have_tag("form label", /Hello project!/)
     end
     
+    it 'should be able to translate nested objects with nested translations' do
+      semantic_form_for(:project, :url => 'http://test.host') do |builder|
+        builder.semantic_fields_for(:task) do |f|
+          concat(f.input(:name))
+        end
+      end
+      output_buffer.should have_tag("form label", /Hello task name!/)
+    end
+
+    it 'should be able to translated nested objects with top level translations' do
+      semantic_form_for(:order, :url => 'http://test.host') do |builder|
+        builder.semantic_fields_for(:line_item) do |f|
+          concat(f.input(:name))
+        end
+      end
+      output_buffer.should have_tag("form label", /Hello line item name!/)
+    end
+
+
     # TODO: Add spec for namespaced models?
     
   end

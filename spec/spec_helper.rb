@@ -1,8 +1,8 @@
 # coding: utf-8
 require 'rubygems'
 
-gem 'activesupport', '>= 2.3.5'
-gem 'actionpack', '>= 2.3.5'
+gem 'activesupport', '>=2.3.7'
+gem 'actionpack', '>=2.3.7'
 require 'active_support'
 require 'action_pack'
 require 'action_view'
@@ -37,6 +37,7 @@ rescue
 end
 
 require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic'))
+require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic/util'))
 require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic/layout_helper'))
 
 module ActionView

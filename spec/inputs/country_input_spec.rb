@@ -56,8 +56,8 @@ describe 'country input' do
     it "should be passed down to the country_select helper when provided" do
       priority_countries = ["Foo", "Bah"]
       semantic_form_for(@new_post) do |builder|
-        builder.stub!(:country_select).and_return("<select><option>...</option></select>")
-        builder.should_receive(:country_select).with(:country, priority_countries, {}, {}).and_return("<select><option>...</option></select>")
+        builder.stub!(:country_select).and_return(Formtastic::Util.html_safe("<select><option>...</option></select>"))
+        builder.should_receive(:country_select).with(:country, priority_countries, {}, {}).and_return(Formtastic::Util.html_safe("<select><option>...</option></select>"))
         
         concat(builder.input(:country, :as => :country, :priority_countries => priority_countries))
       end
@@ -69,8 +69,8 @@ describe 'country input' do
       priority_countries.should_not be_nil
       
       semantic_form_for(@new_post) do |builder|
-        builder.stub!(:country_select).and_return("<select><option>...</option></select>")
-        builder.should_receive(:country_select).with(:country, priority_countries, {}, {}).and_return("<select><option>...</option></select>")
+        builder.stub!(:country_select).and_return(Formtastic::Util.html_safe("<select><option>...</option></select>"))
+        builder.should_receive(:country_select).with(:country, priority_countries, {}, {}).and_return(Formtastic::Util.html_safe("<select><option>...</option></select>"))
         
         concat(builder.input(:country, :as => :country))
       end
@@ -84,7 +84,7 @@ describe 'country input' do
       
       before do
         @form = semantic_form_for(@new_post) do |builder|
-          builder.stub!(:country_select).and_return("<select><option>...</option></select>")
+          builder.stub!(:country_select).and_return(Formtastic::Util.html_safe("<select><option>...</option></select>"))
           concat(builder.input(:country))
         end
       end
