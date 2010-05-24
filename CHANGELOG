@@ -1,24 +1,26 @@
 (HEAD)
-* Changed I18n handling in spec tests to use I18n.backend.reload! instead of assigning nil
 * Changed semantic_remote_form_for to allow for unobstrusive javascript / :remote option (rails3)
 * Changed spec_helper to support Rails 2 with Rspec od Rails 3 with Rspec 3 environments
 * Changed Rakefile to initalize the correct testing framework for the enviroment
-* Fixed inputs_for_nested_attributes only appending to the output buffer
 * Fixed use of model_name.human instead of model_name.human_name (rails3)
 * Fixed use of deprecated Errors#on_base
 * Added railtie to perform initialization tasks after the rails git framework is available (rails3)
-* Added helper to mark strings as HTML safe depending on environment, adapted from haml 2.2 solution (rails3)
 * Added compatible install and form helpers (rails3)
 * Added support for ActiveModel Validations, thanks to Guillaume Belleguic (rails3)
 
 0.9.9 [unreleased]
 
+* Changed I18n handling in spec tests to use I18n.backend.reload! instead of assigning nil
 * Changed date/time inputs to default to nil instead of Time.now when the object has no value (due to deprecation warning, #240)
 * Changed the behaviour of associations with a :class_name option to be more consistent with what Rails expects
+* Changed testsuite to use rails 2.3.7 as base
+* Fixed use of unsafe HTML strings in tests
 * Fixed issues with Ruby 1.9.1 and Haml
 * Fixed inputs_for_nested_attributes only appending to the output buffer
+* Fixed use of deprecated {{key}} syntax in i18n interpolation (thanks to Hans Petter Wilhelmsen)
 * Add the :disabled option to check_boxes input
-* Changed I18n handling in spec tests to use I18n.backend.reload! instead of assigning nil
+* Added helper to mark strings as HTML safe depending on environment, adapted from haml 2.2 solution
+* Added translation support for nested models (thanks to Toni Tuominen)
 
 0.9.8
 
