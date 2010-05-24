@@ -17,12 +17,12 @@ describe 'LayoutHelper' do
     end
     
     it 'should render a link to formtastic.css' do
-      output_buffer.concat(@tags) if defined?(ActiveSupport::SafeBuffer)
+      output_buffer.concat(@tags) if Formtastic::Util.rails3?
       output_buffer.should have_tag("link[@href='/stylesheets/formtastic.css']")
     end
     
     it 'should render a link to formtastic_changes.css' do
-      output_buffer.concat(@tags) if defined?(ActiveSupport::SafeBuffer)
+      output_buffer.concat(@tags) if Formtastic::Util.rails3?
       output_buffer.should have_tag("link[@href='/stylesheets/formtastic_changes.css']")
     end
     

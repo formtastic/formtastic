@@ -19,7 +19,7 @@ describe 'boolean input' do
   it_should_apply_error_logic_for_input_type(:boolean)
 
   it 'should generate a label containing the input' do
-    output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+    output_buffer.concat(@form) if Formtastic::Util.rails3?
     output_buffer.should have_tag('form li label', :count => 1)
     output_buffer.should have_tag('form li label[@for="post_allow_comments"]')
     output_buffer.should have_tag('form li label', /Allow comments/)
@@ -27,7 +27,7 @@ describe 'boolean input' do
   end
 
   it 'should generate a checkbox input' do
-    output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+    output_buffer.concat(@form) if Formtastic::Util.rails3?
     output_buffer.should have_tag('form li label input')
     output_buffer.should have_tag('form li label input#post_allow_comments')
     output_buffer.should have_tag('form li label input[@type="checkbox"]')
@@ -40,7 +40,7 @@ describe 'boolean input' do
       concat(builder.input(:allow_comments, :as => :boolean, :checked_value => 'checked', :unchecked_value => 'unchecked'))
     end
 
-    output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
+    output_buffer.concat(form) if Formtastic::Util.rails3?
     output_buffer.should have_tag('form li label input[@type="checkbox"][@value="checked"]')
     output_buffer.should have_tag('form li label input[@type="hidden"][@value="unchecked"]')
   end
@@ -50,7 +50,7 @@ describe 'boolean input' do
       concat(builder.input(:allow_comments, :as => :boolean))
     end
 
-    output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
+    output_buffer.concat(form) if Formtastic::Util.rails3?
 
     output_buffer.should have_tag('form li label[@for="project_allow_comments"]')
     output_buffer.should have_tag('form li label', /Allow comments/)
@@ -78,7 +78,7 @@ describe 'boolean input' do
       end
 
       it 'should not be selected' do
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should_not have_tag("form li label input[@type='checkbox'][@checked='checked']")
       end
     end
@@ -95,7 +95,7 @@ describe 'boolean input' do
       end
 
       it 'should be selected' do
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li label input[@type='checkbox'][@checked='checked']")
       end
     end

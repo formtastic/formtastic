@@ -34,7 +34,7 @@ describe 'SemanticFormBuilder#semantic_fields_for' do
         concat(nested_builder.inputs(:login))
       end)
     end
-    output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
+    output_buffer.concat(form) if Formtastic::Util.rails3?
     output_buffer.should have_tag('form fieldset.inputs #post_author_1_login_input')
     # Not valid selector, so using good ol' regex
     output_buffer.should_not =~ /id="post\[author\]_1_login_input"/

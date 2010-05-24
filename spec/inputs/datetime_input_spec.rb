@@ -30,23 +30,23 @@ describe 'datetime input' do
     it_should_apply_error_logic_for_input_type(:datetime)
     
     it 'should have a legend and label with the label text inside the fieldset' do
-      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+      output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should have_tag('form li.datetime fieldset legend.label label', /Publish at/)
     end
     
     it 'should associate the legend label with the first select' do
-      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+      output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should have_tag('form li.datetime fieldset legend.label label[@for="post_publish_at_1i"]')
     end
     
     it 'should have an ordered list of five items inside the fieldset' do
-      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+      output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should have_tag('form li.datetime fieldset ol')
       output_buffer.should have_tag('form li.datetime fieldset ol li', :count => 5)
     end
     
     it 'should have five labels for year, month, day, hour and minute' do
-      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+      output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should have_tag('form li.datetime fieldset ol li label', :count => 5)
       output_buffer.should have_tag('form li.datetime fieldset ol li label', /year/i)
       output_buffer.should have_tag('form li.datetime fieldset ol li label', /month/i)
@@ -56,7 +56,7 @@ describe 'datetime input' do
     end
     
     it 'should have five selects for year, month, day, hour and minute' do
-      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+      output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should have_tag('form li.datetime fieldset ol li select', :count => 5)
     end
     
@@ -67,7 +67,7 @@ describe 'datetime input' do
         end
         concat(fields)
       end
-      output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
+      output_buffer.concat(form) if Formtastic::Util.rails3?
     
       1.upto(5) do |i|
         output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_10_created_at_#{i}i']")
@@ -83,7 +83,7 @@ describe 'datetime input' do
         concat(builder.input(:publish_at, :as => :datetime, :discard_day => true))
       end
   
-      output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
+      output_buffer.concat(form) if Formtastic::Util.rails3?
       output_buffer.should have_tag("form li input[@type='hidden'][@value='27']")
     end
   end
@@ -142,7 +142,7 @@ describe 'datetime input' do
     end
   
     it 'should have translated labels for year, month, day, hour and minute' do
-      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+      output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should have_tag('form li.datetime fieldset ol li label', /The Year/)
       output_buffer.should have_tag('form li.datetime fieldset ol li label', /The Month/)
       output_buffer.should have_tag('form li.datetime fieldset ol li label', /The Day/)
@@ -160,17 +160,17 @@ describe 'datetime input' do
     end
   
     it 'should have fieldset with legend - classified as a label' do
-      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+      output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should have_tag('form li.datetime fieldset legend.label', /Publish at/)
     end
   
     it 'should have labels for each input' do
-      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+      output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should have_tag('form li.datetime fieldset ol li label', :count => 5)
     end
   
     it 'should have selects for each inputs' do
-      output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+      output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should have_tag('form li.datetime fieldset ol li select', :count => 5)
     end
   end
@@ -201,7 +201,7 @@ describe 'datetime input' do
             concat(builder.input(:created_at, :as => :datetime, :selected => Time.mktime(1999)))
           end
         end
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li ol li select#post_created_at_1i option[@selected]", :count => 1)
         output_buffer.should have_tag("form li ol li select#post_created_at_1i option[@value='2012'][@selected]", :count => 1)
       end
@@ -216,7 +216,7 @@ describe 'datetime input' do
             concat(builder.input(:created_at, :as => :datetime, :selected => Date.new(1999)))
           end
         end
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li ol li select#post_created_at_1i option[@selected]", :count => 1)
         output_buffer.should have_tag("form li ol li select#post_created_at_1i option[@value='1999'][@selected]", :count => 1)
       end
@@ -229,7 +229,7 @@ describe 'datetime input' do
             concat(builder.input(:created_at, :as => :datetime, :selected => Time.mktime(1999)))
           end
         end
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li ol li select#post_created_at_1i option[@selected]", :count => 1)
         output_buffer.should have_tag("form li ol li select#post_created_at_1i option[@value='1999'][@selected]", :count => 1)
       end
@@ -242,7 +242,7 @@ describe 'datetime input' do
             concat(builder.input(:created_at, :as => :datetime, :selected => nil))
           end
         end
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should_not have_tag("form li ol li select#post_created_at_1i option[@selected]")
       end
       
@@ -252,7 +252,7 @@ describe 'datetime input' do
         form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(:created_at, :as => :datetime))
         end
-        output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(form) if Formtastic::Util.rails3?
         output_buffer.should_not have_tag("form li ol li select option[@selected]")
       end
     end
@@ -276,7 +276,7 @@ describe 'datetime input' do
         form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(:created_at, :as => :datetime, :labels => { field => "another #{field} label" }))
         end
-        output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(form) if Formtastic::Util.rails3?
         output_buffer.should have_tag('form li.datetime fieldset ol li label', :count => fields.length)
         fields.each do |f|
           output_buffer.should have_tag('form li.datetime fieldset ol li label', f == field ? /another #{f} label/i : /#{f}/i)
@@ -288,7 +288,7 @@ describe 'datetime input' do
         form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(:created_at, :as => :datetime, :labels => { field => "" }))
         end
-        output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(form) if Formtastic::Util.rails3?
         output_buffer.should have_tag('form li.datetime fieldset ol li label', :count => fields.length-1)
         fields.each do |f|
           output_buffer.should have_tag('form li.datetime fieldset ol li label', /#{f}/i) unless field == f

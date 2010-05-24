@@ -26,7 +26,7 @@ describe 'text input' do
     form = semantic_form_for(@new_post) do |builder|
       concat(builder.input(:title, :as => :text, :input_html => { :class => 'myclass' }))
     end
-    output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
+    output_buffer.concat(form) if Formtastic::Util.rails3?
     output_buffer.should have_tag("form li textarea.myclass")
   end
     

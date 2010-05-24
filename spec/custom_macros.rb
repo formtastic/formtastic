@@ -8,77 +8,77 @@ module CustomMacros
     
     def it_should_have_input_wrapper_with_class(class_name)
       it "should have input wrapper with class '#{class_name}'" do
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li.#{class_name}") 
       end
     end
     
     def it_should_have_input_wrapper_with_id(id_string)
       it "should have input wrapper with id '#{id_string}'" do
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li##{id_string}") 
       end
     end
     
     def it_should_not_have_a_label
       it "should not have a label" do
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should_not have_tag("form li label") 
       end
     end
     
     def it_should_have_a_nested_fieldset
       it "should have a nested_fieldset" do
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li fieldset") 
       end
     end
     
     def it_should_have_label_with_text(string_or_regex)
       it "should have a label with text '#{string_or_regex}'" do
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li label", string_or_regex) 
       end
     end
     
     def it_should_have_label_for(element_id)
       it "should have a label for ##{element_id}" do
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li label[@for='#{element_id}']")
       end
     end
     
     def it_should_have_input_with_id(element_id)
       it "should have an input with id '#{element_id}'" do
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li input##{element_id}")
       end
     end
     
     def it_should_have_input_with_type(input_type)
       it "should have a #{input_type} input" do
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li input[@type=\"#{input_type}\"]")
       end
     end
     
     def it_should_have_input_with_name(name)
       it "should have an input named #{name}" do
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li input[@name=\"#{name}\"]")
       end
     end
     
     def it_should_have_textarea_with_name(name)
       it "should have an input named #{name}" do
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li textarea[@name=\"#{name}\"]")
       end
     end
     
     def it_should_have_textarea_with_id(element_id)
       it "should have an input with id '#{element_id}'" do
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li textarea##{element_id}")
       end
     end
@@ -90,7 +90,7 @@ module CustomMacros
         form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(:title, :as => as))
         end
-        output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li input[@size='#{Formtastic::SemanticFormBuilder.default_text_field_size}']")
       end
     end
@@ -100,7 +100,7 @@ module CustomMacros
         form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(:title, :as => as, :input_html => { :class => 'myclass' }))
         end
-        output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li input.myclass")
       end
     end
@@ -110,7 +110,7 @@ module CustomMacros
         form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(:title, :as => as, :input_html => { :id => 'myid' }))
         end
-        output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(form) if Formtastic::Util.rails3?
         output_buffer.should have_tag('form li label[@for="myid"]')
       end
     end
@@ -118,7 +118,7 @@ module CustomMacros
     def it_should_have_maxlength_matching_column_limit
       it 'should have a maxlength matching column limit' do
         @new_post.column_for_attribute(:title).limit.should == 50
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li input[@maxlength='50']")
       end
     end
@@ -132,7 +132,7 @@ module CustomMacros
           concat(builder.input(:title, :as => as))
         end
 
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li input[@size='#{default_size}']")
       end
     end
@@ -146,7 +146,7 @@ module CustomMacros
           concat(builder.input(:title, :as => as))
         end
 
-        output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li input[@size='#{column_limit_shorted_than_default}']")
       end
     end
@@ -164,7 +164,7 @@ module CustomMacros
           form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :as => type))
           end
-          output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
+          output_buffer.concat(form) if Formtastic::Util.rails3?
           output_buffer.should have_tag('form li.error')
         end
 
@@ -172,7 +172,7 @@ module CustomMacros
           form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :as => type))
           end
-          output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
+          output_buffer.concat(form) if Formtastic::Util.rails3?
           output_buffer.should_not have_tag('div.fieldWithErrors')
         end
 
@@ -181,7 +181,7 @@ module CustomMacros
           form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :as => type))
           end
-          output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
+          output_buffer.concat(form) if Formtastic::Util.rails3?
           output_buffer.should have_tag('form li.error p.inline-errors')
         end
 
@@ -190,7 +190,7 @@ module CustomMacros
           form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :as => type))
           end
-          output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
+          output_buffer.concat(form) if Formtastic::Util.rails3?
           output_buffer.should have_tag('form li.error ul.errors')
         end
       end
@@ -203,17 +203,17 @@ module CustomMacros
         end
 
         it 'should not apply an errors class to the list item' do
-          output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+          output_buffer.concat(@form) if Formtastic::Util.rails3?
           output_buffer.should_not have_tag('form li.error')
         end
 
         it 'should not render a paragraph for the errors' do
-          output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+          output_buffer.concat(@form) if Formtastic::Util.rails3?
           output_buffer.should_not have_tag('form li.error p.inline-errors')
         end
 
         it 'should not display an error list' do
-          output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+          output_buffer.concat(@form) if Formtastic::Util.rails3?
           output_buffer.should_not have_tag('form li.error ul.errors')
         end
       end
@@ -226,17 +226,17 @@ module CustomMacros
         end
 
         it 'should not apply an errors class to the list item' do
-          output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+          output_buffer.concat(@form) if Formtastic::Util.rails3?
           output_buffer.should_not have_tag('form li.error')
         end
 
         it 'should not render a paragraph for the errors' do
-          output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+          output_buffer.concat(@form) if Formtastic::Util.rails3?
           output_buffer.should_not have_tag('form li.error p.inline-errors')
         end
 
         it 'should not display an error list' do
-          output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+          output_buffer.concat(@form) if Formtastic::Util.rails3?
           output_buffer.should_not have_tag('form li.error ul.errors')
         end
       end
@@ -270,7 +270,7 @@ module CustomMacros
           form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:author, :as => as, :collection => @authors))
           end
-          output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
+          output_buffer.concat(form) if Formtastic::Util.rails3?
           output_buffer.should have_tag("form li.#{as} #{countable}", :count => @authors.size + (as == :select ? 1 : 0))
         end
 
@@ -283,7 +283,7 @@ module CustomMacros
             form = semantic_form_for(@new_post) do |builder|
               concat(builder.input(:category_name, :as => as, :collection => @categories))
             end
-            output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
+            output_buffer.concat(form) if Formtastic::Util.rails3?
 
             @categories.each do |value|
               output_buffer.should have_tag("form li.#{as}", /#{value}/)
@@ -300,7 +300,7 @@ module CustomMacros
                 end
                 concat(fields)
               end
-              output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
+              output_buffer.concat(form) if Formtastic::Util.rails3?
               output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_category_name_general']")
               output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_category_name_design']")
               output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_category_name_development']")
@@ -318,7 +318,7 @@ module CustomMacros
             form = semantic_form_for(@new_post) do |builder|
               concat(builder.input(:category_name, :as => as, :collection => @categories))
             end
-            output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
+            output_buffer.concat(form) if Formtastic::Util.rails3?
 
             @categories.each do |label, value|
               output_buffer.should have_tag("form li.#{as}", /#{label}/)
@@ -336,7 +336,7 @@ module CustomMacros
             form = semantic_form_for(@new_post) do |builder|
               concat(builder.input(:category_name, :as => as, :collection => @categories))
             end
-            output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
+            output_buffer.concat(form) if Formtastic::Util.rails3?
 
             @categories.each do |text, value|
               label = as == :select ? :option : :label
@@ -357,7 +357,7 @@ module CustomMacros
               form = semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:category_name, :as => as, :collection => @choices))
               end
-              output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
+              output_buffer.concat(form) if Formtastic::Util.rails3?
               
               output_buffer.should have_tag("form li.#{as} #{countable}#post_category_name_true")
               output_buffer.should have_tag("form li.#{as} #{countable}#post_category_name_false")
@@ -374,7 +374,7 @@ module CustomMacros
             form = semantic_form_for(@new_post) do |builder|
               concat(builder.input(:category_name, :as => as, :collection => @categories))
             end
-            output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
+            output_buffer.concat(form) if Formtastic::Util.rails3?
 
             @categories.each do |value|
               label = as == :select ? :option : :label
@@ -393,7 +393,7 @@ module CustomMacros
             form = semantic_form_for(@new_post) do |builder|
               concat(builder.input(:category_name, :as => as, :collection => @categories))
             end
-            output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
+            output_buffer.concat(form) if Formtastic::Util.rails3?
 
             @categories.each do |label, value|
               output_buffer.should have_tag("form li.#{as}", /#{label}/)
@@ -413,7 +413,7 @@ module CustomMacros
             end
 
             it 'should have options with text content from the specified method' do
-              output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+              output_buffer.concat(@form) if Formtastic::Util.rails3?
               ::Author.find(:all).each do |author|
                 output_buffer.should have_tag("form li.#{as}", /#{author.login}/)
               end
@@ -428,7 +428,7 @@ module CustomMacros
             end
             
             it 'should have options with the proc applied to each' do
-              output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+              output_buffer.concat(@form) if Formtastic::Util.rails3?
               ::Author.find(:all).each do |author|
                 output_buffer.should have_tag("form li.#{as}", /#{author.login.reverse}/)
               end
@@ -451,7 +451,7 @@ module CustomMacros
               end
 
               it "should render the options with #{label_method} as the label" do
-                output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+                output_buffer.concat(@form) if Formtastic::Util.rails3?
                 ::Author.find(:all).each do |author|
                   output_buffer.should have_tag("form li.#{as}", /The Label Text/)
                 end
@@ -471,7 +471,7 @@ module CustomMacros
             end
             
             it 'should have options with values from specified method' do
-              output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+              output_buffer.concat(@form) if Formtastic::Util.rails3?
               ::Author.find(:all).each do |author|
                 output_buffer.should have_tag("form li.#{as} #{countable}[@value='#{author.login}']")
               end
@@ -486,7 +486,7 @@ module CustomMacros
             end
 
             it 'should have options with the proc applied to each value' do
-              output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+              output_buffer.concat(@form) if Formtastic::Util.rails3?
               ::Author.find(:all).each do |author|
                 output_buffer.should have_tag("form li.#{as} #{countable}[@value='#{author.login.reverse}']")
               end

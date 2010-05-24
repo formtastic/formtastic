@@ -22,22 +22,22 @@ describe 'SemanticFormBuilder#buttons' do
       end
 
       it 'should render a fieldset inside the form, with a class of "inputs"' do
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form fieldset.buttons")
       end
 
       it 'should render an ol inside the fieldset' do
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form fieldset.buttons ol")
       end
 
       it 'should render the contents of the block inside the ol' do
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form fieldset.buttons ol", /hello/)
       end
 
       it 'should not render a legend inside the fieldset' do
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should_not have_tag("form fieldset.buttons legend")
       end
     end
@@ -52,7 +52,7 @@ describe 'SemanticFormBuilder#buttons' do
         end
       end
       it 'should render a fieldset inside the form' do
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form fieldset legend", /#{@legend_text}/)
       end
     end
@@ -68,7 +68,7 @@ describe 'SemanticFormBuilder#buttons' do
         end
       end
       it 'should pass the options into the fieldset tag as attributes' do
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form fieldset##{@id_option}")
         output_buffer.should have_tag("form fieldset.#{@class_option}")
       end
@@ -87,32 +87,32 @@ describe 'SemanticFormBuilder#buttons' do
       end
 
       it 'should render a form' do
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag('form')
       end
 
       it 'should render a buttons fieldset inside the form' do
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag('form fieldset.buttons')
       end
 
       it 'should not render a legend in the fieldset' do
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should_not have_tag('form fieldset.buttons legend')
       end
 
       it 'should render an ol in the fieldset' do
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag('form fieldset.buttons ol')
       end
 
       it 'should render a list item in the ol for each default button' do
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag('form fieldset.buttons ol li', :count => 1)
       end
 
       it 'should render a commit list item for the commit button' do
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag('form fieldset.buttons ol li.commit')
       end
 
@@ -127,7 +127,7 @@ describe 'SemanticFormBuilder#buttons' do
       end
 
       it 'should render a form with a fieldset containing a list item for each button arg' do
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag('form > fieldset.buttons > ol > li', :count => 1)
         output_buffer.should have_tag('form > fieldset.buttons > ol > li.commit')
       end
@@ -143,18 +143,18 @@ describe 'SemanticFormBuilder#buttons' do
       end
 
       it 'should render a form with a fieldset containing a list item for each button arg' do
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag('form > fieldset.buttons > ol > li', :count => 1)
         output_buffer.should have_tag('form > fieldset.buttons > ol > li.commit', :count => 1)
       end
 
       it 'should pass the options down to the fieldset' do
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag('form > fieldset#my-id.buttons')
       end
 
       it 'should use the special :name option as a text for the legend tag' do
-        output_buffer.concat(@form) if defined?(ActiveSupport::SafeBuffer)
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag('form > fieldset#my-id.buttons > legend', /Now click a button/)
       end
 

@@ -111,7 +111,7 @@ describe 'Formtastic::I18n' do
       form = semantic_form_for(@new_post) do |builder|
         concat(builder.input(:title))
       end
-      output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
+      output_buffer.concat(form) if Formtastic::Util.rails3?
       output_buffer.should have_tag("form label", /Hello post!/)
     end
     
@@ -119,7 +119,7 @@ describe 'Formtastic::I18n' do
       form = semantic_form_for(:project, :url => 'http://test.host') do |builder|
         concat(builder.input(:title))
       end
-      output_buffer.concat(form) if defined?(ActiveSupport::SafeBuffer)
+      output_buffer.concat(form) if Formtastic::Util.rails3?
       output_buffer.should have_tag("form label", /Hello project!/)
     end
     
