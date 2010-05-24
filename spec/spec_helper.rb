@@ -22,6 +22,7 @@ Spec::Runner.configure do |config|
 end
 
 require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic'))
+require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic/util'))
 require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic/layout_helper'))
 
 
