@@ -17,9 +17,19 @@ module Formtastic
     end
 
     def rails_safe_buffer_class
-      return ActionView::SafeBuffer if defined?(ActionView::SafeBuffer)
-      ActiveSupport::SafeBuffer
+      # It's important that we check ActiveSupport first,
+      # because in Rails 2.3.6 ActionView::SafeBuffer exists
+      # but is a deprecated proxy object.
+      return ActiveSupport::SafeBuffer if defined?(ActiveSupport::SafeBuffer)
+      return ActionView::SafeBuffer
     end
 
+    def rails3?
+      version=
+        if defined?(ActionPack::VERSION::MAJOR)
+          ActionPack::VERSION::MAJOR
+        end
+      version >= 3
+    end
   end
 end
