@@ -125,20 +125,22 @@ describe 'Formtastic::I18n' do
     end
     
     it 'should be able to translate nested objects with nested translations' do
-      semantic_form_for(:project, :url => 'http://test.host') do |builder|
+      form = semantic_form_for(:project, :url => 'http://test.host') do |builder|
         builder.semantic_fields_for(:task) do |f|
           concat(f.input(:name))
         end
       end
+      output_buffer.concat(form) if Formtastic::Util.rails3?
       output_buffer.should have_tag("form label", /Hello task name!/)
     end
 
     it 'should be able to translated nested objects with top level translations' do
-      semantic_form_for(:order, :url => 'http://test.host') do |builder|
+      form = semantic_form_for(:order, :url => 'http://test.host') do |builder|
         builder.semantic_fields_for(:line_item) do |f|
           concat(f.input(:name))
         end
       end
+      output_buffer.concat(form) if Formtastic::Util.rails3?
       output_buffer.should have_tag("form label", /Hello line item name!/)
     end
 
