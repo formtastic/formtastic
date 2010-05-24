@@ -2,7 +2,7 @@
 
 * Changed date/time inputs to default to nil instead of Time.now when the object has no value (due to deprecation warning, #240)
 * Changed the behaviour of associations with a :class_name option to be more consistent with what Rails expects
-* Fixed issues relating to Rails 2.3.7 automatically escaping ERB
+* Fixed issues relating to Rails 2.3.6 automatically escaping ERB
 * Fixed issues with Ruby 1.9.1 and Haml
 * Fixed use of deprecated {{key}} syntax in i18n interpolation (thanks to Hans Petter Wilhelmsen)
 * Added the :disabled option to check_boxes input
