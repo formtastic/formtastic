@@ -1,8 +1,8 @@
 # coding: utf-8
 require 'rubygems'
 
-gem 'activesupport', '2.3.5'
-gem 'actionpack', '2.3.5'
+gem 'activesupport', '2.3.7'
+gem 'actionpack', '2.3.7'
 require 'active_support'
 require 'action_pack'
 require 'action_view'
