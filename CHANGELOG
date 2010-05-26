@@ -1,4 +1,7 @@
-0.9.9 [unreleased]
+0.9.10 [unreleased]
+
+
+0.9.9
 
 * Changed date/time inputs to default to nil instead of Time.now when the object has no value (due to deprecation warning, #240)
 * Changed the behaviour of associations with a :class_name option to be more consistent with what Rails expects
