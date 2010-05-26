@@ -1,5 +1,6 @@
-0.9.10 [unreleased]
+0.9.10
 
+* Fixed i18n incompatibility with Rails 2.3.8 by reverting two i18n patches pulled in from the rails3 branch
 
 0.9.9
 
