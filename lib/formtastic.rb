@@ -1595,9 +1595,9 @@ module Formtastic #:nodoc:
       #
       # Lookup priority:
       #
-      #   'formtastic.%{type}.%{model}.%{action}.%{attribute}'
-      #   'formtastic.%{type}.%{model}.%{attribute}'
-      #   'formtastic.%{type}.%{attribute}'
+      #   'formtastic.{{type}}.{{model}}.{{action}}.{{attribute}}'
+      #   'formtastic.{{type}}.{{model}}.{{attribute}}'
+      #   'formtastic.{{type}}.{{attribute}}'
       # 
       # Example:
       #   
@@ -1622,10 +1622,10 @@ module Formtastic #:nodoc:
 
             defaults = ::Formtastic::I18n::SCOPES.collect do |i18n_scope|
               i18n_path = i18n_scope.dup
-              i18n_path.gsub!('%{action}', action_name)
-              i18n_path.gsub!('%{model}', model_name)
-              i18n_path.gsub!('%{nested_model}', nested_model_name) unless nested_model_name.nil?
-              i18n_path.gsub!('%{attribute}', attribute_name)
+              i18n_path.gsub!('{{action}}', action_name)
+              i18n_path.gsub!('{{model}}', model_name)
+              i18n_path.gsub!('{{nested_model}}', nested_model_name) unless nested_model_name.nil?
+              i18n_path.gsub!('{{attribute}}', attribute_name)
               i18n_path.gsub!('..', '.')
               i18n_path.to_sym
             end

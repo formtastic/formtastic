@@ -7,16 +7,16 @@ module Formtastic
         :required       => 'required',
         :yes            => 'Yes',
         :no             => 'No',
-        :create         => 'Create %{model}',
-        :update         => 'Update %{model}'
+        :create         => 'Create {{model}}',
+        :update         => 'Update {{model}}'
       }.freeze
     SCOPES = [
-        '%{model}.%{nested_model}.%{action}.%{attribute}',
-        '%{model}.%{action}.%{attribute}',
-        '%{model}.%{nested_model}.%{attribute}',
-        '%{model}.%{attribute}',
-        '%{nested_model}.%{attribute}',
-        '%{attribute}'
+        '{{model}}.{{nested_model}}.{{action}}.{{attribute}}',
+        '{{model}}.{{action}}.{{attribute}}',
+        '{{model}}.{{nested_model}}.{{attribute}}',
+        '{{model}}.{{attribute}}',
+        '{{nested_model}}.{{attribute}}',
+        '{{attribute}}'
       ]
       
     class << self
