@@ -105,19 +105,19 @@ if defined?(Spec)
   end
 end
 
-if defined?(Rspec)
+if defined?(RSpec)
   desc 'Test the formtastic plugin.'
-  Rspec::Core::RakeTask.new('spec') do |t|
+  RSpec::Core::RakeTask.new('spec') do |t|
     t.pattern = FileList['spec/**/*_spec.rb']
   end
 
   desc 'Test the formtastic plugin with specdoc formatting and colors'
-  Rspec::Core::RakeTask.new('specdoc') do |t|
+  RSpec::Core::RakeTask.new('specdoc') do |t|
     t.pattern = FileList['spec/**/*_spec.rb']
   end
 
   desc "Run all examples with RCov"
-  Rspec::Core::RakeTask.new('examples_with_rcov') do |t|
+  RSpec::Core::RakeTask.new('examples_with_rcov') do |t|
     t.pattern = FileList['spec/**/*_spec.rb']
     t.rcov = true
     t.rcov_opts = ['--exclude', 'spec,Library']

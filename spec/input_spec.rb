@@ -136,7 +136,7 @@ describe 'SemanticFormBuilder#input' do
               @new_post.class.stub!(:method_defined?).with(:reflect_on_validations_for).and_return(true)
             end
 
-            unless defined?(Rspec)
+            unless defined?(RSpec)
               after do
                 ::Post.unstub!(:reflect_on_validations_for)
                 @new_post.class.stub!(:method_defined?).with(:reflect_on_validations_for).and_return(false)
@@ -240,7 +240,7 @@ describe 'SemanticFormBuilder#input' do
 
           end
 
-          unless defined?(Rspec)
+          unless defined?(RSpec)
             describe 'and its a ActiveModel' do
               before do
                 ::Post.stub!(:validators_on).and_return([])
