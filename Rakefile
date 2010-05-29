@@ -59,6 +59,7 @@ begin
     # Will be offered to install these if they are not already installed.
     s.add_dependency 'activesupport', '>= 2.3.0'
     s.add_dependency 'actionpack', '>= 2.3.0'
+    s.add_dependency 'i18n', '>= 0.4.0'
     
     # Development dependencies. Not installed by default.
     # Install with: sudo gem install formtastic --development
