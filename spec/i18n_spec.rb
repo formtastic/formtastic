@@ -26,11 +26,11 @@ describe 'Formtastic::I18n' do
       @formtastic_strings = {
           :yes            => 'Default Yes',
           :no             => 'Default No',
-          :create         => 'Default Create {{model}}',
-          :update         => 'Default Update {{model}}',
+          :create         => 'Default Create %{model}',
+          :update         => 'Default Update %{model}',
           :custom_scope   => {
               :duck           => 'Duck',
-              :duck_pond      => '{{ducks}} ducks in a pond'
+              :duck_pond      => '%{ducks} ducks in a pond'
             }
         }
       ::I18n.backend.store_translations :en, :formtastic => @formtastic_strings
@@ -71,7 +71,7 @@ describe 'Formtastic::I18n' do
 
     it "should use default strings" do
       (::Formtastic::I18n::DEFAULT_VALUES.keys).each do |key|
-        ::Formtastic::I18n.t(key, :model => '{{model}}').should == ::Formtastic::I18n::DEFAULT_VALUES[key]
+        ::Formtastic::I18n.t(key, :model => '%{model}').should == ::Formtastic::I18n::DEFAULT_VALUES[key]
       end
     end
     
