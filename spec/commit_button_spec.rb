@@ -147,7 +147,7 @@ describe 'SemanticFormBuilder#commit_button' do
       describe 'when no explicit label is provided' do
         describe 'when no I18n-localized label is provided' do
           before do
-            ::I18n.backend.store_translations :en, :formtastic => {:submit => 'Submit %{model}'}
+            ::I18n.backend.store_translations :en, :formtastic => {:submit => 'Submit {{model}}'}
           end
           
           after do
@@ -183,7 +183,7 @@ describe 'SemanticFormBuilder#commit_button' do
              :formtastic => {
                  :actions => {
                    :post => {
-                     :submit => 'Custom Submit %{model}'
+                     :submit => 'Custom Submit {{model}}'
                     }
                   }
                }
@@ -225,7 +225,7 @@ describe 'SemanticFormBuilder#commit_button' do
       describe 'when no explicit label is provided' do
         describe 'when no I18n-localized label is provided' do
           before do
-            ::I18n.backend.store_translations :en, :formtastic => {:create => 'Create %{model}'}
+            ::I18n.backend.store_translations :en, :formtastic => {:create => 'Create {{model}}'}
           end
 
           after do
@@ -261,7 +261,7 @@ describe 'SemanticFormBuilder#commit_button' do
               :formtastic => {
                   :actions => {
                     :post => {
-                      :create => 'Custom Create %{model}'
+                      :create => 'Custom Create {{model}}'
                      }
                    }
                 }
@@ -303,7 +303,7 @@ describe 'SemanticFormBuilder#commit_button' do
       describe 'when no explicit label is provided' do
         describe 'when no I18n-localized label is provided' do
           before do
-            ::I18n.backend.store_translations :en, :formtastic => {:update => 'Save %{model}'}
+            ::I18n.backend.store_translations :en, :formtastic => {:update => 'Save {{model}}'}
           end
           
           after do
@@ -340,7 +340,7 @@ describe 'SemanticFormBuilder#commit_button' do
               :formtastic => {
                   :actions => {
                     :post => {
-                      :update => 'Custom Save %{model}'
+                      :update => 'Custom Save {{model}}'
                      }
                    }
                 }

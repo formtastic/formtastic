@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{formtastic}
-  s.version = "0.9.8"
+  s.version = "0.9.10"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Justin French"]
-  s.date = %q{2010-03-31}
+  s.date = %q{2010-05-26}
   s.description = %q{A Rails form builder plugin/gem with semantically rich and accessible markup}
   s.email = %q{justin@indent.com.au}
   s.extra_rdoc_files = [
@@ -31,6 +31,7 @@ Gem::Specification.new do |s|
      "lib/formtastic.rb",
      "lib/formtastic/i18n.rb",
      "lib/formtastic/layout_helper.rb",
+     "lib/formtastic/util.rb",
      "lib/locale/en.yml",
      "rails/init.rb",
      "spec/buttons_spec.rb",
