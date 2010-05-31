@@ -232,13 +232,6 @@ module CustomMacros
           output_buffer.replace '' # clears the output_buffer from the before block, hax!
         end
 
-        it 'should not call find() on the parent class' do
-          ::Author.should_not_receive(:find)
-          semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:author, :as => as, :collection => @authors))
-          end
-        end
-
         it 'should use the provided collection' do
           semantic_form_for(@new_post) do |builder|
             concat(builder.input(:author, :as => as, :collection => @authors))

@@ -116,6 +116,33 @@ describe 'check_boxes input' do
       end
     end
 
+    describe 'when :no_hidden_input is set' do
+      before do
+        @output_buffer = ''
+        mock_everything
+
+        semantic_form_for(@fred) do |builder|
+          concat(builder.input(:posts, :as => :check_boxes, :value_as_class => true, :no_hidden_input => true))
+        end
+      end
+
+      it 'should have a checkbox input for each post' do
+        ::Post.find(:all).each do |post|
+          output_buffer.should have_tag("form li fieldset ol li label input#author_post_ids_#{post.id}")
+          output_buffer.should have_tag("form li fieldset ol li label input[@name='author[post_ids][]']", :count => ::Post.find(:all).length)
+        end
+      end
+
+      it "should mark input as checked if it's the the existing choice" do
+        ::Post.find(:all).include?(@fred.posts.first).should be_true
+        output_buffer.should have_tag("form li fieldset ol li label input[@checked='checked']")
+      end
+
+      it 'should not generate empty hidden inputs' do
+        output_buffer.should_not have_tag("form li fieldset ol li label input[@type='hidden'][@value='']", :count => ::Post.find(:all).length)
+      end
+    end
+
     describe 'when :selected is set' do
       before do
         @output_buffer = ''
