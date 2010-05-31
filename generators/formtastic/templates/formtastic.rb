@@ -45,6 +45,13 @@
 # customize it doing just as below:
 # Formtastic::SemanticFormBuilder.inline_order = [:input, :hints, :errors]
 
+# Additionally, you can customize the order for specific types of inputs.
+# This is configured on a type basis and if a type is not found it will
+# fall back to the default order as defined by #inline_order
+# Formtastic::SemanticFormBuilder.custom_inline_order[:checkbox] = [:errors, :hints, :input]
+# Formtastic::SemanticFormBuilder.custom_inline_order[:select] = [:hints, :input, :errors]
+
+
 # Specifies if labels/hints for input fields automatically be looked up using I18n.
 # Default value: false. Overridden for specific fields by setting value to true,
 # i.e. :label => true, or :hint => true (or opposite depending on initialized value)

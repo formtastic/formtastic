@@ -8,8 +8,8 @@ module Formtastic #:nodoc:
   class SemanticFormBuilder < ActionView::Helpers::FormBuilder
     class_inheritable_accessor :default_text_field_size, :default_text_area_height, :all_fields_required_by_default, :include_blank_for_select_by_default,
                    :required_string, :optional_string, :inline_errors, :label_str_method, :collection_value_methods, :collection_label_methods,
-                   :inline_order, :file_methods, :priority_countries, :i18n_lookups_by_default, :escape_html_entities_in_hints_and_labels, :default_commit_button_accesskey,
-                   :instance_reader => false
+                   :inline_order, :custom_inline_order, :file_methods, :priority_countries, :i18n_lookups_by_default, :escape_html_entities_in_hints_and_labels,
+                   :default_commit_button_accesskey, :instance_reader => false
 
     self.default_text_field_size = 50
     self.default_text_area_height = 20
@@ -22,6 +22,7 @@ module Formtastic #:nodoc:
     self.collection_label_methods = %w[to_label display_name full_name name title username login value to_s]
     self.collection_value_methods = %w[id to_s]
     self.inline_order = [ :input, :hints, :errors ]
+    self.custom_inline_order = {}
     self.file_methods = [ :file?, :public_filename, :filename ]
     self.priority_countries = ["Australia", "Canada", "United Kingdom", "United States"]
     self.i18n_lookups_by_default = false
@@ -102,7 +103,7 @@ module Formtastic #:nodoc:
         options[:label_html][:for] ||= options[:input_html][:id]
       end
 
-      input_parts = self.class.inline_order.dup
+      input_parts = (self.class.custom_inline_order[options[:as]] || self.class.inline_order).dup
       input_parts = input_parts - [:errors, :hints] if options[:as] == :hidden
 
       list_item_content = input_parts.map do |type|

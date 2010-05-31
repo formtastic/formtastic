@@ -32,6 +32,23 @@ describe 'SemanticFormBuilder#input' do
         concat(builder.input(:title))
       end
     end
+
+    it 'should allow errors, input, hint for a custom type while preserving original inline order' do
+      ::Formtastic::SemanticFormBuilder.custom_inline_order[:checkbox] = [:errors, :input, :hints]
+      ::Formtastic::SemanticFormBuilder.inline_order = [:hints, :input, :errors]
+
+      semantic_form_for(@new_post) do |builder|
+        builder.should_receive(:inline_errors_for).once.ordered
+        builder.should_receive(:inline_input_for).once.ordered
+        builder.should_receive(:inline_hints_for).once.ordered
+        concat(builder.input(:title, :as => :checkbox))
+        builder.should_receive(:inline_hints_for).once.ordered
+        builder.should_receive(:inline_input_for).once.ordered
+        builder.should_receive(:inline_errors_for).once.ordered
+        concat(builder.input(:title))
+      end
+    end
+
   end
 
   describe 'arguments and options' do

@@ -1,3 +1,7 @@
+1.2.0
+
+* Added custom_inline_order to allow inline ordering per input type
+
 1.1.0
 
 * documentation changes only
