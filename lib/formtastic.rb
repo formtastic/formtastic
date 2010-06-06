@@ -1531,7 +1531,8 @@ module Formtastic #:nodoc:
         elsif type == :numeric || column.nil? || column.limit.nil?
           { :size => @@default_text_field_size }
         else
-          { :maxlength => column.limit, :size => [column.limit, @@default_text_field_size].min }
+          { :maxlength => column.limit, 
+            :size => @@default_text_field_size && [column.limit, @@default_text_field_size].min }
         end
       end
 
