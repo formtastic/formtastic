@@ -536,7 +536,7 @@ module Formtastic #:nodoc:
       #
       def strip_formtastic_options(options) #:nodoc:
         options.except(:value_method, :label_method, :collection, :required, :label,
-                       :as, :hint, :input_html, :label_html, :value_as_class)
+                       :as, :hint, :input_html, :label_html, :value_as_class, :find_options)
       end
 
       # Determins if the attribute (eg :title) should be considered required or not.

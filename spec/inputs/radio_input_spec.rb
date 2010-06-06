@@ -76,6 +76,16 @@ describe 'radio input' do
 
         output_buffer.should have_tag("form li fieldset ol li label input[@checked='checked']")
       end
+      
+      it "should not contain invalid HTML attributes" do
+        
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:author, :as => :radio))
+        end
+        
+        output_buffer.should_not have_tag("form li fieldset ol li input[@find_options]")
+      end
+      
     end
 
     describe 'and no object is given' do
