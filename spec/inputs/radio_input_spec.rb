@@ -29,7 +29,7 @@ describe 'radio input' do
     end
     
     it 'should not link the label within the legend to any input' do
-      output_buffer.should_not have_tag('form li fieldset legend label[@for^="post_author_id_"]')
+      output_buffer.should_not have_tag('form li fieldset legend label[@for]')
     end
 
     it 'should generate an ordered list with a list item for each choice' do
@@ -160,6 +160,27 @@ describe 'radio input' do
       end
     end
 
+  end
+  
+  describe "with i18n of the legend label" do
+    
+    before do
+      ::I18n.backend.store_translations :en, :formtastic => { :labels => { :post => { :authors => "Translated!" }}}
+
+      @new_post.stub!(:author_ids).and_return(nil)
+      semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:authors, :as => :radio))
+      end
+    end
+    
+    after do
+      ::I18n.backend.reload!
+    end
+    
+    it "should do foo" do
+      output_buffer.should have_tag("legend.label label", /Translated/)
+    end
+    
   end
 
 end

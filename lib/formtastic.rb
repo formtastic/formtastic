@@ -885,8 +885,13 @@ module Formtastic #:nodoc:
           li_options = value_as_class ? { :class => [method.to_s.singularize, value.to_s.downcase].join('_') } : {}
           template.content_tag(:li, Formtastic::Util.html_safe(li_content), li_options)
         end
-
-        field_set_and_list_wrapping_for_method(method, options, list_item_content)
+        
+        template.content_tag(:fieldset,
+          template.content_tag(:legend, 
+            template.label_tag(nil, localized_string(method, method, :label) || humanized_attribute_name(method), :for => nil), :class => :label
+          ) << 
+          template.content_tag(:ol, list_item_content)
+        )
       end
       alias :boolean_radio_input :radio_input
 
@@ -1152,7 +1157,12 @@ module Formtastic #:nodoc:
           template.content_tag(:li, Formtastic::Util.html_safe(li_content), li_options)
         end
 
-        field_set_and_list_wrapping_for_method(method, options, list_item_content)
+        template.content_tag(:fieldset,
+          template.content_tag(:legend, 
+            template.label_tag(nil, localized_string(method, method, :label) || humanized_attribute_name(method), :for => nil), :class => :label
+          ) << 
+          template.content_tag(:ol, list_item_content)
+        )
       end
 
       # Outputs a country select input, wrapping around a regular country_select helper. 
