@@ -5,6 +5,9 @@ module Formtastic
          "generated code will be printed out directly in the terminal, and also copied " <<
          "to clipboard. Can optionally be saved into partial directly."
 
+    argument :name, :type => :string, :required => true, :banner => 'ExistingModelName'
+    argument :attributes, :type => :array, :default => [], :banner => 'field:type field:type'
+
     class_option :haml, :type => :boolean, :default => false, :group => :formtastic,
                  :desc => "Generate HAML instead of ERB"
 
@@ -17,10 +20,6 @@ module Formtastic
     def self.source_root
      # Set source directory for the templates to the rails2 generator template directory
      @source_root ||= File.expand_path(File.join('..', '..', '..', '..', 'generators', 'form', 'templates'), File.dirname(__FILE__))
-    end
-
-    def self.banner
-      "rails generate formtastic:form ExistingModelName [options]"
     end
 
     def create_or_show
