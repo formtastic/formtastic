@@ -890,7 +890,7 @@ module Formtastic #:nodoc:
           template.content_tag(:legend, 
             template.label_tag(nil, localized_string(method, method, :label) || humanized_attribute_name(method), :for => nil), :class => :label
           ) << 
-          template.content_tag(:ol, list_item_content)
+          template.content_tag(:ol, Formtastic::Util.html_safe(list_item_content.join))
         )
       end
       alias :boolean_radio_input :radio_input
@@ -1161,7 +1161,7 @@ module Formtastic #:nodoc:
           template.content_tag(:legend, 
             template.label_tag(nil, localized_string(method, method, :label) || humanized_attribute_name(method), :for => nil), :class => :label
           ) << 
-          template.content_tag(:ol, list_item_content)
+          template.content_tag(:ol, Formtastic::Util.html_safe(list_item_content.join))
         )
       end
 
