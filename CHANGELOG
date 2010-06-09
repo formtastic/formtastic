@@ -8,6 +8,13 @@
 * Added compatible install and form helpers (rails3)
 * Added support for ActiveModel Validations, thanks to Guillaume Belleguic (rails3)
 
+1.0.0.beta
+
+* Fixed :radio and :check_boxes inputs so that the legend no longer includes a <label> with a `for` attribute pointing to an input that doesn't exist (#253)
+* Fixed that some inputs had invalid 'find_options' attribute (#262)
+* Fixed that we were calling html_safe! when it was not always available
+* Added the ability for :input_html to now accept an option of :size => nil, to exclude the :size attribute altogether (#267)
+
 0.9.10
 
 * Fixed i18n incompatibility with Rails 2.3.8 by reverting two i18n patches pulled in from the rails3 branch

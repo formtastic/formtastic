@@ -541,7 +541,7 @@ module Formtastic #:nodoc:
       #
       def strip_formtastic_options(options) #:nodoc:
         options.except(:value_method, :label_method, :collection, :required, :label,
-                       :as, :hint, :input_html, :label_html, :value_as_class)
+                       :as, :hint, :input_html, :label_html, :value_as_class, :find_options)
       end
 
       # Determins if the attribute (eg :title) should be considered required or not.
@@ -896,8 +896,13 @@ module Formtastic #:nodoc:
           li_options = value_as_class ? { :class => [method.to_s.singularize, value.to_s.downcase].join('_') } : {}
           template.content_tag(:li, Formtastic::Util.html_safe(li_content), li_options)
         end
-
-        field_set_and_list_wrapping_for_method(method, options, list_item_content)
+        
+        template.content_tag(:fieldset,
+          template.content_tag(:legend, 
+            template.label_tag(nil, localized_string(method, method, :label) || humanized_attribute_name(method), :for => nil), :class => :label
+          ) << 
+          template.content_tag(:ol, list_item_content)
+        )
       end
       alias :boolean_radio_input :radio_input
 
@@ -1163,7 +1168,12 @@ module Formtastic #:nodoc:
           template.content_tag(:li, Formtastic::Util.html_safe(li_content), li_options)
         end
 
-        field_set_and_list_wrapping_for_method(method, options, list_item_content)
+        template.content_tag(:fieldset,
+          template.content_tag(:legend, 
+            template.label_tag(nil, localized_string(method, method, :label) || humanized_attribute_name(method), :for => nil), :class => :label
+          ) << 
+          template.content_tag(:ol, list_item_content)
+        )
       end
 
       # Outputs a country select input, wrapping around a regular country_select helper. 
@@ -1542,7 +1552,8 @@ module Formtastic #:nodoc:
         elsif type == :numeric || column.nil? || column.limit.nil?
           { :size => @@default_text_field_size }
         else
-          { :maxlength => column.limit, :size => [column.limit, @@default_text_field_size].min }
+          { :maxlength => column.limit, 
+            :size => @@default_text_field_size && [column.limit, @@default_text_field_size].min }
         end
       end
 

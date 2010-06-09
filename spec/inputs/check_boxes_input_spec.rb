@@ -250,10 +250,30 @@ describe 'check_boxes input' do
       end
 
     end
+    
+    describe "with i18n of the legend label" do
 
+      before do
+        ::I18n.backend.store_translations :en, :formtastic => { :labels => { :post => { :authors => "Translated!" }}}
+
+        @new_post.stub!(:author_ids).and_return(nil)
+        @form = semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:authors, :as => :check_boxes))
+        end
+      end
+
+      after do
+        ::I18n.backend.reload!
+      end
+
+      it "should do foo" do
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.should have_tag("legend.label label", /Translated/)
+      end
+
+    end
+    
   end
-  
-  
 
 end
 
