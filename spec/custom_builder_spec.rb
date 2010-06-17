@@ -29,7 +29,16 @@ describe 'Formtastic::SemanticFormHelper.builder' do
     ::Formtastic::SemanticFormHelper.builder = ::Formtastic::SemanticFormBuilder
     ::Formtastic::SemanticFormHelper.builder.should == ::Formtastic::SemanticFormBuilder
   end
-  
+
+  it 'should allow custom settings per form builder subclass' do
+    with_config(:all_fields_required_by_default, true) do
+      MyCustomFormBuilder.all_fields_required_by_default = false
+
+      MyCustomFormBuilder.all_fields_required_by_default.should be_false
+      ::Formtastic::SemanticFormBuilder.all_fields_required_by_default.should be_true
+    end
+  end
+
   describe "when using a custom builder" do
     
     before do

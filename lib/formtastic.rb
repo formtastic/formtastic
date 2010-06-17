@@ -5,25 +5,26 @@ require File.join(File.dirname(__FILE__), *%w[formtastic util])
 module Formtastic #:nodoc:
 
   class SemanticFormBuilder < ActionView::Helpers::FormBuilder
-
-    @@default_text_field_size = 50
-    @@default_text_area_height = 20
-    @@all_fields_required_by_default = true
-    @@include_blank_for_select_by_default = true
-    @@required_string = proc { ::Formtastic::Util.html_safe(%{<abbr title="#{::Formtastic::I18n.t(:required)}">*</abbr>}) }
-    @@optional_string = ''
-    @@inline_errors = :sentence
-    @@label_str_method = :humanize
-    @@collection_label_methods = %w[to_label display_name full_name name title username login value to_s]
-    @@inline_order = [ :input, :hints, :errors ]
-    @@file_methods = [ :file?, :public_filename, :filename ]
-    @@priority_countries = ["Australia", "Canada", "United Kingdom", "United States"]
-    @@i18n_lookups_by_default = false
-    @@default_commit_button_accesskey = nil 
-
-    cattr_accessor :default_text_field_size, :default_text_area_height, :all_fields_required_by_default, :include_blank_for_select_by_default,
+    class_inheritable_accessor :default_text_field_size, :default_text_area_height, :all_fields_required_by_default, :include_blank_for_select_by_default,
                    :required_string, :optional_string, :inline_errors, :label_str_method, :collection_label_methods,
-                   :inline_order, :file_methods, :priority_countries, :i18n_lookups_by_default, :default_commit_button_accesskey 
+                   :inline_order, :file_methods, :priority_countries, :i18n_lookups_by_default, :default_commit_button_accesskey,
+                   :instance_reader => false
+
+    self.default_text_field_size = 50
+    self.default_text_area_height = 20
+    self.all_fields_required_by_default = true
+    self.include_blank_for_select_by_default = true
+    self.required_string = proc { ::Formtastic::Util.html_safe(%{<abbr title="#{::Formtastic::I18n.t(:required)}">*</abbr>}) }
+    self.optional_string = ''
+    self.inline_errors = :sentence
+    self.label_str_method = :humanize
+    self.collection_label_methods = %w[to_label display_name full_name name title username login value to_s]
+    self.inline_order = [ :input, :hints, :errors ]
+    self.file_methods = [ :file?, :public_filename, :filename ]
+    self.priority_countries = ["Australia", "Canada", "United Kingdom", "United States"]
+    self.i18n_lookups_by_default = false
+    self.default_commit_button_accesskey = nil
+
 
     RESERVED_COLUMNS = [:created_at, :updated_at, :created_on, :updated_on, :lock_version, :version]
 
@@ -99,7 +100,7 @@ module Formtastic #:nodoc:
         options[:label_html][:for] ||= options[:input_html][:id]
       end
 
-      input_parts = @@inline_order.dup
+      input_parts = self.class.inline_order.dup
       input_parts = input_parts - [:errors, :hints] if options[:as] == :hidden
 
       list_item_content = input_parts.map do |type|
@@ -332,7 +333,7 @@ module Formtastic #:nodoc:
         object_name = (object_human_name == crappy_human_name) ? decent_human_name : object_human_name
       else
         key = :submit
-        object_name = @object_name.to_s.send(@@label_str_method)
+        object_name = @object_name.to_s.send(self.class.label_str_method)
       end
 
       text = (self.localized_string(key, text, :action, :model => object_name) ||
@@ -341,8 +342,8 @@ module Formtastic #:nodoc:
       button_html = options.delete(:button_html) || {}
       button_html.merge!(:class => [button_html[:class], key].compact.join(' '))
       element_class = ['commit', options.delete(:class)].compact.join(' ') # TODO: Add class reflecting on form action.
-      accesskey = (options.delete(:accesskey) || @@default_commit_button_accesskey) unless button_html.has_key?(:accesskey)
-      button_html = button_html.merge(:accesskey => accesskey) if accesskey  
+      accesskey = (options.delete(:accesskey) || self.class.default_commit_button_accesskey) unless button_html.has_key?(:accesskey)
+      button_html = button_html.merge(:accesskey => accesskey) if accesskey
       template.content_tag(:li, Formtastic::Util.html_safe(self.submit(text, button_html)), :class => element_class)
     end
 
@@ -430,7 +431,7 @@ module Formtastic #:nodoc:
         errors = [@object.errors[method.to_sym]]
         errors << [@object.errors[association_primary_key(method)]] if association_macro_for_method(method) == :belongs_to
         errors = errors.flatten.compact.uniq
-        send(:"error_#{@@inline_errors}", [*errors]) if errors.any?
+        send(:"error_#{self.class.inline_errors}", [*errors]) if errors.any?
       else
         nil
       end
@@ -466,7 +467,7 @@ module Formtastic #:nodoc:
     protected
 
       def render_inline_errors?
-        @object && @object.respond_to?(:errors) && INLINE_ERROR_TYPES.include?(@@inline_errors)
+        @object && @object.respond_to?(:errors) && INLINE_ERROR_TYPES.include?(self.class.inline_errors)
       end
 
       # Collects content columns (non-relation columns) for the current form object class.
@@ -550,7 +551,7 @@ module Formtastic #:nodoc:
       #   otherwise.
       #
       # * if the :required option isn't provided, and the plugin isn't available, the value of the
-      #   configuration option @@all_fields_required_by_default is used.
+      #   configuration option all_fields_required_by_default is used.
       #
       def method_required?(attribute) #:nodoc:
         if @object && @object.class.respond_to?(:reflect_on_validations_for)
@@ -562,7 +563,7 @@ module Formtastic #:nodoc:
             (validation.options.present? ? options_require_validation?(validation.options) : true)
           end
         else
-          @@all_fields_required_by_default
+          self.class.all_fields_required_by_default
         end
       end
 
@@ -1181,9 +1182,9 @@ module Formtastic #:nodoc:
       #
       def country_input(method, options)
         raise "To use the :country input, please install a country_select plugin, like this one: http://github.com/rails/iso-3166-country-select" unless self.respond_to?(:country_select)
-      
+
         html_options = options.delete(:input_html) || {}
-        priority_countries = options.delete(:priority_countries) || @@priority_countries
+        priority_countries = options.delete(:priority_countries) || self.class.priority_countries
 
         self.label(method, options_for_label(options)) <<
         self.country_select(method, priority_countries, strip_formtastic_options(options), html_options)
@@ -1255,9 +1256,9 @@ module Formtastic #:nodoc:
       def required_or_optional_string(required) #:nodoc:
         string_or_proc = case required
           when true
-            @@required_string
+            self.class.required_string
           when false
-            @@optional_string
+            self.class.optional_string
           else
             required
         end
@@ -1376,7 +1377,7 @@ module Formtastic #:nodoc:
             return :select  if self.reflection_for(method)
 
             file = @object.send(method) if @object.respond_to?(method)
-            return :file    if file && @@file_methods.any? { |m| file.respond_to?(m) }
+            return :file    if file && self.class.file_methods.any? { |m| file.respond_to?(m) }
           end
 
           return :select    if options.key?(:collection)
@@ -1428,8 +1429,8 @@ module Formtastic #:nodoc:
         collection
       end
 
-      # Detects the label and value methods from a collection values set in 
-      # @@collection_label_methods. It will use and delete
+      # Detects the label and value methods from a collection values set in
+      # collection_label_methods. It will use and delete
       # the options :label_method and :value_methods when present
       #
       def detect_label_and_value_method!(collection_or_instance, options = {}) #:nodoc
@@ -1439,10 +1440,10 @@ module Formtastic #:nodoc:
       end
 
       # Detected the label collection method when none is supplied using the
-      # values set in @@collection_label_methods.
+      # values set in collection_label_methods.
       #
       def detect_label_method(collection) #:nodoc:
-        @@collection_label_methods.detect { |m| collection.first.respond_to?(m) }
+        self.class.collection_label_methods.detect { |m| collection.first.respond_to?(m) }
       end
 
       # Detects the method to call for fetching group members from the groups when grouping select options
@@ -1537,12 +1538,12 @@ module Formtastic #:nodoc:
         column = self.column_for(method)
 
         if type == :text
-          { :cols => @@default_text_field_size, :rows => @@default_text_area_height }
+          { :cols => self.class.default_text_field_size, :rows => self.class.default_text_area_height }
         elsif type == :numeric || column.nil? || column.limit.nil?
-          { :size => @@default_text_field_size }
+          { :size => self.class.default_text_field_size }
         else
-          { :maxlength => column.limit, 
-            :size => @@default_text_field_size && [column.limit, @@default_text_field_size].min }
+          { :maxlength => column.limit,
+            :size => self.class.default_text_field_size && [column.limit, self.class.default_text_field_size].min }
         end
       end
 
@@ -1588,18 +1589,18 @@ module Formtastic #:nodoc:
         if @object && @object.class.respond_to?(:human_attribute_name)
           humanized_name = @object.class.human_attribute_name(method.to_s)
           if humanized_name == method.to_s.send(:humanize)
-            method.to_s.send(@@label_str_method)
+            method.to_s.send(self.class.label_str_method)
           else
             humanized_name
           end
         else
-          method.to_s.send(@@label_str_method)
+          method.to_s.send(self.class.label_str_method)
         end
       end
 
       # Internal generic method for looking up localized values within Formtastic
       # using I18n, if no explicit value is set and I18n-lookups are enabled.
-      # 
+      #
       # Enabled/Disable this by setting:
       #
       #   Formtastic::SemanticFormBuilder.i18n_lookups_by_default = true/false
@@ -1624,7 +1625,7 @@ module Formtastic #:nodoc:
         if value.is_a?(::String)
           value
         else
-          use_i18n = value.nil? ? @@i18n_lookups_by_default : (value != false)
+          use_i18n = value.nil? ? self.class.i18n_lookups_by_default : (value != false)
 
           if use_i18n
             model_name, nested_model_name  = normalize_model_name(self.model_name.underscore)
@@ -1671,7 +1672,7 @@ module Formtastic #:nodoc:
 
       def set_include_blank(options)
         unless options.key?(:include_blank) || options.key?(:prompt)
-          options[:include_blank] = @@include_blank_for_select_by_default
+          options[:include_blank] = self.class.include_blank_for_select_by_default
         end
         options
       end
