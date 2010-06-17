@@ -528,9 +528,17 @@ module Formtastic #:nodoc:
           raise ArgumentError, 'You gave :for option with a block to inputs method, ' <<
                                'but the block does not accept any argument.' if block.arity <= 0
 
-          proc { |f| return f.inputs(*args){ block.call(f) } }
+          Proc.new do |f|
+            contents = f.inputs(*args){ block.call(f) }
+            template.concat(contents) if ::Formtastic::Util.rails3?
+            contents
+          end
         else
-          proc { |f| return f.inputs(*args) }
+          Proc.new do |f|
+            contents = f.inputs(*args)
+            template.concat(contents) if ::Formtastic::Util.rails3?
+            contents
+          end
         end
 
         fields_for_args = [options.delete(:for), options.delete(:for_options) || {}].flatten
@@ -1321,7 +1329,7 @@ module Formtastic #:nodoc:
           html_options.except(:builder, :parent)
         )
 
-        template.concat(fieldset) if block_given? && (!defined?(Rails::VERSION) || Rails::VERSION::MAJOR == 2)
+        template.concat(fieldset) if block_given? && !Formtastic::Util.rails3?
         fieldset
       end
 

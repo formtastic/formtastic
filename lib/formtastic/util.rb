@@ -30,7 +30,7 @@ module Formtastic
         if defined?(ActionPack::VERSION::MAJOR)
           ActionPack::VERSION::MAJOR
         end
-      version >= 3
+      !version.blank? && version >= 3
     end
   end
 end

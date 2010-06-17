@@ -82,7 +82,23 @@ describe 'SemanticFormBuilder#inputs' do
         output_buffer.should_not have_tag("form fieldset.inputs #author_login")
 
       end
-      
+
+      it 'should concat rendered nested inputs to the template under rails3' do
+        @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
+        ::Formtastic::Util.stub!(:rails3?).and_return(true)
+
+        form = semantic_form_for(@new_post) do |builder|
+          builder.inputs :for => [:author, @bob] do |bob_builder|
+            concat(bob_builder.input(:login))
+          end
+        end
+
+        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.should have_tag("form fieldset.inputs #post_author_attributes_login")
+        output_buffer.should_not have_tag("form fieldset.inputs #author_login")
+
+      end
+
       describe "as a symbol representing the association name" do
         
         it 'should nest the inputs with an _attributes suffix on the association name' do
