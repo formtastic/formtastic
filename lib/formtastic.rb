@@ -368,7 +368,7 @@ module Formtastic #:nodoc:
     #
     def semantic_fields_for(record_or_name_or_array, *args, &block)
       opts = args.extract_options!
-      opts[:builder] ||= Formtastic::SemanticFormHelper.builder
+      opts[:builder] ||= self.class
       args.push(opts)
       fields_for(record_or_name_or_array, *args, &block)
     end

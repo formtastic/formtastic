@@ -52,7 +52,7 @@ describe 'Formtastic::SemanticFormHelper.builder' do
     
     describe "semantic_form_for" do
       
-      it "should yeild and instance of the custom builder" do
+      it "should yield an instance of the custom builder" do
         semantic_form_for(@new_post) do |builder|
           builder.class.should == MyCustomFormBuilder
         end
@@ -65,7 +65,34 @@ describe 'Formtastic::SemanticFormHelper.builder' do
       end
     
     end
+
+    describe "semantic_fields_for" do
+
+      it "should yield an instance of the parent form builder" do
+        semantic_form_for(@new_post) do |builder|
+          builder.semantic_fields_for(:author) do |nested_builder|
+            nested_builder.class.should == MyCustomFormBuilder
+          end
+        end
+      end
+
+    end
     
   end
 
+  describe "when using a builder passed to form options" do
+
+    describe "semantic_fields_for" do
+
+      it "should yield an instance of the parent form builder" do
+        semantic_form_for(@new_post, :builder => MyCustomFormBuilder) do |builder|
+          builder.semantic_fields_for(:author) do |nested_builder|
+            nested_builder.class.should == MyCustomFormBuilder
+          end
+        end
+      end
+
+    end
+
+  end
 end
