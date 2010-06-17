@@ -1,49 +1,17 @@
 # coding: utf-8
 require 'rubygems'
-
-gem 'activesupport', '>=2.3.8'
-gem 'actionpack', '>=2.3.8'
 require 'active_support'
 require 'action_pack'
 require 'action_view'
 require 'action_controller'
 
-begin
-  gem 'activemodel', '>= 3.0.0.beta'
-  require 'active_model'
-rescue Exception
-end
-
-gem 'rspec', '>= 1.2.6'
-gem 'rspec-rails', '>= 1.2.6'
-gem 'hpricot', '>= 0.6.1'
-gem 'rspec_tag_matchers', '>= 1.0.0'
-require 'rspec_tag_matchers'
-
-require 'custom_macros'
-
-begin
-  Spec::Runner.configure do |config|
-    config.include(RspecTagMatchers)
-    config.include(CustomMacros)
-  end
-rescue
-  require 'rspec/core'
-  Rspec.configure do |config|
-    config.include RspecTagMatchers
-    config.include CustomMacros
-    config.mock_with :rspec
-  end
-end
-
-require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic'))
 require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic/util'))
+require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic'))
 require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic/layout_helper'))
 
-module ActionView
-  class OutputBuffer < Formtastic::Util.rails_safe_buffer_class
-  end
-end
+# Requires supporting files with custom matchers and macros, etc,
+# in ./support/ and its subdirectories.
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
 
 module FormtasticSpecHelper
   include ActionPack
