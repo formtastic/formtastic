@@ -91,11 +91,17 @@ module FormtasticSpecHelper
     extend ActiveModel::Naming if defined?(ActiveModel::Naming)
     include ActiveModel::Conversion if defined?(ActiveModel::Conversion)
   end
+  class ::PostModel
+    extend ActiveModel::Naming if defined?(ActiveModel::Naming)
+    include ActiveModel::Conversion if defined?(ActiveModel::Conversion)
+  end
   
   def mock_everything
     
     # Resource-oriented styles like form_for(@post) will expect a path method for the object,
     # so we're defining some here.
+    def post_models_path; "/postmodels/1"; end
+
     def post_path(o); "/posts/1"; end
     def posts_path; "/posts"; end
     def new_post_path; "/posts/new"; end
@@ -180,7 +186,7 @@ module FormtasticSpecHelper
     ::Post.stub!(:human_attribute_name).and_return { |column_name| column_name.humanize }
     ::Post.stub!(:human_name).and_return('Post')
     ::Post.stub!(:reflect_on_all_validations).and_return([])
-    ::Post.stub!(:reflect_on_validations_for).and_return([]) if defined?(RSpec)
+    ::Post.stub!(:reflect_on_validations_for).and_return([])
     ::Post.stub!(:reflections).and_return({})
     ::Post.stub!(:reflect_on_association).and_return do |column_name|
       case column_name
