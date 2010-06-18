@@ -2,6 +2,7 @@
 require File.join(File.dirname(__FILE__), *%w[formtastic i18n])
 require File.join(File.dirname(__FILE__), *%w[formtastic util])
 require File.join(File.dirname(__FILE__), *%w[formtastic railtie]) if defined?(::Rails::Railtie)
+require 'pp'
 
 module Formtastic #:nodoc:
 
@@ -483,7 +484,7 @@ module Formtastic #:nodoc:
       # Collects association columns (relation columns) for the current form object class.
       #
       def association_columns(*by_associations) #:nodoc:
-        if @object.present?
+        if @object.present? && @object.class.respond_to?(:reflections)
           @object.class.reflections.collect do |name, _|
             if by_associations.present?
               name if by_associations.include?(_.macro)
@@ -577,6 +578,7 @@ module Formtastic #:nodoc:
           end
         else
           if @object && @object.class.respond_to?(:validators_on)
+            puts "TEHR"
             attribute_sym = attribute.to_s.sub(/_id$/, '').to_sym
             !@object.class.validators_on(attribute_sym).find{|validator| (validator.kind == :presence) && (validator.options.present? ? options_require_validation?(validator.options) : true)}.nil?
           else
