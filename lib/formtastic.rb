@@ -2,7 +2,6 @@
 require File.join(File.dirname(__FILE__), *%w[formtastic i18n])
 require File.join(File.dirname(__FILE__), *%w[formtastic util])
 require File.join(File.dirname(__FILE__), *%w[formtastic railtie]) if defined?(::Rails::Railtie)
-require 'pp'
 
 module Formtastic #:nodoc:
 
@@ -578,7 +577,6 @@ module Formtastic #:nodoc:
           end
         else
           if @object && @object.class.respond_to?(:validators_on)
-            puts "TEHR"
             attribute_sym = attribute.to_s.sub(/_id$/, '').to_sym
             !@object.class.validators_on(attribute_sym).find{|validator| (validator.kind == :presence) && (validator.options.present? ? options_require_validation?(validator.options) : true)}.nil?
           else
