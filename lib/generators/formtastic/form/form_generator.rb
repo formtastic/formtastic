@@ -23,6 +23,7 @@ module Formtastic
     end
 
     def create_or_show
+      @attributes = self.columns if @attributes.empty?
       if options[:partial]
         empty_directory "app/views/#{controller_path}"
         template "view__form.html.#{template_type}", "app/views/#{controller_path}/_form.html.#{template_type}"
