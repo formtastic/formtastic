@@ -571,6 +571,23 @@ describe 'SemanticFormBuilder#input' do
           end
         end
         
+        describe 'when localized hint (I18n) is a model with attribute hints' do
+          it "should see the provided hash as a blank entry" do
+            ::I18n.backend.store_translations :en,
+            :formtastic => {
+                :hints => {
+                  :title => { # movie title
+                    :summary => @localized_hint_text # summary of movie
+                   }
+                 }
+              }
+            semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:title, :hint => true))
+            end
+            output_buffer.should_not have_tag('form li p.inline-hints', @localized_hint_text)
+          end
+        end
+        
         describe 'when localized hint (I18n) is not provided' do
           it 'should not render a hint paragraph' do
             semantic_form_for(@new_post) do |builder|
