@@ -1,6 +1,7 @@
 if Formtastic::Util.rails3?
   gem 'rspec', '~> 2.0.0.beta12'
   gem 'rspec-rails', '~> 2.0.0.beta12'
+  gem 'rspec_tag_matchers'
   
   require "rubygems"
   require "action_controller/railtie"
@@ -29,7 +30,9 @@ if Formtastic::Util.rails3?
 else
   gem 'rspec', '>= 1.2.6'
   gem 'rspec-rails', '>= 1.2.6'
+  gem 'rspec_tag_matchers'
   gem 'hpricot', '>= 0.6.1'
+  
   require 'rspec_tag_matchers'
 
   Spec::Runner.configure do |config|
