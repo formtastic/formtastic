@@ -907,7 +907,7 @@ module Formtastic #:nodoc:
         
         template.content_tag(:fieldset,
           template.content_tag(:legend, 
-            template.label_tag(nil, localized_string(method, method, :label) || humanized_attribute_name(method), :for => nil), :class => :label
+            template.label_tag(nil, localized_string(method, options[:label], :label) || humanized_attribute_name(method), :for => nil), :class => :label
           ) << 
           template.content_tag(:ol, Formtastic::Util.html_safe(list_item_content.join))
         )
@@ -1178,7 +1178,7 @@ module Formtastic #:nodoc:
 
         template.content_tag(:fieldset,
           template.content_tag(:legend, 
-            template.label_tag(nil, localized_string(method, method, :label) || humanized_attribute_name(method), :for => nil), :class => :label
+            template.label_tag(nil, localized_string(method, options[:label], :label) || humanized_attribute_name(method), :for => nil), :class => :label
           ) << 
           template.content_tag(:ol, Formtastic::Util.html_safe(list_item_content.join))
         )
@@ -1242,7 +1242,7 @@ module Formtastic #:nodoc:
       #
       def inline_hints_for(method, options) #:nodoc:
         options[:hint] = localized_string(method, options[:hint], :hint)
-        return if options[:hint].blank?
+        return if options[:hint].blank? or options[:hint].kind_of? Hash
         template.content_tag(:p, Formtastic::Util.html_safe(options[:hint]), :class => 'inline-hints')
       end
 

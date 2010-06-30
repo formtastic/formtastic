@@ -255,6 +255,7 @@ describe 'check_boxes input' do
 
       before do
         ::I18n.backend.store_translations :en, :formtastic => { :labels => { :post => { :authors => "Translated!" }}}
+        Formtastic::SemanticFormBuilder.i18n_lookups_by_default = true
 
         @new_post.stub!(:author_ids).and_return(nil)
         @form = semantic_form_for(@new_post) do |builder|
@@ -264,6 +265,7 @@ describe 'check_boxes input' do
 
       after do
         ::I18n.backend.reload!
+        Formtastic::SemanticFormBuilder.i18n_lookups_by_default = false
       end
 
       it "should do foo" do
@@ -272,8 +274,19 @@ describe 'check_boxes input' do
       end
 
     end
-    
-  end
 
+    describe "when :label option is set" do
+      before do
+        @new_post.stub!(:author_ids).and_return(nil)
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:authors, :as => :check_boxes, :label => 'The authors'))
+        end
+      end
+
+      it "should output the correct label title" do
+        output_buffer.should have_tag("legend.label label", /The authors/)
+      end
+    end
+  end
 end
 
