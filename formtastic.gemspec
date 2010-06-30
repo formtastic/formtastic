@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Justin French"]
-  s.date = %q{2010-06-07}
+  s.date = %q{2010-06-30}
   s.description = %q{A Rails form builder plugin/gem with semantically rich and accessible markup}
   s.email = %q{justin@indent.com.au}
   s.extra_rdoc_files = [
@@ -31,17 +31,20 @@ Gem::Specification.new do |s|
      "lib/formtastic.rb",
      "lib/formtastic/i18n.rb",
      "lib/formtastic/layout_helper.rb",
+     "lib/formtastic/railtie.rb",
      "lib/formtastic/util.rb",
+     "lib/generators/formtastic/form/form_generator.rb",
+     "lib/generators/formtastic/install/install_generator.rb",
      "lib/locale/en.yml",
      "rails/init.rb",
      "spec/buttons_spec.rb",
      "spec/commit_button_spec.rb",
      "spec/custom_builder_spec.rb",
-     "spec/custom_macros.rb",
      "spec/defaults_spec.rb",
      "spec/error_proc_spec.rb",
      "spec/errors_spec.rb",
      "spec/form_helper_spec.rb",
+     "spec/helpers/layout_helper_spec.rb",
      "spec/i18n_spec.rb",
      "spec/include_blank_spec.rb",
      "spec/input_spec.rb",
@@ -62,11 +65,13 @@ Gem::Specification.new do |s|
      "spec/inputs/time_zone_input_spec.rb",
      "spec/inputs_spec.rb",
      "spec/label_spec.rb",
-     "spec/layout_helper_spec.rb",
      "spec/semantic_errors_spec.rb",
      "spec/semantic_fields_for_spec.rb",
      "spec/spec.opts",
-     "spec/spec_helper.rb"
+     "spec/spec_helper.rb",
+     "spec/support/custom_macros.rb",
+     "spec/support/output_buffer.rb",
+     "spec/support/test_environment.rb"
   ]
   s.homepage = %q{http://github.com/justinfrench/formtastic/tree/master}
   s.post_install_message = %q{
@@ -87,17 +92,17 @@ Gem::Specification.new do |s|
   }
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.6}
+  s.rubygems_version = %q{1.3.7}
   s.summary = %q{A Rails form builder plugin/gem with semantically rich and accessible markup}
   s.test_files = [
     "spec/buttons_spec.rb",
      "spec/commit_button_spec.rb",
      "spec/custom_builder_spec.rb",
-     "spec/custom_macros.rb",
      "spec/defaults_spec.rb",
      "spec/error_proc_spec.rb",
      "spec/errors_spec.rb",
      "spec/form_helper_spec.rb",
+     "spec/helpers/layout_helper_spec.rb",
      "spec/i18n_spec.rb",
      "spec/include_blank_spec.rb",
      "spec/input_spec.rb",
@@ -118,30 +123,35 @@ Gem::Specification.new do |s|
      "spec/inputs/time_zone_input_spec.rb",
      "spec/inputs_spec.rb",
      "spec/label_spec.rb",
-     "spec/layout_helper_spec.rb",
      "spec/semantic_errors_spec.rb",
      "spec/semantic_fields_for_spec.rb",
-     "spec/spec_helper.rb"
+     "spec/spec_helper.rb",
+     "spec/support/custom_macros.rb",
+     "spec/support/output_buffer.rb",
+     "spec/support/test_environment.rb"
   ]
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
-    if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
+    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<activesupport>, [">= 2.3.0"])
       s.add_runtime_dependency(%q<actionpack>, [">= 2.3.0"])
+      s.add_runtime_dependency(%q<i18n>, [">= 0.4.0"])
       s.add_development_dependency(%q<rspec-rails>, [">= 1.2.6"])
       s.add_development_dependency(%q<rspec_tag_matchers>, [">= 1.0.0"])
     else
       s.add_dependency(%q<activesupport>, [">= 2.3.0"])
       s.add_dependency(%q<actionpack>, [">= 2.3.0"])
+      s.add_dependency(%q<i18n>, [">= 0.4.0"])
       s.add_dependency(%q<rspec-rails>, [">= 1.2.6"])
       s.add_dependency(%q<rspec_tag_matchers>, [">= 1.0.0"])
     end
   else
     s.add_dependency(%q<activesupport>, [">= 2.3.0"])
     s.add_dependency(%q<actionpack>, [">= 2.3.0"])
+    s.add_dependency(%q<i18n>, [">= 0.4.0"])
     s.add_dependency(%q<rspec-rails>, [">= 1.2.6"])
     s.add_dependency(%q<rspec_tag_matchers>, [">= 1.0.0"])
   end
