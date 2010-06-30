@@ -210,6 +210,7 @@ describe 'radio input' do
     end
 
     it "should output the correct label title" do
+      output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should have_tag("legend.label label", /The authors/)
     end
   end
