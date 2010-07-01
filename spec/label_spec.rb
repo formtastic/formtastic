@@ -42,6 +42,12 @@ describe 'SemanticFormBuilder#label' do
         builder.label(:login, :label => false).should be_blank
       end
     end
+
+    it 'should html escape the label string' do
+      semantic_form_for(@new_post) do |builder|
+        builder.label(:login, :required => false, :label => '<b>My label</b>').should == "<label for=\"post_login\">&lt;b&gt;My label&lt;/b&gt;</label>"
+      end
+    end
   end
   
 end

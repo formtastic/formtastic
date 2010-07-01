@@ -878,7 +878,7 @@ module Formtastic #:nodoc:
           html_options[:checked] = selected_value == value if selected_option_is_present
 
           li_content = template.content_tag(:label,
-            Formtastic::Util.html_safe("#{self.radio_button(input_name, value, html_options)} #{label}"),
+            Formtastic::Util.html_safe("#{self.radio_button(input_name, value, html_options)} #{template.escape_once(label)}"),
             :for => input_id
           )
 
@@ -1149,7 +1149,7 @@ module Formtastic #:nodoc:
           html_options[:id] = input_id
 
           li_content = template.content_tag(:label,
-            Formtastic::Util.html_safe("#{self.check_box(input_name, html_options, value, unchecked_value)} #{label}"),
+            Formtastic::Util.html_safe("#{self.check_box(input_name, html_options, value, unchecked_value)} #{template.escape_once(label)}"),
             :for => input_id
           )
 
@@ -1622,7 +1622,7 @@ module Formtastic #:nodoc:
         key = value if value.is_a?(::Symbol)
 
         if value.is_a?(::String)
-          value
+          template.escape_once(value)
         else
           use_i18n = value.nil? ? @@i18n_lookups_by_default : (value != false)
 
@@ -1644,6 +1644,7 @@ module Formtastic #:nodoc:
 
             i18n_value = ::Formtastic::I18n.t(defaults.shift,
               options.merge(:default => defaults, :scope => type.to_s.pluralize.to_sym))
+            i18n_value = template.escape_once(i18n_value) if i18n_value.is_a?(::String)
             i18n_value.blank? ? nil : i18n_value
           end
         end

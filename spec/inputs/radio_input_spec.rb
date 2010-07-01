@@ -111,6 +111,16 @@ describe 'radio input' do
         end
       end
 
+      it 'should html escape the label string' do
+        output_buffer.replace ''
+        semantic_form_for(:project, :url => 'http://test.host') do |builder|
+          concat(builder.input(:author_id, :as => :radio, :collection => [["<b>Item 1</b>", 1], ["<b>Item 2</b>", 2]]))
+        end
+        output_buffer.should have_tag('form li fieldset ol li label') do |label|
+          label.body.should match /&lt;b&gt;Item [12]&lt;\/b&gt;$/
+        end
+      end
+
       it 'should generate inputs for each item' do
         ::Author.find(:all).each do |author|
           output_buffer.should have_tag("form li fieldset ol li label input#project_author_id_#{author.id}")
