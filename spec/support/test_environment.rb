@@ -2,7 +2,8 @@ if Formtastic::Util.rails3?
   gem 'rspec', '~> 2.0.0.beta12'
   gem 'rspec-rails', '~> 2.0.0.beta12'
   gem 'rspec_tag_matchers'
-  
+  gem 'i18n', '>= 0.4.0'
+
   require "rubygems"
   require "action_controller/railtie"
   require "active_resource/railtie"
@@ -10,7 +11,7 @@ if Formtastic::Util.rails3?
   require 'rspec/core'
   require 'rspec/rails'
   require 'rspec_tag_matchers'
-  
+
   # Create a simple rails application for use in testing the viewhelper
   module FormtasticTest
     class Application < Rails::Application
@@ -32,7 +33,7 @@ else
   gem 'rspec-rails', '>= 1.2.6'
   gem 'rspec_tag_matchers'
   gem 'hpricot', '>= 0.6.1'
-  
+
   require 'rspec_tag_matchers'
 
   Spec::Runner.configure do |config|
