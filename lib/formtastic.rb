@@ -486,9 +486,9 @@ module Formtastic #:nodoc:
       #
       def association_columns(*by_associations) #:nodoc:
         if @object.present? && @object.class.respond_to?(:reflections)
-          @object.class.reflections.collect do |name, _|
+          @object.class.reflections.collect do |name, association_reflection|
             if by_associations.present?
-              name if by_associations.include?(_.macro)
+              name if by_associations.include?(association_reflection.macro)
             else
               name
             end
