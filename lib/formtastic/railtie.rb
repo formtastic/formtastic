@@ -4,7 +4,7 @@ require 'rails'
 
 module Formtastic
   class Railtie < Rails::Railtie
-    initializer :after_initialize do
+    initializer 'formtastic.initialize', :after => :after_initialize do
       ActionView::Base.send :include, Formtastic::SemanticFormHelper
       ActionView::Base.send(:include, Formtastic::LayoutHelper)
     end
