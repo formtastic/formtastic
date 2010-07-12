@@ -1,3 +1,6 @@
+1.0.0.beta2 (unreleased)
+* Added default escaping of html entities in labels and hints (#292, #299)
+
 1.0.0.beta
 
 * Fixed :radio and :check_boxes inputs so that the legend no longer includes a <label> with a `for` attribute pointing to an input that doesn't exist (#253)
