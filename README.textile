@@ -517,7 +517,11 @@ If you want to add your own input types to encapsulate your own logic or interfa
 
 @Formtastic::SemanticFormHelper.builder = MyCustomBuilder@
 
+h2. Security
 
+By default formtastic escapes html entities in both labels and hints unless a string is marked as html_safe. If you are using an older rails version which doesn't know html_safe, or you want to globally turn this feature off, you can set the following in your initializer:
+
+Formtastic::SemanticFormBuilder.escape_html_entities_in_hints_and_labels = false
 
 
 h2. Status
