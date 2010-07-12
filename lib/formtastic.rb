@@ -20,11 +20,12 @@ module Formtastic #:nodoc:
     @@file_methods = [ :file?, :public_filename, :filename ]
     @@priority_countries = ["Australia", "Canada", "United Kingdom", "United States"]
     @@i18n_lookups_by_default = false
+    @@escape_html_entities_in_hints_and_labels = true
     @@default_commit_button_accesskey = nil 
 
     cattr_accessor :default_text_field_size, :default_text_area_height, :all_fields_required_by_default, :include_blank_for_select_by_default,
                    :required_string, :optional_string, :inline_errors, :label_str_method, :collection_label_methods,
-                   :inline_order, :file_methods, :priority_countries, :i18n_lookups_by_default, :default_commit_button_accesskey 
+                   :inline_order, :file_methods, :priority_countries, :i18n_lookups_by_default, :escape_html_entities_in_hints_and_labels, :default_commit_button_accesskey 
 
     RESERVED_COLUMNS = [:created_at, :updated_at, :created_on, :updated_on, :lock_version, :version]
 
@@ -897,7 +898,7 @@ module Formtastic #:nodoc:
           html_options[:checked] = selected_value == value if selected_option_is_present
 
           li_content = template.content_tag(:label,
-            Formtastic::Util.html_safe("#{self.radio_button(input_name, value, html_options)} #{template.escape_once(label)}"),
+            Formtastic::Util.html_safe("#{self.radio_button(input_name, value, html_options)} #{escape_html_entities(label)}"),
             :for => input_id
           )
 
@@ -1168,7 +1169,7 @@ module Formtastic #:nodoc:
           html_options[:id] = input_id
 
           li_content = template.content_tag(:label,
-            Formtastic::Util.html_safe("#{self.check_box(input_name, html_options, value, unchecked_value)} #{template.escape_once(label)}"),
+            Formtastic::Util.html_safe("#{self.check_box(input_name, html_options, value, unchecked_value)} #{escape_html_entities(label)}"),
             :for => input_id
           )
 
@@ -1641,7 +1642,7 @@ module Formtastic #:nodoc:
         key = value if value.is_a?(::Symbol)
 
         if value.is_a?(::String)
-          template.escape_once(value)
+          escape_html_entities(value)
         else
           use_i18n = value.nil? ? @@i18n_lookups_by_default : (value != false)
 
@@ -1663,7 +1664,7 @@ module Formtastic #:nodoc:
 
             i18n_value = ::Formtastic::I18n.t(defaults.shift,
               options.merge(:default => defaults, :scope => type.to_s.pluralize.to_sym))
-            i18n_value = template.escape_once(i18n_value) if i18n_value.is_a?(::String)
+            i18n_value = escape_html_entities(i18n_value) if i18n_value.is_a?(::String)
             i18n_value.blank? ? nil : i18n_value
           end
         end
@@ -1694,6 +1695,14 @@ module Formtastic #:nodoc:
           options[:include_blank] = @@include_blank_for_select_by_default
         end
         options
+      end
+
+      def escape_html_entities(string) #:nodoc:
+        if @@escape_html_entities_in_hints_and_labels
+          # Acceppt html_safe flag as indicator to skip escaping
+          string = template.escape_once(string) unless string.respond_to?(:html_safe?) && string.html_safe? == true
+        end
+        string
       end
 
   end

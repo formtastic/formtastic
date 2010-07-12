@@ -8,6 +8,9 @@
 * Added compatible install and form helpers (rails3)
 * Added support for ActiveModel Validations, thanks to Guillaume Belleguic (rails3)
 
+1.0.0.beta2 (unreleased)
+* Added default escaping of html entities in labels and hints (#292, #299)
+
 1.0.0.beta
 
 * Fixed :radio and :check_boxes inputs so that the legend no longer includes a <label> with a `for` attribute pointing to an input that doesn't exist (#253)
