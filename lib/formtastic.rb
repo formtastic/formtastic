@@ -1403,7 +1403,7 @@ module Formtastic #:nodoc:
         # Return if we have an Array of strings, fixnums or arrays
         return collection if (collection.instance_of?(Array) || collection.instance_of?(Range)) &&
                              [Array, Fixnum, String, Symbol].include?(collection.first.class) &&
-                             !options.include?(:label_method)
+                             !(options.include?(:label_method) || options.include?(:value_method))
 
         label, value = detect_label_and_value_method!(collection, options)
         collection.map { |o| [send_or_call(label, o), send_or_call(value, o)] }
