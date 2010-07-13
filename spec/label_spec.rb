@@ -30,6 +30,15 @@ describe 'SemanticFormBuilder#label' do
     end
   end
 
+  describe 'when label method is given' do
+    it 'should ignore the shortcut for simple collections if a label_method is supplied' do
+      semantic_form_for(:project, :url => 'http://test.host') do |builder|
+        concat(builder.input(:author_id, :as => :check_boxes, :collection => [:a, :b, :c], :value_method => :to_s, :label_method => proc {|f| ('Label_%s' % [f])}))
+      end
+      output_buffer.should have_tag('form li fieldset ol li label', :with => /Label_[abc]/, :count => 3)
+    end
+  end
+
   describe 'when label is given' do
     it 'should allow the text to be given as label option' do
       semantic_form_for(@new_post) do |builder|
