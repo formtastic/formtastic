@@ -130,13 +130,13 @@ describe 'check_boxes input' do
       end
     end
 
-    describe 'when :no_hidden_input is set' do
+    describe 'when :hidden_fields is set to false' do
       before do
         @output_buffer = ''
         mock_everything
 
         semantic_form_for(@fred) do |builder|
-          concat(builder.input(:posts, :as => :check_boxes, :value_as_class => true, :no_hidden_input => true))
+          concat(builder.input(:posts, :as => :check_boxes, :value_as_class => true, :hidden_fields => false))
         end
       end
 
