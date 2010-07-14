@@ -41,8 +41,8 @@ describe 'check_boxes input' do
       output_buffer.should have_tag('form li input[@checked]', :count => 1)
     end
 
-    it 'should generate hidden inputs with default value blank' do
-      output_buffer.should have_tag("form li fieldset ol li label input[@type='hidden'][@value='']", :count => ::Post.find(:all).size)
+    it 'should not generate hidden inputs with default value blank' do
+      output_buffer.should_not have_tag("form li fieldset ol li label input[@type='hidden'][@value='']", :count => ::Post.find(:all).size)
     end
 
     describe "each choice" do
@@ -60,11 +60,25 @@ describe 'check_boxes input' do
         end
       end
 
-      it 'should have a checkbox input for each post' do
+      it 'should have a checkbox input but no hidden field for each post' do
+        ::Post.find(:all).each do |post|
+          output_buffer.should have_tag("form li fieldset ol li label input#author_post_ids_#{post.id}")
+          output_buffer.should have_tag("form li fieldset ol li label input[@name='author[post_ids][]']", :count => 1)
+        end
+      end
+
+      it 'should have a checkbox and a hidden field for each post with :hidden_field => true' do
+        output_buffer.replace ''
+
+        semantic_form_for(@fred) do |builder|
+          concat(builder.input(:posts, :as => :check_boxes, :hidden_fields => true, :value_as_class => true))
+        end
+
         ::Post.find(:all).each do |post|
           output_buffer.should have_tag("form li fieldset ol li label input#author_post_ids_#{post.id}")
           output_buffer.should have_tag("form li fieldset ol li label input[@name='author[post_ids][]']", :count => 2)
         end
+
       end
 
       it "should mark input as checked if it's the the existing choice" do
