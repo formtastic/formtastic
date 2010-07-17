@@ -1137,6 +1137,15 @@ module Formtastic #:nodoc:
       #   f.input :authors, :as => :check_boxes, :selected => Author.most_popular.collect(&:id)
       #   f.input :authors, :as => :check_boxes, :selected => nil   # override any defaults: select none
       #
+      #
+      # Formtastic works around a bug in rails handling of check box collections by
+      # not generating the hidden fields for state checking of the checkboxes 
+      # The :hidden_fields option provides a way to re-enable these hidden inputs by
+      # setting it to true.
+      #
+      #   f.input :authors, :as => :check_boxes, hidden_fields => false
+      #   f.input :authors, :as => :check_boxes, hidden_fields => true
+      #
       # Finally, you can set :value_as_class => true if you want the li wrapper around each checkbox / label 
       # combination to contain a class with the value of the radio button (useful for applying specific 
       # CSS or Javascript to a particular checkbox).
