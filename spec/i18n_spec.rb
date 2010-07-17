@@ -1,5 +1,5 @@
 # coding: utf-8
-require File.join(File.dirname(__FILE__), *%w[spec_helper])
+require 'spec_helper'
 
 describe 'Formtastic::I18n' do
   
