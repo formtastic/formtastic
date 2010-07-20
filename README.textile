@@ -79,16 +79,16 @@ RDoc documentation _should_ be automatically generated after each commit and mad
 
 h2. Installation
 
-The gem is hosted on gemcutter, so *if you haven't already*, add it as a gem source:
-
-<pre>
-  sudo gem sources -a http://gemcutter.org/
-</pre>
-
-Then install the Formtastic gem:
+Install the Formtastic gem:
 
 <pre>
   sudo gem install formtastic
+</pre>
+
+Or try the 1.0.0.beta2:
+
+<pre>
+  sudo gem install formtastic --pre
 </pre>
 
 And add it to your environment.rb configuration as a gem dependency:
