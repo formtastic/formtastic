@@ -1,5 +1,12 @@
 1.0.0.beta2 (unreleased)
+
 * Added default escaping of html entities in labels and hints (#292, #299)
+* Added/Fixed that :value_method and :label_method were not being used for simple collections (like Arrays)
+* Added some more compatibility for Mongooid and other ORMs by checking for reflection information before calling it
+* Fixed deprecation warnings in Rails 2.3.6 and newer
+* Fixed a bug where :check_boxes and :radio were using method instead of :label option
+* Fixed a conflict where i18n lookups were failing when an attribute and model have the same name
+* Fixed some html that was not marked as safe
 
 1.0.0.beta
 
