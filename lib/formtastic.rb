@@ -524,9 +524,9 @@ module Formtastic #:nodoc:
           raise ArgumentError, 'You gave :for option with a block to inputs method, ' <<
                                'but the block does not accept any argument.' if block.arity <= 0
 
-          proc { |f| return f.inputs(*args){ block.call(f) } }
+          lambda { |f| f.inputs(*args){ block.call(f) } }
         else
-          proc { |f| return f.inputs(*args) }
+          lambda { |f| f.inputs(*args) }
         end
 
         fields_for_args = [options.delete(:for), options.delete(:for_options) || {}].flatten
