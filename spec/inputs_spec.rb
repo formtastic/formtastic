@@ -88,6 +88,24 @@ describe 'SemanticFormBuilder#inputs' do
         
       end
       
+      describe "as a symbol representing a has_many association name" do
+        before do
+          @new_post.stub!(:authors).and_return([@bob, @fred])
+          @new_post.stub!(:authors_attributes=)
+        end
+        
+        it 'should nest the inputs with a name input for each item' do
+          semantic_form_for(@new_post) do |post|
+            post.inputs :for => :authors do |author|
+              concat(author.input(:login))
+            end
+          end
+          
+          output_buffer.should have_tag("form input[@name='post[authors_attributes][0][login]']")
+          output_buffer.should have_tag("form input[@name='post[authors_attributes][1][login]']")
+        end
+      end
+      
       describe 'as an array containing the a symbole for the association name and the associated object' do
         
         it 'should nest the inputs with an _attributes suffix on the association name' do
