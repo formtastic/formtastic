@@ -77,18 +77,31 @@ h2. Documentation
 RDoc documentation _should_ be automatically generated after each commit and made available on the "rdoc.info website":http://rdoc.info/projects/justinfrench/formtastic.
 
 
-h2. Installation
+h2. A Note About Rails 3 Support
 
-The gem is hosted on gemcutter, so *if you haven't already*, add it as a gem source:
+Formtastic 1.0 will only support the latest stable Rails 2.x. We're maintaining a rails3 branch which aims to provide both Rails 2.x and 3.x support, which is targeted for the 1.1 release soon after 1.0, around the same time Rails 3.0 ships.
+
+If you have a Rails 3 project and would like to use Formtastic's rails3 branch, bundler provides you with the ability to do this easily. Just add Formtastic as a git dependency in your Gemfile with the :branch option:
 
 <pre>
-  sudo gem sources -a http://gemcutter.org/
+  gem 'formtastic', :git => "http://github.com/justinfrench/formtastic.git", :branch => "rails3"
 </pre>
 
-Then install the Formtastic gem:
+Please be aware that Rails 3 is still under heavy development (even in the later betas), as is Formtastic, so our rails3 branch is very much "on the edge", just like Rails. if you find issues, compatibility issues with Rails 2 or 3, please report an issue on Github.
+
+
+h2. Installation under Rails 2.x
+
+Install the Formtastic gem:
 
 <pre>
   sudo gem install formtastic
+</pre>
+
+Or try the 1.0.0.beta2:
+
+<pre>
+  sudo gem install formtastic --pre
 </pre>
 
 And add it to your environment.rb configuration as a gem dependency:
@@ -112,6 +125,7 @@ A proof-of-concept stylesheet is provided which you can include in your layout. 
     ...
   </head>
 </pre>
+
 
 h2. Usage
 
@@ -524,9 +538,11 @@ By default formtastic escapes html entities in both labels and hints unless a st
 Formtastic::SemanticFormBuilder.escape_html_entities_in_hints_and_labels = false
 
 
-h2. Status
+h2. Focus
 
-Formtastic has been in active development for about a year. We've just recently jumped to an 0.9 version number, signaling that we consider this a 1.0 release candidate, and that the API won't change significantly for the 1.x series.
+Formtastic is close to shipping a 1.0 release candidate after more than a year of active development. 1.0 will be compatible with Rails 2, and this is our top priority right now. We've also been working hard on a Rails 2 *and* 3 compatible version in the rails3 branch, targeting a 1.1 release shortly after Rails 3.0 ships.
+
+There's heaps more we want to do, but we have to do this first.
 
 
 h2. Dependencies
@@ -540,18 +556,14 @@ There are none, but...
 
 h2. Compatibility
 
-I'm only testing Formtastic with the latest Rails 2.4.x stable release, and it should be fine under Rails 2.3.x as well (including nested forms). Patches are welcome to allow backwards compatibility, but I don't have the energy!
-
-h2. Got TextMate?
-
-Well...there's a TextMate-bundle in town, dedicated to make usage of Formtastic in the "TextMate":http://macromates.com/ editor even more of a breeze:
-
-"Formtastic.tmbundle":http://github.com/grimen/formtastic_tmbundle
-
+* We're only testing Formtastic with the latest Rails 2.x stable release. Patches are welcome to allow backwards compatibility with older versions of Rails, of course.
+* Development of a Rails 2 *and* 3 compatible version of Formtastic is underway in the rails3 branch, targeting a Formtastic 1.1 release shortly after Rails 3.0 ships.
+* Formtastic, much like Rails 2, is very ActiveRecord-centric. Many people are using Formtastic (especially the rails3 branch) successfully with other ActiveModel-like ORMs and classes (DataMapper, MongoMapper, Mongoid, Authlogic, Devise...) but we're not guaranteeing anything at this stage. Patches are welcome, but it's not our core focus right now. Shipping a solid 1.0 and Rails 3 compatible 1.1 is. 
+ 
 
 h2. How to contribute
 
-*Before you send a pull request*, please ensure that you provide appropriate spec/test coverage and ensure the documentation is up-to-date.  Bonus points if you perform your changes in a clean topic branch rather than master.
+Please ensure that you provide appropriate spec/test coverage and ensure the documentation is up-to-date.  Bonus points if you perform your changes in a clean topic branch rather than master, and if you create an issue on GH for us to discuss your changes. Pull requests tend to get lost.
 
 Please also keep your commits *atomic* so that they are more likely to apply cleanly.  That means that each commit should contain the smallest possible logical change.  Don't commit two features at once, don't update the gemspec at the same time you add a feature, don't fix a whole bunch of whitespace in a file at the same time you change a few lines, etc, etc.
 
@@ -560,7 +572,7 @@ For significant changes, you may wish to discuss your idea on the Formtastic Goo
 
 h2. Maintainers & Contributors
 
-Formtastic is maintained by "Justin French":http://justinfrench.com, "José Valim":http://github.com/josevalim and "Jonas Grimfelt":http://github.com/grimen, but it wouldn't be as awesome as it is today without help from over 40 contributors.
+Formtastic is maintained by "Justin French":http://github.com/justinfrench, "Morton Jonuscha":http://github.com/yabawock and "Gabriel Sobrinho":http://github.com/sobrinho. "Denis Major":http://github.com/denismajor1 is doing some amazing documentation work in the wiki, and we very much appreciate the past efforts of "José Valim":http://github.com/josevalim and "Jonas Grimfelt":http://github.com/grimen and over 40 other contributors.
 
 @git shortlog -n -s --no-merges@
 

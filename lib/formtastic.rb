@@ -1790,9 +1790,7 @@ module Formtastic #:nodoc:
   module SemanticFormHelper
     @@builder = ::Formtastic::SemanticFormBuilder
     mattr_accessor :builder
-    
-    @@default_field_error_proc = nil
-    
+        
     # Override the default ActiveRecordHelper behaviour of wrapping the input.
     # This gets taken care of semantically by adding an error class to the LI tag
     # containing the input.
@@ -1802,11 +1800,11 @@ module Formtastic #:nodoc:
     end
     
     def with_custom_field_error_proc(&block)
-      @@default_field_error_proc = ::ActionView::Base.field_error_proc
+      default_field_error_proc = ::ActionView::Base.field_error_proc
       ::ActionView::Base.field_error_proc = FIELD_ERROR_PROC
-      result = yield
-      ::ActionView::Base.field_error_proc = @@default_field_error_proc
-      result
+      yield
+    ensure
+      ::ActionView::Base.field_error_proc = default_field_error_proc
     end
     
     def semantic_remote_form_for_wrapper(record_or_name_or_array, *args, &proc)
