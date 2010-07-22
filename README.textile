@@ -572,7 +572,7 @@ For significant changes, you may wish to discuss your idea on the Formtastic Goo
 
 h2. Maintainers & Contributors
 
-Formtastic is maintained by "Justin French":http://github.com/justinfrench, "Morton Jonuscha":http://github.com/yabawock and "Gabriel Sobrinho":http://github.com/sobrinho. "Denis Major":http://github.com/denismajor1 is doing some amazing documentation work in the wiki, and we very much appreciate the past efforts of "José Valim":http://github.com/josevalim and "Jonas Grimfelt":http://github.com/grimen and over 40 other contributors.
+Formtastic is maintained by "Justin French":http://github.com/justinfrench, "Morton Jonuschat":http://github.com/yabawock and "Gabriel Sobrinho":http://github.com/sobrinho. "Denis Major":http://github.com/denismajor1 is doing some amazing documentation work in the wiki, and we very much appreciate the past efforts of "José Valim":http://github.com/josevalim and "Jonas Grimfelt":http://github.com/grimen and over 40 other contributors.
 
 @git shortlog -n -s --no-merges@
 
