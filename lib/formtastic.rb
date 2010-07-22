@@ -1824,12 +1824,14 @@ module Formtastic #:nodoc:
           options[:builder] ||= @@builder
           options[:html] ||= {}
 
+          singularizer = defined?(ActiveModel::Naming.singular) ? ActiveModel::Naming.method(:singular) : ActionController::RecordIdentifier.method(:singular_class_name)
+
           class_names = options[:html][:class] ? options[:html][:class].split(" ") : []
           class_names << "formtastic"
           class_names << case record_or_name_or_array
             when String, Symbol then record_or_name_or_array.to_s               # :post => "post"
-            when Array then ActionController::RecordIdentifier.singular_class_name(record_or_name_or_array.last.class)  # [@post, @comment] # => "comment"
-            else ActionController::RecordIdentifier.singular_class_name(record_or_name_or_array.class)                  # @post => "post"
+            when Array then singularizer.call(record_or_name_or_array.last.class)  # [@post, @comment] # => "comment"
+            else singularizer.call(record_or_name_or_array.class)                  # @post => "post"
           end
           options[:html][:class] = class_names.join(" ")
           
