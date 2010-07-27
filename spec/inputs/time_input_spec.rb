@@ -15,7 +15,27 @@ describe 'time input' do
       ::I18n.backend.reload!
       output_buffer.replace ''
     end
-
+    
+    describe "with :ignore_date" do
+      before do
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:publish_at, :as => :time, :ignore_date => true))
+        end
+      end
+      
+      it 'should not have an input for day, month and year' do
+        output_buffer.should_not have_tag('#post_publish_at_1i')
+        output_buffer.should_not have_tag('#post_publish_at_2i')
+        output_buffer.should_not have_tag('#post_publish_at_3i')
+      end
+      
+      it 'should have an input for hour and minute' do
+        output_buffer.should have_tag('#post_publish_at_4i')
+        output_buffer.should have_tag('#post_publish_at_5i')
+      end
+      
+    end
+    
     describe "without seconds" do
       before do
         semantic_form_for(@new_post) do |builder|
