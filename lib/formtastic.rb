@@ -1205,23 +1205,10 @@ module Formtastic #:nodoc:
         selected_option_is_present = [:selected, :checked].any? { |k| options.key?(k) }
         if selected_option_is_present
           selected_values = (options.key?(:checked) ? options[:checked] : options[:selected])
-        else
-          if reflection = self.reflection_for(method)
-            options[:find_options] ||= {}
-
-            if conditions = reflection.options[:conditions]
-              options[:find_options][:conditions] = reflection.klass.merge_conditions(conditions, options[:find_options][:conditions])
-            end
-            collection = reflection.klass.find(:all, options[:find_options])
-            collection = collection.to_a if collection.is_a?(Hash)
-
-            # Return if we have an Array of strings, fixnums or symbols
-            return collection if (collection.instance_of?(Array) || collection.instance_of?(Range)) &&
-                                 [Fixnum, String, Symbol].include?(collection.first.class)
-
-            label, value = detect_label_and_value_method!(collection, options)
-            selected_values = collection.map { |o| send_or_call(value, o) }
-          end
+        elsif object.respond_to?(method)
+          collection = [object.send(method)].compact.flatten
+          label, value = detect_label_and_value_method!(collection, options)
+          selected_values = collection.map { |o| send_or_call(value, o) }
         end
         selected_values = [*selected_values].compact
         selected_values
