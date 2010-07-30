@@ -342,5 +342,32 @@ describe 'check_boxes input' do
       end
     end
   end
+
+  describe 'for a has_and_belongs_to_many association' do
+    
+    before do
+      @output_buffer = ''
+      mock_everything
+      
+      @form = semantic_form_for(@freds_post) do |builder|
+        concat(builder.input(:authors, :as => :check_boxes))
+      end
+      output_buffer.concat(@form) if Formtastic::Util.rails3?
+    end
+    
+    it 'should render checkboxes' do
+      # I'm aware these two lines test the same thing
+      output_buffer.should have_tag('input[type="checkbox"]', :count => 2)
+      output_buffer.should have_tag('input[type="checkbox"]', :count => ::Author.find(:all).size)
+    end
+    
+    it 'should only select checkboxes that are present in the association' do
+      # I'm aware these two lines test the same thing
+      output_buffer.should have_tag('input[checked="checked"]', :count => 1)
+      output_buffer.should have_tag('input[checked="checked"]', :count => @freds_post.authors.size)
+    end
+    
+  end
+
 end
 
