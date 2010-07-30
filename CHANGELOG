@@ -8,7 +8,13 @@
 * Added compatible install and form helpers (rails3)
 * Added support for ActiveModel Validations, thanks to Guillaume Belleguic (rails3)
 
-1.0.0.beta2 (unreleased)
+1.0.0.beta3
+
+* Added :ignore_date option to time inputs (#308)
+* Fixed inputs_for_nested_attributes returning out of the proc on has_many associated nested models.
+* Fixed with_custom_field_error_proc to use ensure for restoring default field_error_proc and to store it in a local variable instead of in a class variable (nested calls were problematic due to the globalness of class variables)
+
+1.0.0.beta2
 
 * Added default escaping of html entities in labels and hints (#292, #299)
 * Added/Fixed that :value_method and :label_method were not being used for simple collections (like Arrays)

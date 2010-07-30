@@ -529,13 +529,13 @@ module Formtastic #:nodoc:
           raise ArgumentError, 'You gave :for option with a block to inputs method, ' <<
                                'but the block does not accept any argument.' if block.arity <= 0
 
-          Proc.new do |f|
+          lambda do |f|
             contents = f.inputs(*args){ block.call(f) }
             template.concat(contents) if ::Formtastic::Util.rails3?
             contents
           end
         else
-          Proc.new do |f|
+          lambda do |f|
             contents = f.inputs(*args)
             template.concat(contents) if ::Formtastic::Util.rails3?
             contents
@@ -1030,6 +1030,7 @@ module Formtastic #:nodoc:
         i18n_date_order = ::I18n.t(:order, :scope => [:date])
         i18n_date_order = nil unless i18n_date_order.is_a?(Array)
         inputs   = options.delete(:order) || i18n_date_order || [:year, :month, :day]
+        inputs   = [] if options[:ignore_date]
         labels   = options.delete(:labels) || {}
 
         time_inputs = [:hour, :minute]
