@@ -17,6 +17,7 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].sort.each {|f| require f}
 module FormtasticSpecHelper
   include ActionPack
   include ActionView::Context if defined?(ActionView::Context)
+  include ActionController::RecordIdentifier
   include ActionView::Helpers::FormHelper
   include ActionView::Helpers::FormTagHelper
   include ActionView::Helpers::FormOptionsHelper
@@ -25,12 +26,11 @@ module FormtasticSpecHelper
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::ActiveRecordHelper if defined?(ActionView::Helpers::ActiveRecordHelper)
   include ActionView::Helpers::ActiveModelHelper if defined?(ActionView::Helpers::ActiveModelHelper)
-  include ActionView::Helpers::RecordIdentificationHelper
   include ActionView::Helpers::DateHelper
   include ActionView::Helpers::CaptureHelper
   include ActionView::Helpers::AssetTagHelper
   include ActiveSupport
-  include ActionController::PolymorphicRoutes
+  include ActionController::PolymorphicRoutes if defined?(ActionController::PolymorphicRoutes)
   
   include Formtastic::SemanticFormHelper
   

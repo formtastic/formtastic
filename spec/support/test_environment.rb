@@ -1,6 +1,6 @@
 if Formtastic::Util.rails3?
-  gem 'rspec', '~> 2.0.0.beta12'
-  gem 'rspec-rails', '~> 2.0.0.beta12'
+  gem 'rspec', '~> 2.0.0.beta19'
+  gem 'rspec-rails', '~> 2.0.0.beta19'
   gem 'rspec_tag_matchers'
   gem 'i18n', '>= 0.4.0'
 
@@ -17,6 +17,7 @@ if Formtastic::Util.rails3?
     class Application < Rails::Application
       # Configure the default encoding used in templates for Ruby 1.9.
       config.encoding = "utf-8"
+      config.active_support.deprecation = :stderr
     end
   end
   FormtasticTest::Application.initialize!
@@ -33,6 +34,7 @@ else
   gem 'rspec-rails', '>= 1.2.6'
   gem 'rspec_tag_matchers'
   gem 'hpricot', '>= 0.6.1'
+  gem 'i18n', '< 0.4.0'
 
   require 'rspec_tag_matchers'
 
