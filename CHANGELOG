@@ -1,3 +1,7 @@
+1.0.0.beta4
+
+* ensure i18n < 0.4 is listed as a dependency in the gemspec
+
 1.0.0.beta3
 
 * Added :ignore_date option to time inputs (#308)
