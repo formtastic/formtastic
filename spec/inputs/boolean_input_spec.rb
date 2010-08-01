@@ -38,7 +38,7 @@ describe 'boolean input' do
       concat(builder.input(:allow_comments, :as => :boolean, :checked_value => 'checked', :unchecked_value => 'unchecked'))
     end
 
-    output_buffer.should have_tag('form li label input[@type="checkbox"][@value="checked"]')
+    output_buffer.should have_tag('form li label input[@type="checkbox"][@value="checked"]:not([@unchecked_value][@checked_value])')
     output_buffer.should have_tag('form li label input[@type="hidden"][@value="unchecked"]')
   end
 
