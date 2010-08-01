@@ -29,10 +29,12 @@ begin
   ------------------------------------------------------------------------
   You can now (optionally) run the generator to copy some stylesheets and
   a config initializer into your application:
-    ./script/generate formtastic
+    rails generator formastic:install # Rails 3
+    ./script/generate formtastic      # Rails 2
 
   To generate some semantic form markup for your existing models, just run:
-    ./script/generate form MODEL_NAME
+    rails generate formtastic:form MODEL_NAME # Rails 3
+    ./script/generate form MODEL_NAME         # Rails 2
 
   Find out more and get involved:
     http://github.com/justinfrench/formtastic
