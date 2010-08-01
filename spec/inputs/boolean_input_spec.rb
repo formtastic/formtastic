@@ -41,7 +41,7 @@ describe 'boolean input' do
     end
 
     output_buffer.concat(form) if Formtastic::Util.rails3?
-    output_buffer.should have_tag('form li label input[@type="checkbox"][@value="checked"]')
+    output_buffer.should have_tag('form li label input[@type="checkbox"][@value="checked"]:not([@unchecked_value][@checked_value])')
     output_buffer.should have_tag('form li label input[@type="hidden"][@value="unchecked"]')
   end
 

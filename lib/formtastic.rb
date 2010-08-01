@@ -1259,9 +1259,11 @@ module Formtastic #:nodoc:
         html_options = options.delete(:input_html) || {}
         checked = options.key?(:checked) ? options[:checked] : options[:selected]
         html_options[:checked] = checked == true if [:selected, :checked].any? { |k| options.key?(k) }
+        checked_value = options.delete(:checked_value) || '1'
+        unchecked_value = options.delete(:unchecked_value) || '0'
 
         input = self.check_box(method, strip_formtastic_options(options).merge(html_options),
-                               options.delete(:checked_value) || '1', options.delete(:unchecked_value) || '0')
+                               checked_value, unchecked_value)
         options = options_for_label(options)
 
         # the label() method will insert this nested input into the label at the last minute
