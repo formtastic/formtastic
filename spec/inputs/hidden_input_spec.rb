@@ -13,6 +13,8 @@ describe 'hidden input' do
       concat(builder.input(:secret, :as => :hidden))
       concat(builder.input(:author_id, :as => :hidden, :value => 99))
       concat(builder.input(:published, :as => :hidden, :input_html => {:value => true}))
+      concat(builder.input(:reviewer, :as => :hidden, :input_html => {:class => 'new_post_reviewer', :id => 'new_post_reviewer'}))
+      concat(builder.input(:author, :as => :hidden, :value => 'direct_value', :input_html => {:value => "formtastic_value"}))
     end
   end
 
@@ -33,6 +35,14 @@ describe 'hidden input' do
   # Handle Formtastic :input_html options for consistency.
   it "should pass any explicitly specified value - using :input_html options" do
     output_buffer.should have_tag("form li input#post_published[@type=\"hidden\"][@value=\"true\"]")
+  end
+
+  it "should pass any option specified using :input_html" do
+    output_buffer.should have_tag("form li input#new_post_reviewer[@type=\"hidden\"][@class=\"new_post_reviewer\"]")
+  end
+
+  it "should prefer :input_html over directly supplied options" do
+    output_buffer.should have_tag("form li input#post_author[@type=\"hidden\"][@value=\"formtastic_value\"]")
   end
   
   it "should not render inline errors" do
