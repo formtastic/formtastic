@@ -636,15 +636,14 @@ module Formtastic #:nodoc:
       end
 
       # Outputs a hidden field inside the wrapper, which should be hidden with CSS.
-      # Additionals options can be given and will be sent straight to hidden input
-      # element.
+      # Additionals options can be given using :input_hml. Should :input_html not be
+      # specified every option except for formtastic options will be sent straight
+      # to hidden input element.
       #
       def hidden_input(method, options)
         options ||= {}
-        if options[:input_html].present?
-          options[:value] = options[:input_html][:value] if options[:input_html][:value].present?
-        end
-        self.hidden_field(method, strip_formtastic_options(options))
+        html_options = options.delete(:input_html) || strip_formtastic_options(options)
+        self.hidden_field(method, html_options)
       end
 
       # Outputs a label and a select box containing options from the parent
