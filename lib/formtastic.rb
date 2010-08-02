@@ -1166,7 +1166,11 @@ module Formtastic #:nodoc:
         disabled_option_is_present = options.key?(:disabled)
         disabled_values = [*options[:disabled]] if disabled_option_is_present
 
-        list_item_content = collection.map do |c|
+        li_options = value_as_class ? { :class => [method.to_s.singularize, 'default'].join('_') } : {}
+
+        list_item_content = []
+        list_item_content << template.content_tag(:li, self.hidden_field(input_name, {:value => ''}), li_options) unless hidden_fields
+        list_item_content << collection.map do |c|
           label = c.is_a?(Array) ? c.first : c
           value = c.is_a?(Array) ? c.last : c
           input_id = generate_html_id(input_name, value.to_s.gsub(/\s/, '_').gsub(/\W/, '').downcase)

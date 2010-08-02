@@ -37,7 +37,7 @@ describe 'check_boxes input' do
     it 'should generate an ordered list with a list item for each choice' do
       output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should have_tag('form li fieldset ol')
-      output_buffer.should have_tag('form li fieldset ol li', :count => ::Post.find(:all).size)
+      output_buffer.should have_tag('form li fieldset ol li input[@type=checkbox]', :count => ::Post.find(:all).size)
     end
 
     it 'should have one option with a "checked" attribute' do
@@ -73,6 +73,11 @@ describe 'check_boxes input' do
           output_buffer.should have_tag("form li fieldset ol li label input#author_post_ids_#{post.id}")
           output_buffer.should have_tag("form li fieldset ol li label input[@name='author[post_ids][]']", :count => 1)
         end
+      end
+
+      it 'should have a hidden field with an empty value for the collection to allow clearing of all checkboxes' do
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.should have_tag("form li fieldset ol li input[@type=hidden][@name='author[post_ids]'][@value='']", :count => 1)
       end
 
       it 'should have a checkbox and a hidden field for each post with :hidden_field => true' do
@@ -112,7 +117,7 @@ describe 'check_boxes input' do
 
       it 'shold generate an li tag for each item in the collection' do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
-        output_buffer.should have_tag('form li fieldset ol li', :count => ::Author.find(:all).size)
+        output_buffer.should have_tag('form li fieldset ol li input[@type=checkbox]', :count => ::Author.find(:all).size)
       end
 
       it 'should generate labels for each item' do
