@@ -41,10 +41,12 @@ describe 'hidden input' do
   end
 
   it "should pass any option specified using :input_html" do
+    output_buffer.concat(@form) if Formtastic::Util.rails3?
     output_buffer.should have_tag("form li input#new_post_reviewer[@type=\"hidden\"][@class=\"new_post_reviewer\"]")
   end
 
   it "should prefer :input_html over directly supplied options" do
+    output_buffer.concat(@form) if Formtastic::Util.rails3?
     output_buffer.should have_tag("form li input#post_author[@type=\"hidden\"][@value=\"formtastic_value\"]")
   end
   
