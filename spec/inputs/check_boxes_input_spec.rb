@@ -379,5 +379,28 @@ describe 'check_boxes input' do
     
   end
 
+  describe 'for an association when a :collection is provided' do
+    describe 'it should use the specified :value_method option' do
+      before do
+        @output_buffer = ''
+        mock_everything
+      end
+
+      it 'to set the right input value' do
+        item = mock('item')
+        item.should_not_receive(:id)
+        item.stub!(:custom_value).and_return('custom_value')
+        item.should_receive(:custom_value).exactly(3).times
+        @new_post.author.should_receive(:custom_value)
+        @form = semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:author, :as => :check_boxes, :value_method => :custom_value, :collection => [item, item, item]))
+        end
+
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.should have_tag('input[@type=checkbox][@value="custom_value"]', :count => 3)
+      end
+    end
+  end
+
 end
 

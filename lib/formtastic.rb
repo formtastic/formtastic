@@ -16,6 +16,7 @@ module Formtastic #:nodoc:
     @@inline_errors = :sentence
     @@label_str_method = :humanize
     @@collection_label_methods = %w[to_label display_name full_name name title username login value to_s]
+    @@collection_value_methods = %w[id to_s]
     @@inline_order = [ :input, :hints, :errors ]
     @@file_methods = [ :file?, :public_filename, :filename ]
     @@priority_countries = ["Australia", "Canada", "United Kingdom", "United States"]
@@ -1496,21 +1497,35 @@ module Formtastic #:nodoc:
         collection
       end
 
-      # Detects the label and value methods from a collection values set in 
-      # @@collection_label_methods. It will use and delete
-      # the options :label_method and :value_methods when present
+      # Detects the label and value methods from a collection using methods set in
+      # @@collection_label_methods and @@collection_value_methods. For some ruby core
+      # classes sensible defaults have been defined. It will use and delete the options
+      # :label_method and :value_methods when present.
       #
-      def detect_label_and_value_method!(collection_or_instance, options = {}) #:nodoc
-        label = options.delete(:label_method) || detect_label_method(collection_or_instance)
-        value = options.delete(:value_method) || :id
+      def detect_label_and_value_method!(collection, options = {})
+        sample = collection.first || collection.last
+
+        case sample
+        when Array
+          label, value = :first, :last
+        when Integer
+          label, value = :to_s, :to_i
+        when String, NilClass
+          label, value = :to_s, :to_s
+        end
+
+        # Order of preference: user supplied method, class defaults, auto-detect
+        label = options[:label_method] || label || @@collection_label_methods.find { |m| sample.respond_to?(m) }
+        value = options[:value_method] || value || @@collection_value_methods.find { |m| sample.respond_to?(m) }
+
         [label, value]
       end
 
-      # Detected the label collection method when none is supplied using the
+      # Return the label collection method when none is supplied using the
       # values set in @@collection_label_methods.
       #
       def detect_label_method(collection) #:nodoc:
-        @@collection_label_methods.detect { |m| collection.first.respond_to?(m) }
+        detect_label_and_value_method!(collection).first
       end
 
       # Detects the method to call for fetching group members from the groups when grouping select options
