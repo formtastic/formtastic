@@ -1168,9 +1168,7 @@ module Formtastic #:nodoc:
 
         li_options = value_as_class ? { :class => [method.to_s.singularize, 'default'].join('_') } : {}
 
-        list_item_content = []
-        list_item_content << self.create_hidden_field_for_check_boxes(input_name, value_as_class) unless hidden_fields
-        list_item_content << collection.map do |c|
+        list_item_content = collection.map do |c|
           label = c.is_a?(Array) ? c.first : c
           value = c.is_a?(Array) ? c.last : c
           input_id = generate_html_id(input_name, value.to_s.gsub(/\s/, '_').gsub(/\W/, '').downcase)
@@ -1189,12 +1187,12 @@ module Formtastic #:nodoc:
           template.content_tag(:li, Formtastic::Util.html_safe(li_content), li_options)
         end
 
-        template.content_tag(:fieldset,
-          template.content_tag(:legend, 
-            template.label_tag(nil, localized_string(method, options[:label], :label) || humanized_attribute_name(method), :for => nil), :class => :label
-          ) << 
-          template.content_tag(:ol, Formtastic::Util.html_safe(list_item_content.join))
+        fieldset_content = template.content_tag(:legend,
+          template.label_tag(nil, localized_string(method, options[:label], :label) || humanized_attribute_name(method), :for => nil), :class => :label
         )
+        fieldset_content << self.create_hidden_field_for_check_boxes(input_name, value_as_class) unless hidden_fields
+        fieldset_content << template.content_tag(:ol, Formtastic::Util.html_safe(list_item_content.join))
+        template.content_tag(:fieldset, fieldset_content)
       end
 
       # Used by check_boxes input. The selected values will be set either by:
@@ -1220,9 +1218,9 @@ module Formtastic #:nodoc:
       
       # Outputs a custom hidden field for check_boxes
       def create_hidden_field_for_check_boxes(method, value_as_class) #:nodoc:
-        li_options = value_as_class ? { :class => [method.to_s.singularize, 'default'].join('_') } : {}
+        options = value_as_class ? { :class => [method.to_s.singularize, 'default'].join('_') } : {}
         input_name = "#{object_name}[#{method.to_s}][]"
-        template.content_tag(:li, template.hidden_field_tag(input_name, ''), li_options)
+        template.hidden_field_tag(input_name, '', options)
       end
 
       # Outputs a checkbox tag. If called with no_hidden_input = true a plain check_box_tag is returned,
