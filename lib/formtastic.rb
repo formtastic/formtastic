@@ -1739,7 +1739,7 @@ module Formtastic #:nodoc:
       end
 
       def escape_html_entities(string) #:nodoc:
-        if @@escape_html_entities_in_hints_and_labels
+        if self.class.escape_html_entities_in_hints_and_labels
           # Acceppt html_safe flag as indicator to skip escaping
           string = template.escape_once(string) unless string.respond_to?(:html_safe?) && string.html_safe? == true
         end
