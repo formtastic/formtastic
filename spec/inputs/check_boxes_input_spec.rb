@@ -75,9 +75,14 @@ describe 'check_boxes input' do
         end
       end
 
-      it 'should have a hidden field with an empty value for the collection to allow clearing of all checkboxes' do
+      it 'should have a hidden field with an empty array value for the collection to allow clearing of all checkboxes' do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
-        output_buffer.should have_tag("form li fieldset ol li input[@type=hidden][@name='author[post_ids]'][@value='']", :count => 1)
+        output_buffer.should have_tag("form li fieldset ol li input[@type=hidden][@name='author[post_ids][]'][@value='']", :count => 1)
+      end
+
+      it 'should not have a hidden field with an empty string value for the collection' do
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.should_not have_tag("form li fieldset ol li input[@type=hidden][@name='author[post_ids]'][@value='']", :count => 1)
       end
 
       it 'should have a checkbox and a hidden field for each post with :hidden_field => true' do
