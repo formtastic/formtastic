@@ -53,8 +53,8 @@ begin
     
     # Runtime dependencies: When installing Formtastic these will be checked if they are installed.
     # Will be offered to install these if they are not already installed.
-    s.add_dependency 'activesupport', '>= 2.3.0'
-    s.add_dependency 'actionpack', '>= 2.3.0'
+    s.add_dependency 'activesupport', '>= 2.3.0', '< 3.0.0'
+    s.add_dependency 'actionpack', '>= 2.3.0', '< 3.0.0'
     s.add_dependency 'i18n', '< 0.4'
     
     # Development dependencies. Not installed by default.
