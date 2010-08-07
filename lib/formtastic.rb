@@ -1484,7 +1484,7 @@ module Formtastic #:nodoc:
           options[:find_options] ||= {}
 
           if conditions = reflection.options[:conditions]
-            if defined?(ActiveRecord::Base.merge_conditions)
+            if reflection.klass.respond_to?(:merge_conditions)
               options[:find_options][:conditions] = reflection.klass.merge_conditions(conditions, options[:find_options][:conditions])
               reflection.klass.find(:all, options[:find_options])
             elsif reflection.klass.respond_to?(:where)
