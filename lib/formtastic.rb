@@ -1484,9 +1484,13 @@ module Formtastic #:nodoc:
           options[:find_options] ||= {}
 
           if conditions = reflection.options[:conditions]
-            options[:find_options][:conditions] = reflection.klass.merge_conditions(conditions, options[:find_options][:conditions])
+            if defined?(ActiveRecord::Base.merge_conditions)
+              options[:find_options][:conditions] = reflection.klass.merge_conditions(conditions, options[:find_options][:conditions])
+              reflection.klass.find(:all, options[:find_options])
+            elsif reflection.klass.respond_to?(:where)
+              reflection.klass.where(conditions).where(options[:find_options][:conditions])
+            end
           end
-          reflection.klass.find(:all, options[:find_options])
         else
           create_boolean_collection(options)
         end
