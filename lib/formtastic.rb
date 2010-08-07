@@ -1490,6 +1490,8 @@ module Formtastic #:nodoc:
             else
               reflection.klass.where(conditions).where(options[:find_options][:conditions])
             end
+          else
+            reflection.klass.all
           end
         else
           create_boolean_collection(options)
