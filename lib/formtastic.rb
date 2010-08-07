@@ -1487,7 +1487,7 @@ module Formtastic #:nodoc:
             if reflection.klass.respond_to?(:merge_conditions)
               options[:find_options][:conditions] = reflection.klass.merge_conditions(conditions, options[:find_options][:conditions])
               reflection.klass.find(:all, options[:find_options])
-            elsif reflection.klass.respond_to?(:where)
+            else
               reflection.klass.where(conditions).where(options[:find_options][:conditions])
             end
           end
