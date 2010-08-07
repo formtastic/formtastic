@@ -887,10 +887,7 @@ module Formtastic #:nodoc:
         end
         
         template.content_tag(:fieldset,
-          template.content_tag(:legend, 
-            template.label_tag(nil, localized_string(method, options[:label], :label) || humanized_attribute_name(method), :for => nil), :class => :label
-          ) << 
-          template.content_tag(:ol, Formtastic::Util.html_safe(list_item_content.join))
+          legend_tag(method, options) << template.content_tag(:ol, Formtastic::Util.html_safe(list_item_content.join))
         )
       end
       alias :boolean_radio_input :radio_input
@@ -1158,12 +1155,9 @@ module Formtastic #:nodoc:
           template.content_tag(:li, Formtastic::Util.html_safe(li_content), li_options)
         end
 
-        template.content_tag(:fieldset,
-          template.content_tag(:legend, 
-            template.label_tag(nil, localized_string(method, options[:label], :label) || humanized_attribute_name(method), :for => nil), :class => :label
-          ) << 
-          template.content_tag(:ol, Formtastic::Util.html_safe(list_item_content.join))
-        )
+        fieldset_content = legend_tag(method, options)
+        fieldset_content << template.content_tag(:ol, Formtastic::Util.html_safe(list_item_content.join))
+        template.content_tag(:fieldset, fieldset_content)
       end
 
       # Outputs a country select input, wrapping around a regular country_select helper. 
@@ -1342,6 +1336,13 @@ module Formtastic #:nodoc:
                 self.label(method, options_for_label(options).merge(:for => options.delete(:label_for))), :class => 'label'
               ) <<
             template.content_tag(:ol, Formtastic::Util.html_safe(contents))
+          )
+      end
+
+      # Generates the legend for radiobuttons and checkboxes
+      def legend_tag(method, options = {})
+        (options[:label] == false) ? "" : template.content_tag(:legend, 
+            template.label_tag(nil, localized_string(method, options[:label], :label) || humanized_attribute_name(method), :for => nil), :class => :label
           )
       end
 

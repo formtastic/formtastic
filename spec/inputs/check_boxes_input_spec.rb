@@ -277,6 +277,20 @@ describe 'check_boxes input' do
         output_buffer.should have_tag("legend.label label", /The authors/)
       end
     end
+
+    describe "when :label option is false" do
+      before do
+        @output_buffer = ''
+        @new_post.stub!(:author_ids).and_return(nil)
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:authors, :as => :check_boxes, :label => false, :morton => true))
+        end
+      end
+
+      it "should not output the legend" do
+        output_buffer.should_not have_tag("legend.label")
+      end
+    end
   end
 end
 
