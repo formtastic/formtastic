@@ -188,7 +188,7 @@ describe 'select input' do
 
     it "should call author.find with association conditions" do
       ::Author.should_receive(:merge_conditions).with({:active => true}, nil).and_return(:active => true)
-      ::Author.should_receive(:find).with(:all, :conditions => {:active => true})
+      ::Author.should_receive(:all).with(:conditions => {:active => true})
 
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:author, :as => :select))
@@ -197,7 +197,7 @@ describe 'select input' do
 
     it "should call author.find with association conditions and find_options conditions" do
       ::Author.should_receive(:merge_conditions).with({:active => true}, {:publisher => true}).and_return(:active => true, :publisher => true)
-      ::Author.should_receive(:find).with(:all, :conditions => {:active => true, :publisher => true})
+      ::Author.should_receive(:all).with(:conditions => {:active => true, :publisher => true})
 
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:author, :as => :select, :find_options => {:conditions => {:publisher => true}}))
@@ -259,7 +259,7 @@ describe 'select input' do
     end
     
     it 'should call find with :include for more optimized queries' do
-      Author.should_receive(:find).with(:all, :include => :continent)
+      Author.should_receive(:all).with(:include => :continent)
 
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:author, :as => :select, :group_by => :continent ) )
