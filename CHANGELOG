@@ -10,6 +10,15 @@
 * Added compatible install and form helpers (rails3)
 * Added support for ActiveModel Validations, thanks to Guillaume Belleguic (rails3)
 
+1.0.0.rc2
+
+* Fixed that :label=>false didn't disable the label on checkboxes/radiobuttons (#331)
+* Added full support of :input_html options for hidden fields
+
+1.0.0.rc
+
+* Fixed that :checked_value and :unchecked_value options were being passed down into the HTML tags as attributes 
+
 1.0.0.beta4
 
 * ensure i18n < 0.4 is listed as a dependency in the gemspec

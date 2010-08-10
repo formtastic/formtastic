@@ -1411,7 +1411,6 @@ module Formtastic #:nodoc:
           )
       end
 
-
       # For methods that have a database column, take a best guess as to what the input method
       # should be.  In most cases, it will just return the column type (eg :string), but for special
       # cases it will simplify (like the case of :integer, :float & :decimal to :numeric), or do
