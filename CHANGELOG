@@ -1,3 +1,7 @@
+1.0.0
+
+* nothing changed from rc2
+
 1.0.0.rc2
 
 * Fixed that :label=>false didn't disable the label on checkboxes/radiobuttons (#331)
