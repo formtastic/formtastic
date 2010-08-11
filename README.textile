@@ -79,7 +79,7 @@ RDoc documentation _should_ be automatically generated after each commit and mad
 
 h2. A Note About Rails 3 Support
 
-Formtastic 1.0 will only support the latest stable Rails 2.x. We're maintaining a rails3 branch which aims to provide both Rails 2.x and 3.x support, which is targeted for the 1.1 release soon after 1.0, around the same time Rails 3.0 ships.
+Formtastic 1.0 only supports the latest stable Rails 2.x. We're maintaining a rails3 branch which aims to provide both Rails 2.x and 3.x support, which is targeted for the 1.1 release around the same time Rails 3.0 final ships.
 
 If you have a Rails 3 project and would like to use Formtastic's rails3 branch, bundler provides you with the ability to do this easily. Just add Formtastic as a git dependency in your Gemfile with the :branch option:
 
@@ -96,12 +96,6 @@ Install the Formtastic gem:
 
 <pre>
   sudo gem install formtastic
-</pre>
-
-Or try the 1.0.0.beta2:
-
-<pre>
-  sudo gem install formtastic --pre
 </pre>
 
 And add it to your environment.rb configuration as a gem dependency:
@@ -540,7 +534,7 @@ Formtastic::SemanticFormBuilder.escape_html_entities_in_hints_and_labels = false
 
 h2. Focus
 
-Formtastic is close to shipping a 1.0 release candidate after more than a year of active development. 1.0 will be compatible with Rails 2, and this is our top priority right now. We've also been working hard on a Rails 2 *and* 3 compatible version in the rails3 branch, targeting a 1.1 release shortly after Rails 3.0 ships.
+Formtastic 1.0 is compatible with Rails 2.x *only*. We've also been working hard on a Rails 2 *and* 3 compatible version in the rails3 branch, targeting a 1.1 release shortly after Rails 3.0 final ships.
 
 There's heaps more we want to do, but we have to do this first.
 
@@ -558,7 +552,7 @@ h2. Compatibility
 
 * We're only testing Formtastic with the latest Rails 2.x stable release. Patches are welcome to allow backwards compatibility with older versions of Rails, of course.
 * Development of a Rails 2 *and* 3 compatible version of Formtastic is underway in the rails3 branch, targeting a Formtastic 1.1 release shortly after Rails 3.0 ships.
-* Formtastic, much like Rails 2, is very ActiveRecord-centric. Many people are using Formtastic (especially the rails3 branch) successfully with other ActiveModel-like ORMs and classes (DataMapper, MongoMapper, Mongoid, Authlogic, Devise...) but we're not guaranteeing anything at this stage. Patches are welcome, but it's not our core focus right now. Shipping a solid 1.0 and Rails 3 compatible 1.1 is. 
+* Formtastic, much like Rails 2, is very ActiveRecord-centric. Many people are using Formtastic (especially the rails3 branch) successfully with other ActiveModel-like ORMs and classes (DataMapper, MongoMapper, Mongoid, Authlogic, Devise...) but we're not guaranteeing anything at this stage. Patches are welcome, but it's not our core focus right now.
  
 
 h2. How to contribute
