@@ -1,3 +1,7 @@
+1.0.1
+
+* fixed "already initialised constant" warnings on boot
+
 1.0.0
 
 * nothing changed from rc2
