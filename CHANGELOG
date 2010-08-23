@@ -10,6 +10,10 @@
 * Added compatible install and form helpers (rails3)
 * Added support for ActiveModel Validations, thanks to Guillaume Belleguic (rails3)
 
+1.0.1
+
+* fixed "already initialised constant" warnings on boot
+
 1.0.0
 
 * nothing changed from rc2
