@@ -323,8 +323,12 @@ module Formtastic #:nodoc:
       options = args.extract_options!
       text = options.delete(:label) || args.shift
 
-      if @object && @object.respond_to?(:new_record?)
-        key = @object.new_record? ? :create : :update
+      if @object && (@object.respond_to?(:persisted?) || @object.respond_to?(:new_record?))
+        if @object.respond_to?(:persisted?) # ActiveModel
+          key = @object.persisted? ? :update : :create
+        else # Rails 2
+          key = @object.new_record? ? :create : :update
+        end
 
         # Deal with some complications with ActiveRecord::Base.human_name and two name models (eg UserPost)
         # ActiveRecord::Base.human_name falls back to ActiveRecord::Base.name.humanize ("Userpost")
