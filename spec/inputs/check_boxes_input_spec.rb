@@ -75,9 +75,19 @@ describe 'check_boxes input' do
         end
       end
 
-      it 'should have a hidden field with an empty value for the collection to allow clearing of all checkboxes' do
+      it 'should have a hidden field with an empty array value for the collection to allow clearing of all checkboxes' do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
-        output_buffer.should have_tag("form li fieldset ol li input[@type=hidden][@name='author[post_ids]'][@value='']", :count => 1)
+        output_buffer.should have_tag("form li fieldset > input[@type=hidden][@name='author[post_ids][]'][@value='']", :count => 1)
+      end
+
+      it 'the hidden field with an empty array value should be followed by the ol' do
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.should have_tag("form li fieldset > input[@type=hidden][@name='author[post_ids][]'][@value=''] + ol", :count => 1)
+      end
+
+      it 'should not have a hidden field with an empty string value for the collection' do
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.should_not have_tag("form li fieldset > input[@type=hidden][@name='author[post_ids]'][@value='']", :count => 1)
       end
 
       it 'should have a checkbox and a hidden field for each post with :hidden_field => true' do
@@ -346,6 +356,21 @@ describe 'check_boxes input' do
         output_buffer.should have_tag("legend.label label", /The authors/)
       end
     end
+
+    describe "when :label option is false" do
+      before do
+        @output_buffer = ''
+        @new_post.stub!(:author_ids).and_return(nil)
+        @form = semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:authors, :as => :check_boxes, :label => false))
+        end
+      end
+
+      it "should not output the legend" do
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.should_not have_tag("legend.label")
+      end
+    end
   end
 
   describe 'for a has_and_belongs_to_many association' do
@@ -372,6 +397,29 @@ describe 'check_boxes input' do
       output_buffer.should have_tag('input[checked="checked"]', :count => @freds_post.authors.size)
     end
     
+  end
+
+  describe 'for an association when a :collection is provided' do
+    describe 'it should use the specified :value_method option' do
+      before do
+        @output_buffer = ''
+        mock_everything
+      end
+
+      it 'to set the right input value' do
+        item = mock('item')
+        item.should_not_receive(:id)
+        item.stub!(:custom_value).and_return('custom_value')
+        item.should_receive(:custom_value).exactly(3).times
+        @new_post.author.should_receive(:custom_value)
+        @form = semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:author, :as => :check_boxes, :value_method => :custom_value, :collection => [item, item, item]))
+        end
+
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.should have_tag('input[@type=checkbox][@value="custom_value"]', :count => 3)
+      end
+    end
   end
 
 end

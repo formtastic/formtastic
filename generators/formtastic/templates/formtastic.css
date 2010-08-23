@@ -30,28 +30,16 @@ form.formtastic ul.errors li { padding:0; border:none; display:list-item; }
 
 /* FIELDSETS & LISTS
 --------------------------------------------------------------------------------------------------*/
-form.formtastic fieldset { }
+form.formtastic fieldset { overflow:auto; } /* clearing contained floats */
 form.formtastic fieldset.inputs { }
 form.formtastic fieldset.buttons { padding-left:25%; }
 form.formtastic fieldset ol { }
 form.formtastic fieldset.buttons li { float:left; padding-right:0.5em; }
 
-/* clearfixing the fieldsets */
-form.formtastic fieldset { display: inline-block; }
-form.formtastic fieldset:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
-html[xmlns] form.formtastic fieldset { display: block; }
-* html form.formtastic fieldset { height: 1%; }
-
-
 /* INPUT LIs
 --------------------------------------------------------------------------------------------------*/
 form.formtastic fieldset > ol > li { margin-bottom:1.5em; }
-
-/* clearfixing the li's */
-form.formtastic fieldset > ol > li { display: inline-block; }
-form.formtastic fieldset > ol > li:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
-html[xmlns] form.formtastic fieldset > ol > li { display: block; }
-* html form.formtastic fieldset > ol > li { height: 1%; }
+form.formtastic fieldset > ol > li { overflow:auto; } /* clearing contained floats */
 
 form.formtastic fieldset > ol > li.required { }
 form.formtastic fieldset > ol > li.optional { }
@@ -100,11 +88,8 @@ form.formtastic fieldset > ol > li.text textarea { width:74%; }
 
 
 /* HIDDEN OVERRIDES
-The dual declarations are required because of our clearfix display hack on the LIs, which is more
-specific than the more general rule below. TODO: Revist the clearing hack and this rule.
 --------------------------------------------------------------------------------------------------*/
-form.formtastic fieldset ol li.hidden,
-html[xmlns] form.formtastic fieldset ol li.hidden { display:none; }
+form.formtastic fieldset ol li.hidden { display:none; }
 
 /* BOOLEAN OVERRIDES
 --------------------------------------------------------------------------------------------------*/

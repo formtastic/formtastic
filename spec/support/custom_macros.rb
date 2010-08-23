@@ -244,7 +244,7 @@ module CustomMacros
     
     def it_should_call_find_on_association_class_when_no_collection_is_provided(as)
       it "should call find on the association class when no collection is provided" do
-        ::Author.should_receive(:find)
+        ::Author.should_receive(:all)
         form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(:author, :as => as))
         end
@@ -435,7 +435,7 @@ module CustomMacros
 
             describe "when the collection objects respond to #{label_method}" do
               before do
-                @fred.stub!(:respond_to?).and_return { |m| m.to_s == label_method }
+                @fred.stub!(:respond_to?).and_return { |m| m.to_s == label_method || m.to_s == 'id' }
                 ::Author.find(:all).each { |a| a.stub!(label_method).and_return('The Label Text') }
 
                 @form = semantic_form_for(@new_post) do |builder|
