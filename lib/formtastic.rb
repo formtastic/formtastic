@@ -738,9 +738,14 @@ module Formtastic #:nodoc:
 
         reflection = self.reflection_for(method)
         if reflection && [ :has_many, :has_and_belongs_to_many ].include?(reflection.macro)
-          options[:include_blank]   ||= false
           html_options[:multiple] = true if html_options[:multiple].nil?
           html_options[:size]     ||= 5
+          
+          if html_options[:multiple]
+            options[:include_blank]   = false
+          else
+            options[:include_blank]   ||= false
+          end
         end
         options = set_include_blank(options)
         options[:selected] = options[:selected].first if options[:selected].present? && html_options[:multiple] == false
