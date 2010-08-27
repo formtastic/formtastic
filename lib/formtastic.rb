@@ -570,9 +570,9 @@ module Formtastic #:nodoc:
       #   configuration option all_fields_required_by_default is used.
       #
       def method_required?(attribute) #:nodoc:
-        if @object && @object.class.respond_to?(:reflect_on_validations_for)
-          attribute_sym = attribute.to_s.sub(/_id$/, '').to_sym
+        attribute_sym = attribute.to_s.sub(/_id$/, '').to_sym
 
+        if @object && @object.class.respond_to?(:reflect_on_validations_for)
           @object.class.reflect_on_validations_for(attribute_sym).any? do |validation|
             validation.macro == :validates_presence_of &&
             validation.name == attribute_sym &&
@@ -580,7 +580,6 @@ module Formtastic #:nodoc:
           end
         else
           if @object && @object.class.respond_to?(:validators_on)
-            attribute_sym = attribute.to_s.sub(/_id$/, '').to_sym
             !@object.class.validators_on(attribute_sym).find{|validator| (validator.kind == :presence) && (validator.options.present? ? options_require_validation?(validator.options) : true)}.nil?
           else
             self.class.all_fields_required_by_default
@@ -1625,45 +1624,55 @@ module Formtastic #:nodoc:
         @object.column_for_attribute(method) if @object.respond_to?(:column_for_attribute)
       end
 
+      # Returns the active validations for the given method or an empty Array if no validations are
+      # found for the method.
+      #
+      # By default, the if/unless options of the validations are evaluated and only the validations
+      # that should be run for the current object state are returned. Pass :all to the last 
+      # parameter to return :all validations regardless of if/unless options.
+      #
+      # Requires the ValidationReflection plugin to be present or an ActiveModel. Returns an epmty
+      # Array if neither is the case.
+      #
+      def validations_for(method, mode = :active)
+        # ActiveModel?
+        validations = if @object && @object.class.respond_to?(:validators_on)
+          @object.class.validators_on(method)
+        else
+          # ValidationReflection plugin?
+          if @object && @object.class.respond_to?(:reflect_on_validations_for)
+            @object.class.reflect_on_validations_for(method)
+          else
+            []
+          end
+        end
+
+        validations = validations.select do |validation|
+          (validation.options.present? ? options_require_validation?(validation.options) : true)
+        end unless mode == :all
+
+        return validations
+      end
+
       # Generates default_string_options by retrieving column information from
       # the database.
       #
       def default_string_options(method, type) #:nodoc:
-        column = self.column_for(method)
-
         def get_maxlength_for(method)
-          # TODO: Extract this into a validations_for method in line with reflection_for, and update here and in method_required?
-          if @object && @object.class.respond_to?(:reflect_on_validations_for)
-            validation = @object.class.reflect_on_validations_for(method).find { |validation|
-              validation.macro == :validates_length_of &&
-              validation.name == method
-            }
-            if validation
-              validation_max_limit = validation.options[:maximum] || (validation.options[:within].present? ? validation.options[:within].max : nil)
-            else
-              validation_max_limit = nil
-            end
-          else
-            # ActiveModel?
-            if @object && @object.class.respond_to?(:validators_on)
-              validation = @object.class.validators_on(method).find{ |validator|
-                validator.kind == :length &&
-                (validator.options.present? ? options_require_validation?(validator.options) : true)
-              }
-
-              if validation
-                validation_max_limit = validation.options[:maximum] || (validation.options[:within].present? ? validation.options[:within].max : nil)
-              else
-                validation_max_limit = nil
-              end
-            else
-              validation_max_limit = nil
-            end
+          validation = validations_for(method).find do |validation|
+            (validation.respond_to?(:macro) && validation.macro == :validates_length_of) || # Rails 2 validation
+            (validation.respond_to?(:kind) && validation.kind == :length) # Rails 3 validator
           end
-          return validation_max_limit
+
+          if validation
+            validation.options[:maximum] || (validation.options[:within].present? ? validation.options[:within].max : nil)
+          else
+            nil
+          end
         end
 
         validation_max_limit = get_maxlength_for(method)
+        column = self.column_for(method)
 
         if type == :text
           { :cols => self.class.default_text_field_size, :rows => self.class.default_text_area_height }

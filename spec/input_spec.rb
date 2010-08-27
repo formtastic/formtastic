@@ -261,11 +261,11 @@ describe 'SemanticFormBuilder#input' do
             describe 'and validates_presence_of was called for the method' do
               it 'should be required' do
 
-                @new_post.class.should_receive(:validators_on).with(:title).and_return([
+                @new_post.class.should_receive(:validators_on).with(:title).any_number_of_times.and_return([
                   active_model_presence_validator([:title])
                 ])
 
-                @new_post.class.should_receive(:validators_on).with(:body).and_return([
+                @new_post.class.should_receive(:validators_on).with(:body).any_number_of_times.and_return([
                   active_model_presence_validator([:body], {:if => true})
                 ])
 
@@ -299,29 +299,29 @@ describe 'SemanticFormBuilder#input' do
               end
 
               it 'should be required if the optional :if with a method string evaluates to true' do
-                @new_post.should_receive(:required_condition).and_return(true)
+                @new_post.should_receive(:required_condition).at_least(2).and_return(true)
                 should_be_required(:required => true, :options => { :if => :required_condition })
               end
 
               it 'should be required if the optional :if with a method string evaluates to false' do
-                @new_post.should_receive(:required_condition).and_return(false)
+                @new_post.should_receive(:required_condition).at_least(2).and_return(false)
                 should_be_required(:required => false, :options => { :if => :required_condition })
               end
 
               it 'should not be required if the optional :unless with a method string evaluates to false' do
-                 @new_post.should_receive(:required_condition).and_return(false)
+                 @new_post.should_receive(:required_condition).at_least(2).and_return(false)
                 should_be_required(:required => true, :options => { :unless => :required_condition })
               end
 
                it 'should be required if the optional :unless with a method string evaluates to true' do
-                 @new_post.should_receive(:required_condition).and_return(true)
+                 @new_post.should_receive(:required_condition).at_least(2).and_return(true)
                  should_be_required(:required => false, :options => { :unless => :required_condition })
                end
             end
 
             # TODO make a matcher for this?
             def should_be_required(options)
-              @new_post.class.should_receive(:validators_on).with(:body).and_return([
+              @new_post.class.should_receive(:validators_on).with(:body).at_least(2).and_return([
                 active_model_presence_validator([:body], options[:options])
               ])
 
@@ -342,7 +342,7 @@ describe 'SemanticFormBuilder#input' do
 
             describe 'and validates_presence_of was not called for the method' do
               before do
-                @new_post.class.should_receive(:validators_on).with(:title).and_return([])
+                @new_post.class.should_receive(:validators_on).with(:title).at_least(2).and_return([])
               end
 
               it 'should not be required' do
