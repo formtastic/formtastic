@@ -32,14 +32,15 @@ describe 'string input' do
     it_should_apply_custom_for_to_label_when_input_html_id_provided(:string)
     it_should_apply_error_logic_for_input_type(:string)
 
-    describe 'and the validation reflection plugin is available' do
-      def input_field_for_method_should_have_maxlength(method, maxlength)
-        form = semantic_form_for(@new_post) do |builder|
-          concat(builder.input(method))
-        end
-        output_buffer.concat(form) if Formtastic::Util.rails3?
-        output_buffer.should have_tag("form li input[@maxlength='#{maxlength}']")
+    def input_field_for_method_should_have_maxlength(method, maxlength)
+      form = semantic_form_for(@new_post) do |builder|
+        concat(builder.input(method))
       end
+      output_buffer.concat(form) if Formtastic::Util.rails3?
+      output_buffer.should have_tag("form li input[@maxlength='#{maxlength}']")
+    end
+
+    describe 'and the validation reflection plugin is available' do
 
       describe 'and validates_length_of was called for the method' do
         it 'should have a maxlength matching validation range top' do
@@ -62,6 +63,111 @@ describe 'string input' do
         it "should use default maxlength" do
           @new_post.class.should_receive(:reflect_on_validations_for).with(:title).at_least(2).and_return([])
           input_field_for_method_should_have_maxlength :title, 50
+        end
+      end
+    end
+
+    describe 'and its a ActiveModel' do
+      let(:default_maxlength) { 50 }
+
+      before do
+        @new_post.stub!(:class).and_return(::PostModel)
+      end
+
+      after do
+        @new_post.stub!(:class).and_return(::Post)
+      end
+
+      describe 'and validates_length_of was called for the method' do
+        it 'should have a maxlength' do
+          @new_post.class.should_receive(:validators_on).with(:title).at_least(2).and_return([
+            active_model_length_validator([:title], {:within => 5..42})
+          ])
+
+          @new_post.class.should_receive(:validators_on).with(:body).at_least(2).and_return([
+            active_model_length_validator([:body], {:if => true, :maximum => 42})
+          ])
+
+          input_field_for_method_should_have_maxlength(:title, 42)
+          input_field_for_method_should_have_maxlength(:body, 42)
+        end
+
+        it 'should have default maxlength if the optional :if condition is not satisifed' do
+          @new_post.class.should_receive(:validators_on).with(:title).at_least(2).and_return([
+            active_model_length_validator([:title], {:maximum => 42, :if => false})
+          ])
+
+          input_field_for_method_should_have_maxlength(:title, default_maxlength)
+        end
+
+        # TODO make a matcher for this?
+        def should_be_required(options)
+          @new_post.class.should_receive(:validators_on).with(:body).and_return([
+            active_model_presence_validator([:body], options[:options])
+          ])
+
+          form = semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:body))
+          end
+
+          output_buffer.concat(form) if Formtastic::Util.rails3?
+
+          if options[:required]
+            output_buffer.should_not have_tag('form li.optional')
+            output_buffer.should have_tag('form li.required')
+          else
+            output_buffer.should have_tag('form li.optional')
+            output_buffer.should_not have_tag('form li.required')
+          end
+        end
+
+        def should_have_maxlength(maxlength, options)
+          @new_post.class.should_receive(:validators_on).with(:title).at_least(2).and_return([
+            active_model_length_validator([:title], options[:options])
+          ])
+
+          form = semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:title))
+          end
+
+          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.should have_tag("form li input[@maxlength='#{maxlength}']")
+        end
+
+        it 'should have default_maxlength if the optional :if proc evaluates to false' do
+          should_have_maxlength(default_maxlength, :options => {:maximum => 42, :if => proc { |record| false }})
+        end
+
+        it 'should have maxlength if the optional :if proc evaluates to true' do
+          should_have_maxlength(42, :options => { :maximum => 42, :if => proc { |record| true } })
+        end
+
+        it 'should have default maxlength if the optional :if with a method name evaluates to false' do
+          @new_post.should_receive(:specify_maxlength).and_return(false)
+          should_have_maxlength(default_maxlength, :options => { :maximum => 42, :if => :specify_maxlength })
+        end
+
+        it 'should have maxlength if the optional :if with a method name evaluates to true' do
+          @new_post.should_receive(:specify_maxlength).and_return(true)
+          should_have_maxlength(42, :options => { :maximum => 42, :if => :specify_maxlength })
+        end
+
+        it 'should have default maxlength if the optional :unless proc evaluates to true' do
+          should_have_maxlength(default_maxlength, :options => { :maximum => 42, :unless => proc { |record| true } })
+        end
+
+        it 'should have maxlength if the optional :unless proc evaluates to false' do
+          should_have_maxlength(42, :options => { :maximum => 42, :unless => proc { |record| false } })
+        end
+
+        it 'should have default maxlength if the optional :unless with a method name evaluates to true' do
+          @new_post.should_receive(:specify_maxlength).and_return(true)
+          should_have_maxlength(default_maxlength, :options => { :maximum => 42, :unless => :specify_maxlength })
+        end
+
+        it 'should have maxlength if the optional :unless with a method name evaluates to false' do
+          @new_post.should_receive(:specify_maxlength).and_return(false)
+          should_have_maxlength(42, :options => { :maximum => 42, :unless => :specify_maxlength })
         end
       end
     end

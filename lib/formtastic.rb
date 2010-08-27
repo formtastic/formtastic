@@ -1634,13 +1634,28 @@ module Formtastic #:nodoc:
         def get_maxlength_for(method)
           # TODO: Extract this into a validations_for method in line with reflection_for, and update here and in method_required?
           if @object && @object.class.respond_to?(:reflect_on_validations_for)
-
             validation = @object.class.reflect_on_validations_for(method).find { |validation|
               validation.macro == :validates_length_of &&
               validation.name == method
             }
             if validation
               validation_max_limit = validation.options[:maximum] || (validation.options[:within].present? ? validation.options[:within].max : nil)
+            else
+              validation_max_limit = nil
+            end
+          else
+            # ActiveModel?
+            if @object && @object.class.respond_to?(:validators_on)
+              validation = @object.class.validators_on(method).find{ |validator|
+                validator.kind == :length &&
+                (validator.options.present? ? options_require_validation?(validator.options) : true)
+              }
+
+              if validation
+                validation_max_limit = validation.options[:maximum] || (validation.options[:within].present? ? validation.options[:within].max : nil)
+              else
+                validation_max_limit = nil
+              end
             else
               validation_max_limit = nil
             end

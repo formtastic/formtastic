@@ -53,12 +53,20 @@ module FormtasticSpecHelper
     return @default_type
   end
   
-  def active_model_presence_validator(attributes, options = {})
-    presence_validator = mock('ActiveModel::Validations::PresenceValidator', :attributes => attributes, :options => options)
-    presence_validator.stub!(:kind).and_return(:presence)
-    presence_validator
+  def active_model_validator(kind, attributes, options = {})
+    validator = mock("ActiveModel::Validations::#{kind.to_s.titlecase}Validator", :attributes => attributes, :options => options)
+    validator.stub!(:kind).and_return(kind)
+    validator
   end
-  
+
+  def active_model_presence_validator(attributes, options = {})
+    active_model_validator(:presence, attributes, options)
+  end
+
+  def active_model_length_validator(attributes, options = {})
+    active_model_validator(:length, attributes, options)
+  end
+
   class ::Post
     extend ActiveModel::Naming if defined?(ActiveModel::Naming)
     include ActiveModel::Conversion if defined?(ActiveModel::Conversion)
