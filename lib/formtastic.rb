@@ -733,16 +733,16 @@ module Formtastic #:nodoc:
       #
       def select_input(method, options)
         html_options = options.delete(:input_html) || {}
-        options = set_include_blank(options)
         html_options[:multiple] = html_options[:multiple] || options.delete(:multiple)
         html_options.delete(:multiple) if html_options[:multiple].nil?
 
         reflection = self.reflection_for(method)
         if reflection && [ :has_many, :has_and_belongs_to_many ].include?(reflection.macro)
-          options[:include_blank]   = false
+          options[:include_blank]   ||= false
           html_options[:multiple] = true if html_options[:multiple].nil?
           html_options[:size]     ||= 5
         end
+        options = set_include_blank(options)
         options[:selected] = options[:selected].first if options[:selected].present? && html_options[:multiple] == false
         input_name = generate_association_input_name(method)
 
