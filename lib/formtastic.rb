@@ -1631,12 +1631,32 @@ module Formtastic #:nodoc:
       def default_string_options(method, type) #:nodoc:
         column = self.column_for(method)
 
+        def get_maxlength_for(method)
+          # TODO: Extract this into a validations_for method in line with reflection_for, and update here and in method_required?
+          if @object && @object.class.respond_to?(:reflect_on_validations_for)
+
+            validation = @object.class.reflect_on_validations_for(method).find { |validation|
+              validation.macro == :validates_length_of &&
+              validation.name == method
+            }
+            if validation
+              validation_max_limit = validation.options[:maximum] || (validation.options[:within].present? ? validation.options[:within].max : nil)
+            else
+              validation_max_limit = nil
+            end
+          end
+          return validation_max_limit
+        end
+
+        validation_max_limit = get_maxlength_for(method)
+
         if type == :text
           { :cols => self.class.default_text_field_size, :rows => self.class.default_text_area_height }
         elsif type == :numeric || column.nil? || column.limit.nil?
-          { :size => self.class.default_text_field_size }
+          { :maxlength => validation_max_limit,
+            :size => self.class.default_text_field_size }
         else
-          { :maxlength => column.limit,
+          { :maxlength => validation_max_limit || column.limit,
             :size => self.class.default_text_field_size && [column.limit, self.class.default_text_field_size].min }
         end
       end

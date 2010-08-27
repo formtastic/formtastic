@@ -31,6 +31,40 @@ describe 'string input' do
     it_should_apply_custom_input_attributes_when_input_html_provided(:string)
     it_should_apply_custom_for_to_label_when_input_html_id_provided(:string)
     it_should_apply_error_logic_for_input_type(:string)
+
+    describe 'and the validation reflection plugin is available' do
+      def input_field_for_method_should_have_maxlength(method, maxlength)
+        form = semantic_form_for(@new_post) do |builder|
+          concat(builder.input(method))
+        end
+        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.should have_tag("form li input[@maxlength='#{maxlength}']")
+      end
+
+      describe 'and validates_length_of was called for the method' do
+        it 'should have a maxlength matching validation range top' do
+          @new_post.class.should_receive(:reflect_on_validations_for).with(:title).at_least(2).and_return([
+            mock('MacroReflection', :macro => :validates_length_of, :name => :title, :options => {:within => 5..42})
+          ])
+
+          input_field_for_method_should_have_maxlength :title, 42
+        end
+
+        it 'should have a maxlength matching validation maximum' do
+          @new_post.class.should_receive(:reflect_on_validations_for).with(:title).at_least(2).and_return([
+            mock('MacroReflection', :macro => :validates_length_of, :name => :title, :options => {:maximum => 42})
+          ])
+          input_field_for_method_should_have_maxlength :title, 42
+        end
+      end
+
+      describe 'and validates_length_of was not called for the method' do
+        it "should use default maxlength" do
+          @new_post.class.should_receive(:reflect_on_validations_for).with(:title).at_least(2).and_return([])
+          input_field_for_method_should_have_maxlength :title, 50
+        end
+      end
+    end
   end
   
   describe "when no object is provided" do
