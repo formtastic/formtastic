@@ -81,13 +81,25 @@ h2. A Note About Rails 3 Support
 
 Formtastic 1.0 only supports the latest stable Rails 2.x. We're maintaining a rails3 branch which aims to provide both Rails 2.x and 3.x support, which is targeted for the 1.1 release around the same time Rails 3.0 final ships.
 
-If you have a Rails 3 project and would like to use Formtastic's rails3 branch, bundler provides you with the ability to do this easily. Just add Formtastic as a git dependency in your Gemfile with the :branch option:
+A 1.1.0.beta gem is now available on RubyGems.org, so install that with the --pre option:
 
 <pre>
-  gem 'formtastic', :git => "http://github.com/justinfrench/formtastic.git", :branch => "rails3"
+  gem install formtastic --pre
 </pre>
 
-Please be aware that Rails 3 is still under heavy development (even in the later betas), as is Formtastic, so our rails3 branch is very much "on the edge", just like Rails. if you find issues, compatibility issues with Rails 2 or 3, please report an issue on Github.
+Or bundle it in your Gemfile:
+
+<pre>
+  gem 'formtastic', '1.1.0.beta'
+</pre>
+
+You can also live on the edge and track our rails3 branch in your Gemfile with the :git and :branch options:
+
+<pre>
+  gem 'formtastic', :git => "git://github.com/justinfrench/formtastic.git", :branch => "rails3"
+</pre>
+
+Please be aware that Rails 3 is still under heavy development (even in the RCs), as is Formtastic, so our beta gems and the rails3 branch is very much "on the edge", just like Rails. If you find compatibility issues with Rails 2 or 3, please report them on Github.
 
 
 h2. Installation under Rails 2.x
