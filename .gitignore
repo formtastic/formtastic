@@ -4,3 +4,4 @@ pkg
 *~
 *watchr.rb
 log/*
+.rvmrc
