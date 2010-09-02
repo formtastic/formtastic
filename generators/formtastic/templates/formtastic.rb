@@ -5,6 +5,7 @@
 # Formtastic::SemanticFormBuilder.default_text_area_height = 5
 
 # Should all fields be considered "required" by default?
+# Rails 2 only, ignored by Rails 3 because it will never fall back to this default.
 # Defaults to true.
 # Formtastic::SemanticFormBuilder.all_fields_required_by_default = true
 
