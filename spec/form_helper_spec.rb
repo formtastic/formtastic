@@ -37,6 +37,18 @@ describe 'SemanticFormHelper' do
       output_buffer.should have_tag("form.project")
     end
 
+    it 'adds class matching the :as option when provided' do
+      form = semantic_form_for(@new_post, :as => :message, :url => '/hello') do |builder|
+      end
+      output_buffer.concat(form) if Formtastic::Util.rails3?
+      output_buffer.should have_tag("form.message")
+
+      form = semantic_form_for([:admins, @new_post], :as => :message, :url => '/hello') do |builder|
+      end
+      output_buffer.concat(form) if Formtastic::Util.rails3?
+      output_buffer.should have_tag("form.message")
+    end
+
     it 'adds class matching the object\'s class to the generated form when an object is provided' do
       form = semantic_form_for(@new_post) do |builder|
       end
