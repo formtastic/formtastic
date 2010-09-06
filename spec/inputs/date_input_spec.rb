@@ -15,7 +15,7 @@ describe 'date input' do
     before do
       output_buffer.replace ''
       semantic_form_for(@new_post) do |builder|
-        concat(builder.input(:publish_at, :as => :date))
+        concat(builder.input(:publish_at, :as => :date, :order => [:year, :month, :day]))
       end
     end
 
