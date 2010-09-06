@@ -371,6 +371,21 @@ describe 'check_boxes input' do
         output_buffer.should_not have_tag("legend.label")
       end
     end
+
+    describe "when :required option is true" do
+      before do
+        @new_post.stub!(:author_ids).and_return(nil)
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:authors, :as => :check_boxes, :required => true))
+        end
+      end
+  
+      it "should output the correct label title" do
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.should have_tag("legend.label label abbr")
+      end
+    end
+
   end
 
   describe 'for a has_and_belongs_to_many association' do

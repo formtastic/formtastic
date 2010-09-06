@@ -28,7 +28,7 @@ describe 'radio input' do
       output_buffer.should have_tag('form li fieldset legend.label label')
       output_buffer.should have_tag('form li fieldset legend.label label', /Author/)
     end
-    
+
     it 'should not link the label within the legend to any input' do
       output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should_not have_tag('form li fieldset legend label[@for]')
@@ -240,4 +240,19 @@ describe 'radio input' do
       output_buffer.should_not have_tag("legend.label")
     end
   end
+
+  describe "when :required option is true" do
+    before do
+      @new_post.stub!(:author_ids).and_return(nil)
+      @form = semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:authors, :as => :radio, :required => true))
+      end
+    end
+
+    it "should output the correct label title" do
+      output_buffer.concat(@form) if Formtastic::Util.rails3?
+      output_buffer.should have_tag("legend.label label abbr")
+    end
+  end
+
 end

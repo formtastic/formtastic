@@ -1406,9 +1406,14 @@ module Formtastic #:nodoc:
 
       # Generates the legend for radiobuttons and checkboxes
       def legend_tag(method, options = {})
-        (options[:label] == false) ? Formtastic::Util.html_safe("") : template.content_tag(:legend, 
-            template.label_tag(nil, localized_string(method, options[:label], :label) || humanized_attribute_name(method), :for => nil), :class => :label
-          )
+        if options[:label] == false
+          Formtastic::Util.html_safe("")
+        else
+          text = localized_string(method, options[:label], :label) || humanized_attribute_name(method)
+          text += required_or_optional_string(options.delete(:required))
+          text = Formtastic::Util.html_safe(text)
+          template.content_tag :legend, template.label_tag(nil, text, :for => nil), :class => :label
+        end
       end
 
       # For methods that have a database column, take a best guess as to what the input method
