@@ -357,7 +357,7 @@ Formtastic supports localized *labels*, *hints*, *legends*, *actions* using the 
           title: "Choose a good title for you post."
           body: "Write something inspiring here."
       actions:
-        create: "Create my {{model}}"
+        create: "Create my %{model}"
         update: "Save changes"
         dummie: "Launch!"
 </pre>
@@ -374,7 +374,7 @@ Formtastic supports localized *labels*, *hints*, *legends*, *actions* using the 
       <%= form.input :section %>    # => :label => I18n.t('activerecord.attributes.user.section')  or 'Section'
     <% end %>
     <% form.buttons do %>
-      <%= form.commit_button %>     # => "Create my {{model}}"
+      <%= form.commit_button %>     # => "Create my %{model}"
     <% end %>
   <% end %>
 </pre>
