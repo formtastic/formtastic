@@ -1,5 +1,5 @@
 # coding: utf-8
-require File.dirname(__FILE__) + '/../spec_helper'
+require 'spec_helper'
 
 describe 'string input' do
   
@@ -12,7 +12,7 @@ describe 'string input' do
   
   describe "when object is provided" do
     before do
-      semantic_form_for(@new_post) do |builder|
+      @form = semantic_form_for(@new_post) do |builder|
         concat(builder.input(:title, :as => :string))
       end
     end
@@ -35,7 +35,7 @@ describe 'string input' do
   
   describe "when no object is provided" do
     before do
-      semantic_form_for(:project, :url => 'http://test.host/') do |builder|
+      @form = semantic_form_for(:project, :url => 'http://test.host/') do |builder|
         concat(builder.input(:title, :as => :string))
       end
     end
@@ -49,12 +49,13 @@ describe 'string input' do
   
   describe "when size is nil" do
     before do
-      semantic_form_for(:project, :url => 'http://test.host/') do |builder|
+      @form = semantic_form_for(:project, :url => 'http://test.host/') do |builder|
         concat(builder.input(:title, :as => :string, :input_html => {:size => nil}))
       end
     end
   
     it "should have no size attribute" do
+      output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should_not have_tag("input[@size]")
     end
   end

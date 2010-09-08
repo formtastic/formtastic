@@ -1,5 +1,5 @@
 # coding: utf-8
-require File.join(File.dirname(__FILE__), *%w[spec_helper])
+require 'spec_helper'
 
 describe 'Formtastic::I18n' do
   
@@ -26,11 +26,11 @@ describe 'Formtastic::I18n' do
       @formtastic_strings = {
           :yes            => 'Default Yes',
           :no             => 'Default No',
-          :create         => 'Default Create {{model}}',
-          :update         => 'Default Update {{model}}',
+          :create         => 'Default Create %{model}',
+          :update         => 'Default Update %{model}',
           :custom_scope   => {
               :duck           => 'Duck',
-              :duck_pond      => '{{ducks}} ducks in a pond'
+              :duck_pond      => '%{ducks} ducks in a pond'
             }
         }
       ::I18n.backend.store_translations :en, :formtastic => @formtastic_strings
@@ -71,7 +71,7 @@ describe 'Formtastic::I18n' do
 
     it "should use default strings" do
       (::Formtastic::I18n::DEFAULT_VALUES.keys).each do |key|
-        ::Formtastic::I18n.t(key, :model => '{{model}}').should == ::Formtastic::I18n::DEFAULT_VALUES[key]
+        ::Formtastic::I18n.t(key, :model => '%{model}').should == ::Formtastic::I18n::DEFAULT_VALUES[key]
       end
     end
     
@@ -109,34 +109,38 @@ describe 'Formtastic::I18n' do
     end
     
     it "should be able to translate with namespaced object" do
-      semantic_form_for(@new_post) do |builder|
+      form = semantic_form_for(@new_post) do |builder|
         concat(builder.input(:title))
       end
+      output_buffer.concat(form) if Formtastic::Util.rails3?
       output_buffer.should have_tag("form label", /Hello post!/)
     end
     
     it "should be able to translate without form-object" do
-      semantic_form_for(:project, :url => 'http://test.host') do |builder|
+      form = semantic_form_for(:project, :url => 'http://test.host') do |builder|
         concat(builder.input(:title))
       end
+      output_buffer.concat(form) if Formtastic::Util.rails3?
       output_buffer.should have_tag("form label", /Hello project!/)
     end
     
     it 'should be able to translate nested objects with nested translations' do
-      semantic_form_for(:project, :url => 'http://test.host') do |builder|
+      form = semantic_form_for(:project, :url => 'http://test.host') do |builder|
         builder.semantic_fields_for(:task) do |f|
           concat(f.input(:name))
         end
       end
+      output_buffer.concat(form) if Formtastic::Util.rails3?
       output_buffer.should have_tag("form label", /Hello task name!/)
     end
 
     it 'should be able to translated nested objects with top level translations' do
-      semantic_form_for(:order, :url => 'http://test.host') do |builder|
+      form = semantic_form_for(:order, :url => 'http://test.host') do |builder|
         builder.semantic_fields_for(:line_item) do |f|
           concat(f.input(:name))
         end
       end
+      output_buffer.concat(form) if Formtastic::Util.rails3?
       output_buffer.should have_tag("form label", /Hello line item name!/)
     end
 

@@ -1,30 +1,32 @@
 # coding: utf-8
 require File.join(File.dirname(__FILE__), *%w[formtastic i18n])
 require File.join(File.dirname(__FILE__), *%w[formtastic util])
+require File.join(File.dirname(__FILE__), *%w[formtastic railtie]) if defined?(::Rails::Railtie)
 
 module Formtastic #:nodoc:
 
   class SemanticFormBuilder < ActionView::Helpers::FormBuilder
+    class_inheritable_accessor :default_text_field_size, :default_text_area_height, :all_fields_required_by_default, :include_blank_for_select_by_default,
+                   :required_string, :optional_string, :inline_errors, :label_str_method, :collection_value_methods, :collection_label_methods,
+                   :inline_order, :file_methods, :priority_countries, :i18n_lookups_by_default, :escape_html_entities_in_hints_and_labels, :default_commit_button_accesskey,
+                   :instance_reader => false
 
-    @@default_text_field_size = 50
-    @@default_text_area_height = 20
-    @@all_fields_required_by_default = true
-    @@include_blank_for_select_by_default = true
-    @@required_string = proc { ::Formtastic::Util.html_safe(%{<abbr title="#{::Formtastic::I18n.t(:required)}">*</abbr>}) }
-    @@optional_string = ''
-    @@inline_errors = :sentence
-    @@label_str_method = :humanize
-    @@collection_label_methods = %w[to_label display_name full_name name title username login value to_s]
-    @@inline_order = [ :input, :hints, :errors ]
-    @@file_methods = [ :file?, :public_filename, :filename ]
-    @@priority_countries = ["Australia", "Canada", "United Kingdom", "United States"]
-    @@i18n_lookups_by_default = false
-    @@escape_html_entities_in_hints_and_labels = true
-    @@default_commit_button_accesskey = nil 
-
-    cattr_accessor :default_text_field_size, :default_text_area_height, :all_fields_required_by_default, :include_blank_for_select_by_default,
-                   :required_string, :optional_string, :inline_errors, :label_str_method, :collection_label_methods,
-                   :inline_order, :file_methods, :priority_countries, :i18n_lookups_by_default, :escape_html_entities_in_hints_and_labels, :default_commit_button_accesskey 
+    self.default_text_field_size = 50
+    self.default_text_area_height = 20
+    self.all_fields_required_by_default = true
+    self.include_blank_for_select_by_default = true
+    self.required_string = proc { ::Formtastic::Util.html_safe(%{<abbr title="#{::Formtastic::I18n.t(:required)}">*</abbr>}) }
+    self.optional_string = ''
+    self.inline_errors = :sentence
+    self.label_str_method = :humanize
+    self.collection_label_methods = %w[to_label display_name full_name name title username login value to_s]
+    self.collection_value_methods = %w[id to_s]
+    self.inline_order = [ :input, :hints, :errors ]
+    self.file_methods = [ :file?, :public_filename, :filename ]
+    self.priority_countries = ["Australia", "Canada", "United Kingdom", "United States"]
+    self.i18n_lookups_by_default = false
+    self.escape_html_entities_in_hints_and_labels = true
+    self.default_commit_button_accesskey = nil
 
     RESERVED_COLUMNS = [:created_at, :updated_at, :created_on, :updated_on, :lock_version, :version]
 
@@ -100,7 +102,7 @@ module Formtastic #:nodoc:
         options[:label_html][:for] ||= options[:input_html][:id]
       end
 
-      input_parts = @@inline_order.dup
+      input_parts = self.class.inline_order.dup
       input_parts = input_parts - [:errors, :hints] if options[:as] == :hidden
 
       list_item_content = input_parts.map do |type|
@@ -327,13 +329,17 @@ module Formtastic #:nodoc:
         # ActiveRecord::Base.human_name falls back to ActiveRecord::Base.name.humanize ("Userpost") 
         # if there's no i18n, which is pretty crappy.  In this circumstance we want to detect this
         # fall back (human_name == name.humanize) and do our own thing name.underscore.humanize ("User Post")
-        object_human_name = @object.class.human_name                # default is UserPost => "Userpost", but i18n may do better ("User post")
-        crappy_human_name = @object.class.name.humanize             # UserPost => "Userpost"
-        decent_human_name = @object.class.name.underscore.humanize  # UserPost => "User post"
-        object_name = (object_human_name == crappy_human_name) ? decent_human_name : object_human_name
+        if @object.class.model_name.respond_to?(:human)
+          object_name = @object.class.model_name.human
+        else
+          object_human_name = @object.class.human_name                # default is UserPost => "Userpost", but i18n may do better ("User post")
+          crappy_human_name = @object.class.name.humanize             # UserPost => "Userpost"
+          decent_human_name = @object.class.name.underscore.humanize  # UserPost => "User post"
+          object_name = (object_human_name == crappy_human_name) ? decent_human_name : object_human_name
+        end
       else
         key = :submit
-        object_name = @object_name.to_s.send(@@label_str_method)
+        object_name = @object_name.to_s.send(self.class.label_str_method)
       end
 
       text = (self.localized_string(key, text, :action, :model => object_name) ||
@@ -342,8 +348,8 @@ module Formtastic #:nodoc:
       button_html = options.delete(:button_html) || {}
       button_html.merge!(:class => [button_html[:class], key].compact.join(' '))
       element_class = ['commit', options.delete(:class)].compact.join(' ') # TODO: Add class reflecting on form action.
-      accesskey = (options.delete(:accesskey) || @@default_commit_button_accesskey) unless button_html.has_key?(:accesskey)
-      button_html = button_html.merge(:accesskey => accesskey) if accesskey  
+      accesskey = (options.delete(:accesskey) || self.class.default_commit_button_accesskey) unless button_html.has_key?(:accesskey)
+      button_html = button_html.merge(:accesskey => accesskey) if accesskey
       template.content_tag(:li, Formtastic::Util.html_safe(self.submit(text, button_html)), :class => element_class)
     end
 
@@ -368,7 +374,7 @@ module Formtastic #:nodoc:
     #
     def semantic_fields_for(record_or_name_or_array, *args, &block)
       opts = args.extract_options!
-      opts[:builder] ||= Formtastic::SemanticFormHelper.builder
+      opts[:builder] ||= self.class
       args.push(opts)
       fields_for(record_or_name_or_array, *args, &block)
     end
@@ -431,7 +437,7 @@ module Formtastic #:nodoc:
         errors = [@object.errors[method.to_sym]]
         errors << [@object.errors[association_primary_key(method)]] if association_macro_for_method(method) == :belongs_to
         errors = errors.flatten.compact.uniq
-        send(:"error_#{@@inline_errors}", [*errors]) if errors.any?
+        send(:"error_#{self.class.inline_errors}", [*errors]) if errors.any?
       else
         nil
       end
@@ -454,7 +460,7 @@ module Formtastic #:nodoc:
         errors = Array(@object.errors[method.to_sym]).to_sentence
         errors.present? ? array << [attribute, errors].join(" ") : array ||= []
       end
-      full_errors << @object.errors.on_base
+      full_errors << @object.errors[:base]
       full_errors.flatten!
       full_errors.compact!
       return nil if full_errors.blank?
@@ -467,7 +473,7 @@ module Formtastic #:nodoc:
     protected
 
       def render_inline_errors?
-        @object && @object.respond_to?(:errors) && INLINE_ERROR_TYPES.include?(@@inline_errors)
+        @object && @object.respond_to?(:errors) && INLINE_ERROR_TYPES.include?(self.class.inline_errors)
       end
 
       # Collects content columns (non-relation columns) for the current form object class.
@@ -524,9 +530,17 @@ module Formtastic #:nodoc:
           raise ArgumentError, 'You gave :for option with a block to inputs method, ' <<
                                'but the block does not accept any argument.' if block.arity <= 0
 
-          lambda { |f| f.inputs(*args){ block.call(f) } }
+          lambda do |f|
+            contents = f.inputs(*args){ block.call(f) }
+            template.concat(contents) if ::Formtastic::Util.rails3?
+            contents
+          end
         else
-          lambda { |f| f.inputs(*args) }
+          lambda do |f|
+            contents = f.inputs(*args)
+            template.concat(contents) if ::Formtastic::Util.rails3?
+            contents
+          end
         end
 
         fields_for_args = [options.delete(:for), options.delete(:for_options) || {}].flatten
@@ -546,12 +560,13 @@ module Formtastic #:nodoc:
       #   returned immediately, allowing the view to override any guesswork that follows:
       #
       # * if the :required option isn't provided in the options hash, and the ValidationReflection
-      #   plugin is installed (http://github.com/redinger/validation_reflection), true is returned
+      #   plugin is installed (http://github.com/redinger/validation_reflection), or the object is
+      #   an ActiveModel, true is returned
       #   if the validates_presence_of macro has been used in the class for this attribute, or false
       #   otherwise.
       #
-      # * if the :required option isn't provided, and the plugin isn't available, the value of the
-      #   configuration option @@all_fields_required_by_default is used.
+      # * if the :required option isn't provided, and validates_presence_of can't be determined, the
+      #   configuration option all_fields_required_by_default is used.
       #
       def method_required?(attribute) #:nodoc:
         if @object && @object.class.respond_to?(:reflect_on_validations_for)
@@ -563,7 +578,12 @@ module Formtastic #:nodoc:
             (validation.options.present? ? options_require_validation?(validation.options) : true)
           end
         else
-          @@all_fields_required_by_default
+          if @object && @object.class.respond_to?(:validators_on)
+            attribute_sym = attribute.to_s.sub(/_id$/, '').to_sym
+            !@object.class.validators_on(attribute_sym).find{|validator| (validator.kind == :presence) && (validator.options.present? ? options_require_validation?(validator.options) : true)}.nil?
+          else
+            self.class.all_fields_required_by_default
+          end
         end
       end
 
@@ -1115,6 +1135,15 @@ module Formtastic #:nodoc:
       #   f.input :authors, :as => :check_boxes, :selected => Author.most_popular.collect(&:id)
       #   f.input :authors, :as => :check_boxes, :selected => nil   # override any defaults: select none
       #
+      #
+      # Formtastic works around a bug in rails handling of check box collections by
+      # not generating the hidden fields for state checking of the checkboxes 
+      # The :hidden_fields option provides a way to re-enable these hidden inputs by
+      # setting it to true.
+      #
+      #   f.input :authors, :as => :check_boxes, :hidden_fields => false
+      #   f.input :authors, :as => :check_boxes, :hidden_fields => true
+      #
       # Finally, you can set :value_as_class => true if you want the li wrapper around each checkbox / label 
       # combination to contain a class with the value of the radio button (useful for applying specific 
       # CSS or Javascript to a particular checkbox).
@@ -1124,17 +1153,17 @@ module Formtastic #:nodoc:
         html_options = options.delete(:input_html) || {}
 
         input_name      = generate_association_input_name(method)
+        hidden_fields   = options.delete(:hidden_fields)
         value_as_class  = options.delete(:value_as_class)
         unchecked_value = options.delete(:unchecked_value) || ''
         html_options    = { :name => "#{@object_name}[#{input_name}][]" }.merge(html_options)
         input_ids       = []
 
-        selected_option_is_present = [:selected, :checked].any? { |k| options.key?(k) }
-        selected_values = (options.key?(:checked) ? options[:checked] : options[:selected]) if selected_option_is_present
-        selected_values  = [*selected_values].compact
-
+        selected_values = find_selected_values_for_column(method, options)
         disabled_option_is_present = options.key?(:disabled)
         disabled_values = [*options[:disabled]] if disabled_option_is_present
+
+        li_options = value_as_class ? { :class => [method.to_s.singularize, 'default'].join('_') } : {}
 
         list_item_content = collection.map do |c|
           label = c.is_a?(Array) ? c.first : c
@@ -1142,12 +1171,12 @@ module Formtastic #:nodoc:
           input_id = generate_html_id(input_name, value.to_s.gsub(/\s/, '_').gsub(/\W/, '').downcase)
           input_ids << input_id
 
-          html_options[:checked] = selected_values.include?(value) if selected_option_is_present
+          html_options[:checked] = selected_values.include?(value)
           html_options[:disabled] = disabled_values.include?(value) if disabled_option_is_present
           html_options[:id] = input_id
 
           li_content = template.content_tag(:label,
-            Formtastic::Util.html_safe("#{self.check_box(input_name, html_options, value, unchecked_value)} #{escape_html_entities(label)}"),
+            Formtastic::Util.html_safe("#{self.create_check_boxes(input_name, html_options, value, unchecked_value, hidden_fields)} #{escape_html_entities(label)}"),
             :for => input_id
           )
 
@@ -1156,8 +1185,44 @@ module Formtastic #:nodoc:
         end
 
         fieldset_content = legend_tag(method, options)
+        fieldset_content << self.create_hidden_field_for_check_boxes(input_name, value_as_class) unless hidden_fields
         fieldset_content << template.content_tag(:ol, Formtastic::Util.html_safe(list_item_content.join))
         template.content_tag(:fieldset, fieldset_content)
+      end
+
+      # Used by check_boxes input. The selected values will be set either by:
+      #
+      # * Explicitly provided through :selected or :checked
+      # * Values retrieved through an association
+      #
+      # If the collection is not a hash or an array of strings, fixnums or symbols,
+      # we use value_method to retrieve an array with the values
+      #
+      def find_selected_values_for_column(method, options)
+        selected_option_is_present = [:selected, :checked].any? { |k| options.key?(k) }
+        if selected_option_is_present
+          selected_values = (options.key?(:checked) ? options[:checked] : options[:selected])
+        elsif object.respond_to?(method)
+          collection = [object.send(method)].compact.flatten
+          label, value = detect_label_and_value_method!(collection, options)
+          selected_values = collection.map { |o| send_or_call(value, o) }
+        end
+        selected_values = [*selected_values].compact
+        selected_values
+      end
+      
+      # Outputs a custom hidden field for check_boxes
+      def create_hidden_field_for_check_boxes(method, value_as_class) #:nodoc:
+        options = value_as_class ? { :class => [method.to_s.singularize, 'default'].join('_') } : {}
+        input_name = "#{object_name}[#{method.to_s}][]"
+        template.hidden_field_tag(input_name, '', options)
+      end
+
+      # Outputs a checkbox tag. If called with no_hidden_input = true a plain check_box_tag is returned,
+      # otherwise the helper uses the output generated by the rails check_box method.
+      def create_check_boxes(input_name, html_options = {}, checked_value = "1", unchecked_value = "0", hidden_fields = false) #:nodoc:
+        return template.check_box_tag(input_name, checked_value, html_options[:checked], html_options) unless hidden_fields == true
+        self.check_box(input_name, html_options, checked_value, unchecked_value)
       end
 
       # Outputs a country select input, wrapping around a regular country_select helper. 
@@ -1176,9 +1241,9 @@ module Formtastic #:nodoc:
       #
       def country_input(method, options)
         raise "To use the :country input, please install a country_select plugin, like this one: http://github.com/rails/iso-3166-country-select" unless self.respond_to?(:country_select)
-      
+
         html_options = options.delete(:input_html) || {}
-        priority_countries = options.delete(:priority_countries) || @@priority_countries
+        priority_countries = options.delete(:priority_countries) || self.class.priority_countries
 
         self.label(method, options_for_label(options)) <<
         self.country_select(method, priority_countries, strip_formtastic_options(options), html_options)
@@ -1252,9 +1317,9 @@ module Formtastic #:nodoc:
       def required_or_optional_string(required) #:nodoc:
         string_or_proc = case required
           when true
-            @@required_string
+            self.class.required_string
           when false
-            @@optional_string
+            self.class.optional_string
           else
             required
         end
@@ -1307,7 +1372,7 @@ module Formtastic #:nodoc:
           html_options.except(:builder, :parent)
         )
 
-        template.concat(fieldset) if block_given? && (!defined?(Rails::VERSION) || Rails::VERSION::MAJOR == 2)
+        template.concat(fieldset) if block_given? && !Formtastic::Util.rails3?
         fieldset
       end
 
@@ -1380,7 +1445,7 @@ module Formtastic #:nodoc:
             return :select  if self.reflection_for(method)
 
             file = @object.send(method) if @object.respond_to?(method)
-            return :file    if file && @@file_methods.any? { |m| file.respond_to?(m) }
+            return :file    if file && self.class.file_methods.any? { |m| file.respond_to?(m) }
           end
 
           return :select    if options.key?(:collection)
@@ -1421,10 +1486,15 @@ module Formtastic #:nodoc:
           options[:find_options] ||= {}
 
           if conditions = reflection.options[:conditions]
-            options[:find_options][:conditions] = reflection.klass.merge_conditions(conditions, options[:find_options][:conditions])
+            if reflection.klass.respond_to?(:merge_conditions)
+              options[:find_options][:conditions] = reflection.klass.merge_conditions(conditions, options[:find_options][:conditions])
+              reflection.klass.all(options[:find_options])
+            else
+              reflection.klass.where(conditions).where(options[:find_options][:conditions])
+            end
+          else
+            reflection.klass.all(options[:find_options])
           end
-
-          reflection.klass.find(:all, options[:find_options])
         else
           create_boolean_collection(options)
         end
@@ -1433,21 +1503,35 @@ module Formtastic #:nodoc:
         collection
       end
 
-      # Detects the label and value methods from a collection values set in 
-      # @@collection_label_methods. It will use and delete
-      # the options :label_method and :value_methods when present
+      # Detects the label and value methods from a collection using methods set in
+      # collection_label_methods and collection_value_methods. For some ruby core
+      # classes sensible defaults have been defined. It will use and delete the options
+      # :label_method and :value_methods when present.
       #
-      def detect_label_and_value_method!(collection_or_instance, options = {}) #:nodoc
-        label = options.delete(:label_method) || detect_label_method(collection_or_instance)
-        value = options.delete(:value_method) || :id
+      def detect_label_and_value_method!(collection, options = {})
+        sample = collection.first || collection.last
+
+        case sample
+        when Array
+          label, value = :first, :last
+        when Integer
+          label, value = :to_s, :to_i
+        when String, NilClass
+          label, value = :to_s, :to_s
+        end
+
+        # Order of preference: user supplied method, class defaults, auto-detect
+        label = options[:label_method] || label || self.class.collection_label_methods.find { |m| sample.respond_to?(m) }
+        value = options[:value_method] || value || self.class.collection_value_methods.find { |m| sample.respond_to?(m) }
+
         [label, value]
       end
 
-      # Detected the label collection method when none is supplied using the
-      # values set in @@collection_label_methods.
+      # Return the label collection method when none is supplied using the
+      # values set in collection_label_methods.
       #
       def detect_label_method(collection) #:nodoc:
-        @@collection_label_methods.detect { |m| collection.first.respond_to?(m) }
+        detect_label_and_value_method!(collection).first
       end
 
       # Detects the method to call for fetching group members from the groups when grouping select options
@@ -1542,12 +1626,12 @@ module Formtastic #:nodoc:
         column = self.column_for(method)
 
         if type == :text
-          { :cols => @@default_text_field_size, :rows => @@default_text_area_height }
+          { :cols => self.class.default_text_field_size, :rows => self.class.default_text_area_height }
         elsif type == :numeric || column.nil? || column.limit.nil?
-          { :size => @@default_text_field_size }
+          { :size => self.class.default_text_field_size }
         else
-          { :maxlength => column.limit, 
-            :size => @@default_text_field_size && [column.limit, @@default_text_field_size].min }
+          { :maxlength => column.limit,
+            :size => self.class.default_text_field_size && [column.limit, self.class.default_text_field_size].min }
         end
       end
 
@@ -1593,27 +1677,27 @@ module Formtastic #:nodoc:
         if @object && @object.class.respond_to?(:human_attribute_name)
           humanized_name = @object.class.human_attribute_name(method.to_s)
           if humanized_name == method.to_s.send(:humanize)
-            method.to_s.send(@@label_str_method)
+            method.to_s.send(self.class.label_str_method)
           else
             humanized_name
           end
         else
-          method.to_s.send(@@label_str_method)
+          method.to_s.send(self.class.label_str_method)
         end
       end
 
       # Internal generic method for looking up localized values within Formtastic
       # using I18n, if no explicit value is set and I18n-lookups are enabled.
-      # 
+      #
       # Enabled/Disable this by setting:
       #
       #   Formtastic::SemanticFormBuilder.i18n_lookups_by_default = true/false
       #
       # Lookup priority:
       #
-      #   'formtastic.{{type}}.{{model}}.{{action}}.{{attribute}}'
-      #   'formtastic.{{type}}.{{model}}.{{attribute}}'
-      #   'formtastic.{{type}}.{{attribute}}'
+      #   'formtastic.%{type}.%{model}.%{action}.%{attribute}'
+      #   'formtastic.%{type}.%{model}.%{attribute}'
+      #   'formtastic.%{type}.%{attribute}'
       # 
       # Example:
       #   
@@ -1629,7 +1713,7 @@ module Formtastic #:nodoc:
         if value.is_a?(::String)
           escape_html_entities(value)
         else
-          use_i18n = value.nil? ? @@i18n_lookups_by_default : (value != false)
+          use_i18n = value.nil? ? self.class.i18n_lookups_by_default : (value != false)
 
           if use_i18n
             model_name, nested_model_name  = normalize_model_name(self.model_name.underscore)
@@ -1638,10 +1722,10 @@ module Formtastic #:nodoc:
 
             defaults = ::Formtastic::I18n::SCOPES.collect do |i18n_scope|
               i18n_path = i18n_scope.dup
-              i18n_path.gsub!('{{action}}', action_name)
-              i18n_path.gsub!('{{model}}', model_name)
-              i18n_path.gsub!('{{nested_model}}', nested_model_name) unless nested_model_name.nil?
-              i18n_path.gsub!('{{attribute}}', attribute_name)
+              i18n_path.gsub!('%{action}', action_name)
+              i18n_path.gsub!('%{model}', model_name)
+              i18n_path.gsub!('%{nested_model}', nested_model_name) unless nested_model_name.nil?
+              i18n_path.gsub!('%{attribute}', attribute_name)
               i18n_path.gsub!('..', '.')
               i18n_path.to_sym
             end
@@ -1677,13 +1761,13 @@ module Formtastic #:nodoc:
 
       def set_include_blank(options)
         unless options.key?(:include_blank) || options.key?(:prompt)
-          options[:include_blank] = @@include_blank_for_select_by_default
+          options[:include_blank] = self.class.include_blank_for_select_by_default
         end
         options
       end
 
       def escape_html_entities(string) #:nodoc:
-        if @@escape_html_entities_in_hints_and_labels
+        if self.class.escape_html_entities_in_hints_and_labels
           # Acceppt html_safe flag as indicator to skip escaping
           string = template.escape_once(string) unless string.respond_to?(:html_safe?) && string.html_safe? == true
         end
@@ -1743,7 +1827,17 @@ module Formtastic #:nodoc:
     ensure
       ::ActionView::Base.field_error_proc = default_field_error_proc
     end
-        
+    
+    def semantic_remote_form_for_wrapper(record_or_name_or_array, *args, &proc)
+      options = args.extract_options!
+      if self.respond_to? :remote_form_for
+        semantic_remote_form_for_real(record_or_name_or_array, *(args << options), &proc)
+      else
+        options[:remote] = true
+        semantic_form_for(record_or_name_or_array, *(args << options), &proc)
+      end
+    end
+
     [:form_for, :fields_for, :remote_form_for].each do |meth|
       module_eval <<-END_SRC, __FILE__, __LINE__ + 1
         def semantic_#{meth}(record_or_name_or_array, *args, &proc)
@@ -1751,12 +1845,14 @@ module Formtastic #:nodoc:
           options[:builder] ||= @@builder
           options[:html] ||= {}
 
+          singularizer = defined?(ActiveModel::Naming.singular) ? ActiveModel::Naming.method(:singular) : ActionController::RecordIdentifier.method(:singular_class_name)
+
           class_names = options[:html][:class] ? options[:html][:class].split(" ") : []
           class_names << "formtastic"
           class_names << case record_or_name_or_array
             when String, Symbol then record_or_name_or_array.to_s               # :post => "post"
-            when Array then ActionController::RecordIdentifier.singular_class_name(record_or_name_or_array.last.class)  # [@post, @comment] # => "comment"
-            else ActionController::RecordIdentifier.singular_class_name(record_or_name_or_array.class)                  # @post => "post"
+            when Array then singularizer.call(record_or_name_or_array.last.class)  # [@post, @comment] # => "comment"
+            else singularizer.call(record_or_name_or_array.class)                  # @post => "post"
           end
           options[:html][:class] = class_names.join(" ")
           
@@ -1766,6 +1862,8 @@ module Formtastic #:nodoc:
         end
       END_SRC
     end
+    alias :semantic_remote_form_for_real :semantic_remote_form_for
+    alias :semantic_remote_form_for :semantic_remote_form_for_wrapper    
     alias :semantic_form_remote_for :semantic_remote_form_for
     
   end

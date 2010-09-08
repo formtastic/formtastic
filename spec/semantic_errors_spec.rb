@@ -1,5 +1,5 @@
 # coding: utf-8
-require File.dirname(__FILE__) + '/spec_helper'
+require 'spec_helper'
 
 describe 'SemanticFormBuilder#semantic_errors' do
 
@@ -17,7 +17,7 @@ describe 'SemanticFormBuilder#semantic_errors' do
 
   describe 'when there is only one error on base' do
     before do
-      @errors.stub!(:on_base).and_return(@base_error)
+      @errors.stub!(:[]).with(:base).and_return(@base_error)
     end
 
     it 'should render an unordered list' do
@@ -29,7 +29,7 @@ describe 'SemanticFormBuilder#semantic_errors' do
 
   describe 'when there is more than one error on base' do
     before do
-      @errors.stub!(:on_base).and_return(@base_errors)
+      @errors.stub!(:[]).with(:base).and_return(@base_errors)
     end
 
     it 'should render an unordered list' do
@@ -45,7 +45,7 @@ describe 'SemanticFormBuilder#semantic_errors' do
   describe 'when there are errors on title' do
     before do
       @errors.stub!(:[]).with(:title).and_return(@title_errors)
-      @errors.stub!(:on_base).and_return([])
+      @errors.stub!(:[]).with(:base).and_return([])
     end
 
     it 'should render an unordered list' do
@@ -59,7 +59,7 @@ describe 'SemanticFormBuilder#semantic_errors' do
   describe 'when there are errors on title and base' do
     before do
       @errors.stub!(:[]).with(:title).and_return(@title_errors)
-      @errors.stub!(:on_base).and_return(@base_error)
+      @errors.stub!(:[]).with(:base).and_return(@base_error)
     end
 
     it 'should render an unordered list' do
@@ -74,7 +74,7 @@ describe 'SemanticFormBuilder#semantic_errors' do
   describe 'when there are no errors' do
     before do
       @errors.stub!(:[]).with(:title).and_return(nil)
-      @errors.stub!(:on_base).and_return(nil)
+      @errors.stub!(:[]).with(:base).and_return(nil)
     end
 
     it 'should return nil' do
@@ -86,7 +86,7 @@ describe 'SemanticFormBuilder#semantic_errors' do
 
   describe 'when there is one error on base and options with class is passed' do
     before do
-      @errors.stub!(:on_base).and_return(@base_error)
+      @errors.stub!(:[]).with(:base).and_return(@base_error)
     end
 
     it 'should render an unordered list with given class' do

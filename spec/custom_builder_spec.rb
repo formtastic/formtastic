@@ -1,5 +1,5 @@
 # coding: utf-8
-require File.dirname(__FILE__) + '/spec_helper'
+require 'spec_helper'
 
 describe 'Formtastic::SemanticFormHelper.builder' do
 
@@ -29,7 +29,16 @@ describe 'Formtastic::SemanticFormHelper.builder' do
     ::Formtastic::SemanticFormHelper.builder = ::Formtastic::SemanticFormBuilder
     ::Formtastic::SemanticFormHelper.builder.should == ::Formtastic::SemanticFormBuilder
   end
-  
+
+  it 'should allow custom settings per form builder subclass' do
+    with_config(:all_fields_required_by_default, true) do
+      MyCustomFormBuilder.all_fields_required_by_default = false
+
+      MyCustomFormBuilder.all_fields_required_by_default.should be_false
+      ::Formtastic::SemanticFormBuilder.all_fields_required_by_default.should be_true
+    end
+  end
+
   describe "when using a custom builder" do
     
     before do
@@ -43,7 +52,7 @@ describe 'Formtastic::SemanticFormHelper.builder' do
     
     describe "semantic_form_for" do
       
-      it "should yeild and instance of the custom builder" do
+      it "should yield an instance of the custom builder" do
         semantic_form_for(@new_post) do |builder|
           builder.class.should == MyCustomFormBuilder
         end
@@ -56,7 +65,34 @@ describe 'Formtastic::SemanticFormHelper.builder' do
       end
     
     end
+
+    describe "semantic_fields_for" do
+
+      it "should yield an instance of the parent form builder" do
+        semantic_form_for(@new_post) do |builder|
+          builder.semantic_fields_for(:author) do |nested_builder|
+            nested_builder.class.should == MyCustomFormBuilder
+          end
+        end
+      end
+
+    end
     
   end
 
+  describe "when using a builder passed to form options" do
+
+    describe "semantic_fields_for" do
+
+      it "should yield an instance of the parent form builder" do
+        semantic_form_for(@new_post, :builder => MyCustomFormBuilder) do |builder|
+          builder.semantic_fields_for(:author) do |nested_builder|
+            nested_builder.class.should == MyCustomFormBuilder
+          end
+        end
+      end
+
+    end
+
+  end
 end

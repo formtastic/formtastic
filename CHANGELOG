@@ -1,3 +1,24 @@
+1.1.0
+
+* documentation changes only
+
+1.1.0.beta [Specs passed against Rails 2.3.8, 3.0.0.rc & 3.0.0]
+
+* Changed semantic_remote_form_for to allow for unobstrusive javascript / :remote option (rails3)
+* Changed spec_helper to support Rails 2 with RSpec or Rails 3 with RSpec 2 environments
+* Changed Rakefile to initalize the correct testing framework for the enviroment
+* Changed i18n dependency to >= 0.4
+* Fixed use of model_name.human instead of model_name.human_name (rails3)
+* Fixed use of deprecated Errors#on_base
+* Fixed use of ActionController::RecordIdentifier#singular_class_name (rails3)
+* Added railtie to perform initialization tasks after the rails framework is available (rails3)
+* Added compatible install and form helpers (rails3)
+* Added support for ActiveModel Validations, thanks to Guillaume Belleguic (rails3)
+
+1.0.1
+
+* fixed "already initialised constant" warnings on boot
+
 1.0.0
 
 * nothing changed from rc2

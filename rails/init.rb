@@ -1,7 +1,2 @@
 # coding: utf-8
-require 'formtastic'
-require 'formtastic/layout_helper'
-
-ActionView::Base.send :include, Formtastic::SemanticFormHelper
-ActionView::Base.send :include, Formtastic::LayoutHelper
-
+require File.expand_path(File.join(File.dirname(__FILE__), "..", "init"))

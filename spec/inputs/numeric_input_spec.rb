@@ -1,5 +1,5 @@
 # coding: utf-8
-require File.dirname(__FILE__) + '/../spec_helper'
+require 'spec_helper'
 
 describe 'numeric input' do
   
@@ -9,7 +9,7 @@ describe 'numeric input' do
     @output_buffer = ''
     mock_everything
     
-    semantic_form_for(@new_post) do |builder|
+    @form = semantic_form_for(@new_post) do |builder|
       concat(builder.input(:title, :as => :numeric))
     end
   end
@@ -28,7 +28,7 @@ describe 'numeric input' do
   
   describe "when no object is provided" do
     before do
-      semantic_form_for(:project, :url => 'http://test.host/') do |builder|
+      @form = semantic_form_for(:project, :url => 'http://test.host/') do |builder|
         concat(builder.input(:title, :as => :numeric))
       end
     end

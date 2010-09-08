@@ -1,13 +1,17 @@
 # coding: utf-8
+require 'rubygems'
 require 'rake'
 require 'rake/rdoctask'
 
 begin
+  gem 'rspec', '>= 1.2.6'
+  gem 'rspec-rails', '>= 1.2.6'
+  require 'spec'
   require 'spec/rake/spectask'
 rescue LoadError
   begin
-    gem 'rspec-rails', '>= 1.0.0'
-    require 'spec/rake/spectask'
+    require 'rspec/core/rake_task.rb'
+    require 'rspec/core/version'
   rescue LoadError
     puts "[formtastic:] RSpec - or one of it's dependencies - is not available. Install it with: sudo gem install rspec-rails"
   end
@@ -25,10 +29,12 @@ begin
   ------------------------------------------------------------------------
   You can now (optionally) run the generator to copy some stylesheets and
   a config initializer into your application:
-    ./script/generate formtastic
+    rails generator formastic:install # Rails 3
+    ./script/generate formtastic      # Rails 2
 
   To generate some semantic form markup for your existing models, just run:
-    ./script/generate form MODEL_NAME
+    rails generate formtastic:form MODEL_NAME # Rails 3
+    ./script/generate form MODEL_NAME         # Rails 2
 
   Find out more and get involved:
     http://github.com/justinfrench/formtastic
@@ -49,13 +55,13 @@ begin
     s.post_install_message = INSTALL_MESSAGE
     
     s.require_path = 'lib'
-    s.files = %w(MIT-LICENSE README.textile Rakefile) + Dir.glob("{rails,lib,generators,spec}/**/*")
+    s.files = %w(MIT-LICENSE README.textile Rakefile init.rb) + Dir.glob("{rails,lib,generators,spec}/**/*")
     
     # Runtime dependencies: When installing Formtastic these will be checked if they are installed.
     # Will be offered to install these if they are not already installed.
-    s.add_dependency 'activesupport', '>= 2.3.0', '< 3.0.0'
-    s.add_dependency 'actionpack', '>= 2.3.0', '< 3.0.0'
-    s.add_dependency 'i18n', '< 0.4'
+    s.add_dependency 'activesupport', '>= 2.3.0'
+    s.add_dependency 'actionpack', '>= 2.3.0'
+    s.add_dependency 'i18n', '>= 0.4.0'
     
     # Development dependencies. Not installed by default.
     # Install with: sudo gem install formtastic --development
@@ -96,6 +102,25 @@ if defined?(Spec)
   desc "Run all examples with RCov"
   Spec::Rake::SpecTask.new('examples_with_rcov') do |t|
     t.spec_files = FileList['spec/**/*_spec.rb']
+    t.rcov = true
+    t.rcov_opts = ['--exclude', 'spec,Library']
+  end
+end
+
+if defined?(RSpec)
+  desc 'Test the formtastic plugin.'
+  RSpec::Core::RakeTask.new('spec') do |t|
+    t.pattern = FileList['spec/**/*_spec.rb']
+  end
+
+  desc 'Test the formtastic plugin with specdoc formatting and colors'
+  RSpec::Core::RakeTask.new('specdoc') do |t|
+    t.pattern = FileList['spec/**/*_spec.rb']
+  end
+
+  desc "Run all examples with RCov"
+  RSpec::Core::RakeTask.new('examples_with_rcov') do |t|
+    t.pattern = FileList['spec/**/*_spec.rb']
     t.rcov = true
     t.rcov_opts = ['--exclude', 'spec,Library']
   end

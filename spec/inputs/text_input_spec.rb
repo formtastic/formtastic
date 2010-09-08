@@ -1,5 +1,5 @@
 # coding: utf-8
-require File.dirname(__FILE__) + '/../spec_helper'
+require 'spec_helper'
 
 describe 'text input' do
   
@@ -9,7 +9,7 @@ describe 'text input' do
     @output_buffer = ''
     mock_everything
     
-    semantic_form_for(@new_post) do |builder|
+    @form = semantic_form_for(@new_post) do |builder|
       concat(builder.input(:body, :as => :text))
     end
   end
@@ -23,9 +23,10 @@ describe 'text input' do
   it_should_apply_error_logic_for_input_type(:numeric)
   
   it 'should use input_html to style inputs' do
-    semantic_form_for(@new_post) do |builder|
+    form = semantic_form_for(@new_post) do |builder|
       concat(builder.input(:title, :as => :text, :input_html => { :class => 'myclass' }))
     end
+    output_buffer.concat(form) if Formtastic::Util.rails3?
     output_buffer.should have_tag("form li textarea.myclass")
   end
     
