@@ -77,50 +77,40 @@ h2. Documentation
 RDoc documentation _should_ be automatically generated after each commit and made available on the "rdoc.info website":http://rdoc.info/projects/justinfrench/formtastic.
 
 
-h2. A Note About Rails 3 Support
+h2. Gems and Bundles
 
-Formtastic 1.0 only supports the latest stable Rails 2.x. We're maintaining a rails3 branch which aims to provide both Rails 2.x and 3.x support, which is targeted for the 1.1 release around the same time Rails 3.0 final ships.
+Formtastic is now compatible with both Rails 2 and Rails 3, and the gem is "hosted":http://rubygems.org/gems/formtastic on RubyGems.org.
 
-A 1.1.0 gem is now available on RubyGems.org:
 
-<pre>
-  gem install formtastic
-</pre>
+h4. For Rails 3 (or Rails 2 with Bundler)
 
-Or bundle it in your Gemfile:
+Simply add Formtastic to your Gemfile and bundle it up:
 
 <pre>
-  gem 'formtastic', '1.1.0'
+  gem 'formtastic', '~> 1.1.0'
 </pre>
 
-You can also live on the edge and track our rails3 branch in your Gemfile with the :git and :branch options:
-
-<pre>
-  gem 'formtastic', :git => "git://github.com/justinfrench/formtastic.git", :branch => "rails3"
-</pre>
-
-Please be aware that Rails 3 is still under heavy development (even in the RCs), as is Formtastic, so our beta gems and the rails3 branch is very much "on the edge", just like Rails. If you find compatibility issues with Rails 2 or 3, please report them on Github.
+Optionally, run @rails generate formtastic:install@ to copy some stylesheets and a configuration initializer into your application.
 
 
-h2. Installation under Rails 2.x
+h4. For Rails 2:
 
-Install the Formtastic gem:
+Install the gem:
 
 <pre>
   sudo gem install formtastic
 </pre>
 
-And add it to your environment.rb configuration as a gem dependency:
+And add the gem to your environment.rb configuration as a gem dependency:
 
 <pre>
-  config.gem 'formtastic'
+  config.gem 'formtastic', '~> 1.1.0'
 </pre>
 
-Optionally, run @./script/generate formtastic@ to copy the following files into your app:
+Optionally, run @./script/generate formtastic@ to copy some stylesheets and a configuration initializer into your application.
 
-* @config/initializers/formtastic.rb@ - a commented out Formtastic config initializer
-* @public/stylesheets/formtastic.css@
-* @public/stylesheets/formtastic_changes.css@
+
+h2. Stylesheets
 
 A proof-of-concept stylesheet is provided which you can include in your layout. Customization is best achieved by overriding these styles in an additional stylesheet so that the Formtastic styles can be updated without clobbering your changes. If you want to use these stylesheets, add both to your layout with this helper:
 
@@ -544,13 +534,6 @@ By default formtastic escapes html entities in both labels and hints unless a st
 Formtastic::SemanticFormBuilder.escape_html_entities_in_hints_and_labels = false
 
 
-h2. Focus
-
-Formtastic 1.0 is compatible with Rails 2.x *only*. We've also been working hard on a Rails 2 *and* 3 compatible version in the rails3 branch, targeting a 1.1 release shortly after Rails 3.0 final ships.
-
-There's heaps more we want to do, but we have to do this first.
-
-
 h2. Dependencies
 
 There are none, but...
@@ -562,8 +545,7 @@ There are none, but...
 
 h2. Compatibility
 
-* We're only testing Formtastic with the latest Rails 2.x stable release. Patches are welcome to allow backwards compatibility with older versions of Rails, of course.
-* Development of a Rails 2 *and* 3 compatible version of Formtastic is underway in the rails3 branch, targeting a Formtastic 1.1 release shortly after Rails 3.0 ships.
+* We're only testing Formtastic with the latest Rails 2.x and 3.x stable releases. Patches are welcome to allow backwards compatibility with older versions of Rails, of course.
 * Formtastic, much like Rails 2, is very ActiveRecord-centric. Many people are using Formtastic (especially the rails3 branch) successfully with other ActiveModel-like ORMs and classes (DataMapper, MongoMapper, Mongoid, Authlogic, Devise...) but we're not guaranteeing anything at this stage. Patches are welcome, but it's not our core focus right now.
  
 
@@ -593,4 +575,4 @@ h2. Project Info
 Formtastic is hosted on Github: "http://github.com/justinfrench/formtastic":http://github.com/justinfrench/formtastic, where your contributions, forkings, comments and feedback are greatly welcomed.
 
 
-Copyright (c) 2007-2008 Justin French, released under the MIT license.
+Copyright (c) 2007-2010 Justin French, released under the MIT license.
