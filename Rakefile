@@ -17,63 +17,6 @@ rescue LoadError
   end
 end
 
-begin
-  GEM = "formtastic"
-  AUTHOR = "Justin French"
-  EMAIL = "justin@indent.com.au"
-  SUMMARY = "A Rails form builder plugin/gem with semantically rich and accessible markup"
-  HOMEPAGE = "http://github.com/justinfrench/formtastic/tree/master"
-  INSTALL_MESSAGE = %q{
-  ========================================================================
-  Thanks for installing Formtastic!
-  ------------------------------------------------------------------------
-  You can now (optionally) run the generator to copy some stylesheets and
-  a config initializer into your application:
-    rails generator formastic:install # Rails 3
-    ./script/generate formtastic      # Rails 2
-
-  To generate some semantic form markup for your existing models, just run:
-    rails generate formtastic:form MODEL_NAME # Rails 3
-    ./script/generate form MODEL_NAME         # Rails 2
-
-  Find out more and get involved:
-    http://github.com/justinfrench/formtastic
-    http://groups.google.com.au/group/formtastic
-  ========================================================================
-  }
-  
-  gem 'jeweler', '>= 1.0.0'
-  require 'jeweler'
-  
-  Jeweler::Tasks.new do |s|
-    s.name = GEM
-    s.summary = SUMMARY
-    s.email = EMAIL
-    s.homepage = HOMEPAGE
-    s.description = SUMMARY
-    s.author = AUTHOR
-    s.post_install_message = INSTALL_MESSAGE
-    
-    s.require_path = 'lib'
-    s.files = %w(MIT-LICENSE README.textile Rakefile init.rb) + Dir.glob("{rails,lib,generators,spec}/**/*")
-    
-    # Runtime dependencies: When installing Formtastic these will be checked if they are installed.
-    # Will be offered to install these if they are not already installed.
-    s.add_dependency 'activesupport', '>= 2.3.0'
-    s.add_dependency 'actionpack', '>= 2.3.0'
-    s.add_dependency 'i18n', '>= 0.4.0'
-    
-    # Development dependencies. Not installed by default.
-    # Install with: sudo gem install formtastic --development
-    s.add_development_dependency 'rspec-rails', '>= 1.2.6'
-    s.add_development_dependency 'rspec_tag_matchers', '>= 1.0.0'
-  end
-  
-  Jeweler::GemcutterTasks.new
-rescue LoadError
-  puts "[formtastic:] Jeweler - or one of its dependencies - is not available. Install it with: sudo gem install jeweler -s http://gemcutter.org"
-end
-
 desc 'Default: run unit specs.'
 task :default => :spec
 
