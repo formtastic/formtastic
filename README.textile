@@ -77,12 +77,11 @@ h2. Documentation
 RDoc documentation _should_ be automatically generated after each commit and made available on the "rdoc.info website":http://rdoc.info/projects/justinfrench/formtastic.
 
 
-h2. Gems and Bundles
+h2. Installation
 
 Formtastic is now compatible with both Rails 2 and Rails 3, and the gem is "hosted":http://rubygems.org/gems/formtastic on RubyGems.org.
 
-
-h4. For Rails 3 (or Rails 2 with Bundler)
+*You'll need to use Bundler (yes, even under Rails 2, due to the many ways gem dependencies suck). Follow "this tutorial":http://gembundler.com/rails23.html.*
 
 Simply add Formtastic to your Gemfile and bundle it up:
 
@@ -90,24 +89,15 @@ Simply add Formtastic to your Gemfile and bundle it up:
   gem 'formtastic', '~> 1.1.0'
 </pre>
 
-Optionally, run @rails generate formtastic:install@ to copy some stylesheets and a configuration initializer into your application.
-
-
-h4. For Rails 2:
-
-Install the gem:
+Optionally, run the generator to copy some stylesheets and a configuration initializer into your application:
 
 <pre>
-  sudo gem install formtastic
+  # Rails 3:
+  $ rails generate formtastic:install 
+  
+  # Or Rails 2:
+  $ ./script/generate formtastic 
 </pre>
-
-And add the gem to your environment.rb configuration as a gem dependency:
-
-<pre>
-  config.gem 'formtastic', '~> 1.1.0'
-</pre>
-
-Optionally, run @./script/generate formtastic@ to copy some stylesheets and a configuration initializer into your application.
 
 
 h2. Stylesheets
