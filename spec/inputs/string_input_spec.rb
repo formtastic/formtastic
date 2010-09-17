@@ -25,9 +25,8 @@ describe 'string input' do
     it_should_have_input_with_type(:text)
     it_should_have_input_with_name("post[title]")
     it_should_have_maxlength_matching_column_limit
-    it_should_use_default_text_field_size_for_columns_longer_than_default_text_field_size(:string)
-    it_should_use_column_size_for_columns_shorter_than_default_text_field_size(:string)
-    it_should_use_default_text_field_size_when_method_has_no_database_column(:string)
+    it_should_use_default_text_field_size_when_not_nil(:string)
+    it_should_not_use_default_text_field_size_when_nil(:string)
     it_should_apply_custom_input_attributes_when_input_html_provided(:string)
     it_should_apply_custom_for_to_label_when_input_html_id_provided(:string)
     it_should_apply_error_logic_for_input_type(:string)

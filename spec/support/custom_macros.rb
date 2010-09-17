@@ -84,16 +84,29 @@ module CustomMacros
         output_buffer.should have_tag("form li textarea##{element_id}")
       end
     end
-
-    def it_should_use_default_text_field_size_when_method_has_no_database_column(as)
-      it 'should use default_text_field_size when method has no database column' do
-        @new_post.stub!(:column_for_attribute).and_return(nil) # Return a nil column
-
-        form = semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:title, :as => as))
+    
+    def it_should_use_default_text_field_size_when_not_nil(as)
+      it 'should use default_text_field_size when not nil' do
+        with_config :default_text_field_size, 30 do
+          form = semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:title, :as => as))
+          end
+          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.should have_tag("form li input[@size='#{Formtastic::SemanticFormBuilder.default_text_field_size}']")
         end
-        output_buffer.concat(form) if Formtastic::Util.rails3?
-        output_buffer.should have_tag("form li input[@size='#{Formtastic::SemanticFormBuilder.default_text_field_size}']")
+      end
+    end
+    
+    def it_should_not_use_default_text_field_size_when_nil(as)
+      it 'should not use default_text_field_size when nil' do
+        with_config :default_text_field_size, nil do
+          form = semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:title, :as => as))
+          end
+          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.should have_tag("form li input")
+          output_buffer.should_not have_tag("form li input[@size]")
+        end
       end
     end
 
@@ -122,20 +135,6 @@ module CustomMacros
         @new_post.column_for_attribute(:title).limit.should == 50
         output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li input[@maxlength='50']")
-      end
-    end
-
-    def it_should_use_default_text_field_size_for_columns_longer_than_default_text_field_size(as)
-      it 'should use default_text_field_size for columns longer than default_text_field_size' do
-        default_size = Formtastic::SemanticFormBuilder.default_text_field_size
-        @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => as, :limit => default_size * 2))
-
-        form = semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:title, :as => as))
-        end
-
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
-        output_buffer.should have_tag("form li input[@size='#{default_size}']")
       end
     end
 
