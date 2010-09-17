@@ -1,6 +1,6 @@
 if Formtastic::Util.rails3?
-  gem 'rspec', '~> 2.0.0.beta19'
-  gem 'rspec-rails', '~> 2.0.0.beta19'
+  gem 'rspec', '~> 2.0.0.beta22'
+  gem 'rspec-rails', '~> 2.0.0.beta22'
   gem 'rspec_tag_matchers'
   gem 'i18n', '>= 0.4.0'
 
@@ -8,9 +8,6 @@ if Formtastic::Util.rails3?
   require "action_controller/railtie"
   require "active_resource/railtie"
   require 'active_model'
-  require 'rspec/core'
-  require 'rspec/rails'
-  require 'rspec_tag_matchers'
 
   # Create a simple rails application for use in testing the viewhelper
   module FormtasticTest
@@ -23,6 +20,9 @@ if Formtastic::Util.rails3?
   FormtasticTest::Application.initialize!
 
   # Configure RSpec 2.0
+  require 'rspec/core'
+  require 'rspec/rails'
+  require 'rspec_tag_matchers'
   RSpec.configure do |config|
     config.include RspecTagMatchers
     config.include CustomMacros
@@ -42,4 +42,4 @@ else
     config.include(RspecTagMatchers)
     config.include(CustomMacros)
   end
-end  
+end
