@@ -79,7 +79,11 @@ form.formtastic fieldset > ol > li ul.errors li { padding:0; border:none; displa
 --------------------------------------------------------------------------------------------------*/
 form.formtastic fieldset > ol > li.string input, 
 form.formtastic fieldset > ol > li.password input, 
-form.formtastic fieldset > ol > li.numeric input { max-width:72%; }
+form.formtastic fieldset > ol > li.numeric input { width:72%; }
+
+form.formtastic fieldset > ol > li.string input[size], 
+form.formtastic fieldset > ol > li.password input[size], 
+form.formtastic fieldset > ol > li.numeric input[size] { width:auto; max-width:72%; }
 
 
 /* TEXTAREA OVERRIDES
