@@ -11,7 +11,7 @@ module Formtastic #:nodoc:
                    :inline_order, :custom_inline_order, :file_methods, :priority_countries, :i18n_lookups_by_default, :escape_html_entities_in_hints_and_labels,
                    :default_commit_button_accesskey, :instance_reader => false
 
-    self.default_text_field_size = 50
+    self.default_text_field_size = nil
     self.default_text_area_height = 20
     self.all_fields_required_by_default = true
     self.include_blank_for_select_by_default = true
