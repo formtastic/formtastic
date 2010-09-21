@@ -461,51 +461,67 @@ If you have the "ValidationReflection":http://github.com/redinger/validation_ref
 
 h2. Configuration
 
-Run @./script/generate formtastic@ to copy a commented out config file into @config/initializers/formtastic.rb@. You can "view the configuration file on GitHub":http://github.com/justinfrench/formtastic/blob/master/generators/formtastic/templates/formtastic.rb
+Run @rails generate formtastic:install@ (Rails 3) or @./script/generate formtastic@ (Rails 2) to copy a commented out config file into @config/initializers/formtastic.rb@. You can "view the configuration file on GitHub":http://github.com/justinfrench/formtastic/blob/master/generators/formtastic/templates/formtastic.rb
 
 
 h2. Form Generator
 
-There's a Formtastic form code generator to make your transition to Formtastic easier. All you have to do is to *specify an existing model name*, and optionally specify view template framework (ERB/HAML), and you are good to go. *Note:* This won't overwrite any of you stuff. This is how you use it:
+There's a Formtastic form code generator to make your transition to Formtastic easier. All you have to do is to *specify an existing model name*, and optionally specify view template framework (ERB/HAML), and you are good to go. *Note:* This won't overwrite any of your stuff.
 
-*Alt. 1: Generate in terminal:*
+h3. Basic usage
+
+Rails 3:
 
 <pre>
-$ ./script/generate form Post
-# ---------------------------------------------------------
-#  GENERATED FORMTASTIC CODE
-# ---------------------------------------------------------
-
-<% f.inputs do %>
-  <%= f.input :title, :label => 'Title' %>
-  <%= f.input :body, :label => 'Body' %>
-  <%= f.input :published, :label => 'Published' %>
-<% end %>
-
-# ---------------------------------------------------------
- Copied to clipboard - just paste it!
+  $ rails generate formtastic:form ModelName
 </pre>
 
-*Alt. 2: Generate partial:*
+Rails 2:
 
 <pre>
-$ ./script/generate form Post --partial
+  $ ./script/generate form ModelName
+</pre>
+
+The results are something like this, with the ERB code printed out to the terminal 
+
+<pre>
+  $ rails generate formtastic:form Post
+  # ---------------------------------------------------------
+  #  GENERATED FORMTASTIC CODE
+  # ---------------------------------------------------------
+
+  <% f.inputs do %>
+    <%= f.input :title, :label => 'Title' %>
+    <%= f.input :body, :label => 'Body' %>
+    <%= f.input :published, :label => 'Published' %>
+  <% end %>
+
+  # ---------------------------------------------------------
+   Copied to clipboard - just paste it!
+</pre>
+
+h3. Generating a partial with @--partial@
+
+You can also ask Formtastic to *generate a partial* with the @--partial@ option, placing it in the correct location inside your @app/views@ directory:
+
+<pre>
+  $ rails generate formastic:form Post --partial
       exists  app/views/posts
       create  app/views/posts/_form.html.erb
 </pre>
 
-To generate *HAML* markup, just add the @--haml@ as argument:
+h3. Specifying HAML instead of ERB with @--haml@
 
 <pre>
-$ ./script/generate form Post --haml
+  $ rails generate formastic:form Post --haml
       exists  app/views/admin/posts
       create  app/views/admin/posts/_form.html.haml
 </pre>
 
-To specify the controller in a namespace (eg admin/posts instead of posts), use the --controller argument:
+h3. Specifying controller namespace with @--controller@
 
 <pre>
-$ ./script/generate form Post --partial --controller admin/posts
+  $ rails generate formastic:form Post --partial --controller admin/posts
       exists  app/views/admin/posts
       create  app/views/admin/posts/_form.html.erb
 </pre>
@@ -516,6 +532,7 @@ h2. Custom Inputs
 If you want to add your own input types to encapsulate your own logic or interface patterns, you can do so by subclassing SemanticFormBuilder and configuring Formtastic to use your custom builder class.
 
 @Formtastic::SemanticFormHelper.builder = MyCustomBuilder@
+
 
 h2. Security
 
