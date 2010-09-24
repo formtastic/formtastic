@@ -33,8 +33,8 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.6}
 
-  s.add_dependency(%q<activesupport>, [">= 2.3.0"])
-  s.add_dependency(%q<actionpack>, [">= 2.3.0"])
+  s.add_dependency(%q<activesupport>, [">= 2.3.7"])
+  s.add_dependency(%q<actionpack>, [">= 2.3.7"])
   s.add_dependency(%q<i18n>, [">= 0.4.0"])
   s.add_development_dependency(%q<rspec-rails>, [">= 1.2.6"])
   s.add_development_dependency(%q<rspec_tag_matchers>, [">= 1.0.0"])
