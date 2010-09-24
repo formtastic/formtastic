@@ -6,3 +6,4 @@ pkg
 *watchr.rb
 log/*
 .rvmrc
+.bundle
