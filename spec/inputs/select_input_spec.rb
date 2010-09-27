@@ -301,7 +301,25 @@ describe 'select input' do
       end
     end
     
-    it 'should not have a blank option' do
+    it 'should not have a blank option by default' do
+      output_buffer.concat(@form) if Formtastic::Util.rails3?
+      output_buffer.should_not have_tag("form li select option[@value='']")
+    end
+
+    it 'should respect the :include_blank option for single selects' do
+      @form = semantic_form_for(@fred) do |builder|
+        concat(builder.input(:posts, :as => :select, :multiple => false, :size => 1, :include_blank => true))
+      end
+
+      output_buffer.concat(@form) if Formtastic::Util.rails3?
+      output_buffer.should have_tag("form li select option[@value='']")
+    end
+
+    it 'should ignore the :include_blank option for multiple selects' do
+      @form = semantic_form_for(@fred) do |builder|
+        concat(builder.input(:posts, :as => :select, :multiple => true, :include_blank => true))
+      end
+
       output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should_not have_tag("form li select option[@value='']")
     end
