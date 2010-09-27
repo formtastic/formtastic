@@ -37,7 +37,7 @@ describe 'radio input' do
     it 'should generate an ordered list with a list item for each choice' do
       output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should have_tag('form li fieldset ol')
-      output_buffer.should have_tag('form li fieldset ol li', :count => ::Author.find(:all).size)
+      output_buffer.should have_tag('form li fieldset ol li', :count => ::Author.all.size)
     end
 
     it 'should have one option with a "checked" attribute' do
@@ -49,7 +49,7 @@ describe 'radio input' do
 
       it 'should contain a label for the radio input with a nested input and label text' do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
-        ::Author.find(:all).each do |author|
+        ::Author.all.each do |author|
           output_buffer.should have_tag('form li fieldset ol li label', /#{author.to_label}/)
           output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_id_#{author.id}']")
         end
@@ -57,14 +57,14 @@ describe 'radio input' do
 
       it 'should use values as li.class when value_as_class is true' do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
-        ::Author.find(:all).each do |author|
+        ::Author.all.each do |author|
           output_buffer.should have_tag("form li fieldset ol li.author_#{author.id} label")
         end
       end
 
       it "should have a radio input" do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
-        ::Author.find(:all).each do |author|
+        ::Author.all.each do |author|
           output_buffer.should have_tag("form li fieldset ol li label input#post_author_id_#{author.id}")
           output_buffer.should have_tag("form li fieldset ol li label input[@type='radio']")
           output_buffer.should have_tag("form li fieldset ol li label input[@value='#{author.id}']")
@@ -101,7 +101,7 @@ describe 'radio input' do
       before(:each) do
         output_buffer.replace ''
         @form = semantic_form_for(:project, :url => 'http://test.host') do |builder|
-          concat(builder.input(:author_id, :as => :radio, :collection => ::Author.find(:all)))
+          concat(builder.input(:author_id, :as => :radio, :collection => ::Author.all))
         end
       end
 
@@ -112,12 +112,12 @@ describe 'radio input' do
 
       it 'should generate an li tag for each item in the collection' do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
-        output_buffer.should have_tag('form li fieldset ol li', :count => ::Author.find(:all).size)
+        output_buffer.should have_tag('form li fieldset ol li', :count => ::Author.all.size)
       end
 
       it 'should generate labels for each item' do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
-        ::Author.find(:all).each do |author|
+        ::Author.all.each do |author|
           output_buffer.should have_tag('form li fieldset ol li label', /#{author.to_label}/)
           output_buffer.should have_tag("form li fieldset ol li label[@for='project_author_id_#{author.id}']")
         end
@@ -136,7 +136,7 @@ describe 'radio input' do
 
       it 'should generate inputs for each item' do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
-        ::Author.find(:all).each do |author|
+        ::Author.all.each do |author|
           output_buffer.should have_tag("form li fieldset ol li label input#project_author_id_#{author.id}")
           output_buffer.should have_tag("form li fieldset ol li label input[@type='radio']")
           output_buffer.should have_tag("form li fieldset ol li label input[@value='#{author.id}']")

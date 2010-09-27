@@ -37,7 +37,7 @@ describe 'check_boxes input' do
     it 'should generate an ordered list with a list item for each choice' do
       output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should have_tag('form li fieldset ol')
-      output_buffer.should have_tag('form li fieldset ol li input[@type=checkbox]', :count => ::Post.find(:all).size)
+      output_buffer.should have_tag('form li fieldset ol li input[@type=checkbox]', :count => ::Post.all.size)
     end
 
     it 'should have one option with a "checked" attribute' do
@@ -47,14 +47,14 @@ describe 'check_boxes input' do
 
     it 'should not generate hidden inputs with default value blank' do
       output_buffer.concat(@form) if Formtastic::Util.rails3?
-      output_buffer.should_not have_tag("form li fieldset ol li label input[@type='hidden'][@value='']", :count => ::Post.find(:all).size)
+      output_buffer.should_not have_tag("form li fieldset ol li label input[@type='hidden'][@value='']", :count => ::Post.all.size)
     end
 
     describe "each choice" do
 
       it 'should contain a label for the radio input with a nested input and label text' do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
-        ::Post.find(:all).each do |post|
+        ::Post.all.each do |post|
           output_buffer.should have_tag('form li fieldset ol li label', /#{post.to_label}/)
           output_buffer.should have_tag("form li fieldset ol li label[@for='author_post_ids_#{post.id}']")
         end
@@ -62,14 +62,14 @@ describe 'check_boxes input' do
 
       it 'should use values as li.class when value_as_class is true' do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
-        ::Post.find(:all).each do |post|
+        ::Post.all.each do |post|
           output_buffer.should have_tag("form li fieldset ol li.post_#{post.id} label")
         end
       end
 
       it 'should have a checkbox input but no hidden field for each post' do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
-        ::Post.find(:all).each do |post|
+        ::Post.all.each do |post|
           output_buffer.should have_tag("form li fieldset ol li label input#author_post_ids_#{post.id}")
           output_buffer.should have_tag("form li fieldset ol li label input[@name='author[post_ids][]']", :count => 1)
         end
@@ -98,7 +98,7 @@ describe 'check_boxes input' do
         end
         output_buffer.concat(form) if Formtastic::Util.rails3?
 
-        ::Post.find(:all).each do |post|
+        ::Post.all.each do |post|
           output_buffer.should have_tag("form li fieldset ol li label input#author_post_ids_#{post.id}")
           output_buffer.should have_tag("form li fieldset ol li label input[@name='author[post_ids][]']", :count => 2)
         end
@@ -106,7 +106,7 @@ describe 'check_boxes input' do
       end
 
       it "should mark input as checked if it's the the existing choice" do
-        ::Post.find(:all).include?(@fred.posts.first).should be_true
+        ::Post.all.include?(@fred.posts.first).should be_true
         output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li fieldset ol li label input[@checked='checked']")
       end
@@ -116,7 +116,7 @@ describe 'check_boxes input' do
       before(:each) do
         output_buffer.replace ''
         @form = semantic_form_for(:project, :url => 'http://test.host') do |builder|
-          concat(builder.input(:author_id, :as => :check_boxes, :collection => ::Author.find(:all)))
+          concat(builder.input(:author_id, :as => :check_boxes, :collection => ::Author.all))
         end
       end
 
@@ -127,12 +127,12 @@ describe 'check_boxes input' do
 
       it 'shold generate an li tag for each item in the collection' do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
-        output_buffer.should have_tag('form li fieldset ol li input[@type=checkbox]', :count => ::Author.find(:all).size)
+        output_buffer.should have_tag('form li fieldset ol li input[@type=checkbox]', :count => ::Author.all.size)
       end
 
       it 'should generate labels for each item' do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
-        ::Author.find(:all).each do |author|
+        ::Author.all.each do |author|
           output_buffer.should have_tag('form li fieldset ol li label', /#{author.to_label}/)
           output_buffer.should have_tag("form li fieldset ol li label[@for='project_author_id_#{author.id}']")
         end
@@ -140,7 +140,7 @@ describe 'check_boxes input' do
 
       it 'should generate inputs for each item' do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
-        ::Author.find(:all).each do |author|
+        ::Author.all.each do |author|
           output_buffer.should have_tag("form li fieldset ol li label input#project_author_id_#{author.id}")
           output_buffer.should have_tag("form li fieldset ol li label input[@type='checkbox']")
           output_buffer.should have_tag("form li fieldset ol li label input[@value='#{author.id}']")
@@ -171,19 +171,19 @@ describe 'check_boxes input' do
       end
 
       it 'should have a checkbox input for each post' do
-        ::Post.find(:all).each do |post|
+        ::Post.all.each do |post|
           output_buffer.should have_tag("form li fieldset ol li label input#author_post_ids_#{post.id}")
-          output_buffer.should have_tag("form li fieldset ol li label input[@name='author[post_ids][]']", :count => ::Post.find(:all).length)
+          output_buffer.should have_tag("form li fieldset ol li label input[@name='author[post_ids][]']", :count => ::Post.all.length)
         end
       end
 
       it "should mark input as checked if it's the the existing choice" do
-        ::Post.find(:all).include?(@fred.posts.first).should be_true
+        ::Post.all.include?(@fred.posts.first).should be_true
         output_buffer.should have_tag("form li fieldset ol li label input[@checked='checked']")
       end
 
       it 'should not generate empty hidden inputs' do
-        output_buffer.should_not have_tag("form li fieldset ol li label input[@type='hidden'][@value='']", :count => ::Post.find(:all).length)
+        output_buffer.should_not have_tag("form li fieldset ol li label input[@type='hidden'][@value='']", :count => ::Post.all.length)
       end
     end
 
@@ -403,7 +403,7 @@ describe 'check_boxes input' do
     it 'should render checkboxes' do
       # I'm aware these two lines test the same thing
       output_buffer.should have_tag('input[type="checkbox"]', :count => 2)
-      output_buffer.should have_tag('input[type="checkbox"]', :count => ::Author.find(:all).size)
+      output_buffer.should have_tag('input[type="checkbox"]', :count => ::Author.all.size)
     end
     
     it 'should only select checkboxes that are present in the association' do

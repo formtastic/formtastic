@@ -688,13 +688,13 @@ module Formtastic #:nodoc:
       #
       # You can customize the options available in the select by passing in a collection (an Array or 
       # Hash) through the :collection option.  If not provided, the choices are found by inferring the 
-      # parent's class name from the method name and simply calling find(:all) on it 
-      # (VehicleOwner.find(:all) in the example above).
+      # parent's class name from the method name and simply calling all on it 
+      # (VehicleOwner.all in the example above).
       #
       # Examples:
       #
       #   f.input :author, :collection => @authors
-      #   f.input :author, :collection => Author.find(:all)
+      #   f.input :author, :collection => Author.all
       #   f.input :author, :collection => [@justin, @kate]
       #   f.input :author, :collection => {@justin.name => @justin.id, @kate.name => @kate.id}
       #   f.input :author, :collection => ["Justin", "Kate", "Amelia", "Gus", "Meg"]
@@ -839,12 +839,12 @@ module Formtastic #:nodoc:
       #
       # You can customize the choices available in the radio button set by passing in a collection (an Array or 
       # Hash) through the :collection option.  If not provided, the choices are found by reflecting on the association
-      # (Author.find(:all) in the example above).
+      # (Author.all in the example above).
       #
       # Examples:
       #
       #   f.input :author, :as => :radio, :collection => @authors
-      #   f.input :author, :as => :radio, :collection => Author.find(:all)
+      #   f.input :author, :as => :radio, :collection => Author.all
       #   f.input :author, :as => :radio, :collection => [@justin, @kate]
       #   f.input :author, :collection => ["Justin", "Kate", "Amelia", "Gus", "Meg"]
       #
@@ -1098,13 +1098,13 @@ module Formtastic #:nodoc:
       #
       # You can customize the options available in the set by passing in a collection (Array) of
       # ActiveRecord objects through the :collection option.  If not provided, the choices are found
-      # by inferring the parent's class name from the method name and simply calling find(:all) on
-      # it (Author.find(:all) in the example above).
+      # by inferring the parent's class name from the method name and simply calling all on
+      # it (Author.all in the example above).
       #
       # Examples:
       #
       #   f.input :author, :as => :check_boxes, :collection => @authors
-      #   f.input :author, :as => :check_boxes, :collection => Author.find(:all)
+      #   f.input :author, :as => :check_boxes, :collection => Author.all
       #   f.input :author, :as => :check_boxes, :collection => [@justin, @kate]
       #
       # The :label_method option allows you to customize the label for each checkbox two ways:

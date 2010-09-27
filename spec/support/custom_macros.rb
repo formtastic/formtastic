@@ -255,7 +255,7 @@ module CustomMacros
       describe 'when the :collection option is provided' do
 
         before do
-          @authors = ::Author.find(:all) * 2
+          @authors = ::Author.all * 2
           output_buffer.replace '' # clears the output_buffer from the before block, hax!
         end
 
@@ -407,7 +407,7 @@ module CustomMacros
 
             it 'should have options with text content from the specified method' do
               output_buffer.concat(@form) if Formtastic::Util.rails3?
-              ::Author.find(:all).each do |author|
+              ::Author.all.each do |author|
                 output_buffer.should have_tag("form li.#{as}", /#{author.login}/)
               end
             end
@@ -422,7 +422,7 @@ module CustomMacros
             
             it 'should have options with the proc applied to each' do
               output_buffer.concat(@form) if Formtastic::Util.rails3?
-              ::Author.find(:all).each do |author|
+              ::Author.all.each do |author|
                 output_buffer.should have_tag("form li.#{as}", /#{author.login.reverse}/)
               end
             end
@@ -436,7 +436,7 @@ module CustomMacros
             describe "when the collection objects respond to #{label_method}" do
               before do
                 @fred.stub!(:respond_to?).and_return { |m| m.to_s == label_method || m.to_s == 'id' }
-                ::Author.find(:all).each { |a| a.stub!(label_method).and_return('The Label Text') }
+                ::Author.all.each { |a| a.stub!(label_method).and_return('The Label Text') }
 
                 @form = semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:author, :as => as))
@@ -445,7 +445,7 @@ module CustomMacros
 
               it "should render the options with #{label_method} as the label" do
                 output_buffer.concat(@form) if Formtastic::Util.rails3?
-                ::Author.find(:all).each do |author|
+                ::Author.all.each do |author|
                   output_buffer.should have_tag("form li.#{as}", /The Label Text/)
                 end
               end
@@ -465,7 +465,7 @@ module CustomMacros
             
             it 'should have options with values from specified method' do
               output_buffer.concat(@form) if Formtastic::Util.rails3?
-              ::Author.find(:all).each do |author|
+              ::Author.all.each do |author|
                 output_buffer.should have_tag("form li.#{as} #{countable}[@value='#{author.login}']")
               end
             end
@@ -480,7 +480,7 @@ module CustomMacros
 
             it 'should have options with the proc applied to each value' do
               output_buffer.concat(@form) if Formtastic::Util.rails3?
-              ::Author.find(:all).each do |author|
+              ::Author.all.each do |author|
                 output_buffer.should have_tag("form li.#{as} #{countable}[@value='#{author.login.reverse}']")
               end
             end

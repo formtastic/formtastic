@@ -141,8 +141,8 @@ describe 'select input' do
 
     it 'should have a select option for each Author' do
       output_buffer.concat(@form) if Formtastic::Util.rails3?
-      output_buffer.should have_tag("form li select[@name='post[author_id]'] option", :count => ::Author.find(:all).size + 1)
-      ::Author.find(:all).each do |author|
+      output_buffer.should have_tag("form li select[@name='post[author_id]'] option", :count => ::Author.all.size + 1)
+      ::Author.all.each do |author|
         output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
       end
     end
@@ -295,8 +295,8 @@ describe 'select input' do
 
     it 'should have a select option for each Post' do
       output_buffer.concat(@form) if Formtastic::Util.rails3?
-      output_buffer.should have_tag('form li select option', :count => ::Post.find(:all).size)
-      ::Post.find(:all).each do |post|
+      output_buffer.should have_tag('form li select option', :count => ::Post.all.size)
+      ::Post.all.each do |post|
         output_buffer.should have_tag("form li select option[@value='#{post.id}']", /#{post.to_label}/)
       end
     end
@@ -340,8 +340,8 @@ describe 'select input' do
 
     it 'should have a select option for each Author' do
       output_buffer.concat(@form) if Formtastic::Util.rails3?
-      output_buffer.should have_tag('form li select option', :count => ::Author.find(:all).size)
-      ::Author.find(:all).each do |author|
+      output_buffer.should have_tag('form li select option', :count => ::Author.all.size)
+      ::Author.all.each do |author|
         output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
       end
     end
@@ -379,7 +379,7 @@ describe 'select input' do
   describe 'when no object is given' do
     before(:each) do
       @form = semantic_form_for(:project, :url => 'http://test.host') do |builder|
-        concat(builder.input(:author, :as => :select, :collection => ::Author.find(:all)))
+        concat(builder.input(:author, :as => :select, :collection => ::Author.all))
       end
     end
 
@@ -392,12 +392,12 @@ describe 'select input' do
     it 'should generate select inputs' do
       output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should have_tag('form li select#project_author')
-      output_buffer.should have_tag('form li select option', :count => ::Author.find(:all).size + 1)
+      output_buffer.should have_tag('form li select option', :count => ::Author.all.size + 1)
     end
 
     it 'should generate an option to each item' do
       output_buffer.concat(@form) if Formtastic::Util.rails3?
-      ::Author.find(:all).each do |author|
+      ::Author.all.each do |author|
         output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
       end
     end
