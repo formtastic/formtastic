@@ -1,4 +1,4 @@
-# coding: utf-8
+# encoding: utf-8
 require 'rubygems'
 require 'active_support'
 require 'action_pack'

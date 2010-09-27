@@ -1,4 +1,4 @@
-# coding: utf-8
+# encoding: utf-8
 module Formtastic
   class FormGenerator < Rails::Generators::NamedBase
     desc "Generates formtastic form code based on an existing model. By default the " <<

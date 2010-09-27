@@ -1,4 +1,4 @@
-# coding: utf-8
+# encoding: utf-8
 module Formtastic
   class InstallGenerator < Rails::Generators::Base
     desc "Copies formtastic.css and formtastic_changes.css to public/stylesheets/ and a config initializer to config/initializers/formtastic_config.rb"

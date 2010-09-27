@@ -1,4 +1,4 @@
-# coding: utf-8
+# encoding: utf-8
 require 'spec_helper'
 
 describe 'SemanticFormBuilder#commit_button' do
