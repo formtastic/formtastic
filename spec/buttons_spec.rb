@@ -4,7 +4,7 @@ require 'spec_helper'
 describe 'SemanticFormBuilder#buttons' do
 
   include FormtasticSpecHelper
-  
+
   before do
     @output_buffer = ''
     mock_everything

@@ -2,14 +2,14 @@
 require 'spec_helper'
 
 describe 'string input' do
-  
+
   include FormtasticSpecHelper
-  
+
   before do
     @output_buffer = ''
     mock_everything
   end
-  
+
   describe "when object is provided" do
     before do
       @form = semantic_form_for(@new_post) do |builder|
@@ -138,33 +138,33 @@ describe 'string input' do
       end
     end
   end
-  
+
   describe "when no object is provided" do
     before do
       @form = semantic_form_for(:project, :url => 'http://test.host/') do |builder|
         concat(builder.input(:title, :as => :string))
       end
     end
-    
+
     it_should_have_label_with_text(/Title/)
     it_should_have_label_for("project_title")
     it_should_have_input_with_id("project_title")
     it_should_have_input_with_type(:text)
     it_should_have_input_with_name("project[title]")
   end
-  
+
   describe "when size is nil" do
     before do
       @form = semantic_form_for(:project, :url => 'http://test.host/') do |builder|
         concat(builder.input(:title, :as => :string, :input_html => {:size => nil}))
       end
     end
-  
+
     it "should have no size attribute" do
       output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should_not have_tag("input[@size]")
     end
   end
-  
+
 end
 

@@ -4,7 +4,7 @@ require 'spec_helper'
 describe 'SemanticFormBuilder#commit_button' do
 
   include FormtasticSpecHelper
-  
+
   before do
     @output_buffer = ''
     mock_everything
@@ -44,11 +44,11 @@ describe 'SemanticFormBuilder#commit_button' do
       output_buffer.should have_tag('li.commit input#my_id')
       output_buffer.should have_tag('li.commit input.my_class')
     end
-    
+
   end
 
   describe "its accesskey" do
-  
+
     it 'should allow nil default' do
       with_config :default_commit_button_accesskey, nil do
         output_buffer.should_not have_tag('li.commit input[@accesskey]')
@@ -94,24 +94,24 @@ describe 'SemanticFormBuilder#commit_button' do
   end
 
   describe 'when the first option is a string and the second is a hash' do
-    
+
     before do
       @new_post.stub!(:new_record?).and_return(false)
       @form = semantic_form_for(@new_post) do |builder|
         concat(builder.commit_button("a string", :button_html => { :class => "pretty"}))
       end
     end
-    
+
     it "should render the string as the value of the button" do
       output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should have_tag('li input[@value="a string"]')
     end
-    
+
     it "should deal with the options hash" do
       output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should have_tag('li input.pretty')
     end
-    
+
   end
 
   describe 'when the first option is a hash' do
@@ -122,12 +122,12 @@ describe 'SemanticFormBuilder#commit_button' do
         concat(builder.commit_button(:button_html => { :class => "pretty"}))
       end
     end
-    
+
     it "should deal with the options hash" do
       output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should have_tag('li input.pretty')
     end
-    
+
   end
 
   describe 'label' do
@@ -149,11 +149,11 @@ describe 'SemanticFormBuilder#commit_button' do
           before do
             ::I18n.backend.store_translations :en, :formtastic => {:submit => 'Submit %{model}'}
           end
-          
+
           after do
             ::I18n.backend.reload!
           end
-          
+
           it 'should render an input with default I18n-localized label (fallback)' do
             form = semantic_form_for(:post, :url => 'http://example.com') do |builder|
               concat(builder.commit_button)
@@ -251,7 +251,7 @@ describe 'SemanticFormBuilder#commit_button' do
                 }
             ::Formtastic::SemanticFormBuilder.i18n_lookups_by_default = true
           end
-          
+
           after do
             ::I18n.backend.reload!
           end
@@ -305,7 +305,7 @@ describe 'SemanticFormBuilder#commit_button' do
           before do
             ::I18n.backend.store_translations :en, :formtastic => {:update => 'Save %{model}'}
           end
-          
+
           after do
             ::I18n.backend.reload!
           end
@@ -334,7 +334,7 @@ describe 'SemanticFormBuilder#commit_button' do
           after do
             ::I18n.backend.reload!
           end
-          
+
           it 'should render an input with localized label (I18n)' do
             ::I18n.backend.store_translations :en,
               :formtastic => {
@@ -364,7 +364,7 @@ describe 'SemanticFormBuilder#commit_button' do
       end
     end
   end
-  
+
   describe 'when the model is two words' do
     before do
       output_buffer = ''
@@ -374,28 +374,28 @@ describe 'SemanticFormBuilder#commit_button' do
 
         def id
         end
-        
+
         def persisted?
         end
-        
+
         # Rails does crappy human_name
         def self.human_name
           "User post"
         end
       end
       @new_user_post = ::UserPost.new
-      
+
       @new_user_post.stub!(:new_record?).and_return(true)
       @form = semantic_form_for(@new_user_post, :url => '') do |builder|
         concat(builder.commit_button())
       end
     end
-    
+
     it "should render the string as the value of the button" do
       output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should have_tag('li input[@value="Create User post"]')
     end
-    
+
   end
-    
+
 end

@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 if Formtastic::Util.rails3?
   gem 'rspec', '~> 2.0.0.beta22'
   gem 'rspec-rails', '~> 2.0.0.beta22'

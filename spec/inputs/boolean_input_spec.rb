@@ -2,18 +2,18 @@
 require 'spec_helper'
 
 describe 'boolean input' do
-  
+
   include FormtasticSpecHelper
-  
+
   before do
     @output_buffer = ''
     mock_everything
-    
+
     @form = semantic_form_for(@new_post) do |builder|
       concat(builder.input(:allow_comments, :as => :boolean))
     end
   end
-   
+
   it_should_have_input_wrapper_with_class("boolean")
   it_should_have_input_wrapper_with_id("post_allow_comments_input")
   it_should_apply_error_logic_for_input_type(:boolean)
@@ -86,7 +86,7 @@ describe 'boolean input' do
     describe "selected" do
       before do
         @new_post.stub!(:allow_comments).and_return(false)
-        
+
         with_deprecation_silenced do
           @form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:allow_comments, :as => :boolean, :selected => true))

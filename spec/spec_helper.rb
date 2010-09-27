@@ -31,9 +31,9 @@ module FormtasticSpecHelper
   include ActionView::Helpers::AssetTagHelper
   include ActiveSupport
   include ActionController::PolymorphicRoutes if defined?(ActionController::PolymorphicRoutes)
-  
+
   include Formtastic::SemanticFormHelper
-  
+
   def rails3?
     ActionPack::VERSION::MAJOR > 2
   end
@@ -41,7 +41,7 @@ module FormtasticSpecHelper
   def rails2?
     ActionPack::VERSION::MAJOR == 2
   end
-  
+
   def default_input_type(column_type, column_name = :generic_column_name)
     @new_post.stub!(column_name)
     @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => column_type)) unless column_type.nil?
@@ -52,7 +52,7 @@ module FormtasticSpecHelper
 
     return @default_type
   end
-  
+
   def active_model_validator(kind, attributes, options = {})
     validator = mock("ActiveModel::Validations::#{kind.to_s.titlecase}Validator", :attributes => attributes, :options => options)
     validator.stub!(:kind).and_return(kind)
@@ -104,9 +104,9 @@ module FormtasticSpecHelper
     extend ActiveModel::Naming if defined?(ActiveModel::Naming)
     include ActiveModel::Conversion if defined?(ActiveModel::Conversion)
   end
-  
+
   def mock_everything
-    
+
     # Resource-oriented styles like form_for(@post) will expect a path method for the object,
     # so we're defining some here.
     def post_models_path; "/postmodels/1"; end
@@ -118,7 +118,7 @@ module FormtasticSpecHelper
     def author_path(o); "/authors/1"; end
     def authors_path; "/authors"; end
     def new_author_path; "/authors/new"; end
-    
+
     @fred = mock('user')
     @fred.stub!(:to_ary)
     @fred.stub!(:class).and_return(::Author)
@@ -143,7 +143,7 @@ module FormtasticSpecHelper
     @bob.stub!(:errors).and_return(mock('errors', :[] => nil))
     @bob.stub!(:to_key).and_return(nil)
     @bob.stub!(:persisted?).and_return(nil)
-    
+
     @james = mock('user')
     @james.stub!(:to_ary)
     @james.stub!(:class).and_return(::Author)
@@ -156,7 +156,7 @@ module FormtasticSpecHelper
     @james.stub!(:errors).and_return(mock('errors', :[] => nil))
     @james.stub!(:to_key).and_return(nil)
     @james.stub!(:persisted?).and_return(nil)
-    
+
 
     ::Author.stub!(:find).and_return([@fred, @bob])
     ::Author.stub!(:all).and_return([@fred, @bob])
@@ -221,7 +221,7 @@ module FormtasticSpecHelper
       when :main_post
         mock('reflection', :options => {}, :klass => ::Post, :macro => :belongs_to)
       end
-      
+
     end
     ::Post.stub!(:find).and_return([@freds_post])
     ::Post.stub!(:all).and_return([@freds_post])
@@ -229,7 +229,7 @@ module FormtasticSpecHelper
     ::Post.stub!(:to_key).and_return(nil)
     ::Post.stub!(:persisted?).and_return(nil)
     ::Post.stub!(:to_ary)
-    
+
     @new_post.stub!(:title)
     @new_post.stub!(:to_ary)
     @new_post.stub!(:body)
@@ -254,7 +254,7 @@ module FormtasticSpecHelper
     @new_post.stub!(:column_for_attribute).with(:country).and_return(mock('column', :type => :string, :limit => 255))
     @new_post.stub!(:column_for_attribute).with(:country_subdivision).and_return(mock('column', :type => :string, :limit => 255))
     @new_post.stub!(:column_for_attribute).with(:country_code).and_return(mock('column', :type => :string, :limit => 255))
-    
+
     @new_post.stub!(:author).and_return(@bob)
     @new_post.stub!(:author_id).and_return(@bob.id)
 
@@ -264,34 +264,34 @@ module FormtasticSpecHelper
     @new_post.should_receive(:publish_at=).any_number_of_times
     @new_post.should_receive(:title=).any_number_of_times
     @new_post.stub!(:main_post_id).and_return(nil)
-        
+
   end
-  
+
   def self.included(base)
     base.class_eval do
-      
+
       attr_accessor :output_buffer
-      
+
       def protect_against_forgery?
         false
       end
-      
+
     end
   end
-  
+
   def with_config(config_method_name, value, &block)
     old_value = ::Formtastic::SemanticFormBuilder.send(config_method_name)
     ::Formtastic::SemanticFormBuilder.send(:"#{config_method_name}=", value)
     yield
     ::Formtastic::SemanticFormBuilder.send(:"#{config_method_name}=", old_value)
   end
-  
+
   def with_deprecation_silenced(&block)
     ::ActiveSupport::Deprecation.silenced = true
     yield
     ::ActiveSupport::Deprecation.silenced = false
   end
-  
+
 end
 
 ::ActiveSupport::Deprecation.silenced = false

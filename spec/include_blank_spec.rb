@@ -11,7 +11,7 @@ describe "*select: options[:include_blank]" do
 
     @new_post.stub!(:author_id).and_return(nil)
     @new_post.stub!(:publish_at).and_return(nil)
-    
+
     @select_input_types = {
         :select => :author,
         :datetime => :publish_at,

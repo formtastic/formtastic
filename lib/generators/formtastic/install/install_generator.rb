@@ -7,7 +7,7 @@ module Formtastic
       # Set source directory for the templates to the rails2 generator template directory
       @source_root ||= File.expand_path(File.join('..', '..', '..', '..', 'generators', 'formtastic', 'templates'), File.dirname(__FILE__))
     end
-    
+
     def self.banner
       "rails generate formtastic:install [options]"
     end

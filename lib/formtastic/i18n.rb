@@ -1,6 +1,8 @@
+# encoding: utf-8
+
 module Formtastic
   module I18n
-    
+
     DEFAULT_SCOPE = [:formtastic].freeze
     DEFAULT_VALUES = {
         :required       => 'required',
@@ -17,9 +19,9 @@ module Formtastic
         '%{nested_model}.%{attribute}',
         '%{attribute}'
       ]
-      
+
     class << self
-      
+
       def translate(*args)
         key = args.shift.to_sym
         options = args.extract_options!
@@ -28,8 +30,8 @@ module Formtastic
         ::I18n.translate(key, *(args << options))
       end
       alias :t :translate
-      
+
     end
-    
+
   end
 end

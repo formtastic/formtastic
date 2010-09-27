@@ -4,7 +4,7 @@ require 'spec_helper'
 describe 'SemanticFormBuilder#label' do
 
   include FormtasticSpecHelper
-  
+
   before do
     @output_buffer = ''
     mock_everything
@@ -84,6 +84,6 @@ describe 'SemanticFormBuilder#label' do
     end
 
   end
-  
+
 end
 

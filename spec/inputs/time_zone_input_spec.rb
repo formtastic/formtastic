@@ -2,22 +2,22 @@
 require 'spec_helper'
 
 describe 'time_zone input' do
-  
+
   include FormtasticSpecHelper
-  
+
   before do
     @output_buffer = ''
     mock_everything
-    
+
     @form = semantic_form_for(@new_post) do |builder|
       concat(builder.input(:time_zone))
     end
   end
-    
+
   it_should_have_input_wrapper_with_class("time_zone")
   it_should_have_input_wrapper_with_id("post_time_zone_input")
   it_should_apply_error_logic_for_input_type(:time_zone)
-  
+
   it 'should generate a label for the input' do
     output_buffer.concat(@form) if Formtastic::Util.rails3?
     output_buffer.should have_tag('form li label')
@@ -61,7 +61,7 @@ describe 'time_zone input' do
       output_buffer.should have_tag("form li select[@name=\"project[time_zone]\"]")
     end
   end
-  
+
   describe 'when :selected is set' do
     before do
       @output_buffer = ''
@@ -73,12 +73,12 @@ describe 'time_zone input' do
     # describe "no selected items" do
     #   before do
     #     @new_post.stub!(:time_zone).and_return('Stockholm')
-    # 
+    #
     #     semantic_form_for(@new_post) do |builder|
     #       concat(builder.input(:time_zone, :as => :time_zone, :selected => nil))
     #     end
     #   end
-    # 
+    #
     #   it 'should not have any selected item(s)' do
     #     output_buffer.should_not have_tag("form li select option[@selected='selected']")
     #   end

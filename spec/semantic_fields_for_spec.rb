@@ -4,21 +4,21 @@ require 'spec_helper'
 describe 'SemanticFormBuilder#semantic_fields_for' do
 
   include FormtasticSpecHelper
-  
+
   before do
     @output_buffer = ''
     mock_everything
     @new_post.stub!(:author).and_return(::Author.new)
   end
 
-  it 'yields an instance of SemanticFormHelper.builder' do  
+  it 'yields an instance of SemanticFormHelper.builder' do
     semantic_form_for(@new_post) do |builder|
       builder.semantic_fields_for(:author) do |nested_builder|
         nested_builder.class.should == ::Formtastic::SemanticFormHelper.builder
       end
     end
   end
-  
+
   it 'nests the object name' do
     semantic_form_for(@new_post) do |builder|
       builder.semantic_fields_for(@bob) do |nested_builder|
@@ -26,7 +26,7 @@ describe 'SemanticFormBuilder#semantic_fields_for' do
       end
     end
   end
-  
+
   it 'should sanitize html id for li tag' do
     @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
     form = semantic_form_for(@new_post) do |builder|

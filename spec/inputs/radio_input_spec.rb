@@ -2,9 +2,9 @@
 require 'spec_helper'
 
 describe 'radio input' do
-  
+
   include FormtasticSpecHelper
-  
+
   before do
     @output_buffer = ''
     mock_everything
@@ -16,13 +16,13 @@ describe 'radio input' do
         concat(builder.input(:author, :as => :radio, :value_as_class => true))
       end
     end
-    
+
     it_should_have_input_wrapper_with_class("radio")
     it_should_have_input_wrapper_with_id("post_author_input")
     it_should_have_a_nested_fieldset
     it_should_apply_error_logic_for_input_type(:radio)
     it_should_use_the_collection_when_provided(:radio, 'input')
-    
+
     it 'should generate a legend containing a label with text for the input' do
       output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should have_tag('form li fieldset legend.label label')
@@ -84,17 +84,17 @@ describe 'radio input' do
         output_buffer.concat(form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li fieldset ol li label input[@checked='checked']")
       end
-      
+
       it "should not contain invalid HTML attributes" do
-        
+
         form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(:author, :as => :radio))
         end
-        
+
         output_buffer.concat(form) if Formtastic::Util.rails3?
         output_buffer.should_not have_tag("form li fieldset ol li input[@find_options]")
       end
-      
+
     end
 
     describe 'and no object is given' do
@@ -154,7 +154,7 @@ describe 'radio input' do
     describe "no selected items" do
       before do
         @new_post.stub!(:author_ids).and_return(nil)
-        
+
         with_deprecation_silenced do
           @form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:authors, :as => :radio, :selected => nil))
@@ -187,9 +187,9 @@ describe 'radio input' do
     end
 
   end
-  
+
   describe "with i18n of the legend label" do
-    
+
     before do
       ::I18n.backend.store_translations :en, :formtastic => { :labels => { :post => { :authors => "Translated!" }}}
 
@@ -199,17 +199,17 @@ describe 'radio input' do
         concat(builder.input(:authors, :as => :radio))
       end
     end
-    
+
     after do
       ::I18n.backend.reload!
       Formtastic::SemanticFormBuilder.i18n_lookups_by_default = false
     end
-    
+
     it "should do foo" do
       output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should have_tag("legend.label label", /Translated/)
     end
-    
+
   end
 
   describe "when :label option is set" do

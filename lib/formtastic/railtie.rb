@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'formtastic'
 require 'formtastic/layout_helper'
 require 'rails'

@@ -2,9 +2,9 @@
 require 'spec_helper'
 
 describe 'SemanticFormBuilder#inputs' do
-  
+
   include FormtasticSpecHelper
-  
+
   before do
     @output_buffer = ''
     mock_everything
@@ -61,12 +61,12 @@ describe 'SemanticFormBuilder#inputs' do
     end
 
     describe 'when a :for option is provided' do
-      
+
       before do
         @new_post.stub!(:respond_to?).and_return(true, true)
         @new_post.stub!(:author).and_return(@bob)
       end
-      
+
       it 'should render nested inputs' do
         @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
 
@@ -100,7 +100,7 @@ describe 'SemanticFormBuilder#inputs' do
       end
 
       describe "as a symbol representing the association name" do
-        
+
         it 'should nest the inputs with an _attributes suffix on the association name' do
           form = semantic_form_for(@new_post) do |post|
             inputs = post.inputs :for => :author do |author|
@@ -111,30 +111,30 @@ describe 'SemanticFormBuilder#inputs' do
           output_buffer.concat(form) if Formtastic::Util.rails3?
           output_buffer.should have_tag("form input[@name='post[author_attributes][login]']")
         end
-        
+
       end
-      
+
       describe "as a symbol representing a has_many association name" do
         before do
           @new_post.stub!(:authors).and_return([@bob, @fred])
           @new_post.stub!(:authors_attributes=)
         end
-        
+
         it 'should nest the inputs with a name input for each item' do
           form = semantic_form_for(@new_post) do |post|
             post.inputs :for => :authors do |author|
               concat(author.input(:login))
             end
           end
-          
+
           output_buffer.concat(form) if Formtastic::Util.rails3?
           output_buffer.should have_tag("form input[@name='post[authors_attributes][0][login]']")
           output_buffer.should have_tag("form input[@name='post[authors_attributes][1][login]']")
         end
       end
-      
+
       describe 'as an array containing the a symbole for the association name and the associated object' do
-        
+
         it 'should nest the inputs with an _attributes suffix on the association name' do
           form = semantic_form_for(@new_post) do |post|
             inputs = post.inputs :for => [:author, @new_post.author] do |author|
@@ -145,11 +145,11 @@ describe 'SemanticFormBuilder#inputs' do
           output_buffer.concat(form) if Formtastic::Util.rails3?
           output_buffer.should have_tag("form input[@name='post[author_attributes][login]']")
         end
-        
+
       end
-        
+
       describe 'as an associated object' do
-        
+
         it 'should not nest the inputs with an _attributes suffix' do
           form = semantic_form_for(@new_post) do |post|
             inputs = post.inputs :for => @new_post.author do |author|
@@ -160,8 +160,8 @@ describe 'SemanticFormBuilder#inputs' do
           output_buffer.concat(form) if Formtastic::Util.rails3?
           output_buffer.should have_tag("form input[@name='post[author][login]']")
         end
-        
-      end 
+
+      end
 
       it 'should raise an error if :for and block with no argument is given' do
         semantic_form_for(@new_post) do |builder|
@@ -258,7 +258,7 @@ describe 'SemanticFormBuilder#inputs' do
           output_buffer.should have_tag("form fieldset legend", /^#{@nested_forms_legend_text}$/)
         end
       end
-      
+
       describe 'and is a symbol' do
         before do
           @localized_legend_text = "Localized advanced options"

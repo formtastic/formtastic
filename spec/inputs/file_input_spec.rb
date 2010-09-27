@@ -2,13 +2,13 @@
 require 'spec_helper'
 
 describe 'file input' do
-  
+
   include FormtasticSpecHelper
-  
+
   before do
     @output_buffer = ''
     mock_everything
-    
+
     @form = semantic_form_for(@new_post) do |builder|
       concat(builder.input(:body, :as => :file))
     end

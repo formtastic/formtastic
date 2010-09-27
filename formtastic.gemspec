@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 Gem::Specification.new do |s|
   s.name = %q{formtastic}
   s.version = "1.1.0"
@@ -40,4 +42,3 @@ Gem::Specification.new do |s|
   s.add_development_dependency(%q<rspec_tag_matchers>, [">= 1.0.0"])
 
 end
-

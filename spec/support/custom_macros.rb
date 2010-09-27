@@ -1,92 +1,94 @@
+# encoding: utf-8
+
 module CustomMacros
-  
+
   def self.included(base)
-    base.extend(ClassMethods)    
+    base.extend(ClassMethods)
   end
-  
+
   module ClassMethods
-    
+
     def it_should_have_input_wrapper_with_class(class_name)
       it "should have input wrapper with class '#{class_name}'" do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
-        output_buffer.should have_tag("form li.#{class_name}") 
+        output_buffer.should have_tag("form li.#{class_name}")
       end
     end
-    
+
     def it_should_have_input_wrapper_with_id(id_string)
       it "should have input wrapper with id '#{id_string}'" do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
-        output_buffer.should have_tag("form li##{id_string}") 
+        output_buffer.should have_tag("form li##{id_string}")
       end
     end
-    
+
     def it_should_not_have_a_label
       it "should not have a label" do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
-        output_buffer.should_not have_tag("form li label") 
+        output_buffer.should_not have_tag("form li label")
       end
     end
-    
+
     def it_should_have_a_nested_fieldset
       it "should have a nested_fieldset" do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
-        output_buffer.should have_tag("form li fieldset") 
+        output_buffer.should have_tag("form li fieldset")
       end
     end
-    
+
     def it_should_have_label_with_text(string_or_regex)
       it "should have a label with text '#{string_or_regex}'" do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
-        output_buffer.should have_tag("form li label", string_or_regex) 
+        output_buffer.should have_tag("form li label", string_or_regex)
       end
     end
-    
+
     def it_should_have_label_for(element_id)
       it "should have a label for ##{element_id}" do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li label[@for='#{element_id}']")
       end
     end
-    
+
     def it_should_have_input_with_id(element_id)
       it "should have an input with id '#{element_id}'" do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li input##{element_id}")
       end
     end
-    
+
     def it_should_have_input_with_type(input_type)
       it "should have a #{input_type} input" do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li input[@type=\"#{input_type}\"]")
       end
     end
-    
+
     def it_should_have_input_with_name(name)
       it "should have an input named #{name}" do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li input[@name=\"#{name}\"]")
       end
     end
-    
+
     def it_should_have_textarea_with_name(name)
       it "should have an input named #{name}" do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li textarea[@name=\"#{name}\"]")
       end
     end
-    
+
     def it_should_have_textarea_with_id(element_id)
       it "should have an input with id '#{element_id}'" do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li textarea##{element_id}")
       end
     end
-    
+
     def it_should_use_default_text_field_size_when_method_has_no_database_column(as)
       it 'should use default_text_field_size when method has no database column' do
         @new_post.stub!(:column_for_attribute).and_return(nil) # Return a nil column
-        
+
         form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(:title, :as => as))
         end
@@ -94,7 +96,7 @@ module CustomMacros
         output_buffer.should have_tag("form li input[@size='#{Formtastic::SemanticFormBuilder.default_text_field_size}']")
       end
     end
-    
+
     def it_should_apply_custom_input_attributes_when_input_html_provided(as)
       it 'it should apply custom input attributes when input_html provided' do
         form = semantic_form_for(@new_post) do |builder|
@@ -104,7 +106,7 @@ module CustomMacros
         output_buffer.should have_tag("form li input.myclass")
       end
     end
-    
+
     def it_should_apply_custom_for_to_label_when_input_html_id_provided(as)
       it 'it should apply custom for to label when input_html :id provided' do
         form = semantic_form_for(@new_post) do |builder|
@@ -114,7 +116,7 @@ module CustomMacros
         output_buffer.should have_tag('form li label[@for="myid"]')
       end
     end
-    
+
     def it_should_have_maxlength_matching_column_limit
       it 'should have a maxlength matching column limit' do
         @new_post.column_for_attribute(:title).limit.should == 50
@@ -122,7 +124,7 @@ module CustomMacros
         output_buffer.should have_tag("form li input[@maxlength='50']")
       end
     end
-    
+
     def it_should_use_default_text_field_size_for_columns_longer_than_default_text_field_size(as)
       it 'should use default_text_field_size for columns longer than default_text_field_size' do
         default_size = Formtastic::SemanticFormBuilder.default_text_field_size
@@ -136,7 +138,7 @@ module CustomMacros
         output_buffer.should have_tag("form li input[@size='#{default_size}']")
       end
     end
-    
+
     def it_should_use_column_size_for_columns_shorter_than_default_text_field_size(as)
       it 'should use the column size for columns shorter than default_text_field_size' do
         column_limit_shorted_than_default = 1
@@ -150,7 +152,7 @@ module CustomMacros
         output_buffer.should have_tag("form li input[@size='#{column_limit_shorted_than_default}']")
       end
     end
-    
+
     def it_should_apply_error_logic_for_input_type(type)
       describe 'when there are errors on the object for this method' do
         before do
@@ -241,7 +243,7 @@ module CustomMacros
         end
       end
     end
-    
+
     def it_should_call_find_on_association_class_when_no_collection_is_provided(as)
       it "should call find on the association class when no collection is provided" do
         ::Author.should_receive(:all)
@@ -339,25 +341,25 @@ module CustomMacros
             end
           end
         end
-        
+
         if as == :radio
           describe 'and the :collection is an array of arrays with boolean values' do
             before do
               @choices = { 'Yeah' => true, 'Nah' => false }.to_a
             end
-        
+
             it "should use the first value as the label text and the last value as the value attribute for #{countable}" do
               form = semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:category_name, :as => as, :collection => @choices))
               end
               output_buffer.concat(form) if Formtastic::Util.rails3?
-              
+
               output_buffer.should have_tag("form li.#{as} #{countable}#post_category_name_true")
               output_buffer.should have_tag("form li.#{as} #{countable}#post_category_name_false")
             end
           end
         end
-        
+
         describe 'and the :collection is an array of symbols' do
           before do
             @categories = [ :General, :Design, :Development ]
@@ -376,7 +378,7 @@ module CustomMacros
             end
           end
         end
-        
+
         describe 'and the :collection is an OrderedHash of strings' do
           before do
             @categories = ActiveSupport::OrderedHash.new('General' => 'gen', 'Design' => 'des','Development' => 'dev')
@@ -393,11 +395,11 @@ module CustomMacros
               output_buffer.should have_tag("form li.#{as} #{countable}[@value='#{value}']")
             end
           end
-          
+
         end
-        
+
         describe 'when the :label_method option is provided' do
-          
+
           describe 'as a symbol' do
             before do
               @form = semantic_form_for(@new_post) do |builder|
@@ -412,14 +414,14 @@ module CustomMacros
               end
             end
           end
-          
+
           describe 'as a proc' do
             before do
               @form  = semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:author, :as => as, :label_method => Proc.new {|a| a.login.reverse }))
               end
             end
-            
+
             it 'should have options with the proc applied to each' do
               output_buffer.concat(@form) if Formtastic::Util.rails3?
               ::Author.all.each do |author|
@@ -427,7 +429,7 @@ module CustomMacros
               end
             end
           end
-          
+
         end
 
         describe 'when the :label_method option is not provided' do
@@ -455,14 +457,14 @@ module CustomMacros
         end
 
         describe 'when the :value_method option is provided' do
-          
+
           describe 'as a symbol' do
             before do
               @form = semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:author, :as => as, :value_method => :login))
               end
             end
-            
+
             it 'should have options with values from specified method' do
               output_buffer.concat(@form) if Formtastic::Util.rails3?
               ::Author.all.each do |author|
@@ -470,7 +472,7 @@ module CustomMacros
               end
             end
           end
-          
+
           describe 'as a proc' do
             before do
               @form = semantic_form_for(@new_post) do |builder|

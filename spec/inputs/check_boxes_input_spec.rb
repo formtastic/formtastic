@@ -2,37 +2,37 @@
 require 'spec_helper'
 
 describe 'check_boxes input' do
-  
+
   include FormtasticSpecHelper
-  
+
   describe 'for a has_many association' do
     before do
       @output_buffer = ''
       mock_everything
-      
+
       @form = semantic_form_for(@fred) do |builder|
         concat(builder.input(:posts, :as => :check_boxes, :value_as_class => true))
       end
     end
-    
+
     it_should_have_input_wrapper_with_class("check_boxes")
     it_should_have_input_wrapper_with_id("author_posts_input")
     it_should_have_a_nested_fieldset
     it_should_apply_error_logic_for_input_type(:check_boxes)
     it_should_call_find_on_association_class_when_no_collection_is_provided(:check_boxes)
     it_should_use_the_collection_when_provided(:check_boxes, 'input[@type="checkbox"]')
-    
+
     it 'should generate a legend containing a label with text for the input' do
       output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should have_tag('form li fieldset legend.label label')
       output_buffer.should have_tag('form li fieldset legend.label label', /Posts/)
     end
-    
+
     it 'should not link the label within the legend to any input' do
       output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should_not have_tag('form li fieldset legend label[@for^="author_post_ids_"]')
     end
-    
+
 
     it 'should generate an ordered list with a list item for each choice' do
       output_buffer.concat(@form) if Formtastic::Util.rails3?
@@ -167,7 +167,7 @@ describe 'check_boxes input' do
         form = semantic_form_for(@fred) do |builder|
           concat(builder.input(:posts, :as => :check_boxes, :value_as_class => true, :hidden_fields => false))
         end
-        output_buffer.concat(form) if Formtastic::Util.rails3?        
+        output_buffer.concat(form) if Formtastic::Util.rails3?
       end
 
       it 'should have a checkbox input for each post' do
@@ -231,7 +231,7 @@ describe 'check_boxes input' do
       describe "multiple selected items" do
         before do
           @new_post.stub!(:author_ids).and_return(nil)
-          
+
           with_deprecation_silenced do
             @form = semantic_form_for(@new_post) do |builder|
               concat(builder.input(:authors, :as => :check_boxes, :selected => [@bob.id, @fred.id]))
@@ -250,7 +250,7 @@ describe 'check_boxes input' do
       end
 
     end
-    
+
     it 'should warn about :selected deprecation' do
       with_deprecation_silenced do
         ::ActiveSupport::Deprecation.should_receive(:warn).any_number_of_times
@@ -259,7 +259,7 @@ describe 'check_boxes input' do
         end
       end
     end
-    
+
 
     describe 'when :disabled is set' do
       before do
@@ -318,7 +318,7 @@ describe 'check_boxes input' do
       end
 
     end
-    
+
     describe "with i18n of the legend label" do
 
       before do
@@ -379,7 +379,7 @@ describe 'check_boxes input' do
           concat(builder.input(:authors, :as => :check_boxes, :required => true))
         end
       end
-  
+
       it "should output the correct label title" do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("legend.label label abbr")
@@ -389,29 +389,29 @@ describe 'check_boxes input' do
   end
 
   describe 'for a has_and_belongs_to_many association' do
-    
+
     before do
       @output_buffer = ''
       mock_everything
-      
+
       @form = semantic_form_for(@freds_post) do |builder|
         concat(builder.input(:authors, :as => :check_boxes))
       end
       output_buffer.concat(@form) if Formtastic::Util.rails3?
     end
-    
+
     it 'should render checkboxes' do
       # I'm aware these two lines test the same thing
       output_buffer.should have_tag('input[type="checkbox"]', :count => 2)
       output_buffer.should have_tag('input[type="checkbox"]', :count => ::Author.all.size)
     end
-    
+
     it 'should only select checkboxes that are present in the association' do
       # I'm aware these two lines test the same thing
       output_buffer.should have_tag('input[checked="checked"]', :count => 1)
       output_buffer.should have_tag('input[checked="checked"]', :count => @freds_post.authors.size)
     end
-    
+
   end
 
   describe 'for an association when a :collection is provided' do

@@ -2,14 +2,14 @@
 require 'spec_helper'
 
 describe 'SemanticFormHelper' do
-  
+
   include FormtasticSpecHelper
-  
+
   before do
     @output_buffer = ''
     mock_everything
   end
-  
+
   describe '#semantic_form_for' do
 
     it 'yields an instance of SemanticFormBuilder' do
@@ -99,7 +99,7 @@ describe 'SemanticFormHelper' do
         builder.object_name.should == "post"
       end
     end
-    
+
     it 'can be called with a generic style and instance variable' do
       if rails3?
         semantic_form_for(@new_post, :as => :post, :url => new_post_path) do |builder|
@@ -121,7 +121,7 @@ describe 'SemanticFormHelper' do
         builder.object_name.to_s.should == "post" # TODO: is this forced .to_s a bad assumption somewhere?
       end
     end
-    
+
     describe "with :builder option" do
       it "yields an instance of the given builder" do
         class MyAwesomeCustomBuilder < ::Formtastic::SemanticFormBuilder
@@ -131,7 +131,7 @@ describe 'SemanticFormHelper' do
         end
       end
     end
-    
+
   end
 
   describe '#semantic_fields_for' do
