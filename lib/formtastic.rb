@@ -570,9 +570,9 @@ module Formtastic #:nodoc:
       #   configuration option all_fields_required_by_default is used.
       #
       def method_required?(attribute) #:nodoc:
-        if @object && @object.class.respond_to?(:reflect_on_validations_for)
-          attribute_sym = attribute.to_s.sub(/_id$/, '').to_sym
+        attribute_sym = attribute.to_s.sub(/_id$/, '').to_sym
 
+        if @object && @object.class.respond_to?(:reflect_on_validations_for)
           @object.class.reflect_on_validations_for(attribute_sym).any? do |validation|
             validation.macro == :validates_presence_of &&
             validation.name == attribute_sym &&
@@ -580,7 +580,6 @@ module Formtastic #:nodoc:
           end
         else
           if @object && @object.class.respond_to?(:validators_on)
-            attribute_sym = attribute.to_s.sub(/_id$/, '').to_sym
             !@object.class.validators_on(attribute_sym).find{|validator| (validator.kind == :presence) && (validator.options.present? ? options_require_validation?(validator.options) : true)}.nil?
           else
             self.class.all_fields_required_by_default
@@ -1625,18 +1624,63 @@ module Formtastic #:nodoc:
         @object.column_for_attribute(method) if @object.respond_to?(:column_for_attribute)
       end
 
+      # Returns the active validations for the given method or an empty Array if no validations are
+      # found for the method.
+      #
+      # By default, the if/unless options of the validations are evaluated and only the validations
+      # that should be run for the current object state are returned. Pass :all to the last 
+      # parameter to return :all validations regardless of if/unless options.
+      #
+      # Requires the ValidationReflection plugin to be present or an ActiveModel. Returns an epmty
+      # Array if neither is the case.
+      #
+      def validations_for(method, mode = :active)
+        # ActiveModel?
+        validations = if @object && @object.class.respond_to?(:validators_on)
+          @object.class.validators_on(method)
+        else
+          # ValidationReflection plugin?
+          if @object && @object.class.respond_to?(:reflect_on_validations_for)
+            @object.class.reflect_on_validations_for(method)
+          else
+            []
+          end
+        end
+
+        validations = validations.select do |validation|
+          (validation.options.present? ? options_require_validation?(validation.options) : true)
+        end unless mode == :all
+
+        return validations
+      end
+
       # Generates default_string_options by retrieving column information from
       # the database.
       #
       def default_string_options(method, type) #:nodoc:
+        def get_maxlength_for(method)
+          validation = validations_for(method).find do |validation|
+            (validation.respond_to?(:macro) && validation.macro == :validates_length_of) || # Rails 2 validation
+            (validation.respond_to?(:kind) && validation.kind == :length) # Rails 3 validator
+          end
+
+          if validation
+            validation.options[:maximum] || (validation.options[:within].present? ? validation.options[:within].max : nil)
+          else
+            nil
+          end
+        end
+
+        validation_max_limit = get_maxlength_for(method)
         column = self.column_for(method)
 
         if type == :text
           { :cols => self.class.default_text_field_size, :rows => self.class.default_text_area_height }
         elsif type == :numeric || column.nil? || column.limit.nil?
-          { :size => self.class.default_text_field_size }
+          { :maxlength => validation_max_limit,
+            :size => self.class.default_text_field_size }
         else
-          { :maxlength => column.limit,
+          { :maxlength => validation_max_limit || column.limit,
             :size => self.class.default_text_field_size && [column.limit, self.class.default_text_field_size].min }
         end
       end
@@ -1856,9 +1900,9 @@ module Formtastic #:nodoc:
           class_names = options[:html][:class] ? options[:html][:class].split(" ") : []
           class_names << "formtastic"
           class_names << case record_or_name_or_array
-            when String, Symbol then record_or_name_or_array.to_s               # :post => "post"
-            when Array then singularizer.call(record_or_name_or_array.last.class)  # [@post, @comment] # => "comment"
-            else singularizer.call(record_or_name_or_array.class)                  # @post => "post"
+            when String, Symbol then record_or_name_or_array.to_s                                  # :post => "post"
+            when Array then options[:as] || singularizer.call(record_or_name_or_array.last.class)  # [@post, @comment] # => "comment"
+            else options[:as] || singularizer.call(record_or_name_or_array.class)                  # @post => "post"
           end
           options[:html][:class] = class_names.join(" ")
           
