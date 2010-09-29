@@ -4,8 +4,8 @@ require 'rake'
 require 'rake/rdoctask'
 
 begin
-  gem 'rspec', '>= 1.2.6'
-  gem 'rspec-rails', '>= 1.2.6'
+  gem 'rspec', '~> 2.0.0.beta22'
+  gem 'rspec-rails', '~> 2.0.0.beta22'
   require 'spec'
   require 'spec/rake/spectask'
 rescue LoadError
