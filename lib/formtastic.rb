@@ -66,6 +66,11 @@ module Formtastic #:nodoc:
     # * :string (a text field) - default for :string column types
     # * :numeric (a text field, like string) - default for :integer, :float and :decimal column types
     # * :country (a select menu of country names) - requires a country_select plugin to be installed
+    # * :email (an email input) - New in HTML5 - needs to be explicitly provided with :as => :email
+    # * :url (a url input) - New in HTML5 - needs to be explicitly provided with :as => :url
+    # * :phone (a tel input) - New in HTML5 - needs to be explicitly provided with :as => :phone
+    # * :search (a search input) - New in HTML5 - needs to be explicity provided with :as => :search
+    # * :country (a select menu of country names) - requires a country_select plugin to be installed
     # * :hidden (a hidden field) - creates a hidden field (added for compatibility)
     #
     # Example:
@@ -77,6 +82,8 @@ module Formtastic #:nodoc:
     #       <%= form.input :manager_id, :as => :radio %>
     #       <%= form.input :hired_at, :as => :date, :label => "Date Hired" %>
     #       <%= form.input :phone, :required => false, :hint => "Eg: +1 555 1234" %>
+    #       <%= form.input :email, :as => :email %>
+    #       <%= form.input :website, :as => :url, :hint => "You may wish to omit the http://" %>
     #     <% end %>
     #   <% end %>
     #
@@ -605,7 +612,7 @@ module Formtastic #:nodoc:
 
       def basic_input_helper(form_helper_method, type, method, options) #:nodoc:
         html_options = options.delete(:input_html) || {}
-        html_options = default_string_options(method, type).merge(html_options) if [:numeric, :string, :password, :text].include?(type)
+        html_options = default_string_options(method, type).merge(html_options) if [:numeric, :string, :password, :text, :phone, :search, :url, :email].include?(type)
 
         self.label(method, options_for_label(options)) <<
         self.send(form_helper_method, method, html_options)
@@ -634,6 +641,26 @@ module Formtastic #:nodoc:
       # Outputs a label and a standard Rails file field inside the wrapper.
       def file_input(method, options)
         basic_input_helper(:file_field, :file, method, options)
+      end
+      
+      # Outputs a label and a standard Rails email field inside the wrapper.
+      def email_input(method, options)
+        basic_input_helper(:email_field, :email, method, options)
+      end
+
+      # Outputs a label and a standard Rails phone field inside the wrapper.
+      def phone_input(method, options)
+        basic_input_helper(:phone_field, :phone, method, options)
+      end
+
+      # Outputs a label and a standard Rails url field inside the wrapper.
+      def url_input(method, options)
+        basic_input_helper(:url_field, :url, method, options)
+      end
+
+      # Outputs a label and a standard Rails search field inside the wrapper.
+      def search_input(method, options)
+        basic_input_helper(:search_field, :search, method, options)
       end
 
       # Outputs a hidden field inside the wrapper, which should be hidden with CSS.
