@@ -235,6 +235,10 @@ module FormtasticSpecHelper
     ::Post.stub!(:to_ary)
 
     @new_post.stub!(:title)
+    @new_post.stub!(:email)
+    @new_post.stub!(:url)
+    @new_post.stub!(:phone)
+    @new_post.stub!(:search)
     @new_post.stub!(:to_ary)
     @new_post.stub!(:body)
     @new_post.stub!(:published)
