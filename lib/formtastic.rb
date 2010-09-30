@@ -1292,7 +1292,7 @@ module Formtastic #:nodoc:
       def inline_hints_for(method, options) #:nodoc:
         options[:hint] = localized_string(method, options[:hint], :hint)
         return if options[:hint].blank? or options[:hint].kind_of? Hash
-        template.content_tag(:p, Formtastic::Util.html_safe(options[:hint]), :class => 'inline-hints')
+        template.content_tag(:p, Formtastic::Util.html_safe(options[:hint]), :class => (options[:hint_class] ? options[:hint_class] : 'inline-hints'))
       end
 
       # Creates an error sentence by calling to_sentence on the errors array.
