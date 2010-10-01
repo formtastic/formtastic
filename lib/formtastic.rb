@@ -574,13 +574,13 @@ module Formtastic #:nodoc:
 
         if @object && @object.class.respond_to?(:reflect_on_validations_for)
           @object.class.reflect_on_validations_for(attribute_sym).any? do |validation|
-            validation.macro == :validates_presence_of &&
+            (validation.macro == :validates_presence_of || validation.macro == :validates_inclusion_of) &&
             validation.name == attribute_sym &&
             (validation.options.present? ? options_require_validation?(validation.options) : true)
           end
         else
           if @object && @object.class.respond_to?(:validators_on)
-            !@object.class.validators_on(attribute_sym).find{|validator| (validator.kind == :presence) && (validator.options.present? ? options_require_validation?(validator.options) : true)}.nil?
+            !@object.class.validators_on(attribute_sym).find{|validator| (validator.kind == :presence || validator.kind == :inclusion) && (validator.options.present? ? options_require_validation?(validator.options) : true)}.nil?
           else
             self.class.all_fields_required_by_default
           end
