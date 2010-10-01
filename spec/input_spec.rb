@@ -319,6 +319,21 @@ describe 'SemanticFormBuilder#input' do
                end
             end
 
+            describe 'and validates_inclusion_of was called for the method' do
+              it 'should be required' do
+                @new_post.class.should_receive(:validators_on).with(:published).any_number_of_times.and_return([
+                  active_model_inclusion_validator([:published], {:in => [false, true]})
+                ])
+
+                form = semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:published))
+                end
+                output_buffer.concat(form) if Formtastic::Util.rails3?
+                output_buffer.should have_tag('form li.required')
+                output_buffer.should_not have_tag('form li.optional')
+              end
+            end
+
             # TODO make a matcher for this?
             def should_be_required(options)
               @new_post.class.should_receive(:validators_on).with(:body).at_least(2).and_return([

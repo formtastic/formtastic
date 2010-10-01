@@ -67,6 +67,10 @@ module FormtasticSpecHelper
     active_model_validator(:length, attributes, options)
   end
 
+  def active_model_inclusion_validator(attributes, options = {})
+    active_model_validator(:inclusion, attributes, options)
+  end
+
   class ::Post
     extend ActiveModel::Naming if defined?(ActiveModel::Naming)
     include ActiveModel::Conversion if defined?(ActiveModel::Conversion)
