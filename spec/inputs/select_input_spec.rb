@@ -241,6 +241,8 @@ describe 'select input' do
       @form = semantic_form_for(@new_post) do |builder|
         concat(builder.input(:author, :as => :select, :group_by => :continent ) )
         concat(builder.input(:author, :as => :select, :group_by => :continent, :group_label_method => :id ) )
+        concat(builder.input(:author, :as => :select, :group_by => :continent, :label_method => :login ) )
+        concat(builder.input(:author, :as => :select, :group_by => :continent, :label_method => :login, :group_label_method => :id ) )
       end
     end
 
@@ -261,11 +263,21 @@ describe 'select input' do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li select optgroup[@label='#{@continents[i].id}']", @authors[i].to_label)
       end
+
+      it 'should have custom author labels' do
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.should have_tag("form li select optgroup[@label='#{@continent_names[i]}']", @authors[i].login)
+      end
+
+      it 'should have custom author and group labels' do
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.should have_tag("form li select optgroup[@label='#{@continents[i].id}']", @authors[i].login)
+      end
     end
 
     it 'should have no duplicate groups' do
       output_buffer.concat(@form) if Formtastic::Util.rails3?
-      output_buffer.should have_tag('form li select optgroup', :count => 4)
+      output_buffer.should have_tag('form li select optgroup', :count => 8)
     end
 
     it 'should sort the groups on the label method' do

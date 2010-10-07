@@ -803,7 +803,7 @@ module Formtastic #:nodoc:
           # The grouped_options_select is a bit counter intuitive and not optimised (mostly due to ActiveRecord).
           # The formtastic user however shouldn't notice this too much.
           raw_collection = find_raw_collection_for_column(method, options.reverse_merge(:find_options => { :include => options[:group_by] }))
-          label, value = detect_label_and_value_method!(raw_collection)
+          label, value = detect_label_and_value_method!(raw_collection, options)
           group_collection = raw_collection.map { |option| option.send(options[:group_by]) }.uniq
           group_label_method = options[:group_label_method] || detect_label_method(group_collection)
           group_collection = group_collection.sort_by { |group_item| group_item.send(group_label_method) }
