@@ -276,7 +276,11 @@ module Formtastic #:nodoc:
         field_set_and_list_wrapping(*((args << html_options) << contents))
       end
     end
-    alias :input_field_set :inputs
+    
+    def input_field_set(*args, &block)
+      ::ActiveSupport::Deprecation.warn("input_field_set() is deprecated and will be removed in Formtastic 1.3 or later, use inputs() instead.", caller)
+      inputs(args, &block)
+    end
 
     # Creates a fieldset and ol tag wrapping for form buttons / actions as list items.
     # See inputs documentation for a full example.  The fieldset's default class attriute
@@ -295,7 +299,11 @@ module Formtastic #:nodoc:
         field_set_and_list_wrapping(html_options, contents)
       end
     end
-    alias :button_field_set :buttons
+    
+    def button_field_set(*args, &block)
+      ::ActiveSupport::Deprecation.warn("button_field_set() is deprecated and will be removed in Formtastic 1.3 or later, use inputs() instead.", caller)
+      buttons(args, &block)
+    end
 
     # Creates a submit input tag with the value "Save [model name]" (for existing records) or
     # "Create [model name]" (for new records) by default:
@@ -782,7 +790,11 @@ module Formtastic #:nodoc:
 
         self.label(method, options_for_label(options).merge(:input_name => input_name)) << select_html
       end
-      alias :boolean_select_input :select_input
+
+      def boolean_select_input(method, options)
+        ::ActiveSupport::Deprecation.warn(":as => :boolean_select is deprecated and will be removed in Formtastic 1.3 or later. Use :as => :select instead.", caller)
+        select_input(method, options)
+      end
 
       # Outputs a timezone select input as Rails' time_zone_select helper. You
       # can give priority zones as option.
@@ -881,7 +893,11 @@ module Formtastic #:nodoc:
           legend_tag(method, options) << template.content_tag(:ol, Formtastic::Util.html_safe(list_item_content.join))
         )
       end
-      alias :boolean_radio_input :radio_input
+      
+      def boolean_radio_input(method, options)
+        ::ActiveSupport::Deprecation.warn(":as => :boolean_radio is deprecated and will be removed in Formtastic 1.3 or later. Use :as => :radio instead.", caller)
+        radio_input(method, options)
+      end
 
       # Outputs a fieldset with a legend for the method label, and a ordered list (ol) of list
       # items (li), one for each fragment for the date (year, month, day).  Each li contains a label
