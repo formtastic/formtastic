@@ -81,13 +81,6 @@ module Formtastic #:nodoc:
     #   <% end %>
     #
     def input(method, options = {})
-      if options.key?(:selected) || options.key?(:checked) || options.key?(:default)
-        ::ActiveSupport::Deprecation.warn(
-          "The :selected, :checked (and :default) options are deprecated in Formtastic and will be removed from 1.0. " <<
-          "Please set default values in your models (using an after_initialize callback) or in your controller set-up. " <<
-          "See http://api.rubyonrails.org/classes/ActiveRecord/Callbacks.html for more information.", caller)
-      end
-
       options[:required] = method_required?(method) unless options.key?(:required)
       options[:as]     ||= default_input_type(method, options)
 
@@ -724,15 +717,6 @@ module Formtastic #:nodoc:
       #   f.input :author, :value_method => :login
       #   f.input :author, :value_method => Proc.new { |a| "author_#{a.login}" }
       #
-      # You can pre-select a specific option value by passing in the :selected option.
-      #
-      # Examples:
-      #
-      #   f.input :author, :selected => current_user.id
-      #   f.input :author, :value_method => :login, :selected => current_user.login
-      #   f.input :authors, :value_method => :login, :selected => Author.most_popular.collect(&:id)
-      #   f.input :authors, :value_method => :login, :selected => nil   # override any defaults: select none
-      #
       # You can pass html_options to the select tag using :input_html => {}
       #
       # Examples:
@@ -773,7 +757,6 @@ module Formtastic #:nodoc:
           end
         end
         options = set_include_blank(options)
-        options[:selected] = options[:selected].first if options[:selected].present? && html_options[:multiple] == false
         input_name = generate_association_input_name(method)
 
         select_html = if options[:group_by]
@@ -807,22 +790,12 @@ module Formtastic #:nodoc:
       # Examples:
       #
       #   f.input :time_zone, :as => :time_zone, :priority_zones => /Australia/
-      #
-      # You can pre-select a specific option value by passing in the :selected option.
-      # Note: Right now only works if the form object attribute value is not set (nil),
-      # because of how the core helper is implemented.
-      #
-      # Examples:
-      #
-      #   f.input :my_favorite_time_zone, :as => :time_zone, :selected => 'Singapore'
-      #
       def time_zone_input(method, options)
         html_options = options.delete(:input_html) || {}
-        selected_value = options.delete(:selected)
 
         self.label(method, options_for_label(options)) <<
         self.time_zone_select(method, options.delete(:priority_zones),
-          strip_formtastic_options(options).merge(:default => selected_value), html_options)
+          strip_formtastic_options(options), html_options)
       end
 
       # Outputs a fieldset containing a legend for the label text, and an ordered list (ol) of list
@@ -878,17 +851,9 @@ module Formtastic #:nodoc:
       #   f.input :author, :as => :radio, :value_method => :login
       #   f.input :author, :as => :radio, :value_method => Proc.new { |a| "author_#{a.login}" }
       #
-      # You can force a particular radio button in the collection to be checked with the :selected option.
-      #
-      # Examples:
-      #
-      #   f.input :subscribe_to_newsletter, :as => :radio, :selected => true
-      #   f.input :subscribe_to_newsletter, :as => :radio, :collection => ["Yeah!", "Nope!"], :selected => "Nope!"
-      #
       # Finally, you can set :value_as_class => true if you want the li wrapper around each radio
       # button / label combination to contain a class with the value of the radio button (useful for
       # applying specific CSS or Javascript to a particular radio button).
-      #
       def radio_input(method, options)
         collection   = find_collection_for_column(method, options)
         html_options = strip_formtastic_options(options).merge(options.delete(:input_html) || {})
@@ -896,16 +861,12 @@ module Formtastic #:nodoc:
         input_name = generate_association_input_name(method)
         value_as_class = options.delete(:value_as_class)
         input_ids = []
-        selected_option_is_present = [:selected, :checked].any? { |k| options.key?(k) }
-        selected_value = (options.key?(:checked) ? options[:checked] : options[:selected]) if selected_option_is_present
-
+        
         list_item_content = collection.map do |c|
           label = c.is_a?(Array) ? c.first : c
           value = c.is_a?(Array) ? c.last  : c
           input_id = generate_html_id(input_name, value.to_s.gsub(/\s/, '_').gsub(/\W/, '').downcase)
           input_ids << input_id
-
-          html_options[:checked] = selected_value == value if selected_option_is_present
 
           li_content = template.content_tag(:label,
             Formtastic::Util.html_safe("#{self.radio_button(input_name, value, html_options)} #{escape_html_entities(label)}"),
@@ -928,14 +889,6 @@ module Formtastic #:nodoc:
       # :labels should be a hash with the field (e.g. day) as key and the label text as value.
       # See date_or_datetime_input for a more detailed output example.
       #
-      # You can pre-select a specific option value by passing in the :selected option.
-      #
-      # Examples:
-      #
-      #   f.input :created_at, :as => :date, :selected => 1.day.ago
-      #   f.input :created_at, :as => :date, :selected => nil   # override any defaults: select none
-      #   f.input :created_at, :as => :date, :labels => { :year => "Year", :month => "Month", :day => "Day" }
-      #
       # Some of Rails' options for select_date are supported, but not everything yet, see
       # documentation of date_or_datetime_input() for more information.
       def date_input(method, options)
@@ -949,15 +902,6 @@ module Formtastic #:nodoc:
       # the :labels option. :labels should be a hash with the field (e.g. day) as key and the label
       # text as value.  See date_or_datetime_input for a more detailed output example.
       #
-      # You can pre-select a specific option value by passing in the :selected option.
-      #
-      # Examples:
-      #
-      #   f.input :created_at, :as => :datetime, :selected => 1.day.ago
-      #   f.input :created_at, :as => :datetime, :selected => nil   # override any defaults: select none
-      #   f.input :created_at, :as => :date, :labels => { :year => "Year", :month => "Month", :day => "Day",
-      #                                                   :hour => "Hour", :minute => "Minute" }
-      #
       # Some of Rails' options for select_date are supported, but not everything yet, see
       # documentation of date_or_datetime_input() for more information.
       def datetime_input(method, options)
@@ -970,14 +914,6 @@ module Formtastic #:nodoc:
       # (eg "Hour") and a select box. Overwriting the label is possible by adding the :labels option.
       # :labels should be a hash with the field (e.g. day) as key and the label text as value.
       # See date_or_datetime_input for a more detailed output example.
-      #
-      # You can pre-select a specific option value by passing in the :selected option.
-      #
-      # Examples:
-      #
-      #   f.input :created_at, :as => :time, :selected => 1.hour.ago
-      #   f.input :created_at, :as => :time, :selected => nil   # override any defaults: select none
-      #   f.input :created_at, :as => :date, :labels => { :hour => "Hour", :minute => "Minute" }
       #
       # Some of Rails' options for select_time are supported, but not everything yet, see
       # documentation of date_or_datetime_input() for more information.
@@ -1026,9 +962,6 @@ module Formtastic #:nodoc:
       #
       #   * @:order => [:month, :day, :year]@
       #   * @:include_seconds@ => true@
-      #   * @:selected => Time.mktime(2008)@
-      #   * @:selected => Date.new(2008)@
-      #   * @:selected => nil@
       #   * @:discard_(year|month|day|hour|minute) => true@
       #   * @:include_blank => true@
       #   * @:labels => {}@
@@ -1046,8 +979,7 @@ module Formtastic #:nodoc:
         list_items_capture = ""
         hidden_fields_capture = ""
 
-        datetime = options[:selected]
-        datetime = @object.send(method) if @object && @object.send(method) # object value trumps :selected value
+        datetime = @object.send(method) if @object && @object.send(method)
 
         html_options = options.delete(:input_html) || {}
         input_ids    = []
@@ -1137,15 +1069,6 @@ module Formtastic #:nodoc:
       #   f.input :author, :as => :check_boxes, :value_method => :login
       #   f.input :author, :as => :check_boxes, :value_method => Proc.new { |a| "author_#{a.login}" }
       #
-      # You can pre-select/check a specific checkbox value by passing in the :selected option (alias :checked works as well).
-      #
-      # Examples:
-      #
-      #   f.input :authors, :as => :check_boxes, :selected => @justin
-      #   f.input :authors, :as => :check_boxes, :selected => Author.most_popular.collect(&:id)
-      #   f.input :authors, :as => :check_boxes, :selected => nil   # override any defaults: select none
-      #
-      #
       # Formtastic works around a bug in rails handling of check box collections by
       # not generating the hidden fields for state checking of the checkboxes
       # The :hidden_fields option provides a way to re-enable these hidden inputs by
@@ -1200,25 +1123,19 @@ module Formtastic #:nodoc:
         template.content_tag(:fieldset, fieldset_content)
       end
 
-      # Used by check_boxes input. The selected values will be set either by:
-      #
-      # * Explicitly provided through :selected or :checked
-      # * Values retrieved through an association
+      # Used by check_boxes input. The selected values will be set by retrieving the value 
+      # through the association.
       #
       # If the collection is not a hash or an array of strings, fixnums or symbols,
       # we use value_method to retrieve an array with the values
-      #
       def find_selected_values_for_column(method, options)
-        selected_option_is_present = [:selected, :checked].any? { |k| options.key?(k) }
-        if selected_option_is_present
-          selected_values = (options.key?(:checked) ? options[:checked] : options[:selected])
-        elsif object.respond_to?(method)
+        if object.respond_to?(method)
           collection = [object.send(method)].compact.flatten
           label, value = detect_label_and_value_method!(collection, options)
-          selected_values = collection.map { |o| send_or_call(value, o) }
+          [*collection.map { |o| send_or_call(value, o) }].compact
+        else
+          []
         end
-        selected_values = [*selected_values].compact
-        selected_values
       end
 
       # Outputs a custom hidden field for check_boxes
@@ -1263,16 +1180,9 @@ module Formtastic #:nodoc:
       # to the column name (method name) and can be altered with the :label option.
       # :checked_value and :unchecked_value options are also available.
       #
-      # You can pre-select/check the boolean checkbox by passing in the :selected option (alias :checked works as well).
-      #
-      # Examples:
-      #
-      #   f.input :allow_comments, :as => :boolean, :selected => true   # override any default value: selected/checked
-      #
+      # TODO: doesn't look to the model value to set html_options[:checked]
       def boolean_input(method, options)
         html_options = options.delete(:input_html) || {}
-        checked = options.key?(:checked) ? options[:checked] : options[:selected]
-        html_options[:checked] = checked == true if [:selected, :checked].any? { |k| options.key?(k) }
         checked_value = options.delete(:checked_value) || '1'
         unchecked_value = options.delete(:unchecked_value) || '0'
 

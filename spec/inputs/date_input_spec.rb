@@ -57,76 +57,6 @@ describe 'date input' do
     end
   end
 
-  describe ':selected option' do
-
-    describe "when the object has a value" do
-      it "should select the object value (ignoring :selected)" do
-        output_buffer.replace ''
-        @new_post.stub!(:created_at => Time.mktime(2012))
-        with_deprecation_silenced do
-          @form = semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:created_at, :as => :date, :selected => Time.mktime(1999)))
-          end
-        end
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
-        output_buffer.should have_tag("form li ol li select#post_created_at_1i option[@selected]", :count => 1)
-        output_buffer.should have_tag("form li ol li select#post_created_at_1i option[@value='2012'][@selected]", :count => 1)
-      end
-    end
-
-    describe 'when the object has no value (nil)' do
-      it "should select the :selected if provided as a Date" do
-        output_buffer.replace ''
-        @new_post.stub!(:created_at => nil)
-        with_deprecation_silenced do
-          @form = semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:created_at, :as => :date, :selected => Date.new(1999)))
-          end
-        end
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
-        output_buffer.should have_tag("form li ol li select#post_created_at_1i option[@selected]", :count => 1)
-        output_buffer.should have_tag("form li ol li select#post_created_at_1i option[@value='1999'][@selected]", :count => 1)
-      end
-
-      it "should select the :selected if provided as a Time" do
-        output_buffer.replace ''
-        @new_post.stub!(:created_at => nil)
-        with_deprecation_silenced do
-          @form = semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:created_at, :as => :date, :selected => Time.mktime(1999)))
-          end
-        end
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
-        output_buffer.should have_tag("form li ol li select#post_created_at_1i option[@selected]", :count => 1)
-        output_buffer.should have_tag("form li ol li select#post_created_at_1i option[@value='1999'][@selected]", :count => 1)
-      end
-
-      it "should not select an option if the :selected is provided as nil" do
-        output_buffer.replace ''
-        @new_post.stub!(:created_at => nil)
-        with_deprecation_silenced do
-          @form = semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:created_at, :as => :date, :selected => nil))
-          end
-        end
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
-        output_buffer.should_not have_tag("form li ol li select#post_created_at_1i option[@selected]")
-      end
-
-      it "should select nothing if a :selected is not provided" do
-        output_buffer.replace ''
-        @new_post.stub!(:created_at => nil)
-        form = semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:created_at, :as => :date))
-        end
-        output_buffer.concat(form) if Formtastic::Util.rails3?
-        output_buffer.should_not have_tag("form li ol li select option[@selected]")
-
-      end
-    end
-
-  end
-
   describe ':labels option' do
     fields = [:year, :month, :day]
     fields.each do |field|
@@ -152,15 +82,6 @@ describe 'date input' do
         fields.each do |f|
           output_buffer.should have_tag('form li.date fieldset ol li label', /#{f}/i) unless field == f
         end
-      end
-    end
-  end
-
-  it 'should warn about :selected deprecation' do
-    with_deprecation_silenced do
-      ::ActiveSupport::Deprecation.should_receive(:warn).any_number_of_times
-      semantic_form_for(@new_post) do |builder|
-        concat(builder.input(:created_at, :as => :date, :selected => Date.new(1999)))
       end
     end
   end

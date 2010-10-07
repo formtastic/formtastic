@@ -437,91 +437,6 @@ describe 'select input' do
     end
   end
 
-  describe 'when :selected is set' do
-    before do
-      @output_buffer = ''
-    end
-
-    describe "no selected items" do
-      before do
-        @new_post.stub!(:author_id).and_return(nil)
-        with_deprecation_silenced do
-          @form = semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:author, :as => :select, :selected => nil))
-          end
-        end
-      end
-
-      it 'should not have any selected item(s)' do
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
-        output_buffer.should_not have_tag("form li select option[@selected='selected']")
-      end
-    end
-
-    describe "single selected item" do
-      before do
-        @new_post.stub!(:author_id).and_return(nil)
-        with_deprecation_silenced do
-          @form = semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:author, :as => :select, :selected => @bob.id))
-          end
-        end
-      end
-
-      it 'should have a selected item; the specified one' do
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
-        output_buffer.should have_tag("form li select option[@selected='selected']", :count => 1)
-        output_buffer.should have_tag("form li select option[@selected='selected']", /bob/i)
-        output_buffer.should have_tag("form li select option[@selected='selected'][@value='#{@bob.id}']")
-      end
-    end
-
-    describe "multiple selected items" do
-
-      describe "when :multiple => false" do
-        before do
-          @new_post.stub!(:author_ids).and_return(nil)
-
-          with_deprecation_silenced do
-            @form = semantic_form_for(@new_post) do |builder|
-              concat(builder.input(:authors, :as => :select, :selected => [@bob.id, @fred.id], :multiple => false))
-            end
-          end
-        end
-
-        it "should only select the first value" do
-          output_buffer.concat(@form) if Formtastic::Util.rails3?
-          output_buffer.should have_tag("form li select option[@selected='selected']", :count => 1)
-          output_buffer.should have_tag("form li select:not([@multiple]) option[@selected='selected']", /bob/i)
-          output_buffer.should have_tag("form li select:not([@multiple]) option[@selected='selected'][@value='#{@bob.id}']")
-        end
-      end
-
-      describe "when :multiple => true" do
-        before do
-          @new_post.stub!(:author_ids).and_return(nil)
-
-          with_deprecation_silenced do
-            @form = semantic_form_for(@new_post) do |builder|
-              concat(builder.input(:authors, :as => :select, :selected => [@bob.id, @fred.id]))
-            end
-          end
-        end
-
-        it "should have multiple items selected; the specified ones" do
-          output_buffer.concat(@form) if Formtastic::Util.rails3?
-          output_buffer.should have_tag("form li select option[@selected='selected']", :count => 2)
-          output_buffer.should have_tag("form li select[@multiple] option[@selected='selected']", /bob/i)
-          output_buffer.should have_tag("form li select[@multiple] option[@selected='selected'][@value='#{@bob.id}']")
-          output_buffer.should have_tag("form li select[@multiple] option[@selected='selected']", /fred/i)
-          output_buffer.should have_tag("form li select[@multiple] option[@selected='selected'][@value='#{@fred.id}']")
-        end
-      end
-
-    end
-
-  end
-
   describe "enum" do
     before do
       @output_buffer = ''
@@ -565,16 +480,5 @@ describe 'select input' do
       end
     end
   end
-
-  it 'should warn about :selected deprecation' do
-    with_deprecation_silenced do
-      ::ActiveSupport::Deprecation.should_receive(:warn).any_number_of_times
-      semantic_form_for(@new_post) do |builder|
-        concat(builder.input(:author_id, :as => :select, :selected => @bob.id))
-      end
-    end
-  end
-
-
 
 end
