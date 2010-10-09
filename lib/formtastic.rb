@@ -6,13 +6,14 @@ require File.join(File.dirname(__FILE__), *%w[formtastic railtie]) if defined?(:
 module Formtastic #:nodoc:
 
   class SemanticFormBuilder < ActionView::Helpers::FormBuilder
-    class_inheritable_accessor :default_text_field_size, :default_text_area_height, :all_fields_required_by_default, :include_blank_for_select_by_default,
+    class_inheritable_accessor :default_text_field_size, :default_text_area_height, :default_text_area_width, :all_fields_required_by_default, :include_blank_for_select_by_default,
                    :required_string, :optional_string, :inline_errors, :label_str_method, :collection_value_methods, :collection_label_methods,
                    :inline_order, :custom_inline_order, :file_methods, :priority_countries, :i18n_lookups_by_default, :escape_html_entities_in_hints_and_labels,
                    :default_commit_button_accesskey, :instance_reader => false
 
     self.default_text_field_size = nil
     self.default_text_area_height = 20
+    self.default_text_area_width = 50
     self.all_fields_required_by_default = true
     self.include_blank_for_select_by_default = true
     self.required_string = proc { ::Formtastic::Util.html_safe(%{<abbr title="#{::Formtastic::I18n.t(:required)}">*</abbr>}) }
@@ -1614,7 +1615,7 @@ module Formtastic #:nodoc:
         column = self.column_for(method)
 
         if type == :text
-          { :rows => self.class.default_text_area_height }
+          { :rows => self.class.default_text_area_height, :cols => self.class.default_text_area_width }
         elsif type == :numeric || column.nil? || column.limit.nil?
           { :maxlength => validation_max_limit,
             :size => self.class.default_text_field_size }

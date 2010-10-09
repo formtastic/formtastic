@@ -85,6 +85,29 @@ describe 'text input' do
       
     end
   end
+
+  context "when :cols is missing in :input_html" do
+    it "should have a cols attribute matching default_text_area_width if numeric" do
+      with_config :default_text_area_width, 10 do
+        form = semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:title, :as => :text))
+        end
+        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.should have_tag("form li textarea[@cols='10']")
+      end
+    end
+    
+    it "should not have a cols attribute if default_text_area_width is nil" do
+      with_config :default_text_area_width, nil do
+        form = semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:title, :as => :text))
+        end
+        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.should_not have_tag("form li textarea[@cols]")
+      end
+      
+    end
+  end
     
 end
 
