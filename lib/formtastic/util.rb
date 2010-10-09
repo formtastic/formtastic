@@ -28,11 +28,7 @@ module Formtastic
     end
 
     def rails3?
-      version=
-        if defined?(ActionPack::VERSION::MAJOR)
-          ActionPack::VERSION::MAJOR
-        end
-      !version.blank? && version >= 3
+      ActionPack::VERSION::MAJOR >= 3
     end
   end
 end
