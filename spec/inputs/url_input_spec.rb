@@ -13,7 +13,7 @@ describe 'url input' do
   describe "when object is provided" do
     before do
       @form = semantic_form_for(@new_post) do |builder|
-        concat(builder.input(:url, :as => :url))
+        concat(builder.input(:url))
       end
     end
 

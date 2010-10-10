@@ -66,6 +66,10 @@ module Formtastic #:nodoc:
     # * :boolean (a checkbox) - default for :boolean column types (you can also have booleans as :select and :radio)
     # * :string (a text field) - default for :string column types
     # * :numeric (a text field, like string) - default for :integer, :float and :decimal column types
+    # * :email (an email input) - default for :string column types with 'email' as the method name.
+    # * :url (a url input) - default for :string column types with 'url' as the method name.
+    # * :phone (a tel input) - default for :string column types with 'phone' or 'fax' in the method name.
+    # * :search (a search input) - default for :string column types with 'search' as the method name.
     # * :country (a select menu of country names) - requires a country_select plugin to be installed
     # * :email (an email input) - New in HTML5 - needs to be explicitly provided with :as => :email
     # * :url (a url input) - New in HTML5 - needs to be explicitly provided with :as => :url
@@ -83,7 +87,7 @@ module Formtastic #:nodoc:
     #       <%= form.input :manager_id, :as => :radio %>
     #       <%= form.input :hired_at, :as => :date, :label => "Date Hired" %>
     #       <%= form.input :phone, :required => false, :hint => "Eg: +1 555 1234" %>
-    #       <%= form.input :email, :as => :email %>
+    #       <%= form.input :email %>
     #       <%= form.input :website, :as => :url, :hint => "You may wish to omit the http://" %>
     #     <% end %>
     #   <% end %>
@@ -1396,6 +1400,10 @@ module Formtastic #:nodoc:
             return :password  if method.to_s =~ /password/
             return :country   if method.to_s =~ /country$/
             return :time_zone if method.to_s =~ /time_zone/
+            return :email     if method.to_s =~ /^email$/
+            return :url       if method.to_s =~ /^url$/
+            return :phone     if method.to_s =~ /(phone|fax)/
+            return :search    if method.to_s =~ /^search$/
           when :integer
             return :select    if method.to_s =~ /_id$/
             return :numeric
