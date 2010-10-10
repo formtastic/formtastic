@@ -275,6 +275,10 @@ The Formtastic input types:
 * @:numeric@ - a text field (just like string). Default for  column types: @:integer@, @:float@, and @:decimal@.
 * @:file@ - a file field. Default for file-attachment attributes matching: "paperclip":http://github.com/thoughtbot/paperclip or "attachment_fu":http://github.com/technoweenie/attachment_fu.
 * @:country@ - a select menu of country names. Default for column types: :string with name @"country"@ - requires a *country_select* plugin to be installed.
+* @:email@ - a text field (just like string). Default for columns with name matching @"email"@. New in HTML5. Works on some mobile browsers already.
+* @:url@ - a text field (just like string). Default for columns with name matching @"url"@. New in HTML5. Works on some mobile browsers already.
+* @:phone@ - a text field (just like string). Default for columns with name matching @"phone"@ or @"fax"@. New in HTML5.
+* @:search@ - a text field (just like string). Default for columns with name matching @"search"@. New in HTML5. Works on Safari.
 * @:hidden@ - a hidden field. Creates a hidden field (added for compatibility).
 
 The comments in the code are pretty good for each of these (what it does, what the output is, what the options are, etc.) so go check it out.

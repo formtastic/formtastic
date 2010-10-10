@@ -13,7 +13,7 @@ describe 'phone input' do
   describe "when object is provided" do
     before do
       @form = semantic_form_for(@new_post) do |builder|
-        concat(builder.input(:phone, :as => :phone))
+        concat(builder.input(:phone))
       end
     end
 

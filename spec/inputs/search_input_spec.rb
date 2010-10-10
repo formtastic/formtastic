@@ -13,7 +13,7 @@ describe 'search input' do
   describe "when object is provided" do
     before do
       @form = semantic_form_for(@new_post) do |builder|
-        concat(builder.input(:search, :as => :search))
+        concat(builder.input(:search))
       end
     end
 
