@@ -1,12 +1,22 @@
 # encoding: utf-8
 
-if Formtastic::Util.rails3?
-  gem 'rspec', '~> 2.0.0.beta22'
-  gem 'rspec-rails', '~> 2.0.0.beta22'
-  gem 'rspec_tag_matchers'
-  gem 'i18n', '>= 0.4.0'
+require "rubygems"
 
-  require "rubygems"
+gem 'rspec', '~> 2.0.0'
+gem 'rspec-rails', '~> 2.0.0'
+gem 'rspec_tag_matchers'
+gem 'hpricot', '>= 0.6.1'
+
+require 'rspec_tag_matchers'
+
+RSpec.configure do |config|
+  config.include RspecTagMatchers
+  config.include CustomMacros
+  config.mock_with :rspec
+end
+
+if Formtastic::Util.rails3?
+
   require "action_controller/railtie"
   require "active_resource/railtie"
   require 'active_model'
@@ -21,27 +31,9 @@ if Formtastic::Util.rails3?
   end
   FormtasticTest::Application.initialize!
 
-  # Configure RSpec 2.0
-  require 'rspec/core'
   require 'rspec/rails'
-  require 'rspec_tag_matchers'
-  RSpec.configure do |config|
-    config.include RspecTagMatchers
-    config.include CustomMacros
-    config.mock_with :rspec
-  end
-
-else
-  gem 'rspec', '>= 1.2.6'
-  gem 'rspec-rails', '>= 1.2.6'
-  gem 'rspec_tag_matchers'
-  gem 'hpricot', '>= 0.6.1'
-  gem 'i18n', '< 0.4.0'
-
-  require 'rspec_tag_matchers'
-
-  Spec::Runner.configure do |config|
-    config.include(RspecTagMatchers)
-    config.include(CustomMacros)
-  end
 end
+
+
+
+

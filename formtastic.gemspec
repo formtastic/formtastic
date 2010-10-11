@@ -39,7 +39,7 @@ Gem::Specification.new do |s|
   s.add_dependency(%q<actionpack>, [">= 2.3.7"])
   s.add_dependency(%q<i18n>, [">= 0.4.0"])
   s.add_development_dependency(%q<rails>, ["= 3.0.0"])
-  s.add_development_dependency(%q<rspec-rails>, ["~> 2.0.0.beta22"])
+  s.add_development_dependency(%q<rspec-rails>, ["~> 2.0.0"])
   s.add_development_dependency(%q<rspec_tag_matchers>, [">= 1.0.0"])
 
 end
