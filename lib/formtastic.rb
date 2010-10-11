@@ -624,9 +624,8 @@ module Formtastic #:nodoc:
         html_options = options.delete(:input_html) || {}
         html_options = default_string_options(method, type).merge(html_options) if [:numeric, :string, :password, :text, :phone, :search, :url, :email].include?(type)
 
-        raise "This type of field is not supported by the Rails version you are currently using." unless self.respond_to?(form_helper_method)
         self.label(method, options_for_label(options)) <<
-        self.send(form_helper_method, method, html_options)
+        self.send(self.respond_to?(form_helper_method) ? form_helper_method : :text_field, method, html_options)
       end
 
       # Outputs a label and standard Rails text field inside the wrapper.
@@ -1401,10 +1400,10 @@ module Formtastic #:nodoc:
             return :password  if method.to_s =~ /password/
             return :country   if method.to_s =~ /country$/
             return :time_zone if method.to_s =~ /time_zone/
-            return :email     if method.to_s =~ /^email$/ && Formtastic::Util.rails3?
-            return :url       if method.to_s =~ /^url$/ && Formtastic::Util.rails3?
-            return :phone     if method.to_s =~ /(phone|fax)/ && Formtastic::Util.rails3?
-            return :search    if method.to_s =~ /^search$/ && Formtastic::Util.rails3?
+            return :email     if method.to_s =~ /^email$/
+            return :url       if method.to_s =~ /^url$/
+            return :phone     if method.to_s =~ /(phone|fax)/
+            return :search    if method.to_s =~ /^search$/
           when :integer
             return :select    if method.to_s =~ /_id$/
             return :numeric
