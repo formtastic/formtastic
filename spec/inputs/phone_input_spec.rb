@@ -22,7 +22,7 @@ describe 'phone input' do
     it_should_have_label_with_text(/Phone/)
     it_should_have_label_for("post_phone")
     it_should_have_input_with_id("post_phone")
-    it_should_have_input_with_type(:tel)
+    it_should_have_input_with_type(Formtastic::Util.rails3? ? :tel : :text)
     it_should_have_input_with_name("post[phone]")
     
   end

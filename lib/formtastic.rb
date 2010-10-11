@@ -614,7 +614,7 @@ module Formtastic #:nodoc:
         html_options = default_string_options(method, type).merge(html_options) if [:numeric, :string, :password, :text, :phone, :search, :url, :email].include?(type)
 
         self.label(method, options_for_label(options)) <<
-        self.send(form_helper_method, method, html_options)
+        self.send(self.respond_to?(form_helper_method) ? form_helper_method : :text_field, method, html_options)
       end
 
       # Outputs a label and standard Rails text field inside the wrapper.
