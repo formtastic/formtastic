@@ -1227,21 +1227,25 @@ module Formtastic #:nodoc:
       # Outputs a label containing a checkbox and the label text. The label defaults
       # to the column name (method name) and can be altered with the :label option.
       # :checked_value and :unchecked_value options are also available.
-      #
-      # TODO: doesn't look to the model value to set html_options[:checked]
       def boolean_input(method, options)
         html_options = options.delete(:input_html) || {}
         checked_value = options.delete(:checked_value) || '1'
         unchecked_value = options.delete(:unchecked_value) || '0'
 
-        input = self.check_box(method, strip_formtastic_options(options).merge(html_options),
-                               checked_value, unchecked_value)
+        #input = self.check_box(method, strip_formtastic_options(options).merge(html_options),
+        #                       checked_value, unchecked_value)
+        input = template.check_box_tag(
+          "#{@object_name}[#{method}]", 
+          checked_value, 
+          (@object && @object.send(:"#{method}") == checked_value), 
+          :id => "#{@object_name}_#{method}"
+        )
         options = options_for_label(options)
 
         # the label() method will insert this nested input into the label at the last minute
         options[:label_prefix_for_nested_input] = input
 
-        self.label(method, options)
+        template.hidden_field_tag(method, unchecked_value) << self.label(method, options)
       end
 
       # Generates an input for the given method using the type supplied with :as.

@@ -23,7 +23,9 @@ describe 'boolean input' do
     output_buffer.should have_tag('form li label', :count => 1)
     output_buffer.should have_tag('form li label[@for="post_allow_comments"]')
     output_buffer.should have_tag('form li label', /Allow comments/)
-    output_buffer.should have_tag('form li label input[@type="checkbox"]')
+    output_buffer.should have_tag('form li label input[@type="checkbox"]', :count => 1)
+    output_buffer.should have_tag('form li input[@type="hidden"]', :count => 1)
+    output_buffer.should_not have_tag('form li label input[@type="hidden"]', :count => 1) # invalid HTML5
   end
 
   it 'should generate a checkbox input' do
@@ -42,7 +44,8 @@ describe 'boolean input' do
 
     output_buffer.concat(form) if Formtastic::Util.rails3?
     output_buffer.should have_tag('form li label input[@type="checkbox"][@value="checked"]:not([@unchecked_value][@checked_value])')
-    output_buffer.should have_tag('form li label input[@type="hidden"][@value="unchecked"]')
+    output_buffer.should have_tag('form li input[@type="hidden"][@value="unchecked"]')
+    output_buffer.should_not have_tag('form li label input[@type="hidden"]') # invalid HTML5
   end
 
   it 'should generate a label and a checkbox even if no object is given' do
