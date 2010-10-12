@@ -1745,7 +1745,9 @@ module Formtastic #:nodoc:
             action_name = template.params[:action].to_s rescue ''
             attribute_name = key.to_s
 
-            defaults = ::Formtastic::I18n::SCOPES.collect do |i18n_scope|
+            defaults = ::Formtastic::I18n::SCOPES.reject do |i18n_scope|
+              nested_model_name.nil? && i18n_scope.to_s.match(/\{nested_model\}/)
+            end.collect do |i18n_scope|
               i18n_path = i18n_scope.dup
               i18n_path.gsub!('%{action}', action_name)
               i18n_path.gsub!('%{model}', model_name)
