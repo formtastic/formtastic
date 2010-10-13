@@ -482,6 +482,26 @@ describe 'SemanticFormBuilder#input' do
           default_input_type(:string, :country).should == :country
         end
 
+        it 'should default to :email for :string columns matching email' do
+          default_input_type(:string, :email).should == :email
+          default_input_type(:string, :customer_email).should == :email
+          default_input_type(:string, :email_work).should == :email
+        end
+
+        it 'should default to :url for :string columns named url or website' do
+          default_input_type(:string, :url).should == :url
+          default_input_type(:string, :website).should == :url
+        end
+
+        it 'should default to :phone for :string columns named phone or fax' do
+          default_input_type(:string, :phone).should == :phone
+          default_input_type(:string, :fax).should == :phone
+        end
+
+        it 'should default to :search for :string columns named search' do
+          default_input_type(:string, :search).should == :search
+        end
+
         describe 'defaulting to file column' do
           ::Formtastic::SemanticFormBuilder.file_methods.each do |method|
             it "should default to :file for attributes that respond to ##{method}" do
