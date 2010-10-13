@@ -666,6 +666,15 @@ describe 'SemanticFormBuilder#input' do
           output_buffer.concat(form) if Formtastic::Util.rails3?
           output_buffer.should have_tag("form li p.inline-hints", hint_text)
         end
+
+				it 'should have a custom hint class if I ask for one' do
+          hint_text = "this is the title of the post"
+          form = semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:title, :hint => hint_text, :hint_class => 'custom-hint-class'))
+          end
+          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.should have_tag("form li p.custom-hint-class", hint_text)
+				end
       end
 
       describe 'when not provided' do
@@ -701,6 +710,22 @@ describe 'SemanticFormBuilder#input' do
               end
               output_buffer.concat(form) if Formtastic::Util.rails3?
               output_buffer.should have_tag('form li p.inline-hints', @localized_hint_text)
+            end
+
+						it 'should render a hint paragraph containing a localized hint (I18n) with a custom hint class if i ask for one' do
+              ::I18n.backend.store_translations :en,
+              :formtastic => {
+                  :hints => {
+                    :post => {
+                      :title => @localized_hint_text
+                     }
+                   }
+                }
+              form = semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:title, :hint => true, :hint_class => 'custom-hint-class'))
+              end
+              output_buffer.concat(form) if Formtastic::Util.rails3?
+              output_buffer.should have_tag('form li p.custom-hint-class', @localized_hint_text)
             end
 
             it 'should render a hint paragraph containing an optional localized hint (I18n) if first is not set' do
