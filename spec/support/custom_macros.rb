@@ -84,7 +84,7 @@ module CustomMacros
         output_buffer.should have_tag("form li textarea##{element_id}")
       end
     end
-    
+
     def it_should_use_default_text_field_size_when_not_nil(as)
       it 'should use default_text_field_size when not nil' do
         with_config :default_text_field_size, 30 do
@@ -96,7 +96,7 @@ module CustomMacros
         end
       end
     end
-    
+
     def it_should_not_use_default_text_field_size_when_nil(as)
       it 'should not use default_text_field_size when nil' do
         with_config :default_text_field_size, nil do

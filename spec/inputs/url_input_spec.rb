@@ -24,7 +24,7 @@ describe 'url input' do
     it_should_have_input_with_id("post_url")
     it_should_have_input_with_type(Formtastic::Util.rails3? ? :url : :text)
     it_should_have_input_with_name("post[url]")
-    
+
   end
 
 end

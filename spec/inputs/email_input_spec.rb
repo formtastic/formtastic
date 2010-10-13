@@ -24,7 +24,7 @@ describe 'email input' do
     it_should_have_input_with_id("post_email")
     it_should_have_input_with_type(Formtastic::Util.rails3? ? :email : :text)
     it_should_have_input_with_name("post[email]")
-    
+
   end
 
 end

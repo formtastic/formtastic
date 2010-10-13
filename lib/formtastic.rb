@@ -288,7 +288,7 @@ module Formtastic #:nodoc:
         field_set_and_list_wrapping(*((args << html_options) << contents))
       end
     end
-    
+
     def input_field_set(*args, &block)
       ::ActiveSupport::Deprecation.warn("input_field_set() is deprecated and will be removed in Formtastic 1.3 or later, use inputs() instead.", caller)
       inputs(args, &block)
@@ -311,7 +311,7 @@ module Formtastic #:nodoc:
         field_set_and_list_wrapping(html_options, contents)
       end
     end
-    
+
     def button_field_set(*args, &block)
       ::ActiveSupport::Deprecation.warn("button_field_set() is deprecated and will be removed in Formtastic 1.3 or later, use inputs() instead.", caller)
       buttons(args, &block)
@@ -652,7 +652,7 @@ module Formtastic #:nodoc:
       def file_input(method, options)
         basic_input_helper(:file_field, :file, method, options)
       end
-      
+
       # Outputs a label and a standard Rails email field inside the wrapper.
       def email_input(method, options)
         basic_input_helper(:email_field, :email, method, options)
@@ -905,7 +905,7 @@ module Formtastic #:nodoc:
         input_name = generate_association_input_name(method)
         value_as_class = options.delete(:value_as_class)
         input_ids = []
-        
+
         list_item_content = collection.map do |c|
           label = c.is_a?(Array) ? c.first : c
           value = c.is_a?(Array) ? c.last  : c
@@ -925,7 +925,7 @@ module Formtastic #:nodoc:
           legend_tag(method, options) << template.content_tag(:ol, Formtastic::Util.html_safe(list_item_content.join))
         )
       end
-      
+
       def boolean_radio_input(method, options)
         ::ActiveSupport::Deprecation.warn(":as => :boolean_radio is deprecated and will be removed in Formtastic 1.3 or later. Use :as => :radio instead.", caller)
         radio_input(method, options)
@@ -1171,7 +1171,7 @@ module Formtastic #:nodoc:
         template.content_tag(:fieldset, fieldset_content)
       end
 
-      # Used by check_boxes input. The selected values will be set by retrieving the value 
+      # Used by check_boxes input. The selected values will be set by retrieving the value
       # through the association.
       #
       # If the collection is not a hash or an array of strings, fixnums or symbols,

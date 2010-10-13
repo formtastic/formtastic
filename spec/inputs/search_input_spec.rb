@@ -24,7 +24,7 @@ describe 'search input' do
     it_should_have_input_with_id("post_search")
     it_should_have_input_with_type(Formtastic::Util.rails3? ? :search : :text)
     it_should_have_input_with_name("post[search]")
-    
+
   end
 
 end

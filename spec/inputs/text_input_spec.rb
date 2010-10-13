@@ -30,7 +30,7 @@ describe 'text input' do
     output_buffer.concat(form) if Formtastic::Util.rails3?
     output_buffer.should have_tag("form li textarea.myclass")
   end
-  
+
   it "should have a cols attribute when :cols is a number in :input_html" do
     output_buffer.replace ''
     form = semantic_form_for(@new_post) do |builder|
@@ -48,7 +48,7 @@ describe 'text input' do
     output_buffer.concat(form) if Formtastic::Util.rails3?
     output_buffer.should_not have_tag("form li textarea[@cols]")
   end
-  
+
   it "should have a rows attribute when :rows is a number in :input_html" do
     output_buffer.replace ''
     form = semantic_form_for(@new_post) do |builder|
@@ -56,7 +56,7 @@ describe 'text input' do
     end
     output_buffer.concat(form) if Formtastic::Util.rails3?
     output_buffer.should have_tag("form li textarea[@rows='42']")
-    
+
   end
 
   it "should not have a rows attribute when :rows is nil in :input_html" do
@@ -67,12 +67,12 @@ describe 'text input' do
     output_buffer.concat(form) if Formtastic::Util.rails3?
     output_buffer.should_not have_tag("form li textarea[@rows]")
   end
-  
+
   context "when :rows is missing in :input_html" do
-    before do 
+    before do
       output_buffer.replace ''
     end
-    
+
     it "should have a rows attribute matching default_text_area_height if numeric" do
       with_config :default_text_area_height, 12 do
         form = semantic_form_for(@new_post) do |builder|
@@ -82,7 +82,7 @@ describe 'text input' do
         output_buffer.should have_tag("form li textarea[@rows='12']")
       end
     end
-    
+
     it "should not have a rows attribute if default_text_area_height is nil" do
       with_config :default_text_area_height, nil do
         form = semantic_form_for(@new_post) do |builder|
@@ -91,15 +91,15 @@ describe 'text input' do
         output_buffer.concat(form) if Formtastic::Util.rails3?
         output_buffer.should_not have_tag("form li textarea[@rows]")
       end
-      
+
     end
   end
 
   context "when :cols is missing in :input_html" do
-    before do 
+    before do
       output_buffer.replace ''
     end
-    
+
     it "should have a cols attribute matching default_text_area_width if numeric" do
       with_config :default_text_area_width, 10 do
         form = semantic_form_for(@new_post) do |builder|
@@ -109,7 +109,7 @@ describe 'text input' do
         output_buffer.should have_tag("form li textarea[@cols='10']")
       end
     end
-    
+
     it "should not have a cols attribute if default_text_area_width is nil" do
       with_config :default_text_area_width, nil do
         form = semantic_form_for(@new_post) do |builder|
@@ -118,9 +118,9 @@ describe 'text input' do
         output_buffer.concat(form) if Formtastic::Util.rails3?
         output_buffer.should_not have_tag("form li textarea[@cols]")
       end
-      
+
     end
   end
-    
+
 end
 
