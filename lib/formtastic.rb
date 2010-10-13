@@ -1401,7 +1401,7 @@ module Formtastic #:nodoc:
             return :country   if method.to_s =~ /country$/
             return :time_zone if method.to_s =~ /time_zone/
             return :email     if method.to_s =~ /email/
-            return :url       if method.to_s =~ /^(url|website)$/
+            return :url       if method.to_s =~ /^url$|^website$|_url$/
             return :phone     if method.to_s =~ /(phone|fax)/
             return :search    if method.to_s =~ /^search$/
           when :integer
