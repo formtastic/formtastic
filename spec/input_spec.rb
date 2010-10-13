@@ -491,6 +491,8 @@ describe 'SemanticFormBuilder#input' do
         it 'should default to :url for :string columns named url or website' do
           default_input_type(:string, :url).should == :url
           default_input_type(:string, :website).should == :url
+          default_input_type(:string, :my_url).should == :url
+          default_input_type(:string, :hurl).should_not == :url
         end
 
         it 'should default to :phone for :string columns named phone or fax' do
