@@ -85,14 +85,18 @@ describe 'Formtastic::I18n' do
       @output_buffer = ''
       mock_everything
 
-      ::I18n.backend.store_translations :en, :formtastic => {
+      ::I18n.backend.store_translations :en, {:formtastic => {
           :labels => {
               :title    => "Hello world!",
               :post     => {:title => "Hello post!"},
               :project  => {:title => "Hello project!", :task => {:name => "Hello task name!"}},
               :line_item => {:name => "Hello line item name!"}
             }
-        }
+        }, :helpers => {
+          :label => {
+            :post => {:author => "Written by"}
+          }
+        }}
       ::Formtastic::SemanticFormBuilder.i18n_lookups_by_default = true
 
       @new_post.stub!(:title)
@@ -134,7 +138,7 @@ describe 'Formtastic::I18n' do
       output_buffer.should have_tag("form label", /Hello task name!/)
     end
 
-    it 'should be able to translated nested objects with top level translations' do
+    it 'should be able to translate nested objects with top level translations' do
       form = semantic_form_for(:order, :url => 'http://test.host') do |builder|
         builder.semantic_fields_for(:line_item) do |f|
           concat(f.input(:name))
@@ -144,6 +148,13 @@ describe 'Formtastic::I18n' do
       output_buffer.should have_tag("form label", /Hello line item name!/)
     end
 
+    it 'should be able to translate helper label as Rails does' do
+      form = semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:author))
+      end
+      output_buffer.concat(form) if Formtastic::Util.rails3?
+      output_buffer.should have_tag("form label", /Written by/)
+    end
 
     # TODO: Add spec for namespaced models?
 

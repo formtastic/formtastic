@@ -1746,7 +1746,7 @@ module Formtastic #:nodoc:
             attribute_name = key.to_s
 
             defaults = ::Formtastic::I18n::SCOPES.reject do |i18n_scope|
-              nested_model_name.nil? && i18n_scope.to_s.match(/\{nested_model\}/)
+              nested_model_name.nil? && i18n_scope.match(/nested_model/)
             end.collect do |i18n_scope|
               i18n_path = i18n_scope.dup
               i18n_path.gsub!('%{action}', action_name)
@@ -1758,8 +1758,17 @@ module Formtastic #:nodoc:
             end
             defaults << ''
 
-            i18n_value = ::Formtastic::I18n.t(defaults.shift,
+            defaults.uniq!
+
+            default_key = defaults.shift
+            i18n_value = ::Formtastic::I18n.t(default_key,
               options.merge(:default => defaults, :scope => type.to_s.pluralize.to_sym))
+            if i18n_value.blank? && type == :label
+              # This is effectively what Rails label helper does for i18n lookup
+              options[:scope] = [:helpers, type]
+              options[:default] = defaults
+              i18n_value = ::I18n.t(default_key, options)
+            end
             i18n_value = escape_html_entities(i18n_value) if i18n_value.is_a?(::String)
             i18n_value.blank? ? nil : i18n_value
           end
