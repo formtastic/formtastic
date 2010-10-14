@@ -1405,7 +1405,7 @@ module Formtastic #:nodoc:
             return :phone     if method.to_s =~ /(phone|fax)/
             return :search    if method.to_s =~ /^search$/
           when :integer
-            return :select    if method.to_s =~ /_id$/
+            return :select    if self.reflection_for(method)
             return :numeric
           when :float, :decimal
             return :numeric

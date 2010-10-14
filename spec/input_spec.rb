@@ -436,7 +436,15 @@ describe 'SemanticFormBuilder#input' do
           default_input_type(nil, :password_method_without_a_database_column).should == :password
         end
 
-        it 'should default to :select for column names ending in "_id"' do
+        it 'should default to :numeric for "integer" column with name ending in "_id"' do
+          @new_post.stub!(:aws_instance_id)
+          @new_post.stub!(:column_for_attribute).with(:aws_instance_id).and_return(mock('column', :type => :integer))
+          default_input_type(:integer, :aws_instance_id).should == :numeric
+        end
+        
+        it 'should default to :select for associations' do
+          @new_post.class.stub!(:reflect_on_association).with(:user_id).and_return(mock('ActiveRecord::Reflection::AssociationReflection'))
+          @new_post.class.stub!(:reflect_on_association).with(:section_id).and_return(mock('ActiveRecord::Reflection::AssociationReflection'))
           default_input_type(:integer, :user_id).should == :select
           default_input_type(:integer, :section_id).should == :select
         end
