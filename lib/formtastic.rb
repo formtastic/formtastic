@@ -914,6 +914,8 @@ module Formtastic #:nodoc:
           input_id = generate_html_id(input_name, value.to_s.gsub(/\s/, '_').gsub(/\W/, '').downcase)
           input_ids << input_id
 
+          html_options[:id] = input_id
+
           li_content = template.content_tag(:label,
             Formtastic::Util.html_safe("#{self.radio_button(input_name, value, html_options)} #{escape_html_entities(label)}"),
             :for => input_id

@@ -220,6 +220,9 @@ describe 'radio input' do
       @form = semantic_form_for(@new_post, :id_prefix => "custom_prefix") do |builder|
         concat(builder.input(:authors, :as => :radio, :label => ''))
       end
+
+      @form.should match(/for="custom_prefix_post_author_ids_(\d+)"/)
+      @form.should match(/id="custom_prefix_post_author_ids_(\d+)"/)
     end
     it_should_have_input_wrapper_with_id("custom_prefix_post_authors_input")
   end
