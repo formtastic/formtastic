@@ -213,4 +213,15 @@ describe 'radio input' do
     end
   end
 
+  describe "when :id_prefix is given on form" do
+    before do
+      @output_buffer = ''
+      @new_post.stub!(:author_ids).and_return(nil)
+      @form = semantic_form_for(@new_post, :id_prefix => "custom_prefix") do |builder|
+        concat(builder.input(:authors, :as => :radio, :label => ''))
+      end
+    end
+    it_should_have_input_wrapper_with_id("custom_prefix_post_authors_input")
+  end
+
 end

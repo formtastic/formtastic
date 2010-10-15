@@ -11,6 +11,8 @@ module Formtastic #:nodoc:
                    :inline_order, :custom_inline_order, :file_methods, :priority_countries, :i18n_lookups_by_default, :escape_html_entities_in_hints_and_labels,
                    :default_commit_button_accesskey, :instance_reader => false
 
+    cattr_accessor :custom_id_prefix
+
     self.default_text_field_size = nil
     self.default_text_area_height = 20
     self.default_text_area_width = 50
@@ -1670,16 +1672,16 @@ module Formtastic #:nodoc:
       # and method names.
       #
       def generate_html_id(method_name, value='input') #:nodoc:
-        if options.has_key?(:index)
-          index = "_#{options[:index]}"
-        elsif defined?(@auto_index)
-          index = "_#{@auto_index}"
-        else
-          index = ""
-        end
+        index = if options.has_key?(:index)
+                  options[:index]
+                elsif defined?(@auto_index)
+                  @auto_index
+                else
+                  ""
+                end
         sanitized_method_name = method_name.to_s.gsub(/[\?\/\-]$/, '')
 
-        "#{sanitized_object_name}#{index}_#{sanitized_method_name}_#{value}"
+        [@@custom_id_prefix, sanitized_object_name, index, sanitized_method_name, value].reject{|x|x.blank?}.join('_')
       end
 
       # Gets the nested_child_index value from the parent builder. In Rails 2.3
@@ -1885,6 +1887,7 @@ module Formtastic #:nodoc:
           options = args.extract_options!
           options[:builder] ||= @@builder
           options[:html] ||= {}
+          @@builder.custom_id_prefix = options[:id_prefix].to_s
 
           singularizer = defined?(ActiveModel::Naming.singular) ? ActiveModel::Naming.method(:singular) : ActionController::RecordIdentifier.method(:singular_class_name)
 
