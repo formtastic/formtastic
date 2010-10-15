@@ -132,6 +132,14 @@ describe 'SemanticFormHelper' do
       end
     end
 
+    describe 'with :id_prefix option' do
+      it "should set the custom_id_prefix" do
+        semantic_form_for(@new_post, :id_prefix => 'context2') do |builder|
+          builder.custom_id_prefix == 'context2'
+        end
+      end
+    end
+
   end
 
   describe '#semantic_fields_for' do
