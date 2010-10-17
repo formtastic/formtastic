@@ -57,6 +57,22 @@ describe 'date input' do
     end
   end
 
+  describe "when id_prefix is provided" do
+
+    before do
+      output_buffer.replace ''
+      @form = semantic_form_for(@new_post, :id_prefix => "context2") do |builder|
+        concat(builder.input(:publish_at, :as => :date, :order => [:year, :month, :day]))
+      end
+    end
+
+    it_should_have_input_wrapper_with_id("context2_post_publish_at_input")
+    it_should_have_select_with_id("context2_post_publish_at_1i")
+    it_should_have_select_with_id("context2_post_publish_at_2i")
+    it_should_have_select_with_id("context2_post_publish_at_3i")
+
+  end
+
   describe ':labels option' do
     fields = [:year, :month, :day]
     fields.each do |field|

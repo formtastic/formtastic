@@ -41,5 +41,16 @@ describe 'numeric input' do
     it_should_have_input_with_name("project[title]")
   end
 
+  describe "when id_prefix provided" do
+    before do
+      @form = semantic_form_for(@new_post, :id_prefix => :context2) do |builder|
+        concat(builder.input(:title, :as => :numeric))
+      end
+    end
+
+    it_should_have_input_wrapper_with_id("context2_post_title_input")
+    it_should_have_label_and_input_with_id("context2_post_title")
+  end
+
 end
 

@@ -40,6 +40,23 @@ describe 'time_zone input' do
     output_buffer.should have_tag("form li select.myclass")
   end
 
+  describe "when id_prefix is provided" do
+
+    before do
+      @output_buffer = ''
+      mock_everything
+
+      @form = semantic_form_for(@new_post, :id_prefix => 'context2') do |builder|
+        concat(builder.input(:time_zone))
+      end
+    end
+
+    it_should_have_input_wrapper_with_id("context2_post_time_zone_input")
+    it_should_have_select_with_id("context2_post_time_zone")
+    it_should_have_label_for("context2_post_time_zone")
+
+  end
+
   describe 'when no object is given' do
     before(:each) do
       @form = semantic_form_for(:project, :url => 'http://test.host/') do |builder|

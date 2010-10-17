@@ -190,6 +190,22 @@ describe 'datetime input' do
   #
   #end
 
+  describe "when id_prefix is provided" do
+
+    before do
+      output_buffer.replace ''
+      @form = semantic_form_for(@new_post, :id_prefix => "context2") do |builder|
+        concat(builder.input(:created_at, :as => :datetime, :include_seconds => true))
+      end
+    end
+
+    it_should_have_input_wrapper_with_id("context2_post_created_at_input")
+    (1..6).each do |i|
+      it_should_have_select_with_id("context2_post_created_at_#{i}i")
+    end
+
+  end
+
   describe ':labels option' do
     fields = [:year, :month, :day, :hour, :minute]
     fields.each do |field|

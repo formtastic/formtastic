@@ -33,7 +33,6 @@ describe 'check_boxes input' do
       output_buffer.should_not have_tag('form li fieldset legend label[@for^="author_post_ids_"]')
     end
 
-
     it 'should generate an ordered list with a list item for each choice' do
       output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should have_tag('form li fieldset ol')
@@ -361,6 +360,22 @@ describe 'check_boxes input' do
         output_buffer.should have_tag('input[@type=checkbox][@value="custom_value"]', :count => 3)
       end
     end
+  end
+
+  describe "when id_prefix is provided" do
+
+    before do
+      @output_buffer = ''
+      mock_everything
+
+      @form = semantic_form_for(@fred, :id_prefix => "context2") do |builder|
+        concat(builder.input(:posts, :as => :check_boxes))
+      end
+    end
+
+    it_should_have_label_for('context2_author_post_ids_19')
+    it_should_have_input_with_id('context2_author_post_ids_19')
+    it_should_have_input_wrapper_with_id("context2_author_posts_input")
   end
 
 end

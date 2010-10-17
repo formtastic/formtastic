@@ -68,6 +68,23 @@ describe 'text input' do
     output_buffer.should_not have_tag("form li textarea[@rows]")
   end
 
+  describe "when id_prefix is provided" do
+
+    before do
+      @output_buffer = ''
+      mock_everything
+
+      @form = semantic_form_for(@new_post, :id_prefix => 'context2') do |builder|
+        concat(builder.input(:body, :as => :text))
+      end
+    end
+
+    it_should_have_input_wrapper_with_id("context2_post_body_input")
+    it_should_have_textarea_with_id("context2_post_body")
+    it_should_have_label_for("context2_post_body")
+
+  end
+
   context "when :rows is missing in :input_html" do
     before do
       output_buffer.replace ''

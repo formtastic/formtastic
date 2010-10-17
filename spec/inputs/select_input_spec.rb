@@ -493,4 +493,15 @@ describe 'select input' do
     end
   end
 
+  describe 'when a id_prefix is provided' do
+    before do
+      @form = semantic_form_for(@freds_post, :id_prefix => 'context2') do |builder|
+        concat(builder.input(:authors, :as => :select))
+      end
+    end
+    it_should_have_input_wrapper_with_id("context2_post_authors_input")
+    it_should_have_select_with_id("context2_post_author_ids")
+    it_should_have_label_for("context2_post_author_ids")
+  end
+
 end
