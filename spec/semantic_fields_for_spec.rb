@@ -40,6 +40,33 @@ describe 'SemanticFormBuilder#semantic_fields_for' do
     output_buffer.should_not =~ /id="post\[author\]_1_login_input"/
     # <=> output_buffer.should_not have_tag('form fieldset.inputs #post[author]_1_login_input')
   end
+  
+  context "when I rendered my own hidden id input" do 
+    
+    before do
+      output_buffer.replace ''
+      
+      @fred.posts.size.should == 1
+      @fred.posts.first.stub!(:persisted?).and_return(true)
+      @fred.stub!(:posts_attributes=)
+
+      form = semantic_form_for(@fred) do |builder|
+        concat(builder.semantic_fields_for(:posts) do |nested_builder|
+          concat(nested_builder.input(:id, :as => :hidden))
+          concat(nested_builder.input(:title))
+        end)
+      end
+      output_buffer.concat(form) if Formtastic::Util.rails3?
+    end
+  
+    it "should only render one hidden input (my one)" do
+      output_buffer.should have_tag 'input#author_posts_attributes_0_id', :count => 1
+    end
+    
+    it "should render the hidden input inside an li.hidden" do
+      output_buffer.should have_tag 'li.hidden input#author_posts_attributes_0_id'
+    end
+  end
 
 end
 

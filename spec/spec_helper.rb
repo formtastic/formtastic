@@ -192,6 +192,7 @@ module FormtasticSpecHelper
     @freds_post.stub!(:class).and_return(::Post)
     @freds_post.stub!(:to_label).and_return('Fred Smith')
     @freds_post.stub!(:id).and_return(19)
+    @freds_post.stub!(:title).and_return("Hello World")
     @freds_post.stub!(:author).and_return(@fred)
     @freds_post.stub!(:author_id).and_return(@fred.id)
     @freds_post.stub!(:authors).and_return([@fred])
