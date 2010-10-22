@@ -1450,7 +1450,7 @@ module Formtastic #:nodoc:
         collection = find_raw_collection_for_column(column, options)
 
         # Return if we have a plain string
-        return collection if collection.instance_of?(String)
+        return collection if collection.instance_of?(String) || collection.instance_of?(::Formtastic::Util.rails_safe_buffer_class)
 
         # Return if we have an Array of strings, fixnums or arrays
         return collection if (collection.instance_of?(Array) || collection.instance_of?(Range)) &&

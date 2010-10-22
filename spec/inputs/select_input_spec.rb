@@ -449,6 +449,28 @@ describe 'select input' do
     end
   end
 
+  describe 'when a grouped collection collection is given' do
+    before(:each) do
+      @form = semantic_form_for(:project, :url => 'http://test.host') do |builder|
+        @grouped_opts = [['one',   ['pencil', 'crayon', 'pen']],
+                         ['two',   ['eyes', 'hands', 'feet']],
+                         ['three', ['wickets', 'witches', 'blind mice']]]
+        concat(builder.input(:author, :as => :select, :collection => grouped_options_for_select(@grouped_opts, "hands")))
+      end
+    end
+
+    it 'should generate an option to each item' do
+      output_buffer.concat(@form) if Formtastic::Util.rails3?
+      @grouped_opts.each do |opt_pair|
+        output_buffer.should have_tag("form li select optgroup[@label='#{opt_pair[0]}']")
+        opt_pair[1].each do |v|
+          output_buffer.should have_tag("form li select optgroup[@label='#{opt_pair[0]}'] option[@value='#{v}']")
+        end
+      end
+      output_buffer.should have_tag("form li select optgroup option[@selected]","hands")
+    end
+  end
+
   describe "enum" do
     before do
       @output_buffer = ''
