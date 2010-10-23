@@ -32,6 +32,12 @@
 # Set the way inline errors will be displayed.
 # Defaults to :sentence, valid options are :sentence, :list, :first and :none
 # Formtastic::SemanticFormBuilder.inline_errors = :sentence
+# Formtastic uses the following classes as default for hints, inline_errors and error list
+
+# If you override the class here, please ensure to override it in your formtastic_changes.css stylesheet as well
+# Formtastic::SemanticFormBuilder.default_hint_class = "inline-hints"
+# Formtastic::SemanticFormBuilder.default_inline_error_class = "inline-errors"
+# Formtastic::SemanticFormBuilder.default_error_list_class = "errors"
 
 # Set the method to call on label text to transform or format it for human-friendly
 # reading when formtastic is used without object. Defaults to :humanize.
@@ -55,7 +61,6 @@
 # fall back to the default order as defined by #inline_order
 # Formtastic::SemanticFormBuilder.custom_inline_order[:checkbox] = [:errors, :hints, :input]
 # Formtastic::SemanticFormBuilder.custom_inline_order[:select] = [:hints, :input, :errors]
-
 
 # Specifies if labels/hints for input fields automatically be looked up using I18n.
 # Default value: false. Overridden for specific fields by setting value to true,
