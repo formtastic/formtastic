@@ -703,6 +703,11 @@ describe 'SemanticFormBuilder#input' do
     describe ':hint option' do
 
       describe 'when provided' do
+
+        after do
+          ::Formtastic::SemanticFormBuilder.default_hint_class = "inline-hints"
+        end
+
         it 'should be passed down to the paragraph tag' do
           hint_text = "this is the title of the post"
           form = semantic_form_for(@new_post) do |builder|
@@ -719,7 +724,17 @@ describe 'SemanticFormBuilder#input' do
           end
           output_buffer.concat(form) if Formtastic::Util.rails3?
           output_buffer.should have_tag("form li p.custom-hint-class", hint_text)
-				end
+        end
+
+        it 'should have a custom hint class defaulted for all forms' do
+          hint_text = "this is the title of the post"
+          ::Formtastic::SemanticFormBuilder.default_hint_class = "custom-hint-class"
+          form = semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:title, :hint => hint_text))
+          end
+          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.should have_tag("form li p.custom-hint-class", hint_text)
+        end
       end
 
       describe 'when not provided' do

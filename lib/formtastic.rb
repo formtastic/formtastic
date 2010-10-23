@@ -9,7 +9,7 @@ module Formtastic #:nodoc:
     class_inheritable_accessor :default_text_field_size, :default_text_area_height, :default_text_area_width, :all_fields_required_by_default, :include_blank_for_select_by_default,
                    :required_string, :optional_string, :inline_errors, :label_str_method, :collection_value_methods, :collection_label_methods,
                    :inline_order, :custom_inline_order, :file_methods, :priority_countries, :i18n_lookups_by_default, :escape_html_entities_in_hints_and_labels,
-                   :default_commit_button_accesskey, :instance_reader => false
+                   :default_commit_button_accesskey, :default_inline_error_class, :default_hint_class, :default_error_list_class, :instance_reader => false
 
     self.default_text_field_size = nil
     self.default_text_area_height = 20
@@ -29,6 +29,9 @@ module Formtastic #:nodoc:
     self.i18n_lookups_by_default = false
     self.escape_html_entities_in_hints_and_labels = true
     self.default_commit_button_accesskey = nil
+    self.default_inline_error_class = 'inline-errors'
+    self.default_error_list_class = 'errors'
+    self.default_hint_class = 'inline-hints'
 
     RESERVED_COLUMNS = [:created_at, :updated_at, :created_on, :updated_on, :lock_version, :version]
 
@@ -1258,20 +1261,21 @@ module Formtastic #:nodoc:
       def inline_hints_for(method, options) #:nodoc:
         options[:hint] = localized_string(method, options[:hint], :hint)
         return if options[:hint].blank? or options[:hint].kind_of? Hash
-        template.content_tag(:p, Formtastic::Util.html_safe(options[:hint]), :class => (options[:hint_class] ? options[:hint_class] : 'inline-hints'))
+        hint_class = options[:hint_class] || self.class.default_hint_class
+        template.content_tag(:p, Formtastic::Util.html_safe(options[:hint]), :class => hint_class)
       end
 
       # Creates an error sentence by calling to_sentence on the errors array.
       #
       def error_sentence(errors, options = {}) #:nodoc:
-        error_class = (options[:error_class]) ? options[:error_class] : 'inline-errors'
+        error_class = options[:error_class] || self.class.default_inline_error_class
         template.content_tag(:p, Formtastic::Util.html_safe(errors.to_sentence.untaint), :class => error_class)
       end
 
       # Creates an error li list.
       #
       def error_list(errors, options = {}) #:nodoc:
-        error_class = (options[:error_class]) ? options[:error_class] : 'errors'
+        error_class = options[:error_class] || self.class.default_error_list_class
         list_elements = []
         errors.each do |error|
           list_elements <<  template.content_tag(:li, Formtastic::Util.html_safe(error.untaint))
@@ -1282,7 +1286,7 @@ module Formtastic #:nodoc:
       # Creates an error sentence containing only the first error
       #
       def error_first(errors, options = {}) #:nodoc:
-        error_class = (options[:error_class]) ? options[:error_class] : 'inline-errors'
+        error_class = options[:error_class] || self.class.default_inline_error_class
         template.content_tag(:p, Formtastic::Util.html_safe(errors.first.untaint), :class => error_class)
       end
 
