@@ -25,6 +25,13 @@ describe 'SemanticFormBuilder#errors_on' do
       end
     end
 
+    it 'should render a paragraph with the errors joined into a sentence when inline_errors config is :sentence with a customized error class' do
+      ::Formtastic::SemanticFormBuilder.inline_errors = :sentence
+      semantic_form_for(@new_post) do |builder|
+        builder.errors_on(:title, :error_class => 'better-errors').should have_tag('p.better-errors', @title_errors.to_sentence)
+      end
+    end
+
     it 'should render an unordered list with the class errors when inline_errors config is :list' do
       ::Formtastic::SemanticFormBuilder.inline_errors = :list
       semantic_form_for(@new_post) do |builder|
@@ -35,10 +42,27 @@ describe 'SemanticFormBuilder#errors_on' do
       end
     end
 
+    it 'should render an unordered list with the class errors when inline_errors config is :list with a customized error class' do
+      ::Formtastic::SemanticFormBuilder.inline_errors = :list
+      semantic_form_for(@new_post) do |builder|
+        builder.errors_on(:title, :error_class => 'better-errors').should have_tag('ul.better-errors')
+        @title_errors.each do |error|
+          builder.errors_on(:title, :error_class => 'better-errors').should have_tag('ul.better-errors li', error)
+        end
+      end
+    end
+
     it 'should render a paragraph with the first error when inline_errors config is :first' do
       ::Formtastic::SemanticFormBuilder.inline_errors = :first
       semantic_form_for(@new_post) do |builder|
         builder.errors_on(:title).should have_tag('p.inline-errors', @title_errors.first)
+      end
+    end
+
+    it 'should render a paragraph with the first error when inline_errors config is :first with a customized error class' do
+      ::Formtastic::SemanticFormBuilder.inline_errors = :first
+      semantic_form_for(@new_post) do |builder|
+        builder.errors_on(:title, :error_class => 'better-errors').should have_tag('p.better-errors', @title_errors.first)
       end
     end
 
