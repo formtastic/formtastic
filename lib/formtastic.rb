@@ -450,12 +450,12 @@ module Formtastic #:nodoc:
     #     f.errors_on(:body)
     #   end
     #
-    def inline_errors_for(method, options = nil) #:nodoc:
+    def inline_errors_for(method, options = {}) #:nodoc:
       if render_inline_errors?
         errors = [@object.errors[method.to_sym]]
         errors << [@object.errors[association_primary_key(method)]] if association_macro_for_method(method) == :belongs_to
         errors = errors.flatten.compact.uniq
-        send(:"error_#{self.class.inline_errors}", [*errors]) if errors.any?
+        send(:"error_#{self.class.inline_errors}", [*errors], options) if errors.any?
       else
         nil
       end
@@ -1263,24 +1263,27 @@ module Formtastic #:nodoc:
 
       # Creates an error sentence by calling to_sentence on the errors array.
       #
-      def error_sentence(errors) #:nodoc:
-        template.content_tag(:p, Formtastic::Util.html_safe(errors.to_sentence.untaint), :class => 'inline-errors')
+      def error_sentence(errors, options = {}) #:nodoc:
+        error_class = (options[:error_class]) ? options[:error_class] : 'inline-errors'
+        template.content_tag(:p, Formtastic::Util.html_safe(errors.to_sentence.untaint), :class => error_class)
       end
 
       # Creates an error li list.
       #
-      def error_list(errors) #:nodoc:
+      def error_list(errors, options = {}) #:nodoc:
+        error_class = (options[:error_class]) ? options[:error_class] : 'errors'
         list_elements = []
         errors.each do |error|
           list_elements <<  template.content_tag(:li, Formtastic::Util.html_safe(error.untaint))
         end
-        template.content_tag(:ul, Formtastic::Util.html_safe(list_elements.join("\n")), :class => 'errors')
+        template.content_tag(:ul, Formtastic::Util.html_safe(list_elements.join("\n")), :class => error_class)
       end
 
       # Creates an error sentence containing only the first error
       #
-      def error_first(errors) #:nodoc:
-        template.content_tag(:p, Formtastic::Util.html_safe(errors.first.untaint), :class => 'inline-errors')
+      def error_first(errors, options = {}) #:nodoc:
+        error_class = (options[:error_class]) ? options[:error_class] : 'inline-errors'
+        template.content_tag(:p, Formtastic::Util.html_safe(errors.first.untaint), :class => error_class)
       end
 
       # Generates the required or optional string. If the value set is a proc,
