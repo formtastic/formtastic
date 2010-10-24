@@ -138,10 +138,10 @@ describe 'string input' do
     end
   end
 
-  describe "when id_prefix is provided" do
+  describe "when namespace is provided" do
 
     before do
-      @form = semantic_form_for(@new_post, :id_prefix => 'context2') do |builder|
+      @form = semantic_form_for(@new_post, :namespace => 'context2') do |builder|
         concat(builder.input(:title, :as => :string))
       end
     end

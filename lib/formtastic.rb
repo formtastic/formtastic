@@ -11,7 +11,7 @@ module Formtastic #:nodoc:
                    :inline_order, :custom_inline_order, :file_methods, :priority_countries, :i18n_lookups_by_default, :escape_html_entities_in_hints_and_labels,
                    :default_commit_button_accesskey, :default_inline_error_class, :default_hint_class, :default_error_list_class, :instance_reader => false
 
-    cattr_accessor :custom_id_prefix
+    cattr_accessor :custom_namespace
 
     self.default_text_field_size = nil
     self.default_text_area_height = 20
@@ -1256,7 +1256,7 @@ module Formtastic #:nodoc:
 
         #input = self.check_box(method, strip_formtastic_options(options).merge(html_options),
         #                       checked_value, unchecked_value)
-        field_id = [@@custom_id_prefix,@object_name,method].reject{|x|x.blank?}.join("_")
+        field_id = [@@custom_namespace,@object_name,method].reject{|x|x.blank?}.join("_")
         input = template.check_box_tag(
           "#{@object_name}[#{method}]", 
           checked_value, 
@@ -1707,7 +1707,7 @@ module Formtastic #:nodoc:
                 end
         sanitized_method_name = method_name.to_s.gsub(/[\?\/\-]$/, '')
 
-        [@@custom_id_prefix, sanitized_object_name, index, sanitized_method_name, value].reject{|x|x.blank?}.join('_')
+        [@@custom_namespace, sanitized_object_name, index, sanitized_method_name, value].reject{|x|x.blank?}.join('_')
       end
 
       # Gets the nested_child_index value from the parent builder. In Rails 2.3
@@ -1913,7 +1913,7 @@ module Formtastic #:nodoc:
           options = args.extract_options!
           options[:builder] ||= @@builder
           options[:html] ||= {}
-          @@builder.custom_id_prefix = options[:id_prefix].to_s
+          @@builder.custom_namespace = options[:namespace].to_s
 
           singularizer = defined?(ActiveModel::Naming.singular) ? ActiveModel::Naming.method(:singular) : ActionController::RecordIdentifier.method(:singular_class_name)
 

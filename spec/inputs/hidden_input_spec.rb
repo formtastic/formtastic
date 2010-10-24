@@ -74,13 +74,13 @@ describe 'hidden input' do
     output_buffer.should_not have_tag("form li ul.hints")
   end
 
-  describe "when id_prefix is provided" do
+  describe "when namespace is provided" do
 
     before do
       @output_buffer = ''
       mock_everything
 
-      @form = semantic_form_for(@new_post, :id_prefix => 'context2') do |builder|
+      @form = semantic_form_for(@new_post, :namespace => 'context2') do |builder|
         concat(builder.input(:secret, :as => :hidden))
         concat(builder.input(:author_id, :as => :hidden, :value => 99))
         concat(builder.input(:published, :as => :hidden, :input_html => {:value => true}))

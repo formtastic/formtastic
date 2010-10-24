@@ -41,9 +41,9 @@ describe 'SemanticFormBuilder#semantic_fields_for' do
     # <=> output_buffer.should_not have_tag('form fieldset.inputs #post[author]_1_login_input')
   end
 
-  it 'should use id_prefix provided in nested fields' do
+  it 'should use namespace provided in nested fields' do
     @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
-    form = semantic_form_for(@new_post, :id_prefix => 'context2') do |builder|
+    form = semantic_form_for(@new_post, :namespace => 'context2') do |builder|
       concat(builder.semantic_fields_for(@bob, :index => 1) do |nested_builder|
         concat(nested_builder.inputs(:login))
       end)

@@ -78,13 +78,13 @@ describe 'country input' do
 
   end
 
-  describe "when id_prefix is provided" do
+  describe "when namespace is provided" do
 
     before do
       @output_buffer = ''
       mock_everything
 
-      @form = semantic_form_for(@new_post, :id_prefix => 'context2') do |builder|
+      @form = semantic_form_for(@new_post, :namespace => 'context2') do |builder|
         builder.stub!(:country_select).and_return(Formtastic::Util.html_safe("<select><option>...</option></select>"))
         builder.should_receive(:country_select).with(:country, [], {}, {:id => "context2_post_country"}).and_return(Formtastic::Util.html_safe("<select><option>...</option></select>"))
         concat(builder.input(:country, :priority_countries => []))

@@ -138,14 +138,14 @@ describe 'time input' do
     end
   end
 
-  describe ':id_prefix option' do
+  describe ':namespace option' do
     before do
-      @form = semantic_form_for(@new_post, :id_prefix => 'form2') do |builder|
+      @form = semantic_form_for(@new_post, :namespace => 'form2') do |builder|
         concat(builder.input(:publish_at, :as => :time))
       end
     end
 
-    it 'should have a tag matching the id_prefix' do
+    it 'should have a tag matching the namespace' do
       output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should have_tag('#form2_post_publish_at_input')
       output_buffer.should have_tag('#form2_post_publish_at_4i')

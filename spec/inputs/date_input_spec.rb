@@ -57,11 +57,11 @@ describe 'date input' do
     end
   end
 
-  describe "when id_prefix is provided" do
+  describe "when namespace is provided" do
 
     before do
       output_buffer.replace ''
-      @form = semantic_form_for(@new_post, :id_prefix => "context2") do |builder|
+      @form = semantic_form_for(@new_post, :namespace => "context2") do |builder|
         concat(builder.input(:publish_at, :as => :date, :order => [:year, :month, :day]))
       end
     end

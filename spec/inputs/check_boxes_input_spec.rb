@@ -362,13 +362,13 @@ describe 'check_boxes input' do
     end
   end
 
-  describe "when id_prefix is provided" do
+  describe "when namespace is provided" do
 
     before do
       @output_buffer = ''
       mock_everything
 
-      @form = semantic_form_for(@fred, :id_prefix => "context2") do |builder|
+      @form = semantic_form_for(@fred, :namespace => "context2") do |builder|
         concat(builder.input(:posts, :as => :check_boxes))
       end
     end

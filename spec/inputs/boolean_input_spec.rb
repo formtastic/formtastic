@@ -64,13 +64,13 @@ describe 'boolean input' do
     output_buffer.should have_tag('form li label input[@name="project[allow_comments]"]')
   end
 
-  describe "when id_prefix is provided" do
+  describe "when namespace is provided" do
 
     before do
       @output_buffer = ''
       mock_everything
 
-      @form = semantic_form_for(@new_post, :id_prefix => "context2") do |builder|
+      @form = semantic_form_for(@new_post, :namespace => "context2") do |builder|
         concat(builder.input(:allow_comments, :as => :boolean))
       end
     end

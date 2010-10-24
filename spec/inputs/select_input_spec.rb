@@ -515,9 +515,9 @@ describe 'select input' do
     end
   end
 
-  describe 'when a id_prefix is provided' do
+  describe 'when a namespace is provided' do
     before do
-      @form = semantic_form_for(@freds_post, :id_prefix => 'context2') do |builder|
+      @form = semantic_form_for(@freds_post, :namespace => 'context2') do |builder|
         concat(builder.input(:authors, :as => :select))
       end
     end

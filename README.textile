@@ -165,7 +165,7 @@ If you want to customize the label text, or render some hint text below the fiel
     <% form.inputs :name => "Advanced Options", :id => "advanced" do %>
       <%= form.input :slug, :label => "URL Title", :hint => "Created automatically if left blank", :required => false %>
       <%= form.input :section, :as => :radio %>
-      <%= form.input :user, :label => "Author", :label_method => :full_name,  %>
+      <%= form.input :user, :label => "Author", :label_method => :full_name %>
       <%= form.input :categories, :required => false %>
       <%= form.input :created_at, :as => :string, :label => "Publication Date", :required => false %>
     <% end %>
@@ -207,6 +207,17 @@ When working in has many association, you can even supply @"%i"@ in your fieldse
   <% end %>
 </pre>
 
+If you have more than one form on the same page, it may lead to HTML invalidation because of the way HTML element id attributes are assigned. You can provide
+a namespace for your form to ensure uniqueness of id attributes on form elements. The namespace attribute will be prefixed with underscore on the generate html id. For example:
+
+<pre>
+  <% semantic_form_for(@post, :namespace => 'cat_form') do |form| %>
+  <%= form.input :title %>        # id="cat_form_post_title"
+  <%= form.input :body %>         # id="cat_form_post_body"
+  <%= form.input :created_at %>   # id="cat_form_post_created_at"
+  <%= form.buttons %>
+  <% end %>
+</pre>
 
 Customize HTML attributes for any input using the @:input_html@ option. Typically this is used to disable the input, change the size of a text field, change the rows in a textarea, or even to add a special class to an input to attach special behavior like "autogrow":http://plugins.jquery.com/project/autogrow textareas:
 
@@ -230,7 +241,7 @@ The same can be done for buttons with the @:button_html@ option:
   <% end %>
 </pre>
 
-Customize the HTML attributes for the @<li>@ wrapper around every input with the @:wrapper_html@ option hash. There's one special key in the hash (@:class@), which will actually _append_ your string of classes to the existing classes provided by Formtastic (like @"required string error"@)
+Customize the HTML attributes for the @<li>@ wrapper around every input with the @:wrapper_html@ option hash. There's one special key in the hash (@:class@), which will actually _append_ your string of classes to the existing classes provided by Formtastic (like @"required string error"@).
 
 <pre>
   <% semantic_form_for @post do |form| %>
@@ -238,6 +249,14 @@ Customize the HTML attributes for the @<li>@ wrapper around every input with the
     <%= form.input :body %>
     <%= form.input :description, :wrapper_html => { :style => "display:none;" } %>
     ...
+  <% end %>
+</pre>
+
+Customize the default class used for hints on each attribute or globally in the @config/formtastic.rb@ file. Similarly you can customize the error classes on an attribute level or globally.
+
+<pre>
+  <% semantic_form_for @post do |form| %>
+    <%= form.input :title, :hint_class => 'custom-html-class', :error_class => 'custom-error-class' %>
   <% end %>
 </pre>
 
