@@ -57,6 +57,13 @@ module CustomMacros
       end
     end
 
+    def it_should_have_select_with_id(element_id)
+      it "should have a select box with id '#{element_id}'" do
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.should have_tag("form li select##{element_id}")
+      end
+    end
+
     def it_should_have_input_with_type(input_type)
       it "should have a #{input_type} input" do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
@@ -82,6 +89,14 @@ module CustomMacros
       it "should have an input with id '#{element_id}'" do
         output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag("form li textarea##{element_id}")
+      end
+    end
+
+    def it_should_have_label_and_input_with_id(element_id)
+      it "should have an input with id '#{element_id}'" do
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.should have_tag("form li input##{element_id}")
+        output_buffer.should have_tag("form li label[@for='#{element_id}']")
       end
     end
 

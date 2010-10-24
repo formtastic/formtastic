@@ -30,5 +30,21 @@ describe 'file input' do
     output_buffer.should have_tag("form li input.myclass")
   end
 
+  describe "when id_prefix is provided" do
+
+    before do
+      @output_buffer = ''
+      mock_everything
+
+      @form = semantic_form_for(@new_post, :id_prefix => 'context2') do |builder|
+        concat(builder.input(:body, :as => :file))
+      end
+    end
+
+    it_should_have_input_wrapper_with_id("context2_post_body_input")
+    it_should_have_label_and_input_with_id("context2_post_body")
+
+  end
+
 end
 

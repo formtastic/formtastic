@@ -11,6 +11,8 @@ module Formtastic #:nodoc:
                    :inline_order, :custom_inline_order, :file_methods, :priority_countries, :i18n_lookups_by_default, :escape_html_entities_in_hints_and_labels,
                    :default_commit_button_accesskey, :default_inline_error_class, :default_hint_class, :default_error_list_class, :instance_reader => false
 
+    cattr_accessor :custom_id_prefix
+
     self.default_text_field_size = nil
     self.default_text_area_height = 20
     self.default_text_area_width = 50
@@ -626,8 +628,11 @@ module Formtastic #:nodoc:
       def basic_input_helper(form_helper_method, type, method, options) #:nodoc:
         html_options = options.delete(:input_html) || {}
         html_options = default_string_options(method, type).merge(html_options) if [:numeric, :string, :password, :text, :phone, :search, :url, :email].include?(type)
-
-        self.label(method, options_for_label(options)) <<
+        field_id = generate_html_id(method, "")
+        html_options[:id] ||= field_id
+        label_options = options_for_label(options)
+        label_options[:for] ||= html_options[:id]
+        self.label(method, label_options) <<
         self.send(self.respond_to?(form_helper_method) ? form_helper_method : :text_field, method, html_options)
       end
 
@@ -684,6 +689,7 @@ module Formtastic #:nodoc:
       def hidden_input(method, options)
         options ||= {}
         html_options = options.delete(:input_html) || strip_formtastic_options(options)
+        html_options[:id] ||= generate_html_id(method, "")
         self.hidden_field(method, html_options)
       end
 
@@ -801,6 +807,7 @@ module Formtastic #:nodoc:
         end
         options = set_include_blank(options)
         input_name = generate_association_input_name(method)
+        html_options[:id] ||= generate_html_id(input_name, "")
 
         select_html = if options[:group_by]
           # The grouped_options_select is a bit counter intuitive and not optimised (mostly due to ActiveRecord).
@@ -823,7 +830,9 @@ module Formtastic #:nodoc:
           self.select(input_name, collection, strip_formtastic_options(options), html_options)
         end
 
-        self.label(method, options_for_label(options).merge(:input_name => input_name)) << select_html
+        label_options = options_for_label(options).merge(:input_name => input_name)
+        label_options[:for] ||= html_options[:id]
+        self.label(method, label_options) << select_html
       end
 
       def boolean_select_input(method, options)
@@ -839,8 +848,11 @@ module Formtastic #:nodoc:
       #   f.input :time_zone, :as => :time_zone, :priority_zones => /Australia/
       def time_zone_input(method, options)
         html_options = options.delete(:input_html) || {}
-
-        self.label(method, options_for_label(options)) <<
+        field_id = generate_html_id(method, "")
+        html_options[:id] ||= field_id
+        label_options = options_for_label(options)
+        label_options[:for] ||= html_options[:id]
+        self.label(method, label_options) <<
         self.time_zone_select(method, options.delete(:priority_zones),
           strip_formtastic_options(options), html_options)
       end
@@ -914,6 +926,8 @@ module Formtastic #:nodoc:
           value = c.is_a?(Array) ? c.last  : c
           input_id = generate_html_id(input_name, value.to_s.gsub(/\s/, '_').gsub(/\W/, '').downcase)
           input_ids << input_id
+
+          html_options[:id] = input_id
 
           li_content = template.content_tag(:label,
             Formtastic::Util.html_safe("#{self.radio_button(input_name, value, html_options)} #{escape_html_entities(label)}"),
@@ -1223,7 +1237,12 @@ module Formtastic #:nodoc:
         html_options = options.delete(:input_html) || {}
         priority_countries = options.delete(:priority_countries) || self.class.priority_countries
 
-        self.label(method, options_for_label(options)) <<
+        field_id = generate_html_id(method, "")
+        html_options[:id] ||= field_id
+        label_options = options_for_label(options)
+        label_options[:for] ||= html_options[:id]
+
+        self.label(method, label_options) <<
         self.country_select(method, priority_countries, strip_formtastic_options(options), html_options)
       end
 
@@ -1237,13 +1256,15 @@ module Formtastic #:nodoc:
 
         #input = self.check_box(method, strip_formtastic_options(options).merge(html_options),
         #                       checked_value, unchecked_value)
+        field_id = [@@custom_id_prefix,@object_name,method].reject{|x|x.blank?}.join("_")
         input = template.check_box_tag(
           "#{@object_name}[#{method}]", 
           checked_value, 
           (@object && @object.send(:"#{method}") == checked_value), 
-          :id => "#{@object_name}_#{method}"
+          :id => field_id
         )
         options = options_for_label(options)
+        options[:for] ||= field_id
 
         # the label() method will insert this nested input into the label at the last minute
         options[:label_prefix_for_nested_input] = input
@@ -1677,16 +1698,16 @@ module Formtastic #:nodoc:
       # and method names.
       #
       def generate_html_id(method_name, value='input') #:nodoc:
-        if options.has_key?(:index)
-          index = "_#{options[:index]}"
-        elsif defined?(@auto_index)
-          index = "_#{@auto_index}"
-        else
-          index = ""
-        end
+        index = if options.has_key?(:index)
+                  options[:index]
+                elsif defined?(@auto_index)
+                  @auto_index
+                else
+                  ""
+                end
         sanitized_method_name = method_name.to_s.gsub(/[\?\/\-]$/, '')
 
-        "#{sanitized_object_name}#{index}_#{sanitized_method_name}_#{value}"
+        [@@custom_id_prefix, sanitized_object_name, index, sanitized_method_name, value].reject{|x|x.blank?}.join('_')
       end
 
       # Gets the nested_child_index value from the parent builder. In Rails 2.3
@@ -1892,6 +1913,7 @@ module Formtastic #:nodoc:
           options = args.extract_options!
           options[:builder] ||= @@builder
           options[:html] ||= {}
+          @@builder.custom_id_prefix = options[:id_prefix].to_s
 
           singularizer = defined?(ActiveModel::Naming.singular) ? ActiveModel::Naming.method(:singular) : ActionController::RecordIdentifier.method(:singular_class_name)
 

@@ -74,5 +74,31 @@ describe 'hidden input' do
     output_buffer.should_not have_tag("form li ul.hints")
   end
 
+  describe "when id_prefix is provided" do
+
+    before do
+      @output_buffer = ''
+      mock_everything
+
+      @form = semantic_form_for(@new_post, :id_prefix => 'context2') do |builder|
+        concat(builder.input(:secret, :as => :hidden))
+        concat(builder.input(:author_id, :as => :hidden, :value => 99))
+        concat(builder.input(:published, :as => :hidden, :input_html => {:value => true}))
+        concat(builder.input(:reviewer, :as => :hidden, :input_html => {:class => 'new_post_reviewer', :id => 'new_post_reviewer'}))
+        concat(builder.input(:author, :as => :hidden, :value => 'direct_value', :input_html => {:value => "formtastic_value"}))
+      end
+    end
+
+    attributes_to_check = [:secret, :author_id, :published, :reviewer, :author]
+    attributes_to_check.each do |a|
+      it_should_have_input_wrapper_with_id("context2_post_#{a}_input")
+    end
+
+    (attributes_to_check - [:reviewer]).each do |a|
+      it_should_have_input_with_id("context2_post_#{a}")
+    end
+
+  end
+
 end
 

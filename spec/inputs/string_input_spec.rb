@@ -138,6 +138,19 @@ describe 'string input' do
     end
   end
 
+  describe "when id_prefix is provided" do
+
+    before do
+      @form = semantic_form_for(@new_post, :id_prefix => 'context2') do |builder|
+        concat(builder.input(:title, :as => :string))
+      end
+    end
+
+    it_should_have_input_wrapper_with_id("context2_post_title_input")
+    it_should_have_label_and_input_with_id("context2_post_title")
+
+  end
+
   describe "when no object is provided" do
     before do
       @form = semantic_form_for(:project, :url => 'http://test.host/') do |builder|
