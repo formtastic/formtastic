@@ -129,6 +129,44 @@ describe 'SemanticFormBuilder#errors_on' do
     end
   end
 
+  describe "when error keys are specified as options" do
+    it "should show errors on specified key" do
+      @errors.stub!(:[]).with(:document_file_name).and_return(['must be provided'])
+      @errors.stub!(:[]).with(:title).and_return([])
+      ::Formtastic::SemanticFormBuilder.inline_errors = :sentence
+      form = semantic_form_for(@new_post) do |builder|
+        builder.input(:title, :errors_on => :document_file_name)
+      end
+      output_buffer.concat(form) if Formtastic::Util.rails3?
+      output_buffer.should have_tag('p.inline-errors', (['must be provided']).to_sentence)
+      output_buffer.should have_tag("li[@class='string optional error']")
+    end
+
+    it "should show errors on original method" do
+      @errors.stub!(:[]).with(:document_file_name).and_return(['must be provided'])
+      @errors.stub!(:[]).with(:title).and_return(@title_errors)
+      ::Formtastic::SemanticFormBuilder.inline_errors = :sentence
+      form = semantic_form_for(@new_post) do |builder|
+        builder.input(:title, :errors_on => :document_file_name)
+      end
+      output_buffer.concat(form) if Formtastic::Util.rails3?
+      output_buffer.should have_tag('p.inline-errors', (@title_errors+['must be provided']).to_sentence)
+      output_buffer.should have_tag("li[@class='string optional error']")
+    end
+
+    it "should show errors all specified keys" do
+      @errors.stub!(:[]).with(:document_file_name).and_return(['must be provided'])
+      @errors.stub!(:[]).with(:document_content_type).and_return(['must be an image file'])
+      @errors.stub!(:[]).with(:title).and_return(@title_errors)
+      ::Formtastic::SemanticFormBuilder.inline_errors = :sentence
+      form = semantic_form_for(@new_post) do |builder|
+        builder.input(:title, :errors_on => [:document_file_name, :document_content_type])
+      end
+      output_buffer.concat(form) if Formtastic::Util.rails3?
+      output_buffer.should have_tag('p.inline-errors', (@title_errors+['must be provided', 'must be an image file']).to_sentence)
+      output_buffer.should have_tag("li[@class='string optional error']")
+    end
+  end
 
   describe 'when there are errors on the association and column' do
 
