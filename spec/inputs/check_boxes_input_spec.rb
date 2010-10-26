@@ -52,7 +52,6 @@ describe 'check_boxes input' do
     it 'should not render hidden inputs inside the ol' do
       output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should_not have_tag("form li fieldset ol li input[@type='hidden']")
-      puts output_buffer
     end
     
     it 'should render one hidden input for each choice outside the ol' do

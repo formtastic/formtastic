@@ -102,7 +102,7 @@ module Formtastic #:nodoc:
       options[:as]     ||= default_input_type(method, options)
 
       html_class = [ options[:as], (options[:required] ? :required : :optional) ]
-      html_class << 'error' if @object && @object.respond_to?(:errors) && !@object.errors[method.to_sym].blank?
+      html_class << 'error' if has_errors?(method, options)
 
       wrapper_html = options.delete(:wrapper_html) || {}
       wrapper_html[:id]  ||= generate_html_id(method)
@@ -457,9 +457,7 @@ module Formtastic #:nodoc:
     #
     def inline_errors_for(method, options = {}) #:nodoc:
       if render_inline_errors?
-        errors = [@object.errors[method.to_sym]]
-        errors << [@object.errors[association_primary_key(method)]] if association_macro_for_method(method) == :belongs_to
-        errors = errors.flatten.compact.uniq
+        errors = error_keys(method, options).map{|x| @object.errors[x] }.flatten.compact.uniq
         send(:"error_#{self.class.inline_errors}", [*errors], options) if errors.any?
       else
         nil
@@ -494,6 +492,20 @@ module Formtastic #:nodoc:
     end
 
     protected
+
+      def error_keys(method, options)
+        @method_errors ||= begin
+          @methods_for_error = [method.to_sym]
+          @methods_for_error << [options[:errors_on]].flatten.compact.map{|x|x.to_sym}
+          @methods_for_error << [association_primary_key(method)] if association_macro_for_method(method) == :belongs_to
+          @methods_for_error = @methods_for_error.flatten.compact.uniq
+        end
+      end
+
+      def has_errors?(method, options)
+        methods_for_error = error_keys(method,options)
+        @object && @object.respond_to?(:errors) && methods_for_error.any?{|error| !@object.errors[error].blank?}
+      end
 
       def render_inline_errors?
         @object && @object.respond_to?(:errors) && INLINE_ERROR_TYPES.include?(self.class.inline_errors)
