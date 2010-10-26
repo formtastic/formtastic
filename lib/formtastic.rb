@@ -494,12 +494,10 @@ module Formtastic #:nodoc:
     protected
 
       def error_keys(method, options)
-        @methods_for_error ||= begin
-          @methods_for_error = [method.to_sym]
-          @methods_for_error << [options[:errors_on]].flatten.compact.map{|x|x.to_sym}
-          @methods_for_error << [association_primary_key(method)] if association_macro_for_method(method) == :belongs_to
-          @methods_for_error.flatten.compact.uniq
-        end
+        methods_for_error = [method.to_sym]
+        methods_for_error << [options[:errors_on]].flatten.compact.map{|x|x.to_sym}
+        methods_for_error << [association_primary_key(method)] if association_macro_for_method(method) == :belongs_to
+        methods_for_error.flatten.compact.uniq
       end
 
       def has_errors?(method, options)
