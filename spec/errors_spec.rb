@@ -106,9 +106,10 @@ describe 'SemanticFormBuilder#errors_on' do
 
     it 'should return nil when inline_errors config is :sentence, :list or :none' do
       [:sentence, :list, :none].each do |config|
-        ::Formtastic::SemanticFormBuilder.inline_errors = config
-        semantic_form_for(@new_post) do |builder|
-          builder.errors_on(:title).should be_nil
+        with_config :inline_errors, config do
+          semantic_form_for(@new_post) do |builder|
+            builder.errors_on(:title).should be_nil
+          end
         end
       end
     end
@@ -136,11 +137,11 @@ describe 'SemanticFormBuilder#errors_on' do
       @errors.stub!(:[]).with(:document_content_type).and_return(['must be an image'])
       @errors.stub!(:[]).with(:document).and_return(nil)
 
-      ::Formtastic::SemanticFormBuilder.inline_errors = :sentence
-      form = semantic_form_for(@new_post) do |builder|
-        concat(builder.input(:document))
-      end
-
+      with_config :inline_errors, :sentence do
+        form = semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:document))
+        end
+      end 
       output_buffer.concat(form) if Formtastic::Util.rails3?
       output_buffer.should have_tag("li[@class='file optional error']")
       output_buffer.should have_tag('p.inline-errors', (['must be an image','must be provided', 'must be less than 4mb']).to_sentence)
@@ -150,14 +151,15 @@ describe 'SemanticFormBuilder#errors_on' do
   describe 'when there are errors on the association and column' do
 
     it "should list all unique errors" do
-      ::Formtastic::SemanticFormBuilder.inline_errors = :list
       ::Post.stub!(:reflections).and_return({:author => mock('reflection', :options => {}, :macro => :belongs_to)})
 
       @errors.stub!(:[]).with(:author).and_return(['must not be blank'])
       @errors.stub!(:[]).with(:author_id).and_return(['is already taken', 'must not be blank']) # note the duplicate of association
 
-      form = semantic_form_for(@new_post) do |builder|
-        concat(builder.input(:author))
+      with_config :inline_errors, :list do
+        form = semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:author))
+        end
       end
       output_buffer.concat(form) if Formtastic::Util.rails3?
       output_buffer.should have_tag("ul.errors li", /must not be blank/, :count => 1)
