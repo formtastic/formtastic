@@ -138,7 +138,7 @@ describe 'SemanticFormBuilder#errors_on' do
 
       ::Formtastic::SemanticFormBuilder.inline_errors = :sentence
       form = semantic_form_for(@new_post) do |builder|
-        builder.input(:document)
+        concat(builder.input(:document))
       end
 
       output_buffer.concat(form) if Formtastic::Util.rails3?
