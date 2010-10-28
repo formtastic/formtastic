@@ -7,7 +7,7 @@ module Formtastic #:nodoc:
 
   class SemanticFormBuilder < ActionView::Helpers::FormBuilder
     class_inheritable_accessor :default_text_field_size, :default_text_area_height, :default_text_area_width, :all_fields_required_by_default, :include_blank_for_select_by_default,
-                   :required_string, :optional_string, :inline_errors, :label_str_method, :collection_value_methods, :collection_label_methods,
+                   :required_string, :optional_string, :inline_errors, :label_str_method, :collection_value_methods, :collection_label_methods, :file_metadata_suffixes,
                    :inline_order, :custom_inline_order, :file_methods, :priority_countries, :i18n_lookups_by_default, :escape_html_entities_in_hints_and_labels,
                    :default_commit_button_accesskey, :default_inline_error_class, :default_hint_class, :default_error_list_class, :instance_reader => false
 
@@ -27,6 +27,7 @@ module Formtastic #:nodoc:
     self.inline_order = [ :input, :hints, :errors ]
     self.custom_inline_order = {}
     self.file_methods = [ :file?, :public_filename, :filename ]
+    self.file_metadata_suffixes = ['content_type', 'file_name', 'file_size']
     self.priority_countries = ["Australia", "Canada", "United Kingdom", "United States"]
     self.i18n_lookups_by_default = false
     self.escape_html_entities_in_hints_and_labels = true
@@ -494,10 +495,13 @@ module Formtastic #:nodoc:
     protected
 
       def error_keys(method, options)
-        methods_for_error = [method.to_sym]
-        methods_for_error << [options[:errors_on]].flatten.compact.map{|x|x.to_sym}
-        methods_for_error << [association_primary_key(method)] if association_macro_for_method(method) == :belongs_to
-        methods_for_error.flatten.compact.uniq
+        @methods_for_error ||= {}
+        @methods_for_error[method] ||= begin
+          methods_for_error = [method.to_sym]
+          methods_for_error << self.class.file_metadata_suffixes.map{|suffix| "#{method}_#{suffix}".to_sym} if is_file?(method, options)
+          methods_for_error << [association_primary_key(method)] if association_macro_for_method(method) == :belongs_to
+          methods_for_error.flatten.compact.uniq
+        end
       end
 
       def has_errors?(method, options)
@@ -1463,13 +1467,20 @@ module Formtastic #:nodoc:
           if @object
             return :select  if self.reflection_for(method)
 
-            file = @object.send(method) if @object.respond_to?(method)
-            return :file    if file && self.class.file_methods.any? { |m| file.respond_to?(m) }
+            return :file    if is_file?(method)
           end
 
           return :select    if options.key?(:collection)
           return :password  if method.to_s =~ /password/
           return :string
+        end
+      end
+
+      def is_file?(method, options = {})
+        @files ||= {}
+        @files[method] ||= (options[:as].present? && options[:as] == :file) || begin
+          file = @object.send(method) if @object && @object.respond_to?(method)
+          file && self.class.file_methods.any?{|m| file.respond_to?(m)}
         end
       end
 

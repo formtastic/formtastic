@@ -173,6 +173,9 @@ module CustomMacros
           @title_errors = ['must not be blank', 'must be longer than 10 characters', 'must be awesome']
           @errors = mock('errors')
           @errors.stub!(:[]).with(:title).and_return(@title_errors)
+          ::Formtastic::SemanticFormBuilder.file_metadata_suffixes.each do |suffix|
+            @errors.stub!(:[]).with("title_#{suffix}".to_sym).and_return(nil)
+          end
           @new_post.stub!(:errors).and_return(@errors)
         end
 
