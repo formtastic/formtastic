@@ -478,13 +478,6 @@ You can show errors on base (by default) and any other attribute just passing it
   <% end %>
 </pre>
 
-If you want to include inline errors on fields including the original field (for e.g. Paperclip adds errors on @:document_file_name@@ and @:document_file_size@ and @:document_content_type@ instead of @:document@), provide one or more keys with @:errors_on@ option
-
-<pre>
-  <% semantic_form_for @post do |form| %>
-    <%= form.input :document, :errors_on => [:document_file_size, :document_file_name] %>
-  <% end %>
-</pre>
 
 h2. ValidationReflection plugin
 

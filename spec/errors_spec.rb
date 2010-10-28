@@ -129,42 +129,21 @@ describe 'SemanticFormBuilder#errors_on' do
     end
   end
 
-  describe "when error keys are specified as options" do
-    it "should show errors on specified key" do
+  describe 'when file type columns have errors' do
+    it "should list errors added on metadata fields" do
       @errors.stub!(:[]).with(:document_file_name).and_return(['must be provided'])
-      @errors.stub!(:[]).with(:title).and_return([])
-      ::Formtastic::SemanticFormBuilder.inline_errors = :sentence
-      form = semantic_form_for(@new_post) do |builder|
-        builder.input(:title, :errors_on => :document_file_name)
-      end
-      output_buffer.concat(form) if Formtastic::Util.rails3?
-      output_buffer.should have_tag('p.inline-errors', (['must be provided']).to_sentence)
-      output_buffer.should have_tag("li[@class='string optional error']")
-    end
+      @errors.stub!(:[]).with(:document_file_size).and_return(['must be less than 4mb'])
+      @errors.stub!(:[]).with(:document_content_type).and_return(['must be an image'])
+      @errors.stub!(:[]).with(:document).and_return(nil)
 
-    it "should show errors on original method" do
-      @errors.stub!(:[]).with(:document_file_name).and_return(['must be provided'])
-      @errors.stub!(:[]).with(:title).and_return(@title_errors)
       ::Formtastic::SemanticFormBuilder.inline_errors = :sentence
       form = semantic_form_for(@new_post) do |builder|
-        builder.input(:title, :errors_on => :document_file_name)
+        builder.input(:document)
       end
-      output_buffer.concat(form) if Formtastic::Util.rails3?
-      output_buffer.should have_tag('p.inline-errors', (@title_errors+['must be provided']).to_sentence)
-      output_buffer.should have_tag("li[@class='string optional error']")
-    end
 
-    it "should show errors all specified keys" do
-      @errors.stub!(:[]).with(:document_file_name).and_return(['must be provided'])
-      @errors.stub!(:[]).with(:document_content_type).and_return(['must be an image file'])
-      @errors.stub!(:[]).with(:title).and_return(@title_errors)
-      ::Formtastic::SemanticFormBuilder.inline_errors = :sentence
-      form = semantic_form_for(@new_post) do |builder|
-        builder.input(:title, :errors_on => [:document_file_name, :document_content_type])
-      end
       output_buffer.concat(form) if Formtastic::Util.rails3?
-      output_buffer.should have_tag('p.inline-errors', (@title_errors+['must be provided', 'must be an image file']).to_sentence)
-      output_buffer.should have_tag("li[@class='string optional error']")
+      output_buffer.should have_tag("li[@class='file optional error']")
+      output_buffer.should have_tag('p.inline-errors', (['must be an image','must be provided', 'must be less than 4mb']).to_sentence)
     end
   end
 
