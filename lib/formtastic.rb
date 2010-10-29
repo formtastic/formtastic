@@ -1467,7 +1467,7 @@ module Formtastic #:nodoc:
           if @object
             return :select  if self.reflection_for(method)
 
-            return :file    if is_file?(method)
+            return :file    if is_file?(method, options)
           end
 
           return :select    if options.key?(:collection)
