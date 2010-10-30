@@ -1,20 +1,5 @@
 # encoding: utf-8
 
-# Get current OS - needed for clipboard functionality
-case RUBY_PLATFORM
-when /darwin/ then
-  CURRENT_OS = :osx
-when /win32/
-  CURRENT_OS = :win
-  begin
-    require 'win32/clipboard'
-  rescue LoadError
-    # Do nothing
-  end
-else
-  CURRENT_OS = :x
-end
-
 class FormGenerator < Rails::Generator::NamedBase
 
   default_options :haml => false,
@@ -66,19 +51,20 @@ class FormGenerator < Rails::Generator::NamedBase
 
   protected
 
-    # Save to lipboard with multiple OS support.
     def save_to_clipboard(data)
       return unless data
+
       begin
-        case CURRENT_OS
-        when :osx
-          `echo "#{data}" | pbcopy`
-        when :win
+        case RUBY_PLATFORM
+        when /win32/
+          require 'win32/clipboard'
           ::Win32::Clipboard.data = data
-        else # :linux/:unix
+        when /darwin/ # mac
+          `echo "#{data}" | pbcopy`
+        else # linux/unix
           `echo "#{data}" | xsel --clipboard` || `echo "#{data}" | xclip`
         end
-      rescue
+      rescue LoadError
         false
       else
         true
