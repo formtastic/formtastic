@@ -8,10 +8,6 @@ module Formtastic
       @source_root ||= File.expand_path(File.join('..', '..', '..', '..', 'generators', 'formtastic', 'templates'), File.dirname(__FILE__))
     end
 
-    def self.banner
-      "rails generate formtastic:install [options]"
-    end
-
     def copy_files
       empty_directory 'config/initializers'
       template        'formtastic.rb', 'config/initializers/formtastic.rb'
