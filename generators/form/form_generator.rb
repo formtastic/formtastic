@@ -29,10 +29,10 @@ class FormGenerator < Rails::Generator::NamedBase
         # Ensure directory exists.
         m.directory File.join(VIEWS_PATH, controller_and_view_path)
         # Create a form partial for the model as "_form" in it's views path.
-        m.template "view__form.html.#{template_type}", File.join(VIEWS_PATH, controller_and_view_path, "_form.html.#{template_type}")
+        m.template "_form.html.#{template_type}", File.join(VIEWS_PATH, controller_and_view_path, "_form.html.#{template_type}")
       else
         # Load template file, and render without saving to file
-        template = File.read(File.join(source_root, "view__form.html.#{template_type}"))
+        template = File.read(File.join(source_root, "_form.html.#{template_type}"))
         erb = ERB.new(template, nil, '-')
         generated_code = erb.result(binding).strip rescue nil
 
@@ -44,7 +44,7 @@ class FormGenerator < Rails::Generator::NamedBase
         puts generated_code || " Nothing could be generated - model exists?"
         puts
         puts "# ---------------------------------------------------------"
-        puts " Copied to clipboard - just paste it!" if save_to_clipboard(generated_code)
+        puts "Copied to clipboard - just paste it!" if save_to_clipboard(generated_code)
       end
     end
   end
@@ -102,6 +102,10 @@ class FormGenerator < Rails::Generator::NamedBase
 
     def banner
       "Usage: #{$0} form ExistingModelName [--haml] [--partial]"
+    end
+    
+    def source_root
+      File.expand_path('../../../lib/generators/templates', __FILE__)
     end
 
 end
