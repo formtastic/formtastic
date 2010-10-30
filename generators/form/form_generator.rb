@@ -8,12 +8,12 @@ class FormGenerator < Rails::Generator::NamedBase
   VIEWS_PATH = File.join('app', 'views').freeze
   IGNORED_COLUMNS = [:updated_at, :created_at].freeze
 
-  attr_reader   :controller_file_name,
-                :controller_class_path,
-                :controller_class_nesting,
-                :controller_class_nesting_depth,
-                :controller_class_name,
-                :template_type
+  attr_reader :controller_file_name,
+              :controller_class_path,
+              :controller_class_nesting,
+              :controller_class_nesting_depth,
+              :controller_class_name,
+              :template_type
 
   def initialize(runtime_args, runtime_options = {})
     super
