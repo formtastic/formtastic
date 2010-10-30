@@ -17,18 +17,16 @@ module Formtastic
     class_option :controller, :type => :string, :default => false, :group => :formtastic,
                  :desc => 'Generate for custom controller/view path - in case model and controller namespace is different, i.e. "admin/posts"'
 
-    def self.source_root
-     # Set source directory for the templates to the rails2 generator template directory
-     @source_root ||= File.expand_path(File.join('..', '..', '..', '..', 'generators', 'form', 'templates'), File.dirname(__FILE__))
-    end
+    source_root File.expand_path('../../../templates', __FILE__)
 
     def create_or_show
       @attributes = self.columns if @attributes.empty?
+
       if options[:partial]
         empty_directory "app/views/#{controller_path}"
-        template "view__form.html.#{template_type}", "app/views/#{controller_path}/_form.html.#{template_type}"
+        template "_form.html.#{template_type}", "app/views/#{controller_path}/_form.html.#{template_type}"
       else
-        template = File.read("#{self.class.source_root}/view__form.html.#{template_type}")
+        template = File.read("#{self.class.source_root}/_form.html.#{template_type}")
         erb = ERB.new(template, nil, '-')
         generated_code = erb.result(binding).strip rescue nil
 
