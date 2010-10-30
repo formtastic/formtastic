@@ -3,10 +3,7 @@ module Formtastic
   class InstallGenerator < Rails::Generators::Base
     desc "Copies formtastic.css and formtastic_changes.css to public/stylesheets/ and a config initializer to config/initializers/formtastic_config.rb"
 
-    def self.source_root
-      # Set source directory for the templates to the rails2 generator template directory
-      @source_root ||= File.expand_path(File.join('..', '..', '..', '..', 'generators', 'formtastic', 'templates'), File.dirname(__FILE__))
-    end
+    source_root File.expand_path('../../../templates', __FILE__)
 
     def copy_files
       empty_directory 'config/initializers'
