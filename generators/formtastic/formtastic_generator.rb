@@ -2,10 +2,6 @@
 
 class FormtasticGenerator < Rails::Generator::Base
 
-  def initialize(*runtime_args)
-    super
-  end
-
   def manifest
     record do |m|
       m.directory File.join('config', 'initializers')
