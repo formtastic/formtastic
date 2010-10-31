@@ -2,10 +2,6 @@
 
 class FormtasticGenerator < Rails::Generator::Base
 
-  def initialize(*runtime_args)
-    super
-  end
-
   def manifest
     record do |m|
       m.directory File.join('config', 'initializers')
@@ -21,6 +17,10 @@ class FormtasticGenerator < Rails::Generator::Base
 
   def banner
     %{Usage: #{$0} #{spec.name}\nCopies formtastic.css and formtastic_changes.css to public/stylesheets/ and a config initializer to config/initializers/formtastic.rb}
+  end
+  
+  def source_root
+    File.expand_path('../../../lib/generators/templates', __FILE__)
   end
 
 end

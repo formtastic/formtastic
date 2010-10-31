@@ -27,6 +27,7 @@
   * Fixed a bunch of invalid i18n key defaults
   * Fixed that 'required' classes and logic were not being applied to :check_boxes and :radio inputs
   * Fixed CSS bugs around Firefox's quirks with form elements that resulted in overflow/scroll bar issues
+  * Fixed that errors on fields with association were not marking the wrapping tag with the error class
 
 * Changes
 
