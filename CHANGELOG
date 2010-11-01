@@ -20,6 +20,7 @@
   * Added the ability to customize the order for specific types of inputs. This is configured on a type basis and if a type is not found it willfall back to the default order as defined by @@inline_order
   * Added :first as a new rendering choice for the errors on each input
   * Added custom_inline_order to allow inline ordering per input type
+  * Added the ability to override the generator templates in Rails 3
 
 * Fixes 
 
@@ -28,7 +29,8 @@
   * Fixed that 'required' classes and logic were not being applied to :check_boxes and :radio inputs
   * Fixed CSS bugs around Firefox's quirks with form elements that resulted in overflow/scroll bar issues
   * Fixed that errors on fields with association were not marking the wrapping tag with the error class
-
+  * Fixed CSS where FF was displaying extra scroll bars on .check_boxes and .radio inputs (and the choices within them)
+  
 * Changes
 
   * Changed that we were defaulting to a :select input for columns ending in _id, instead of columns with an appropriate associations
