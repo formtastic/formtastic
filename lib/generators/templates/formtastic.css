@@ -113,8 +113,9 @@ form.formtastic fieldset > ol > li.boolean label input { margin:0 0.5em 0 0.2em;
 /* RADIO OVERRIDES
 --------------------------------------------------------------------------------------------------*/
 form.formtastic fieldset > ol > li.radio { }
-form.formtastic fieldset > ol > li.radio fieldset ol { margin-bottom:-0.6em; }
-form.formtastic fieldset > ol > li.radio fieldset ol li { margin:0.1em 0 0.5em 0; }
+form.formtastic fieldset > ol > li.radio fieldset { overflow:visible; }
+form.formtastic fieldset > ol > li.radio fieldset ol { margin-bottom:-0.5em; }
+form.formtastic fieldset > ol > li.radio fieldset ol li { margin:0.1em 0 0.5em 0; overflow:visible; }
 form.formtastic fieldset > ol > li.radio fieldset ol li label { float:none; width:100%; }
 form.formtastic fieldset > ol > li.radio fieldset ol li label input { margin-right:0.2em; }
 
@@ -122,11 +123,11 @@ form.formtastic fieldset > ol > li.radio fieldset ol li label input { margin-rig
 /* CHECK BOXES (COLLECTION) OVERRIDES
 --------------------------------------------------------------------------------------------------*/
 form.formtastic fieldset > ol > li.check_boxes { }
-form.formtastic fieldset > ol > li.check_boxes fieldset ol { margin-bottom:-0.6em; }
-form.formtastic fieldset > ol > li.check_boxes fieldset ol li { margin:0.1em 0 0.5em 0; }
+form.formtastic fieldset > ol > li.check_boxes fieldset { overflow:visible; }
+form.formtastic fieldset > ol > li.check_boxes fieldset ol { margin-bottom:-0.5em; }
+form.formtastic fieldset > ol > li.check_boxes fieldset ol li { margin:0.1em 0 0.5em 0; overflow:visible; }
 form.formtastic fieldset > ol > li.check_boxes fieldset ol li label { float:none; width:100%; }
 form.formtastic fieldset > ol > li.check_boxes fieldset ol li label input { margin-right:0.2em; }
-
 
 
 /* DATE & TIME OVERRIDES
