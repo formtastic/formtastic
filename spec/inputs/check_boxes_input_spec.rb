@@ -15,10 +15,6 @@ describe 'check_boxes input' do
       end
     end
     
-    it 'should be true' do 
-      true.should be_true
-    end
-    
     it_should_have_input_wrapper_with_class("check_boxes")
     it_should_have_input_wrapper_with_id("author_posts_input")
     it_should_have_a_nested_fieldset
@@ -331,70 +327,70 @@ describe 'check_boxes input' do
   
   end
   
-  #describe 'for a has_and_belongs_to_many association' do
-  #
-  #  before do
-  #    @output_buffer = ''
-  #    mock_everything
-  #
-  #    @form = semantic_form_for(@freds_post) do |builder|
-  #      concat(builder.input(:authors, :as => :check_boxes))
-  #    end
-  #    output_buffer.concat(@form) if Formtastic::Util.rails3?
-  #  end
-  #
-  #  it 'should render checkboxes' do
-  #    # I'm aware these two lines test the same thing
-  #    output_buffer.should have_tag('input[type="checkbox"]', :count => 2)
-  #    output_buffer.should have_tag('input[type="checkbox"]', :count => ::Author.all.size)
-  #  end
-  #
-  #  it 'should only select checkboxes that are present in the association' do
-  #    # I'm aware these two lines test the same thing
-  #    output_buffer.should have_tag('input[checked="checked"]', :count => 1)
-  #    output_buffer.should have_tag('input[checked="checked"]', :count => @freds_post.authors.size)
-  #  end
-  #
-  #end
-  #
-  #describe 'for an association when a :collection is provided' do
-  #  describe 'it should use the specified :value_method option' do
-  #    before do
-  #      @output_buffer = ''
-  #      mock_everything
-  #    end
-  #
-  #    it 'to set the right input value' do
-  #      item = mock('item')
-  #      item.should_not_receive(:id)
-  #      item.stub!(:custom_value).and_return('custom_value')
-  #      item.should_receive(:custom_value).exactly(3).times
-  #      @new_post.author.should_receive(:custom_value)
-  #      @form = semantic_form_for(@new_post) do |builder|
-  #        concat(builder.input(:author, :as => :check_boxes, :value_method => :custom_value, :collection => [item, item, item]))
-  #      end
-  #
-  #      output_buffer.concat(@form) if Formtastic::Util.rails3?
-  #      output_buffer.should have_tag('input[@type=checkbox][@value="custom_value"]', :count => 3)
-  #    end
-  #  end
-  #end
-  #
-  #describe "when namespace is provided" do
-  #
-  #  before do
-  #    @output_buffer = ''
-  #    mock_everything
-  #
-  #    @form = semantic_form_for(@fred, :namespace => "context2") do |builder|
-  #      concat(builder.input(:posts, :as => :check_boxes))
-  #    end
-  #  end
-  #
-  #  it_should_have_label_for('context2_author_post_ids_19')
-  #  it_should_have_input_with_id('context2_author_post_ids_19')
-  #  it_should_have_input_wrapper_with_id("context2_author_posts_input")
-  #end
-  #
+  describe 'for a has_and_belongs_to_many association' do
+  
+    before do
+      @output_buffer = ''
+      mock_everything
+  
+      @form = semantic_form_for(@freds_post) do |builder|
+        concat(builder.input(:authors, :as => :check_boxes))
+      end
+      output_buffer.concat(@form) if Formtastic::Util.rails3?
+    end
+  
+    it 'should render checkboxes' do
+      # I'm aware these two lines test the same thing
+      output_buffer.should have_tag('input[type="checkbox"]', :count => 2)
+      output_buffer.should have_tag('input[type="checkbox"]', :count => ::Author.all.size)
+    end
+  
+    it 'should only select checkboxes that are present in the association' do
+      # I'm aware these two lines test the same thing
+      output_buffer.should have_tag('input[checked="checked"]', :count => 1)
+      output_buffer.should have_tag('input[checked="checked"]', :count => @freds_post.authors.size)
+    end
+  
+  end
+  
+  describe 'for an association when a :collection is provided' do
+    describe 'it should use the specified :value_method option' do
+      before do
+        @output_buffer = ''
+        mock_everything
+      end
+  
+      it 'to set the right input value' do
+        item = mock('item')
+        item.should_not_receive(:id)
+        item.stub!(:custom_value).and_return('custom_value')
+        item.should_receive(:custom_value).exactly(3).times
+        @new_post.author.should_receive(:custom_value)
+        @form = semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:author, :as => :check_boxes, :value_method => :custom_value, :collection => [item, item, item]))
+        end
+  
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.should have_tag('input[@type=checkbox][@value="custom_value"]', :count => 3)
+      end
+    end
+  end
+  
+  describe "when namespace is provided" do
+  
+    before do
+      @output_buffer = ''
+      mock_everything
+  
+      @form = semantic_form_for(@fred, :namespace => "context2") do |builder|
+        concat(builder.input(:posts, :as => :check_boxes))
+      end
+    end
+  
+    it_should_have_label_for('context2_author_post_ids_19')
+    it_should_have_input_with_id('context2_author_post_ids_19')
+    it_should_have_input_wrapper_with_id("context2_author_posts_input")
+  end
+  
 end
 
