@@ -558,6 +558,25 @@ If you want to add your own input types to encapsulate your own logic or interfa
 
 @Formtastic::SemanticFormHelper.builder = MyCustomBuilder@
 
+Be aware that you should either set the options on custom builder or require it after setting options on formtastic default builder.
+
+<pre>
+  # OK
+  Formtastic::SemanticFormBuilder.i18n_lookups_by_default = true
+  require 'formtastic/my_custom_builder'
+  Formtastic::SemanticFormHelper.builder = Formtastic::MyCustomBuilder
+  
+  # OK
+  require 'formtastic/my_custom_builder'
+  Formtastic::SemanticFormHelper.builder = Formtastic::MyCustomBuilder
+  Formtastic::MyCustomBuilder.i18n_lookups_by_default = true
+  
+  # WRONG!
+  require 'formtastic/my_custom_builder'
+  Formtastic::SemanticFormBuilder.i18n_lookups_by_default = true
+  Formtastic::SemanticFormHelper.builder = Formtastic::MyCustomBuilder
+</pre>
+
 
 h2. Security
 
