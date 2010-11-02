@@ -528,7 +528,7 @@ Formtastic::SemanticFormHelper.builder = Formtastic::MyCustomBuilder
 # OK
 require 'formtastic/my_custom_builder'
 Formtastic::SemanticFormHelper.builder = Formtastic::MyCustomBuilder
-Formtastic::ExtendedFormBuilder.i18n_lookups_by_default = true
+Formtastic::MyCustomBuilder.i18n_lookups_by_default = true
 
 # WRONG!
 require 'formtastic/my_custom_builder'
