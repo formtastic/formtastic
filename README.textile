@@ -454,7 +454,7 @@ If I18n-lookups is disabled, i.e.:
       <%= form.input :section, :label => true %>    # => :label => I18n.t('activerecord.attributes.user.section')  or 'Section'
     <% end %>
     <% form.buttons do %>
-      <%= form.commit_button true %>                # => "Save changes" (if we are in edit that is...)
+      <%= form.commit_button true %>                # => "Update %{model}" (if we are in edit that is...)
     <% end %>
   <% end %>
 </pre>
