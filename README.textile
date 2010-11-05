@@ -115,6 +115,30 @@ A proof-of-concept stylesheet is provided which you can include in your layout. 
 </pre>
 
 
+h2. Syntax
+
+*Please note:* Formtastic makes use of a lot of ERB blocks and currently supports both Rails 2 and Rails 3, which means the syntax in these examples will differ depending on which version of Rails you're using.
+
+The difference is subtle, with most blocks in Rails 3 requiring the addition of an equals sign:
+
+<pre>
+  <!-- Rails 2 -->
+  <% semantic_form_for @user do |form| %>
+    <% form.inputs do %>
+      ...
+    <% end %>
+  <% end %>
+  
+  <!-- Rails 3 -->
+  <%= semantic_form_for @user do |form| %>
+    <%= form.inputs do %>
+      ...
+    <% end %>
+  <% end %>
+  
+This README is currently documenting the Rails 2 way only. If you're using Rails 3 and your forms aren't rendering everything as expected, try changing @<%@ to @<%=@.
+
+
 h2. Usage
 
 Forms are really boring to code... you want to get onto the good stuff as fast as possible.
@@ -128,7 +152,9 @@ This renders a set of inputs (one for _most_ columns in the database table, and 
   <% end %>
 </pre>
 
-If you want to specify the order of the fields, skip some of the fields or even add in fields that Formtastic couldn't detect, you can pass in a list of field names to @inputs@ and list of button names to @buttons@:
+This is a great way to get something up fast, but like scaffolding, it's not recommended for production.
+
+You probably want to specify the order of the fields, skip some of the fields or even add in fields that Formtastic couldn't detect, you can pass in a list of field names to @inputs@ and list of button names to @buttons@:
 
 <pre>
   <% semantic_form_for @user do |form| %>
@@ -137,7 +163,7 @@ If you want to specify the order of the fields, skip some of the fields or even 
   <% end %>
 </pre>
 
-If you want control over the input type Formtastic uses for each field, you can expand the @inputs@ and @buttons@ blocks. This specifies the @:section@ input should be a set of radio buttons (rather than the default select box), and that the @:created_at@ field should be a string (rather than the default datetime selects):
+You probably want control over the input type Formtastic uses for each field, you can expand the @inputs@ and @buttons@ blocks. This specifies the @:section@ input should be a set of radio buttons (rather than the default select box), and that the @:created_at@ field should be a string (rather than the default datetime selects):
 
 <pre>
   <% semantic_form_for @post do |form| %>
