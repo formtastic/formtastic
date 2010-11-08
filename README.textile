@@ -642,9 +642,11 @@ Formtastic is maintained by "Justin French":http://github.com/justinfrench, "Mor
 @git shortlog -n -s --no-merges@
 
 
-h2. Google Group
+h2. Google Group, Twitter, etc
 
 Please join the "Formtastic Google Group":http://groups.google.com.au/group/formtastic, especially if you'd like to talk about a new feature, or report a bug.
+
+You can also "follow @formtastic on Twitter":http://twitter.com/formtastic for announcements, tutorials and awesome Formtastic links.
 
 
 h2. Project Info
