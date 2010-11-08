@@ -340,7 +340,9 @@ module Formtastic #:nodoc:
     #
     def commit_button(*args)
       options = args.extract_options!
+      ::ActiveSupport::Deprecation.warn(":class => 'whatever' is deprecated on commit button, use :wrapper_html => { :class => 'whatever' } instead.", caller) if options.key?(:class)
       text = options.delete(:label) || args.shift
+      
 
       if @object && (@object.respond_to?(:persisted?) || @object.respond_to?(:new_record?))
         if @object.respond_to?(:persisted?) # ActiveModel
@@ -371,10 +373,14 @@ module Formtastic #:nodoc:
 
       button_html = options.delete(:button_html) || {}
       button_html.merge!(:class => [button_html[:class], key].compact.join(' '))
-      element_class = ['commit', options.delete(:class)].compact.join(' ') # TODO: Add class reflecting on form action.
+
+      wrapper_html_class = ['commit', options.delete(:class)].compact # TODO: Add class reflecting on form action.
+      wrapper_html = options.delete(:wrapper_html) || {}
+      wrapper_html[:class] = (wrapper_html_class << wrapper_html[:class] << button_html[:class]).flatten.compact.join(' ')
+
       accesskey = (options.delete(:accesskey) || self.class.default_commit_button_accesskey) unless button_html.has_key?(:accesskey)
       button_html = button_html.merge(:accesskey => accesskey) if accesskey
-      template.content_tag(:li, Formtastic::Util.html_safe(self.submit(text, button_html)), :class => element_class)
+      template.content_tag(:li, Formtastic::Util.html_safe(self.submit(text, button_html)), wrapper_html)
     end
 
     # A thin wrapper around #fields_for to set :builder => Formtastic::SemanticFormBuilder
