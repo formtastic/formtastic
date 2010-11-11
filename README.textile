@@ -201,6 +201,12 @@ If you want to customize the label text, or render some hint text below the fiel
   <% end %>
 </pre>
 
+You can create forms for nested resources:
+
+<pre>
+	<% semantic_form_for [@author, @post] do |form| %>
+</pre>
+
 Nested forms are also supported (don't forget your models need to be setup correctly with @accepts_nested_attributes_for@). You can do it in the Rails way:
 
 <pre>
