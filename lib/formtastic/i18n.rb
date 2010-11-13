@@ -1,22 +1,21 @@
+# encoding: utf-8
+
 module Formtastic
   module I18n
-    
+
     DEFAULT_SCOPE = [:formtastic].freeze
-    DEFAULT_VALUES = {
-        :required       => 'required',
-        :yes            => 'Yes',
-        :no             => 'No',
-        :create         => 'Create {{model}}',
-        :update         => 'Update {{model}}'
-      }.freeze
+    DEFAULT_VALUES = YAML.load_file(File.expand_path("../../locale/en.yml", __FILE__))["en"]["formtastic"].freeze
     SCOPES = [
-        '{{model}}.{{action}}.{{attribute}}',
-        '{{model}}.{{attribute}}',
-        '{{attribute}}'
+        '%{model}.%{nested_model}.%{action}.%{attribute}',
+        '%{model}.%{action}.%{attribute}',
+        '%{model}.%{nested_model}.%{attribute}',
+        '%{model}.%{attribute}',
+        '%{nested_model}.%{attribute}',
+        '%{attribute}'
       ]
-      
+
     class << self
-      
+
       def translate(*args)
         key = args.shift.to_sym
         options = args.extract_options!
@@ -25,8 +24,8 @@ module Formtastic
         ::I18n.translate(key, *(args << options))
       end
       alias :t :translate
-      
+
     end
-    
+
   end
 end
