@@ -1,3 +1,8 @@
+1.2.0
+
+* Changed default_text_area_width to nil, overlooked in recent CSS/width changes
+* Improved documentation
+
 1.2.0.beta2
 
 * Added :wrapper_html functionality to commit_button() to match what input() does
