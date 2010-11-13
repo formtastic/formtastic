@@ -15,7 +15,7 @@ module Formtastic #:nodoc:
 
     self.default_text_field_size = nil
     self.default_text_area_height = 20
-    self.default_text_area_width = 50
+    self.default_text_area_width = nil
     self.all_fields_required_by_default = true
     self.include_blank_for_select_by_default = true
     self.required_string = proc { ::Formtastic::Util.html_safe(%{<abbr title="#{::Formtastic::I18n.t(:required)}">*</abbr>}) }
