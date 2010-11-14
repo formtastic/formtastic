@@ -1,3 +1,8 @@
+1.2.1
+
+* Fixed that unchecking :boolean inputs would not send the correct params (and not persist the change the the DB)
+* Fixed that :boolean inputs checked state was not reflecting the database/model value
+
 1.2.0
 
 * Changed default_text_area_width to nil, overlooked in recent CSS/width changes
