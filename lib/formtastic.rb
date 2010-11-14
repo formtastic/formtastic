@@ -15,7 +15,7 @@ module Formtastic #:nodoc:
 
     self.default_text_field_size = nil
     self.default_text_area_height = 20
-    self.default_text_area_width = 50
+    self.default_text_area_width = nil
     self.all_fields_required_by_default = true
     self.include_blank_for_select_by_default = true
     self.required_string = proc { ::Formtastic::Util.html_safe(%{<abbr title="#{::Formtastic::I18n.t(:required)}">*</abbr>}) }
@@ -340,7 +340,9 @@ module Formtastic #:nodoc:
     #
     def commit_button(*args)
       options = args.extract_options!
+      ::ActiveSupport::Deprecation.warn(":class => 'whatever' is deprecated on commit button, use :wrapper_html => { :class => 'whatever' } instead.", caller) if options.key?(:class)
       text = options.delete(:label) || args.shift
+      
 
       if @object && (@object.respond_to?(:persisted?) || @object.respond_to?(:new_record?))
         if @object.respond_to?(:persisted?) # ActiveModel
@@ -371,10 +373,14 @@ module Formtastic #:nodoc:
 
       button_html = options.delete(:button_html) || {}
       button_html.merge!(:class => [button_html[:class], key].compact.join(' '))
-      element_class = ['commit', options.delete(:class)].compact.join(' ') # TODO: Add class reflecting on form action.
+
+      wrapper_html_class = ['commit', options.delete(:class)].compact # TODO: Add class reflecting on form action.
+      wrapper_html = options.delete(:wrapper_html) || {}
+      wrapper_html[:class] = (wrapper_html_class << wrapper_html[:class] << button_html[:class]).flatten.compact.join(' ')
+
       accesskey = (options.delete(:accesskey) || self.class.default_commit_button_accesskey) unless button_html.has_key?(:accesskey)
       button_html = button_html.merge(:accesskey => accesskey) if accesskey
-      template.content_tag(:li, Formtastic::Util.html_safe(self.submit(text, button_html)), :class => element_class)
+      template.content_tag(:li, Formtastic::Util.html_safe(self.submit(text, button_html)), wrapper_html)
     end
 
     # A thin wrapper around #fields_for to set :builder => Formtastic::SemanticFormBuilder
@@ -1274,16 +1280,17 @@ module Formtastic #:nodoc:
         input = template.check_box_tag(
           "#{@object_name}[#{method}]", 
           checked_value, 
-          (@object && @object.send(:"#{method}") == checked_value), 
+          (@object && @object.send(:"#{method}")), 
           :id => field_id
         )
+        
         options = options_for_label(options)
         options[:for] ||= field_id
 
         # the label() method will insert this nested input into the label at the last minute
         options[:label_prefix_for_nested_input] = input
 
-        template.hidden_field_tag(method, unchecked_value) << self.label(method, options)
+        template.hidden_field_tag("#{@object_name}[#{method}]", unchecked_value, :id => nil) << self.label(method, options)
       end
 
       # Generates an input for the given method using the type supplied with :as.

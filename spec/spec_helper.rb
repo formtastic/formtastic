@@ -257,7 +257,7 @@ module FormtasticSpecHelper
     @new_post.stub!(:phone)
     @new_post.stub!(:time_zone)
     @new_post.stub!(:category_name)
-    @new_post.stub!(:allow_comments)
+    @new_post.stub!(:allow_comments).and_return(true)
     @new_post.stub!(:country)
     @new_post.stub!(:country_subdivision)
     @new_post.stub!(:country_code)

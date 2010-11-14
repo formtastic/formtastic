@@ -434,5 +434,76 @@ describe 'SemanticFormBuilder#commit_button' do
     end
 
   end
+  
+  describe ':wrapper_html option' do
 
+    describe 'when provided' do
+      it 'should be passed down to the li tag' do
+        form = semantic_form_for(@new_post) do |builder|
+          concat(builder.commit_button('text', :wrapper_html => {:id => :another_id}))
+        end
+        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.should have_tag("form li#another_id")
+      end
+
+      it 'should append given classes to li default classes' do
+        form = semantic_form_for(@new_post) do |builder|
+          concat(builder.commit_button('text', :wrapper_html => {:class => :another_class}))
+        end
+        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.should have_tag("form li.commit")
+        output_buffer.should have_tag("form li.another_class")
+      end
+
+      it 'should allow classes to be an array' do
+        form = semantic_form_for(@new_post) do |builder|
+          concat(builder.commit_button('text', :wrapper_html => {:class => [ :my_class, :another_class ]}))
+        end
+        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.should have_tag("form li.commit")
+        output_buffer.should have_tag("form li.my_class")
+        output_buffer.should have_tag("form li.another_class")
+      end
+      
+      it 'should merge in classes applied using the :class option' do
+        with_deprecation_silenced do
+          form = semantic_form_for(@new_post) do |builder|
+            concat(builder.commit_button('text', :class => 'from_button_html', :wrapper_html => {:class => 'from_wrapper_html'}))
+          end
+          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.should have_tag("form li.commit")
+          output_buffer.should have_tag("form li.from_button_html")
+          output_buffer.should have_tag("form li.from_wrapper_html")
+        end
+      end
+      
+      it 'should warn that :class is a deprecated option' do
+        with_deprecation_silenced do
+          ::ActiveSupport::Deprecation.should_receive(:warn).any_number_of_times
+          @form = semantic_form_for(@new_post) do |builder|
+            concat(builder.commit_button('text', :class => 'from_button_html', :wrapper_html => {:class => 'from_wrapper_html'}))
+          end
+        end
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.should have_tag("form li.commit")
+        output_buffer.should have_tag("form li.from_button_html")
+        output_buffer.should have_tag("form li.from_wrapper_html")
+      end
+    end
+
+    describe 'when not provided' do
+      it 'should use default id and class' do
+        form = semantic_form_for(@new_post) do |builder|
+          concat(builder.commit_button('text'))
+        end
+        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.should have_tag("form li.commit")
+      end
+    end
+
+  end
+
+  
+  
+  
 end
