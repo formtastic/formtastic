@@ -45,6 +45,16 @@ describe 'boolean input' do
     output_buffer.concat(form) if Formtastic::Util.rails3?
     output_buffer.should have_tag('form li label input[@checked="checked"]')
   end
+  
+  it 'should generate a checked checkbox input if object and object.method is true' do
+    form = semantic_form_for(@new_post) do |builder|
+      concat(builder.input(:allow_comments, :as => :boolean))
+    end
+
+    output_buffer.concat(form) if Formtastic::Util.rails3?
+    output_buffer.should have_tag('form li input[@name="post[allow_comments]"]', :count => 2)
+    output_buffer.should have_tag('form li input#post_allow_comments', :count => 1)
+  end
 
   it 'should allow checked and unchecked values to be sent' do
     form = semantic_form_for(@new_post) do |builder|
