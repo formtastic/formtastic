@@ -342,7 +342,7 @@ module Formtastic #:nodoc:
       options = args.extract_options!
       ::ActiveSupport::Deprecation.warn(":class => 'whatever' is deprecated on commit button, use :wrapper_html => { :class => 'whatever' } instead.", caller) if options.key?(:class)
       text = options.delete(:label) || args.shift
-      
+
 
       if @object && (@object.respond_to?(:persisted?) || @object.respond_to?(:new_record?))
         if @object.respond_to?(:persisted?) # ActiveModel
@@ -1274,13 +1274,11 @@ module Formtastic #:nodoc:
         checked_value = options.delete(:checked_value) || '1'
         unchecked_value = options.delete(:unchecked_value) || '0'
 
-        #input = self.check_box(method, strip_formtastic_options(options).merge(html_options),
-        #                       checked_value, unchecked_value)
-        field_id = [@@custom_namespace,@object_name,method].reject{|x|x.blank?}.join("_")
+        field_id = generate_html_id(method, "")
         input = template.check_box_tag(
-          "#{@object_name}[#{method}]", 
-          checked_value, 
-          (@object && @object.send(:"#{method}")), 
+          "#{@object_name}[#{method}]",
+          checked_value,
+          (@object && @object.send(:"#{method}") == checked_value),
           :id => field_id
         )
         
@@ -1966,3 +1964,4 @@ module Formtastic #:nodoc:
 
   end
 end
+
