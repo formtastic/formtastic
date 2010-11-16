@@ -1,3 +1,7 @@
+1.2.1.beta2
+
+* Fixed typos in gemspec post-install message
+
 1.2.1.beta
 
 * Fixed that unchecking :boolean inputs would not send the correct params (and not persist the change the the DB)
