@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   ------------------------------------------------------------------------
   You can now (optionally) run the generator to copy some stylesheets and
   a config initializer into your application:
-    rails generator formastic:install # Rails 3
+    rails generate formtastic:install # Rails 3
     ./script/generate formtastic      # Rails 2
 
   To generate some semantic form markup for your existing models, just run:
