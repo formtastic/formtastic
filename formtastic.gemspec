@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{formtastic}
-  s.version = "1.2.1.beta"
+  s.version = "1.2.1.beta2"
   s.date = %q{2010-11-16}
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
