@@ -1274,8 +1274,6 @@ module Formtastic #:nodoc:
         checked_value = options.delete(:checked_value) || '1'
         unchecked_value = options.delete(:unchecked_value) || '0'
 
-        #input = self.check_box(method, strip_formtastic_options(options).merge(html_options),
-        #                       checked_value, unchecked_value)
         field_id = generate_html_id(method, "")
         input = template.check_box_tag(
           "#{@object_name}[#{method}]",
