@@ -2,8 +2,8 @@
 
 require "rubygems"
 
-gem 'rspec', '~> 2.0.0'
-gem 'rspec-rails', '~> 2.0.0'
+gem 'rspec', '~> 2.0'
+gem 'rspec-rails', '~> 2.0'
 gem 'rspec_tag_matchers'
 gem 'hpricot', '>= 0.6.1'
 
