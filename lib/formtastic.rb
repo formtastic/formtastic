@@ -1278,7 +1278,7 @@ module Formtastic #:nodoc:
         input = template.check_box_tag(
           "#{@object_name}[#{method}]",
           checked_value,
-          (@object && @object.send(:"#{method}") == checked_value),
+          (@object && @object.send(:"#{method}")),
           :id => field_id
         )
         
