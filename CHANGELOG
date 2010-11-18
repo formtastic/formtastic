@@ -1,3 +1,7 @@
+1.2.1.beta3
+
+* Fixed bad merge related to :boolean inputs in 1.2.1.beta
+
 1.2.1.beta2
 
 * Fixed typos in gemspec post-install message

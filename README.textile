@@ -2,7 +2,7 @@ h1. Formtastic
 
 Formtastic is a Rails FormBuilder DSL (with some other goodies) to make it far easier to create beautiful, semantically rich, syntactically awesome, readily stylable and wonderfully accessible HTML forms in your Rails applications.
 
-<a href='http://www.pledgie.com/campaigns/2178'><img alt='Click here to lend your support to: formtastic and make a donation at www.pledgie.com !' src='http://www.pledgie.com/campaigns/2178.png?skin_name=chrome' border='0' /></a>
+<a href='http://www.pledgie.com/campaigns/2178'><img alt='Click here to lend your support to: formtastic and make a donation at www.pledgie.com !' src='http://pledgie.com/campaigns/2178.png?skin_name=chrome' border='0' /></a>
 
 h2. The Story
 
