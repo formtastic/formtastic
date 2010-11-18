@@ -135,7 +135,7 @@ module FormtasticSpecHelper
     @fred.stub!(:persisted?).and_return(nil)
 
     @bob = mock('user')
-    @bob.stub!(:to_ary)
+    #@bob.stub!(:to_ary)
     @bob.stub!(:class).and_return(::Author)
     @bob.stub!(:to_label).and_return('Bob Rock')
     @bob.stub!(:login).and_return('bob')
