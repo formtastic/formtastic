@@ -818,12 +818,7 @@ module Formtastic #:nodoc:
         if reflection && [ :has_many, :has_and_belongs_to_many ].include?(reflection.macro)
           html_options[:multiple] = true if html_options[:multiple].nil?
           html_options[:size]     ||= 5
-
-          if html_options[:multiple]
-            options[:include_blank]   = false
-          else
-            options[:include_blank]   ||= false
-          end
+          options[:include_blank] ||= false
         end
         options = set_include_blank(options)
         input_name = generate_association_input_name(method)
