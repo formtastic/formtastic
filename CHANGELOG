@@ -1,3 +1,8 @@
+[master]
+
+* Fixed that classes in :button_html were being merged into :wrapper_html
+* Fixed that :include_blank was being ignored (always false) for multi selects 
+
 1.2.1
 
 * test suite compatibilities with Rails 3.0.3
