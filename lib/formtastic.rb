@@ -376,7 +376,7 @@ module Formtastic #:nodoc:
 
       wrapper_html_class = ['commit', options.delete(:class)].compact # TODO: Add class reflecting on form action.
       wrapper_html = options.delete(:wrapper_html) || {}
-      wrapper_html[:class] = (wrapper_html_class << wrapper_html[:class] << button_html[:class]).flatten.compact.join(' ')
+      wrapper_html[:class] = (wrapper_html_class << wrapper_html[:class]).flatten.compact.join(' ')
 
       accesskey = (options.delete(:accesskey) || self.class.default_commit_button_accesskey) unless button_html.has_key?(:accesskey)
       button_html = button_html.merge(:accesskey => accesskey) if accesskey

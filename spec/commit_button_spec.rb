@@ -468,12 +468,14 @@ describe 'SemanticFormBuilder#commit_button' do
       it 'should merge in classes applied using the :class option' do
         with_deprecation_silenced do
           form = semantic_form_for(@new_post) do |builder|
-            concat(builder.commit_button('text', :class => 'from_button_html', :wrapper_html => {:class => 'from_wrapper_html'}))
+            concat(builder.commit_button('text', :class => 'from_class_option', :wrapper_html => {:class => 'from_wrapper_html'}, :button_html => { :class => 'from_button_html'}))
           end
           output_buffer.concat(form) if Formtastic::Util.rails3?
           output_buffer.should have_tag("form li.commit")
-          output_buffer.should have_tag("form li.from_button_html")
           output_buffer.should have_tag("form li.from_wrapper_html")
+          output_buffer.should have_tag("form li.from_class_option")
+          output_buffer.should have_tag("form li input.from_button_html")
+          output_buffer.should_not have_tag("form li.from_button_html")
         end
       end
       
