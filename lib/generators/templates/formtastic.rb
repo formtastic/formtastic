@@ -62,6 +62,13 @@
 # Formtastic::SemanticFormBuilder.custom_inline_order[:checkbox] = [:errors, :hints, :input]
 # Formtastic::SemanticFormBuilder.custom_inline_order[:select] = [:hints, :input, :errors]
 
+# Additionally, you can customize container tag for input elements.
+# Formtastic::SemanticFormBuilder.default_input_container_tag = :li
+
+# You can set default css class for label or input html tag
+# Formtastic::SemanticFormBuilder.default_label_class = 'nice-label'
+# Formtastic::SemanticFormBuilder.default_input_class = 'nice-field'
+
 # Specifies if labels/hints for input fields automatically be looked up using I18n.
 # Default value: false. Overridden for specific fields by setting value to true,
 # i.e. :label => true, or :hint => true (or opposite depending on initialized value)

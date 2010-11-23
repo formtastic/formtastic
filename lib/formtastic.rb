@@ -9,7 +9,8 @@ module Formtastic #:nodoc:
     class_inheritable_accessor :default_text_field_size, :default_text_area_height, :default_text_area_width, :all_fields_required_by_default, :include_blank_for_select_by_default,
                    :required_string, :optional_string, :inline_errors, :label_str_method, :collection_value_methods, :collection_label_methods, :file_metadata_suffixes,
                    :inline_order, :custom_inline_order, :file_methods, :priority_countries, :i18n_lookups_by_default, :escape_html_entities_in_hints_and_labels,
-                   :default_commit_button_accesskey, :default_inline_error_class, :default_hint_class, :default_error_list_class, :instance_reader => false
+                   :default_commit_button_accesskey, :default_inline_error_class, :default_hint_class, :default_error_list_class, :default_input_container_tag, 
+                   :default_label_class, :default_input_class, :instance_reader => false
 
     cattr_accessor :custom_namespace
 
@@ -35,6 +36,9 @@ module Formtastic #:nodoc:
     self.default_inline_error_class = 'inline-errors'
     self.default_error_list_class = 'errors'
     self.default_hint_class = 'inline-hints'
+    self.default_input_container_tag = 'li'
+    self.default_label_class = nil
+    self.default_input_class = nil
 
     RESERVED_COLUMNS = [:created_at, :updated_at, :created_on, :updated_on, :lock_version, :version]
 
@@ -121,7 +125,7 @@ module Formtastic #:nodoc:
         send(:"inline_#{type}_for", method, options)
       end.compact.join("\n")
 
-      return template.content_tag(:li, Formtastic::Util.html_safe(list_item_content), wrapper_html)
+      return template.content_tag(self.class.default_input_container_tag, Formtastic::Util.html_safe(list_item_content), wrapper_html)
     end
 
     # Creates an input fieldset and ol tag wrapping for use around a set of inputs.  It can be
@@ -423,7 +427,7 @@ module Formtastic #:nodoc:
         text = options_or_text
         options ||= {}
       end
-
+      
       text = localized_string(method, text, :label) || humanized_attribute_name(method)
       text += required_or_optional_string(options.delete(:required))
       text = Formtastic::Util.html_safe(text)
@@ -542,7 +546,9 @@ module Formtastic #:nodoc:
       # Prepare options to be sent to label
       #
       def options_for_label(options) #:nodoc:
-        options.slice(:label, :required).merge!(options.fetch(:label_html, {}))
+        label_options = options.fetch(:label_html, {})
+        label_options[:class] = ([label_options[:class]] << self.class.default_label_class).flatten.compact.join(' ')
+        options.slice(:label, :required).merge!(label_options)
       end
 
       # Deals with :for option when it's supplied to inputs methods. Additional
@@ -1264,6 +1270,9 @@ module Formtastic #:nodoc:
 
       # Generates an input for the given method using the type supplied with :as.
       def inline_input_for(method, options)
+        html_options = options.delete(:input_html) || {}
+        html_options[:class] = ([html_options[:class]] << self.class.default_input_class).flatten.compact.join(' ')
+        options[:input_html] = html_options
         send(:"#{options.delete(:as)}_input", method, options)
       end
 
