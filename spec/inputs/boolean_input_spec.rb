@@ -37,23 +37,43 @@ describe 'boolean input' do
     output_buffer.should have_tag('form li label input[@type="checkbox"][@value="1"]')
   end
   
-  it 'should generate a checked checkbox input if object and object.method is true' do
+  it 'should generate a checked input if object.method returns true' do
     form = semantic_form_for(@new_post) do |builder|
       concat(builder.input(:allow_comments, :as => :boolean))
     end
 
     output_buffer.concat(form) if Formtastic::Util.rails3?
     output_buffer.should have_tag('form li label input[@checked="checked"]')
+    output_buffer.should have_tag('form li input[@name="post[allow_comments]"]', :count => 2)
+    output_buffer.should have_tag('form li input#post_allow_comments', :count => 1)
   end
   
-  it 'should generate a checked checkbox input if object and object.method is true' do
+  it 'should generate a checked input if :input_html is passed :checked => checked' do
     form = semantic_form_for(@new_post) do |builder|
-      concat(builder.input(:allow_comments, :as => :boolean))
+      concat(builder.input(:answer_comments, :as => :boolean, :input_html => {:checked => 'checked'}))
     end
 
     output_buffer.concat(form) if Formtastic::Util.rails3?
-    output_buffer.should have_tag('form li input[@name="post[allow_comments]"]', :count => 2)
-    output_buffer.should have_tag('form li input#post_allow_comments', :count => 1)
+    output_buffer.should have_tag('form li label input[@checked="checked"]')
+  end
+  
+  it "should generate a disabled input if :input_html is passed :disabled => 'disabled' " do
+    form = semantic_form_for(@new_post) do |builder|
+      concat(builder.input(:allow_comments, :as => :boolean, :input_html => {:disabled => 'disabled'}))
+    end
+    
+    output_buffer.concat(form) if Formtastic::Util.rails3?
+    output_buffer.should have_tag('form li label input[@disabled="disabled"]')
+  end
+  
+  it 'should generate an input[id] with matching label[for] when id passed in :input_html' do
+    form = semantic_form_for(@new_post) do |builder|
+      concat(builder.input(:allow_comments, :as => :boolean, :input_html => {:id => 'custom_id'}))
+    end
+    
+    output_buffer.concat(form) if Formtastic::Util.rails3?
+    output_buffer.should have_tag('form li label input[@id="custom_id"]')
+    output_buffer.should have_tag('form li label[@for="custom_id"]')
   end
 
   it 'should allow checked and unchecked values to be sent' do

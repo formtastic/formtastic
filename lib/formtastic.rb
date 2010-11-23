@@ -1265,20 +1265,20 @@ module Formtastic #:nodoc:
       # to the column name (method name) and can be altered with the :label option.
       # :checked_value and :unchecked_value options are also available.
       def boolean_input(method, options)
-        html_options = options.delete(:input_html) || {}
+        html_options  = options.delete(:input_html) || {}
         checked_value = options.delete(:checked_value) || '1'
         unchecked_value = options.delete(:unchecked_value) || '0'
 
-        field_id = generate_html_id(method, "")
+        html_options[:id] = html_options[:id] || generate_html_id(method, "")
         input = template.check_box_tag(
           "#{@object_name}[#{method}]",
           checked_value,
           (@object && @object.send(:"#{method}")),
-          :id => field_id
+          html_options
         )
         
         options = options_for_label(options)
-        options[:for] ||= field_id
+        options[:for] ||= html_options[:id]
 
         # the label() method will insert this nested input into the label at the last minute
         options[:label_prefix_for_nested_input] = input
