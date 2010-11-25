@@ -122,8 +122,8 @@ module FormtasticSpecHelper
     def author_path(o); "/authors/1"; end
     def authors_path; "/authors"; end
     def new_author_path; "/authors/new"; end
-
-    @fred = mock('user')
+    
+    @fred = ::Author.new
     @fred.stub!(:class).and_return(::Author)
     @fred.stub!(:to_label).and_return('Fred Smith')
     @fred.stub!(:login).and_return('fred_smith')
@@ -133,8 +133,7 @@ module FormtasticSpecHelper
     @fred.stub!(:to_key).and_return(nil)
     @fred.stub!(:persisted?).and_return(nil)
 
-    @bob = mock('user')
-    @bob.stub!(:class).and_return(::Author)
+    @bob = ::Author.new
     @bob.stub!(:to_label).and_return('Bob Rock')
     @bob.stub!(:login).and_return('bob')
     @bob.stub!(:created_at)
@@ -146,8 +145,7 @@ module FormtasticSpecHelper
     @bob.stub!(:to_key).and_return(nil)
     @bob.stub!(:persisted?).and_return(nil)
 
-    @james = mock('user')
-    @james.stub!(:class).and_return(::Author)
+    @james = ::Author.new
     @james.stub!(:to_label).and_return('James Shock')
     @james.stub!(:login).and_return('james')
     @james.stub!(:id).and_return(75)
@@ -183,6 +181,7 @@ module FormtasticSpecHelper
     @new_post.stub!(:persisted?).and_return(nil)
 
     @freds_post = mock('post')
+    @freds_post.stub!(:to_ary)
     @freds_post.stub!(:class).and_return(::Post)
     @freds_post.stub!(:to_label).and_return('Fred Smith')
     @freds_post.stub!(:id).and_return(19)
@@ -227,6 +226,7 @@ module FormtasticSpecHelper
     ::Post.stub!(:content_columns).and_return([mock('column', :name => 'title'), mock('column', :name => 'body'), mock('column', :name => 'created_at')])
     ::Post.stub!(:to_key).and_return(nil)
     ::Post.stub!(:persisted?).and_return(nil)
+    ::Post.stub!(:to_ary)
 
     @mock_file = mock('file')
     ::Formtastic::SemanticFormBuilder.file_methods.each do |method|
@@ -238,6 +238,7 @@ module FormtasticSpecHelper
     @new_post.stub!(:url)
     @new_post.stub!(:phone)
     @new_post.stub!(:search)
+    @new_post.stub!(:to_ary)
     @new_post.stub!(:body)
     @new_post.stub!(:published)
     @new_post.stub!(:publish_at)
