@@ -332,6 +332,19 @@ describe 'SemanticFormBuilder#input' do
                 output_buffer.should have_tag('form li.required')
                 output_buffer.should_not have_tag('form li.optional')
               end
+              
+              it 'should not be required if allow_blank is true' do
+                @new_post.class.should_receive(:validators_on).with(:published).any_number_of_times.and_return([
+                  active_model_inclusion_validator([:published], {:in => [false, true], :allow_blank => true})
+                ])
+
+                form = semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:published))
+                end
+                output_buffer.concat(form) if Formtastic::Util.rails3?
+                output_buffer.should_not have_tag('form li.required')
+                output_buffer.should have_tag('form li.optional')
+              end
             end
 
             # TODO make a matcher for this?
