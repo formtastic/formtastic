@@ -295,11 +295,6 @@ module Formtastic #:nodoc:
       end
     end
 
-    def input_field_set(*args, &block)
-      ::ActiveSupport::Deprecation.warn("input_field_set() is deprecated and will be removed in Formtastic 1.3 or later, use inputs() instead.", caller)
-      inputs(args, &block)
-    end
-
     # Creates a fieldset and ol tag wrapping for form buttons / actions as list items.
     # See inputs documentation for a full example.  The fieldset's default class attriute
     # is set to "buttons".
@@ -318,11 +313,6 @@ module Formtastic #:nodoc:
       end
     end
 
-    def button_field_set(*args, &block)
-      ::ActiveSupport::Deprecation.warn("button_field_set() is deprecated and will be removed in Formtastic 1.3 or later, use inputs() instead.", caller)
-      buttons(args, &block)
-    end
-
     # Creates a submit input tag with the value "Save [model name]" (for existing records) or
     # "Create [model name]" (for new records) by default:
     #
@@ -335,14 +325,10 @@ module Formtastic #:nodoc:
     #
     # And you can pass html atributes down to the input, with or without the button text:
     #
-    #  <%= form.commit_button "Go" %> => <input name="commit" type="submit" value="Go" class="{create|update|submit}" />
-    #  <%= form.commit_button :class => "pretty" %> => <input name="commit" type="submit" value="Save Post" class="pretty {create|update|submit}" />
-    #
+    #  <%= form.commit_button :button_html => { :class => "pretty" } %> => <input name="commit" type="submit" value="Save Post" class="pretty {create|update|submit}" />
     def commit_button(*args)
       options = args.extract_options!
-      ::ActiveSupport::Deprecation.warn(":class => 'whatever' is deprecated on commit button, use :wrapper_html => { :class => 'whatever' } instead.", caller) if options.key?(:class)
       text = options.delete(:label) || args.shift
-
 
       if @object && (@object.respond_to?(:persisted?) || @object.respond_to?(:new_record?))
         if @object.respond_to?(:persisted?) # ActiveModel
@@ -374,9 +360,9 @@ module Formtastic #:nodoc:
       button_html = options.delete(:button_html) || {}
       button_html.merge!(:class => [button_html[:class], key].compact.join(' '))
 
-      wrapper_html_class = ['commit', options.delete(:class)].compact # TODO: Add class reflecting on form action.
+      wrapper_html_class = ['commit'] # TODO: Add class reflecting on form action.
       wrapper_html = options.delete(:wrapper_html) || {}
-      wrapper_html[:class] = (wrapper_html_class << wrapper_html[:class] << button_html[:class]).flatten.compact.join(' ')
+      wrapper_html[:class] = (wrapper_html_class << wrapper_html[:class]).flatten.compact.join(' ')
 
       accesskey = (options.delete(:accesskey) || self.class.default_commit_button_accesskey) unless button_html.has_key?(:accesskey)
       button_html = button_html.merge(:accesskey => accesskey) if accesskey
@@ -594,7 +580,7 @@ module Formtastic #:nodoc:
       #
       def strip_formtastic_options(options) #:nodoc:
         options.except(:value_method, :label_method, :collection, :required, :label,
-                       :as, :hint, :input_html, :label_html, :value_as_class, :find_options)
+                       :as, :hint, :input_html, :label_html, :value_as_class, :find_options, :class)
       end
 
       # Determins if the attribute (eg :title) should be considered required or not.
@@ -818,12 +804,7 @@ module Formtastic #:nodoc:
         if reflection && [ :has_many, :has_and_belongs_to_many ].include?(reflection.macro)
           html_options[:multiple] = true if html_options[:multiple].nil?
           html_options[:size]     ||= 5
-
-          if html_options[:multiple]
-            options[:include_blank]   = false
-          else
-            options[:include_blank]   ||= false
-          end
+          options[:include_blank] ||= false
         end
         options = set_include_blank(options)
         input_name = generate_association_input_name(method)
@@ -853,11 +834,6 @@ module Formtastic #:nodoc:
         label_options = options_for_label(options).merge(:input_name => input_name)
         label_options[:for] ||= html_options[:id]
         self.label(method, label_options) << select_html
-      end
-
-      def boolean_select_input(method, options)
-        ::ActiveSupport::Deprecation.warn(":as => :boolean_select is deprecated and will be removed in Formtastic 1.3 or later. Use :as => :select instead.", caller)
-        select_input(method, options)
       end
 
       # Outputs a timezone select input as Rails' time_zone_select helper. You
@@ -961,11 +937,6 @@ module Formtastic #:nodoc:
         template.content_tag(:fieldset,
           legend_tag(method, options) << template.content_tag(:ol, Formtastic::Util.html_safe(list_item_content.join))
         )
-      end
-
-      def boolean_radio_input(method, options)
-        ::ActiveSupport::Deprecation.warn(":as => :boolean_radio is deprecated and will be removed in Formtastic 1.3 or later. Use :as => :radio instead.", caller)
-        radio_input(method, options)
       end
 
       # Outputs a fieldset with a legend for the method label, and a ordered list (ol) of list
@@ -1270,20 +1241,20 @@ module Formtastic #:nodoc:
       # to the column name (method name) and can be altered with the :label option.
       # :checked_value and :unchecked_value options are also available.
       def boolean_input(method, options)
-        html_options = options.delete(:input_html) || {}
+        html_options  = options.delete(:input_html) || {}
         checked_value = options.delete(:checked_value) || '1'
         unchecked_value = options.delete(:unchecked_value) || '0'
 
-        field_id = generate_html_id(method, "")
+        html_options[:id] = html_options[:id] || generate_html_id(method, "")
         input = template.check_box_tag(
           "#{@object_name}[#{method}]",
           checked_value,
           (@object && @object.send(:"#{method}")),
-          :id => field_id
+          html_options
         )
         
         options = options_for_label(options)
-        options[:for] ||= field_id
+        options[:for] ||= html_options[:id]
 
         # the label() method will insert this nested input into the label at the last minute
         options[:label_prefix_for_nested_input] = input
