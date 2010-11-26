@@ -1,7 +1,9 @@
-[master]
+1.2.2
 
 * Fixed that classes in :button_html were being merged into :wrapper_html
 * Fixed that :include_blank was being ignored (always false) for multi selects 
+* Fixed that we should reflect on allow_blank option to determine required status with validates_inclusion_of
+* Added the ability to pass :input_html options be passed to the checkbox on a boolean input
 
 1.2.1
 
