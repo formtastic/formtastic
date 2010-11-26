@@ -631,6 +631,8 @@ module Formtastic #:nodoc:
 
       # Determines whether the given options evaluate to true
       def options_require_validation?(options) #nodoc
+        allow_blank = options[:allow_blank]
+        return !allow_blank unless allow_blank.nil?
         if_condition = !options[:if].nil?
         condition = if_condition ? options[:if] : options[:unless]
 
