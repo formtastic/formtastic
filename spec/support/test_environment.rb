@@ -1,12 +1,4 @@
 # encoding: utf-8
-
-require "rubygems"
-
-gem 'rspec', '~> 2.0'
-gem 'rspec-rails', '~> 2.0'
-gem 'rspec_tag_matchers'
-gem 'hpricot', '>= 0.6.1'
-
 require 'rspec_tag_matchers'
 
 RSpec.configure do |config|
