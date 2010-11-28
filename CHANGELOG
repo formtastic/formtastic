@@ -1,9 +1,14 @@
 1.2.2
 
+* Removed deprecated aliased input names (:as => :boolean_select, :as => :boolean_radio_input
+* Removed deprecated aliased method names (input_field_set, button_field_set)
+* Removed deprecated :class => 'whatever' on commit_button
 * Fixed that classes in :button_html were being merged into :wrapper_html
 * Fixed that :include_blank was being ignored (always false) for multi selects 
 * Fixed that we should reflect on allow_blank option to determine required status with validates_inclusion_of
 * Added the ability to pass :input_html options be passed to the checkbox on a boolean input
+* Developers: Added bundler support to for developer/contribution
+* Developers: Fixed spec coverage under Rails 2 and Ruby 1.9.2
 
 1.2.1
 
