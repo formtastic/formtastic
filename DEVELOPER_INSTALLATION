@@ -1,4 +1,0 @@
-rvm gemset create formtastic-rails-3
-rvm gemset use formtastic-rails-3 
-gem install rails rspec rspec-rails rspec_tag_matchers hpricot
-rake spec
