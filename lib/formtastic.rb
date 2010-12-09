@@ -359,6 +359,7 @@ module Formtastic #:nodoc:
 
       button_html = options.delete(:button_html) || {}
       button_html.merge!(:class => [button_html[:class], key].compact.join(' '))
+      button_html.merge!('data-disable-with' => options.delete(:disable_with)) if options[:disable_with]
 
       wrapper_html_class = ['commit'] # TODO: Add class reflecting on form action.
       wrapper_html = options.delete(:wrapper_html) || {}

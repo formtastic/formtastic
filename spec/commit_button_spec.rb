@@ -478,7 +478,29 @@ describe 'SemanticFormBuilder#commit_button' do
 
   end
 
-  
+  describe ':disable_with option' do
+    
+    describe 'when provided' do
+      it 'should add data-disable-with attribute to the button' do
+        form = semantic_form_for(@new_post) do |builder|
+          concat(builder.commit_button('text', :disable_with => "Submitting"))
+        end
+        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.should have_tag("form li input[data-disable-with=Submitting]")
+      end
+    end
+    
+    describe 'when not provided' do
+      it 'should not add the data-disable-with attribute to the button' do
+        form = semantic_form_for(@new_post) do |builder|
+          concat(builder.commit_button('text'))
+          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.should_not have_tag("li.commit input[data-disable-with]")
+        end
+      end
+    end
+    
+  end
   
   
 end
