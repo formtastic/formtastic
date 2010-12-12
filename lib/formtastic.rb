@@ -88,9 +88,9 @@ module Formtastic #:nodoc:
     #
     #   <% semantic_form_for @employee do |form| %>
     #     <% form.inputs do -%>
-    #       <%= form.input :secret, :value => "Hello" %>
     #       <%= form.input :name, :label => "Full Name" %>
-    #       <%= form.input :manager_id, :as => :radio %>
+    #       <%= form.input :manager, :as => :radio %>
+    #       <%= form.input :secret, :as => :password, :input_html => { :value => "xxxx" } %>
     #       <%= form.input :hired_at, :as => :date, :label => "Date Hired" %>
     #       <%= form.input :phone, :required => false, :hint => "Eg: +1 555 1234" %>
     #       <%= form.input :email %>
