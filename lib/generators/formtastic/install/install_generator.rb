@@ -6,10 +6,8 @@ module Formtastic
     source_root File.expand_path('../../../templates', __FILE__)
 
     def copy_files
-      empty_directory 'config/initializers'
       template        'formtastic.rb', 'config/initializers/formtastic.rb'
 
-      empty_directory 'public/stylesheets'
       template        'formtastic.css',         'public/stylesheets/formtastic.css'
       template        'formtastic_changes.css', 'public/stylesheets/formtastic_changes.css'
     end
