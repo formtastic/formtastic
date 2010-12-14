@@ -135,6 +135,7 @@ The difference is subtle, with most blocks in Rails 3 requiring the addition of 
       ...
     <% end %>
   <% end %>
+</pre>
   
 This README is currently documenting the Rails 2 way only. If you're using Rails 3 and your forms aren't rendering everything as expected, try changing @<%@ to @<%=@.
 
