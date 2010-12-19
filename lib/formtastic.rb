@@ -6,11 +6,20 @@ require File.join(File.dirname(__FILE__), *%w[formtastic railtie]) if defined?(:
 module Formtastic #:nodoc:
 
   class SemanticFormBuilder < ActionView::Helpers::FormBuilder
-    class_inheritable_accessor :default_text_field_size, :default_text_area_height, :default_text_area_width, :all_fields_required_by_default, :include_blank_for_select_by_default,
-                   :required_string, :optional_string, :inline_errors, :label_str_method, :collection_value_methods, :collection_label_methods, :file_metadata_suffixes,
-                   :inline_order, :custom_inline_order, :file_methods, :priority_countries, :i18n_lookups_by_default, :escape_html_entities_in_hints_and_labels,
-                   :default_commit_button_accesskey, :default_inline_error_class, :default_hint_class, :default_error_list_class, :instance_reader => false
-
+    
+    configurables = [
+      :default_text_field_size, :default_text_area_height, :default_text_area_width, :all_fields_required_by_default, :include_blank_for_select_by_default,
+      :required_string, :optional_string, :inline_errors, :label_str_method, :collection_value_methods, :collection_label_methods, :file_metadata_suffixes,
+      :inline_order, :custom_inline_order, :file_methods, :priority_countries, :i18n_lookups_by_default, :escape_html_entities_in_hints_and_labels,
+      :default_commit_button_accesskey, :default_inline_error_class, :default_hint_class, :default_error_list_class
+    ]
+    
+    if defined?(:class_inheritable_attribute)
+      class_inheritable_accessor *configurables
+    else
+      class_attribute *configurables
+    end
+    
     cattr_accessor :custom_namespace
 
     self.default_text_field_size = nil
