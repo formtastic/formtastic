@@ -1,7 +1,26 @@
-[master]
+1.2.3
 
+* Removed deprecated methods input_field_set, button_field_set, boolean_select_input, boolean_radio_input and boolean_radio_input
+* Removed deprecated :class option on commit_button (use :input_html instead)
+* Fixed that stylesheets and initializers directories would be removed on uninstalling
+* Fixed some documentation and formatting
+* Fixed test coverage issues under Ruby 192 and Rails 2
+* Fixed that input_html options were not being passed down to checkbox tags
+* Added Rails 3 compatible form generator templates in addition to existing Rails 2 support
+* Added reflection on allow_blank option when determining the 'required' status of an input
+
+
+1.2.2
+
+* Removed deprecated aliased input names (:as => :boolean_select, :as => :boolean_radio_input
+* Removed deprecated aliased method names (input_field_set, button_field_set)
+* Removed deprecated :class => 'whatever' on commit_button
 * Fixed that classes in :button_html were being merged into :wrapper_html
 * Fixed that :include_blank was being ignored (always false) for multi selects 
+* Fixed that we should reflect on allow_blank option to determine required status with validates_inclusion_of
+* Added the ability to pass :input_html options be passed to the checkbox on a boolean input
+* Developers: Added bundler support to for developer/contribution
+* Developers: Fixed spec coverage under Rails 2 and Ruby 1.9.2
 
 1.2.1
 
