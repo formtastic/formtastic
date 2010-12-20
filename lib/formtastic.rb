@@ -108,6 +108,8 @@ module Formtastic #:nodoc:
     #   <% end %>
     #
     def input(method, options = {})
+      options = options.dup # Allow options to be shared without being tainted by Formtastic
+      
       options[:required] = method_required?(method) unless options.key?(:required)
       options[:as]     ||= default_input_type(method, options)
 
@@ -1690,7 +1692,8 @@ module Formtastic #:nodoc:
         column = column_for(method)
 
         if type == :text
-          { :rows => default_text_area_height, :cols => default_text_area_width }
+          { :rows => default_text_area_height, 
+            :cols => default_text_area_width }
         elsif type == :numeric || column.nil? || column.limit.nil?
           { :maxlength => validation_max_limit,
             :size => default_text_field_size }
