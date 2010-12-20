@@ -14,10 +14,10 @@ module Formtastic #:nodoc:
       :default_commit_button_accesskey, :default_inline_error_class, :default_hint_class, :default_error_list_class
     ]
     
-    if defined?(:class_inheritable_attribute)
-      class_inheritable_accessor *configurables
-    else
+    if respond_to?(:class_attribute)
       class_attribute *configurables
+    else
+      class_inheritable_accessor *configurables
     end
     
     cattr_accessor :custom_namespace
