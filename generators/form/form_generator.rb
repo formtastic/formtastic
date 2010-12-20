@@ -105,7 +105,7 @@ class FormGenerator < Rails::Generator::NamedBase
     end
     
     def source_root
-      File.expand_path('../../../lib/generators/templates', __FILE__)
+      File.expand_path('../../../lib/generators/templates/rails2', __FILE__)
     end
 
 end
