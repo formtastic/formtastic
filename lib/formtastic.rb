@@ -123,7 +123,7 @@ module Formtastic #:nodoc:
         options[:label_html][:for] ||= options[:input_html][:id]
       end
 
-      input_parts = (self.class.custom_inline_order[options[:as]] || self.class.inline_order).dup
+      input_parts = (custom_inline_order[options[:as]] || inline_order).dup
       input_parts = input_parts - [:errors, :hints] if options[:as] == :hidden
 
       list_item_content = input_parts.map do |type|
@@ -360,7 +360,7 @@ module Formtastic #:nodoc:
         end
       else
         key = :submit
-        object_name = @object_name.to_s.send(self.class.label_str_method)
+        object_name = @object_name.to_s.send(label_str_method)
       end
 
       text = (self.localized_string(key, text, :action, :model => object_name) ||
@@ -373,7 +373,7 @@ module Formtastic #:nodoc:
       wrapper_html = options.delete(:wrapper_html) || {}
       wrapper_html[:class] = (wrapper_html_class << wrapper_html[:class]).flatten.compact.join(' ')
 
-      accesskey = (options.delete(:accesskey) || self.class.default_commit_button_accesskey) unless button_html.has_key?(:accesskey)
+      accesskey = (options.delete(:accesskey) || default_commit_button_accesskey) unless button_html.has_key?(:accesskey)
       button_html = button_html.merge(:accesskey => accesskey) if accesskey
       template.content_tag(:li, Formtastic::Util.html_safe(self.submit(text, button_html)), wrapper_html)
     end
@@ -460,7 +460,7 @@ module Formtastic #:nodoc:
     def inline_errors_for(method, options = {}) #:nodoc:
       if render_inline_errors?
         errors = error_keys(method, options).map{|x| @object.errors[x] }.flatten.compact.uniq
-        send(:"error_#{self.class.inline_errors}", [*errors], options) if errors.any?
+        send(:"error_#{inline_errors}", [*errors], options) if errors.any?
       else
         nil
       end
@@ -499,7 +499,7 @@ module Formtastic #:nodoc:
         @methods_for_error ||= {}
         @methods_for_error[method] ||= begin
           methods_for_error = [method.to_sym]
-          methods_for_error << self.class.file_metadata_suffixes.map{|suffix| "#{method}_#{suffix}".to_sym} if is_file?(method, options)
+          methods_for_error << file_metadata_suffixes.map{|suffix| "#{method}_#{suffix}".to_sym} if is_file?(method, options)
           methods_for_error << [association_primary_key(method)] if association_macro_for_method(method) == :belongs_to
           methods_for_error.flatten.compact.uniq
         end
@@ -511,7 +511,7 @@ module Formtastic #:nodoc:
       end
 
       def render_inline_errors?
-        @object && @object.respond_to?(:errors) && INLINE_ERROR_TYPES.include?(self.class.inline_errors)
+        @object && @object.respond_to?(:errors) && INLINE_ERROR_TYPES.include?(inline_errors)
       end
 
       # Collects content columns (non-relation columns) for the current form object class.
@@ -619,7 +619,7 @@ module Formtastic #:nodoc:
           if @object && @object.class.respond_to?(:validators_on)
             !@object.class.validators_on(attribute_sym).find{|validator| (validator.kind == :presence || validator.kind == :inclusion) && (validator.options.present? ? options_require_validation?(validator.options) : true)}.nil?
           else
-            self.class.all_fields_required_by_default
+            all_fields_required_by_default
           end
         end
       end
@@ -1283,21 +1283,21 @@ module Formtastic #:nodoc:
       def inline_hints_for(method, options) #:nodoc:
         options[:hint] = localized_string(method, options[:hint], :hint)
         return if options[:hint].blank? or options[:hint].kind_of? Hash
-        hint_class = options[:hint_class] || self.class.default_hint_class
+        hint_class = options[:hint_class] || default_hint_class
         template.content_tag(:p, Formtastic::Util.html_safe(options[:hint]), :class => hint_class)
       end
 
       # Creates an error sentence by calling to_sentence on the errors array.
       #
       def error_sentence(errors, options = {}) #:nodoc:
-        error_class = options[:error_class] || self.class.default_inline_error_class
+        error_class = options[:error_class] || default_inline_error_class
         template.content_tag(:p, Formtastic::Util.html_safe(errors.to_sentence.untaint), :class => error_class)
       end
 
       # Creates an error li list.
       #
       def error_list(errors, options = {}) #:nodoc:
-        error_class = options[:error_class] || self.class.default_error_list_class
+        error_class = options[:error_class] || default_error_list_class
         list_elements = []
         errors.each do |error|
           list_elements <<  template.content_tag(:li, Formtastic::Util.html_safe(error.untaint))
@@ -1308,7 +1308,7 @@ module Formtastic #:nodoc:
       # Creates an error sentence containing only the first error
       #
       def error_first(errors, options = {}) #:nodoc:
-        error_class = options[:error_class] || self.class.default_inline_error_class
+        error_class = options[:error_class] || default_inline_error_class
         template.content_tag(:p, Formtastic::Util.html_safe(errors.first.untaint), :class => error_class)
       end
 
@@ -1318,9 +1318,9 @@ module Formtastic #:nodoc:
       def required_or_optional_string(required) #:nodoc:
         string_or_proc = case required
           when true
-            self.class.required_string
+            required_string
           when false
-            self.class.optional_string
+            optional_string
           else
             required
         end
@@ -1467,7 +1467,7 @@ module Formtastic #:nodoc:
         @files ||= {}
         @files[method] ||= (options[:as].present? && options[:as] == :file) || begin
           file = @object.send(method) if @object && @object.respond_to?(method)
-          file && self.class.file_methods.any?{|m| file.respond_to?(m)}
+          file && file_methods.any?{|m| file.respond_to?(m)}
         end
       end
 
@@ -1541,8 +1541,8 @@ module Formtastic #:nodoc:
         end
 
         # Order of preference: user supplied method, class defaults, auto-detect
-        label = options[:label_method] || label || self.class.collection_label_methods.find { |m| sample.respond_to?(m) }
-        value = options[:value_method] || value || self.class.collection_value_methods.find { |m| sample.respond_to?(m) }
+        label = options[:label_method] || label || collection_label_methods.find { |m| sample.respond_to?(m) }
+        value = options[:value_method] || value || collection_value_methods.find { |m| sample.respond_to?(m) }
 
         [label, value]
       end
@@ -1690,13 +1690,13 @@ module Formtastic #:nodoc:
         column = self.column_for(method)
 
         if type == :text
-          { :rows => self.class.default_text_area_height, :cols => self.class.default_text_area_width }
+          { :rows => default_text_area_height, :cols => default_text_area_width }
         elsif type == :numeric || column.nil? || column.limit.nil?
           { :maxlength => validation_max_limit,
-            :size => self.class.default_text_field_size }
+            :size => default_text_field_size }
         else
           { :maxlength => validation_max_limit || column.limit,
-            :size => self.class.default_text_field_size }
+            :size => default_text_field_size }
         end
       end
 
@@ -1742,12 +1742,12 @@ module Formtastic #:nodoc:
         if @object && @object.class.respond_to?(:human_attribute_name)
           humanized_name = @object.class.human_attribute_name(method.to_s)
           if humanized_name == method.to_s.send(:humanize)
-            method.to_s.send(self.class.label_str_method)
+            method.to_s.send(label_str_method)
           else
             humanized_name
           end
         else
-          method.to_s.send(self.class.label_str_method)
+          method.to_s.send(label_str_method)
         end
       end
 
@@ -1778,7 +1778,7 @@ module Formtastic #:nodoc:
         if value.is_a?(::String)
           escape_html_entities(value)
         else
-          use_i18n = value.nil? ? self.class.i18n_lookups_by_default : (value != false)
+          use_i18n = value.nil? ? i18n_lookups_by_default : (value != false)
 
           if use_i18n
             model_name, nested_model_name  = normalize_model_name(self.model_name.underscore)
@@ -1837,13 +1837,13 @@ module Formtastic #:nodoc:
 
       def set_include_blank(options)
         unless options.key?(:include_blank) || options.key?(:prompt)
-          options[:include_blank] = self.class.include_blank_for_select_by_default
+          options[:include_blank] = include_blank_for_select_by_default
         end
         options
       end
 
       def escape_html_entities(string) #:nodoc:
-        if self.class.escape_html_entities_in_hints_and_labels
+        if escape_html_entities_in_hints_and_labels
           # Acceppt html_safe flag as indicator to skip escaping
           string = template.escape_once(string) unless string.respond_to?(:html_safe?) && string.html_safe? == true
         end
