@@ -1694,7 +1694,7 @@ module Formtastic #:nodoc:
         if type == :text
           { :rows => default_text_area_height, 
             :cols => default_text_area_width }
-        elsif (type == :numeric) || !column.respond_to?(:limit) || column.nil? || column.limit.nil?
+        elsif type == :numeric || column.nil? || !column.respond_to?(:limit) || column.limit.nil?
           { :maxlength => validation_max_limit,
             :size => default_text_field_size }
         else
