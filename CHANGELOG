@@ -6,6 +6,8 @@
 * Fixed some documentation and formatting
 * Fixed test coverage issues under Ruby 192 and Rails 2
 * Fixed that input_html options were not being passed down to checkbox tags
+* Changed internal duplication of the options hash so that the same options hash can be re-used over multiple inputs without being altered
+* Changed internal configuration to use class_attribute when available (Rails 3) to avoid deprecation warnings
 * Added Rails 3 compatible form generator templates in addition to existing Rails 2 support
 * Added reflection on allow_blank option when determining the 'required' status of an input
 
