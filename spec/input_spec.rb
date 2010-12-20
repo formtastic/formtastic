@@ -896,6 +896,24 @@ describe 'SemanticFormBuilder#input' do
 
     end
   end
-
+  
+  describe 'options re-use' do
+    
+    it 'should retain :as option when re-using the same options hash' do
+      my_options = { :as => :string }
+      output = ''
+      
+      @form = semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:title, my_options))
+        concat(builder.input(:publish_at, my_options))
+      end
+      output_buffer.concat(@form) if Formtastic::Util.rails3?
+      
+      output_buffer.should have_tag 'li.string', :count => 2
+    end
+    
+    
+  end
+  
 end
 
