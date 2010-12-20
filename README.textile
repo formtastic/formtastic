@@ -650,20 +650,13 @@ We currently support both Rails 2 and Rails 3, under Ruby 1.8.7-ish (and 1.9.2-i
 
 <pre>
   $ cd ~/code/formtastic
-  $ rvm gemset create formtastic-rails3
-  $ rvm gemset use formtastic-rails3
-  $ gem install bundler
-  $ bundle install
-  $ rake spec
-  $ rm Gemfile.lock
-  $ rvm gemset create formtastic-rails2
-  $ rvm gemset use formtastic-rails2
-  $ gem install bundler
-  $ RAILS_2=true bundle install
-  $ RAILS_2=true rake spec
-  $ touch .rvmrc
-  $ echo "rvm gemset use formtastic-rails-3" > .rvmrc
-  $ cd ~/code/formtastic
+  $ rvm gemset create formtastic      # If that's your thing
+  $ rvm gemset use formtastic         # Add that to your .rvmrc too
+  $ bundle install                    # Initial bundle command to build Gemfile.lock
+  $ RAILS_2=true bundle update rails  # Updates gemfile to run agains rails 2
+  $ RAILS_2=true rake                 # Run tests against rails 2
+  $ bundle update rails               # Updates gemfile to run agains rails 3
+  $ rake                              # Run tests against rails 3
 </pre>
 
 
