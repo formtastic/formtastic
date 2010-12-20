@@ -291,8 +291,8 @@ module Formtastic #:nodoc:
         field_set_and_list_wrapping(*(args << html_options), &block)
       else
         if @object && args.empty?
-          args  = self.association_columns(:belongs_to)
-          args += self.content_columns
+          args  = association_columns(:belongs_to)
+          args += content_columns
           args -= RESERVED_COLUMNS
           args.compact!
         end
@@ -363,7 +363,7 @@ module Formtastic #:nodoc:
         object_name = @object_name.to_s.send(label_str_method)
       end
 
-      text = (self.localized_string(key, text, :action, :model => object_name) ||
+      text = (localized_string(key, text, :action, :model => object_name) ||
               ::Formtastic::I18n.t(key, :model => object_name)) unless text.is_a?(::String)
 
       button_html = options.delete(:button_html) || {}
@@ -375,7 +375,7 @@ module Formtastic #:nodoc:
 
       accesskey = (options.delete(:accesskey) || default_commit_button_accesskey) unless button_html.has_key?(:accesskey)
       button_html = button_html.merge(:accesskey => accesskey) if accesskey
-      template.content_tag(:li, Formtastic::Util.html_safe(self.submit(text, button_html)), wrapper_html)
+      template.content_tag(:li, Formtastic::Util.html_safe(submit(text, button_html)), wrapper_html)
     end
 
     # A thin wrapper around #fields_for to set :builder => Formtastic::SemanticFormBuilder
@@ -517,7 +517,7 @@ module Formtastic #:nodoc:
       # Collects content columns (non-relation columns) for the current form object class.
       #
       def content_columns #:nodoc:
-        self.model_name.constantize.content_columns.collect { |c| c.name.to_sym }.compact rescue []
+        model_name.constantize.content_columns.collect { |c| c.name.to_sym }.compact rescue []
       end
 
       # Collects association columns (relation columns) for the current form object class.
@@ -538,12 +538,12 @@ module Formtastic #:nodoc:
 
       # Returns nil, or a symbol like :belongs_to or :has_many
       def association_macro_for_method(method) #:nodoc:
-        reflection = self.reflection_for(method)
+        reflection = reflection_for(method)
         reflection.macro if reflection
       end
 
       def association_primary_key(method)
-        reflection = self.reflection_for(method)
+        reflection = reflection_for(method)
         reflection.options[:foreign_key] if reflection && !reflection.options[:foreign_key].blank?
         :"#{method}_id"
       end
@@ -649,8 +649,8 @@ module Formtastic #:nodoc:
         html_options[:id] ||= field_id
         label_options = options_for_label(options)
         label_options[:for] ||= html_options[:id]
-        self.label(method, label_options) <<
-        self.send(self.respond_to?(form_helper_method) ? form_helper_method : :text_field, method, html_options)
+        label(method, label_options) <<
+          send(respond_to?(form_helper_method) ? form_helper_method : :text_field, method, html_options)
       end
 
       # Outputs a label and standard Rails text field inside the wrapper.
@@ -707,7 +707,7 @@ module Formtastic #:nodoc:
         options ||= {}
         html_options = options.delete(:input_html) || strip_formtastic_options(options)
         html_options[:id] ||= generate_html_id(method, "")
-        self.hidden_field(method, html_options)
+        hidden_field(method, html_options)
       end
 
       # Outputs a label and a select box containing options from the parent
@@ -811,7 +811,7 @@ module Formtastic #:nodoc:
         html_options[:multiple] = html_options[:multiple] || options.delete(:multiple)
         html_options.delete(:multiple) if html_options[:multiple].nil?
 
-        reflection = self.reflection_for(method)
+        reflection = reflection_for(method)
         if reflection && [ :has_many, :has_and_belongs_to_many ].include?(reflection.macro)
           html_options[:multiple] = true if html_options[:multiple].nil?
           html_options[:size]     ||= 5
@@ -832,19 +832,19 @@ module Formtastic #:nodoc:
           group_association = options[:group_association] || detect_group_association(method, options[:group_by])
 
           # Here comes the monster with 8 arguments
-          self.grouped_collection_select(input_name, group_collection,
+          grouped_collection_select(input_name, group_collection,
                                          group_association, group_label_method,
                                          value, label,
                                          strip_formtastic_options(options), html_options)
         else
           collection = find_collection_for_column(method, options)
 
-          self.select(input_name, collection, strip_formtastic_options(options), html_options)
+          select(input_name, collection, strip_formtastic_options(options), html_options)
         end
 
         label_options = options_for_label(options).merge(:input_name => input_name)
         label_options[:for] ||= html_options[:id]
-        self.label(method, label_options) << select_html
+        label(method, label_options) << select_html
       end
 
       # Outputs a timezone select input as Rails' time_zone_select helper. You
@@ -859,8 +859,8 @@ module Formtastic #:nodoc:
         html_options[:id] ||= field_id
         label_options = options_for_label(options)
         label_options[:for] ||= html_options[:id]
-        self.label(method, label_options) <<
-        self.time_zone_select(method, options.delete(:priority_zones),
+        label(method, label_options) <<
+        time_zone_select(method, options.delete(:priority_zones),
           strip_formtastic_options(options), html_options)
       end
 
@@ -937,7 +937,7 @@ module Formtastic #:nodoc:
           html_options[:id] = input_id
 
           li_content = template.content_tag(:label,
-            Formtastic::Util.html_safe("#{self.radio_button(input_name, value, html_options)} #{escape_html_entities(label)}"),
+            Formtastic::Util.html_safe("#{radio_button(input_name, value, html_options)} #{escape_html_entities(label)}"),
             :for => input_id
           )
 
@@ -1176,7 +1176,7 @@ module Formtastic #:nodoc:
           html_options[:id] = input_id
 
           li_content = template.content_tag(:label,
-            Formtastic::Util.html_safe("#{self.create_check_boxes(input_name, html_options, value, unchecked_value, hidden_fields)} #{escape_html_entities(label)}"),
+            Formtastic::Util.html_safe("#{create_check_boxes(input_name, html_options, value, unchecked_value, hidden_fields)} #{escape_html_entities(label)}"),
             :for => input_id
           )
 
@@ -1185,7 +1185,7 @@ module Formtastic #:nodoc:
         end
 
         fieldset_content = legend_tag(method, options)
-        fieldset_content << self.create_hidden_field_for_check_boxes(input_name, value_as_class) unless hidden_fields
+        fieldset_content << create_hidden_field_for_check_boxes(input_name, value_as_class) unless hidden_fields
         fieldset_content << template.content_tag(:ol, Formtastic::Util.html_safe(list_item_content.join))
         template.content_tag(:fieldset, fieldset_content)
       end
@@ -1216,7 +1216,7 @@ module Formtastic #:nodoc:
       # otherwise the helper uses the output generated by the rails check_box method.
       def create_check_boxes(input_name, html_options = {}, checked_value = "1", unchecked_value = "0", hidden_fields = false) #:nodoc:
         return template.check_box_tag(input_name, checked_value, html_options[:checked], html_options) unless hidden_fields == true
-        self.check_box(input_name, html_options, checked_value, unchecked_value)
+        check_box(input_name, html_options, checked_value, unchecked_value)
       end
 
       # Outputs a country select input, wrapping around a regular country_select helper.
@@ -1234,18 +1234,18 @@ module Formtastic #:nodoc:
       #   f.input :location, :as => :country, :priority_countries => /Australia/ # set your own
       #
       def country_input(method, options)
-        raise "To use the :country input, please install a country_select plugin, like this one: http://github.com/rails/iso-3166-country-select" unless self.respond_to?(:country_select)
+        raise "To use the :country input, please install a country_select plugin, like this one: http://github.com/rails/iso-3166-country-select" unless respond_to?(:country_select)
 
         html_options = options.delete(:input_html) || {}
-        priority_countries = options.delete(:priority_countries) || self.class.priority_countries
+        priority_countries = options.delete(:priority_countries) || self.priority_countries
 
         field_id = generate_html_id(method, "")
         html_options[:id] ||= field_id
         label_options = options_for_label(options)
         label_options[:for] ||= html_options[:id]
 
-        self.label(method, label_options) <<
-        self.country_select(method, priority_countries, strip_formtastic_options(options), html_options)
+        label(method, label_options) <<
+        country_select(method, priority_countries, strip_formtastic_options(options), html_options)
       end
 
       # Outputs a label containing a checkbox and the label text. The label defaults
@@ -1270,7 +1270,7 @@ module Formtastic #:nodoc:
         # the label() method will insert this nested input into the label at the last minute
         options[:label_prefix_for_nested_input] = input
 
-        template.hidden_field_tag("#{@object_name}[#{method}]", unchecked_value, :id => nil) << self.label(method, options)
+        template.hidden_field_tag("#{@object_name}[#{method}]", unchecked_value, :id => nil) << label(method, options)
       end
 
       # Generates an input for the given method using the type supplied with :as.
@@ -1384,7 +1384,7 @@ module Formtastic #:nodoc:
 
         if title.blank?
           valid_name_classes = [::String, ::Symbol]
-          valid_name_classes.delete(::Symbol) if !block_given? && (args.first.is_a?(::Symbol) && self.content_columns.include?(args.first))
+          valid_name_classes.delete(::Symbol) if !block_given? && (args.first.is_a?(::Symbol) && content_columns.include?(args.first))
           title = args.shift if valid_name_classes.any? { |valid_name_class| args.first.is_a?(valid_name_class) }
         end
         title = localized_string(title, title, :title) if title.is_a?(::Symbol)
@@ -1399,7 +1399,7 @@ module Formtastic #:nodoc:
 
         template.content_tag(:fieldset,
             template.content_tag(:legend,
-                self.label(method, options_for_label(options).merge(:for => options.delete(:label_for))), :class => 'label'
+                label(method, options_for_label(options).merge(:for => options.delete(:label_for))), :class => 'label'
               ) <<
             template.content_tag(:ol, Formtastic::Util.html_safe(contents))
           )
@@ -1426,7 +1426,7 @@ module Formtastic #:nodoc:
       # default is a :string, a similar behaviour to Rails' scaffolding.
       #
       def default_input_type(method, options = {}) #:nodoc:
-        if column = self.column_for(method)
+        if column = column_for(method)
           # Special cases where the column type doesn't map to an input method.
           case column.type
           when :string
@@ -1438,7 +1438,7 @@ module Formtastic #:nodoc:
             return :phone     if method.to_s =~ /(phone|fax)/
             return :search    if method.to_s =~ /^search$/
           when :integer
-            return :select    if self.reflection_for(method)
+            return :select    if reflection_for(method)
             return :numeric
           when :float, :decimal
             return :numeric
@@ -1452,7 +1452,7 @@ module Formtastic #:nodoc:
           return column.type
         else
           if @object
-            return :select  if self.reflection_for(method)
+            return :select  if reflection_for(method)
 
             return :file    if is_file?(method, options)
           end
@@ -1502,7 +1502,7 @@ module Formtastic #:nodoc:
       def find_raw_collection_for_column(column, options) #:nodoc:
         collection = if options[:collection]
           options.delete(:collection)
-        elsif reflection = self.reflection_for(column)
+        elsif reflection = reflection_for(column)
           options[:find_options] ||= {}
 
           if conditions = reflection.options[:conditions]
@@ -1557,7 +1557,7 @@ module Formtastic #:nodoc:
       # Detects the method to call for fetching group members from the groups when grouping select options
       #
       def detect_group_association(method, group_by)
-        object_to_method_reflection = self.reflection_for(method)
+        object_to_method_reflection = reflection_for(method)
         method_class = object_to_method_reflection.klass
 
         method_to_group_association = method_class.reflect_on_association(group_by)
@@ -1615,7 +1615,7 @@ module Formtastic #:nodoc:
       #   has_and_belongs_to_many will act like has_many
       #
       def generate_association_input_name(method) #:nodoc:
-        if reflection = self.reflection_for(method)
+        if reflection = reflection_for(method)
           if [:has_and_belongs_to_many, :has_many].include?(reflection.macro)
             "#{method.to_s.singularize}_ids"
           else
@@ -1687,7 +1687,7 @@ module Formtastic #:nodoc:
         end
 
         validation_max_limit = get_maxlength_for(method)
-        column = self.column_for(method)
+        column = column_for(method)
 
         if type == :text
           { :rows => default_text_area_height, :cols => default_text_area_width }
@@ -1907,7 +1907,7 @@ module Formtastic #:nodoc:
 
     def semantic_remote_form_for_wrapper(record_or_name_or_array, *args, &proc)
       options = args.extract_options!
-      if self.respond_to? :remote_form_for
+      if respond_to? :remote_form_for
         semantic_remote_form_for_real(record_or_name_or_array, *(args << options), &proc)
       else
         options[:remote] = true
