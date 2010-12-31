@@ -132,6 +132,10 @@ form.formtastic fieldset > ol > li.check_boxes fieldset ol li label input { marg
 
 /* DATE & TIME OVERRIDES
 --------------------------------------------------------------------------------------------------*/
+form.formtastic fieldset > ol > li.date fieldset,
+form.formtastic fieldset > ol > li.time fieldset,
+form.formtastic fieldset > ol > li.datetime fieldset { overflow:visible; }
+
 form.formtastic fieldset > ol > li.date fieldset ol li,
 form.formtastic fieldset > ol > li.time fieldset ol li,
 form.formtastic fieldset > ol > li.datetime fieldset ol li { float:left; width:auto; margin:0 .3em 0 0; }
