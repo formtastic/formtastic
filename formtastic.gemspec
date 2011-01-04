@@ -37,7 +37,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency(%q<activesupport>, [">= 2.3.7"])
   s.add_dependency(%q<actionpack>, [">= 2.3.7"])
-  s.add_dependency(%q<i18n>, [">= 0.4.0"])
+  s.add_dependency(%q<i18n>, ["~> 0.4"])
   
   if ENV['RAILS_2']
     s.add_development_dependency(%q<rails>, ["~> 2.3.8"])
