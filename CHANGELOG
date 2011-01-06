@@ -1,4 +1,4 @@
-1.2.3.beta2
+1.2.3
 
 * Fixed documentation typos
 * Changed i18n gem dependency from ">= 0.4.0" to "~> 0.4" to work with apps that require i18n 0.5
