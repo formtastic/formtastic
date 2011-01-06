@@ -2,8 +2,8 @@
 
 Gem::Specification.new do |s|
   s.name = %q{formtastic}
-  s.version = "1.2.3.beta"
-  s.date = %q{2010-11-29}
+  s.version = "1.2.3"
+  s.date = %q{2011-01-07}
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Justin French"]
