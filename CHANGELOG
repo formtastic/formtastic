@@ -1,3 +1,8 @@
+1.2.3.beta2
+
+* Fixed documentation typos
+* Changed i18n gem dependency from ">= 0.4.0" to "~> 0.4" to work with apps that require i18n 0.5
+
 1.2.3.beta
 
 * Removed deprecated methods input_field_set, button_field_set, boolean_select_input, boolean_radio_input and boolean_radio_input
