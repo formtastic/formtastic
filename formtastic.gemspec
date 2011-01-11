@@ -2,8 +2,8 @@
 
 Gem::Specification.new do |s|
   s.name = %q{formtastic}
-  s.version = "1.2.1"
-  s.date = %q{2010-11-22}
+  s.version = "1.2.3"
+  s.date = %q{2011-01-07}
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Justin French"]
@@ -37,7 +37,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency(%q<activesupport>, [">= 2.3.7"])
   s.add_dependency(%q<actionpack>, [">= 2.3.7"])
-  s.add_dependency(%q<i18n>, [">= 0.4.0"])
+  s.add_dependency(%q<i18n>, ["~> 0.4"])
   
   if ENV['RAILS_2']
     s.add_development_dependency(%q<rails>, ["~> 2.3.8"])
