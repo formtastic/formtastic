@@ -101,17 +101,9 @@ describe 'SemanticFormHelper' do
     end
 
     it 'can be called with a generic style and instance variable' do
-      if rails3?
-        semantic_form_for(@new_post, :as => :post, :url => new_post_path) do |builder|
-          builder.object.class.should == ::Post
-          builder.object_name.to_s.should == "post" # TODO: is this forced .to_s a bad assumption somewhere?
-        end
-      end
-      if rails2?
-        semantic_form_for(:post, @new_post, :url => new_post_path) do |builder|
-          builder.object.class.should == ::Post
-          builder.object_name.to_s.should == "post" # TODO: is this forced .to_s a bad assumption somewhere?
-        end
+      semantic_form_for(@new_post, :as => :post, :url => new_post_path) do |builder|
+        builder.object.class.should == ::Post
+        builder.object_name.to_s.should == "post" # TODO: is this forced .to_s a bad assumption somewhere?
       end
     end
 
