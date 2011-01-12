@@ -23,28 +23,28 @@ describe 'SemanticFormBuilder#inputs' do
       end
 
       it 'should output just the content wrapped in inputs, not the whole template' do
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.concat(@form)
         output_buffer.should      =~ /before_builder/
         @inputs_output.should_not =~ /before_builder/
       end
 
       it 'should render a fieldset inside the form, with a class of "inputs"' do
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.concat(@form)
         output_buffer.should have_tag("form fieldset.inputs")
       end
 
       it 'should render an ol inside the fieldset' do
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.concat(@form)
         output_buffer.should have_tag("form fieldset.inputs ol")
       end
 
       it 'should render the contents of the block inside the ol' do
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.concat(@form)
         output_buffer.should have_tag("form fieldset.inputs ol", /hello/)
       end
 
       it 'should not render a legend inside the fieldset' do
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.concat(@form)
         output_buffer.should_not have_tag("form fieldset.inputs legend")
       end
 
@@ -55,7 +55,7 @@ describe 'SemanticFormBuilder#inputs' do
           end
         end
 
-        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.concat(form)
         output_buffer.should have_tag("form fieldset.inputs ol", /bye/)
       end
     end
@@ -77,15 +77,14 @@ describe 'SemanticFormBuilder#inputs' do
           concat(inputs)
         end
 
-        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.concat(form)
         output_buffer.should have_tag("form fieldset.inputs #post_author_attributes_login")
         output_buffer.should_not have_tag("form fieldset.inputs #author_login")
 
       end
 
-      it 'should concat rendered nested inputs to the template under rails3' do
+      it 'should concat rendered nested inputs to the template' do
         @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
-        ::Formtastic::Util.stub!(:rails3?).and_return(true)
 
         form = semantic_form_for(@new_post) do |builder|
           builder.inputs :for => [:author, @bob] do |bob_builder|
@@ -93,7 +92,7 @@ describe 'SemanticFormBuilder#inputs' do
           end
         end
 
-        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.concat(form)
         output_buffer.should have_tag("form fieldset.inputs #post_author_attributes_login")
         output_buffer.should_not have_tag("form fieldset.inputs #author_login")
 
@@ -108,7 +107,7 @@ describe 'SemanticFormBuilder#inputs' do
             end
             concat(inputs)
           end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.concat(form)
           output_buffer.should have_tag("form input[@name='post[author_attributes][login]']")
         end
 
@@ -127,7 +126,7 @@ describe 'SemanticFormBuilder#inputs' do
             end
           end
 
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.concat(form)
           output_buffer.should have_tag("form input[@name='post[authors_attributes][0][login]']")
           output_buffer.should have_tag("form input[@name='post[authors_attributes][1][login]']")
         end
@@ -142,7 +141,7 @@ describe 'SemanticFormBuilder#inputs' do
             end
             concat(inputs)
           end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.concat(form)
           output_buffer.should have_tag("form input[@name='post[author_attributes][login]']")
         end
 
@@ -157,7 +156,7 @@ describe 'SemanticFormBuilder#inputs' do
             end
             concat(inputs)
           end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.concat(form)
           output_buffer.should have_tag("form input[@name='post[author][login]']")
         end
 
@@ -184,7 +183,7 @@ describe 'SemanticFormBuilder#inputs' do
           concat(inputs)
         end
 
-        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.concat(form)
         output_buffer.should have_tag('form fieldset ol li #post_author_attributes_10_login')
       end
 
@@ -196,7 +195,7 @@ describe 'SemanticFormBuilder#inputs' do
           concat(inputs)
         end
 
-        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.concat(form)
         output_buffer.should_not have_tag('fieldset[@builder="Formtastic::SemanticFormHelper"]')
       end
 
@@ -209,7 +208,7 @@ describe 'SemanticFormBuilder#inputs' do
           concat(inputs)
         end
 
-        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.concat(form)
         output_buffer.should have_tag('fieldset legend', 'Author #1')
       end
 
@@ -222,7 +221,7 @@ describe 'SemanticFormBuilder#inputs' do
           concat(inputs)
         end
 
-        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.concat(form)
         output_buffer.should have_tag('fieldset legend', 'Author #11')
       end
     end
@@ -251,7 +250,7 @@ describe 'SemanticFormBuilder#inputs' do
         end
 
         it 'should render a fieldset with a legend inside the form' do
-          output_buffer.concat(@form) if Formtastic::Util.rails3?
+          output_buffer.concat(@form)
           output_buffer.should have_tag("form fieldset legend", /^#{@legend_text}$/)
           output_buffer.should have_tag("form fieldset legend", /^#{@legend_text_using_name}$/)
           output_buffer.should have_tag("form fieldset legend", /^#{@legend_text_using_title}$/)
@@ -292,7 +291,7 @@ describe 'SemanticFormBuilder#inputs' do
         end
 
         it 'should render a fieldset with a localized legend inside the form' do
-          output_buffer.concat(@form) if Formtastic::Util.rails3?
+          output_buffer.concat(@form)
           output_buffer.should have_tag("form fieldset legend", /^#{@localized_legend_text}$/)
           output_buffer.should have_tag("form fieldset legend", /^#{@localized_legend_text_using_name}$/)
           output_buffer.should have_tag("form fieldset legend", /^#{@localized_legend_text_using_title}$/)
@@ -313,7 +312,7 @@ describe 'SemanticFormBuilder#inputs' do
       end
 
       it 'should pass the options into the fieldset tag as attributes' do
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.concat(@form)
         output_buffer.should have_tag("form fieldset##{@id_option}")
         output_buffer.should have_tag("form fieldset.#{@class_option}")
       end
@@ -346,49 +345,49 @@ describe 'SemanticFormBuilder#inputs' do
       end
 
       it 'should render a form' do
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.concat(@form)
         output_buffer.should have_tag('form')
       end
 
       it 'should render a fieldset inside the form' do
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.concat(@form)
         output_buffer.should have_tag('form > fieldset.inputs')
       end
 
       it 'should not render a legend in the fieldset' do
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.concat(@form)
         output_buffer.should_not have_tag('form > fieldset.inputs > legend')
       end
 
       it 'should render an ol in the fieldset' do
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.concat(@form)
         output_buffer.should have_tag('form > fieldset.inputs > ol')
       end
 
       it 'should render a list item in the ol for each column and reflection' do
         # Remove the :has_many macro and :created_at column
         count = ::Post.content_columns.size + ::Post.reflections.size - 2
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.concat(@form)
         output_buffer.should have_tag('form > fieldset.inputs > ol > li', :count => count)
       end
 
       it 'should render a string list item for title' do
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.concat(@form)
         output_buffer.should have_tag('form > fieldset.inputs > ol > li.string')
       end
 
       it 'should render a text list item for body' do
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.concat(@form)
         output_buffer.should have_tag('form > fieldset.inputs > ol > li.text')
       end
 
       it 'should render a select list item for author_id' do
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.concat(@form)
         output_buffer.should have_tag('form > fieldset.inputs > ol > li.select', :count => 1)
       end
 
       it 'should not render timestamps inputs by default' do
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.concat(@form)
         output_buffer.should_not have_tag('form > fieldset.inputs > ol > li.datetime')
       end
     end
@@ -400,7 +399,7 @@ describe 'SemanticFormBuilder#inputs' do
             concat(builder.inputs(:title, :body))
           end
 
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.concat(form)
           output_buffer.should have_tag('form > fieldset.inputs > ol > li', :count => 2)
           output_buffer.should have_tag('form > fieldset.inputs > ol > li.string')
           output_buffer.should have_tag('form > fieldset.inputs > ol > li.text')
@@ -413,7 +412,7 @@ describe 'SemanticFormBuilder#inputs' do
             concat(builder.inputs(:title, :body))
           end
 
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.concat(form)
           output_buffer.should have_tag('form > fieldset.inputs > ol > li.string', :count => 2)
         end
       end
@@ -427,7 +426,7 @@ describe 'SemanticFormBuilder#inputs' do
             concat(builder.inputs(:login, :for => @bob))
           end
 
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.concat(form)
           output_buffer.should have_tag("form fieldset.inputs #post_author_login")
           output_buffer.should_not have_tag("form fieldset.inputs #author_login")
         end
@@ -438,7 +437,7 @@ describe 'SemanticFormBuilder#inputs' do
           form = semantic_form_for(:project, :url => 'http://test.host/') do |builder|
             concat(builder.inputs(:login, :for => @bob))
           end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.concat(form)
           output_buffer.should have_tag("form fieldset.inputs #project_author_login")
           output_buffer.should_not have_tag("form fieldset.inputs #project_login")
         end
@@ -456,17 +455,17 @@ describe 'SemanticFormBuilder#inputs' do
       end
 
       it 'should render a form with a fieldset containing two list items' do
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.concat(@form)
         output_buffer.should have_tag('form > fieldset.inputs > ol > li', :count => 4)
       end
 
       it 'should pass the options down to the fieldset' do
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.concat(@form)
         output_buffer.should have_tag('form > fieldset#my-id.inputs')
       end
 
       it 'should use the special :name option as a text for the legend tag' do
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.concat(@form)
         output_buffer.should have_tag('form > fieldset#my-id.inputs > legend', /^#{@legend_text_using_option}$/)
         output_buffer.should have_tag('form > fieldset#my-id-2.inputs > legend', /^#{@legend_text_using_arg}$/)
       end

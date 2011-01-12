@@ -19,7 +19,7 @@ describe 'boolean input' do
   it_should_apply_error_logic_for_input_type(:boolean)
 
   it 'should generate a label containing the input' do
-    output_buffer.concat(@form) if Formtastic::Util.rails3?
+    output_buffer.concat(@form)
     output_buffer.should have_tag('form li label', :count => 1)
     output_buffer.should have_tag('form li label[@for="post_allow_comments"]')
     output_buffer.should have_tag('form li label', /Allow comments/)
@@ -29,7 +29,7 @@ describe 'boolean input' do
   end
 
   it 'should generate a checkbox input' do
-    output_buffer.concat(@form) if Formtastic::Util.rails3?
+    output_buffer.concat(@form)
     output_buffer.should have_tag('form li label input')
     output_buffer.should have_tag('form li label input#post_allow_comments')
     output_buffer.should have_tag('form li label input[@type="checkbox"]')
@@ -38,7 +38,7 @@ describe 'boolean input' do
   end
   
   it 'should generate a checked input if object.method returns true' do
-    output_buffer.concat(@form) if Formtastic::Util.rails3?
+    output_buffer.concat(@form)
     output_buffer.should have_tag('form li label input[@checked="checked"]')
     output_buffer.should have_tag('form li input[@name="post[allow_comments]"]', :count => 2)
     output_buffer.should have_tag('form li input#post_allow_comments', :count => 1)
@@ -49,7 +49,7 @@ describe 'boolean input' do
       concat(builder.input(:answer_comments, :as => :boolean, :input_html => {:checked => 'checked'}))
     end
 
-    output_buffer.concat(form) if Formtastic::Util.rails3?
+    output_buffer.concat(form)
     output_buffer.should have_tag('form li label input[@checked="checked"]')
   end
   
@@ -58,7 +58,7 @@ describe 'boolean input' do
       concat(builder.input(:allow_comments, :as => :boolean, :input_html => {:disabled => 'disabled'}))
     end
     
-    output_buffer.concat(form) if Formtastic::Util.rails3?
+    output_buffer.concat(form)
     output_buffer.should have_tag('form li label input[@disabled="disabled"]')
   end
   
@@ -67,7 +67,7 @@ describe 'boolean input' do
       concat(builder.input(:allow_comments, :as => :boolean, :input_html => {:id => 'custom_id'}))
     end
     
-    output_buffer.concat(form) if Formtastic::Util.rails3?
+    output_buffer.concat(form)
     output_buffer.should have_tag('form li label input[@id="custom_id"]')
     output_buffer.should have_tag('form li label[@for="custom_id"]')
   end
@@ -77,7 +77,7 @@ describe 'boolean input' do
       concat(builder.input(:allow_comments, :as => :boolean, :checked_value => 'checked', :unchecked_value => 'unchecked'))
     end
 
-    output_buffer.concat(form) if Formtastic::Util.rails3?
+    output_buffer.concat(form)
     output_buffer.should have_tag('form li label input[@type="checkbox"][@value="checked"]:not([@unchecked_value][@checked_value])')
     output_buffer.should have_tag('form li input[@type="hidden"][@value="unchecked"]')
     output_buffer.should_not have_tag('form li label input[@type="hidden"]') # invalid HTML5
@@ -88,7 +88,7 @@ describe 'boolean input' do
       concat(builder.input(:allow_comments, :as => :boolean))
     end
 
-    output_buffer.concat(form) if Formtastic::Util.rails3?
+    output_buffer.concat(form)
 
     output_buffer.should have_tag('form li label[@for="project_allow_comments"]')
     output_buffer.should have_tag('form li label', /Allow comments/)

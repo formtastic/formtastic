@@ -79,7 +79,7 @@ describe 'SemanticFormBuilder#input' do
           form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :required => true))
           end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.concat(form)
           output_buffer.should_not have_tag('form li.optional')
           output_buffer.should have_tag('form li.required')
         end
@@ -88,7 +88,7 @@ describe 'SemanticFormBuilder#input' do
           form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :required => true))
           end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.concat(form)
           output_buffer.should have_tag('form li.required label', /#{@new_string}$/)
         end
 
@@ -109,7 +109,7 @@ describe 'SemanticFormBuilder#input' do
           form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :required => false))
           end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.concat(form)
           output_buffer.should_not have_tag('form li.required')
           output_buffer.should have_tag('form li.optional')
         end
@@ -118,7 +118,7 @@ describe 'SemanticFormBuilder#input' do
           form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :required => false))
           end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.concat(form)
           output_buffer.should have_tag('form li.optional label', /#{@string}$/)
         end
 
@@ -135,7 +135,7 @@ describe 'SemanticFormBuilder#input' do
             form = semantic_form_for(:project, :url => 'http://test.host/') do |builder|
               concat(builder.input(:title))
             end
-            output_buffer.concat(form) if Formtastic::Util.rails3?
+            output_buffer.concat(form)
             output_buffer.should_not have_tag('form li.required')
             output_buffer.should have_tag('form li.optional')
 
@@ -166,7 +166,7 @@ describe 'SemanticFormBuilder#input' do
                   concat(builder.input(:title))
                   concat(builder.input(:body))
                 end
-                output_buffer.concat(form) if Formtastic::Util.rails3?
+                output_buffer.concat(form)
                 output_buffer.should have_tag('form li.required')
                 output_buffer.should_not have_tag('form li.optional')
               end
@@ -222,7 +222,7 @@ describe 'SemanticFormBuilder#input' do
                 concat(builder.input(:body))
               end
 
-              output_buffer.concat(form) if Formtastic::Util.rails3?
+              output_buffer.concat(form)
 
               if options[:required]
                 output_buffer.should_not have_tag('form li.optional')
@@ -242,7 +242,7 @@ describe 'SemanticFormBuilder#input' do
                 form = semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:title))
                 end
-                output_buffer.concat(form) if Formtastic::Util.rails3?
+                output_buffer.concat(form)
                 output_buffer.should_not have_tag('form li.required')
                 output_buffer.should have_tag('form li.optional')
               end
@@ -273,7 +273,7 @@ describe 'SemanticFormBuilder#input' do
                   concat(builder.input(:title))
                   concat(builder.input(:body))
                 end
-                output_buffer.concat(form) if Formtastic::Util.rails3?
+                output_buffer.concat(form)
                 output_buffer.should have_tag('form li.required')
                 output_buffer.should_not have_tag('form li.optional')
               end
@@ -328,7 +328,7 @@ describe 'SemanticFormBuilder#input' do
                 form = semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:published))
                 end
-                output_buffer.concat(form) if Formtastic::Util.rails3?
+                output_buffer.concat(form)
                 output_buffer.should have_tag('form li.required')
                 output_buffer.should_not have_tag('form li.optional')
               end
@@ -341,7 +341,7 @@ describe 'SemanticFormBuilder#input' do
                 form = semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:published))
                 end
-                output_buffer.concat(form) if Formtastic::Util.rails3?
+                output_buffer.concat(form)
                 output_buffer.should_not have_tag('form li.required')
                 output_buffer.should have_tag('form li.optional')
               end
@@ -357,7 +357,7 @@ describe 'SemanticFormBuilder#input' do
                 concat(builder.input(:body))
               end
 
-              output_buffer.concat(form) if Formtastic::Util.rails3?
+              output_buffer.concat(form)
 
               if options[:required]
                 output_buffer.should_not have_tag('form li.optional')
@@ -377,7 +377,7 @@ describe 'SemanticFormBuilder#input' do
                 form = semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:title))
                 end
-                output_buffer.concat(form) if Formtastic::Util.rails3?
+                output_buffer.concat(form)
                 output_buffer.should_not have_tag('form li.required')
                 output_buffer.should have_tag('form li.optional')
               end
@@ -394,7 +394,7 @@ describe 'SemanticFormBuilder#input' do
               form = semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title))
               end
-              output_buffer.concat(form) if Formtastic::Util.rails3?
+              output_buffer.concat(form)
               output_buffer.should_not have_tag('form li.required')
               output_buffer.should have_tag('form li.optional')
 
@@ -417,7 +417,7 @@ describe 'SemanticFormBuilder#input' do
           form = semantic_form_for(:project, :url => 'http://test.host') do |builder|
             concat(builder.input(:anything))
           end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.concat(form)
           output_buffer.should have_tag('form li.string')
         end
 
@@ -427,7 +427,7 @@ describe 'SemanticFormBuilder#input' do
             concat(builder.input(:password_confirmation))
             concat(builder.input(:confirm_password))
           end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.concat(form)
           output_buffer.should have_tag('form li.password', :count => 3)
         end
 
@@ -577,7 +577,7 @@ describe 'SemanticFormBuilder#input' do
             concat(builder.input(:title, :label => "Kustom"))
           end
 
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.concat(form)
           output_buffer.should have_tag("form li label", /Kustom/)
         end
 
@@ -585,7 +585,7 @@ describe 'SemanticFormBuilder#input' do
           form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :label => false))
           end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.concat(form)
           output_buffer.should_not have_tag("form li label")
         end
 
@@ -593,7 +593,7 @@ describe 'SemanticFormBuilder#input' do
           form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :label => "Kustom".freeze))
           end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.concat(form)
           output_buffer.should have_tag("form li label", /Kustom/)
         end
       end
@@ -612,7 +612,7 @@ describe 'SemanticFormBuilder#input' do
                     concat(builder.input(:meta_description))
                   end
 
-                  output_buffer.concat(form) if Formtastic::Util.rails3?
+                  output_buffer.concat(form)
                   output_buffer.should have_tag('form li label', Regexp.new('^' + @localized_label_text))
                 end
               end
@@ -629,7 +629,7 @@ describe 'SemanticFormBuilder#input' do
                 concat(builder.input(:meta_description))
               end
 
-              output_buffer.concat(form) if Formtastic::Util.rails3?
+              output_buffer.concat(form)
               output_buffer.should have_tag("form li label", /#{'meta_description'.humanize}/)
             end
           end
@@ -643,7 +643,7 @@ describe 'SemanticFormBuilder#input' do
                 concat(builder.input(:meta_description))
               end
 
-              output_buffer.concat(form) if Formtastic::Util.rails3?
+              output_buffer.concat(form)
               output_buffer.should have_tag("form li label", /#{'meta_description'.humanize}/)
             end
           end
@@ -657,7 +657,7 @@ describe 'SemanticFormBuilder#input' do
                   concat(builder.input(:meta_description))
                 end
 
-                output_buffer.concat(form) if Formtastic::Util.rails3?
+                output_buffer.concat(form)
                 output_buffer.should have_tag("form li label", /#{'meta_description'.capitalize}/)
               end
             end
@@ -687,7 +687,7 @@ describe 'SemanticFormBuilder#input' do
               concat(builder.input(:title, :label => true))
               concat(builder.input(:published, :as => :boolean, :label => true))
             end
-            output_buffer.concat(form) if Formtastic::Util.rails3?
+            output_buffer.concat(form)
             output_buffer.should have_tag('form li label', Regexp.new('^' + @localized_label_text))
           end
 
@@ -705,7 +705,7 @@ describe 'SemanticFormBuilder#input' do
               concat(builder.input(:title, :label => true))
               concat(builder.input(:published, :as => :boolean, :label => true))
             end
-            output_buffer.concat(form) if Formtastic::Util.rails3?
+            output_buffer.concat(form)
             output_buffer.should have_tag('form li label', Regexp.new('^' + @default_localized_label_text))
           end
         end
@@ -726,7 +726,7 @@ describe 'SemanticFormBuilder#input' do
           form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :hint => hint_text))
           end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.concat(form)
           output_buffer.should have_tag("form li p.inline-hints", hint_text)
         end
 
@@ -735,7 +735,7 @@ describe 'SemanticFormBuilder#input' do
           form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :hint => hint_text, :hint_class => 'custom-hint-class'))
           end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.concat(form)
           output_buffer.should have_tag("form li p.custom-hint-class", hint_text)
         end
 
@@ -745,7 +745,7 @@ describe 'SemanticFormBuilder#input' do
           form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :hint => hint_text))
           end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.concat(form)
           output_buffer.should have_tag("form li p.custom-hint-class", hint_text)
         end
       end
@@ -781,7 +781,7 @@ describe 'SemanticFormBuilder#input' do
               form = semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title, :hint => true))
               end
-              output_buffer.concat(form) if Formtastic::Util.rails3?
+              output_buffer.concat(form)
               output_buffer.should have_tag('form li p.inline-hints', @localized_hint_text)
             end
 
@@ -797,7 +797,7 @@ describe 'SemanticFormBuilder#input' do
               form = semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title, :hint => true, :hint_class => 'custom-hint-class'))
               end
-              output_buffer.concat(form) if Formtastic::Util.rails3?
+              output_buffer.concat(form)
               output_buffer.should have_tag('form li p.custom-hint-class', @localized_hint_text)
             end
 
@@ -805,7 +805,7 @@ describe 'SemanticFormBuilder#input' do
               form = semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title, :hint => true))
               end
-              output_buffer.concat(form) if Formtastic::Util.rails3?
+              output_buffer.concat(form)
               output_buffer.should have_tag('form li p.inline-hints', @default_localized_hint_text)
             end
           end
@@ -815,7 +815,7 @@ describe 'SemanticFormBuilder#input' do
               form = semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title, :hint => false))
               end
-              output_buffer.concat(form) if Formtastic::Util.rails3?
+              output_buffer.concat(form)
               output_buffer.should_not have_tag('form li p.inline-hints', @localized_hint_text)
             end
           end
@@ -843,7 +843,7 @@ describe 'SemanticFormBuilder#input' do
             form = semantic_form_for(@new_post) do |builder|
               concat(builder.input(:title))
             end
-            output_buffer.concat(form) if Formtastic::Util.rails3?
+            output_buffer.concat(form)
             output_buffer.should_not have_tag('form li p.inline-hints')
           end
         end
@@ -858,7 +858,7 @@ describe 'SemanticFormBuilder#input' do
           form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :wrapper_html => {:id => :another_id}))
           end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.concat(form)
           output_buffer.should have_tag("form li#another_id")
         end
 
@@ -866,7 +866,7 @@ describe 'SemanticFormBuilder#input' do
           form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :wrapper_html => {:class => :another_class}, :required => true))
           end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.concat(form)
           output_buffer.should have_tag("form li.string")
           output_buffer.should have_tag("form li.required")
           output_buffer.should have_tag("form li.another_class")
@@ -876,7 +876,7 @@ describe 'SemanticFormBuilder#input' do
           form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :wrapper_html => {:class => [ :my_class, :another_class ]}))
           end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.concat(form)
           output_buffer.should have_tag("form li.string")
           output_buffer.should have_tag("form li.my_class")
           output_buffer.should have_tag("form li.another_class")
@@ -888,7 +888,7 @@ describe 'SemanticFormBuilder#input' do
           form = semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title))
           end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.concat(form)
           output_buffer.should have_tag("form li#post_title_input")
           output_buffer.should have_tag("form li.string")
         end
@@ -907,7 +907,7 @@ describe 'SemanticFormBuilder#input' do
         concat(builder.input(:title, my_options))
         concat(builder.input(:publish_at, my_options))
       end
-      output_buffer.concat(@form) if Formtastic::Util.rails3?
+      output_buffer.concat(@form)
       
       output_buffer.should have_tag 'li.string', :count => 2
     end

@@ -27,7 +27,7 @@ describe "*select: options[:include_blank]" do
         form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(attribute, :as => as))
         end
-        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.concat(form)
         output_buffer.should have_tag("form li select option[@value='']", "")
       end
     end
@@ -38,7 +38,7 @@ describe "*select: options[:include_blank]" do
         form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(attribute, :as => as))
         end
-        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.concat(form)
         output_buffer.should_not have_tag("form li select option[@value='']", "")
       end
     end
@@ -54,7 +54,7 @@ describe "*select: options[:include_blank]" do
         form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(attribute, :as => as, :include_blank => false))
         end
-        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.concat(form)
         output_buffer.should_not have_tag("form li select option[@value='']", "")
       end
     end
@@ -66,7 +66,7 @@ describe "*select: options[:include_blank]" do
         form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(attribute, :as => as, :include_blank => true))
         end
-        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.concat(form)
         output_buffer.should have_tag("form li select option[@value='']", "")
       end
     end

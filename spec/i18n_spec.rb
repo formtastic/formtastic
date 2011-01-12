@@ -116,7 +116,7 @@ describe 'Formtastic::I18n' do
       form = semantic_form_for(@new_post) do |builder|
         concat(builder.input(:title))
       end
-      output_buffer.concat(form) if Formtastic::Util.rails3?
+      output_buffer.concat(form)
       output_buffer.should have_tag("form label", /Hello post!/)
     end
 
@@ -124,7 +124,7 @@ describe 'Formtastic::I18n' do
       form = semantic_form_for(:project, :url => 'http://test.host') do |builder|
         concat(builder.input(:title))
       end
-      output_buffer.concat(form) if Formtastic::Util.rails3?
+      output_buffer.concat(form)
       output_buffer.should have_tag("form label", /Hello project!/)
     end
 
@@ -134,7 +134,7 @@ describe 'Formtastic::I18n' do
           concat(f.input(:name))
         end
       end
-      output_buffer.concat(form) if Formtastic::Util.rails3?
+      output_buffer.concat(form)
       output_buffer.should have_tag("form label", /Hello task name!/)
     end
 
@@ -144,7 +144,7 @@ describe 'Formtastic::I18n' do
           concat(f.input(:name))
         end
       end
-      output_buffer.concat(form) if Formtastic::Util.rails3?
+      output_buffer.concat(form)
       output_buffer.should have_tag("form label", /Hello line item name!/)
     end
 
@@ -152,7 +152,7 @@ describe 'Formtastic::I18n' do
       form = semantic_form_for(@new_post) do |builder|
         concat(builder.input(:author))
       end
-      output_buffer.concat(form) if Formtastic::Util.rails3?
+      output_buffer.concat(form)
       output_buffer.should have_tag("form label", /Written by/)
     end
 

@@ -35,7 +35,7 @@ describe 'string input' do
       form = semantic_form_for(@new_post) do |builder|
         concat(builder.input(method))
       end
-      output_buffer.concat(form) if Formtastic::Util.rails3?
+      output_buffer.concat(form)
       output_buffer.should have_tag("form li input[@maxlength='#{maxlength}']")
     end
 
@@ -87,7 +87,7 @@ describe 'string input' do
             concat(builder.input(:title))
           end
 
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.concat(form)
           output_buffer.should have_tag("form li input##{@new_post.class.name.underscore}_title[@maxlength='#{maxlength}']")
         end
 
@@ -173,7 +173,7 @@ describe 'string input' do
     end
 
     it "should have no size attribute" do
-      output_buffer.concat(@form) if Formtastic::Util.rails3?
+      output_buffer.concat(@form)
       output_buffer.should_not have_tag("input[@size]")
     end
   end

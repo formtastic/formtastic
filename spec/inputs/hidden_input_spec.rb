@@ -23,30 +23,30 @@ describe 'hidden input' do
   it_should_not_have_a_label
 
   it "should generate a input field" do
-    output_buffer.concat(@form) if Formtastic::Util.rails3?
+    output_buffer.concat(@form)
     output_buffer.should have_tag("form li input#post_secret")
     output_buffer.should have_tag("form li input#post_secret[@type=\"hidden\"]")
     output_buffer.should have_tag("form li input#post_secret[@name=\"post[secret]\"]")
   end
 
   it "should pass any explicitly specified value - using :value" do
-    output_buffer.concat(@form) if Formtastic::Util.rails3?
+    output_buffer.concat(@form)
     output_buffer.should have_tag("form li input#post_author_id[@type=\"hidden\"][@value=\"99\"]")
   end
 
   # Handle Formtastic :input_html options for consistency.
   it "should pass any explicitly specified value - using :input_html options" do
-    output_buffer.concat(@form) if Formtastic::Util.rails3?
+    output_buffer.concat(@form)
     output_buffer.should have_tag("form li input#post_published[@type=\"hidden\"][@value=\"true\"]")
   end
 
   it "should pass any option specified using :input_html" do
-    output_buffer.concat(@form) if Formtastic::Util.rails3?
+    output_buffer.concat(@form)
     output_buffer.should have_tag("form li input#new_post_reviewer[@type=\"hidden\"][@class=\"new_post_reviewer\"]")
   end
 
   it "should prefer :input_html over directly supplied options" do
-    output_buffer.concat(@form) if Formtastic::Util.rails3?
+    output_buffer.concat(@form)
     output_buffer.should have_tag("form li input#post_author[@type=\"hidden\"][@value=\"formtastic_value\"]")
   end
 
@@ -59,7 +59,7 @@ describe 'hidden input' do
       concat(builder.input(:secret, :as => :hidden))
     end
 
-    output_buffer.concat(form) if Formtastic::Util.rails3?
+    output_buffer.concat(form)
     output_buffer.should_not have_tag("form li p.inline-errors")
     output_buffer.should_not have_tag("form li ul.errors")
   end
@@ -69,7 +69,7 @@ describe 'hidden input' do
       concat(builder.input(:secret, :as => :hidden, :hint => "all your base are belong to use"))
     end
 
-    output_buffer.concat(form) if Formtastic::Util.rails3?
+    output_buffer.concat(form)
     output_buffer.should_not have_tag("form li p.inline-hints")
     output_buffer.should_not have_tag("form li ul.hints")
   end

@@ -27,7 +27,7 @@ describe 'text input' do
     form = semantic_form_for(@new_post) do |builder|
       concat(builder.input(:title, :as => :text, :input_html => { :class => 'myclass' }))
     end
-    output_buffer.concat(form) if Formtastic::Util.rails3?
+    output_buffer.concat(form)
     output_buffer.should have_tag("form li textarea.myclass")
   end
 
@@ -36,7 +36,7 @@ describe 'text input' do
     form = semantic_form_for(@new_post) do |builder|
       concat(builder.input(:title, :as => :text, :input_html => { :cols => 42 }))
     end
-    output_buffer.concat(form) if Formtastic::Util.rails3?
+    output_buffer.concat(form)
     output_buffer.should have_tag("form li textarea[@cols='42']")
   end
 
@@ -45,7 +45,7 @@ describe 'text input' do
     form = semantic_form_for(@new_post) do |builder|
       concat(builder.input(:title, :as => :text, :input_html => { :cols => nil }))
     end
-    output_buffer.concat(form) if Formtastic::Util.rails3?
+    output_buffer.concat(form)
     output_buffer.should_not have_tag("form li textarea[@cols]")
   end
 
@@ -54,7 +54,7 @@ describe 'text input' do
     form = semantic_form_for(@new_post) do |builder|
       concat(builder.input(:title, :as => :text, :input_html => { :rows => 42 }))
     end
-    output_buffer.concat(form) if Formtastic::Util.rails3?
+    output_buffer.concat(form)
     output_buffer.should have_tag("form li textarea[@rows='42']")
 
   end
@@ -64,7 +64,7 @@ describe 'text input' do
     form = semantic_form_for(@new_post) do |builder|
       concat(builder.input(:title, :as => :text, :input_html => { :rows => nil }))
     end
-    output_buffer.concat(form) if Formtastic::Util.rails3?
+    output_buffer.concat(form)
     output_buffer.should_not have_tag("form li textarea[@rows]")
   end
 
@@ -95,7 +95,7 @@ describe 'text input' do
         form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(:title, :as => :text))
         end
-        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.concat(form)
         output_buffer.should have_tag("form li textarea[@rows='12']")
       end
     end
@@ -105,7 +105,7 @@ describe 'text input' do
         form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(:title, :as => :text))
         end
-        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.concat(form)
         output_buffer.should_not have_tag("form li textarea[@rows]")
       end
 
@@ -122,7 +122,7 @@ describe 'text input' do
         form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(:title, :as => :text))
         end
-        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.concat(form)
         output_buffer.should have_tag("form li textarea[@cols='10']")
       end
     end
@@ -132,7 +132,7 @@ describe 'text input' do
         form = semantic_form_for(@new_post) do |builder|
           concat(builder.input(:title, :as => :text))
         end
-        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.concat(form)
         output_buffer.should_not have_tag("form li textarea[@cols]")
       end
 
