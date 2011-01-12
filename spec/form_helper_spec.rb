@@ -21,7 +21,7 @@ describe 'SemanticFormHelper' do
     it 'adds a class of "formtastic" to the generated form' do
       form = semantic_form_for(@new_post, :url => '/hello') do |builder|
       end
-      output_buffer.concat(form) if Formtastic::Util.rails3?
+      output_buffer.concat(form)
       output_buffer.should have_tag("form.formtastic")
     end
 
@@ -29,45 +29,45 @@ describe 'SemanticFormHelper' do
       ::Formtastic::SemanticFormHelper.default_form_class = 'xyz'
       form = semantic_form_for(::Post.new, :as => :post, :url => '/hello') do |builder|
       end
-      output_buffer.concat(form) if Formtastic::Util.rails3?
+      output_buffer.concat(form)
       output_buffer.should have_tag("form.xyz")
     end
 
     it 'adds class matching the object name to the generated form when a symbol is provided' do
       form = semantic_form_for(@new_post, :url => '/hello') do |builder|
       end
-      output_buffer.concat(form) if Formtastic::Util.rails3?
+      output_buffer.concat(form)
       output_buffer.should have_tag("form.post")
 
       form = semantic_form_for(:project, :url => '/hello') do |builder|
       end
-      output_buffer.concat(form) if Formtastic::Util.rails3?
+      output_buffer.concat(form)
       output_buffer.should have_tag("form.project")
     end
 
     it 'adds class matching the :as option when provided' do
       form = semantic_form_for(@new_post, :as => :message, :url => '/hello') do |builder|
       end
-      output_buffer.concat(form) if Formtastic::Util.rails3?
+      output_buffer.concat(form)
       output_buffer.should have_tag("form.message")
 
       form = semantic_form_for([:admins, @new_post], :as => :message, :url => '/hello') do |builder|
       end
-      output_buffer.concat(form) if Formtastic::Util.rails3?
+      output_buffer.concat(form)
       output_buffer.should have_tag("form.message")
     end
 
     it 'adds class matching the object\'s class to the generated form when an object is provided' do
       form = semantic_form_for(@new_post) do |builder|
       end
-      output_buffer.concat(form) if Formtastic::Util.rails3?
+      output_buffer.concat(form)
       output_buffer.should have_tag("form.post")
     end
 
     it 'adds a namespaced class to the generated form' do
       form = semantic_form_for(::Namespaced::Post.new, :url => '/hello') do |builder|
       end
-      output_buffer.concat(form) if Formtastic::Util.rails3?
+      output_buffer.concat(form)
       output_buffer.should have_tag("form.namespaced_post")
     end
 
@@ -78,17 +78,17 @@ describe 'SemanticFormHelper' do
       end
 
       it 'to add a id of "something-special" to generated form' do
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.concat(@form)
         output_buffer.should have_tag("form#something-special")
       end
 
       it 'to add a class of "something-extra" to generated form' do
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.concat(@form)
         output_buffer.should have_tag("form.something-extra")
       end
 
       it 'to add enctype="multipart/form-data"' do
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.concat(@form)
         output_buffer.should have_tag('form[@enctype="multipart/form-data"]')
       end
     end

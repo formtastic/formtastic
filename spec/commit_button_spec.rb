@@ -39,17 +39,17 @@ describe 'SemanticFormBuilder#commit_button' do
     end
 
     it 'should render a commit li' do
-      output_buffer.concat(@form) if Formtastic::Util.rails3?
+      output_buffer.concat(@form)
       output_buffer.should have_tag('li.commit')
     end
 
     it 'should render an input with a type attribute of "submit"' do
-      output_buffer.concat(@form) if Formtastic::Util.rails3?
+      output_buffer.concat(@form)
       output_buffer.should have_tag('li.commit input[@type="submit"]')
     end
 
     it 'should render an input with a name attribute of "commit"' do
-      output_buffer.concat(@form) if Formtastic::Util.rails3?
+      output_buffer.concat(@form)
       output_buffer.should have_tag('li.commit input[@name="commit"]')
     end
 
@@ -59,7 +59,7 @@ describe 'SemanticFormBuilder#commit_button' do
         concat(builder.commit_button('text', :button_html => {:class => 'my_class', :id => 'my_id'}))
       end
 
-      output_buffer.concat(form) if Formtastic::Util.rails3?
+      output_buffer.concat(form)
       output_buffer.should have_tag('li.commit input#my_id')
       output_buffer.should have_tag('li.commit input.my_class')
     end
@@ -80,7 +80,7 @@ describe 'SemanticFormBuilder#commit_button' do
         form = semantic_form_for(@new_post) do |builder|
           concat(builder.commit_button('text', :button_html => {}))
         end
-        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.concat(form)
         output_buffer.should have_tag('li.commit input[@accesskey="s"]')
       end
     end
@@ -91,7 +91,7 @@ describe 'SemanticFormBuilder#commit_button' do
         form = semantic_form_for(@new_post) do |builder|
           concat(builder.commit_button('text', :accesskey => 'o'))
         end
-        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.concat(form)
         output_buffer.should_not have_tag('li.commit input[@accesskey="s"]')
         output_buffer.should have_tag('li.commit input[@accesskey="o"]')
       end
@@ -103,7 +103,7 @@ describe 'SemanticFormBuilder#commit_button' do
         form = semantic_form_for(@new_post) do |builder|
           concat(builder.commit_button('text', :accesskey => 'o', :button_html => {:accesskey => 't'}))
         end
-        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.concat(form)
         output_buffer.should_not have_tag('li.commit input[@accesskey="s"]')
         output_buffer.should_not have_tag('li.commit input[@accesskey="o"]')
         output_buffer.should have_tag('li.commit input[@accesskey="t"]')
@@ -122,12 +122,12 @@ describe 'SemanticFormBuilder#commit_button' do
     end
 
     it "should render the string as the value of the button" do
-      output_buffer.concat(@form) if Formtastic::Util.rails3?
+      output_buffer.concat(@form)
       output_buffer.should have_tag('li input[@value="a string"]')
     end
 
     it "should deal with the options hash" do
-      output_buffer.concat(@form) if Formtastic::Util.rails3?
+      output_buffer.concat(@form)
       output_buffer.should have_tag('li input.pretty')
     end
 
@@ -143,7 +143,7 @@ describe 'SemanticFormBuilder#commit_button' do
     end
 
     it "should deal with the options hash" do
-      output_buffer.concat(@form) if Formtastic::Util.rails3?
+      output_buffer.concat(@form)
       output_buffer.should have_tag('li input.pretty')
     end
 
@@ -158,7 +158,7 @@ describe 'SemanticFormBuilder#commit_button' do
           form = semantic_form_for(:post, :url => 'http://example.com') do |builder|
             concat(builder.commit_button("Click!"))
           end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.concat(form)
           output_buffer.should have_tag('li.commit input[@value="Click!"][@class~="submit"]')
         end
       end
@@ -177,7 +177,7 @@ describe 'SemanticFormBuilder#commit_button' do
             form = semantic_form_for(:post, :url => 'http://example.com') do |builder|
               concat(builder.commit_button)
             end
-            output_buffer.concat(form) if Formtastic::Util.rails3?
+            output_buffer.concat(form)
             output_buffer.should have_tag('li.commit input[@value="Submit Post"][@class~="submit"]')
           end
         end
@@ -209,7 +209,7 @@ describe 'SemanticFormBuilder#commit_button' do
            form = semantic_form_for(:post, :url => 'http://example.com') do |builder|
              concat(builder.commit_button)
            end
-           output_buffer.concat(form) if Formtastic::Util.rails3?
+           output_buffer.concat(form)
            output_buffer.should have_tag(%Q{li.commit input[@value="Custom Submit Post"][@class~="submit"]})
          end
 
@@ -217,7 +217,7 @@ describe 'SemanticFormBuilder#commit_button' do
            form = semantic_form_for(:post, :url => 'http://example.com') do |builder|
              concat(builder.commit_button)
            end
-           output_buffer.concat(form) if Formtastic::Util.rails3?
+           output_buffer.concat(form)
            output_buffer.should have_tag(%Q{li.commit input[@value="Custom Submit"][@class~="submit"]})
          end
 
@@ -236,7 +236,7 @@ describe 'SemanticFormBuilder#commit_button' do
           form = semantic_form_for(@new_post) do |builder|
             concat(builder.commit_button("Click!"))
           end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.concat(form)
           output_buffer.should have_tag('li.commit input[@value="Click!"][@class~="create"]')
         end
       end
@@ -255,7 +255,7 @@ describe 'SemanticFormBuilder#commit_button' do
             form = semantic_form_for(@new_post) do |builder|
               concat(builder.commit_button)
             end
-            output_buffer.concat(form) if Formtastic::Util.rails3?
+            output_buffer.concat(form)
             output_buffer.should have_tag('li.commit input[@value="Create Post"][@class~="create"]')
           end
         end
@@ -287,7 +287,7 @@ describe 'SemanticFormBuilder#commit_button' do
             form = semantic_form_for(@new_post) do |builder|
               concat(builder.commit_button)
             end
-            output_buffer.concat(form) if Formtastic::Util.rails3?
+            output_buffer.concat(form)
             output_buffer.should have_tag(%Q{li.commit input[@value="Custom Create Post"][@class~="create"]})
           end
 
@@ -295,7 +295,7 @@ describe 'SemanticFormBuilder#commit_button' do
             form = semantic_form_for(@new_post) do |builder|
               concat(builder.commit_button)
             end
-            output_buffer.concat(form) if Formtastic::Util.rails3?
+            output_buffer.concat(form)
             output_buffer.should have_tag(%Q{li.commit input[@value="Custom Create"][@class~="create"]})
           end
 
@@ -314,7 +314,7 @@ describe 'SemanticFormBuilder#commit_button' do
           form = semantic_form_for(@new_post) do |builder|
             concat(builder.commit_button("Click!"))
           end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.concat(form)
           output_buffer.should have_tag('li.commit input[@value="Click!"][@class~="update"]')
         end
       end
@@ -333,7 +333,7 @@ describe 'SemanticFormBuilder#commit_button' do
             form = semantic_form_for(@new_post) do |builder|
               concat(builder.commit_button)
             end
-            output_buffer.concat(form) if Formtastic::Util.rails3?
+            output_buffer.concat(form)
             output_buffer.should have_tag('li.commit input[@value="Save Post"][@class~="update"]')
           end
         end
@@ -366,7 +366,7 @@ describe 'SemanticFormBuilder#commit_button' do
             form = semantic_form_for(@new_post) do |builder|
               concat(builder.commit_button)
             end
-            output_buffer.concat(form) if Formtastic::Util.rails3?
+            output_buffer.concat(form)
             output_buffer.should have_tag(%Q{li.commit input[@value="Custom Save Post"][@class~="update"]})
           end
 
@@ -374,7 +374,7 @@ describe 'SemanticFormBuilder#commit_button' do
             form = semantic_form_for(@new_post) do |builder|
               concat(builder.commit_button)
             end
-            output_buffer.concat(form) if Formtastic::Util.rails3?
+            output_buffer.concat(form)
             output_buffer.should have_tag(%Q{li.commit input[@value="Custom Save"][@class~="update"]})
             ::I18n.backend.store_translations :en, :formtastic => {}
           end
@@ -411,7 +411,7 @@ describe 'SemanticFormBuilder#commit_button' do
     end
 
     it "should render the string as the value of the button" do
-      output_buffer.concat(@form) if Formtastic::Util.rails3?
+      output_buffer.concat(@form)
       output_buffer.should have_tag('li input[@value="Create User post"]')
     end
 
@@ -424,7 +424,7 @@ describe 'SemanticFormBuilder#commit_button' do
         form = semantic_form_for(@new_post) do |builder|
           concat(builder.commit_button('text', :wrapper_html => {:id => :another_id}))
         end
-        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.concat(form)
         output_buffer.should have_tag("form li#another_id")
       end
 
@@ -432,7 +432,7 @@ describe 'SemanticFormBuilder#commit_button' do
         form = semantic_form_for(@new_post) do |builder|
           concat(builder.commit_button('text', :wrapper_html => {:class => :another_class}))
         end
-        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.concat(form)
         output_buffer.should have_tag("form li.commit")
         output_buffer.should have_tag("form li.another_class")
       end
@@ -441,7 +441,7 @@ describe 'SemanticFormBuilder#commit_button' do
         form = semantic_form_for(@new_post) do |builder|
           concat(builder.commit_button('text', :wrapper_html => {:class => [ :my_class, :another_class ]}))
         end
-        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.concat(form)
         output_buffer.should have_tag("form li.commit")
         output_buffer.should have_tag("form li.my_class")
         output_buffer.should have_tag("form li.another_class")
@@ -453,7 +453,7 @@ describe 'SemanticFormBuilder#commit_button' do
         form = semantic_form_for(@new_post) do |builder|
           concat(builder.commit_button('text'))
         end
-        output_buffer.concat(form) if Formtastic::Util.rails3?
+        output_buffer.concat(form)
         output_buffer.should have_tag("form li.commit")
       end
     end

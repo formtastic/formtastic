@@ -142,7 +142,7 @@ describe 'SemanticFormBuilder#errors_on' do
           concat(builder.input(:document))
         end
       end 
-      output_buffer.concat(@form) if Formtastic::Util.rails3?
+      output_buffer.concat(@form)
       output_buffer.should have_tag("li[@class='file optional error']")
       output_buffer.should have_tag('p.inline-errors', (['must be an image','must be provided', 'must be less than 4mb']).to_sentence)
     end
@@ -161,7 +161,7 @@ describe 'SemanticFormBuilder#errors_on' do
           concat(builder.input(:author))
         end
       end
-      output_buffer.concat(@form) if Formtastic::Util.rails3?
+      output_buffer.concat(@form)
       output_buffer.should have_tag("ul.errors li", /must not be blank/, :count => 1)
       output_buffer.should have_tag("ul.errors li", /is already taken/, :count => 1)
     end

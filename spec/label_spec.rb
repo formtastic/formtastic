@@ -35,7 +35,7 @@ describe 'SemanticFormBuilder#label' do
       form = semantic_form_for(:project, :url => 'http://test.host') do |builder|
         concat(builder.input(:author_id, :as => :check_boxes, :collection => [:a, :b, :c], :value_method => :to_s, :label_method => proc {|f| ('Label_%s' % [f])}))
       end
-      output_buffer.concat(form) if Formtastic::Util.rails3?
+      output_buffer.concat(form)
       output_buffer.should have_tag('form li fieldset ol li label', :with => /Label_[abc]/, :count => 3)
     end
 
@@ -43,7 +43,7 @@ describe 'SemanticFormBuilder#label' do
       form = semantic_form_for(:project, :url => 'http://test.host') do |builder|
         concat(builder.input(:author_id, :as => :check_boxes, :collection => [:a, :b, :c], :value_method => proc {|f| ('Value_%s' % [f.to_s])}))
       end
-      output_buffer.concat(form) if Formtastic::Util.rails3?
+      output_buffer.concat(form)
       output_buffer.should have_tag('form li fieldset ol li label input[value="Value_a"]')
       output_buffer.should have_tag('form li fieldset ol li label input[value="Value_b"]')
       output_buffer.should have_tag('form li fieldset ol li label input[value="Value_c"]')
