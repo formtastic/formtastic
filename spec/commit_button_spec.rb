@@ -10,24 +10,6 @@ describe 'SemanticFormBuilder#commit_button' do
     mock_everything
   end
 
-  describe 'when the object responds to :new_record? (Rails 2)' do
-
-    before do
-      @new_post.stub(:respond_to?).with(:to_model).and_return("X")
-      @new_post.stub(:respond_to?).with(:persisted?).and_return(false)
-      @new_post.stub(:respond_to?).with(:new_record?).and_return(true)
-    end
-
-    it 'should call :new_record?' do
-      @new_post.should_receive(:new_record?)
-      @new_post.should_not_receive(:persisted?)
-      semantic_form_for(@new_post) do |builder|
-        concat(builder.commit_button)
-      end
-    end
-
-  end
-
   describe 'when the object responds to :persisted? (ActiveModel)' do
 
     before do

@@ -342,11 +342,7 @@ module Formtastic #:nodoc:
       text = options.delete(:label) || args.shift
 
       if @object && (@object.respond_to?(:persisted?) || @object.respond_to?(:new_record?))
-        if @object.respond_to?(:persisted?) # ActiveModel
-          key = @object.persisted? ? :update : :create
-        else # Rails 2
-          key = @object.new_record? ? :create : :update
-        end
+        key = @object.persisted? ? :update : :create
 
         # Deal with some complications with ActiveRecord::Base.human_name and two name models (eg UserPost)
         # ActiveRecord::Base.human_name falls back to ActiveRecord::Base.name.humanize ("Userpost")
@@ -571,14 +567,14 @@ module Formtastic #:nodoc:
                                'but the block does not accept any argument.' if block.arity <= 0
           lambda do |f|
             contents = f.inputs(*args){ block.call(f) }
-            template.concat(contents) if ::Formtastic::Util.rails3?
-            contents
+            template.concat(contents)
+            contents # TODO: needed in Rails 3?
           end
         else
           lambda do |f|
             contents = f.inputs(*args)
-            template.concat(contents) if ::Formtastic::Util.rails3?
-            contents
+            template.concat(contents)
+            contents # TODO: needed in Rails 3?
           end
         end
 
@@ -1334,8 +1330,7 @@ module Formtastic #:nodoc:
       end
 
       # Generates a fieldset and wraps the content in an ordered list. When working
-      # with nested attributes (in Rails 2.3), it allows %i as interpolation option
-      # in :name. So you can do:
+      # with nested attributes, it allows %i as interpolation option in :name. So you can do:
       #
       #   f.inputs :name => 'Task #%i', :for => :tasks
       #
@@ -1374,7 +1369,6 @@ module Formtastic #:nodoc:
           html_options.except(:builder, :parent)
         )
 
-        template.concat(fieldset) if block_given? && !Formtastic::Util.rails3?
         fieldset
       end
 
@@ -1676,8 +1670,8 @@ module Formtastic #:nodoc:
       def default_string_options(method, type) #:nodoc:
         def get_maxlength_for(method)
           validation = validations_for(method).find do |validation|
-            (validation.respond_to?(:macro) && validation.macro == :validates_length_of) || # Rails 2 validation
-            (validation.respond_to?(:kind) && validation.kind == :length) # Rails 3 validator
+            (validation.respond_to?(:macro) && validation.macro == :validates_length_of) || # Rails 2 + 3 style validation
+            (validation.respond_to?(:kind) && validation.kind == :length) # Rails 3 style validator
           end
 
           if validation
@@ -1720,20 +1714,14 @@ module Formtastic #:nodoc:
         [@@custom_namespace, sanitized_object_name, index, sanitized_method_name, value].reject{|x|x.blank?}.join('_')
       end
 
-      # Gets the nested_child_index value from the parent builder. In Rails 2.3
-      # it always returns a fixnum. In next versions it returns a hash with each
+      # Gets the nested_child_index value from the parent builder. It returns a hash with each
       # association that the parent builds.
-      #
       def parent_child_index(parent) #:nodoc:
         duck = parent[:builder].instance_variable_get('@nested_child_index')
 
-        if duck.is_a?(Hash)
-          child = parent[:for]
-          child = child.first if child.respond_to?(:first)
-          duck[child].to_i + 1
-        else
-          duck.to_i + 1
-        end
+        child = parent[:for]
+        child = child.first if child.respond_to?(:first)
+        duck[child].to_i + 1
       end
 
       def sanitized_object_name #:nodoc:
