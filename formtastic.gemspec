@@ -27,6 +27,7 @@ Gem::Specification.new do |s|
   Find out more and get involved:
     http://github.com/justinfrench/formtastic
     http://groups.google.com.au/group/formtastic
+    http://twitter.com/formtastic
   ========================================================================
   }
   s.rdoc_options = ["--charset=UTF-8"]
