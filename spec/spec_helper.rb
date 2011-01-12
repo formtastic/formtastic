@@ -37,14 +37,6 @@ module FormtasticSpecHelper
 
   include Formtastic::SemanticFormHelper
 
-  def rails3?
-    ActionPack::VERSION::MAJOR > 2
-  end
-
-  def rails2?
-    ActionPack::VERSION::MAJOR == 2
-  end
-
   def default_input_type(column_type, column_name = :generic_column_name)
     @new_post.stub!(column_name)
     @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => column_type)) unless column_type.nil?
