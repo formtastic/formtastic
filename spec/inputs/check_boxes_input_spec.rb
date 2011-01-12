@@ -163,12 +163,9 @@ describe 'check_boxes input' do
         end
         output_buffer.concat(form)
 
-        ## This should work, but it's emits deprecation warnings under Rails 2
-        ## TODO: revisit in 2.0 when we drop Rails 2. Simpler test follows.
-        #output_buffer.should have_tag('form li fieldset ol li label') do |label|
-        #  label.body.should match /&lt;b&gt;Item [12]&lt;\/b&gt;$/
-        #end
-        output_buffer.should  =~ /&lt;b&gt;Item [12]&lt;\/b&gt;/
+        output_buffer.should have_tag('form li fieldset ol li label') do |label|
+          label.body.should match /&lt;b&gt;Item [12]&lt;\/b&gt;$/
+        end
       end
     end
 
