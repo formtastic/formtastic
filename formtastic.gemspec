@@ -19,12 +19,10 @@ Gem::Specification.new do |s|
   ------------------------------------------------------------------------
   You can now (optionally) run the generator to copy some stylesheets and
   a config initializer into your application:
-    rails generate formtastic:install # Rails 3
-    ./script/generate formtastic      # Rails 2
+    rails generate formtastic:install
 
   To generate some semantic form markup for your existing models, just run:
-    rails generate formtastic:form MODEL_NAME # Rails 3
-    ./script/generate form MODEL_NAME         # Rails 2
+    rails generate formtastic:form MODEL_NAME
 
   Find out more and get involved:
     http://github.com/justinfrench/formtastic
@@ -35,15 +33,8 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.6}
 
-  s.add_dependency(%q<activesupport>, [">= 2.3.7"])
-  s.add_dependency(%q<actionpack>, [">= 2.3.7"])
-  s.add_dependency(%q<i18n>, ["~> 0.4"])
-  
-  if ENV['RAILS_2']
-    s.add_development_dependency(%q<rails>, ["~> 2.3.8"])
-  else
-    s.add_development_dependency(%q<rails>, [">= 3.0.0"])
-  end
+  s.add_dependency(%q<rails>, ["~> 3.0.0"])
+
   s.add_development_dependency(%q<rspec-rails>, ["~> 2.0.0"])
   s.add_development_dependency(%q<rspec_tag_matchers>, [">= 1.0.0"])
   s.add_development_dependency(%q<hpricot>, ["~> 0.8.3"])
