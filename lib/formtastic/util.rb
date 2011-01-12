@@ -14,17 +14,12 @@ module Formtastic
     # @return [String] `text`, marked as HTML-safe
     def html_safe(text)
       return text if text.nil?
-      return text.html_safe if defined?(ActiveSupport::SafeBuffer)
-      return text.html_safe! if text.respond_to?(:html_safe!)
+      return text.html_safe
       text
     end
 
     def rails_safe_buffer_class
-      # It's important that we check ActiveSupport first,
-      # because in Rails 2.3.6 ActionView::SafeBuffer exists
-      # but is a deprecated proxy object.
-      return ActiveSupport::SafeBuffer if defined?(ActiveSupport::SafeBuffer)
-      return ActionView::SafeBuffer
+      return ActiveSupport::SafeBuffer
     end
 
     def rails3?
