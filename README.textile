@@ -46,7 +46,7 @@ h2. It's better than _SomeOtherFormBuilder_ because...
 
 * it can handle @belongs_to@ associations (like Post belongs_to :author), rendering a select or set of radio inputs with choices from the parent model.
 * it can handle @has_many@ and @has_and_belongs_to_many@ associations (like: Post has_many :tags), rendering a multi-select with choices from the child models.
-* it's Rails 2.x and 3.x compatible (including nested forms).
+* it's Rails 3 compatible (including nested forms).
 * it has internationalization (I18n)!
 * it's _really_ quick to get started with a basic form in place (4 lines), then go back to add in more detail if you need it.
 * there's heaps of elements, id and class attributes for you to hook in your CSS and JS.
@@ -81,24 +81,18 @@ RDoc documentation _should_ be automatically generated after each commit and mad
 
 h2. Installation
 
-Formtastic is now compatible with both Rails 2 and Rails 3, and the gem is "hosted":http://rubygems.org/gems/formtastic on RubyGems.org.
-
-*You'll need to use Bundler (yes, even under Rails 2, due to the many ways gem dependencies suck). Follow "this tutorial":http://gembundler.com/rails23.html.*
+Formtastic 2 compatible with Rails 3 only, and the gem is "hosted":http://rubygems.org/gems/formtastic on RubyGems.org.
 
 Simply add Formtastic to your Gemfile and bundle it up:
 
 <pre>
-  gem 'formtastic', '~> 1.1.0'
+  gem 'formtastic', '~> 2.0.0'
 </pre>
 
 Optionally, run the generator to copy some stylesheets and a configuration initializer into your application:
 
 <pre>
-  # Rails 3:
   $ rails generate formtastic:install 
-  
-  # Or Rails 2:
-  $ ./script/generate formtastic 
 </pre>
 
 
@@ -113,31 +107,6 @@ A proof-of-concept stylesheet is provided which you can include in your layout. 
     ...
   </head>
 </pre>
-
-
-h2. Syntax
-
-*Please note:* Formtastic makes use of a lot of ERB blocks and currently supports both Rails 2 and Rails 3, which means the syntax in these examples will differ depending on which version of Rails you're using.
-
-The difference is subtle, with most blocks in Rails 3 requiring the addition of an equals sign:
-
-<pre>
-  <!-- Rails 2 -->
-  <% semantic_form_for @user do |form| %>
-    <% form.inputs do %>
-      ...
-    <% end %>
-  <% end %>
-  
-  <!-- Rails 3 -->
-  <%= semantic_form_for @user do |form| %>
-    <%= form.inputs do %>
-      ...
-    <% end %>
-  <% end %>
-</pre>
-  
-This README is currently documenting the Rails 2 way only. If you're using Rails 3 and your forms aren't rendering everything as expected, try changing @<%@ to @<%=@.
 
 
 h2. Usage
@@ -519,7 +488,7 @@ If you have the "ValidationReflection":http://github.com/redinger/validation_ref
 
 h2. Configuration
 
-Run @rails generate formtastic:install@ (Rails 3) or @./script/generate formtastic@ (Rails 2) to copy a commented out config file into @config/initializers/formtastic.rb@. You can "view the configuration file on GitHub":http://github.com/justinfrench/formtastic/blob/master/generators/formtastic/templates/formtastic.rb
+Run @rails generate formtastic:install@ to copy a commented out config file into @config/initializers/formtastic.rb@. You can "view the configuration file on GitHub":http://github.com/justinfrench/formtastic/blob/master/generators/formtastic/templates/formtastic.rb
 
 
 h2. Form Generator
@@ -528,16 +497,8 @@ There's a Formtastic form code generator to make your transition to Formtastic e
 
 h3. Basic usage
 
-Rails 3:
-
 <pre>
   $ rails generate formtastic:form ModelName
-</pre>
-
-Rails 2:
-
-<pre>
-  $ ./script/generate form ModelName
 </pre>
 
 The results are something like this, with the ERB code printed out to the terminal 
@@ -629,8 +590,8 @@ There are none, but...
 
 h2. Compatibility
 
-* We're only testing Formtastic with the latest Rails 2.x and 3.x stable releases. Patches are welcome to allow backwards compatibility with older versions of Rails, of course.
-* Formtastic, much like Rails 2, is very ActiveRecord-centric. Many people are using Formtastic (especially the rails3 branch) successfully with other ActiveModel-like ORMs and classes (DataMapper, MongoMapper, Mongoid, Authlogic, Devise...) but we're not guaranteeing anything at this stage. Patches are welcome, but it's not our core focus right now.
+* We're only testing Formtastic with the latest Rails stable release. Patches are welcome to allow backwards compatibility with previous versions of Rails, of course, but we've dropped support for Rails 2. Formtastic 1.x is compatible with Rails 2, and is being maintained for bug fixes only. See the README in the "1.2-stable branch":https://github.com/justinfrench/formtastic/tree/1.2-stable.
+* Formtastic, much like Rails, is very ActiveRecord-centric. Many people are using Formtastic successfully with other ActiveModel-like ORMs and classes (DataMapper, MongoMapper, Mongoid, Authlogic, Devise...) but we're not guaranteeing full compatibility at this stage. Patches are welcome.
  
 
 h2. How to contribute
@@ -642,22 +603,6 @@ Please also keep your commits *atomic* so that they are more likely to apply cle
 For significant changes, you may wish to discuss your idea on the Formtastic Google group before coding to ensure that your change is likely to be accepted.  Formtastic relies heavily on i18n, so if you're unsure of the impact this has on your changes, please discuss them with the group.
 
 See below for installation of a development environment.
-
-
-h2. Development Environment
-
-We currently support both Rails 2 and Rails 3, under Ruby 1.8.7-ish (and 1.9.2-ish). That means, at a bare minimum, you'll want to set-up two rvm gemsets to run your specs against. So, fork the project on Github, clone it, make some gemsets, run bundler, run your specs and then finally set-up an .rvmrc file that specifies Rails 3 as your default gemset and cd back into that directory to load in the .rvmrc file. Something like this:
-
-<pre>
-  $ cd ~/code/formtastic
-  $ rvm gemset create formtastic      # If that's your thing
-  $ rvm gemset use formtastic         # Add that to your .rvmrc too
-  $ bundle install                    # Initial bundle command to build Gemfile.lock
-  $ RAILS_2=true bundle update rails  # Updates gemfile to run agains rails 2
-  $ RAILS_2=true rake                 # Run tests against rails 2
-  $ bundle update rails               # Updates gemfile to run agains rails 3
-  $ rake                              # Run tests against rails 3
-</pre>
 
 
 h2. Maintainers & Contributors
