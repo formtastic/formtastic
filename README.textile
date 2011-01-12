@@ -4,6 +4,15 @@ Formtastic is a Rails FormBuilder DSL (with some other goodies) to make it far e
 
 <a href='http://www.pledgie.com/campaigns/2178'><img alt='Click here to lend your support to: formtastic and make a donation at www.pledgie.com !' src='http://pledgie.com/campaigns/2178.png?skin_name=chrome' border='0' /></a>
 
+
+h2. Compatibility
+
+* Formtastic 1.x is compatible with both Rails 2 and 3, and is being maintained for bug fixes in the the "1.2-stable branch":https://github.com/justinfrench/formtastic/tree/1.2-stable.
+* Formtastic 2.0 will be Rails 3.x compatible only
+* If you're bundling Formtastic from edge/master, get ready for a bumpy ride. Try the "1.2-stable branch":https://github.com/justinfrench/formtastic/tree/1.2-stable.
+* Formtastic, much like Rails, is very ActiveRecord-centric. Many are successfully using other ActiveModel-like ORMs and objects (DataMapper, MongoMapper, Mongoid, Authlogic, Devise...) but we're not guaranteeing full compatibility at this stage. Patches are welcome!
+ 
+
 h2. The Story
 
 One day, I finally had enough, so I opened up my text editor, and wrote a DSL for how I'd like to author forms:
@@ -81,7 +90,7 @@ RDoc documentation _should_ be automatically generated after each commit and mad
 
 h2. Installation
 
-Formtastic 2 compatible with Rails 3 only, and the gem is "hosted":http://rubygems.org/gems/formtastic on RubyGems.org.
+Formtastic edge (2.0) will be compatible with Rails 3 only, and the gem is "hosted":http://rubygems.org/gems/formtastic on RubyGems.org.
 
 Simply add Formtastic to your Gemfile and bundle it up:
 
@@ -587,12 +596,6 @@ There are none, but...
 * if you want to use the @:country@ input, you'll need to install the "iso-3166-country-select plugin":http://github.com/rails/iso-3166-country-select (or any other country_select plugin with the same API).
 * "rspec":http://github.com/dchelimsky/rspec/, "rspec_hpricot_matchers":http://rubyforge.org/projects/rspec-hpricot/ and "rcov":http://github.com/relevance/rcov gems (plus any of their own dependencies) are required for the test suite.
 
-
-h2. Compatibility
-
-* We're only testing Formtastic with the latest Rails stable release. Patches are welcome to allow backwards compatibility with previous versions of Rails, of course, but we've dropped support for Rails 2. Formtastic 1.x is compatible with Rails 2, and is being maintained for bug fixes only. See the README in the "1.2-stable branch":https://github.com/justinfrench/formtastic/tree/1.2-stable.
-* Formtastic, much like Rails, is very ActiveRecord-centric. Many people are using Formtastic successfully with other ActiveModel-like ORMs and classes (DataMapper, MongoMapper, Mongoid, Authlogic, Devise...) but we're not guaranteeing full compatibility at this stage. Patches are welcome.
- 
 
 h2. How to contribute
 
