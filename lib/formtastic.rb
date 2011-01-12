@@ -568,13 +568,11 @@ module Formtastic #:nodoc:
           lambda do |f|
             contents = f.inputs(*args){ block.call(f) }
             template.concat(contents)
-            contents # TODO: needed in Rails 3?
           end
         else
           lambda do |f|
             contents = f.inputs(*args)
             template.concat(contents)
-            contents # TODO: needed in Rails 3?
           end
         end
 
