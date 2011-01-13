@@ -286,7 +286,7 @@ module Formtastic #:nodoc:
       html_options = args.extract_options!
       html_options[:class] ||= "inputs"
       html_options[:name] = title
-
+      
       if html_options[:for] # Nested form
         inputs_for_nested_attributes(*(args << html_options), &block)
       elsif block_given?
@@ -569,7 +569,6 @@ module Formtastic #:nodoc:
         fields_for_block = if block_given?
           raise ArgumentError, 'You gave :for option with a block to inputs method, ' <<
                                'but the block does not accept any argument.' if block.arity <= 0
-
           lambda do |f|
             contents = f.inputs(*args){ block.call(f) }
             template.concat(contents) if ::Formtastic::Util.rails3?
@@ -1356,7 +1355,7 @@ module Formtastic #:nodoc:
         contents = args.last.is_a?(::Hash) ? '' : args.pop.flatten
         html_options = args.extract_options!
 
-        legend  = html_options.delete(:name).to_s
+        legend  = html_options.dup.delete(:name).to_s
         legend %= parent_child_index(html_options[:parent]) if html_options[:parent]
         legend  = template.content_tag(:legend, template.content_tag(:span, Formtastic::Util.html_safe(legend))) unless legend.blank?
 
