@@ -113,46 +113,41 @@ describe 'Formtastic::I18n' do
     end
 
     it "should be able to translate with namespaced object" do
-      form = semantic_form_for(@new_post) do |builder|
+      concat(semantic_form_for(@new_post) do |builder|
         concat(builder.input(:title))
-      end
-      output_buffer.concat(form)
+      end)
       output_buffer.should have_tag("form label", /Hello post!/)
     end
 
     it "should be able to translate without form-object" do
-      form = semantic_form_for(:project, :url => 'http://test.host') do |builder|
+      concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
         concat(builder.input(:title))
-      end
-      output_buffer.concat(form)
+      end)
       output_buffer.should have_tag("form label", /Hello project!/)
     end
 
     it 'should be able to translate nested objects with nested translations' do
-      form = semantic_form_for(:project, :url => 'http://test.host') do |builder|
+      concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
         builder.semantic_fields_for(:task) do |f|
           concat(f.input(:name))
         end
-      end
-      output_buffer.concat(form)
+      end)
       output_buffer.should have_tag("form label", /Hello task name!/)
     end
 
     it 'should be able to translate nested objects with top level translations' do
-      form = semantic_form_for(:order, :url => 'http://test.host') do |builder|
+      concat(semantic_form_for(:order, :url => 'http://test.host') do |builder|
         builder.semantic_fields_for(:line_item) do |f|
           concat(f.input(:name))
         end
-      end
-      output_buffer.concat(form)
+      end)
       output_buffer.should have_tag("form label", /Hello line item name!/)
     end
 
     it 'should be able to translate helper label as Rails does' do
-      form = semantic_form_for(@new_post) do |builder|
+      concat(semantic_form_for(@new_post) do |builder|
         concat(builder.input(:author))
-      end
-      output_buffer.concat(form)
+      end)
       output_buffer.should have_tag("form label", /Written by/)
     end
 

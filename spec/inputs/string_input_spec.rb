@@ -12,9 +12,9 @@ describe 'string input' do
 
   describe "when object is provided" do
     before do
-      @form = semantic_form_for(@new_post) do |builder|
+      concat(semantic_form_for(@new_post) do |builder|
         concat(builder.input(:title, :as => :string))
-      end
+      end)
     end
 
     it_should_have_input_wrapper_with_class(:string)
@@ -32,10 +32,9 @@ describe 'string input' do
     it_should_apply_error_logic_for_input_type(:string)
 
     def input_field_for_method_should_have_maxlength(method, maxlength)
-      form = semantic_form_for(@new_post) do |builder|
+      concat(semantic_form_for(@new_post) do |builder|
         concat(builder.input(method))
-      end
-      output_buffer.concat(form)
+      end)
       output_buffer.should have_tag("form li input[@maxlength='#{maxlength}']")
     end
 
@@ -83,11 +82,10 @@ describe 'string input' do
             active_model_length_validator([:title], options[:options])
           ])
 
-          form = semantic_form_for(@new_post) do |builder|
+          concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title))
-          end
+          end)
 
-          output_buffer.concat(form)
           output_buffer.should have_tag("form li input##{@new_post.class.name.underscore}_title[@maxlength='#{maxlength}']")
         end
 
@@ -141,9 +139,9 @@ describe 'string input' do
   describe "when namespace is provided" do
 
     before do
-      @form = semantic_form_for(@new_post, :namespace => 'context2') do |builder|
+      concat(semantic_form_for(@new_post, :namespace => 'context2') do |builder|
         concat(builder.input(:title, :as => :string))
-      end
+      end)
     end
 
     it_should_have_input_wrapper_with_id("context2_post_title_input")
@@ -153,9 +151,9 @@ describe 'string input' do
 
   describe "when no object is provided" do
     before do
-      @form = semantic_form_for(:project, :url => 'http://test.host/') do |builder|
+      concat(semantic_form_for(:project, :url => 'http://test.host/') do |builder|
         concat(builder.input(:title, :as => :string))
-      end
+      end)
     end
 
     it_should_have_label_with_text(/Title/)
@@ -167,13 +165,12 @@ describe 'string input' do
 
   describe "when size is nil" do
     before do
-      @form = semantic_form_for(:project, :url => 'http://test.host/') do |builder|
+      concat(semantic_form_for(:project, :url => 'http://test.host/') do |builder|
         concat(builder.input(:title, :as => :string, :input_html => {:size => nil}))
-      end
+      end)
     end
 
     it "should have no size attribute" do
-      output_buffer.concat(@form)
       output_buffer.should_not have_tag("input[@size]")
     end
   end
