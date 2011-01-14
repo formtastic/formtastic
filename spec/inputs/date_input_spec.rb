@@ -14,9 +14,9 @@ describe 'date input' do
 
     before do
       output_buffer.replace ''
-      @form = semantic_form_for(@new_post) do |builder|
+      concat(semantic_form_for(@new_post) do |builder|
         concat(builder.input(:publish_at, :as => :date, :order => [:year, :month, :day]))
-      end
+      end)
     end
 
     it_should_have_input_wrapper_with_class("date")
@@ -25,12 +25,10 @@ describe 'date input' do
     it_should_apply_error_logic_for_input_type(:date)
 
     it 'should have a legend and label with the label text inside the fieldset' do
-      output_buffer.concat(@form)
       output_buffer.should have_tag('form li.date fieldset legend.label label', /Publish at/)
     end
 
     it 'should associate the legend label with the first select' do
-      output_buffer.concat(@form)
       output_buffer.should have_tag('form li.date fieldset legend.label')
       output_buffer.should have_tag('form li.date fieldset legend.label label')
       output_buffer.should have_tag('form li.date fieldset legend.label label[@for]')
@@ -38,13 +36,11 @@ describe 'date input' do
     end
 
     it 'should have an ordered list of three items inside the fieldset' do
-      output_buffer.concat(@form)
       output_buffer.should have_tag('form li.date fieldset ol')
       output_buffer.should have_tag('form li.date fieldset ol li', :count => 3)
     end
 
     it 'should have three labels for year, month and day' do
-      output_buffer.concat(@form)
       output_buffer.should have_tag('form li.date fieldset ol li label', :count => 3)
       output_buffer.should have_tag('form li.date fieldset ol li label', /year/i)
       output_buffer.should have_tag('form li.date fieldset ol li label', /month/i)
@@ -52,7 +48,6 @@ describe 'date input' do
     end
 
     it 'should have three selects for year, month and day' do
-      output_buffer.concat(@form)
       output_buffer.should have_tag('form li.date fieldset ol li select', :count => 3)
     end
   end
@@ -61,9 +56,9 @@ describe 'date input' do
 
     before do
       output_buffer.replace ''
-      @form = semantic_form_for(@new_post, :namespace => "context2") do |builder|
+      concat(semantic_form_for(@new_post, :namespace => "context2") do |builder|
         concat(builder.input(:publish_at, :as => :date, :order => [:year, :month, :day]))
-      end
+      end)
     end
 
     it_should_have_input_wrapper_with_id("context2_post_publish_at_input")
@@ -78,10 +73,9 @@ describe 'date input' do
     fields.each do |field|
       it "should replace the #{field} label with the specified text if :labels[:#{field}] is set" do
         output_buffer.replace ''
-        form = semantic_form_for(@new_post) do |builder|
+        concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:created_at, :as => :date, :labels => { field => "another #{field} label" }))
-        end
-        output_buffer.concat(form)
+        end)
         output_buffer.should have_tag('form li.date fieldset ol li label', :count => fields.length)
         fields.each do |f|
           output_buffer.should have_tag('form li.date fieldset ol li label', f == field ? /another #{f} label/i : /#{f}/i)
@@ -90,10 +84,9 @@ describe 'date input' do
 
       it "should not display the label for the #{field} field when :labels[:#{field}] is blank" do
         output_buffer.replace ''
-        form = semantic_form_for(@new_post) do |builder|
+        concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:created_at, :as => :date, :labels => { field => "" }))
-        end
-        output_buffer.concat(form)
+        end)
         output_buffer.should have_tag('form li.date fieldset ol li label', :count => fields.length-1)
         fields.each do |f|
           output_buffer.should have_tag('form li.date fieldset ol li label', /#{f}/i) unless field == f
