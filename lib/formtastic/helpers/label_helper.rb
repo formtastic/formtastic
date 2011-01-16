@@ -42,6 +42,29 @@ module Formtastic
         input_name = options.delete(:input_name) || method
         super(input_name, text, options)
       end
+      
+      protected
+      
+      # Generates the required or optional string. If the value set is a proc,
+      # it evaluates the proc first.
+      #
+      def required_or_optional_string(required) #:nodoc:
+        string_or_proc = case required
+          when true
+            required_string
+          when false
+            optional_string
+          else
+            required
+        end
+  
+        if string_or_proc.is_a?(Proc)
+          string_or_proc.call
+        else
+          string_or_proc.to_s
+        end
+      end
+      
     end
   end
 end

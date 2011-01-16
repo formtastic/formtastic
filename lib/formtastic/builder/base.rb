@@ -143,27 +143,7 @@ module Formtastic
           error_class = options[:error_class] || default_inline_error_class
           template.content_tag(:p, Formtastic::Util.html_safe(errors.first.untaint), :class => error_class)
         end
-    
-        # Generates the required or optional string. If the value set is a proc,
-        # it evaluates the proc first.
-        #
-        def required_or_optional_string(required) #:nodoc:
-          string_or_proc = case required
-            when true
-              required_string
-            when false
-              optional_string
-            else
-              required
-          end
-    
-          if string_or_proc.is_a?(Proc)
-            string_or_proc.call
-          else
-            string_or_proc.to_s
-          end
-        end
-    
+        
         # Generates a fieldset and wraps the content in an ordered list. When working
         # with nested attributes, it allows %i as interpolation option in :name. So you can do:
         #
