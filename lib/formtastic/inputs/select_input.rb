@@ -165,6 +165,17 @@ module Formtastic
         collection
       end
       
+      # Returns a hash to be used by radio and select inputs when a boolean field
+      # is provided.
+      #
+      def create_boolean_collection(options) #:nodoc:
+        options[:true] ||= ::Formtastic::I18n.t(:yes)
+        options[:false] ||= ::Formtastic::I18n.t(:no)
+        options[:value_as_class] = true unless options.key?(:value_as_class)
+  
+        [ [ options.delete(:true), true], [ options.delete(:false), false ] ]
+      end
+  
     end
   end
 end
