@@ -257,6 +257,24 @@ module Formtastic
         end
       end
       
+      protected
+      
+      # Collects association columns (relation columns) for the current form object class.
+      #
+      def association_columns(*by_associations) #:nodoc:
+        if @object.present? && @object.class.respond_to?(:reflections)
+          @object.class.reflections.collect do |name, association_reflection|
+            if by_associations.present?
+              name if by_associations.include?(association_reflection.macro)
+            else
+              name
+            end
+          end.compact
+        else
+          []
+        end
+      end
+      
     end
   end
 end

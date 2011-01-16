@@ -46,28 +46,15 @@ module Formtastic
       include Formtastic::Builder::ButtonsHelper
       include Formtastic::Builder::LabelHelper
       include Formtastic::Builder::ErrorsHelper
+      include Formtastic::Builder::Support
     
-    
+      
+      protected
+      
         # Collects content columns (non-relation columns) for the current form object class.
         #
         def content_columns #:nodoc:
           model_name.constantize.content_columns.collect { |c| c.name.to_sym }.compact rescue []
-        end
-    
-        # Collects association columns (relation columns) for the current form object class.
-        #
-        def association_columns(*by_associations) #:nodoc:
-          if @object.present? && @object.class.respond_to?(:reflections)
-            @object.class.reflections.collect do |name, association_reflection|
-              if by_associations.present?
-                name if by_associations.include?(association_reflection.macro)
-              else
-                name
-              end
-            end.compact
-          else
-            []
-          end
         end
     
         # Returns nil, or a symbol like :belongs_to or :has_many
