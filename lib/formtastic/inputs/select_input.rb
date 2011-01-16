@@ -179,6 +179,54 @@ module Formtastic
   
         [ [ options.delete(:true), true], [ options.delete(:false), false ] ]
       end
+      
+      # Return the label collection method when none is supplied using the
+      # values set in collection_label_methods.
+      #
+      def detect_label_method(collection) #:nodoc:
+        detect_label_and_value_method!(collection).first
+      end
+      
+      # Detects the method to call for fetching group members from the groups when grouping select options
+      #
+      def detect_group_association(method, group_by)
+        object_to_method_reflection = reflection_for(method)
+        method_class = object_to_method_reflection.klass
+  
+        method_to_group_association = method_class.reflect_on_association(group_by)
+        group_class = method_to_group_association.klass
+  
+        # This will return in the normal case
+        return method.to_s.pluralize.to_sym if group_class.reflect_on_association(method.to_s.pluralize)
+  
+        # This is for belongs_to associations named differently than their class
+        # form.input :parent, :group_by => :customer
+        # eg.
+        # class Project
+        #   belongs_to :parent, :class_name => 'Project', :foreign_key => 'parent_id'
+        #   belongs_to :customer
+        # end
+        # class Customer
+        #   has_many :projects
+        # end
+        group_method = method_class.to_s.underscore.pluralize.to_sym
+        return group_method if group_class.reflect_on_association(group_method) # :projects
+  
+        # This is for has_many associations named differently than their class
+        # eg.
+        # class Project
+        #   belongs_to :parent, :class_name => 'Project', :foreign_key => 'parent_id'
+        #   belongs_to :customer
+        # end
+        # class Customer
+        #   has_many :tasks, :class_name => 'Project', :foreign_key => 'customer_id'
+        # end
+        possible_associations =  group_class.reflect_on_all_associations(:has_many).find_all{|assoc| assoc.klass == object_class}
+        return possible_associations.first.name.to_sym if possible_associations.count == 1
+  
+        raise "Cannot infer group association for #{method} grouped by #{group_by}, there were #{possible_associations.empty? ? 'no' : possible_associations.size} possible associations. Please specify using :group_association"
+  
+      end
   
     end
   end

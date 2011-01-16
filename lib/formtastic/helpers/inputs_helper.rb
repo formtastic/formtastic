@@ -257,6 +257,53 @@ module Formtastic
         end
       end
       
+      # A thin wrapper around #fields_for to set :builder => Formtastic::SemanticFormBuilder
+      # for nesting forms:
+      #
+      #   # Example:
+      #   <% semantic_form_for @post do |post| %>
+      #     <% post.semantic_fields_for :author do |author| %>
+      #       <% author.inputs :name %>
+      #     <% end %>
+      #   <% end %>
+      #
+      #   # Output:
+      #   <form ...>
+      #     <fieldset class="inputs">
+      #       <ol>
+      #         <li class="string"><input type='text' name='post[author][name]' id='post_author_name' /></li>
+      #       </ol>
+      #     </fieldset>
+      #   </form>
+      #
+      def semantic_fields_for(record_or_name_or_array, *args, &block)
+        opts = args.extract_options!
+        opts[:builder] ||= self.class
+        args.push(opts)
+        fields_for(record_or_name_or_array, *args, &block)
+      end
+      
+      # Generates error messages for the given method. Errors can be shown as list,
+      # as sentence or just the first error can be displayed. If :none is set, no error is shown.
+      #
+      # This method is also aliased as errors_on, so you can call on your custom
+      # inputs as well:
+      #
+      #   semantic_form_for :post do |f|
+      #     f.text_field(:body)
+      #     f.errors_on(:body)
+      #   end
+      #
+      def inline_errors_for(method, options = {}) #:nodoc:
+        if render_inline_errors?
+          errors = error_keys(method, options).map{|x| @object.errors[x] }.flatten.compact.uniq
+          send(:"error_#{inline_errors}", [*errors], options) if errors.any?
+        else
+          nil
+        end
+      end
+      alias :errors_on :inline_errors_for
+      
       protected
       
       # Collects association columns (relation columns) for the current form object class.
@@ -409,6 +456,59 @@ module Formtastic
       #
       def column_for(method) #:nodoc:
         @object.column_for_attribute(method) if @object.respond_to?(:column_for_attribute)
+      end
+      
+      # Generates an input for the given method using the type supplied with :as.
+      def inline_input_for(method, options)
+        send(:"#{options.delete(:as)}_input", method, options)
+      end
+  
+      # Generates hints for the given method using the text supplied in :hint.
+      #
+      def inline_hints_for(method, options) #:nodoc:
+        options[:hint] = localized_string(method, options[:hint], :hint)
+        return if options[:hint].blank? or options[:hint].kind_of? Hash
+        hint_class = options[:hint_class] || default_hint_class
+        template.content_tag(:p, Formtastic::Util.html_safe(options[:hint]), :class => hint_class)
+      end
+      
+      # Creates an error sentence by calling to_sentence on the errors array.
+      #
+      def error_sentence(errors, options = {}) #:nodoc:
+        error_class = options[:error_class] || default_inline_error_class
+        template.content_tag(:p, Formtastic::Util.html_safe(errors.to_sentence.untaint), :class => error_class)
+      end
+  
+      # Creates an error li list.
+      #
+      def error_list(errors, options = {}) #:nodoc:
+        error_class = options[:error_class] || default_error_list_class
+        list_elements = []
+        errors.each do |error|
+          list_elements <<  template.content_tag(:li, Formtastic::Util.html_safe(error.untaint))
+        end
+        template.content_tag(:ul, Formtastic::Util.html_safe(list_elements.join("\n")), :class => error_class)
+      end
+  
+      # Creates an error sentence containing only the first error
+      #
+      def error_first(errors, options = {}) #:nodoc:
+        error_class = options[:error_class] || default_inline_error_class
+        template.content_tag(:p, Formtastic::Util.html_safe(errors.first.untaint), :class => error_class)
+      end
+      
+      def field_set_title_from_args(*args) #:nodoc:
+        options = args.extract_options!
+        options[:name] ||= options.delete(:title)
+        title = options[:name]
+  
+        if title.blank?
+          valid_name_classes = [::String, ::Symbol]
+          valid_name_classes.delete(::Symbol) if !block_given? && (args.first.is_a?(::Symbol) && content_columns.include?(args.first))
+          title = args.shift if valid_name_classes.any? { |valid_name_class| args.first.is_a?(valid_name_class) }
+        end
+        title = localized_string(title, title, :title) if title.is_a?(::Symbol)
+        title
       end
       
     end

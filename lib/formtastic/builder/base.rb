@@ -91,45 +91,6 @@ module Formtastic
       include Formtastic::Inputs::UrlInput
       
       protected
-      
-        # Generates an input for the given method using the type supplied with :as.
-        def inline_input_for(method, options)
-          send(:"#{options.delete(:as)}_input", method, options)
-        end
-    
-        # Generates hints for the given method using the text supplied in :hint.
-        #
-        def inline_hints_for(method, options) #:nodoc:
-          options[:hint] = localized_string(method, options[:hint], :hint)
-          return if options[:hint].blank? or options[:hint].kind_of? Hash
-          hint_class = options[:hint_class] || default_hint_class
-          template.content_tag(:p, Formtastic::Util.html_safe(options[:hint]), :class => hint_class)
-        end
-    
-        # Creates an error sentence by calling to_sentence on the errors array.
-        #
-        def error_sentence(errors, options = {}) #:nodoc:
-          error_class = options[:error_class] || default_inline_error_class
-          template.content_tag(:p, Formtastic::Util.html_safe(errors.to_sentence.untaint), :class => error_class)
-        end
-    
-        # Creates an error li list.
-        #
-        def error_list(errors, options = {}) #:nodoc:
-          error_class = options[:error_class] || default_error_list_class
-          list_elements = []
-          errors.each do |error|
-            list_elements <<  template.content_tag(:li, Formtastic::Util.html_safe(error.untaint))
-          end
-          template.content_tag(:ul, Formtastic::Util.html_safe(list_elements.join("\n")), :class => error_class)
-        end
-    
-        # Creates an error sentence containing only the first error
-        #
-        def error_first(errors, options = {}) #:nodoc:
-          error_class = options[:error_class] || default_inline_error_class
-          template.content_tag(:p, Formtastic::Util.html_safe(errors.first.untaint), :class => error_class)
-        end
         
         # Generates a fieldset and wraps the content in an ordered list. When working
         # with nested attributes, it allows %i as interpolation option in :name. So you can do:
@@ -174,20 +135,6 @@ module Formtastic
           fieldset
         end
     
-        def field_set_title_from_args(*args) #:nodoc:
-          options = args.extract_options!
-          options[:name] ||= options.delete(:title)
-          title = options[:name]
-    
-          if title.blank?
-            valid_name_classes = [::String, ::Symbol]
-            valid_name_classes.delete(::Symbol) if !block_given? && (args.first.is_a?(::Symbol) && content_columns.include?(args.first))
-            title = args.shift if valid_name_classes.any? { |valid_name_class| args.first.is_a?(valid_name_class) }
-          end
-          title = localized_string(title, title, :title) if title.is_a?(::Symbol)
-          title
-        end
-    
         # Also generates a fieldset and an ordered list but with label based in
         # method. This methods is currently used by radio and datetime inputs.
         #
@@ -202,142 +149,12 @@ module Formtastic
             )
         end
     
-        # Generates the legend for radiobuttons and checkboxes
-        def legend_tag(method, options = {})
-          if options[:label] == false
-            Formtastic::Util.html_safe("")
-          else
-            text = localized_string(method, options[:label], :label) || humanized_attribute_name(method)
-            text += required_or_optional_string(options.delete(:required))
-            text = Formtastic::Util.html_safe(text)
-            template.content_tag :legend, template.label_tag(nil, text, :for => nil), :class => :label
-          end
-        end
-    
         def is_file?(method, options = {})
           @files ||= {}
           @files[method] ||= (options[:as].present? && options[:as] == :file) || begin
             file = @object.send(method) if @object && @object.respond_to?(method)
             file && file_methods.any?{|m| file.respond_to?(m)}
           end
-        end
-    
-        # Used by select and radio inputs. The collection can be retrieved by
-        # three ways:
-        #
-        # * Explicitly provided through :collection
-        # * Retrivied through an association
-        # * Or a boolean column, which will generate a localized { "Yes" => true, "No" => false } hash.
-        #
-        # If the collection is not a hash or an array of strings, fixnums or arrays,
-        # we use label_method and value_method to retreive an array with the
-        # appropriate label and value.
-        #
-        def find_collection_for_column(column, options) #:nodoc:
-          collection = find_raw_collection_for_column(column, options)
-    
-          # Return if we have a plain string
-          return collection if collection.instance_of?(String) || collection.instance_of?(::Formtastic::Util.rails_safe_buffer_class)
-    
-          # Return if we have an Array of strings, fixnums or arrays
-          return collection if (collection.instance_of?(Array) || collection.instance_of?(Range)) &&
-                               [Array, Fixnum, String, Symbol].include?(collection.first.class) &&
-                               !(options.include?(:label_method) || options.include?(:value_method))
-    
-          label, value = detect_label_and_value_method!(collection, options)
-          collection.map { |o| [send_or_call(label, o), send_or_call(value, o)] }
-        end
-    
-        # Detects the label and value methods from a collection using methods set in
-        # collection_label_methods and collection_value_methods. For some ruby core
-        # classes sensible defaults have been defined. It will use and delete the options
-        # :label_method and :value_methods when present.
-        #
-        def detect_label_and_value_method!(collection, options = {})
-          sample = collection.first || collection.last
-    
-          case sample
-          when Array
-            label, value = :first, :last
-          when Integer
-            label, value = :to_s, :to_i
-          when String, NilClass
-            label, value = :to_s, :to_s
-          end
-    
-          # Order of preference: user supplied method, class defaults, auto-detect
-          label = options[:label_method] || label || collection_label_methods.find { |m| sample.respond_to?(m) }
-          value = options[:value_method] || value || collection_value_methods.find { |m| sample.respond_to?(m) }
-    
-          [label, value]
-        end
-    
-        # Return the label collection method when none is supplied using the
-        # values set in collection_label_methods.
-        #
-        def detect_label_method(collection) #:nodoc:
-          detect_label_and_value_method!(collection).first
-        end
-    
-        # Detects the method to call for fetching group members from the groups when grouping select options
-        #
-        def detect_group_association(method, group_by)
-          object_to_method_reflection = reflection_for(method)
-          method_class = object_to_method_reflection.klass
-    
-          method_to_group_association = method_class.reflect_on_association(group_by)
-          group_class = method_to_group_association.klass
-    
-          # This will return in the normal case
-          return method.to_s.pluralize.to_sym if group_class.reflect_on_association(method.to_s.pluralize)
-    
-          # This is for belongs_to associations named differently than their class
-          # form.input :parent, :group_by => :customer
-          # eg.
-          # class Project
-          #   belongs_to :parent, :class_name => 'Project', :foreign_key => 'parent_id'
-          #   belongs_to :customer
-          # end
-          # class Customer
-          #   has_many :projects
-          # end
-          group_method = method_class.to_s.underscore.pluralize.to_sym
-          return group_method if group_class.reflect_on_association(group_method) # :projects
-    
-          # This is for has_many associations named differently than their class
-          # eg.
-          # class Project
-          #   belongs_to :parent, :class_name => 'Project', :foreign_key => 'parent_id'
-          #   belongs_to :customer
-          # end
-          # class Customer
-          #   has_many :tasks, :class_name => 'Project', :foreign_key => 'customer_id'
-          # end
-          possible_associations =  group_class.reflect_on_all_associations(:has_many).find_all{|assoc| assoc.klass == object_class}
-          return possible_associations.first.name.to_sym if possible_associations.count == 1
-    
-          raise "Cannot infer group association for #{method} grouped by #{group_by}, there were #{possible_associations.empty? ? 'no' : possible_associations.size} possible associations. Please specify using :group_association"
-    
-        end
-    
-        # Used by association inputs (select, radio) to generate the name that should
-        # be used for the input
-        #
-        #   belongs_to :author; f.input :author; will generate 'author_id'
-        #   belongs_to :entity, :foreign_key = :owner_id; f.input :author; will generate 'owner_id'
-        #   has_many :authors; f.input :authors; will generate 'author_ids'
-        #   has_and_belongs_to_many will act like has_many
-        #
-        def generate_association_input_name(method) #:nodoc:
-          if reflection = reflection_for(method)
-            if [:has_and_belongs_to_many, :has_many].include?(reflection.macro)
-              "#{method.to_s.singularize}_ids"
-            else
-              reflection.options[:foreign_key] || "#{method}_id"
-            end
-          else
-            method
-          end.to_sym
         end
     
         # If an association method is passed in (f.input :author) try to find the
