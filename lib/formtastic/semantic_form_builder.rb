@@ -1,39 +1,34 @@
 module Formtastic
   class SemanticFormBuilder < ActionView::Helpers::FormBuilder
 
-    configurables = [
-      :default_text_field_size, :default_text_area_height, :default_text_area_width, :all_fields_required_by_default, :include_blank_for_select_by_default,
-      :required_string, :optional_string, :inline_errors, :label_str_method, :collection_value_methods, :collection_label_methods, :file_metadata_suffixes,
-      :inline_order, :custom_inline_order, :file_methods, :priority_countries, :i18n_lookups_by_default, :escape_html_entities_in_hints_and_labels,
-      :default_commit_button_accesskey, :default_inline_error_class, :default_hint_class, :default_error_list_class
-    ]
-    
-    class_attribute *configurables
-    
-    class_attribute :custom_namespace
+    def self.configure(name, value = nil)
+      class_attribute(name)
+      self.send(:"#{name}=", value)  
+    end
 
-    self.default_text_field_size = nil
-    self.default_text_area_height = 20
-    self.default_text_area_width = nil
-    self.all_fields_required_by_default = true
-    self.include_blank_for_select_by_default = true
-    self.required_string = proc { ::Formtastic::Util.html_safe(%{<abbr title="#{::Formtastic::I18n.t(:required)}">*</abbr>}) }
-    self.optional_string = ''
-    self.inline_errors = :sentence
-    self.label_str_method = :humanize
-    self.collection_label_methods = %w[to_label display_name full_name name title username login value to_s]
-    self.collection_value_methods = %w[id to_s]
-    self.inline_order = [ :input, :hints, :errors ]
-    self.custom_inline_order = {}
-    self.file_methods = [ :file?, :public_filename, :filename ]
-    self.file_metadata_suffixes = ['content_type', 'file_name', 'file_size']
-    self.priority_countries = ["Australia", "Canada", "United Kingdom", "United States"]
-    self.i18n_lookups_by_default = false
-    self.escape_html_entities_in_hints_and_labels = true
-    self.default_commit_button_accesskey = nil
-    self.default_inline_error_class = 'inline-errors'
-    self.default_error_list_class = 'errors'
-    self.default_hint_class = 'inline-hints'
+    configure :custom_namespace
+    configure :default_text_field_size
+    configure :default_text_area_height, 20
+    configure :default_text_area_width
+    configure :all_fields_required_by_default, true
+    configure :include_blank_for_select_by_default, true
+    configure :required_string, proc { ::Formtastic::Util.html_safe(%{<abbr title="#{::Formtastic::I18n.t(:required)}">*</abbr>}) }
+    configure :optional_string, ''
+    configure :inline_errors, :sentence
+    configure :label_str_method, :humanize
+    configure :collection_label_methods, %w[to_label display_name full_name name title username login value to_s]
+    configure :collection_value_methods, %w[id to_s]
+    configure :inline_order, [ :input, :hints, :errors ]
+    configure :custom_inline_order, {}
+    configure :file_methods, [ :file?, :public_filename, :filename ]
+    configure :file_metadata_suffixes, ['content_type', 'file_name', 'file_size']
+    configure :priority_countries, ["Australia", "Canada", "United Kingdom", "United States"]
+    configure :i18n_lookups_by_default, false
+    configure :escape_html_entities_in_hints_and_labels, true
+    configure :default_commit_button_accesskey
+    configure :default_inline_error_class, 'inline-errors'
+    configure :default_error_list_class, 'errors'
+    configure :default_hint_class, 'inline-hints'
 
     RESERVED_COLUMNS = [:created_at, :updated_at, :created_on, :updated_on, :lock_version, :version]
 
