@@ -105,38 +105,6 @@ module Formtastic
                          :as, :hint, :input_html, :label_html, :value_as_class, :find_options, :class)
         end
     
-        # Determins if the attribute (eg :title) should be considered required or not.
-        #
-        # * if the :required option was provided in the options hash, the true/false value will be
-        #   returned immediately, allowing the view to override any guesswork that follows:
-        #
-        # * if the :required option isn't provided in the options hash, and the ValidationReflection
-        #   plugin is installed (http://github.com/redinger/validation_reflection), or the object is
-        #   an ActiveModel, true is returned
-        #   if the validates_presence_of macro has been used in the class for this attribute, or false
-        #   otherwise.
-        #
-        # * if the :required option isn't provided, and validates_presence_of can't be determined, the
-        #   configuration option all_fields_required_by_default is used.
-        #
-        def method_required?(attribute) #:nodoc:
-          attribute_sym = attribute.to_s.sub(/_id$/, '').to_sym
-    
-          if @object && @object.class.respond_to?(:reflect_on_validations_for)
-            @object.class.reflect_on_validations_for(attribute_sym).any? do |validation|
-              (validation.macro == :validates_presence_of || validation.macro == :validates_inclusion_of) &&
-              validation.name == attribute_sym &&
-              (validation.options.present? ? options_require_validation?(validation.options) : true)
-            end
-          else
-            if @object && @object.class.respond_to?(:validators_on)
-              !@object.class.validators_on(attribute_sym).find{|validator| (validator.kind == :presence || validator.kind == :inclusion) && (validator.options.present? ? options_require_validation?(validator.options) : true)}.nil?
-            else
-              all_fields_required_by_default
-            end
-          end
-        end
-    
         # Determines whether the given options evaluate to true
         def options_require_validation?(options) #nodoc
           allow_blank = options[:allow_blank]
