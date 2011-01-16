@@ -405,6 +405,12 @@ module Formtastic
         end
       end
       
+      # Get a column object for a specified attribute method - if possible.
+      #
+      def column_for(method) #:nodoc:
+        @object.column_for_attribute(method) if @object.respond_to?(:column_for_attribute)
+      end
+      
     end
   end
 end
