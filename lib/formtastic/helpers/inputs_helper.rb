@@ -359,6 +359,52 @@ module Formtastic
         if_condition ? !!condition : !condition
       end
       
+      # For methods that have a database column, take a best guess as to what the input method
+      # should be.  In most cases, it will just return the column type (eg :string), but for special
+      # cases it will simplify (like the case of :integer, :float & :decimal to :numeric), or do
+      # something different (like :password and :select).
+      #
+      # If there is no column for the method (eg "virtual columns" with an attr_accessor), the
+      # default is a :string, a similar behaviour to Rails' scaffolding.
+      #
+      def default_input_type(method, options = {}) #:nodoc:
+        if column = column_for(method)
+          # Special cases where the column type doesn't map to an input method.
+          case column.type
+          when :string
+            return :password  if method.to_s =~ /password/
+            return :country   if method.to_s =~ /country$/
+            return :time_zone if method.to_s =~ /time_zone/
+            return :email     if method.to_s =~ /email/
+            return :url       if method.to_s =~ /^url$|^website$|_url$/
+            return :phone     if method.to_s =~ /(phone|fax)/
+            return :search    if method.to_s =~ /^search$/
+          when :integer
+            return :select    if reflection_for(method)
+            return :numeric
+          when :float, :decimal
+            return :numeric
+          when :timestamp
+            return :datetime
+          end
+  
+          # Try look for hints in options hash. Quite common senario: Enum keys stored as string in the database.
+          return :select    if column.type == :string && options.key?(:collection)
+          # Try 3: Assume the input name will be the same as the column type (e.g. string_input).
+          return column.type
+        else
+          if @object
+            return :select  if reflection_for(method)
+  
+            return :file    if is_file?(method, options)
+          end
+  
+          return :select    if options.key?(:collection)
+          return :password  if method.to_s =~ /password/
+          return :string
+        end
+      end
+      
     end
   end
 end

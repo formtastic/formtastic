@@ -227,52 +227,6 @@ module Formtastic
           end
         end
     
-        # For methods that have a database column, take a best guess as to what the input method
-        # should be.  In most cases, it will just return the column type (eg :string), but for special
-        # cases it will simplify (like the case of :integer, :float & :decimal to :numeric), or do
-        # something different (like :password and :select).
-        #
-        # If there is no column for the method (eg "virtual columns" with an attr_accessor), the
-        # default is a :string, a similar behaviour to Rails' scaffolding.
-        #
-        def default_input_type(method, options = {}) #:nodoc:
-          if column = column_for(method)
-            # Special cases where the column type doesn't map to an input method.
-            case column.type
-            when :string
-              return :password  if method.to_s =~ /password/
-              return :country   if method.to_s =~ /country$/
-              return :time_zone if method.to_s =~ /time_zone/
-              return :email     if method.to_s =~ /email/
-              return :url       if method.to_s =~ /^url$|^website$|_url$/
-              return :phone     if method.to_s =~ /(phone|fax)/
-              return :search    if method.to_s =~ /^search$/
-            when :integer
-              return :select    if reflection_for(method)
-              return :numeric
-            when :float, :decimal
-              return :numeric
-            when :timestamp
-              return :datetime
-            end
-    
-            # Try look for hints in options hash. Quite common senario: Enum keys stored as string in the database.
-            return :select    if column.type == :string && options.key?(:collection)
-            # Try 3: Assume the input name will be the same as the column type (e.g. string_input).
-            return column.type
-          else
-            if @object
-              return :select  if reflection_for(method)
-    
-              return :file    if is_file?(method, options)
-            end
-    
-            return :select    if options.key?(:collection)
-            return :password  if method.to_s =~ /password/
-            return :string
-          end
-        end
-    
         def is_file?(method, options = {})
           @files ||= {}
           @files[method] ||= (options[:as].present? && options[:as] == :file) || begin
@@ -305,32 +259,6 @@ module Formtastic
     
           label, value = detect_label_and_value_method!(collection, options)
           collection.map { |o| [send_or_call(label, o), send_or_call(value, o)] }
-        end
-    
-        # As #find_collection_for_column but returns the collection without mapping the label and value
-        #
-        def find_raw_collection_for_column(column, options) #:nodoc:
-          collection = if options[:collection]
-            options.delete(:collection)
-          elsif reflection = reflection_for(column)
-            options[:find_options] ||= {}
-    
-            if conditions = reflection.options[:conditions]
-              if reflection.klass.respond_to?(:merge_conditions)
-                options[:find_options][:conditions] = reflection.klass.merge_conditions(conditions, options[:find_options][:conditions])
-                reflection.klass.all(options[:find_options])
-              else
-                reflection.klass.where(conditions).where(options[:find_options][:conditions])
-              end
-            else
-              reflection.klass.all(options[:find_options])
-            end
-          else
-            create_boolean_collection(options)
-          end
-    
-          collection = collection.to_a if collection.is_a?(Hash)
-          collection
         end
     
         # Detects the label and value methods from a collection using methods set in

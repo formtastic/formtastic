@@ -136,6 +136,35 @@ module Formtastic
         label_options[:for] ||= html_options[:id]
         label(method, label_options) << select_html
       end
+      
+      protected
+      
+      # As #find_collection_for_column but returns the collection without mapping the label and value
+      #
+      def find_raw_collection_for_column(column, options) #:nodoc:
+        collection = if options[:collection]
+          options.delete(:collection)
+        elsif reflection = reflection_for(column)
+          options[:find_options] ||= {}
+  
+          if conditions = reflection.options[:conditions]
+            if reflection.klass.respond_to?(:merge_conditions)
+              options[:find_options][:conditions] = reflection.klass.merge_conditions(conditions, options[:find_options][:conditions])
+              reflection.klass.all(options[:find_options])
+            else
+              reflection.klass.where(conditions).where(options[:find_options][:conditions])
+            end
+          else
+            reflection.klass.all(options[:find_options])
+          end
+        else
+          create_boolean_collection(options)
+        end
+  
+        collection = collection.to_a if collection.is_a?(Hash)
+        collection
+      end
+      
     end
   end
 end
