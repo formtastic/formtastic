@@ -1,8 +1,10 @@
+require 'support/base'
 require 'support/basic'
 
 module Formtastic
   module Inputs
     module PasswordInput
+      include Support::Base
       include Support::Basic
       
       # Outputs a label and standard Rails password field inside the wrapper.

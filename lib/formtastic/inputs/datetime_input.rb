@@ -1,9 +1,12 @@
+require 'support/base'
 require 'support/timeish'
 
 module Formtastic
   module Inputs
     module DatetimeInput
+      include Support::Base
       include Support::Timeish
+      
       # Outputs a fieldset with a legend for the method label, and a ordered list (ol) of list
       # items (li), one for each fragment for the date (year, month, day, hour, min, sec).  Each li
       # contains a label (eg "Year") and a select box. Overwriting the label is possible by adding

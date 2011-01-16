@@ -1,6 +1,10 @@
+require 'support/base'
+
 module Formtastic
   module Inputs
     module SelectInput
+      include Support::Base
+      
       # Outputs a label and a select box containing options from the parent
       # (belongs_to, has_many, has_and_belongs_to_many) association. If an association
       # is has_many or has_and_belongs_to_many the select box will be set as multi-select

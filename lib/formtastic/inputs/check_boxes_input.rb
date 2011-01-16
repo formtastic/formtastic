@@ -1,6 +1,9 @@
+require 'support/base'
+
 module Formtastic
   module Inputs
     module CheckBoxesInput
+      include Support::Base
       
       # Outputs a fieldset containing a legend for the label text, and an ordered list (ol) of list
       # items, one for each possible choice in the belongs_to association.  Each li contains a
@@ -146,6 +149,14 @@ module Formtastic
       def create_check_boxes(input_name, html_options = {}, checked_value = "1", unchecked_value = "0", hidden_fields = false) #:nodoc:
         return template.check_box_tag(input_name, checked_value, html_options[:checked], html_options) unless hidden_fields == true
         check_box(input_name, html_options, checked_value, unchecked_value)
+      end
+      
+      def send_or_call(duck, object)
+        if duck.is_a?(Proc)
+          duck.call(object)
+        else
+          object.send(duck)
+        end
       end
 
     end

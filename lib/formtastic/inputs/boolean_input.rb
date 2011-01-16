@@ -1,6 +1,10 @@
+require 'support/base'
+
 module Formtastic
   module Inputs
     module BooleanInput
+      include Support::Base
+      
       # Outputs a label containing a checkbox and the label text. The label defaults
       # to the column name (method name) and can be altered with the :label option.
       # :checked_value and :unchecked_value options are also available.

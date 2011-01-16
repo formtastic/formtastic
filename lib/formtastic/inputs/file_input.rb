@@ -1,8 +1,10 @@
+require 'support/base'
 require 'support/basic'
 
 module Formtastic
   module Inputs
     module FileInput
+      include Support::Base
       include Support::Basic
       
       # Outputs a label and a standard Rails file field inside the wrapper.
