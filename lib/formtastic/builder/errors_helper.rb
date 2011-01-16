@@ -96,6 +96,11 @@ module Formtastic
         @object && @object.respond_to?(:errors) && Formtastic::Builder::Base::INLINE_ERROR_TYPES.include?(inline_errors)
       end
       
+      def association_macro_for_method(method) #:nodoc:
+        reflection = reflection_for(method)
+        reflection.macro if reflection
+      end
+  
     end
   end
 end

@@ -57,12 +57,6 @@ module Formtastic
           model_name.constantize.content_columns.collect { |c| c.name.to_sym }.compact rescue []
         end
     
-        # Returns nil, or a symbol like :belongs_to or :has_many
-        def association_macro_for_method(method) #:nodoc:
-          reflection = reflection_for(method)
-          reflection.macro if reflection
-        end
-    
         def association_primary_key(method)
           reflection = reflection_for(method)
           reflection.options[:foreign_key] if reflection && !reflection.options[:foreign_key].blank?
