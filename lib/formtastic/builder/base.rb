@@ -98,34 +98,6 @@ module Formtastic
           options.slice(:label, :required).merge!(options.fetch(:label_html, {}))
         end
     
-        # Deals with :for option when it's supplied to inputs methods. Additional
-        # options to be passed down to :for should be supplied using :for_options
-        # key.
-        #
-        # It should raise an error if a block with arity zero is given.
-        #
-        def inputs_for_nested_attributes(*args, &block) #:nodoc:
-          options = args.extract_options!
-          args << options.merge!(:parent => { :builder => self, :for => options[:for] })
-    
-          fields_for_block = if block_given?
-            raise ArgumentError, 'You gave :for option with a block to inputs method, ' <<
-                                 'but the block does not accept any argument.' if block.arity <= 0
-            lambda do |f|
-              contents = f.inputs(*args){ block.call(f) }
-              template.concat(contents)
-            end
-          else
-            lambda do |f|
-              contents = f.inputs(*args)
-              template.concat(contents)
-            end
-          end
-    
-          fields_for_args = [options.delete(:for), options.delete(:for_options) || {}].flatten
-          semantic_fields_for(*fields_for_args, &fields_for_block)
-        end
-    
         # Remove any Formtastic-specific options before passing the down options.
         #
         def strip_formtastic_options(options) #:nodoc:
