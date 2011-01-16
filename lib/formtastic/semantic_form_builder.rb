@@ -8,11 +8,7 @@ module Formtastic
       :default_commit_button_accesskey, :default_inline_error_class, :default_hint_class, :default_error_list_class
     ]
     
-    if respond_to?(:class_attribute)
-      class_attribute *configurables
-    else
-      class_inheritable_accessor *configurables
-    end
+    class_attribute *configurables
     
     cattr_accessor :custom_namespace
 
