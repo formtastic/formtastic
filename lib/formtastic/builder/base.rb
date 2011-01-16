@@ -92,19 +92,6 @@ module Formtastic
       
       protected
       
-        # Prepare options to be sent to label
-        #
-        def options_for_label(options) #:nodoc:
-          options.slice(:label, :required).merge!(options.fetch(:label_html, {}))
-        end
-    
-        # Remove any Formtastic-specific options before passing the down options.
-        #
-        def strip_formtastic_options(options) #:nodoc:
-          options.except(:value_method, :label_method, :collection, :required, :label,
-                         :as, :hint, :input_html, :label_html, :value_as_class, :find_options, :class)
-        end
-    
         # Generates an input for the given method using the type supplied with :as.
         def inline_input_for(method, options)
           send(:"#{options.delete(:as)}_input", method, options)

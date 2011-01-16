@@ -18,6 +18,17 @@ module Formtastic
           string
         end
         
+        # Prepare options to be sent to label
+        def options_for_label(options) #:nodoc:
+          options.slice(:label, :required).merge!(options.fetch(:label_html, {}))
+        end
+        
+        # Remove any Formtastic-specific options before passing the down options.
+        def strip_formtastic_options(options) #:nodoc:
+          options.except(:value_method, :label_method, :collection, :required, :label,
+                         :as, :hint, :input_html, :label_html, :value_as_class, :find_options, :class)
+        end
+    
       end
     end
   end
