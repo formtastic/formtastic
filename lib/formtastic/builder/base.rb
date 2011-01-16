@@ -57,12 +57,6 @@ module Formtastic
           model_name.constantize.content_columns.collect { |c| c.name.to_sym }.compact rescue []
         end
     
-        def association_primary_key(method)
-          reflection = reflection_for(method)
-          reflection.options[:foreign_key] if reflection && !reflection.options[:foreign_key].blank?
-          :"#{method}_id"
-        end
-    
         # Prepare options to be sent to label
         #
         def options_for_label(options) #:nodoc:

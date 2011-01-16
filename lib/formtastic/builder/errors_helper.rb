@@ -100,6 +100,12 @@ module Formtastic
         reflection = reflection_for(method)
         reflection.macro if reflection
       end
+      
+      def association_primary_key(method)
+        reflection = reflection_for(method)
+        reflection.options[:foreign_key] if reflection && !reflection.options[:foreign_key].blank?
+        :"#{method}_id"
+      end
   
     end
   end
