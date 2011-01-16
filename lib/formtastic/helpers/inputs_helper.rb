@@ -275,6 +275,12 @@ module Formtastic
         end
       end
       
+      # Collects content columns (non-relation columns) for the current form object class.
+      #
+      def content_columns #:nodoc:
+        model_name.constantize.content_columns.collect { |c| c.name.to_sym }.compact rescue []
+      end
+      
     end
   end
 end

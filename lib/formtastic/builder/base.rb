@@ -92,12 +92,6 @@ module Formtastic
       
       protected
       
-        # Collects content columns (non-relation columns) for the current form object class.
-        #
-        def content_columns #:nodoc:
-          model_name.constantize.content_columns.collect { |c| c.name.to_sym }.compact rescue []
-        end
-    
         # Prepare options to be sent to label
         #
         def options_for_label(options) #:nodoc:
