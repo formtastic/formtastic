@@ -10,7 +10,7 @@ module Formtastic
     
     class_attribute *configurables
     
-    cattr_accessor :custom_namespace
+    class_attribute :custom_namespace
 
     self.default_text_field_size = nil
     self.default_text_area_height = 20
@@ -1699,7 +1699,7 @@ module Formtastic
                 end
         sanitized_method_name = method_name.to_s.gsub(/[\?\/\-]$/, '')
 
-        [@@custom_namespace, sanitized_object_name, index, sanitized_method_name, value].reject{|x|x.blank?}.join('_')
+        [custom_namespace, sanitized_object_name, index, sanitized_method_name, value].reject{|x|x.blank?}.join('_')
       end
 
       # Gets the nested_child_index value from the parent builder. It returns a hash with each
