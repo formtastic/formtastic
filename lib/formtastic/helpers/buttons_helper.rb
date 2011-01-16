@@ -1,5 +1,5 @@
 module Formtastic
-  module Builder
+  module Helpers
     module ButtonsHelper
       # Creates a fieldset and ol tag wrapping for form buttons / actions as list items.
       # See inputs documentation for a full example.  The fieldset's default class attriute

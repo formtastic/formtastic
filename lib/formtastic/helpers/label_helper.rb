@@ -1,5 +1,5 @@
 module Formtastic
-  module Builder
+  module Helpers
     module LabelHelper
       # Generates the label for the input. It also accepts the same arguments as
       # Rails label method. It has three options that are not supported by Rails

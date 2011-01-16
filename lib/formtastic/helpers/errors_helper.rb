@@ -1,5 +1,5 @@
 module Formtastic
-  module Builder
+  module Helpers
     module ErrorsHelper
       
       # A thin wrapper around #fields_for to set :builder => Formtastic::SemanticFormBuilder

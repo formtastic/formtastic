@@ -1,5 +1,5 @@
 module Formtastic
-  module Builder
+  module Helpers
     module InputsHelper
 
       # Returns a suitable form input for the given +method+, using the database column information

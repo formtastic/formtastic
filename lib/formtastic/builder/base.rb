@@ -1,7 +1,9 @@
-require File.join(File.dirname(__FILE__), *%w[inputs_helper])
-require File.join(File.dirname(__FILE__), *%w[buttons_helper])
-require File.join(File.dirname(__FILE__), *%w[label_helper])
-require File.join(File.dirname(__FILE__), *%w[errors_helper])
+$LOAD_PATH.unshift(File.expand_path(File.join(File.dirname(__FILE__), '..', 'helpers')))
+
+require 'inputs_helper'
+require 'buttons_helper'
+require 'label_helper'
+require 'errors_helper'
 
 module Formtastic
   module Builder
@@ -42,12 +44,10 @@ module Formtastic
     
       attr_accessor :template
       
-      include Formtastic::Builder::InputsHelper
-      include Formtastic::Builder::ButtonsHelper
-      include Formtastic::Builder::LabelHelper
-      include Formtastic::Builder::ErrorsHelper
-      include Formtastic::Builder::Support
-    
+      include Formtastic::Helpers::InputsHelper
+      include Formtastic::Helpers::ButtonsHelper
+      include Formtastic::Helpers::LabelHelper
+      include Formtastic::Helpers::ErrorsHelper
       
       protected
       
