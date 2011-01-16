@@ -105,24 +105,6 @@ module Formtastic
                          :as, :hint, :input_html, :label_html, :value_as_class, :find_options, :class)
         end
     
-        # Determines whether the given options evaluate to true
-        def options_require_validation?(options) #nodoc
-          allow_blank = options[:allow_blank]
-          return !allow_blank unless allow_blank.nil?
-          if_condition = !options[:if].nil?
-          condition = if_condition ? options[:if] : options[:unless]
-    
-          condition = if condition.respond_to?(:call)
-                        condition.call(@object)
-                      elsif condition.is_a?(::Symbol) && @object.respond_to?(condition)
-                        @object.send(condition)
-                      else
-                        condition
-                      end
-    
-          if_condition ? !!condition : !condition
-        end
-    
         # Generates an input for the given method using the type supplied with :as.
         def inline_input_for(method, options)
           send(:"#{options.delete(:as)}_input", method, options)
