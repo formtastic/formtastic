@@ -22,12 +22,5 @@ module Formtastic
       return ActiveSupport::SafeBuffer
     end
 
-    def rails3?
-      version=
-        if defined?(ActionPack::VERSION::MAJOR)
-          ActionPack::VERSION::MAJOR
-        end
-      !version.blank? && version >= 3
-    end
   end
 end
