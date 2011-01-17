@@ -57,8 +57,6 @@ module Formtastic
     configure :default_error_list_class, 'errors'
     configure :default_hint_class, 'inline-hints'
   
-    RESERVED_COLUMNS = [:created_at, :updated_at, :created_on, :updated_on, :lock_version, :version]
-  
     INLINE_ERROR_TYPES = [:sentence, :list, :first]
   
     attr_accessor :template

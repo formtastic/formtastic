@@ -9,6 +9,8 @@ module Formtastic
       include Formtastic::Helpers::FileColumnDetection
       include Formtastic::Reflection
       
+      RESERVED_COLUMNS = [:created_at, :updated_at, :created_on, :updated_on, :lock_version, :version]
+      
       # Returns a suitable form input for the given +method+, using the database column information
       # and other factors (like the method name) to figure out what you probably want.
       #
@@ -253,7 +255,7 @@ module Formtastic
           if @object && args.empty?
             args  = association_columns(:belongs_to)
             args += content_columns
-            args -= Formtastic::FormBuilder::RESERVED_COLUMNS
+            args -= RESERVED_COLUMNS
             args.compact!
           end
           legend = args.shift if args.first.is_a?(::String)
