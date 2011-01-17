@@ -7,6 +7,8 @@ module Formtastic
       include Formtastic::Helpers::FileColumnDetection
       include Formtastic::Reflection
       
+      INLINE_ERROR_TYPES = [:sentence, :list, :first]
+      
       # Generates error messages for given method names and for base.
       # You can pass a hash with html options that will be added to ul tag
       #

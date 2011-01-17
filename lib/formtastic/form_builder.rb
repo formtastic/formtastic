@@ -57,8 +57,6 @@ module Formtastic
     configure :default_error_list_class, 'errors'
     configure :default_hint_class, 'inline-hints'
   
-    INLINE_ERROR_TYPES = [:sentence, :list, :first]
-  
     attr_accessor :template
     
     include Formtastic::Helpers::InputsHelper
