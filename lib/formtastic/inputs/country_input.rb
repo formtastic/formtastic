@@ -1,9 +1,9 @@
-require 'support/base'
+require 'inputs/base'
 
 module Formtastic
   module Inputs
     module CountryInput
-      include Support::Base
+      include Formtastic::Inputs::Base
       
       # Outputs a country select input, wrapping around a regular country_select helper.
       # Rails doesn't come with a country_select helper by default any more, so you'll need to install

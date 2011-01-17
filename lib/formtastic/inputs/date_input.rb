@@ -1,10 +1,10 @@
-require 'support/base'
-require 'support/timeish'
+require 'inputs/timeish'
+require 'inputs/base'
 
 module Formtastic
   module Inputs
     module DateInput
-      include Support::Base
+      include Formtastic::Inputs::Base
       include Support::Timeish
       
       # Outputs a fieldset with a legend for the method label, and a ordered list (ol) of list

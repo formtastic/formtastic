@@ -1,10 +1,10 @@
-require 'support/base'
-require 'support/basic'
+require 'inputs/basic'
+require 'inputs/base'
 
 module Formtastic
   module Inputs
     module EmailInput
-      include Support::Base
+      include Formtastic::Inputs::Base
       include Support::Basic
       
       # Outputs a label and a standard Rails email field inside the wrapper.

@@ -1,9 +1,9 @@
-require 'support/base'
+require 'inputs/base'
 
 module Formtastic
   module Inputs
     module BooleanInput
-      include Support::Base
+      include Formtastic::Inputs::Base
       
       # Outputs a label containing a checkbox and the label text. The label defaults
       # to the column name (method name) and can be altered with the :label option.

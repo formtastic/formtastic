@@ -1,9 +1,7 @@
-require 'support/base'
-
 module Formtastic
   module Inputs
     module RadioInput
-      include Support::Base
+      include Formtastic::Inputs::Base
       
       # Outputs a fieldset containing a legend for the label text, and an ordered list (ol) of list
       # items, one for each possible choice in the belongs_to association.  Each li contains a
