@@ -90,6 +90,9 @@ module Formtastic
       # It takes into account options[:index] and @auto_index to generate li
       # elements with appropriate index scope. It also sanitizes the object
       # and method names.
+      #
+      # For those of you wondering (like me), options is part of the fields_for
+      # and Builder scope, which is why you can't see it passed in as an arg.
       def generate_html_id(method_name, value='input') #:nodoc:
         index = if options.has_key?(:index)
                   options[:index]
