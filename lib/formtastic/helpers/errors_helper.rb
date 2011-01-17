@@ -1,5 +1,5 @@
 require 'helpers/file_column_detection'
-require 'formtastic/reflection'
+require 'reflection'
 
 module Formtastic
   module Helpers

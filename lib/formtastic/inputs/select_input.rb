@@ -1,4 +1,4 @@
-require 'formtastic/reflection'
+require 'reflection'
 
 module Formtastic
   module Inputs
