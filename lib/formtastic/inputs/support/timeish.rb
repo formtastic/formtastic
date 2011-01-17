@@ -87,6 +87,20 @@ module Formtastic
         
           hidden_fields_capture << field_set_and_list_wrapping_for_method(method, options.merge(:label_for => input_ids.first), list_items_capture)
         end
+        
+        # Generates a fieldset and an ordered list but with label based in
+        # method. This methods is currently used by radio and datetime inputs.
+        def field_set_and_list_wrapping_for_method(method, options, contents) #:nodoc:
+          contents = contents.join if contents.respond_to?(:join)
+
+          template.content_tag(:fieldset,
+              template.content_tag(:legend,
+                  label(method, options_for_label(options).merge(:for => options.delete(:label_for))), :class => 'label'
+                ) <<
+              template.content_tag(:ol, Formtastic::Util.html_safe(contents))
+            )
+        end
+
       end
     end
   end

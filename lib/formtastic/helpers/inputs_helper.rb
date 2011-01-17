@@ -1,7 +1,10 @@
+require 'support/fieldset_wrapper'
+
 module Formtastic
   module Helpers
     module InputsHelper
-
+      include Support::FieldsetWrapper
+      
       # Returns a suitable form input for the given +method+, using the database column information
       # and other factors (like the method name) to figure out what you probably want.
       #
