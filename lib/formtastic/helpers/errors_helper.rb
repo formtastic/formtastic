@@ -51,7 +51,7 @@ module Formtastic
       end
       
       def render_inline_errors?
-        @object && @object.respond_to?(:errors) && Formtastic::Builder::Base::INLINE_ERROR_TYPES.include?(inline_errors)
+        @object && @object.respond_to?(:errors) && Formtastic::FormBuilder::INLINE_ERROR_TYPES.include?(inline_errors)
       end
       
       def association_macro_for_method(method) #:nodoc:

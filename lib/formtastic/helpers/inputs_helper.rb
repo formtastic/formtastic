@@ -253,7 +253,7 @@ module Formtastic
           if @object && args.empty?
             args  = association_columns(:belongs_to)
             args += content_columns
-            args -= Formtastic::Builder::Base::RESERVED_COLUMNS
+            args -= Formtastic::FormBuilder::RESERVED_COLUMNS
             args.compact!
           end
           legend = args.shift if args.first.is_a?(::String)
