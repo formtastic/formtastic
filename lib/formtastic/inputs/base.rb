@@ -1,9 +1,11 @@
 require 'reflection'
+require 'localized_string'
 
 module Formtastic
   module Inputs
     module Base
       include Formtastic::Reflection
+      include Formtastic::LocalizedString
     
       def set_include_blank(options)
         unless options.key?(:include_blank) || options.key?(:prompt)

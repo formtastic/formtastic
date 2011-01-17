@@ -1,6 +1,10 @@
+require 'localized_string'
+
 module Formtastic
   module Helpers
     module LabelHelper
+      include Formtastic::LocalizedString
+      
       # Generates the label for the input. It also accepts the same arguments as
       # Rails label method. It has three options that are not supported by Rails
       # label method:

@@ -1,9 +1,11 @@
 require 'helpers/fieldset_wrapper'
+require 'localized_string'
 
 module Formtastic
   module Helpers
     module ButtonsHelper
       include Formtastic::Helpers::FieldsetWrapper
+      include Formtastic::LocalizedString
       
       # Creates a fieldset and ol tag wrapping for form buttons / actions as list items.
       # See inputs documentation for a full example.  The fieldset's default class attriute

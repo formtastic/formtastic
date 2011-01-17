@@ -1,6 +1,7 @@
 require 'helpers/fieldset_wrapper'
 require 'helpers/file_column_detection'
 require 'reflection'
+require 'localized_string'
 
 module Formtastic
   module Helpers
@@ -8,6 +9,7 @@ module Formtastic
       include Formtastic::Helpers::FieldsetWrapper
       include Formtastic::Helpers::FileColumnDetection
       include Formtastic::Reflection
+      include Formtastic::LocalizedString
       
       RESERVED_COLUMNS = [:created_at, :updated_at, :created_on, :updated_on, :lock_version, :version]
       
