@@ -1,12 +1,12 @@
-require 'support/fieldset_wrapper'
-require 'formtastic/helpers/support/file_column_detection'
+require 'helpers/fieldset_wrapper'
+require 'helpers/file_column_detection'
 require 'formtastic/reflection'
 
 module Formtastic
   module Helpers
     module InputsHelper
-      include Support::FieldsetWrapper
-      include Support::FileColumnDetection
+      include Formtastic::Helpers::FieldsetWrapper
+      include Formtastic::Helpers::FileColumnDetection
       include Formtastic::Reflection
       
       # Returns a suitable form input for the given +method+, using the database column information

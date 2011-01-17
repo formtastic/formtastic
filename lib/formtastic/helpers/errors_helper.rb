@@ -1,10 +1,10 @@
-require 'formtastic/helpers/support/file_column_detection'
+require 'helpers/file_column_detection'
 require 'formtastic/reflection'
 
 module Formtastic
   module Helpers
     module ErrorsHelper
-      include Support::FileColumnDetection
+      include Formtastic::Helpers::FileColumnDetection
       include Formtastic::Reflection
       
       # Generates error messages for given method names and for base.

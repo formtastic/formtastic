@@ -1,9 +1,9 @@
-require 'support/fieldset_wrapper'
+require 'helpers/fieldset_wrapper'
 
 module Formtastic
   module Helpers
     module ButtonsHelper
-      include Support::FieldsetWrapper
+      include Formtastic::Helpers::FieldsetWrapper
       
       # Creates a fieldset and ol tag wrapping for form buttons / actions as list items.
       # See inputs documentation for a full example.  The fieldset's default class attriute
