@@ -45,6 +45,17 @@ module Formtastic
       
         fieldset
       end
+      
+      # Gets the nested_child_index value from the parent builder. It returns a hash with each
+      # association that the parent builds.
+      def parent_child_index(parent) #:nodoc:
+        duck = parent[:builder].instance_variable_get('@nested_child_index')
+  
+        child = parent[:for]
+        child = child.first if child.respond_to?(:first)
+        duck[child].to_i + 1
+      end
+
     end
   end
 end

@@ -104,16 +104,6 @@ module Formtastic
         [custom_namespace, sanitized_object_name, index, sanitized_method_name, value].reject{|x|x.blank?}.join('_')
       end
   
-      # Gets the nested_child_index value from the parent builder. It returns a hash with each
-      # association that the parent builds.
-      def parent_child_index(parent) #:nodoc:
-        duck = parent[:builder].instance_variable_get('@nested_child_index')
-  
-        child = parent[:for]
-        child = child.first if child.respond_to?(:first)
-        duck[child].to_i + 1
-      end
-  
       def sanitized_object_name #:nodoc:
         @sanitized_object_name ||= @object_name.to_s.gsub(/\]\[|[^-a-zA-Z0-9:.]/, "_").sub(/_$/, "")
       end
