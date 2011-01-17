@@ -1,10 +1,10 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe Formtastic::LayoutHelper do
+describe Formtastic::Helpers::LayoutHelper do
 
   include FormtasticSpecHelper
-  include Formtastic::LayoutHelper
+  include Formtastic::Helpers::LayoutHelper
 
   describe '#formtastic_stylesheet_link_tag' do
 
