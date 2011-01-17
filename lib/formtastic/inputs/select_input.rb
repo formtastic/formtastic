@@ -1,9 +1,11 @@
 require 'support/base'
+require 'formtastic/reflection'
 
 module Formtastic
   module Inputs
     module SelectInput
       include Support::Base
+      include Formtastic::Reflection
       
       # Outputs a label and a select box containing options from the parent
       # (belongs_to, has_many, has_and_belongs_to_many) association. If an association

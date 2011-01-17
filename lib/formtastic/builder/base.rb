@@ -92,21 +92,6 @@ module Formtastic
       
       protected
         
-        def is_file?(method, options = {})
-          @files ||= {}
-          @files[method] ||= (options[:as].present? && options[:as] == :file) || begin
-            file = @object.send(method) if @object && @object.respond_to?(method)
-            file && file_methods.any?{|m| file.respond_to?(m)}
-          end
-        end
-    
-        # If an association method is passed in (f.input :author) try to find the
-        # reflection object.
-        #
-        def reflection_for(method) #:nodoc:
-          @object.class.reflect_on_association(method) if @object.class.respond_to?(:reflect_on_association)
-        end
-    
         # Generate the html id for the li tag.
         # It takes into account options[:index] and @auto_index to generate li
         # elements with appropriate index scope. It also sanitizes the object

@@ -1,6 +1,11 @@
+require 'formtastic/helpers/support/file_column_detection'
+require 'formtastic/reflection'
+
 module Formtastic
   module Helpers
     module ErrorsHelper
+      include Support::FileColumnDetection
+      include Formtastic::Reflection
       
       # Generates error messages for given method names and for base.
       # You can pass a hash with html options that will be added to ul tag

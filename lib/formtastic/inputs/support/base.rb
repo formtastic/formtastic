@@ -1,7 +1,10 @@
+require 'formtastic/reflection'
+
 module Formtastic
   module Inputs
     module Support
       module Base
+        include Formtastic::Reflection
 
         def set_include_blank(options)
           unless options.key?(:include_blank) || options.key?(:prompt)
