@@ -5,7 +5,7 @@ module Formtastic
   module Inputs
     module EmailInput
       include Formtastic::Inputs::Base
-      include Support::Basic
+      include Formtastic::Inputs::Basic
       
       # Outputs a label and a standard Rails email field inside the wrapper.
       def email_input(method, options)

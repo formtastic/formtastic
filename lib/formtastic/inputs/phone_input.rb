@@ -4,7 +4,7 @@ module Formtastic
   module Inputs
     module PhoneInput
       include Formtastic::Inputs::Base
-      include Support::Basic
+      include Formtastic::Inputs::Basic
 
       # Outputs a label and a standard Rails phone field inside the wrapper.
       def phone_input(method, options)

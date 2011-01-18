@@ -4,7 +4,7 @@ module Formtastic
   module Inputs
     module PasswordInput
       include Formtastic::Inputs::Base
-      include Support::Basic
+      include Formtastic::Inputs::Basic
       
       # Outputs a label and standard Rails password field inside the wrapper.
       def password_input(method, options)

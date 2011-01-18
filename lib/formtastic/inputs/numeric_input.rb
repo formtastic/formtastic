@@ -4,7 +4,7 @@ module Formtastic
   module Inputs
     module NumericInput
       include Formtastic::Inputs::Base
-      include Support::Basic
+      include Formtastic::Inputs::Basic
       
       # Outputs a label and standard Rails text field inside the wrapper.
       def numeric_input(method, options)

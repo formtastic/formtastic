@@ -3,7 +3,7 @@ require 'inputs/timeish'
 module Formtastic
   module Inputs
     module TimeInput
-      include Support::Timeish
+      include Formtastic::Inputs::Timeish
       # Outputs a fieldset with a legend for the method label, and a ordered list (ol) of list
       # items (li), one for each fragment for the time (hour, minute, second).  Each li contains a label
       # (eg "Hour") and a select box. Overwriting the label is possible by adding the :labels option.

@@ -5,7 +5,7 @@ module Formtastic
   module Inputs
     module DatetimeInput
       include Formtastic::Inputs::Base
-      include Support::Timeish
+      include Formtastic::Inputs::Timeish
       
       # Outputs a fieldset with a legend for the method label, and a ordered list (ol) of list
       # items (li), one for each fragment for the date (year, month, day, hour, min, sec).  Each li

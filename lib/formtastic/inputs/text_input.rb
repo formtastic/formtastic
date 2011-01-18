@@ -3,7 +3,7 @@ require 'inputs/basic'
 module Formtastic
   module Inputs
     module TextInput
-      include Support::Basic
+      include Formtastic::Inputs::Basic
       
       # Ouputs a label and standard Rails text area inside the wrapper.
       def text_input(method, options)
