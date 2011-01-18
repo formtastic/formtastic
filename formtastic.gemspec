@@ -39,7 +39,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency(%q<rspec-rails>, ["~> 2.0.0"])
   s.add_development_dependency(%q<rspec_tag_matchers>, [">= 1.0.0"])
   s.add_development_dependency(%q<hpricot>, ["~> 0.8.3"])
-  s.add_development_dependency(%q<RedCloth>) # for YARD, which doesn't list it as a dependency
+  s.add_development_dependency(%q<BlueCloth>) # for YARD
   s.add_development_dependency(%q<yard>, ["~> 0.6"])
 
 end
