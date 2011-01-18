@@ -3,6 +3,7 @@ require 'localized_string'
 
 module Formtastic
   module Inputs
+    # @private
     module Base
       include Formtastic::Reflection
       include Formtastic::LocalizedString

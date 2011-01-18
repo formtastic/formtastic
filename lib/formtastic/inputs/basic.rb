@@ -1,5 +1,6 @@
 module Formtastic
   module Inputs
+    # @private
     module Basic
       
       def basic_input_helper(form_helper_method, type, method, options) #:nodoc:

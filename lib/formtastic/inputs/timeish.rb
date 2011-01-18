@@ -1,5 +1,6 @@
 module Formtastic
   module Inputs
+    # @private
     module Timeish
       # Helper method used by :as => (:date|:datetime|:time).  Generates a fieldset containing a
       # legend (for what would normally be considered the label), and an ordered list of list items
