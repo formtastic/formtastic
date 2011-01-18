@@ -5,6 +5,55 @@ require 'localized_string'
 
 module Formtastic
   module Helpers
+    
+    # InputsHelper encapsulates the responsibilties of the {#inputs} and {#input} helpers at the core of the 
+    # Formtastic DSL.
+    #
+    # {#inputs} is used to wrap a series of form items in a `<fieldset>` and `<ol>`, with each item
+    # in the list containing the markup representing a single {#input}.
+    #
+    # {#inputs} is usually called with a block containing a series of {#input} calls:
+    #
+    #     <%= semantic_form_for @post do |f| %>
+    #       <%= f.inputs do %>
+    #         <%= f.input :title %>
+    #         <%= f.input :body %>
+    #       <% end %>
+    #     <% end %>
+    #
+    # The HTML output will be something like:
+    #
+    #     <form class="formtastic" method="post" action="...">
+    #       <fieldset>
+    #         <ol>
+    #           <li class="string required" id="post_title_input">
+    #             <label for="post_title">Title*</label>
+    #             <input type="text" name="post[title]" id="post_title" value="">
+    #           </li>
+    #           <li class="text required" id="post_body_input">
+    #             <label for="post_title">Title*</label>
+    #             <textarea name="post[body]" id="post_body"></textarea>
+    #           </li>
+    #         </ol>
+    #       </fieldset>
+    #     </form>
+    #
+    # It's important to note that the `semantic_form_for` and {#inputs} blocks wrap the
+    # standard Rails `form_for` helper and form builder, so you have full access to every standard
+    # Rails form helper, with any HTML markup and ERB syntax, allowing you to "break free" from 
+    # Formtastic when it doesn't suit:
+    #
+    #     <%= semantic_form_for @post do |f| %>
+    #       <%= f.inputs do %>
+    #         <%= f.input :title %>
+    #         <li>
+    #           <%= f.text_area :body %>
+    #         <li>
+    #       <% end %>
+    #     <% end %>
+    #
+    # There are many other syntax variations and arguments to customize your form. See the
+    # full documentation of {#inputs} and {#input} for details.
     module InputsHelper
       include Formtastic::Helpers::FieldsetWrapper
       include Formtastic::Helpers::FileColumnDetection
@@ -13,62 +62,93 @@ module Formtastic
       
       RESERVED_COLUMNS = [:created_at, :updated_at, :created_on, :updated_on, :lock_version, :version]
       
-      # Returns a suitable form input for the given +method+, using the database column information
-      # and other factors (like the method name) to figure out what you probably want.
+      # Returns a chunk of HTML markup for a given `method` on the form object, wrapped in
+      # an `<li>` wrapper tag with appropriate `class` and `id` attribute hooks for CSS and JS.
+      # In many cases, the contents of the wrapper will be as simple as a `<label>` and an `<input>`:
       #
-      # Options:
+      #     <%= f.input :title, :as => :string, :required => true %>
       #
-      # * :as - override the input type (eg force a :string to render as a :password field)
-      # * :label - use something other than the method name as the label text, when false no label is printed
-      # * :required - specify if the column is required (true) or not (false)
-      # * :hint - provide some text to hint or help the user provide the correct information for a field
-      # * :input_html - provide options that will be passed down to the generated input
-      # * :wrapper_html - provide options that will be passed down to the li wrapper
+      #     <li class="string required" id="post_title_input">
+      #       <label for="post_title">Title<abbr title="Required">*</abbr></label>
+      #       <input type="text" name="post[title]" value="" id="post_title">
+      #     </li>
       #
-      # Input Types:
+      # In other cases (like a series of checkboxes for a `has_many` relationship), the wrapper may 
+      # include more complex markup, like a nested `<fieldset>` with a `<legend>` and an `<ol>` of 
+      # checkbox/label pairs for each choice:
       #
-      # Most inputs map directly to one of ActiveRecord's column types by default (eg string_input),
-      # but there are a few special cases and some simplification (:integer, :float and :decimal
-      # columns all map to a single numeric_input, for example).
+      #     <%= f.input :categories, :as => :check_boxes, :collection => Category.active.ordered %>
       #
-      # * :select (a select menu for associations) - default to association names
-      # * :check_boxes (a set of check_box inputs for associations) - alternative to :select has_many and has_and_belongs_to_many associations
-      # * :radio (a set of radio inputs for associations) - alternative to :select belongs_to associations
-      # * :time_zone (a select menu with time zones)
-      # * :password (a password input) - default for :string column types with 'password' in the method name
-      # * :text (a textarea) - default for :text column types
-      # * :date (a date select) - default for :date column types
-      # * :datetime (a date and time select) - default for :datetime and :timestamp column types
-      # * :time (a time select) - default for :time column types
-      # * :boolean (a checkbox) - default for :boolean column types (you can also have booleans as :select and :radio)
-      # * :string (a text field) - default for :string column types
-      # * :numeric (a text field, like string) - default for :integer, :float and :decimal column types
-      # * :email (an email input) - default for :string column types with 'email' as the method name.
-      # * :url (a url input) - default for :string column types with 'url' as the method name.
-      # * :phone (a tel input) - default for :string column types with 'phone' or 'fax' in the method name.
-      # * :search (a search input) - default for :string column types with 'search' as the method name.
-      # * :country (a select menu of country names) - requires a country_select plugin to be installed
-      # * :email (an email input) - New in HTML5 - needs to be explicitly provided with :as => :email
-      # * :url (a url input) - New in HTML5 - needs to be explicitly provided with :as => :url
-      # * :phone (a tel input) - New in HTML5 - needs to be explicitly provided with :as => :phone
-      # * :search (a search input) - New in HTML5 - needs to be explicity provided with :as => :search
-      # * :country (a select menu of country names) - requires a country_select plugin to be installed
-      # * :hidden (a hidden field) - creates a hidden field (added for compatibility)
+      #     <li class="check_boxes" id="post_categories_input">
+      #       <fieldset>
+      #         <legend>Categories</legend>
+      #         <ol>
+      #           <li>
+      #             <label><input type="checkbox" name="post[categories][1]" value="1"> Ruby</label>
+      #           </li>
+      #           <li>
+      #             <label><input type="checkbox" name="post[categories][2]" value="2"> Rails</label>
+      #           </li>
+      #           <li>
+      #             <label><input type="checkbox" name="post[categories][2]" value="2"> Awesome</label>
+      #           </li>
+      #         </ol>
+      #       </fieldset>
+      #     </li>
       #
-      # Example:
+      # Sensible defaults for all options are guessed by looking at the method name, database column 
+      # information, association information, validation information, etc. For example, a `:string`
+      # database column will map to a `:string` input, but if the method name contains 'email', will
+      # map to an `:email` input instead. `belongs_to` associations will have a `:select` input, etc.
+      #             
+      # Formtastic supports many different styles of inputs, and you can/should override the default
+      # with the `:as` option. Internally, the symbol is used to map to a protected method 
+      # responsible for the details. For example, `:as => :string` will map to `string_input`, 
+      # defined in a module of the same name. Detailed documentation for each input style and it's 
+      # supported options is available on the `*_input` method in each module (links provided below).
       #
-      #   <% semantic_form_for @employee do |form| %>
-      #     <% form.inputs do -%>
-      #       <%= form.input :name, :label => "Full Name" %>
-      #       <%= form.input :manager, :as => :radio %>
-      #       <%= form.input :secret, :as => :password, :input_html => { :value => "xxxx" } %>
-      #       <%= form.input :hired_at, :as => :date, :label => "Date Hired" %>
-      #       <%= form.input :phone, :required => false, :hint => "Eg: +1 555 1234" %>
-      #       <%= form.input :email %>
-      #       <%= form.input :website, :as => :url, :hint => "You may wish to omit the http://" %>
+      # Available input styles:
+      #
+      # * `:boolean`      (see {Inputs::BooleanInput})
+      # * `:check_boxes`  (see {Inputs::CheckBoxesInput})
+      # * `:country`      (see {Inputs::CountryInput})
+      # * `:datetime`     (see {Inputs::DatetimeInput})
+      # * `:date`         (see {Inputs::DateInput})
+      # * `:email`        (see {Inputs::EmailInput})
+      # * `:hidden`       (see {Inputs::HiddenInput})
+      # * `:numeric`      (see {Inputs::NumericInput})
+      # * `:password`     (see {Inputs::PasswordInput})
+      # * `:phone`        (see {Inputs::PhoneInput})
+      # * `:radio`        (see {Inputs::RadioInput})
+      # * `:search`       (see {Inputs::SearchInput})
+      # * `:select`       (see {Inputs::SelectInput})
+      # * `:string`       (see {Inputs::StringInput})
+      # * `:text`         (see {Inputs::TextInput})
+      # * `:time_zone`    (see {Inputs::TimeZoneInput})
+      # * `:time`         (see {Inputs::TimeInput})
+      # * `:url`          (see {Inputs::UrlInput})
+      #
+      # @param [Symbol] method The database column or method name on the form object that this input represents
+      # @option options [Symbol] :as Override the style of input should be rendered
+      # @option options [String, Symbol, Proc] :label Override the label text
+      # @option options [String, Symbol, Proc] :hint Override hint text
+      # @option options [Boolean] :required Optional flag to mark the input as required (or not)
+      # @option options [Hash] :input_html Optional HTML attributes to be passed down to the `<input>` tag
+      # @option options [Hash] :wrapper_html Optional HTML attributes to be passed down to the wrapping `<li>` tag
+      #
+      # Examples:
+      #
+      #     <% semantic_form_for @employee do |form| %>
+      #       <% form.inputs do -%>
+      #         <%= form.input :name, :label => "Full Name" %>
+      #         <%= form.input :manager, :as => :radio %>
+      #         <%= form.input :secret, :as => :password, :input_html => { :value => "xxxx" } %>
+      #         <%= form.input :hired_at, :as => :date, :label => "Date Hired" %>
+      #         <%= form.input :phone, :required => false, :hint => "Eg: +1 555 1234" %>
+      #         <%= form.input :email %>
+      #         <%= form.input :website, :as => :url, :hint => "You may wish to omit the http://" %>
+      #       <% end %>
       #     <% end %>
-      #   <% end %>
-      #
       def input(method, options = {})
         options = options.dup # Allow options to be shared without being tainted by Formtastic
         
@@ -242,7 +322,6 @@ module Formtastic
       # inputs. If you have two separate models, but, semantically, on the page
       # they are part of the same fieldset, you should use semantic_fields_for
       # instead (just as you would do with Rails' form builder).
-      #
       def inputs(*args, &block)
         title = field_set_title_from_args(*args)
         html_options = args.extract_options!
@@ -287,6 +366,7 @@ module Formtastic
       #     </fieldset>
       #   </form>
       #
+      # @private
       def semantic_fields_for(record_or_name_or_array, *args, &block)
         opts = args.extract_options!
         opts[:builder] ||= self.class
@@ -304,7 +384,7 @@ module Formtastic
       #     f.text_field(:body)
       #     f.errors_on(:body)
       #   end
-      #
+      # @private
       def inline_errors_for(method, options = {}) #:nodoc:
         if render_inline_errors?
           errors = error_keys(method, options).map{|x| @object.errors[x] }.flatten.compact.uniq
