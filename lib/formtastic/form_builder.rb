@@ -1,5 +1,7 @@
 $LOAD_PATH.unshift(File.expand_path(File.join(File.dirname(__FILE__))))
 
+require 'html_attributes'
+
 require 'helpers/inputs_helper'
 require 'helpers/buttons_helper'
 require 'helpers/label_helper'
@@ -59,6 +61,8 @@ module Formtastic
   
     attr_accessor :template
     
+    include Formtastic::HtmlAttributes
+    
     include Formtastic::Helpers::InputsHelper
     include Formtastic::Helpers::ButtonsHelper
     include Formtastic::Helpers::LabelHelper
@@ -84,47 +88,6 @@ module Formtastic
     include Formtastic::Inputs::TimeZoneInput
     include Formtastic::Inputs::UrlInput
     
-    protected
-      
-      # Generate the html id for the li tag.
-      # It takes into account options[:index] and @auto_index to generate li
-      # elements with appropriate index scope. It also sanitizes the object
-      # and method names.
-      #
-      # For those of you wondering (like me), options is part of the fields_for
-      # and Builder scope, which is why you can't see it passed in as an arg.
-      def generate_html_id(method_name, value='input') #:nodoc:
-        index = if options.has_key?(:index)
-                  options[:index]
-                elsif defined?(@auto_index)
-                  @auto_index
-                else
-                  ""
-                end
-        sanitized_method_name = method_name.to_s.gsub(/[\?\/\-]$/, '')
-  
-        [custom_namespace, sanitized_object_name, index, sanitized_method_name, value].reject{|x|x.blank?}.join('_')
-      end
-    
-      # Naming, used by FormBuilder generate_html_id
-      def sanitized_object_name #:nodoc:
-        @sanitized_object_name ||= @object_name.to_s.gsub(/\]\[|[^-a-zA-Z0-9:.]/, "_").sub(/_$/, "")
-      end
-    
-      # Naming, used by ErrorsHelper, LabelHelper & Inputs::Base
-      def humanized_attribute_name(method) #:nodoc:
-        if @object && @object.class.respond_to?(:human_attribute_name)
-          humanized_name = @object.class.human_attribute_name(method.to_s)
-          if humanized_name == method.to_s.send(:humanize)
-            method.to_s.send(label_str_method)
-          else
-            humanized_name
-          end
-        else
-          method.to_s.send(label_str_method)
-        end
-      end
-      
   end
   
   # Quick hack/shim so that any code expecting the old SemanticFormBuilder class still works.

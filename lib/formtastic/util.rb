@@ -21,6 +21,6 @@ module Formtastic
     def rails_safe_buffer_class
       return ActiveSupport::SafeBuffer
     end
-
+    
   end
 end
