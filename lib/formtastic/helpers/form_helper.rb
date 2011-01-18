@@ -1,6 +1,6 @@
 module Formtastic
   module Helpers
-    # Wrappers around form_for (etc) with :builder => SemanticFormBuilder.
+    # Wrappers around form_for (etc) with :builder => Formtastic::FormBuilder.
     #
     # * semantic_form_for(@post)
     # * semantic_fields_for(@post)
@@ -9,10 +9,10 @@ module Formtastic
     #
     # Each of which are the equivalent of:
     #
-    # * form_for(@post, :builder => Formtastic::SemanticFormBuilder))
-    # * fields_for(@post, :builder => Formtastic::SemanticFormBuilder))
-    # * form_remote_for(@post, :builder => Formtastic::SemanticFormBuilder))
-    # * remote_form_for(@post, :builder => Formtastic::SemanticFormBuilder))
+    # * form_for(@post, :builder => Formtastic::FormBuilder))
+    # * fields_for(@post, :builder => Formtastic::FormBuilder))
+    # * form_remote_for(@post, :builder => Formtastic::FormBuilder))
+    # * remote_form_for(@post, :builder => Formtastic::FormBuilder))
     #
     # Example Usage:
     #
@@ -33,7 +33,7 @@ module Formtastic
     #     ...
     #   <% end %>
     module FormHelper
-      @@builder = ::Formtastic::SemanticFormBuilder
+      @@builder = Formtastic::FormBuilder
       @@default_form_class = 'formtastic'
       mattr_accessor :builder, :default_form_class
   
@@ -94,13 +94,4 @@ module Formtastic
     end
   end
   
-  # Quick hack/shim for anything expecting the old SemanticFormHelper module.
-  # TODO: migrate everything across
-  module SemanticFormHelper
-    include Formtastic::Helpers::FormHelper
-    @@builder = Formtastic::Helpers::FormHelper.builder
-    @@default_form_class = Formtastic::Helpers::FormHelper.default_form_class
-    mattr_accessor :builder, :default_form_class
-  end
-
 end

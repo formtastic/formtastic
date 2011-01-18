@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'SemanticFormBuilder#inputs' do
+describe 'Formtastic::FormBuilder#inputs' do
 
   include FormtasticSpecHelper
 
@@ -181,7 +181,7 @@ describe 'SemanticFormBuilder#inputs' do
           concat(inputs)
         end)
 
-        output_buffer.should_not have_tag('fieldset[@builder="Formtastic::SemanticFormHelper"]')
+        output_buffer.should_not have_tag('fieldset[@builder="Formtastic::Helpers::FormHelper"]')
       end
 
       it 'should send parent_builder as an option to allow child index interpolation' do

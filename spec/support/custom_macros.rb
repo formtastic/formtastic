@@ -93,7 +93,7 @@ module CustomMacros
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :as => as))
           end)
-          output_buffer.should have_tag("form li input[@size='#{Formtastic::SemanticFormBuilder.default_text_field_size}']")
+          output_buffer.should have_tag("form li input[@size='#{Formtastic::FormBuilder.default_text_field_size}']")
         end
       end
     end
@@ -154,7 +154,7 @@ module CustomMacros
           @title_errors = ['must not be blank', 'must be longer than 10 characters', 'must be awesome']
           @errors = mock('errors')
           @errors.stub!(:[]).with(:title).and_return(@title_errors)
-          ::Formtastic::SemanticFormBuilder.file_metadata_suffixes.each do |suffix|
+          Formtastic::FormBuilder.file_metadata_suffixes.each do |suffix|
             @errors.stub!(:[]).with("title_#{suffix}".to_sym).and_return(nil)
           end
           @new_post.stub!(:errors).and_return(@errors)
@@ -175,7 +175,7 @@ module CustomMacros
         end
 
         it 'should render a paragraph for the errors' do
-          ::Formtastic::SemanticFormBuilder.inline_errors = :sentence
+          Formtastic::FormBuilder.inline_errors = :sentence
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :as => type))
           end)
@@ -183,7 +183,7 @@ module CustomMacros
         end
 
         it 'should not display an error list' do
-          ::Formtastic::SemanticFormBuilder.inline_errors = :list
+          Formtastic::FormBuilder.inline_errors = :list
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :as => type))
           end)
@@ -411,7 +411,7 @@ module CustomMacros
         end
 
         describe 'when the :label_method option is not provided' do
-          ::Formtastic::SemanticFormBuilder.collection_label_methods.each do |label_method|
+          Formtastic::FormBuilder.collection_label_methods.each do |label_method|
 
             describe "when the collection objects respond to #{label_method}" do
               before do

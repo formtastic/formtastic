@@ -235,7 +235,7 @@ describe 'check_boxes input' do
 
       before do
         ::I18n.backend.store_translations :en, :formtastic => { :labels => { :post => { :authors => "Translated!" }}}
-        Formtastic::SemanticFormBuilder.i18n_lookups_by_default = true
+        Formtastic::FormBuilder.i18n_lookups_by_default = true
 
         @new_post.stub!(:author_ids).and_return(nil)
         concat(semantic_form_for(@new_post) do |builder|
@@ -245,7 +245,7 @@ describe 'check_boxes input' do
 
       after do
         ::I18n.backend.reload!
-        Formtastic::SemanticFormBuilder.i18n_lookups_by_default = false
+        Formtastic::FormBuilder.i18n_lookups_by_default = false
       end
 
       it "should do foo" do

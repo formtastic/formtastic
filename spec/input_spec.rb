@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'SemanticFormBuilder#input' do
+describe 'Formtastic::FormBuilder#input' do
 
   include FormtasticSpecHelper
 
@@ -12,7 +12,7 @@ describe 'SemanticFormBuilder#input' do
 
   describe 'with inline order customization' do
     it 'should allow input, hints, errors as order' do
-      ::Formtastic::SemanticFormBuilder.inline_order = [:input, :hints, :errors]
+      Formtastic::FormBuilder.inline_order = [:input, :hints, :errors]
 
       semantic_form_for(@new_post) do |builder|
         builder.should_receive(:inline_input_for).once.ordered
@@ -23,7 +23,7 @@ describe 'SemanticFormBuilder#input' do
     end
 
     it 'should allow hints, input, errors as order' do
-      ::Formtastic::SemanticFormBuilder.inline_order = [:hints, :input, :errors]
+      Formtastic::FormBuilder.inline_order = [:hints, :input, :errors]
 
       semantic_form_for(@new_post) do |builder|
         builder.should_receive(:inline_hints_for).once.ordered
@@ -34,8 +34,8 @@ describe 'SemanticFormBuilder#input' do
     end
 
     it 'should allow errors, input, hint for a custom type while preserving original inline order' do
-      ::Formtastic::SemanticFormBuilder.custom_inline_order[:checkbox] = [:errors, :input, :hints]
-      ::Formtastic::SemanticFormBuilder.inline_order = [:hints, :input, :errors]
+      Formtastic::FormBuilder.custom_inline_order[:checkbox] = [:errors, :input, :hints]
+      Formtastic::FormBuilder.inline_order = [:hints, :input, :errors]
 
       semantic_form_for(@new_post) do |builder|
         builder.should_receive(:inline_errors_for).once.ordered
@@ -66,13 +66,13 @@ describe 'SemanticFormBuilder#input' do
       describe 'when true' do
 
         before do
-          @old_string = ::Formtastic::SemanticFormBuilder.required_string
-          @new_string = ::Formtastic::SemanticFormBuilder.required_string = " required yo!" # ensure there's something in the string
+          @old_string = Formtastic::FormBuilder.required_string
+          @new_string = Formtastic::FormBuilder.required_string = " required yo!" # ensure there's something in the string
           @new_post.class.should_not_receive(:reflect_on_all_validations)
         end
 
         after do
-          ::Formtastic::SemanticFormBuilder.required_string = @old_string
+          Formtastic::FormBuilder.required_string = @old_string
         end
 
         it 'should set a "required" class' do
@@ -95,12 +95,12 @@ describe 'SemanticFormBuilder#input' do
       describe 'when false' do
 
         before do
-          @string = ::Formtastic::SemanticFormBuilder.optional_string = " optional yo!" # ensure there's something in the string
+          @string = Formtastic::FormBuilder.optional_string = " optional yo!" # ensure there's something in the string
           @new_post.class.should_not_receive(:reflect_on_all_validations)
         end
 
         after do
-          ::Formtastic::SemanticFormBuilder.optional_string = ''
+          Formtastic::FormBuilder.optional_string = ''
         end
 
         it 'should set an "optional" class' do
@@ -125,8 +125,8 @@ describe 'SemanticFormBuilder#input' do
         describe 'and an object was not given' do
 
           it 'should use the default value' do
-            ::Formtastic::SemanticFormBuilder.all_fields_required_by_default.should == true
-            ::Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
+            Formtastic::FormBuilder.all_fields_required_by_default.should == true
+            Formtastic::FormBuilder.all_fields_required_by_default = false
 
             concat(semantic_form_for(:project, :url => 'http://test.host/') do |builder|
               concat(builder.input(:title))
@@ -134,7 +134,7 @@ describe 'SemanticFormBuilder#input' do
             output_buffer.should_not have_tag('form li.required')
             output_buffer.should have_tag('form li.optional')
 
-            ::Formtastic::SemanticFormBuilder.all_fields_required_by_default = true
+            Formtastic::FormBuilder.all_fields_required_by_default = true
           end
 
         end
@@ -373,8 +373,8 @@ describe 'SemanticFormBuilder#input' do
           describe 'and the validation reflection plugin is not available' do
 
             it 'should use the default value' do
-              ::Formtastic::SemanticFormBuilder.all_fields_required_by_default.should == true
-              ::Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
+              Formtastic::FormBuilder.all_fields_required_by_default.should == true
+              Formtastic::FormBuilder.all_fields_required_by_default = false
 
               concat(semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title))
@@ -382,7 +382,7 @@ describe 'SemanticFormBuilder#input' do
               output_buffer.should_not have_tag('form li.required')
               output_buffer.should have_tag('form li.optional')
 
-              ::Formtastic::SemanticFormBuilder.all_fields_required_by_default = true
+              Formtastic::FormBuilder.all_fields_required_by_default = true
             end
 
           end
@@ -508,12 +508,12 @@ describe 'SemanticFormBuilder#input' do
         end
 
         describe 'defaulting to file column' do
-          ::Formtastic::SemanticFormBuilder.file_methods.each do |method|
+          Formtastic::FormBuilder.file_methods.each do |method|
             it "should default to :file for attributes that respond to ##{method}" do
               @new_post.stub!(:column_for_attribute).and_return(nil)
               column = mock('column')
 
-              ::Formtastic::SemanticFormBuilder.file_methods.each do |test|
+              Formtastic::FormBuilder.file_methods.each do |test|
                 ### TODO: Check if this is ok
                 column.stub!(method).with(test).and_return(method == test)
               end
@@ -599,7 +599,7 @@ describe 'SemanticFormBuilder#input' do
         describe 'when localized label is NOT provided' do
           describe 'and object is not given' do
             it 'should default the humanized method name, passing it down to the label tag' do
-              ::Formtastic::SemanticFormBuilder.label_str_method = :humanize
+              Formtastic::FormBuilder.label_str_method = :humanize
 
               concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
                 concat(builder.input(:meta_description))
@@ -649,7 +649,7 @@ describe 'SemanticFormBuilder#input' do
                      }
                    }
                 }
-            ::Formtastic::SemanticFormBuilder.i18n_lookups_by_default = false
+            Formtastic::FormBuilder.i18n_lookups_by_default = false
           end
 
           it 'should render a label with localized label (I18n)' do
@@ -686,7 +686,7 @@ describe 'SemanticFormBuilder#input' do
       describe 'when provided' do
 
         after do
-          ::Formtastic::SemanticFormBuilder.default_hint_class = "inline-hints"
+          Formtastic::FormBuilder.default_hint_class = "inline-hints"
         end
 
         it 'should be passed down to the paragraph tag' do
@@ -707,7 +707,7 @@ describe 'SemanticFormBuilder#input' do
 
         it 'should have a custom hint class defaulted for all forms' do
           hint_text = "this is the title of the post"
-          ::Formtastic::SemanticFormBuilder.default_hint_class = "custom-hint-class"
+          Formtastic::FormBuilder.default_hint_class = "custom-hint-class"
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :hint => hint_text))
           end)
@@ -726,7 +726,7 @@ describe 'SemanticFormBuilder#input' do
                     :title => @default_localized_hint_text,
                    }
                 }
-            ::Formtastic::SemanticFormBuilder.i18n_lookups_by_default = false
+            Formtastic::FormBuilder.i18n_lookups_by_default = false
           end
 
           after do

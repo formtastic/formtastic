@@ -8,7 +8,7 @@ module Formtastic
     #
     # Enabled/Disable this by setting:
     #
-    #   Formtastic::SemanticFormBuilder.i18n_lookups_by_default = true/false
+    #   Formtastic::FormBuilder.i18n_lookups_by_default = true/false
     #
     # Lookup priority:
     #
@@ -37,7 +37,7 @@ module Formtastic
           action_name = template.params[:action].to_s rescue ''
           attribute_name = key.to_s
     
-          defaults = ::Formtastic::I18n::SCOPES.reject do |i18n_scope|
+          defaults = Formtastic::I18n::SCOPES.reject do |i18n_scope|
             nested_model_name.nil? && i18n_scope.match(/nested_model/)
           end.collect do |i18n_scope|
             i18n_path = i18n_scope.dup
@@ -53,7 +53,7 @@ module Formtastic
           defaults.uniq!
     
           default_key = defaults.shift
-          i18n_value = ::Formtastic::I18n.t(default_key,
+          i18n_value = Formtastic::I18n.t(default_key,
             options.merge(:default => defaults, :scope => type.to_s.pluralize.to_sym))
           if i18n_value.blank? && type == :label
             # This is effectively what Rails label helper does for i18n lookup

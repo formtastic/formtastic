@@ -352,7 +352,7 @@ Formtastic supports localized *labels*, *hints*, *legends*, *actions* using the 
 *1. Enable I18n lookups by default (@config/initializers/formtastic.rb@):*
 
 <pre>
-  Formtastic::SemanticFormBuilder.i18n_lookups_by_default = true
+  Formtastic::FormBuilder.i18n_lookups_by_default = true
 </pre>
 
 *2. Add some cool label-translations/variants (@config/locale/en.yml@):*
@@ -426,7 +426,7 @@ _Note: Slightly different because Formtastic can't guess how you group fields in
 If I18n-lookups is disabled, i.e.:
 
 <pre>
-  Formtastic::SemanticFormBuilder.i18n_lookups_by_default = false
+  Formtastic::FormBuilder.i18n_lookups_by_default = false
 </pre>
 
 ...then you can enable I18n within the forms instead:
@@ -557,27 +557,27 @@ h3. Specifying controller namespace with @--controller@
 
 h2. Custom Inputs
 
-If you want to add your own input types to encapsulate your own logic or interface patterns, you can do so by subclassing SemanticFormBuilder and configuring Formtastic to use your custom builder class.
+If you want to add your own input types to encapsulate your own logic or interface patterns, you can do so by subclassing Formtastic::FormBuilder and configuring Formtastic to use your custom builder class.
 
-@Formtastic::SemanticFormHelper.builder = MyCustomBuilder@
+@Formtastic::Helpers::FormHelper.builder = MyCustomBuilder@
 
 Be aware that you should either set the options on custom builder or require it after setting options on formtastic default builder.
 
 <pre>
   # OK
-  Formtastic::SemanticFormBuilder.i18n_lookups_by_default = true
+  Formtastic::FormBuilder.i18n_lookups_by_default = true
   require 'formtastic/my_custom_builder'
-  Formtastic::SemanticFormHelper.builder = Formtastic::MyCustomBuilder
+  Formtastic::Helpers::FormHelper.builder = Formtastic::MyCustomBuilder
   
   # OK
   require 'formtastic/my_custom_builder'
-  Formtastic::SemanticFormHelper.builder = Formtastic::MyCustomBuilder
+  Formtastic::Helpers::FormHelper.builder = Formtastic::MyCustomBuilder
   Formtastic::MyCustomBuilder.i18n_lookups_by_default = true
   
   # WRONG!
   require 'formtastic/my_custom_builder'
-  Formtastic::SemanticFormBuilder.i18n_lookups_by_default = true
-  Formtastic::SemanticFormHelper.builder = Formtastic::MyCustomBuilder
+  Formtastic::FormBuilder.i18n_lookups_by_default = true
+  Formtastic::Helpers::FormHelper.builder = Formtastic::MyCustomBuilder
 </pre>
 
 
@@ -585,7 +585,7 @@ h2. Security
 
 By default formtastic escapes html entities in both labels and hints unless a string is marked as html_safe. If you are using an older rails version which doesn't know html_safe, or you want to globally turn this feature off, you can set the following in your initializer:
 
-Formtastic::SemanticFormBuilder.escape_html_entities_in_hints_and_labels = false
+Formtastic::FormBuilder.escape_html_entities_in_hints_and_labels = false
 
 
 h2. Dependencies

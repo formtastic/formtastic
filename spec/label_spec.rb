@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'SemanticFormBuilder#label' do
+describe 'Formtastic::FormBuilder#label' do
 
   include FormtasticSpecHelper
 
@@ -68,14 +68,14 @@ describe 'SemanticFormBuilder#label' do
     end
 
     it 'should not html escape the label if configured that way' do
-      ::Formtastic::SemanticFormBuilder.escape_html_entities_in_hints_and_labels = false
+      Formtastic::FormBuilder.escape_html_entities_in_hints_and_labels = false
       semantic_form_for(@new_post) do |builder|
         builder.label(:login, :required => false, :label => '<b>My label</b>').should == "<label for=\"post_login\"><b>My label</b></label>"
       end
     end
 
     it 'should not html escape the label string for html_safe strings' do
-      ::Formtastic::SemanticFormBuilder.escape_html_entities_in_hints_and_labels = true
+      Formtastic::FormBuilder.escape_html_entities_in_hints_and_labels = true
       semantic_form_for(@new_post) do |builder|
         builder.label(:login, :required => false, :label => '<b>My label</b>'.html_safe).should == "<label for=\"post_login\"><b>My label</b></label>"
       end

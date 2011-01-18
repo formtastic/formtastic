@@ -268,7 +268,7 @@ module Formtastic
         end
       end
       
-      # A thin wrapper around #fields_for to set :builder => Formtastic::SemanticFormBuilder
+      # A thin wrapper around #fields_for to set :builder => Formtastic::FormBuilder
       # for nesting forms:
       #
       #   # Example:

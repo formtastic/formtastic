@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'SemanticFormBuilder#semantic_fields_for' do
+describe 'Formtastic::FormBuilder#semantic_fields_for' do
 
   include FormtasticSpecHelper
 
@@ -11,10 +11,10 @@ describe 'SemanticFormBuilder#semantic_fields_for' do
     @new_post.stub!(:author).and_return(::Author.new)
   end
 
-  it 'yields an instance of SemanticFormHelper.builder' do
+  it 'yields an instance of FormHelper.builder' do
     semantic_form_for(@new_post) do |builder|
       builder.semantic_fields_for(:author) do |nested_builder|
-        nested_builder.class.should == ::Formtastic::SemanticFormHelper.builder
+        nested_builder.class.should == Formtastic::Helpers::FormHelper.builder
       end
     end
   end

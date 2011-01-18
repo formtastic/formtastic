@@ -63,7 +63,7 @@ module Formtastic
         end
     
         text = (localized_string(key, text, :action, :model => object_name) ||
-                ::Formtastic::I18n.t(key, :model => object_name)) unless text.is_a?(::String)
+                Formtastic::I18n.t(key, :model => object_name)) unless text.is_a?(::String)
     
         button_html = options.delete(:button_html) || {}
         button_html.merge!(:class => [button_html[:class], key].compact.join(' '))

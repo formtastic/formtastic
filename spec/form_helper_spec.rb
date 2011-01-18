@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'SemanticFormHelper' do
+describe 'FormHelper' do
 
   include FormtasticSpecHelper
 
@@ -12,9 +12,9 @@ describe 'SemanticFormHelper' do
 
   describe '#semantic_form_for' do
 
-    it 'yields an instance of SemanticFormBuilder' do
+    it 'yields an instance of Formtastic::FormBuilder' do
       semantic_form_for(@new_post, :url => '/hello') do |builder|
-        builder.class.should == ::Formtastic::SemanticFormBuilder
+        builder.class.should == Formtastic::FormBuilder
       end
     end
 
@@ -25,7 +25,7 @@ describe 'SemanticFormHelper' do
     end
 
     it 'adds a class of "xyz" to the generated form' do
-      ::Formtastic::SemanticFormHelper.default_form_class = 'xyz'
+      Formtastic::Helpers::FormHelper.default_form_class = 'xyz'
       concat(semantic_form_for(::Post.new, :as => :post, :url => '/hello') do |builder|
       end)
       output_buffer.should have_tag("form.xyz")
@@ -105,7 +105,7 @@ describe 'SemanticFormHelper' do
 
     describe "with :builder option" do
       it "yields an instance of the given builder" do
-        class MyAwesomeCustomBuilder < ::Formtastic::SemanticFormBuilder
+        class MyAwesomeCustomBuilder < Formtastic::FormBuilder
         end
         semantic_form_for(@new_post, :url => '/hello', :builder => MyAwesomeCustomBuilder) do |builder|
           builder.class.should == MyAwesomeCustomBuilder
@@ -124,25 +124,25 @@ describe 'SemanticFormHelper' do
   end
 
   describe '#semantic_fields_for' do
-    it 'yields an instance of SemanticFormBuilder' do
+    it 'yields an instance of Formtastic::FormBuilder' do
       semantic_fields_for(@new_post, :url => '/hello') do |builder|
-        builder.class.should == ::Formtastic::SemanticFormBuilder
+        builder.class.should == Formtastic::FormBuilder
       end
     end
   end
 
   describe '#semantic_form_remote_for' do
-    it 'yields an instance of SemanticFormBuilder' do
+    it 'yields an instance of Formtastic::FormBuilder' do
       semantic_form_remote_for(@new_post, :url => '/hello') do |builder|
-        builder.class.should == ::Formtastic::SemanticFormBuilder
+        builder.class.should == Formtastic::FormBuilder
       end
     end
   end
 
   describe '#semantic_form_for_remote' do
-    it 'yields an instance of SemanticFormBuilder' do
+    it 'yields an instance of Formtastic::FormBuilder' do
       semantic_remote_form_for(@new_post, :url => '/hello') do |builder|
-        builder.class.should == ::Formtastic::SemanticFormBuilder
+        builder.class.should == Formtastic::FormBuilder
       end
     end
   end

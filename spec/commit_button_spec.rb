@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'SemanticFormBuilder#commit_button' do
+describe 'Formtastic::FormBuilder#commit_button' do
 
   include FormtasticSpecHelper
 
@@ -178,7 +178,7 @@ describe 'SemanticFormBuilder#commit_button' do
                    :submit => 'Custom Submit',
                   }
                }
-           ::Formtastic::SemanticFormBuilder.i18n_lookups_by_default = true
+           Formtastic::FormBuilder.i18n_lookups_by_default = true
          end
 
          after do
@@ -252,7 +252,7 @@ describe 'SemanticFormBuilder#commit_button' do
                     :create => 'Custom Create',
                    }
                 }
-            ::Formtastic::SemanticFormBuilder.i18n_lookups_by_default = true
+            Formtastic::FormBuilder.i18n_lookups_by_default = true
           end
 
           after do
@@ -327,7 +327,7 @@ describe 'SemanticFormBuilder#commit_button' do
                     :update => 'Custom Save',
                    }
                 }
-            ::Formtastic::SemanticFormBuilder.i18n_lookups_by_default = true
+            Formtastic::FormBuilder.i18n_lookups_by_default = true
           end
 
           after do

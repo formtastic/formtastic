@@ -16,7 +16,7 @@ module Formtastic
       # which you can change to suit your market and user base (see README for more info on config).
       #
       # Examples:
-      #   f.input :location, :as => :country # use Formtastic::SemanticFormBuilder.priority_countries array for the priority countries
+      #   f.input :location, :as => :country # use Formtastic::FormBuilder.priority_countries array for the priority countries
       #   f.input :location, :as => :country, :priority_countries => /Australia/ # set your own
       #
       def country_input(method, options)

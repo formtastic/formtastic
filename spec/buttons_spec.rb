@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'SemanticFormBuilder#buttons' do
+describe 'Formtastic::FormBuilder#buttons' do
 
   include FormtasticSpecHelper
 

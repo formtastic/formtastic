@@ -41,7 +41,7 @@ module Formtastic
     configure :default_text_area_width
     configure :all_fields_required_by_default, true
     configure :include_blank_for_select_by_default, true
-    configure :required_string, proc { ::Formtastic::Util.html_safe(%{<abbr title="#{::Formtastic::I18n.t(:required)}">*</abbr>}) }
+    configure :required_string, proc { Formtastic::Util.html_safe(%{<abbr title="#{Formtastic::I18n.t(:required)}">*</abbr>}) }
     configure :optional_string, ''
     configure :inline_errors, :sentence
     configure :label_str_method, :humanize
@@ -88,11 +88,6 @@ module Formtastic
     include Formtastic::Inputs::TimeZoneInput
     include Formtastic::Inputs::UrlInput
     
-  end
-  
-  # Quick hack/shim so that any code expecting the old SemanticFormBuilder class still works.
-  # TODO: migrate everything across
-  class SemanticFormBuilder < Formtastic::FormBuilder
   end
   
 end
