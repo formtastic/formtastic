@@ -1,1 +1,1 @@
---no-private --title "Formtastic Documentation"
+--no-private --title "Formtastic Documentation" --markup markdown --quiet
