@@ -1,5 +1,6 @@
 module Formtastic
   module Helpers
+    # @private
     module FieldsetWrapper
     
       protected

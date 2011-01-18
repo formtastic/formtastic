@@ -2,6 +2,7 @@
 
 # Adapted from the rails3 compatibility shim in Haml 2.2
 module Formtastic
+  # @private
   module Util
     extend self
     ## Rails XSS Safety

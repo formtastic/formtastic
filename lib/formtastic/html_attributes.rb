@@ -1,4 +1,5 @@
 module Formtastic
+  # @private
   module HtmlAttributes
     
     protected
