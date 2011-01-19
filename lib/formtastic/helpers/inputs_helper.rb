@@ -130,16 +130,18 @@ module Formtastic
       # * `:time`         (see {Inputs::TimeInput})
       # * `:url`          (see {Inputs::UrlInput})
       #
+      # @todo document the "guessing" of input style
+      #
       # @param [Symbol] method 
       #   The database column or method name on the form object that this input represents
       #
       # @option options :as [Symbol] 
       #   Override the style of input should be rendered
       #
-      # @option options :label [String, Symbol, Proc] 
+      # @option options :label [String, Symbol, false] 
       #   Override the label text
       #
-      # @option options :hint [String, Symbol, Proc]  
+      # @option options :hint [String, Symbol, false]  
       #   Override hint text
       #
       # @option options :required [Boolean] 
@@ -154,10 +156,10 @@ module Formtastic
       # @option options :collection [Array<ActiveModel, String, Symbol>, Hash{String => String, Boolean}, OrderedHash{String => String, Boolean}]
       #   Override collection of objects in the association (`:select`, `:radio` & `:check_boxes` inputs only)
       #
-      # @option options :label_method [Symbol]
+      # @option options :label_method [Symbol, Proc]
       #   Override the method called on each object in the `:collection` for use as the `<label>` content (`:check_boxes` & `:radio` inputs) or `<option>` content (`:select` inputs)
       #
-      # @option options :value_method [Symbol]
+      # @option options :value_method [Symbol, Proc]
       #   Override the method called on each object in the `:collection` for use as the `value` attribute in the `<input>` (`:check_boxes` & `:radio` inputs) or `<option>` (`:select` inputs)
       #
       # @option options :hint_class [String]
@@ -166,24 +168,62 @@ module Formtastic
       # @option options :error_class [String]
       #   Override the `class` attribute applied to the `<p>` or `<ol>` tag used when inline errors are rendered for an input
       #
-      # @todo Can we kill :hint_class & :error_class?
-      # @todo Can we kill :label & :hint (i18n)?
-      # @todo examples need improvement
-      # @todo document the "guessing" of input style
+      # @option options :multiple [Boolean] TODO
+      # @option options :group_by [Symbol] TODO
+      # @option options :find_options [Symbol] TODO
+      # @option options :group_label_method [Symbol] TODO
+      # @option options :include_blank [Boolean] TODO
+      # @option options :prompt [String] TODO
       #
-      # Examples:
+      # @todo Can we kill `:hint_class` & `:error_class`? What's the use case for input-by-input? Shift to config or burn!
+      # @todo Can we kill `:group_by` & `:group_label_method`? Should be done with :collection => grouped_options_for_select(...)
+      # @todo Can we kill `:find_options`? Should be done with MyModel.some_scope.where(...).order(...).whatever_scope
+      # @todo Can we kill `:label`, `:hint` & `:prompt`? All strings could be shifted to i18n!
       #
-      #     <% semantic_form_for @employee do |form| %>
-      #       <% form.inputs do -%>
-      #         <%= form.input :name, :label => "Full Name" %>
-      #         <%= form.input :manager, :as => :radio %>
-      #         <%= form.input :secret, :as => :password, :input_html => { :value => "xxxx" } %>
-      #         <%= form.input :hired_at, :as => :date, :label => "Date Hired" %>
-      #         <%= form.input :phone, :required => false, :hint => "Eg: +1 555 1234" %>
-      #         <%= form.input :email %>
-      #         <%= form.input :website, :as => :url, :hint => "You may wish to omit the http://" %>
-      #       <% end %>
-      #     <% end %>
+      # @example Accept all default options
+      #   <%= f.input :title %>
+      #
+      # @example Change the input type
+      #   <%= f.input :title, :as => :string %>
+      #
+      # @example Changing the label with a String
+      #   <%= f.input :title, :label => "Post title" %>
+      #
+      # @example Disabling the label with false, even if an i18n translation exists
+      #   <%= f.input :title, :label => false  %>
+      #
+      # @example Changing the hint with a String
+      #   <%= f.input :title, :hint => "Every post needs a title!" %>
+      #
+      # @example Disabling the hint with false, even if an i18n translation exists
+      #   <%= f.input :title, :hint => false  %>
+      #
+      # @example Marking a field as required or not (even if validations do not enforce it)
+      #   <%= f.input :title, :required => true  %>
+      #   <%= f.input :title, :required => false  %>
+      #
+      # @example Changing or adding to HTML attributes in the main `<input>` or `<select>` tag
+      #   <%= f.input :title, :input_html => { :onchange => "somethingAwesome();", :class => 'awesome' } %>
+      #
+      # @example Changing or adding to HTML attributes in the wrapper `<li>` tag
+      #   <%= f.input :title, :wrapper_html => { :class => "important-input" } %>
+      #
+      # @example Changing the association choices with `:collection`
+      #   <%= f.input :author,     :collection => User.active %>
+      #   <%= f.input :categories, :collection => Category.where(...).order(...) %>
+      #   <%= f.input :status,     :collection => ["Draft", "Published"] %>
+      #   <%= f.input :status,     :collection => [:draft, :published] %>
+      #   <%= f.input :status,     :collection => {"Draft" => 0, "Published" => 1} %>
+      #   <%= f.input :status,     :collection => OrderedHash.new("Draft" => 0, "Published" => 1) %>
+      #   <%= f.input :status,     :collection => [["Draft", 0], ["Published", 1]] %>
+      #   <%= f.input :status,     :collection => grouped_options_for_select(...) %>
+      #   <%= f.input :status,     :collection => options_for_select(...) %>
+      #
+      # @example Specifying if a `:select` should allow multiple selections:
+      #   <%= f.input :cateogies, :as => :select, :multiple => true %>
+      #   <%= f.input :cateogies, :as => :select, :multiple => false %>
+      #
+      # @todo Many many more examples. Some of the detail probably needs to be pushed out to the relevant methods too.
       def input(method, options = {})
         options = options.dup # Allow options to be shared without being tainted by Formtastic
         
