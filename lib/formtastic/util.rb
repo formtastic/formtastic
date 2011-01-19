@@ -18,10 +18,6 @@ module Formtastic
       text
     end
 
-    def rails_safe_buffer_class
-      return ActiveSupport::SafeBuffer
-    end
-
     def rails3?
       version=
         if defined?(ActionPack::VERSION::MAJOR)
