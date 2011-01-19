@@ -81,16 +81,11 @@ module Formtastic #:nodoc:
     # * :boolean (a checkbox) - default for :boolean column types (you can also have booleans as :select and :radio)
     # * :string (a text field) - default for :string column types
     # * :numeric (a text field, like string) - default for :integer, :float and :decimal column types
-    # * :email (an email input) - default for :string column types with 'email' as the method name.
-    # * :url (a url input) - default for :string column types with 'url' as the method name.
-    # * :phone (a tel input) - default for :string column types with 'phone' or 'fax' in the method name.
-    # * :search (a search input) - default for :string column types with 'search' as the method name.
     # * :country (a select menu of country names) - requires a country_select plugin to be installed
     # * :email (an email input) - New in HTML5 - needs to be explicitly provided with :as => :email
     # * :url (a url input) - New in HTML5 - needs to be explicitly provided with :as => :url
     # * :phone (a tel input) - New in HTML5 - needs to be explicitly provided with :as => :phone
     # * :search (a search input) - New in HTML5 - needs to be explicity provided with :as => :search
-    # * :country (a select menu of country names) - requires a country_select plugin to be installed
     # * :hidden (a hidden field) - creates a hidden field (added for compatibility)
     #
     # Example:
