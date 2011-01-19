@@ -60,7 +60,8 @@ module Formtastic
       include Formtastic::Reflection
       include Formtastic::LocalizedString
       
-      RESERVED_COLUMNS = [:created_at, :updated_at, :created_on, :updated_on, :lock_version, :version]
+      # Which columns to skip when automatically rendering a form without any fields specified.
+      SKIPPED_COLUMNS = [:created_at, :updated_at, :created_on, :updated_on, :lock_version, :version]
       
       # Returns a chunk of HTML markup for a given `method` on the form object, wrapped in
       # an `<li>` wrapper tag with appropriate `class` and `id` attribute hooks for CSS and JS.
@@ -115,6 +116,7 @@ module Formtastic
       # * `:datetime`     (see {Inputs::DatetimeInput})
       # * `:date`         (see {Inputs::DateInput})
       # * `:email`        (see {Inputs::EmailInput})
+      # * `:file`         (see {Inputs::FileInput})
       # * `:hidden`       (see {Inputs::HiddenInput})
       # * `:numeric`      (see {Inputs::NumericInput})
       # * `:password`     (see {Inputs::PasswordInput})
@@ -128,13 +130,46 @@ module Formtastic
       # * `:time`         (see {Inputs::TimeInput})
       # * `:url`          (see {Inputs::UrlInput})
       #
-      # @param [Symbol] method The database column or method name on the form object that this input represents
-      # @option options [Symbol] :as Override the style of input should be rendered
-      # @option options [String, Symbol, Proc] :label Override the label text
-      # @option options [String, Symbol, Proc] :hint Override hint text
-      # @option options [Boolean] :required Optional flag to mark the input as required (or not)
-      # @option options [Hash] :input_html Optional HTML attributes to be passed down to the `<input>` tag
-      # @option options [Hash] :wrapper_html Optional HTML attributes to be passed down to the wrapping `<li>` tag
+      # @param [Symbol] method 
+      #   The database column or method name on the form object that this input represents
+      #
+      # @option options :as [Symbol] 
+      #   Override the style of input should be rendered
+      #
+      # @option options :label [String, Symbol, Proc] 
+      #   Override the label text
+      #
+      # @option options :hint [String, Symbol, Proc]  
+      #   Override hint text
+      #
+      # @option options :required [Boolean] 
+      #   Override to mark the input as required (or not)
+      #
+      # @option options :input_html [Hash]  
+      #   Override the HTML attributes to be passed down to the `<input>` tag
+      #
+      # @option options :wrapper_html [Hash] 
+      #   Override the HTML attributes to be passed down to the wrapping `<li>` tag
+      #
+      # @option options :collection [Array<ActiveModel, String, Symbol>, Hash{String => String, Boolean}, OrderedHash{String => String, Boolean}]
+      #   Override collection of objects in the association (`:select`, `:radio` & `:check_boxes` inputs only)
+      #
+      # @option options :label_method [Symbol]
+      #   Override the method called on each object in the `:collection` for use as the `<label>` content (`:check_boxes` & `:radio` inputs) or `<option>` content (`:select` inputs)
+      #
+      # @option options :value_method [Symbol]
+      #   Override the method called on each object in the `:collection` for use as the `value` attribute in the `<input>` (`:check_boxes` & `:radio` inputs) or `<option>` (`:select` inputs)
+      #
+      # @option options :hint_class [String]
+      #   Override the `class` attribute applied to the `<p>` tag used when a `:hint` is rendered for an input
+      #
+      # @option options :error_class [String]
+      #   Override the `class` attribute applied to the `<p>` or `<ol>` tag used when inline errors are rendered for an input
+      #
+      # @todo Can we kill :hint_class & :error_class?
+      # @todo Can we kill :label & :hint (i18n)?
+      # @todo examples need improvement
+      # @todo document the "guessing" of input style
       #
       # Examples:
       #
@@ -181,147 +216,149 @@ module Formtastic
       # called either with a block (in which you can do the usual Rails form stuff, HTML, ERB, etc),
       # or with a list of fields.  These two examples are functionally equivalent:
       #
-      #   # With a block:
-      #   <% semantic_form_for @post do |form| %>
-      #     <% form.inputs do %>
-      #       <%= form.input :title %>
-      #       <%= form.input :body %>
+      #     # With a block:
+      #     <% semantic_form_for @post do |form| %>
+      #       <% form.inputs do %>
+      #         <%= form.input :title %>
+      #         <%= form.input :body %>
+      #       <% end %>
       #     <% end %>
-      #   <% end %>
+      #     
+      #     # With a list of fields:
+      #     <% semantic_form_for @post do |form| %>
+      #       <%= form.inputs :title, :body %>
+      #     <% end %>
+      #     
+      #     # Output:
+      #     <form ...>
+      #       <fieldset class="inputs">
+      #         <ol>
+      #           <li class="string">...</li>
+      #           <li class="text">...</li>
+      #         </ol>
+      #       </fieldset>
+      #     </form>
       #
-      #   # With a list of fields:
-      #   <% semantic_form_for @post do |form| %>
-      #     <%= form.inputs :title, :body %>
-      #   <% end %>
-      #
-      #   # Output:
-      #   <form ...>
-      #     <fieldset class="inputs">
-      #       <ol>
-      #         <li class="string">...</li>
-      #         <li class="text">...</li>
-      #       </ol>
-      #     </fieldset>
-      #   </form>
-      #
-      # === Quick Forms
+      # **Quick Forms**
       #
       # When called without a block or a field list, an input is rendered for each column in the
       # model's database table, just like Rails' scaffolding.  You'll obviously want more control
       # than this in a production application, but it's a great way to get started, then come back
       # later to customise the form with a field list or a block of inputs.  Example:
       #
-      #   <% semantic_form_for @post do |form| %>
-      #     <%= form.inputs %>
-      #   <% end %>
+      #     <% semantic_form_for @post do |form| %>
+      #       <%= form.inputs %>
+      #     <% end %>
+      #     
+      #     With a few arguments:
+      #     <% semantic_form_for @post do |form| %>
+      #       <%= form.inputs "Post details", :title, :body %>
+      #     <% end %>
       #
-      #   With a few arguments:
-      #   <% semantic_form_for @post do |form| %>
-      #     <%= form.inputs "Post details", :title, :body %>
-      #   <% end %>
-      #
-      # === Options
+      # **Options**
       #
       # All options (with the exception of :name/:title) are passed down to the fieldset as HTML
       # attributes (id, class, style, etc).  If provided, the :name/:title option is passed into a
       # legend tag inside the fieldset.
       #
-      #   # With a block:
-      #   <% semantic_form_for @post do |form| %>
-      #     <% form.inputs :name => "Create a new post", :style => "border:1px;" do %>
-      #       ...
+      #     # With a block:
+      #     <% semantic_form_for @post do |form| %>
+      #       <% form.inputs :name => "Create a new post", :style => "border:1px;" do %>
+      #         ...
+      #       <% end %>
       #     <% end %>
-      #   <% end %>
+      #     
+      #     # With a list (the options must come after the field list):
+      #     <% semantic_form_for @post do |form| %>
+      #       <%= form.inputs :title, :body, :name => "Create a new post", :style => "border:1px;" %>
+      #     <% end %>
+      #     
+      #     # ...or the equivalent:
+      #     <% semantic_form_for @post do |form| %>
+      #       <%= form.inputs "Create a new post", :title, :body, :style => "border:1px;" %>
+      #     <% end %>
       #
-      #   # With a list (the options must come after the field list):
-      #   <% semantic_form_for @post do |form| %>
-      #     <%= form.inputs :title, :body, :name => "Create a new post", :style => "border:1px;" %>
-      #   <% end %>
-      #
-      #   # ...or the equivalent:
-      #   <% semantic_form_for @post do |form| %>
-      #     <%= form.inputs "Create a new post", :title, :body, :style => "border:1px;" %>
-      #   <% end %>
-      #
-      # === It's basically a fieldset!
+      # **It's basically a fieldset!**
       #
       # Instead of hard-coding fieldsets & legends into your form to logically group related fields,
       # use inputs:
       #
-      #   <% semantic_form_for @post do |f| %>
-      #     <% f.inputs do %>
-      #       <%= f.input :title %>
-      #       <%= f.input :body %>
+      #     <% semantic_form_for @post do |f| %>
+      #       <% f.inputs do %>
+      #         <%= f.input :title %>
+      #         <%= f.input :body %>
+      #       <% end %>
+      #       <% f.inputs :name => "Advanced", :id => "advanced" do %>
+      #         <%= f.input :created_at %>
+      #         <%= f.input :user_id, :label => "Author" %>
+      #       <% end %>
+      #       <% f.inputs "Extra" do %>
+      #         <%= f.input :update_at %>
+      #       <% end %>
       #     <% end %>
-      #     <% f.inputs :name => "Advanced", :id => "advanced" do %>
-      #       <%= f.input :created_at %>
-      #       <%= f.input :user_id, :label => "Author" %>
-      #     <% end %>
-      #     <% f.inputs "Extra" do %>
-      #       <%= f.input :update_at %>
-      #     <% end %>
-      #   <% end %>
+      #     
+      #     # Output:
+      #     <form ...>
+      #       <fieldset class="inputs">
+      #         <ol>
+      #           <li class="string">...</li>
+      #           <li class="text">...</li>
+      #         </ol>
+      #       </fieldset>
+      #       <fieldset class="inputs" id="advanced">
+      #         <legend><span>Advanced</span></legend>
+      #         <ol>
+      #           <li class="datetime">...</li>
+      #           <li class="select">...</li>
+      #         </ol>
+      #       </fieldset>
+      #       <fieldset class="inputs">
+      #         <legend><span>Extra</span></legend>
+      #         <ol>
+      #           <li class="datetime">...</li>
+      #         </ol>
+      #       </fieldset>
+      #     </form>
       #
-      #   # Output:
-      #   <form ...>
-      #     <fieldset class="inputs">
-      #       <ol>
-      #         <li class="string">...</li>
-      #         <li class="text">...</li>
-      #       </ol>
-      #     </fieldset>
-      #     <fieldset class="inputs" id="advanced">
-      #       <legend><span>Advanced</span></legend>
-      #       <ol>
-      #         <li class="datetime">...</li>
-      #         <li class="select">...</li>
-      #       </ol>
-      #     </fieldset>
-      #     <fieldset class="inputs">
-      #       <legend><span>Extra</span></legend>
-      #       <ol>
-      #         <li class="datetime">...</li>
-      #       </ol>
-      #     </fieldset>
-      #   </form>
-      #
-      # === Nested attributes
+      # **Nested attributes**
       #
       # As in Rails, you can use semantic_fields_for to nest attributes:
       #
-      #   <% semantic_form_for @post do |form| %>
-      #     <%= form.inputs :title, :body %>
+      #     <% semantic_form_for @post do |form| %>
+      #       <%= form.inputs :title, :body %>
+      #     
+      #       <% form.semantic_fields_for :author, @bob do |author_form| %>
+      #         <% author_form.inputs do %>
+      #           <%= author_form.input :first_name, :required => false %>
+      #           <%= author_form.input :last_name %>
+      #         <% end %>
+      #       <% end %>
+      #     <% end %>
       #
-      #     <% form.semantic_fields_for :author, @bob do |author_form| %>
-      #       <% author_form.inputs do %>
+      # But this does not look formtastic! This is equivalent:
+      #
+      #     <% semantic_form_for @post do |form| %>
+      #       <%= form.inputs :title, :body %>
+      #       <% form.inputs :for => [ :author, @bob ] do |author_form| %>
       #         <%= author_form.input :first_name, :required => false %>
       #         <%= author_form.input :last_name %>
       #       <% end %>
       #     <% end %>
-      #   <% end %>
-      #
-      # But this does not look formtastic! This is equivalent:
-      #
-      #   <% semantic_form_for @post do |form| %>
-      #     <%= form.inputs :title, :body %>
-      #     <% form.inputs :for => [ :author, @bob ] do |author_form| %>
-      #       <%= author_form.input :first_name, :required => false %>
-      #       <%= author_form.input :last_name %>
-      #     <% end %>
-      #   <% end %>
       #
       # And if you don't need to give options to your input call, you could do it
       # in just one line:
       #
-      #   <% semantic_form_for @post do |form| %>
-      #     <%= form.inputs :title, :body %>
-      #     <%= form.inputs :first_name, :last_name, :for => @bob %>
-      #   <% end %>
+      #     <% semantic_form_for @post do |form| %>
+      #       <%= form.inputs :title, :body %>
+      #       <%= form.inputs :first_name, :last_name, :for => @bob %>
+      #     <% end %>
       #
       # Just remember that calling inputs generates a new fieldset to wrap your
       # inputs. If you have two separate models, but, semantically, on the page
       # they are part of the same fieldset, you should use semantic_fields_for
       # instead (just as you would do with Rails' form builder).
+      #
+      # @todo convert to YARD documentation syntax
       def inputs(*args, &block)
         title = field_set_title_from_args(*args)
         html_options = args.extract_options!
@@ -336,7 +373,7 @@ module Formtastic
           if @object && args.empty?
             args  = association_columns(:belongs_to)
             args += content_columns
-            args -= RESERVED_COLUMNS
+            args -= SKIPPED_COLUMNS
             args.compact!
           end
           legend = args.shift if args.first.is_a?(::String)
@@ -350,23 +387,23 @@ module Formtastic
       # A thin wrapper around #fields_for to set :builder => Formtastic::FormBuilder
       # for nesting forms:
       #
-      #   # Example:
-      #   <% semantic_form_for @post do |post| %>
-      #     <% post.semantic_fields_for :author do |author| %>
-      #       <% author.inputs :name %>
+      #     # Example:
+      #     <% semantic_form_for @post do |post| %>
+      #       <% post.semantic_fields_for :author do |author| %>
+      #         <% author.inputs :name %>
+      #       <% end %>
       #     <% end %>
-      #   <% end %>
+      #     
+      #     # Output:
+      #     <form ...>
+      #       <fieldset class="inputs">
+      #         <ol>
+      #           <li class="string"><input type='text' name='post[author][name]' id='post_author_name' /></li>
+      #         </ol>
+      #       </fieldset>
+      #     </form>
       #
-      #   # Output:
-      #   <form ...>
-      #     <fieldset class="inputs">
-      #       <ol>
-      #         <li class="string"><input type='text' name='post[author][name]' id='post_author_name' /></li>
-      #       </ol>
-      #     </fieldset>
-      #   </form>
-      #
-      # @private
+      # @todo convert to YARD syntax
       def semantic_fields_for(record_or_name_or_array, *args, &block)
         opts = args.extract_options!
         opts[:builder] ||= self.class
@@ -380,11 +417,12 @@ module Formtastic
       # This method is also aliased as errors_on, so you can call on your custom
       # inputs as well:
       #
-      #   semantic_form_for :post do |f|
-      #     f.text_field(:body)
-      #     f.errors_on(:body)
-      #   end
-      # @private
+      #     semantic_form_for :post do |f|
+      #       f.text_field(:body)
+      #       f.errors_on(:body)
+      #     end
+      #
+      # @todo convert to YARD syntax
       def inline_errors_for(method, options = {}) #:nodoc:
         if render_inline_errors?
           errors = error_keys(method, options).map{|x| @object.errors[x] }.flatten.compact.uniq
@@ -398,7 +436,6 @@ module Formtastic
       protected
       
       # Collects association columns (relation columns) for the current form object class.
-      #
       def association_columns(*by_associations) #:nodoc:
         if @object.present? && @object.class.respond_to?(:reflections)
           @object.class.reflections.collect do |name, association_reflection|
@@ -414,7 +451,6 @@ module Formtastic
       end
       
       # Collects content columns (non-relation columns) for the current form object class.
-      #
       def content_columns #:nodoc:
         model_name.constantize.content_columns.collect { |c| c.name.to_sym }.compact rescue []
       end
@@ -424,7 +460,6 @@ module Formtastic
       # key.
       #
       # It should raise an error if a block with arity zero is given.
-      #
       def inputs_for_nested_attributes(*args, &block) #:nodoc:
         options = args.extract_options!
         args << options.merge!(:parent => { :builder => self, :for => options[:for] })
@@ -460,7 +495,6 @@ module Formtastic
       #
       # * if the :required option isn't provided, and validates_presence_of can't be determined, the
       #   configuration option all_fields_required_by_default is used.
-      #
       def method_required?(attribute) #:nodoc:
         attribute_sym = attribute.to_s.sub(/_id$/, '').to_sym
   
@@ -504,7 +538,6 @@ module Formtastic
       #
       # If there is no column for the method (eg "virtual columns" with an attr_accessor), the
       # default is a :string, a similar behaviour to Rails' scaffolding.
-      #
       def default_input_type(method, options = {}) #:nodoc:
         if column = column_for(method)
           # Special cases where the column type doesn't map to an input method.
@@ -544,7 +577,6 @@ module Formtastic
       end
       
       # Get a column object for a specified attribute method - if possible.
-      #
       def column_for(method) #:nodoc:
         @object.column_for_attribute(method) if @object.respond_to?(:column_for_attribute)
       end
@@ -555,7 +587,6 @@ module Formtastic
       end
   
       # Generates hints for the given method using the text supplied in :hint.
-      #
       def inline_hints_for(method, options) #:nodoc:
         options[:hint] = localized_string(method, options[:hint], :hint)
         return if options[:hint].blank? or options[:hint].kind_of? Hash
@@ -564,14 +595,12 @@ module Formtastic
       end
       
       # Creates an error sentence by calling to_sentence on the errors array.
-      #
       def error_sentence(errors, options = {}) #:nodoc:
         error_class = options[:error_class] || default_inline_error_class
         template.content_tag(:p, Formtastic::Util.html_safe(errors.to_sentence.untaint), :class => error_class)
       end
   
       # Creates an error li list.
-      #
       def error_list(errors, options = {}) #:nodoc:
         error_class = options[:error_class] || default_error_list_class
         list_elements = []
@@ -582,7 +611,6 @@ module Formtastic
       end
   
       # Creates an error sentence containing only the first error
-      #
       def error_first(errors, options = {}) #:nodoc:
         error_class = options[:error_class] || default_inline_error_class
         template.content_tag(:p, Formtastic::Util.html_safe(errors.first.untaint), :class => error_class)
