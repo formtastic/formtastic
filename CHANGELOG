@@ -1,3 +1,13 @@
+[v2 branch]
+
+* Improved some documentation, much more to come
+* Tagged many modules as @private to remove from YARD documentation
+* Added YARD as development dependency for a massive documentation effort
+* Renamed Formtastic::SemanticFormHelper to Formtastic::Helpers::FormHelper (SemanticFormHelper still exists as a module which includes the new module, need to handle deprecation notices somehow)
+* Renamed Formtastic::SemanticFormBuilder to Formtastic::FormBuilder (SemanticFormBuilder still exists as a subclass, need to handle deprecation notices somehow)
+* Massive refactoring of formtastic.rb into around 30 files and modules like StringInput and ButtonsHelper
+* Removed chunks of Rails 2 specific code, tests and documentation
+
 1.2.3
 
 * Removed deprecated methods input_field_set, button_field_set, boolean_select_input, boolean_radio_input and boolean_radio_input
