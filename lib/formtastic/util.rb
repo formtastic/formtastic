@@ -17,13 +17,5 @@ module Formtastic
       return text.html_safe
       text
     end
-
-    def rails3?
-      version=
-        if defined?(ActionPack::VERSION::MAJOR)
-          ActionPack::VERSION::MAJOR
-        end
-      !version.blank? && version >= 3
-    end
   end
 end
