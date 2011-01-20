@@ -649,32 +649,35 @@ describe 'Formtastic::FormBuilder#input' do
                      }
                    }
                 }
-            Formtastic::FormBuilder.i18n_lookups_by_default = false
           end
 
           it 'should render a label with localized label (I18n)' do
-            concat(semantic_form_for(@new_post) do |builder|
-              concat(builder.input(:title, :label => true))
-              concat(builder.input(:published, :as => :boolean, :label => true))
-            end)
-            output_buffer.should have_tag('form li label', Regexp.new('^' + @localized_label_text))
+            with_config :i18n_lookups_by_default, false do
+              concat(semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:title, :label => true))
+                concat(builder.input(:published, :as => :boolean, :label => true))
+              end)
+              output_buffer.should have_tag('form li label', Regexp.new('^' + @localized_label_text))
+            end
           end
 
           it 'should render a hint paragraph containing an optional localized label (I18n) if first is not set' do
-            ::I18n.backend.store_translations :en,
-              :formtastic => {
-                  :labels => {
-                    :post => {
-                      :title => nil,
-                      :published => nil
+            with_config :i18n_lookups_by_default, false do
+              ::I18n.backend.store_translations :en,
+                :formtastic => {
+                    :labels => {
+                      :post => {
+                        :title => nil,
+                        :published => nil
+                       }
                      }
-                   }
-                }
-            concat(semantic_form_for(@new_post) do |builder|
-              concat(builder.input(:title, :label => true))
-              concat(builder.input(:published, :as => :boolean, :label => true))
-            end)
-            output_buffer.should have_tag('form li label', Regexp.new('^' + @default_localized_label_text))
+                  }
+              concat(semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:title, :label => true))
+                concat(builder.input(:published, :as => :boolean, :label => true))
+              end)
+              output_buffer.should have_tag('form li label', Regexp.new('^' + @default_localized_label_text))
+            end
           end
         end
       end
@@ -726,7 +729,6 @@ describe 'Formtastic::FormBuilder#input' do
                     :title => @default_localized_hint_text,
                    }
                 }
-            Formtastic::FormBuilder.i18n_lookups_by_default = false
           end
 
           after do
@@ -735,76 +737,88 @@ describe 'Formtastic::FormBuilder#input' do
 
           describe 'when provided value (hint value) is set to TRUE' do
             it 'should render a hint paragraph containing a localized hint (I18n)' do
-              ::I18n.backend.store_translations :en,
-              :formtastic => {
-                  :hints => {
-                    :post => {
-                      :title => @localized_hint_text
+              with_config :i18n_lookups_by_default, false do
+                ::I18n.backend.store_translations :en,
+                :formtastic => {
+                    :hints => {
+                      :post => {
+                        :title => @localized_hint_text
+                       }
                      }
-                   }
-                }
-              concat(semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:title, :hint => true))
-              end)
-              output_buffer.should have_tag('form li p.inline-hints', @localized_hint_text)
+                  }
+                concat(semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:title, :hint => true))
+                end)
+                output_buffer.should have_tag('form li p.inline-hints', @localized_hint_text)
+              end
             end
 
 						it 'should render a hint paragraph containing a localized hint (I18n) with a custom hint class if i ask for one' do
-              ::I18n.backend.store_translations :en,
-              :formtastic => {
-                  :hints => {
-                    :post => {
-                      :title => @localized_hint_text
+              with_config :i18n_lookups_by_default, false do
+                ::I18n.backend.store_translations :en,
+                :formtastic => {
+                    :hints => {
+                      :post => {
+                        :title => @localized_hint_text
+                       }
                      }
-                   }
-                }
-              concat(semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:title, :hint => true, :hint_class => 'custom-hint-class'))
-              end)
-              output_buffer.should have_tag('form li p.custom-hint-class', @localized_hint_text)
+                  }
+                concat(semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:title, :hint => true, :hint_class => 'custom-hint-class'))
+                end)
+                output_buffer.should have_tag('form li p.custom-hint-class', @localized_hint_text)
+              end
             end
 
             it 'should render a hint paragraph containing an optional localized hint (I18n) if first is not set' do
-              concat(semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:title, :hint => true))
-              end)
-              output_buffer.should have_tag('form li p.inline-hints', @default_localized_hint_text)
+              with_config :i18n_lookups_by_default, false do
+                concat(semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:title, :hint => true))
+                end)
+                output_buffer.should have_tag('form li p.inline-hints', @default_localized_hint_text)
+              end
             end
           end
 
           describe 'when provided value (label value) is set to FALSE' do
             it 'should not render a hint paragraph' do
-              concat(semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:title, :hint => false))
-              end)
-              output_buffer.should_not have_tag('form li p.inline-hints', @localized_hint_text)
+              with_config :i18n_lookups_by_default, false do
+                concat(semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:title, :hint => false))
+                end)
+                output_buffer.should_not have_tag('form li p.inline-hints', @localized_hint_text)
+              end
             end
           end
         end
 
         describe 'when localized hint (I18n) is a model with attribute hints' do
           it "should see the provided hash as a blank entry" do
-            ::I18n.backend.store_translations :en,
-            :formtastic => {
-                :hints => {
-                  :title => { # movie title
-                    :summary => @localized_hint_text # summary of movie
+            with_config :i18n_lookups_by_default, false do
+              ::I18n.backend.store_translations :en,
+              :formtastic => {
+                  :hints => {
+                    :title => { # movie title
+                      :summary => @localized_hint_text # summary of movie
+                     }
                    }
-                 }
-              }
-            semantic_form_for(@new_post) do |builder|
-              concat(builder.input(:title, :hint => true))
+                }
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:title, :hint => true))
+              end
+              output_buffer.should_not have_tag('form li p.inline-hints', @localized_hint_text)
             end
-            output_buffer.should_not have_tag('form li p.inline-hints', @localized_hint_text)
           end
         end
 
         describe 'when localized hint (I18n) is not provided' do
           it 'should not render a hint paragraph' do
-            concat(semantic_form_for(@new_post) do |builder|
-              concat(builder.input(:title))
-            end)
-            output_buffer.should_not have_tag('form li p.inline-hints')
+            with_config :i18n_lookups_by_default, false do
+              concat(semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:title))
+              end)
+              output_buffer.should_not have_tag('form li p.inline-hints')
+            end
           end
         end
       end

@@ -97,7 +97,6 @@ describe 'Formtastic::I18n' do
             :post => {:author => "Written by"}
           }
         }}
-      Formtastic::FormBuilder.i18n_lookups_by_default = true
 
       @new_post.stub!(:title)
       @new_post.stub!(:column_for_attribute).with(:title).and_return(mock('column', :type => :string, :limit => 255))
@@ -105,50 +104,61 @@ describe 'Formtastic::I18n' do
 
     after do
       ::I18n.backend.reload!
-      Formtastic::FormBuilder.i18n_lookups_by_default = false
     end
 
     it "lookup scopes should be defined" do
-      lambda { Formtastic::I18n::SCOPES }.should_not raise_error(::NameError)
+      with_config :i18n_lookups_by_default, true do
+        lambda { Formtastic::I18n::SCOPES }.should_not raise_error(::NameError)
+      end
     end
 
     it "should be able to translate with namespaced object" do
-      concat(semantic_form_for(@new_post) do |builder|
-        concat(builder.input(:title))
-      end)
-      output_buffer.should have_tag("form label", /Hello post!/)
+      with_config :i18n_lookups_by_default, true do
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:title))
+        end)
+        output_buffer.should have_tag("form label", /Hello post!/)
+      end
     end
 
     it "should be able to translate without form-object" do
-      concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
-        concat(builder.input(:title))
-      end)
-      output_buffer.should have_tag("form label", /Hello project!/)
+      with_config :i18n_lookups_by_default, true do
+        concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
+          concat(builder.input(:title))
+        end)
+        output_buffer.should have_tag("form label", /Hello project!/)
+      end
     end
 
     it 'should be able to translate nested objects with nested translations' do
-      concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
-        builder.semantic_fields_for(:task) do |f|
-          concat(f.input(:name))
-        end
-      end)
-      output_buffer.should have_tag("form label", /Hello task name!/)
+      with_config :i18n_lookups_by_default, true do
+        concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
+          builder.semantic_fields_for(:task) do |f|
+            concat(f.input(:name))
+          end
+        end)
+        output_buffer.should have_tag("form label", /Hello task name!/)
+      end
     end
 
     it 'should be able to translate nested objects with top level translations' do
-      concat(semantic_form_for(:order, :url => 'http://test.host') do |builder|
-        builder.semantic_fields_for(:line_item) do |f|
-          concat(f.input(:name))
-        end
-      end)
-      output_buffer.should have_tag("form label", /Hello line item name!/)
+      with_config :i18n_lookups_by_default, true do
+        concat(semantic_form_for(:order, :url => 'http://test.host') do |builder|
+          builder.semantic_fields_for(:line_item) do |f|
+            concat(f.input(:name))
+          end
+        end)
+        output_buffer.should have_tag("form label", /Hello line item name!/)
+      end
     end
 
     it 'should be able to translate helper label as Rails does' do
-      concat(semantic_form_for(@new_post) do |builder|
-        concat(builder.input(:author))
-      end)
-      output_buffer.should have_tag("form label", /Written by/)
+      with_config :i18n_lookups_by_default, true do
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:author))
+        end)
+        output_buffer.should have_tag("form label", /Written by/)
+      end
     end
 
     # TODO: Add spec for namespaced models?
