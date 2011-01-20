@@ -1,5 +1,16 @@
 # encoding: utf-8
 module Formtastic
+  # Copies formtastic.css and formtastic_changes.css to public/stylesheets/ and a config initializer
+  # to config/initializers/formtastic_config.rb.
+  #
+  # @example
+  #   $ rails generate formtastic:form Post
+  # @example Write a partial to the file system 
+  #   $ rails generate formtastic:form Post --partial
+  # @example Return HAML output instead of ERB 
+  #   $ rails generate formtastic:form Post --haml
+  # @example Generate a form for specific model attributes 
+  #   $ rails generate formtastic:form Post title:string body:text
   class FormGenerator < Rails::Generators::NamedBase
     desc "Generates formtastic form code based on an existing model. By default the " <<
          "generated code will be printed out directly in the terminal, and also copied " <<
