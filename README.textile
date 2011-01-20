@@ -112,7 +112,7 @@ A proof-of-concept stylesheet is provided which you can include in your layout. 
 <pre>
   <head>
     ...
-    <%= formtastic_stylesheet_link_tag %>
+    <%= stylesheet_link_tag 'formtastic', 'formtastic_changes' %>
     ...
   </head>
 </pre>
