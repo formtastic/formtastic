@@ -1,5 +1,13 @@
 # encoding: utf-8
+
 module Formtastic
+  # Copies formtastic.css and formtastic_changes.css to public/stylesheets/ and a config initializer
+  # to config/initializers/formtastic_config.rb.
+  #
+  # @example
+  #   $ rails generate formtastic:install
+  #
+  # @todo Revisit in Rails 3.1 where public assets are treated differently
   class InstallGenerator < Rails::Generators::Base
     desc "Copies formtastic.css and formtastic_changes.css to public/stylesheets/ and a config initializer to config/initializers/formtastic_config.rb"
 
