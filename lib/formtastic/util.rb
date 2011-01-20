@@ -18,10 +18,6 @@ module Formtastic
       return text.html_safe
       text
     end
-
-    def rails_safe_buffer_class
-      return ActiveSupport::SafeBuffer
-    end
     
   end
 end
