@@ -502,7 +502,7 @@ Run @rails generate formtastic:install@ to copy a commented out config file into
 
 h2. Form Generator
 
-There's a Formtastic form code generator to make your transition to Formtastic easier. All you have to do is to *specify an existing model name*, and optionally specify view template framework (ERB/HAML), and you are good to go. *Note:* This won't overwrite any of your stuff.
+There's a Formtastic form code generator to make your transition to Formtastic easier. All you have to do is to *specify an existing model name*, and optionally specify view template framework (ERB/HAML), and you are good to go. *Note:* This won't overwrite any of your exsting files without confrmation.
 
 h3. Basic usage
 
@@ -531,10 +531,19 @@ h3. Specifying HAML instead of ERB with @--haml@
 h3. Specifying controller namespace with @--controller@
 
 <pre>
-  $ rails generate formtastic:form Post --partial --controller admin/posts
+  $ rails generate formtastic:form Post --controller admin/posts
       exists  app/views/admin/posts
       create  app/views/admin/posts/_form.html.erb
 </pre>
+
+h3. Specifying which attributes need an input
+
+<pre>
+  $ rails generate formtastic:form Post title:string body:text publication_state:select
+      exists  app/views/admin/posts
+      create  app/views/admin/posts/_form.html.erb
+</pre>
+
 
 
 h2. Custom Inputs
