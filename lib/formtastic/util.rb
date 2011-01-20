@@ -14,9 +14,11 @@ module Formtastic
     # @param text [String]
     # @return [String] `text`, marked as HTML-safe
     def html_safe(text)
-      return text if text.nil?
-      return text.html_safe
-      text
+      if text.respond_to?(:html_safe)
+        text.html_safe
+      else
+        text
+      end
     end
     
   end
