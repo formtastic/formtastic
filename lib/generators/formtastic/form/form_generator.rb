@@ -1,29 +1,30 @@
 # encoding: utf-8
 module Formtastic
-  # Copies formtastic.css and formtastic_changes.css to public/stylesheets/ and a config initializer
-  # to config/initializers/formtastic_config.rb.
+  # Generates a Formtastic form partial based on an existing model. It will not overwrite existing
+  # files without confirmation.
   #
   # @example
   #   $ rails generate formtastic:form Post
-  # @example Write a partial to the file system 
-  #   $ rails generate formtastic:form Post --partial
+  # @example Copy the partial code to the pasteboard rather than generating a partial
+  #   $ rails generate formtastic:form Post --copy
   # @example Return HAML output instead of ERB 
   #   $ rails generate formtastic:form Post --haml
   # @example Generate a form for specific model attributes 
   #   $ rails generate formtastic:form Post title:string body:text
   class FormGenerator < Rails::Generators::NamedBase
-    desc "Generates formtastic form code based on an existing model. By default the " <<
-         "generated code will be printed out directly in the terminal, and also copied " <<
-         "to clipboard. Can optionally be saved into partial directly."
+    desc "Generates a Formtastic form partial based on an existing model."
 
-    argument :name, :type => :string, :required => true, :banner => 'ExistingModelName'
-    argument :attributes, :type => :array, :default => [], :banner => 'field:type field:type'
+    argument :name, :type => :string, :required => true, :banner => 'MyExistingModel'
+    argument :attributes, :type => :array, :default => [], :banner => 'attribute:type attribute:type'
 
     class_option :haml, :type => :boolean, :default => false, :group => :formtastic,
                  :desc => "Generate HAML instead of ERB"
 
-    class_option :partial, :type => :boolean, :default => false, :group => :formtastic,
-                 :desc => 'Generate a form partial in the model views path, i.e. "_form.html.erb" or "_form.html.haml"'
+    class_option :partial, :type => :boolean, :default => true, :group => :formtastic,
+                 :desc => 'Generate a form partial in the model views path (eg `posts/_form.html.erb`'
+
+    class_option :copy, :type => :boolean, :default => false, :group => :formtastic,
+                 :desc => 'Copy the generated code the clipboard instead of generating a partial file."'
 
     class_option :controller, :type => :string, :default => false, :group => :formtastic,
                  :desc => 'Generate for custom controller/view path - in case model and controller namespace is different, i.e. "admin/posts"'
@@ -33,22 +34,15 @@ module Formtastic
     def create_or_show
       @attributes = self.columns if @attributes.empty?
 
-      if options[:partial]
-        empty_directory "app/views/#{controller_path}"
-        template "_form.html.#{template_type}", "app/views/#{controller_path}/_form.html.#{template_type}"
-      else
+      if options[:copy]
         template = File.read("#{self.class.source_root}/_form.html.#{template_type}")
         erb = ERB.new(template, nil, '-')
         generated_code = erb.result(binding).strip rescue nil
-
-        puts "# ---------------------------------------------------------"
-        puts "#  GENERATED FORMTASTIC CODE"
-        puts "# ---------------------------------------------------------"
-        puts
-        puts generated_code || "Nothing could be generated - model exists?"
-        puts
-        puts "# ---------------------------------------------------------"
-        puts "Copied to clipboard - just paste it!" if save_to_clipboard(generated_code)
+        puts "The following code has been to the clipboard, just paste it in your views:" if save_to_clipboard(generated_code)
+        puts generated_code || "Error: Nothing generated. Does the model exist?"
+      else
+        empty_directory "app/views/#{controller_path}"
+        template "_form.html.#{template_type}", "app/views/#{controller_path}/_form.html.#{template_type}"
       end
     end
 

@@ -1,5 +1,7 @@
 [v2 branch]
 
+* Changed formtastic:form generator to generate a partial by default (instead of copying to clipboard, which can be done with --copy)
+* Removed formtastic_stylesheet_link_tag
 * Improved some documentation, much more to come
 * Tagged many modules as @private to remove from YARD documentation
 * Added YARD as development dependency for a massive documentation effort
@@ -7,7 +9,6 @@
 * Renamed Formtastic::SemanticFormBuilder to Formtastic::FormBuilder (SemanticFormBuilder still exists as a subclass, need to handle deprecation notices somehow)
 * Massive refactoring of formtastic.rb into around 30 files and modules like StringInput and ButtonsHelper
 * Removed chunks of Rails 2 specific code, tests and documentation
-* Removed formtastic_stylesheet_link_tag
 
 1.2.3
 

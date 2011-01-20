@@ -508,34 +508,16 @@ h3. Basic usage
 
 <pre>
   $ rails generate formtastic:form ModelName
-</pre>
-
-The results are something like this, with the ERB code printed out to the terminal 
-
-<pre>
-  $ rails generate formtastic:form Post
-  # ---------------------------------------------------------
-  #  GENERATED FORMTASTIC CODE
-  # ---------------------------------------------------------
-
-  <% f.inputs do %>
-    <%= f.input :title, :label => 'Title' %>
-    <%= f.input :body, :label => 'Body' %>
-    <%= f.input :published, :label => 'Published' %>
-  <% end %>
-
-  # ---------------------------------------------------------
-   Copied to clipboard - just paste it!
-</pre>
-
-h3. Generating a partial with @--partial@
-
-You can also ask Formtastic to *generate a partial* with the @--partial@ option, placing it in the correct location inside your @app/views@ directory:
-
-<pre>
-  $ rails generate formtastic:form Post --partial
       exists  app/views/posts
       create  app/views/posts/_form.html.erb
+</pre>
+
+The ERB code is saved to a partial file, but it will not overwrite existing files without a prompt.
+
+h3. Copying the ERB code to the clipboard instead with @--copy@
+
+<pre>
+  $ rails generate formtastic:form Post --copy
 </pre>
 
 h3. Specifying HAML instead of ERB with @--haml@
