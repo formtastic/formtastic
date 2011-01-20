@@ -6,8 +6,10 @@ require 'rails'
 module Formtastic
   # @private
   class Railtie < Rails::Railtie
-    initializer 'formtastic.initialize', :after => :after_initialize do
-      ActionView::Base.send :include, Formtastic::Helpers::FormHelper
+    initializer 'formtastic.initialize' do
+      ActiveSupport.on_load(:action_view) do
+        include Formtastic::Helpers::FormHelper
+      end
     end
   end
 end
