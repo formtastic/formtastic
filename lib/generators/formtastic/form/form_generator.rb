@@ -35,7 +35,6 @@ module Formtastic
 
     def create_or_show
       @attributes = self.columns if @attributes.empty?
-
       if options[:copy]
         template = File.read("#{self.class.source_root}/_form.html.#{template_type}")
         erb = ERB.new(template, nil, '-')

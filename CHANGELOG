@@ -1,5 +1,6 @@
 [v2 branch]
 
+* Changed formtastic:form generator include the wrapping semantic_form_for block
 * Changed formtastic:form generator to generate a partial by default (instead of copying to clipboard, which can be done with --copy)
 * Removed formtastic_stylesheet_link_tag
 * Improved some documentation, much more to come
