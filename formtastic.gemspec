@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{formtastic}
-  s.version = "1.2.3"
+  s.version = "2.0.0.pre"
   s.date = %q{2011-01-07}
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.summary = %q{A Rails form builder plugin/gem with semantically rich and accessible markup}
   s.email = %q{justin@indent.com.au}
   s.extra_rdoc_files = ["README.textile"]
-  s.files = Dir.glob("generators/**/*") + Dir.glob("lib/**/*") + Dir.glob("rails/*") + %w(MIT-LICENSE README.textile init.rb)
+  s.files = Dir.glob("lib/**/*") + %w(MIT-LICENSE README.textile)
   s.homepage = %q{http://github.com/justinfrench/formtastic/tree/master}
   s.post_install_message = %q{
   ========================================================================

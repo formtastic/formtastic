@@ -178,33 +178,36 @@ describe 'Formtastic::FormBuilder#commit_button' do
                    :submit => 'Custom Submit',
                   }
                }
-           Formtastic::FormBuilder.i18n_lookups_by_default = true
          end
-
+         
          after do
            ::I18n.backend.reload!
          end
-
+         
          it 'should render an input with localized label (I18n)' do
-           ::I18n.backend.store_translations :en,
-             :formtastic => {
-                 :actions => {
-                   :post => {
-                     :submit => 'Custom Submit %{model}'
+           with_config :i18n_lookups_by_default, true do
+             ::I18n.backend.store_translations :en,
+               :formtastic => {
+                   :actions => {
+                     :post => {
+                       :submit => 'Custom Submit %{model}'
+                      }
                     }
-                  }
-               }
-           concat(semantic_form_for(:post, :url => 'http://example.com') do |builder|
-             concat(builder.commit_button)
-           end)
-           output_buffer.should have_tag(%Q{li.commit input[@value="Custom Submit Post"][@class~="submit"]})
+                 }
+             concat(semantic_form_for(:post, :url => 'http://example.com') do |builder|
+               concat(builder.commit_button)
+             end)
+             output_buffer.should have_tag(%Q{li.commit input[@value="Custom Submit Post"][@class~="submit"]})
+           end
          end
-
+         
          it 'should render an input with anoptional localized label (I18n) - if first is not set' do
-           concat(semantic_form_for(:post, :url => 'http://example.com') do |builder|
-             concat(builder.commit_button)
-           end)
-           output_buffer.should have_tag(%Q{li.commit input[@value="Custom Submit"][@class~="submit"]})
+           with_config :i18n_lookups_by_default, true do
+             concat(semantic_form_for(:post, :url => 'http://example.com') do |builder|
+               concat(builder.commit_button)
+             end)
+             output_buffer.should have_tag(%Q{li.commit input[@value="Custom Submit"][@class~="submit"]})
+           end
          end
 
        end
@@ -252,7 +255,6 @@ describe 'Formtastic::FormBuilder#commit_button' do
                     :create => 'Custom Create',
                    }
                 }
-            Formtastic::FormBuilder.i18n_lookups_by_default = true
           end
 
           after do
@@ -260,25 +262,29 @@ describe 'Formtastic::FormBuilder#commit_button' do
           end
 
           it 'should render an input with localized label (I18n)' do
-            ::I18n.backend.store_translations :en,
-              :formtastic => {
-                  :actions => {
-                    :post => {
-                      :create => 'Custom Create %{model}'
+            with_config :i18n_lookups_by_default, true do
+              ::I18n.backend.store_translations :en,
+                :formtastic => {
+                    :actions => {
+                      :post => {
+                        :create => 'Custom Create %{model}'
+                       }
                      }
-                   }
-                }
-            concat(semantic_form_for(@new_post) do |builder|
-              concat(builder.commit_button)
-            end)
-            output_buffer.should have_tag(%Q{li.commit input[@value="Custom Create Post"][@class~="create"]})
+                  }
+              concat(semantic_form_for(@new_post) do |builder|
+                concat(builder.commit_button)
+              end)
+              output_buffer.should have_tag(%Q{li.commit input[@value="Custom Create Post"][@class~="create"]})
+            end
           end
 
           it 'should render an input with anoptional localized label (I18n) - if first is not set' do
-            concat(semantic_form_for(@new_post) do |builder|
-              concat(builder.commit_button)
-            end)
-            output_buffer.should have_tag(%Q{li.commit input[@value="Custom Create"][@class~="create"]})
+            with_config :i18n_lookups_by_default, true do
+              concat(semantic_form_for(@new_post) do |builder|
+                concat(builder.commit_button)
+              end)
+              output_buffer.should have_tag(%Q{li.commit input[@value="Custom Create"][@class~="create"]})
+            end
           end
 
         end
@@ -327,7 +333,6 @@ describe 'Formtastic::FormBuilder#commit_button' do
                     :update => 'Custom Save',
                    }
                 }
-            Formtastic::FormBuilder.i18n_lookups_by_default = true
           end
 
           after do
@@ -335,26 +340,30 @@ describe 'Formtastic::FormBuilder#commit_button' do
           end
 
           it 'should render an input with localized label (I18n)' do
-            ::I18n.backend.store_translations :en,
-              :formtastic => {
-                  :actions => {
-                    :post => {
-                      :update => 'Custom Save %{model}'
+            with_config :i18n_lookups_by_default, true do
+              ::I18n.backend.store_translations :en,
+                :formtastic => {
+                    :actions => {
+                      :post => {
+                        :update => 'Custom Save %{model}'
+                       }
                      }
-                   }
-                }
-            concat(semantic_form_for(@new_post) do |builder|
-              concat(builder.commit_button)
-            end)
-            output_buffer.should have_tag(%Q{li.commit input[@value="Custom Save Post"][@class~="update"]})
+                  }
+              concat(semantic_form_for(@new_post) do |builder|
+                concat(builder.commit_button)
+              end)
+              output_buffer.should have_tag(%Q{li.commit input[@value="Custom Save Post"][@class~="update"]})
+            end
           end
 
           it 'should render an input with anoptional localized label (I18n) - if first is not set' do
-            concat(semantic_form_for(@new_post) do |builder|
-              concat(builder.commit_button)
-            end)
-            output_buffer.should have_tag(%Q{li.commit input[@value="Custom Save"][@class~="update"]})
-            ::I18n.backend.store_translations :en, :formtastic => {}
+            with_config :i18n_lookups_by_default, true do
+              concat(semantic_form_for(@new_post) do |builder|
+                concat(builder.commit_button)
+              end)
+              output_buffer.should have_tag(%Q{li.commit input[@value="Custom Save"][@class~="update"]})
+              ::I18n.backend.store_translations :en, :formtastic => {}
+            end
           end
 
         end
