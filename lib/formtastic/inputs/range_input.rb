@@ -1,10 +1,7 @@
-require 'reflection'
-
 module Formtastic
   module Inputs
     module RangeInput
       include Formtastic::Inputs::Base
-      include Formtastic::Reflection
       
       def range_input(method, options)  
         reflections = @object.class.reflect_on_validations_for(method) if @object.class.respond_to?(:reflect_on_validations_for)
