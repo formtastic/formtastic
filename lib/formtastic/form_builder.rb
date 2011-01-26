@@ -19,6 +19,7 @@ require 'inputs/numeric_input'
 require 'inputs/password_input'
 require 'inputs/phone_input'
 require 'inputs/radio_input'
+require 'inputs/range_input'
 require 'inputs/search_input'
 require 'inputs/select_input'
 require 'inputs/string_input'
@@ -80,6 +81,7 @@ module Formtastic
     include Formtastic::Inputs::PasswordInput
     include Formtastic::Inputs::PhoneInput
     include Formtastic::Inputs::RadioInput
+    include Formtastic::Inputs::RangeInput
     include Formtastic::Inputs::SearchInput
     include Formtastic::Inputs::SelectInput
     include Formtastic::Inputs::StringInput
