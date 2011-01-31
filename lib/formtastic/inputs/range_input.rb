@@ -18,7 +18,8 @@ module Formtastic
               range_end = reflection.options[:less_than_or_equal_to]
             end
             options[:input_html] ||= {}
-            options[:input_html][:in] = (range_start..range_end)
+            options[:input_html][:in] = options.delete(:in) if options[:in]
+            options[:input_html][:in] ||= (range_start..range_end)
           end
         end
         basic_input_helper(:range_field, :numeric, method, options)
