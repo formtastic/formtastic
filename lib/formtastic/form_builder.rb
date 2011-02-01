@@ -6,6 +6,7 @@ require 'helpers/inputs_helper'
 require 'helpers/buttons_helper'
 require 'helpers/label_helper'
 require 'helpers/errors_helper'
+require 'helpers/validation_helper'
 
 require 'inputs/boolean_input'
 require 'inputs/check_boxes_input'
@@ -68,6 +69,7 @@ module Formtastic
     include Formtastic::Helpers::ButtonsHelper
     include Formtastic::Helpers::LabelHelper
     include Formtastic::Helpers::ErrorsHelper
+    include Formtastic::Helpers::ValidationHelper
 
     include Formtastic::Inputs::BooleanInput
     include Formtastic::Inputs::CheckBoxesInput
