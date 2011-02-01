@@ -212,6 +212,8 @@ module FormtasticSpecHelper
         mock('reflection', :options => {}, :klass => ::Post, :macro => :has_many)
       when :main_post
         mock('reflection', :options => {}, :klass => ::Post, :macro => :belongs_to)
+      when :mongoid_reviewer
+        mock('reflection', :options => {}, :klass => ::Author, :macro => :referenced_in, :foreign_key => "reviewer_id")
       end
 
     end

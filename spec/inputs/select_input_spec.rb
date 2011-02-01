@@ -30,6 +30,20 @@ describe 'select input' do
         end
       end
     end
+    
+    describe "using a related model without reflection's options(Mongoid Document)" do
+      before do        
+        @form = semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:mongoid_reviewer, :as => :select))
+        end
+      end
+      
+      it 'should draw select options' do
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.should have_tag('form li select')
+        output_buffer.should have_tag('form li select#post_reviewer_id')
+      end
+    end
 
     describe 'using a range' do
       before do
