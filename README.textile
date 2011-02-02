@@ -234,8 +234,8 @@ Customize HTML attributes for any input using the @:input_html@ option. Typicall
 
 <pre>
   <% semantic_form_for @post do |form| %>
-    <%= form.input :title,      :input_html => { :size => 60 } %>
-    <%= form.input :body,       :input_html => { :class => 'autogrow' } %>
+    <%= form.input :title,      :input_html => {  :cols => 10 } %>
+    <%= form.input :body,       :input_html => { :class => 'autogrow', :rows => 10, :cols => 20, :maxlength => 10  } %>
     <%= form.input :created_at, :input_html => { :disabled => true } %>
     <%= form.buttons %>
   <% end %>
