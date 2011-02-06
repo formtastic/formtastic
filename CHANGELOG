@@ -1,3 +1,5 @@
+* Fixed an issue when formtastic fails to determine if a checkbox is checked with custom checked and unchecked values (thanks to Eugene Bolshakov)
+
 1.2.3
 
 * Removed deprecated methods input_field_set, button_field_set, boolean_select_input, boolean_radio_input and boolean_radio_input
