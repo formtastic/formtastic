@@ -12,12 +12,13 @@ module Formtastic
         html_options  = options.delete(:input_html) || {}
         checked_value = options.delete(:checked_value) || '1'
         unchecked_value = options.delete(:unchecked_value) || '0'
+        checked = @object && ActionView::Helpers::InstanceTag.check_box_checked?(@object.send(:"#{method}"), checked_value)
   
         html_options[:id] = html_options[:id] || generate_html_id(method, "")
         input = template.check_box_tag(
           "#{@object_name}[#{method}]",
           checked_value,
-          (@object && @object.send(:"#{method}")),
+          checked,
           html_options
         )
         
