@@ -205,6 +205,8 @@ describe 'check_boxes input' do
         end
 
         it "should have one item disabled; the specified one" do
+          output_buffer.concat(@form) if Formtastic::Util.rails3?
+          output_buffer.should have_tag("form li fieldset ol li input[@type='hidden'][@disabled='disabled']", :count => 1)
           output_buffer.should have_tag("form li fieldset ol li label input[@disabled='disabled']", :count => 1)
           output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_ids_#{@fred.id}']", /fred/i)
           output_buffer.should have_tag("form li fieldset ol li label input[@disabled='disabled'][@value='#{@fred.id}']")
