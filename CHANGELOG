@@ -1,7 +1,15 @@
+1.2.4.beta (unreleased)
+
+* Changed :boolean inputs to use Rails' check_box_checked? instead of our own logic
+* Changed developer instructions in README
+* Fixed :boolean inputs to disable the included hidden input when disabling the actual checkbox
+* Fixed that Formtastic was making changes to the options hash directly instead of on a duplicate, causing problems for those trying to reuse options on multiple inputs in the view 
+* Fixed that tiny scroll bars were appearing on legends in date/time/radio/cbheckboxes fielsets (GH-477)    
+
 1.2.3
 
-* Fixed documentation typos
 * Changed i18n gem dependency from ">= 0.4.0" to "~> 0.4" to work with apps that require i18n 0.5
+* Fixed documentation typos
 
 1.2.3.beta
 
@@ -16,6 +24,35 @@
 * Added Rails 3 compatible form generator templates in addition to existing Rails 2 support
 * Added reflection on allow_blank option when determining the 'required' status of an input
 
+850bf1d .dup options hash before we fiddle with it so that the same hash can be re-used in views between inputs (GH-474)
+2d69c23 Merge branch 'class_attribute_fix' into 1.2-stable
+1b12feb Stylistic change to remove self. prefix on method calls
+0a8fe2d Use class_attribute configuration instance methods
+58a91b5 use class_attribute as the priority over class_inheritable_accesssor
+88c5552 adding a note/warning about subclassing in the initializer template
+8bfc66b CHANGELOG catch-up
+3fb94d1 use class_attribute instead of class_inheritable_accessor if defined
+65e7e2d Rails 2 & 3 compatible form generator templates (GH-472):
+029f758 Rails 2 & 3 compatible form generator templates (GH-472):
+772bf40 Add missing </pre> to README.
+3ba4485 Add missing </pre> to README.
+6baeac9 Merge branch 'vijaydev-master' into 1.2-stable
+e1e1b81 Merge branch 'master' of https://github.com/vijaydev/formtastic into vijaydev-master
+e6aba23 corrected documentation on how to override a value
+cd3b49c corrected documentation on how to override a value
+5a73707 Fixes Issue #468 - https://github.com/justinfrench/formtastic/issues/#issue/468 - where the directories config/initializers and public/stylesheets are removed on running t
+b6e580d fixing rails 2 development instruction
+533c086 added a section to the README on getting a dev environment up and running
+d952753 Remove unnecessary gem method, now handled by bundler
+249dba1 Add bundler for easier development setup Add support to switch between rails versions in dev
+1aecc63 Input spec failing in 2.3.x because form was in output_buffer twice...
+4fcd1e8 Use real object to get specs passing in ruby 192
+9b00e07 reflect on allow_blank option to determine required status
+8f75fc7 input_html should be passed to checkbox_tag
+aac0564 removed a bunch of deprecated methods and options
+
+
+* Fixed an issue when formtastic fails to determine if a checkbox is checked with custom checked and unchecked values (thanks to Eugene Bolshakov)
 
 1.2.2
 
