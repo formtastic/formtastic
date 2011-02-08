@@ -546,7 +546,7 @@ module Formtastic #:nodoc:
 
       def association_primary_key(method)
         reflection = reflection_for(method)
-        reflection.options[:foreign_key] if reflection && !reflection.options[:foreign_key].blank?
+        return reflection.options[:foreign_key] if reflection && !reflection.options[:foreign_key].blank?
         :"#{method}_id"
       end
 
