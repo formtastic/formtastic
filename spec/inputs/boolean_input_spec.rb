@@ -49,11 +49,10 @@ describe 'boolean input' do
   end
 
   it 'should name the hidden input with the :name html_option' do
-    form = semantic_form_for(@new_post) do |builder|
+    concat(semantic_form_for(@new_post) do |builder|
       concat(builder.input(:answer_comments, :as => :boolean, :input_html => { :name => "foo" }))
-    end
+    end)
     
-    output_buffer.concat(form) if Formtastic::Util.rails3?
     output_buffer.should have_tag('form li input[@type="checkbox"][@name="foo"]', :count => 1)
     output_buffer.should have_tag('form li input[@type="hidden"][@name="foo"]', :count => 1)
   end
@@ -85,22 +84,20 @@ describe 'boolean input' do
   it 'should generate a checked input if object.method returns checked value' do
     @new_post.stub!(:allow_comments).and_return('yes')
   
-    form = semantic_form_for(@new_post) do |builder|
+    concat(semantic_form_for(@new_post) do |builder|
       concat(builder.input(:allow_comments, :as => :boolean, :checked_value => 'yes', :unchecked_value => 'no'))
-    end
+    end)
   
-    output_buffer.concat(form) if Formtastic::Util.rails3?
     output_buffer.should have_tag('form li label input[@type="checkbox"][@value="yes"][@checked="checked"]')
   end
   
   it 'should not generate a checked input if object.method returns unchecked value' do
     @new_post.stub!(:allow_comments).and_return('no')
   
-    form = semantic_form_for(@new_post) do |builder|
+    concat(semantic_form_for(@new_post) do |builder|
       concat(builder.input(:allow_comments, :as => :boolean, :checked_value => 'yes', :unchecked_value => 'no'))
-    end
+    end)
   
-    output_buffer.concat(form) if Formtastic::Util.rails3?
     output_buffer.should have_tag('form li label input[@type="checkbox"][@value="yes"]:not([@checked])')
   end
 
