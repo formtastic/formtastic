@@ -1272,7 +1272,7 @@ module Formtastic #:nodoc:
         # the label() method will insert this nested input into the label at the last minute
         options[:label_prefix_for_nested_input] = input
 
-        template.hidden_field_tag("#{@object_name}[#{method}]", unchecked_value, :id => nil) << label(method, options)
+        template.hidden_field_tag((html_options[:name] || "#{@object_name}[#{method}]"), unchecked_value, :id => nil) << label(method, options)
       end
 
       # Generates an input for the given method using the type supplied with :as.
