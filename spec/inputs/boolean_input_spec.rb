@@ -47,6 +47,16 @@ describe 'boolean input' do
     end)
     output_buffer.should have_tag('form li label input[@checked="checked"]')
   end
+
+  it 'should name the hidden input with the :name html_option' do
+    form = semantic_form_for(@new_post) do |builder|
+      concat(builder.input(:answer_comments, :as => :boolean, :input_html => { :name => "foo" }))
+    end
+    
+    output_buffer.concat(form) if Formtastic::Util.rails3?
+    output_buffer.should have_tag('form li input[@type="checkbox"][@name="foo"]', :count => 1)
+    output_buffer.should have_tag('form li input[@type="hidden"][@name="foo"]', :count => 1)
+  end
   
   it "should generate a disabled input if :input_html is passed :disabled => 'disabled' " do
     concat(semantic_form_for(@new_post) do |builder|
