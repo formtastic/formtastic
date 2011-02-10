@@ -93,6 +93,7 @@ module Formtastic
       #
       #     # With no args:
       #     <% semantic_form_for @post do |f| %>
+      #       ...
       #       <%= f.buttons %>
       #     <% end %>
       #
@@ -101,28 +102,72 @@ module Formtastic
       # cancel buttons or links, reset buttons and even alternate actions like 'save and continue 
       # editing').
       #
-      # **Options**
+      # All options except `:name` and `:title` are passed down to the fieldset as HTML
+      # attributes (`id`, `class`, `style`...). If provided, the `:name` or `:title` option is 
+      # passed into a `<legend>` inside the `<fieldset>` to name the set of buttons.
       #
-      # All options (with the exception of :name/:title) are passed down to the fieldset as HTML
-      # attributes (id, class, style, etc).  If provided, the :name/:title option is passed into a
-      # legend tag inside the fieldset.
-      #
-      #     # With a block:
+      # @example Quickly add button(s) to the form, accepting all default values, options and behaviors
       #     <% semantic_form_for @post do |f| %>
       #       ...
-      #       <% f.buttons :name => "Actions", :style => "border:1px;" do %>
+      #       <%= f.buttons %>
+      #     <% end %>
+      #
+      # @example Specify which named buttons you want, accepting all default values, options and behaviors
+      #     <% semantic_form_for @post do |f| %>
+      #       ...
+      #       <%= f.buttons :commit %>
+      #     <% end %>
+      #
+      # @example Specify which named buttons you want, and name the fieldset
+      #     <% semantic_form_for @post do |f| %>
+      #       ...
+      #       <%= f.buttons :commit, :name => "Actions" %>
+      #       or
+      #       <%= f.buttons :commit, :label => "Actions" %>
+      #     <% end %>
+      #
+      # @example Get full control over the commit_button options
+      #     <% semantic_form_for @post do |f| %>
+      #       ...
+      #       <%= f.buttons do %>
+      #         <%= f.commit_button :label => "Go", :input_html => { ... }, :wrapper_html => { ... }
+      #       <% end %>
+      #     <% end %>
+      #
+      # @example Make your own custom buttons, links or actions with standard Rails helpers or HTML
+      #     <% semantic_form_for @post do |f| %>
+      #       ...
+      #       <%= f.buttons do %>
+      #         <li class="submit">
+      #           <%= f.submit "Submit" %>
+      #         </li>
+      #         <li class="reset">
+      #           <input type="reset" value="Reset">
+      #         </li>
+      #         <li class="cancel">
+      #           <%= link_to "Cancel", posts_url %>
+      #         </li>
+      #       <% end %>
+      #     <% end %>
+      #
+      # @example Add HTML attributes to the fieldset
+      #     <% semantic_form_for @post do |f| %>
+      #       ...
+      #       <%= f.buttons :commit, :style => "border:1px;" %>
+      #       or
+      #       <%= f.buttons :style => "border:1px;" do %>
       #         ...
       #       <% end %>
       #     <% end %>
-      #     
-      #     # With a list of named buttons (the options must come after the button list list):
-      #     <% semantic_form_for @post do |f| %>
-      #       ...
-      #       <%= f.buttons :commit, :name => "Create a new post", :style => "border:1px;" %>
-      #     <% end %>
       #
-      # @todo convert to YARD documentation syntax
+      # @option args :label [String, Symbol]
+      #   Optionally specify text for the legend of the fieldset
+      #
+      # @option args :name [String, Symbol]
+      #   Optionally specify text for the legend of the fieldset (alias for `:label`)
+      #
       # @todo document i18n keys
+      # @todo YARD @option tags aren't rendering
       def buttons(*args, &block)
         html_options = args.extract_options!
         html_options[:class] ||= "buttons"
@@ -193,6 +238,7 @@ module Formtastic
       #
       # @todo document i18n keys
       # @todo strange that `:accesskey` seems to be supported in the top level args as well as `:button_html`
+      # @todo YARD @option tags aren't rendering
       def commit_button(*args)
         options = args.extract_options!
         text = options.delete(:label) || args.shift
