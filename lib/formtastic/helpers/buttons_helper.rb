@@ -3,15 +3,126 @@ require 'localized_string'
 
 module Formtastic
   module Helpers
+    
+    # ButtonsHelper encapsulates the responsibilties of the {#buttons} and {#commit_button} helpers 
+    # for submitting forms.
+    #
+    # {#buttons} is used to wrap the form's button(s) and actions in a `<fieldset>` and `<ol>`, 
+    # with each item in the list containing the markup representing a single button.
+    #
+    # {#buttons} is usually called with a block containing a single {#commit_button} call:
+    #
+    #     <%= semantic_form_for @post do |f| %>
+    #       ...
+    #       <%= f.buttons do %>
+    #         <%= f.commit_button
+    #       <% end %>
+    #     <% end %>
+    #
+    # The HTML output will be something like:
+    #
+    #     <form class="formtastic" method="post" action="...">
+    #       ...
+    #       <fieldset class="buttons">
+    #         <ol>
+    #           <li class="commit">
+    #             <input type="submit" name="commit" value="Create Post" class="create">
+    #           </li>
+    #         </ol>
+    #       </fieldset>
+    #     </form>
+    #
+    # While this may seem slightly over-engineered, it is consistent with the way form inputs are
+    # handled, and makes room for other types of buttons and actions in future versions (such as
+    # cancel buttons or links, reset buttons and even alternate actions like 'save and continue 
+    # editing').
+    #
+    # It's important to note that the `semantic_form_for` and {#buttons} blocks wrap the
+    # standard Rails `form_for` helper and form builder, so you have full access to every standard
+    # Rails form helper, with any HTML markup and ERB syntax, allowing you to "break free" from 
+    # Formtastic when it doesn't suit to create your own buttons, links and actions:
+    #
+    #     <%= semantic_form_for @post do |f| %>
+    #       ...
+    #       <%= f.buttons do %>
+    #         <li class="save">
+    #           <%= f.submit "Save" %>
+    #         <li>
+    #         <li class="cancel-link">
+    #           Or <%= link_to "Cancel", posts_url %>
+    #         <li>
+    #       <% end %>
+    #     <% end %>
+    #
+    # There are many other syntax variations and arguments to customize your form. See the
+    # full documentation of {#buttons} and {#commit_button} for details.
     module ButtonsHelper
       include Formtastic::Helpers::FieldsetWrapper
       include Formtastic::LocalizedString
       
-      # Creates a fieldset and ol tag wrapping for form buttons / actions as list items.
-      # See inputs documentation for a full example.  The fieldset's default class attriute
-      # is set to "buttons".
+      # Creates a fieldset and ol tag wrapping for use around a set of buttons. It can be
+      # called either with a block (in which you can do the usual Rails form stuff, HTML, ERB, etc),
+      # or with a list of named buttons. These two examples are functionally equivalent:
       #
-      # See inputs for html attributes and special options.
+      #     # With a block:
+      #     <% semantic_form_for @post do |f| %>
+      #       ...
+      #       <% f.buttons do %>
+      #         <%= f.commit_button %>
+      #       <% end %>
+      #     <% end %>
+      #     
+      #     # With a list of fields:
+      #     <% semantic_form_for @post do |f| %>
+      #       <%= f.buttons :commit %>
+      #     <% end %>
+      #     
+      #     # Output:
+      #     <form ...>
+      #       <fieldset class="inputs">
+      #         <ol>
+      #           <li class="commit">
+      #             <input type="submit" ...>
+      #           </li>
+      #         </ol>
+      #       </fieldset>
+      #     </form>
+      #
+      # Only one type of named button is supported at this time (:commit), and it's assumed to be 
+      # the default choice, so this is also functionally equivalent, but may change in the future:
+      #
+      #     # With no args:
+      #     <% semantic_form_for @post do |f| %>
+      #       <%= f.buttons %>
+      #     <% end %>
+      #
+      # While this may seem slightly over-engineered, it is consistent with the way form inputs are
+      # handled, and makes room for other types of buttons and actions in future versions (such as
+      # cancel buttons or links, reset buttons and even alternate actions like 'save and continue 
+      # editing').
+      #
+      # **Options**
+      #
+      # All options (with the exception of :name/:title) are passed down to the fieldset as HTML
+      # attributes (id, class, style, etc).  If provided, the :name/:title option is passed into a
+      # legend tag inside the fieldset.
+      #
+      #     # With a block:
+      #     <% semantic_form_for @post do |f| %>
+      #       ...
+      #       <% f.buttons :name => "Actions", :style => "border:1px;" do %>
+      #         ...
+      #       <% end %>
+      #     <% end %>
+      #     
+      #     # With a list of named buttons (the options must come after the button list list):
+      #     <% semantic_form_for @post do |f| %>
+      #       ...
+      #       <%= f.buttons :commit, :name => "Create a new post", :style => "border:1px;" %>
+      #     <% end %>
+      #
+      # @todo convert to YARD documentation syntax
+      # @todo document i18n keys
       def buttons(*args, &block)
         html_options = args.extract_options!
         html_options[:class] ||= "buttons"
@@ -28,16 +139,19 @@ module Formtastic
       # Creates a submit input tag with the value "Save [model name]" (for existing records) or
       # "Create [model name]" (for new records) by default:
       #
-      #   <%= form.commit_button %> => <input name="commit" type="submit" value="Save Post" />
+      #   <%= f.commit_button %> => <input name="commit" type="submit" value="Save Post" />
       #
       # The value of the button text can be overridden:
       #
-      #  <%= form.commit_button "Go" %> => <input name="commit" type="submit" value="Go" class="{create|update|submit}" />
-      #  <%= form.commit_button :label => "Go" %> => <input name="commit" type="submit" value="Go" class="{create|update|submit}" />
+      #  <%= f.commit_button "Go" %> => <input name="commit" type="submit" value="Go" class="{create|update|submit}" />
+      #  <%= f.commit_button :label => "Go" %> => <input name="commit" type="submit" value="Go" class="{create|update|submit}" />
       #
       # And you can pass html atributes down to the input, with or without the button text:
       #
-      #  <%= form.commit_button :button_html => { :class => "pretty" } %> => <input name="commit" type="submit" value="Save Post" class="pretty {create|update|submit}" />
+      #  <%= f.commit_button :button_html => { :class => "pretty" } %> => <input name="commit" type="submit" value="Save Post" class="pretty {create|update|submit}" />
+      #
+      # @todo convert to YARD syntax
+      # @todo document i18n keys
       def commit_button(*args)
         options = args.extract_options!
         text = options.delete(:label) || args.shift
