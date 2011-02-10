@@ -137,21 +137,62 @@ module Formtastic
       end
     
       # Creates a submit input tag with the value "Save [model name]" (for existing records) or
-      # "Create [model name]" (for new records) by default:
+      # "Create [model name]" (for new records) by default. The output is an `<input>` tag with the 
+      # `type` of `submit` and a class of either `create` or `update` (if Formtastic can determin if)
+      # the record is new or not) with `submit` as a fallback class. The submit button is wrapped in
+      # an `<li>` tag with a class of `commit`, and is intended to be rendered inside a {#buttons}
+      # block which wraps the button in a `fieldset` and `ol`.
       #
-      #   <%= f.commit_button %> => <input name="commit" type="submit" value="Save Post" />
+      # The textual value of the label can be changed from this default through the `:label` 
+      # argument or through i18n.
       #
-      # The value of the button text can be overridden:
+      # You can pass HTML attributes down to the `<input>` tag with the `:button_html` option, and 
+      # pass HTML attributes to the wrapping `<li>` tag with the `:wrapper_html` option.
       #
-      #  <%= f.commit_button "Go" %> => <input name="commit" type="submit" value="Go" class="{create|update|submit}" />
-      #  <%= f.commit_button :label => "Go" %> => <input name="commit" type="submit" value="Go" class="{create|update|submit}" />
+      # @example Basic usage
+      #   # form
+      #   <%= semantic_form_for @post do |f| %>
+      #     ...
+      #     <%= f.buttons do %>
+      #       <%= f.commit_button %>
+      #     <% end %>
+      #   <% end %>
       #
-      # And you can pass html atributes down to the input, with or without the button text:
+      #   # output
+      #   <form ...>
+      #     ...
+      #     <fieldset class="buttons">
+      #       <input name="commit" type="submit" value="Create Post" class="create">
+      #     </fieldset>
+      #   </form>
       #
-      #  <%= f.commit_button :button_html => { :class => "pretty" } %> => <input name="commit" type="submit" value="Save Post" class="pretty {create|update|submit}" />
+      # @example Set the value through the `:label` option
+      #   <%= f.commit_button :label => "Go" %>
       #
-      # @todo convert to YARD syntax
+      # @example Set the value through the optional first argument (like Rails' `f.submit`)
+      #   <%= f.commit_button "Go" %>
+      #
+      # @example Pass HTML attributes down to the `<input>`
+      #   <%= f.commit_button :button_html => { :class => 'pretty', :accesskey => 'g' } %>
+      #   <%= f.commit_button :label => "Go", :button_html => { :class => 'pretty', :accesskey => 'g' } %>
+      #   <%= f.commit_button "Go", :button_html => { :class => 'pretty', :accesskey => 'g' } %>
+      #
+      # @example Pass HTML attributes down to the `<li>` wrapper
+      #   <%= f.commit_button :button_html => { :class => 'special', :id => 'whatever' } %>
+      #   <%= f.commit_button :label => "Go", :button_html => { :class => 'special', :id => 'whatever' } %>
+      #   <%= f.commit_button "Go", :button_html => { :class => 'special', :id => 'whatever' } %>
+      #
+      # @option args :label [String, Symbol]  
+      #   Override the label text with a String or a symbold for an i18n translation key
+      #
+      # @option args :button_html [Hash]  
+      #   Override or add to the HTML attributes to be passed down to the `<input>` tag
+      #
+      # @option args :wrapper_html [Hash] 
+      #   Override or add to the HTML attributes to be passed down to the wrapping `<li>` tag
+      #
       # @todo document i18n keys
+      # @todo strange that `:accesskey` seems to be supported in the top level args as well as `:button_html`
       def commit_button(*args)
         options = args.extract_options!
         text = options.delete(:label) || args.shift
