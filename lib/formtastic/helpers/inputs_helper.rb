@@ -148,10 +148,10 @@ module Formtastic
       #   Override to mark the input as required (or not)
       #
       # @option options :input_html [Hash]  
-      #   Override the HTML attributes to be passed down to the `<input>` tag
+      #   Override or add to the HTML attributes to be passed down to the `<input>` tag
       #
       # @option options :wrapper_html [Hash] 
-      #   Override the HTML attributes to be passed down to the wrapping `<li>` tag
+      #   Override or add to the HTML attributes to be passed down to the wrapping `<li>` tag
       #
       # @option options :collection [Array<ActiveModel, String, Symbol>, Hash{String => String, Boolean}, OrderedHash{String => String, Boolean}]
       #   Override collection of objects in the association (`:select`, `:radio` & `:check_boxes` inputs only)
@@ -258,15 +258,15 @@ module Formtastic
       #
       #     # With a block:
       #     <% semantic_form_for @post do |form| %>
-      #       <% form.inputs do %>
-      #         <%= form.input :title %>
-      #         <%= form.input :body %>
+      #       <% f.inputs do %>
+      #         <%= f.input :title %>
+      #         <%= f.input :body %>
       #       <% end %>
       #     <% end %>
       #     
       #     # With a list of fields:
       #     <% semantic_form_for @post do |form| %>
-      #       <%= form.inputs :title, :body %>
+      #       <%= f.inputs :title, :body %>
       #     <% end %>
       #     
       #     # Output:
@@ -287,12 +287,12 @@ module Formtastic
       # later to customise the form with a field list or a block of inputs.  Example:
       #
       #     <% semantic_form_for @post do |form| %>
-      #       <%= form.inputs %>
+      #       <%= f.inputs %>
       #     <% end %>
       #     
       #     With a few arguments:
       #     <% semantic_form_for @post do |form| %>
-      #       <%= form.inputs "Post details", :title, :body %>
+      #       <%= f.inputs "Post details", :title, :body %>
       #     <% end %>
       #
       # **Options**
@@ -303,19 +303,19 @@ module Formtastic
       #
       #     # With a block:
       #     <% semantic_form_for @post do |form| %>
-      #       <% form.inputs :name => "Create a new post", :style => "border:1px;" do %>
+      #       <% f.inputs :name => "Create a new post", :style => "border:1px;" do %>
       #         ...
       #       <% end %>
       #     <% end %>
       #     
       #     # With a list (the options must come after the field list):
       #     <% semantic_form_for @post do |form| %>
-      #       <%= form.inputs :title, :body, :name => "Create a new post", :style => "border:1px;" %>
+      #       <%= f.inputs :title, :body, :name => "Create a new post", :style => "border:1px;" %>
       #     <% end %>
       #     
       #     # ...or the equivalent:
       #     <% semantic_form_for @post do |form| %>
-      #       <%= form.inputs "Create a new post", :title, :body, :style => "border:1px;" %>
+      #       <%= f.inputs "Create a new post", :title, :body, :style => "border:1px;" %>
       #     <% end %>
       #
       # **It's basically a fieldset!**
@@ -365,12 +365,12 @@ module Formtastic
       # As in Rails, you can use semantic_fields_for to nest attributes:
       #
       #     <% semantic_form_for @post do |form| %>
-      #       <%= form.inputs :title, :body %>
+      #       <%= f.inputs :title, :body %>
       #     
-      #       <% form.semantic_fields_for :author, @bob do |author_form| %>
-      #         <% author_form.inputs do %>
-      #           <%= author_form.input :first_name, :required => false %>
-      #           <%= author_form.input :last_name %>
+      #       <% f.semantic_fields_for :author, @bob do |author| %>
+      #         <% author.inputs do %>
+      #           <%= author.input :first_name, :required => false %>
+      #           <%= author.input :last_name %>
       #         <% end %>
       #       <% end %>
       #     <% end %>
@@ -378,10 +378,10 @@ module Formtastic
       # But this does not look formtastic! This is equivalent:
       #
       #     <% semantic_form_for @post do |form| %>
-      #       <%= form.inputs :title, :body %>
-      #       <% form.inputs :for => [ :author, @bob ] do |author_form| %>
-      #         <%= author_form.input :first_name, :required => false %>
-      #         <%= author_form.input :last_name %>
+      #       <%= f.inputs :title, :body %>
+      #       <% f.inputs :for => [ :author, @bob ] do |author| %>
+      #         <%= author.input :first_name, :required => false %>
+      #         <%= author.input :last_name %>
       #       <% end %>
       #     <% end %>
       #
@@ -389,8 +389,8 @@ module Formtastic
       # in just one line:
       #
       #     <% semantic_form_for @post do |form| %>
-      #       <%= form.inputs :title, :body %>
-      #       <%= form.inputs :first_name, :last_name, :for => @bob %>
+      #       <%= f.inputs :title, :body %>
+      #       <%= f.inputs :first_name, :last_name, :for => @bob %>
       #     <% end %>
       #
       # Just remember that calling inputs generates a new fieldset to wrap your
