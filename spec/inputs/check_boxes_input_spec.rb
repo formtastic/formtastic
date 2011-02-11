@@ -171,6 +171,24 @@ describe 'check_boxes input' do
         output_buffer.should  =~ /&lt;b&gt;Item [12]&lt;\/b&gt;/
       end
     end
+    
+    describe 'for a non-association when :collection is given' do
+      before(:each) do
+        output_buffer.replace ''
+        
+        @fred.stub!(:genres) { [:biography, :fiction] }
+        
+        form = semantic_form_for(@fred, :url => 'http://test.host') do |builder|
+          concat(builder.input(:genres, :as => :check_boxes, :collection => [:fiction, :biography, :non_fiction]))
+        end
+        output_buffer.concat(form) if Formtastic::Util.rails3?
+      end
+      
+      it "should mark the correct options as checked" do
+        output_buffer.should have_tag("form li fieldset ol li label input[@name='author[genres][]'][@value='fiction'][@checked='checked']")
+        output_buffer.should have_tag("form li fieldset ol li label input[@name='author[genres][]'][@value='biography'][@checked='checked']")
+      end
+    end
 
     describe 'when :hidden_fields is set to false' do
       before do
