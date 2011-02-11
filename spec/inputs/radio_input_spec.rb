@@ -45,6 +45,14 @@ describe 'radio input' do
       output_buffer.should have_tag('form li input[@checked]', :count => 1)
     end
 
+    it "should take arbitrary html options for the wrapping fieldset" do
+      form = semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:author, :as => :radio, :fieldset_html => {"data-foo" => "bar"}))
+      end
+      output_buffer.concat(form) if Formtastic::Util.rails3?
+      output_buffer.should have_tag("form li fieldset[@data-foo='bar']")
+    end
+
     describe "each choice" do
 
       it 'should contain a label for the radio input with a nested input and label text' do
