@@ -589,7 +589,7 @@ module Formtastic #:nodoc:
       # Remove any Formtastic-specific options before passing the down options.
       #
       def strip_formtastic_options(options) #:nodoc:
-        options.except(:value_method, :label_method, :collection, :required, :label,
+        options.except(:value_method, :label_method, :collection, :required, :label, :fieldset_html,
                        :as, :hint, :input_html, :label_html, :value_as_class, :find_options, :class)
       end
 
@@ -924,7 +924,7 @@ module Formtastic #:nodoc:
       def radio_input(method, options)
         collection   = find_collection_for_column(method, options)
         html_options = strip_formtastic_options(options).merge(options.delete(:input_html) || {})
-        fieldset_options = options.delete(:fieldset_html) || {}
+        fieldset_options = strip_formtastic_options(options).merge(options.delete(:fieldset_html) || {})
 
         input_name = generate_association_input_name(method)
         value_as_class = options.delete(:value_as_class)
