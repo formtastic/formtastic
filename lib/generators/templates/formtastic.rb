@@ -1,11 +1,25 @@
-# Set the default text field size when input is a string. Default is 50.
+# encoding: utf-8
+
+# --------------------------------------------------------------------------------------------------
+# Please note: If you're subclassing Formtastic::SemanticFormBuilder in a Rails 3 project, 
+# Formtastic uses class_attribute for these configuration attributes instead of the deprecated 
+# class_inheritable_attribute. The behaviour is slightly different with subclasses (especially 
+# around attributes with Hash or Array) values, so make sure you understand what's happening. 
+# See the documentation for class_attribute in ActiveSupport for more information.
+# --------------------------------------------------------------------------------------------------
+
+# Set the default text field size when input is a string. Default is nil.
 # Formtastic::SemanticFormBuilder.default_text_field_size = 50
 
 # Set the default text area height when input is a text. Default is 20.
 # Formtastic::SemanticFormBuilder.default_text_area_height = 5
 
+# Set the default text area width when input is a text. Default is nil.
+# Formtastic::SemanticFormBuilder.default_text_area_width = 50
+
 # Should all fields be considered "required" by default?
-# Defaults to true, see ValidationReflection notes below.
+# Rails 2 only, ignored by Rails 3 because it will never fall back to this default.
+# Defaults to true.
 # Formtastic::SemanticFormBuilder.all_fields_required_by_default = true
 
 # Should select fields have a blank option/prompt by default?
@@ -24,8 +38,14 @@
 # Formtastic::SemanticFormBuilder.optional_string = "(optional)"
 
 # Set the way inline errors will be displayed.
-# Defaults to :sentence, valid options are :sentence, :list and :none
+# Defaults to :sentence, valid options are :sentence, :list, :first and :none
 # Formtastic::SemanticFormBuilder.inline_errors = :sentence
+# Formtastic uses the following classes as default for hints, inline_errors and error list
+
+# If you override the class here, please ensure to override it in your formtastic_changes.css stylesheet as well
+# Formtastic::SemanticFormBuilder.default_hint_class = "inline-hints"
+# Formtastic::SemanticFormBuilder.default_inline_error_class = "inline-errors"
+# Formtastic::SemanticFormBuilder.default_error_list_class = "errors"
 
 # Set the method to call on label text to transform or format it for human-friendly
 # reading when formtastic is used without object. Defaults to :humanize.
@@ -43,6 +63,12 @@
 # the input, in the following order: hints, input and errors. You can
 # customize it doing just as below:
 # Formtastic::SemanticFormBuilder.inline_order = [:input, :hints, :errors]
+
+# Additionally, you can customize the order for specific types of inputs.
+# This is configured on a type basis and if a type is not found it will
+# fall back to the default order as defined by #inline_order
+# Formtastic::SemanticFormBuilder.custom_inline_order[:checkbox] = [:errors, :hints, :input]
+# Formtastic::SemanticFormBuilder.custom_inline_order[:select] = [:hints, :input, :errors]
 
 # Specifies if labels/hints for input fields automatically be looked up using I18n.
 # Default value: false. Overridden for specific fields by setting value to true,

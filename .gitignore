@@ -1,6 +1,10 @@
 .DS_Store
+.rvmrc
 coverage
 pkg
 *~
 *watchr.rb
 log/*
+.rvmrc
+.bundle
+Gemfile.lock

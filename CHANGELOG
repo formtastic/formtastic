@@ -1,3 +1,140 @@
+1.2.4.beta (unreleased)
+
+* Changed :boolean inputs to use Rails' check_box_checked? instead of our own logic
+* Changed developer instructions in README
+* Fixed :boolean inputs to disable the included hidden input when disabling the actual checkbox
+* Fixed that Formtastic was making changes to the options hash directly instead of on a duplicate, causing problems for those trying to reuse options on multiple inputs in the view 
+* Fixed that tiny scroll bars were appearing on legends in date/time/radio/cbheckboxes fielsets (GH-477)    
+* Fixed an issue when formtastic fails to determine if a checkbox is checked with custom checked and unchecked values (thanks to Eugene Bolshakov)
+* Fixed that the hidden input rendered with a boolean checkbox did nt use the custom :name from :input_html options hash
+
+1.2.3
+
+* Removed deprecated methods input_field_set, button_field_set, boolean_select_input, boolean_radio_input and boolean_radio_input
+* Removed deprecated :class option on commit_button (use :input_html instead)
+* Fixed that stylesheets and initializers directories would be removed on uninstalling
+* Fixed some documentation and formatting
+* Fixed test coverage issues under Ruby 192 and Rails 2
+* Fixed that input_html options were not being passed down to checkbox tags
+* Changed internal duplication of the options hash so that the same options hash can be re-used over multiple inputs without being altered
+* Changed internal configuration to use class_attribute when available (Rails 3) to avoid deprecation warnings
+* Added Rails 3 compatible form generator templates in addition to existing Rails 2 support
+* Added reflection on allow_blank option when determining the 'required' status of an input
+
+
+1.2.2
+
+* Removed deprecated aliased input names (:as => :boolean_select, :as => :boolean_radio_input
+* Removed deprecated aliased method names (input_field_set, button_field_set)
+* Removed deprecated :class => 'whatever' on commit_button
+* Fixed that classes in :button_html were being merged into :wrapper_html
+* Fixed that :include_blank was being ignored (always false) for multi selects 
+* Fixed that we should reflect on allow_blank option to determine required status with validates_inclusion_of
+* Added the ability to pass :input_html options be passed to the checkbox on a boolean input
+* Developers: Added bundler support to for developer/contribution
+* Developers: Fixed spec coverage under Rails 2 and Ruby 1.9.2
+
+1.2.1
+
+* test suite compatibilities with Rails 3.0.3
+
+1.2.1.beta3
+
+* Fixed bad merge related to :boolean inputs in 1.2.1.beta
+
+1.2.1.beta2
+
+* Fixed typos in gemspec post-install message
+
+1.2.1.beta
+
+* Fixed that unchecking :boolean inputs would not send the correct params (and not persist the change the the DB)
+* Fixed that :boolean inputs checked state was not reflecting the database/model value
+* Fixed that init.rb and rails/init.rb were not included in the gem (affecting Rails 2)
+
+1.2.0
+
+* Changed default_text_area_width to nil, overlooked in recent CSS/width changes
+* Improved documentation
+
+1.2.0.beta2
+
+* Added :wrapper_html functionality to commit_button() to match what input() does
+* Deprecated the :class option on commit_button(), use :wrapper_html instead
+* Added hpricot as missing development dependency
+* Improved documentation
+
+1.2.0.beta
+
+* New Stuff
+
+  * Added support for Paperclip's questionable use of multiple error keys on a single attribute, so errors on Paperclip :file inputs Just Work
+  * Added ability for the error and hint class to be overridden with :hint_class and :error_class, and configurable defaults app-wide
+  * Added basic support for multiple forms in the same document by allowing the element ids to be prefixed with the :namespace option on semantic_form_for
+  * Added a fallback to Rails' helpers.label key if Formtastic label translation are not found
+  * Added support for default_text_area_width
+  * Added support for #persisted? over #new_record? (ActiveModel)
+  * Added the 'required' logic to attributes with validates_inclusion_of validation, in addition to validates_presence_of 
+  * Added new HTML5 :as => :email input (Rails 3)
+  * Added new HTML5 :as => :phone input (Rails 3)
+  * Added new HTML5 :as => :search input (Rails 3)
+  * Added new HTML5 :as => :url input (Rails 3)
+  * Added the ability for the :collection option to accept a string of HTML (like the output from grouped_options_for_select), rather than just Arrays, Hashes, collections, etc.
+  * Added the ability to set your own form class, instead of 'formtastic'
+  * Added maxlength attributes to inputs if it can be determined via the ValidationReflection plugin or ActiveModel validation reflections
+  * Added the ability to override the form class (Post => "post") through an :as option on semantic_form_for option
+  * Added the ability to customize the order for specific types of inputs. This is configured on a type basis and if a type is not found it willfall back to the default order as defined by @@inline_order
+  * Added :first as a new rendering choice for the errors on each input
+  * Added custom_inline_order to allow inline ordering per input type
+  * Added the ability to override the generator templates in Rails 3
+
+* Fixes 
+
+  * Fixed invalid HTML generated by Rails' hidden inputs on checkboxes (by rendering our own hidden tag in a more deliberate place)
+  * Fixed a bunch of invalid i18n key defaults
+  * Fixed that 'required' classes and logic were not being applied to :check_boxes and :radio inputs
+  * Fixed CSS bugs around Firefox's quirks with form elements that resulted in overflow/scroll bar issues
+  * Fixed that errors on fields with association were not marking the wrapping tag with the error class
+  * Fixed CSS where FF was displaying extra scroll bars on .check_boxes and .radio inputs (and the choices within them)
+  
+* Changes
+
+  * Changed that we were defaulting to a :select input for columns ending in _id, instead of columns with an appropriate associations
+  * Deprecated a bunch of aliased method names that should no longer be used
+  * Removed deprecated :selected, :checked and :default options
+  * Changed the width styling for string, numeric, password and other basic inputs, defaults to 75% unless the size attribute is present
+  * Changed string, numeric, password and other basic inputs' default text field size config to nil instead of 50, meaning the size attribute will be ommitted from most inputs, makeing styling easier, and custom sizes with the size attribute more deliberate
+  * Changed string, numeric, password and other basic inputs to no longer add the size attribute based on column information (the default config is applied, unless it's nil)
+  * Changed text input css behaviour updated to be similar to string etc
+  * Changed text inputs to no longer include a default cols attribute, specify it with :input_html if you need it, but the value we were using was useless... also beefed up spec coverage
+  * Removed :label calls from the generated ERB in the form generator (i18n is preferred)
+  * Changed that :select inputs for HABTM associations would ignore the :include_blank option
+  * Changed the default method on collections from Model.find(:all) to Model.all
+  * Removed the deprecated formtastic_stylesheets generator
+  * Changed the minimum Rails version to 2.3.7, which the earliest version which the specs pass with
+  * Changed :password inputs to be sized by percentage (like other string-ish inputs), rather then em-based
+
+1.1.0
+
+* documentation changes only
+
+1.1.0.beta [Specs passed against Rails 2.3.8, 3.0.0.rc & 3.0.0]
+
+* Changed semantic_remote_form_for to allow for unobstrusive javascript / :remote option (rails3)
+* Changed spec_helper to support Rails 2 with RSpec or Rails 3 with RSpec 2 environments
+* Changed Rakefile to initalize the correct testing framework for the enviroment
+* Changed i18n dependency to >= 0.4
+* Fixed use of model_name.human instead of model_name.human_name (rails3)
+* Fixed use of deprecated Errors#on_base
+* Fixed use of ActionController::RecordIdentifier#singular_class_name (rails3)
+* Added railtie to perform initialization tasks after the rails framework is available (rails3)
+* Added compatible install and form helpers (rails3)
+* Added support for ActiveModel Validations, thanks to Guillaume Belleguic (rails3)
+
+1.0.1
+
+* fixed "already initialised constant" warnings on boot
+
 1.0.0
 
 * nothing changed from rc2

@@ -2,7 +2,6 @@ en:
   formtastic:
     :yes: 'Yes'
     :no: 'No'
-    create: 'Create'
-    save: 'Save'
-    submit: 'Submit'
-    required: 'Required'
+    :create: 'Create %{model}'
+    :update: 'Update %{model}'
+    :required: 'required'

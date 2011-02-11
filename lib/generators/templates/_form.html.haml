@@ -1,0 +1,4 @@
+= f.inputs do
+<% attributes.each do |attribute| -%>
+  = f.input :<%= attribute.name %>
+<% end -%>

@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # Adapted from the rails3 compatibility shim in Haml 2.2
 module Formtastic
   module Util
@@ -25,5 +27,12 @@ module Formtastic
       return ActionView::SafeBuffer
     end
 
+    def rails3?
+      version=
+        if defined?(ActionPack::VERSION::MAJOR)
+          ActionPack::VERSION::MAJOR
+        end
+      !version.blank? && version >= 3
+    end
   end
 end
