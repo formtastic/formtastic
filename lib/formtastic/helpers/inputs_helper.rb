@@ -466,6 +466,20 @@ module Formtastic
       #       <%= profile.input :categories ... %>
       #     <% end %>
       #   <% end %>
+      #
+      # @example Nesting {#inputs} blocks requires an extra `<li>` tag for valid markup
+      #   <% semantic_form_for @user do |form| %>
+      #     <%= f.inputs do %>
+      #       <%= f.input :name ... %>
+      #       <%= f.input :email ... %>
+      #       <li>
+      #         <%= f.inputs :for => [:user_profile, @user.profile] do |profile| %>
+      #           <%= profile.input :user ... %>
+      #           <%= profile.input :categories ... %>
+      #         <% end %>
+      #       </li>
+      #     <% end %>
+      #   <% end %>
       def inputs(*args, &block)
         title = field_set_title_from_args(*args)
         html_options = args.extract_options!
@@ -491,26 +505,24 @@ module Formtastic
         end
       end
       
-      # A thin wrapper around #fields_for to set :builder => Formtastic::FormBuilder
-      # for nesting forms:
+      # A thin wrapper around Rails' `fields_for` helper to set :builder => Formtastic::FormBuilder
+      # for nesting forms. Can be used in the same way as `fields_for` (see the Rails documentation),
+      # but you'll also have access to Formtastic's helpers ({#input}, etc) inside the block.
       #
-      #     # Example:
-      #     <% semantic_form_for @post do |post| %>
-      #       <% post.semantic_fields_for :author do |author| %>
-      #         <% author.inputs :name %>
-      #       <% end %>
+      # @example
+      #   <% semantic_form_for @post do |post| %>
+      #     <% post.semantic_fields_for :author do |author| %>
+      #       <% author.inputs :name %>
       #     <% end %>
+      #   <% end %>
       #     
-      #     # Output:
-      #     <form ...>
-      #       <fieldset class="inputs">
-      #         <ol>
-      #           <li class="string"><input type='text' name='post[author][name]' id='post_author_name' /></li>
-      #         </ol>
-      #       </fieldset>
-      #     </form>
-      #
-      # @todo convert to YARD syntax
+      #   <form ...>
+      #     <fieldset class="inputs">
+      #       <ol>
+      #         <li class="string"><input type='text' name='post[author][name]' id='post_author_name' /></li>
+      #       </ol>
+      #     </fieldset>
+      #   </form>
       def semantic_fields_for(record_or_name_or_array, *args, &block)
         opts = args.extract_options!
         opts[:builder] ||= self.class
@@ -518,18 +530,24 @@ module Formtastic
         fields_for(record_or_name_or_array, *args, &block)
       end
       
-      # Generates error messages for the given method. Errors can be shown as list,
-      # as sentence or just the first error can be displayed. If :none is set, no error is shown.
+      # Generates error messages for the given method, used for displaying errors right near the 
+      # field for data entry. Uses the `:inline_errors` config to determin the right presentation,
+      # which may be an ordered list, a paragraph sentence containing all errors, or a paragraph
+      # containing just the first error. If configred to `:none`, no error is shown.
       #
-      # This method is also aliased as errors_on, so you can call on your custom
-      # inputs as well:
+      # See the `:inline_errors` config documentation for more details. 
       #
-      #     semantic_form_for :post do |f|
-      #       f.text_field(:body)
-      #       f.errors_on(:body)
-      #     end
+      # This method is mostly used internally, but can be used in your forms when creating your own
+      # custom inputs, so it's been made public and aliased to `errors_on`.
       #
-      # @todo convert to YARD syntax
+      # @example
+      #   <%= semantic_form_for @post do |f| %>
+      #     <li class='my-custom-text-input'>
+      #       <%= f.label(:body) %>
+      #       <%= f.text_field(:body) %>
+      #       <%= f.errors_on(:body) %>
+      #     </li>
+      #   <% end %>
       def inline_errors_for(method, options = {}) #:nodoc:
         if render_inline_errors?
           errors = error_keys(method, options).map{|x| @object.errors[x] }.flatten.compact.uniq
