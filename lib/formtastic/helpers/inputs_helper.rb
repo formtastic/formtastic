@@ -168,12 +168,23 @@ module Formtastic
       # @option options :error_class [String]
       #   Override the `class` attribute applied to the `<p>` or `<ol>` tag used when inline errors are rendered for an input
       #
-      # @option options :multiple [Boolean] TODO
-      # @option options :group_by [Symbol] TODO
-      # @option options :find_options [Symbol] TODO
-      # @option options :group_label_method [Symbol] TODO
-      # @option options :include_blank [Boolean] TODO
-      # @option options :prompt [String] TODO
+      # @option options :multiple [Boolean]
+      #   Specify if the `:select` input should allow multiple selections or not (defaults to `belongs_to` associations, and `true` for `has_many` and `has_and_belongs_to_many` associations)
+      #
+      # @option options :group_by [Symbol]
+      #   TODO will probably be deprecated
+      #
+      # @option options :find_options [Symbol]
+      #   TODO will probably be deprecated
+      #
+      # @option options :group_label_method [Symbol]
+      #   TODO will probably be deprecated
+      #
+      # @option options :include_blank [Boolean]
+      #   Specify if a `:select` input should include a blank option or not (defaults to `include_blank_for_select_by_default` configuration)
+      #
+      # @option options :prompt [String]
+      #   Specify the text in the first ('blank') `:select` input `<option>` to prompt a user to make a selection (implicitly sets `:include_blank` to `true`)
       #
       # @todo Can we kill `:hint_class` & `:error_class`? What's the use case for input-by-input? Shift to config or burn!
       # @todo Can we kill `:group_by` & `:group_label_method`? Should be done with :collection => grouped_options_for_select(...)
@@ -223,6 +234,13 @@ module Formtastic
       #   <%= f.input :cateogies, :as => :select, :multiple => true %>
       #   <%= f.input :cateogies, :as => :select, :multiple => false %>
       #
+      # @example Specifying if a `:select` should have a 'blank' first option to prompt selection:
+      #   <%= f.input :author, :as => :select, :include_blank => true %>
+      #   <%= f.input :author, :as => :select, :include_blank => false %>
+      #
+      # @example Specifying the text for a `:select` input's 'blank' first option to prompt selection:
+      #   <%= f.input :author, :as => :select, :prompt => "Select an Author" %>
+      #
       # @todo Many many more examples. Some of the detail probably needs to be pushed out to the relevant methods too.
       def input(method, options = {})
         options = options.dup # Allow options to be shared without being tainted by Formtastic
@@ -251,10 +269,11 @@ module Formtastic
     
         return template.content_tag(:li, Formtastic::Util.html_safe(list_item_content), wrapper_html)
       end
-    
-      # Creates an input fieldset and ol tag wrapping for use around a set of inputs.  It can be
+      
+      # {#inputs} creates an input fieldset and ol tag wrapping for use around a set of inputs.  It can be
       # called either with a block (in which you can do the usual Rails form stuff, HTML, ERB, etc),
-      # or with a list of fields.  These two examples are functionally equivalent:
+      # or with a list of fields (accepting all default arguments and options). These two examples 
+      # are functionally equivalent:
       #
       #     # With a block:
       #     <% semantic_form_for @post do |form| %>
@@ -264,7 +283,7 @@ module Formtastic
       #       <% end %>
       #     <% end %>
       #     
-      #     # With a list of fields:
+      #     # With a list of fields (short hand syntax):
       #     <% semantic_form_for @post do |form| %>
       #       <%= f.inputs :title, :body %>
       #     <% end %>
@@ -281,124 +300,172 @@ module Formtastic
       #
       # **Quick Forms**
       #
-      # When called without a block or a field list, an input is rendered for each column in the
-      # model's database table, just like Rails' scaffolding.  You'll obviously want more control
-      # than this in a production application, but it's a great way to get started, then come back
-      # later to customise the form with a field list or a block of inputs.  Example:
+      # Quick, scaffolding-style forms can be easily rendered for rapid early development if called
+      # without a block or a field list. In the case an input is rendered for **most** columns in
+      # the model's database table (like Rails' scaffolding) plus inputs for some model associations.
+      #
+      # In this case, all inputs are rendered with default options and arguments. You'll want more 
+      # control than this in a production application, but it's a great way to get started, then 
+      # come back later to customise the form with a field list or a block of inputs.  Example:
       #
       #     <% semantic_form_for @post do |form| %>
       #       <%= f.inputs %>
       #     <% end %>
+      #
+      # **Nested Attributes**
+      #
+      # One of the most complicated parts of Rails forms comes when nesting the inputs for 
+      # attrinbutes on associated models. Formtastic can take the pain away for many (but not all)
+      # situations.
+      #
+      # Given the following models:
+      #
+      #     # Models
+      #     class User < ActiveRecord::Base
+      #       has_one :profile
+      #       accepts_nested_attributes_for :profile
+      #     end
+      #     class Profile < ActiveRecord::Base
+      #       belongs_to :user
+      #     end
+      #
+      # Formtastic provides a helper called `semantic_fields_for`, which wraps around Rails' built-in
+      # `fields_for` helper, allowing you to combine Rails-style nested fields with Formtastic inputs:
+      #
+      #     <% semantic_form_for @user do |form| %>
+      #       <%= f.inputs :name, :email %>
       #     
-      #     With a few arguments:
-      #     <% semantic_form_for @post do |form| %>
-      #       <%= f.inputs "Post details", :title, :body %>
-      #     <% end %>
-      #
-      # **Options**
-      #
-      # All options (with the exception of :name/:title) are passed down to the fieldset as HTML
-      # attributes (id, class, style, etc).  If provided, the :name/:title option is passed into a
-      # legend tag inside the fieldset.
-      #
-      #     # With a block:
-      #     <% semantic_form_for @post do |form| %>
-      #       <% f.inputs :name => "Create a new post", :style => "border:1px;" do %>
-      #         ...
-      #       <% end %>
-      #     <% end %>
-      #     
-      #     # With a list (the options must come after the field list):
-      #     <% semantic_form_for @post do |form| %>
-      #       <%= f.inputs :title, :body, :name => "Create a new post", :style => "border:1px;" %>
-      #     <% end %>
-      #     
-      #     # ...or the equivalent:
-      #     <% semantic_form_for @post do |form| %>
-      #       <%= f.inputs "Create a new post", :title, :body, :style => "border:1px;" %>
-      #     <% end %>
-      #
-      # **It's basically a fieldset!**
-      #
-      # Instead of hard-coding fieldsets & legends into your form to logically group related fields,
-      # use inputs:
-      #
-      #     <% semantic_form_for @post do |f| %>
-      #       <% f.inputs do %>
-      #         <%= f.input :title %>
-      #         <%= f.input :body %>
-      #       <% end %>
-      #       <% f.inputs :name => "Advanced", :id => "advanced" do %>
-      #         <%= f.input :created_at %>
-      #         <%= f.input :user_id, :label => "Author" %>
-      #       <% end %>
-      #       <% f.inputs "Extra" do %>
-      #         <%= f.input :update_at %>
-      #       <% end %>
-      #     <% end %>
-      #     
-      #     # Output:
-      #     <form ...>
-      #       <fieldset class="inputs">
-      #         <ol>
-      #           <li class="string">...</li>
-      #           <li class="text">...</li>
-      #         </ol>
-      #       </fieldset>
-      #       <fieldset class="inputs" id="advanced">
-      #         <legend><span>Advanced</span></legend>
-      #         <ol>
-      #           <li class="datetime">...</li>
-      #           <li class="select">...</li>
-      #         </ol>
-      #       </fieldset>
-      #       <fieldset class="inputs">
-      #         <legend><span>Extra</span></legend>
-      #         <ol>
-      #           <li class="datetime">...</li>
-      #         </ol>
-      #       </fieldset>
-      #     </form>
-      #
-      # **Nested attributes**
-      #
-      # As in Rails, you can use semantic_fields_for to nest attributes:
-      #
-      #     <% semantic_form_for @post do |form| %>
-      #       <%= f.inputs :title, :body %>
-      #     
-      #       <% f.semantic_fields_for :author, @bob do |author| %>
-      #         <% author.inputs do %>
-      #           <%= author.input :first_name, :required => false %>
-      #           <%= author.input :last_name %>
+      #       <% f.semantic_fields_for :profile do |profile| %>
+      #         <% profile.inputs do %>
+      #           <%= profile.input :biography %>
+      #           <%= profile.input :twitter_name %>
+      #           <%= profile.input :shoe_size %>
       #         <% end %>
       #       <% end %>
       #     <% end %>
       #
-      # But this does not look formtastic! This is equivalent:
+      # {#inputs} also provides a DSL similar to `semantic_fields_for` to reduce the lines of code a
+      # little:
       #
-      #     <% semantic_form_for @post do |form| %>
-      #       <%= f.inputs :title, :body %>
-      #       <% f.inputs :for => [ :author, @bob ] do |author| %>
-      #         <%= author.input :first_name, :required => false %>
-      #         <%= author.input :last_name %>
+      #     <% semantic_form_for @user do |f| %>
+      #       <%= f.inputs :name, :email %>
+      #     
+      #       <% f.inputs :for => :profile do %>
+      #         <%= profile.input :biography %>
+      #         <%= profile.input :twitter_name %>
+      #         <%= profile.input :shoe_size %>
       #       <% end %>
       #     <% end %>
       #
-      # And if you don't need to give options to your input call, you could do it
-      # in just one line:
+      # The `:for` option also works with short hand syntax:
       #
       #     <% semantic_form_for @post do |form| %>
-      #       <%= f.inputs :title, :body %>
-      #       <%= f.inputs :first_name, :last_name, :for => @bob %>
+      #       <%= f.inputs :name, :email %>
+      #       <%= f.inputs :biography, :twitter_name, :shoe_size, :for => :profile %>
       #     <% end %>
       #
-      # Just remember that calling inputs generates a new fieldset to wrap your
-      # inputs. If you have two separate models, but, semantically, on the page
-      # they are part of the same fieldset, you should use semantic_fields_for
-      # instead (just as you would do with Rails' form builder).
+      # {#inputs} will always create a new `<fieldset>` wrapping, so only use it when it makes sense
+      # in the document structure and semantics (using `semantic_fields_for` otherwise).
       #
-      # @todo convert to YARD documentation syntax
+      # All options except `:name`, `:title` and `:for` will be passed down to the fieldset as HTML
+      # attributes (id, class, style, etc).
+      #
+      #
+      # @option args :for [Symbol, ActiveModel, Array]
+      #   The contents of this option is passed down to Rails' fields_for() helper, so it accepts the same values.
+      #
+      # @option args :name [String] 
+      #   The optional name passed into the `<legend>` tag within the fieldset (alias of `:title`)
+      #
+      # @option args :title [String] 
+      #   The optional name passed into the `<legend>` tag within the fieldset (alias of `:name`)
+      #
+      #
+      # @example Quick form: Render a scaffold-like set of inputs for automatically guessed attributes and simple associations on the model, with all default arguments and options
+      #   <% semantic_form_for @post do |form| %>
+      #     <%= f.inputs %>
+      #   <% end %>
+      #
+      # @example Short hand: Render inputs for a named set of attributes and simple associations on the model, with all default arguments and options
+      #   <% semantic_form_for @post do |form| %>
+      #     <%= f.inputs, :title, :body, :user, :categories %>
+      #   <% end %>
+      #
+      # @example Block: Render inputs for attributes and simple associations with full control over arguments and options
+      #   <% semantic_form_for @post do |form| %>
+      #     <%= f.inputs do %>
+      #       <%= f.input :title ... %>
+      #       <%= f.input :body ... %>
+      #       <%= f.input :user ... %>
+      #       <%= f.input :categories ... %>
+      #     <% end %>
+      #   <% end %>
+      #
+      # @example Multiple blocks: Render inputs in multiple fieldsets
+      #   <% semantic_form_for @post do |form| %>
+      #     <%= f.inputs do %>
+      #       <%= f.input :title ... %>
+      #       <%= f.input :body ... %>
+      #     <% end %>
+      #     <%= f.inputs do %>
+      #       <%= f.input :user ... %>
+      #       <%= f.input :categories ... %>
+      #     <% end %>
+      #   <% end %>
+      #
+      # @example Provide text for the `<legend>` to name a fieldset (with a block)
+      #   <% semantic_form_for @post do |form| %>
+      #     <%= f.inputs :name => 'Write something:' do %>
+      #       <%= f.input :title ... %>
+      #       <%= f.input :body ... %>
+      #     <% end %>
+      #     <%= f.inputs do :name => 'Advanced options:' do %>
+      #       <%= f.input :user ... %>
+      #       <%= f.input :categories ... %>
+      #     <% end %>
+      #   <% end %>
+      #
+      # @example Provide text for the `<legend>` to name a fieldset (with short hand)
+      #   <% semantic_form_for @post do |form| %>
+      #     <%= f.inputs :title, :body, :name => 'Write something:'%>
+      #     <%= f.inputs :user, :cateogies, :name => 'Advanced options:' %>
+      #   <% end %>
+      #
+      # @example Inputs for nested attributes (don't forget `accepts_nested_attributes_for` in your model, see Rails' `fields_for` documentation)
+      #   <% semantic_form_for @user do |form| %>
+      #     <%= f.inputs do %>
+      #       <%= f.input :name ... %>
+      #       <%= f.input :email ... %>
+      #     <% end %>
+      #     <%= f.inputs :for => :profile do |profile| %>
+      #       <%= profile.input :user ... %>
+      #       <%= profile.input :categories ... %>
+      #     <% end %>
+      #   <% end %>
+      #
+      # @example Inputs for nested record (don't forget `accepts_nested_attributes_for` in your model, see Rails' `fields_for` documentation)
+      #   <% semantic_form_for @user do |form| %>
+      #     <%= f.inputs do %>
+      #       <%= f.input :name ... %>
+      #       <%= f.input :email ... %>
+      #     <% end %>
+      #     <%= f.inputs :for => @user.profile do |profile| %>
+      #       <%= profile.input :user ... %>
+      #       <%= profile.input :categories ... %>
+      #     <% end %>
+      #   <% end %>
+      #
+      # @example Inputs for nested record with a different name (don't forget `accepts_nested_attributes_for` in your model, see Rails' `fields_for` documentation)
+      #   <% semantic_form_for @user do |form| %>
+      #     <%= f.inputs do %>
+      #       <%= f.input :name ... %>
+      #       <%= f.input :email ... %>
+      #     <% end %>
+      #     <%= f.inputs :for => [:user_profile, @user.profile] do |profile| %>
+      #       <%= profile.input :user ... %>
+      #       <%= profile.input :categories ... %>
+      #     <% end %>
+      #   <% end %>
       def inputs(*args, &block)
         title = field_set_title_from_args(*args)
         html_options = args.extract_options!
