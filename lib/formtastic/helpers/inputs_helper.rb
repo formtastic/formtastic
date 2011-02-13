@@ -505,7 +505,7 @@ module Formtastic
         end
       end
       
-      # A thin wrapper around Rails' `fields_for` helper to set :builder => Formtastic::FormBuilder
+      # A thin wrapper around Rails' `fields_for` helper to set `:builder => Formtastic::FormBuilder`
       # for nesting forms. Can be used in the same way as `fields_for` (see the Rails documentation),
       # but you'll also have access to Formtastic's helpers ({#input}, etc) inside the block.
       #
