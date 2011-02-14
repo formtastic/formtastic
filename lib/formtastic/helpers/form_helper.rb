@@ -1,60 +1,166 @@
 module Formtastic
   module Helpers
-    # Wrappers around form_for (etc) with :builder => Formtastic::FormBuilder.
+    
+    # FormHelper provides a handful of wrappers around Rails' built-in form helpers methods to set
+    # the `:builder` option to `Formtastic::FormBuilder` and apply some class names to the `<form>`
+    # tag.
     #
-    # * semantic_form_for(@post)
-    # * semantic_fields_for(@post)
-    # * semantic_form_remote_for(@post)
-    # * semantic_remote_form_for(@post)
+    # The following methods are wrapped:
     #
-    # Each of which are the equivalent of:
+    # * `semantic_form_for` to `form_for`
+    # * `semantic_fields_for` to `fields_for`
+    # * `semantic_remote_form_for` and `semantic_form_remote_for` to `remote_form_for`
     #
-    # * form_for(@post, :builder => Formtastic::FormBuilder))
-    # * fields_for(@post, :builder => Formtastic::FormBuilder))
-    # * form_remote_for(@post, :builder => Formtastic::FormBuilder))
-    # * remote_form_for(@post, :builder => Formtastic::FormBuilder))
+    # The following two examples are effectively equivalent:
     #
-    # Example Usage:
+    #     <%= form_for(@post, :builder => Formtastic::FormBuilder, :class => 'formtastic post') do |f| %>
+    #       #...
+    #     <% end %>
     #
-    #   <% semantic_form_for @post do |f| %>
-    #     <%= f.input :title %>
-    #     <%= f.input :body %>
-    #   <% end %>
+    #     <%= semantic_form_for(@post) do |f| %>
+    #       #...
+    #     <% end %>
     #
-    # The above examples use a resource-oriented style of form_for() helper where only the @post
-    # object is given as an argument, but the generic style is also supported, as are forms with
-    # inline objects (Post.new) rather than objects with instance variables (@post):
+    # This simple wrapping means that all arguments, options and variations supported by Rails' own
+    # helpers are also supported by Formtastic.
     #
-    #   <% semantic_form_for :post, @post, :url => posts_path do |f| %>
-    #     ...
-    #   <% end %>
+    # Since `Formtastic::FormBuilder` subclasses Rails' own `FormBuilder`, you have access to all
+    # of Rails' built-in form helper methods such as `text_field`, `check_box`, `radio_button`, 
+    # etc **in addition to** all of Formtastic's additional helpers like {InputsHelper#inputs inputs}, 
+    # {InputsHelper#input input}, {ButtonsHelper#buttons buttons}, etc:
     #
-    #   <% semantic_form_for :post, Post.new, :url => posts_path do |f| %>
-    #     ...
-    #   <% end %>
+    #     <%= semantic_form_for(@post) do |f| %>
     #
-    # @todo Documentation
+    #       <!-- Formtastic -->       
+    #       <%= f.input :title %>
+    #
+    #       <!-- Rails -->
+    #       <li class='something-custom'>
+    #         <%= f.label :title %>
+    #         <%= f.text_field :title %>
+    #         <p class='hints'>...</p>
+    #       </li>
+    #     <% end %>
+    #
+    # Formtastic is a superset of Rails' FormBuilder. It deliberately avoids overriding or modifying 
+    # the behavior of Rails' own form helpers so that you can use Formtastic helpers when suited, 
+    # and fall back to regular Rails helpers, ERB and HTML when needed. In other words, you're never
+    # fully committed to The Formtastic Way.
     module FormHelper
+      
+      # Allows the `:builder` option on `form_for` etc to be changed to your own which subclasses
+      # `Formtastic::FormBuilder`. Change this from `config/initializers/formtastic.rb`.
       @@builder = Formtastic::FormBuilder
+      mattr_accessor :builder
+      
+      # Allows the default class we add to all `<form>` tags to be changed from `formtastic` to 
+      # `whatever`. Change this from `config/initializers/formtastic.rb`.
       @@default_form_class = 'formtastic'
-      mattr_accessor :builder, :default_form_class
+      mattr_accessor :default_form_class
   
-      # @todo Documentation
+      # Wrapper around Rails' own `form_for` helper to set the `:builder` option to 
+      # `Formtastic::FormBuilder` and to set some class names on the `<form>` tag such as 
+      # `formtastic` and the downcased and underscored model name (eg `post`).
+      #
+      # See Rails' `form_for` for full documentation of all supported arguments and options.
+      #
+      # Since `Formtastic::FormBuilder` subclasses Rails' own FormBuilder, you have access to all
+      # of Rails' built-in form helper methods such as `text_field`, `check_box`, `radio_button`, 
+      # etc **in addition to** all of Formtastic's additional helpers like {InputsHelper#inputs inputs}, 
+      # {InputsHelper#input input}, {ButtonsHelper#buttons buttons}, etc.
+      #
+      # Most of the examples below have been adapted from the examples found in the Rails `form_for` 
+      # documentation.
+      #
+      # @see http://api.rubyonrails.org/classes/ActionView/Helpers/FormHelper.html Rails' FormHelper documentation (`form_for`, etc)
+      # @see http://api.rubyonrails.org/classes/ActionView/Helpers/FormBuilder.html Rails' FormBuilder documentaion (`text_field`, etc)
+      # @see FormHelper The overview of the FormBuilder module
+      #
+      # @example Resource-oriented form generation
+      #   <%= semantic_form_for @user do |f| %>
+      #     <%= f.input :name %>
+      #     <%= f.input :email %>
+      #     <%= f.input :password %>
+      #   <% end %>
+      #
+      # @example Generic form generation
+      #   <%= semantic_form_for :user do |f| %>
+      #     <%= f.input :name %>
+      #     <%= f.input :email %>
+      #     <%= f.input :password %>
+      #   <% end %>
+      #
+      # @example Resource-oriented with custom URL
+      #   <%= semantic_form_for(@post, :url => super_post_path(@post)) do |f| %>
+      #     ...
+      #   <% end %>
+      #
+      # @example Resource-oriented with namespaced routes
+      #   <%= semantic_form_for([:admin, @post]) do |f| %>
+      #     ...
+      #   <% end %>
+      #
+      # @example Resource-oriented with nested routes
+      #   <%= semantic_form_for([@user, @post]) do |f| %>
+      #     ...
+      #   <% end %>
+      #
+      # @example Rename the resource
+      #   <%= semantic_form_for(@post, :as => :article) do |f| %>
+      #     ...
+      #   <% end %>
+      #
+      # @example Remote forms (unobtrusive JavaScript)
+      #   <%= semantic_form_for(@post, :remote => true) do |f| %>
+      #     ...
+      #   <% end %>
+      #
+      # @example Namespaced forms all multiple Formtastic forms to exist on the one page without DOM id clashes and invalid HTML documents.
+      #   <%= semantic_form_for(@post, :namespace => 'first') do |f| %>
+      #     ...
+      #   <% end %>
+      #
+      # @example Accessing a mixture of Formtastic helpers and Rails FormBuilder helpers.
+      #   <%= semantic_form_for(@post) do |f| %>
+      #     <%= f.input :title %>
+      #     <%= f.input :body %>
+      #     <li class="something-custom">
+      #       <label><%= f.check_box :published %></label>
+      #     </li>
+      #   <% end %>
+      #
+      # @param record_or_name_or_array
+      #   Same behavior as Rails' `form_for`
+      #
+      # @option *args [Hash] :html
+      #   Pass HTML attributes into the `<form>` tag. Same behavior as Rails' `form_for`, except we add in some of our own classes.
+      #
+      # @option *args [String, Hash] :url
+      #   A hash of URL components just like you pass into `link_to` or `url_for`, or a named route (eg `posts_path`). Same behavior as Rails' `form_for`.
+      #
+      # @option *args [String] :namespace
       def semantic_form_for(record_or_name_or_array, *args, &proc)
         form_helper_wrapper(:form_for, record_or_name_or_array, *args, &proc)
       end
 
-      # @todo Documentation
+      # Wrapper around Rails' own `fields_for` helper to set the `:builder` option to 
+      # `Formtastic::FormBuilder`.
+      #
+      # @see #semantic_form_for
       def semantic_fields_for(record_or_name_or_array, *args, &proc)
         form_helper_wrapper(:fields_for, record_or_name_or_array, *args, &proc)
       end
 
-      # @todo Documentation
+      # Wrapper around Rails' own `remote_form_for` helper to set the `:builder` option to 
+      # `Formtastic::FormBuilder` and to set some class names on the `<form>` tag such as 
+      # `formtastic` and the downcased and underscored model name.
+      #
+      # @see #semantic_form_for
+      # @todo why isn't YARD rendering this method?
       def semantic_remote_form_for(record_or_name_or_array, *args, &proc)
         form_helper_wrapper(:remote_form_for, record_or_name_or_array, *args, &proc)
       end
       
-      # TODO WTF is this mess?
       def semantic_remote_form_for_wrapper(record_or_name_or_array, *args, &proc)
         options = args.extract_options!
         if respond_to? :remote_form_for
@@ -70,6 +176,7 @@ module Formtastic
 
       protected
       
+      # @todo pretty sure some of this (like HTML classes and record naming are exlusive to `form_for`)
       def form_helper_wrapper(rails_helper_method_name, record_or_name_or_array, *args, &proc)
         options = args.extract_options!
         options[:builder] ||= @@builder
@@ -95,7 +202,7 @@ module Formtastic
       # Override the default ActiveRecordHelper behaviour of wrapping the input.
       # This gets taken care of semantically by adding an error class to the LI tag
       # containing the input.
-      #
+      # @private
       FIELD_ERROR_PROC = proc do |html_tag, instance_tag|
         html_tag
       end
