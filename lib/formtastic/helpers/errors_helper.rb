@@ -11,15 +11,37 @@ module Formtastic
       
       INLINE_ERROR_TYPES = [:sentence, :list, :first]
       
-      # Generates error messages for given method names and for base.
-      # You can pass a hash with html options that will be added to ul tag
+      # Generates an unordered list of error messages on the base object and optionally for a given 
+      # set of named attribute. This is idea for rendering a block of error messages at the top of 
+      # the form for hidden/special/virtual attributes (the Paperclip Rails plugin does this), or 
+      # errors on the base model.
       #
-      # == Examples
+      # A hash can be used as the last set of arguments to pass HTML attributes to the `<ul>` 
+      # wrapper.
       #
-      #  f.semantic_errors # This will show only errors on base
-      #  f.semantic_errors :state # This will show errors on base and state
-      #  f.semantic_errors :state, :class => "awesome" # errors will be rendered in ul.awesome
+      # @example A list of errors on the base model
+      #   <%= semantic_form_for ... %>
+      #     <%= f.semantic_errors %>
+      #     ...
+      #   <% end %>
       #
+      # @example A list of errors on the base and named attributes
+      #   <%= semantic_form_for ... %>
+      #     <%= f.semantic_errors :something_special %>
+      #     ...
+      #   <% end %>
+      #
+      # @example A list of errors on the base model, with custom HTML attributes
+      #   <%= semantic_form_for ... %>
+      #     <%= f.semantic_errors :class => "awesome" %>
+      #     ...
+      #   <% end %>
+      #
+      # @example A list of errors on the base model and named attributes, with custom HTML attributes
+      #   <%= semantic_form_for ... %>
+      #     <%= f.semantic_errors :something_special, :something_else, :class => "awesome", :onclick => "Awesome();" %>
+      #     ...
+      #   <% end %>
       def semantic_errors(*args)
         html_options = args.extract_options!
         full_errors = args.inject([]) do |array, method|
