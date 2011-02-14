@@ -160,14 +160,13 @@ module Formtastic
       #       <% end %>
       #     <% end %>
       #
-      # @option args :label [String, Symbol]
+      # @option *args :label [String, Symbol]
       #   Optionally specify text for the legend of the fieldset
       #
-      # @option args :name [String, Symbol]
+      # @option *args :name [String, Symbol]
       #   Optionally specify text for the legend of the fieldset (alias for `:label`)
       #
       # @todo document i18n keys
-      # @todo YARD @option tags aren't rendering
       def buttons(*args, &block)
         html_options = args.extract_options!
         html_options[:class] ||= "buttons"
@@ -227,18 +226,17 @@ module Formtastic
       #   <%= f.commit_button :label => "Go", :button_html => { :class => 'special', :id => 'whatever' } %>
       #   <%= f.commit_button "Go", :button_html => { :class => 'special', :id => 'whatever' } %>
       #
-      # @option args :label [String, Symbol]  
+      # @option *args :label [String, Symbol]  
       #   Override the label text with a String or a symbold for an i18n translation key
       #
-      # @option args :button_html [Hash]  
+      # @option *args :button_html [Hash]  
       #   Override or add to the HTML attributes to be passed down to the `<input>` tag
       #
-      # @option args :wrapper_html [Hash] 
+      # @option *args :wrapper_html [Hash] 
       #   Override or add to the HTML attributes to be passed down to the wrapping `<li>` tag
       #
       # @todo document i18n keys
       # @todo strange that `:accesskey` seems to be supported in the top level args as well as `:button_html`
-      # @todo YARD @option tags aren't rendering
       def commit_button(*args)
         options = args.extract_options!
         text = options.delete(:label) || args.shift

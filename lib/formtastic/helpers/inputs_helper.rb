@@ -371,13 +371,13 @@ module Formtastic
       # attributes (id, class, style, etc).
       #
       #
-      # @option args :for [Symbol, ActiveModel, Array]
+      # @option *args :for [Symbol, ActiveModel, Array]
       #   The contents of this option is passed down to Rails' fields_for() helper, so it accepts the same values.
       #
-      # @option args :name [String] 
+      # @option *args :name [String] 
       #   The optional name passed into the `<legend>` tag within the fieldset (alias of `:title`)
       #
-      # @option args :title [String] 
+      # @option *args :title [String] 
       #   The optional name passed into the `<legend>` tag within the fieldset (alias of `:name`)
       #
       #
