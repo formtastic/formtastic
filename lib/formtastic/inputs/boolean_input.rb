@@ -2,12 +2,38 @@ require 'inputs/base'
 
 module Formtastic
   module Inputs
+    # Boolean inputs are used to render an input for a single checkbox, typically for attributes
+    # with a simple yes/no or true/false value. Boolean inputs are used by default for boolean
+    # database columns.
+    #
+    # @example Full form context and markup
+    #   <%= semantic_form_for @post %>
+    #     <%= f.inputs do %>
+    #       <%= f.input :published, :as => :boolean %>
+    #     <% end %>
+    #   <% end %>
+    #   
+    #   <form...>
+    #     <fieldset>
+    #       <ol>
+    #         <li class="boolean" id="post_published_input">
+    #           <input type="hidden" name="post[published]" id="post_published" value="0">
+    #           <label for="post_published">
+    #             <input type="checkbox" name="post[published]" id="post_published" value="1">
+    #             Published?
+    #           </label>
+    #         </li>
+    #       </ol>
+    #     </fieldset>
+    #   </form>
+    #
+    # @example Set the values for the checked and unchecked states
+    #   <%= f.input :published, :checked_value => "yes", :unchecked_value => "no" %> 
+    #
+    # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
     module BooleanInput
       include Formtastic::Inputs::Base
       
-      # Outputs a label containing a checkbox and the label text. The label defaults
-      # to the column name (method name) and can be altered with the :label option.
-      # :checked_value and :unchecked_value options are also available.
       def boolean_input(method, options)
         html_options  = options.delete(:input_html) || {}
         checked_value = options.delete(:checked_value) || '1'
