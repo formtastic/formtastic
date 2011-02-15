@@ -480,8 +480,6 @@ module Formtastic
       #       </li>
       #     <% end %>
       #   <% end %>
-      #
-      # @todo args are not being rendered in YARD documentation
       def inputs(*args, &block)
         title = field_set_title_from_args(*args)
         html_options = args.extract_options!
