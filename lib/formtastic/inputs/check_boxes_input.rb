@@ -2,82 +2,74 @@ require 'inputs/base'
 
 module Formtastic
   module Inputs
+    # Boolean inputs are used to render a series of checkboxes. This is an alternative input choice 
+    # for `has_many` or `has_and_belongs_to_many` associations like a `Post` belonging to many 
+    # `categories` (by default, a {SelectInput `:select`} input is used, allowing multiple selections).
+    #
+    # Within the standard `<li>` wrapper, the output is a `<fieldset>` with a `<legend>` to
+    # represent the "label" for the input, and an `<ol>` containing `<li>`s for each choice in 
+    # the association. Each `<li>` choice contains a hidden `<input>` tag for the "unchecked"
+    # value (like Rails), and a `<label>` containing the checkbox `<input>` and the label text 
+    # for each choice.
+    #
+    # @example Basic example with full form context
+    #
+    #   <%= semantic_form_for @post do |f| %>
+    #     <%= f.inputs do %>
+    #       <%= f.input :categories, :as => :check_boxes %>
+    #     <% end %>
+    #   <% end %>
+    #
+    #   <li class='check_boxes'>
+    #     <fieldset>
+    #       <legend class="label"><label>Categories</label></legend>
+    #       <ol>
+    #         <li>
+    #           <input type="hidden" name="post[category_ids][1]" value="">
+    #           <label for="post_category_ids_1"><input id="post_category_ids_1" name="post[category_ids][1]" type="checkbox" value="1" /> Ruby</label>
+    #         </li>
+    #         <li>
+    #           <input type="hidden" name="post[category_ids][2]" value="">
+    #           <label for="post_category_ids_2"><input id="post_category_ids_2" name="post[category_ids][2]" type="checkbox" value="2" /> Rails</label>
+    #         </li>
+    #       </ol>
+    #     </fieldset>
+    #   </li>
+    #
+    # @example `:collection` can be used to customize the choices
+    #   <%= f.input :categories, :as => :check_boxes, :collection => @categories %>
+    #   <%= f.input :categories, :as => :check_boxes, :collection => Category.all %>
+    #   <%= f.input :categories, :as => :check_boxes, :collection => Category.some_named_scope %>
+    #   <%= f.input :categories, :as => :check_boxes, :collection => [Category.find_by_name("Ruby"), Category.find_by_name("Rails")] %>
+    #   <%= f.input :categories, :as => :check_boxes, :collection => ["Ruby", "Rails"] %>
+    #   <%= f.input :categories, :as => :check_boxes, :collection => [["Ruby", "ruby"], ["Rails", "rails"]] %>
+    #   <%= f.input :categories, :as => :check_boxes, :collection => [["Ruby", "1"], ["Rails", "2"]] %>
+    #   <%= f.input :categories, :as => :check_boxes, :collection => [["Ruby", 1], ["Rails", 2]] %>
+    #   <%= f.input :categories, :as => :check_boxes, :collection => 1..5 %>
+    #
+    # @example `:hidden_fields` can be used to skip Rails' rendering of a hidden field before every checkbox
+    #   <%= f.input :categories, :as => :check_boxes, :hidden_fields => false %>
+    #
+    # @example `:disabled` can be used to disable any checkboxes with a value found in the given Array
+    #   <%= f.input :categories, :as => :check_boxes, :collection => ["a", "b"], :disabled => ["a"] %>
+    # 
+    # @example `:label_method` can be used to call a different method (or a Proc) on each object in the collection for rendering the label text (it'll try the methods like `to_s` in `collection_label_methods` config by default)
+    #   <%= f.input :categories, :as => :check_boxes, :label_method => :name %>
+    #   <%= f.input :categories, :as => :check_boxes, :label_method => :name_with_post_count
+    #   <%= f.input :categories, :as => :check_boxes, :label_method => Proc.new { |c| "#{c.name} (#{pluralize("post", c.posts.count)})" }
+    # 
+    # @example `:value_method` can be used to call a different method (or a Proc) on each object in the collection for rendering the value for each checkbox (it'll try the methods like `id` in `collection_value_methods` config by default)
+    #   <%= f.input :categories, :as => :check_boxes, :value_method => :code %>
+    #   <%= f.input :categories, :as => :check_boxes, :value_method => :isbn
+    #   <%= f.input :categories, :as => :check_boxes, :value_method => Proc.new { |c| c.name.downcase.underscore }
+    # 
+    # @example `:value_as_class` can be used to add a class to the `<li>` wrapped around each choice using the checkbox value for custom styling of each choice
+    #   <%= f.input :categories, :as => :check_boxes, :value_as_class => true %>
+    #
+    # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
     module CheckBoxesInput
       include Formtastic::Inputs::Base
       
-      # Outputs a fieldset containing a legend for the label text, and an ordered list (ol) of list
-      # items, one for each possible choice in the belongs_to association.  Each li contains a
-      # label and a check_box input.
-      #
-      # This is an alternative for has many and has and belongs to many associations.
-      #
-      # Example:
-      #
-      #   f.input :author, :as => :check_boxes
-      #
-      # Output:
-      #
-      #   <fieldset>
-      #     <legend class="label"><label>Authors</label></legend>
-      #     <ol>
-      #       <li>
-      #         <input type="hidden" name="book[author_id][1]" value="">
-      #         <label for="book_author_id_1"><input id="book_author_id_1" name="book[author_id][1]" type="checkbox" value="1" /> Justin French</label>
-      #       </li>
-      #       <li>
-      #         <input type="hidden" name="book[author_id][2]" value="">
-      #         <label for="book_author_id_2"><input id="book_author_id_2" name="book[owner_id][2]" type="checkbox" value="2" /> Kate French</label>
-      #       </li>
-      #     </ol>
-      #   </fieldset>
-      #
-      # Notice that the value of the checkbox is the same as the id and the hidden
-      # field has empty value. You can override the hidden field value using the
-      # unchecked_value option.
-      #
-      # You can customize the options available in the set by passing in a collection (Array) of
-      # ActiveRecord objects through the :collection option.  If not provided, the choices are found
-      # by inferring the parent's class name from the method name and simply calling all on
-      # it (Author.all in the example above).
-      #
-      # Examples:
-      #
-      #   f.input :author, :as => :check_boxes, :collection => @authors
-      #   f.input :author, :as => :check_boxes, :collection => Author.all
-      #   f.input :author, :as => :check_boxes, :collection => [@justin, @kate]
-      #
-      # The :label_method option allows you to customize the label for each checkbox two ways:
-      #
-      # * by naming the correct method to call on each object in the collection as a symbol (:name, :login, etc)
-      # * by passing a Proc that will be called on each object in the collection, allowing you to use helpers or multiple model attributes together
-      #
-      # Examples:
-      #
-      #   f.input :author, :as => :check_boxes, :label_method => :full_name
-      #   f.input :author, :as => :check_boxes, :label_method => :login
-      #   f.input :author, :as => :check_boxes, :label_method => :full_name_with_post_count
-      #   f.input :author, :as => :check_boxes, :label_method => Proc.new { |a| "#{a.name} (#{pluralize("post", a.posts.count)})" }
-      #
-      # The :value_method option provides the same customization of the value attribute of each checkbox input tag.
-      #
-      # Examples:
-      #
-      #   f.input :author, :as => :check_boxes, :value_method => :full_name
-      #   f.input :author, :as => :check_boxes, :value_method => :login
-      #   f.input :author, :as => :check_boxes, :value_method => Proc.new { |a| "author_#{a.login}" }
-      #
-      # Formtastic works around a bug in rails handling of check box collections by
-      # not generating the hidden fields for state checking of the checkboxes
-      # The :hidden_fields option provides a way to re-enable these hidden inputs by
-      # setting it to true.
-      #
-      #   f.input :authors, :as => :check_boxes, :hidden_fields => false
-      #   f.input :authors, :as => :check_boxes, :hidden_fields => true
-      #
-      # Finally, you can set :value_as_class => true if you want the li wrapper around each checkbox / label
-      # combination to contain a class with the value of the radio button (useful for applying specific
-      # CSS or Javascript to a particular checkbox).
-      #
       def check_boxes_input(method, options)
         collection = find_collection_for_column(method, options)
         html_options = options.delete(:input_html) || {}
@@ -144,7 +136,7 @@ module Formtastic
         template.hidden_field_tag(input_name, '', options)
       end
   
-      # Outputs a checkbox tag. If called with no_hidden_input = true a plain check_box_tag is returned,
+      # Outputs a checkbox tag. If called with hidden_fields = true a plain check_box_tag is returned,
       # otherwise the helper uses the output generated by the rails check_box method.
       def create_check_boxes(input_name, html_options = {}, checked_value = "1", unchecked_value = "0", hidden_fields = false) #:nodoc:
         return template.check_box_tag(input_name, checked_value, html_options[:checked], html_options) unless hidden_fields == true
