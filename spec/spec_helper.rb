@@ -221,6 +221,8 @@ module FormtasticSpecHelper
         mock('reflection', :options => {}, :klass => ::Post, :macro => :has_many)
       when :main_post
         mock('reflection', :options => {}, :klass => ::Post, :macro => :belongs_to)
+      when :mongoid_reviewer
+        mock('reflection', :options => {}, :klass => ::Author, :macro => :referenced_in, :foreign_key => "reviewer_id")
       end
 
     end
@@ -305,12 +307,6 @@ module FormtasticSpecHelper
     ::Formtastic::SemanticFormBuilder.send(:"#{config_method_name}=", value)
     yield
     ::Formtastic::SemanticFormBuilder.send(:"#{config_method_name}=", old_value)
-  end
-
-  def with_deprecation_silenced(&block)
-    ::ActiveSupport::Deprecation.silenced = true
-    yield
-    ::ActiveSupport::Deprecation.silenced = false
   end
 
 end

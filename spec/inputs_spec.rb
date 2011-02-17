@@ -120,14 +120,16 @@ describe 'SemanticFormBuilder#inputs' do
           @new_post.stub!(:authors_attributes=)
         end
 
-        it 'should nest the inputs with a name input for each item' do
+        it 'should nest the inputs with a fieldset, legend and :name input for each item' do
           form = semantic_form_for(@new_post) do |post|
-            post.inputs :for => :authors do |author|
+            post.inputs :for => :authors, :name => '%i' do |author|
               concat(author.input(:login))
             end
           end
 
           output_buffer.concat(form) if Formtastic::Util.rails3?
+          output_buffer.should have_tag("form fieldset.inputs", :count => 2)
+          output_buffer.should have_tag("form fieldset.inputs legend", :count => 2)
           output_buffer.should have_tag("form input[@name='post[authors_attributes][0][login]']")
           output_buffer.should have_tag("form input[@name='post[authors_attributes][1][login]']")
         end

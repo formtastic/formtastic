@@ -286,7 +286,7 @@ module Formtastic #:nodoc:
       html_options = args.extract_options!
       html_options[:class] ||= "inputs"
       html_options[:name] = title
-
+      
       if html_options[:for] # Nested form
         inputs_for_nested_attributes(*(args << html_options), &block)
       elsif block_given?
@@ -569,7 +569,6 @@ module Formtastic #:nodoc:
         fields_for_block = if block_given?
           raise ArgumentError, 'You gave :for option with a block to inputs method, ' <<
                                'but the block does not accept any argument.' if block.arity <= 0
-
           lambda do |f|
             contents = f.inputs(*args){ block.call(f) }
             template.concat(contents) if ::Formtastic::Util.rails3?
@@ -1257,12 +1256,13 @@ module Formtastic #:nodoc:
         html_options  = options.delete(:input_html) || {}
         checked_value = options.delete(:checked_value) || '1'
         unchecked_value = options.delete(:unchecked_value) || '0'
+        checked = @object && ActionView::Helpers::InstanceTag.check_box_checked?(@object.send(:"#{method}"), checked_value)
 
         html_options[:id] = html_options[:id] || generate_html_id(method, "")
         input = template.check_box_tag(
           "#{@object_name}[#{method}]",
           checked_value,
-          (@object && @object.send(:"#{method}")),
+          checked,
           html_options
         )
         
@@ -1272,7 +1272,7 @@ module Formtastic #:nodoc:
         # the label() method will insert this nested input into the label at the last minute
         options[:label_prefix_for_nested_input] = input
 
-        template.hidden_field_tag("#{@object_name}[#{method}]", unchecked_value, :id => nil) << label(method, options)
+        template.hidden_field_tag((html_options[:name] || "#{@object_name}[#{method}]"), unchecked_value, :id => nil) << label(method, options)
       end
 
       # Generates an input for the given method using the type supplied with :as.
@@ -1356,7 +1356,7 @@ module Formtastic #:nodoc:
         contents = args.last.is_a?(::Hash) ? '' : args.pop.flatten
         html_options = args.extract_options!
 
-        legend  = html_options.delete(:name).to_s
+        legend  = html_options.dup.delete(:name).to_s
         legend %= parent_child_index(html_options[:parent]) if html_options[:parent]
         legend  = template.content_tag(:legend, template.content_tag(:span, Formtastic::Util.html_safe(legend))) unless legend.blank?
 
@@ -1620,6 +1620,8 @@ module Formtastic #:nodoc:
         if reflection = reflection_for(method)
           if [:has_and_belongs_to_many, :has_many].include?(reflection.macro)
             "#{method.to_s.singularize}_ids"
+          elsif reflection.respond_to? :foreign_key
+            reflection.foreign_key
           else
             reflection.options[:foreign_key] || "#{method}_id"
           end
