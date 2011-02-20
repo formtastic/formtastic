@@ -8,3 +8,5 @@ log/*
 .rvmrc
 .bundle
 Gemfile.lock
+.yardoc
+doc/

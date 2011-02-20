@@ -1,3 +1,16 @@
+[v2 branch]
+
+* Changed formtastic:form generator include the wrapping semantic_form_for block
+* Changed formtastic:form generator to generate a partial by default (instead of copying to clipboard, which can be done with --copy)
+* Removed formtastic_stylesheet_link_tag
+* Improved some documentation, much more to come
+* Tagged many modules as @private to remove from YARD documentation
+* Added YARD as development dependency for a massive documentation effort
+* Renamed Formtastic::SemanticFormHelper to Formtastic::Helpers::FormHelper (SemanticFormHelper still exists as a module which includes the new module, need to handle deprecation notices somehow)
+* Renamed Formtastic::SemanticFormBuilder to Formtastic::FormBuilder (SemanticFormBuilder still exists as a subclass, need to handle deprecation notices somehow)
+* Massive refactoring of formtastic.rb into around 30 files and modules like StringInput and ButtonsHelper
+* Removed chunks of Rails 2 specific code, tests and documentation
+
 1.2.4.beta (unreleased)
 
 * Changed :boolean inputs to use Rails' check_box_checked? instead of our own logic

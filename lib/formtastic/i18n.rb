@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 module Formtastic
+  # @private
   module I18n
 
     DEFAULT_SCOPE = [:formtastic].freeze

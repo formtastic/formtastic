@@ -7,25 +7,23 @@ RSpec.configure do |config|
   config.mock_with :rspec
 end
 
-if Formtastic::Util.rails3?
+require "action_controller/railtie"
+require "active_resource/railtie"
+require 'active_model'
 
-  require "action_controller/railtie"
-  require "active_resource/railtie"
-  require 'active_model'
-
-  # Create a simple rails application for use in testing the viewhelper
-  module FormtasticTest
-    class Application < Rails::Application
-      # Configure the default encoding used in templates for Ruby 1.9.
-      config.encoding = "utf-8"
-      config.active_support.deprecation = :stderr
-    end
+# Create a simple rails application for use in testing the viewhelper
+module FormtasticTest
+  class Application < Rails::Application
+    # Configure the default encoding used in templates for Ruby 1.9.
+    config.encoding = "utf-8"
+    config.active_support.deprecation = :stderr
   end
-  FormtasticTest::Application.initialize!
-
-  require 'rspec/rails'
 end
+FormtasticTest::Application.initialize!
 
+require 'rspec/rails'
 
-
-
+# Quick hack to avoid the 'Spec' deprecation warnings from rspec_tag_matchers
+module Spec
+  include Rspec
+end

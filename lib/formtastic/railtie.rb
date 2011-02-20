@@ -1,14 +1,15 @@
 # encoding: utf-8
 
 require 'formtastic'
-require 'formtastic/layout_helper'
 require 'rails'
 
 module Formtastic
+  # @private
   class Railtie < Rails::Railtie
-    initializer 'formtastic.initialize', :after => :after_initialize do
-      ActionView::Base.send :include, Formtastic::SemanticFormHelper
-      ActionView::Base.send(:include, Formtastic::LayoutHelper)
+    initializer 'formtastic.initialize' do
+      ActiveSupport.on_load(:action_view) do
+        include Formtastic::Helpers::FormHelper
+      end
     end
   end
 end

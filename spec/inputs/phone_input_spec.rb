@@ -12,9 +12,9 @@ describe 'phone input' do
 
   describe "when object is provided" do
     before do
-      @form = semantic_form_for(@new_post) do |builder|
+      concat(semantic_form_for(@new_post) do |builder|
         concat(builder.input(:phone))
-      end
+      end)
     end
 
     it_should_have_input_wrapper_with_class(:phone)
@@ -22,7 +22,7 @@ describe 'phone input' do
     it_should_have_label_with_text(/Phone/)
     it_should_have_label_for("post_phone")
     it_should_have_input_with_id("post_phone")
-    it_should_have_input_with_type(Formtastic::Util.rails3? ? :tel : :text)
+    it_should_have_input_with_type(:tel)
     it_should_have_input_with_name("post[phone]")
 
   end
@@ -30,9 +30,9 @@ describe 'phone input' do
   describe "when namespace is provided" do
 
     before do
-      @form = semantic_form_for(@new_post, :namespace => "context2") do |builder|
+      concat(semantic_form_for(@new_post, :namespace => "context2") do |builder|
         concat(builder.input(:phone))
-      end
+      end)
     end
 
     it_should_have_input_wrapper_with_id("context2_post_phone_input")
