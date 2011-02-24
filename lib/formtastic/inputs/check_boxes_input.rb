@@ -2,7 +2,8 @@ require 'inputs/base'
 
 module Formtastic
   module Inputs
-    # Boolean inputs are used to render a series of checkboxes. This is an alternative input choice 
+    
+    # A CheckBoxes input is used to render a series of checkboxes. This is an alternative input choice 
     # for `has_many` or `has_and_belongs_to_many` associations like a `Post` belonging to many 
     # `categories` (by default, a {SelectInput `:select`} input is used, allowing multiple selections).
     #
