@@ -93,14 +93,14 @@ module Formtastic
     #   <%= f.input :authors, :as => :select, :input_html => { :multiple => false } %>
     #
     # @example The `:collection` option can be used to customize the choices
-    #   <%= f.input :author, :as => :select, :collection => @categories %>
-    #   <%= f.input :author, :as => :select, :collection => Category.all %>
-    #   <%= f.input :author, :as => :select, :collection => Category.some_named_scope %>
-    #   <%= f.input :author, :as => :select, :collection => [Category.find_by_name("Ruby"), Category.find_by_name("Rails")] %>
-    #   <%= f.input :author, :as => :select, :collection => ["Ruby", "Rails"] %>
-    #   <%= f.input :author, :as => :select, :collection => [["Ruby", "ruby"], ["Rails", "rails"]] %>
-    #   <%= f.input :author, :as => :select, :collection => [["Ruby", "1"], ["Rails", "2"]] %>
-    #   <%= f.input :author, :as => :select, :collection => [["Ruby", 1], ["Rails", 2]] %>
+    #   <%= f.input :author, :as => :select, :collection => @authors %>
+    #   <%= f.input :author, :as => :select, :collection => Author.all %>
+    #   <%= f.input :author, :as => :select, :collection => Author.some_named_scope %>
+    #   <%= f.input :author, :as => :select, :collection => [Author.find_by_login("justin"), Category.find_by_name("kate")] %>
+    #   <%= f.input :author, :as => :select, :collection => ["Justin", "Kate"] %>
+    #   <%= f.input :author, :as => :select, :collection => [["Justin", "justin"], ["Kate", "kate"]] %>
+    #   <%= f.input :author, :as => :select, :collection => [["Justin", "1"], ["Kate", "3"]] %>
+    #   <%= f.input :author, :as => :select, :collection => [["Justin", 1], ["Kate", 3]] %>
     #   <%= f.input :author, :as => :select, :collection => 1..5 %>
     #   <%= f.input :author, :as => :select, :collection => "<option>your own options HTML string</option>" %>
     #   <%= f.input :author, :as => :select, :collection => options_for_select(...) %>
@@ -118,18 +118,18 @@ module Formtastic
     #   <%= f.input :author, :as => :select, :value_method => Proc.new { |c| c.full_name.downcase.underscore }
     # 
     # @example Set HTML attributes on the `<select>` tag with `:input_html`
-    #   <%= f.input :authors, :input_html => { :size => 20, :multiple => true, :class => "special" } %>
+    #   <%= f.input :authors, :as => :select, :input_html => { :size => 20, :multiple => true, :class => "special" } %>
     # 
     # @example Set HTML attributes on the `<li>` wrapper with `:wrapper_html`
-    #   <%= f.input :authors, :input_html => { :size => 20, :multiple => true, :class => "special" } %>
+    #   <%= f.input :authors, :as => :select, :wrapper_html => { :class => "special" } %>
     #
     # @example Exclude or include the blank option at the top of the select, or change the prompt
-    #   <%= f.input :author, :input_html => { :include_blank => false } %>
-    #   <%= f.input :author, :input_html => { :include_blank => true } %>
-    #   <%= f.input :author, :input_html => { :prompt => "Please select an Author..." } %>
+    #   <%= f.input :author, :as => :select, :input_html => { :include_blank => false } %>
+    #   <%= f.input :author, :as => :select, :input_html => { :include_blank => true } %>
+    #   <%= f.input :author, :as => :select, :input_html => { :prompt => "Please select an Author..." } %>
     #
     # @example Group options an `<optgroup>` with the `:group_by` and `:group_label_method` options (`belongs_to` associations only)
-    #   <%= f.input :author, :group_by => :continent %>
+    #   <%= f.input :author, :as => :select, :group_by => :continent %>
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
     # @see Formtastic::Inputs::CheckBoxesInput CheckBoxesInput as an alternative for `has_many` and `has_and_belongs_to_many` associations
