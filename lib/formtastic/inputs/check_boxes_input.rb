@@ -68,6 +68,7 @@ module Formtastic
     #   <%= f.input :categories, :as => :check_boxes, :value_as_class => true %>
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
+    # @see Formtastic::Inputs::BooleanInput BooleanInput for a single checkbox for boolean (checked = true) inputs
     module CheckBoxesInput
       include Formtastic::Inputs::Base
       
