@@ -2,7 +2,7 @@ module Formtastic
   module Inputs
     # @private
     module Basic
-      
+
       def basic_input_helper(form_helper_method, type, method, options) #:nodoc:
         html_options = options.delete(:input_html) || {}
         html_options = default_string_options(method, type).merge(html_options) if [:numeric, :string, :password, :text, :phone, :search, :url, :email].include?(type)
@@ -13,9 +13,9 @@ module Formtastic
         label(method, label_options) <<
           send(respond_to?(form_helper_method) ? form_helper_method : :text_field, method, html_options)
       end
-      
+
       protected
-      
+
       # Generates default_string_options by retrieving column information from
       # the database.
       #
@@ -25,19 +25,19 @@ module Formtastic
             (validation.respond_to?(:macro) && validation.macro == :validates_length_of) || # Rails 2 + 3 style validation
             (validation.respond_to?(:kind) && validation.kind == :length) # Rails 3 style validator
           end
-  
+
           if validation
             validation.options[:maximum] || (validation.options[:within].present? ? validation.options[:within].max : nil)
           else
             nil
           end
         end
-  
+
         validation_max_limit = get_maxlength_for(method)
         column = column_for(method)
-  
+
         if type == :text
-          { :rows => default_text_area_height, 
+          { :rows => default_text_area_height,
             :cols => default_text_area_width }
         elsif type == :numeric || column.nil? || !column.respond_to?(:limit) || column.limit.nil?
           { :maxlength => validation_max_limit,
@@ -47,7 +47,7 @@ module Formtastic
             :size => default_text_field_size }
         end
       end
-      
+
       # Returns the active validations for the given method or an empty Array if no validations are
       # found for the method.
       #
@@ -70,14 +70,14 @@ module Formtastic
             []
           end
         end
-  
+
         validations = validations.select do |validation|
           (validation.options.present? ? options_require_validation?(validation.options) : true)
         end unless mode == :all
-  
+
         return validations
       end
-      
+
     end
   end
 end

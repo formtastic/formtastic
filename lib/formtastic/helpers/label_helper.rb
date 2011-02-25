@@ -4,13 +4,13 @@ module Formtastic
   module Helpers
     module LabelHelper
       include Formtastic::LocalizedString
-      
+
       # Generates the label for the input. It's a superset of the functionality of Rails' own `label`
       # helper, meaning that it accepts the same arguments and options, plus some new arguments that
       # are exclusive to Formtastic.
       #
-      # It's unlikely you will need call this method direct from your views, but it's been made 
-      # public to document the changes made to the Rails method, for the rare occasions when you 
+      # It's unlikely you will need call this method direct from your views, but it's been made
+      # public to document the changes made to the Rails method, for the rare occasions when you
       # might build your own input in the view using regular form helpers.
       #
       # @param [Symbol] method
@@ -26,13 +26,13 @@ module Formtastic
       #   Override the text for the contents of the `<label>` tag
       #
       # @option options [true, false] :required
-      #   Specify if the field required or not. By default this value is "guessed" by reflecting on 
-      #   the model validations, with a fallback to `all_fields_required_by_default` configuration. 
-      #   Required and optional labels have the `required_string` (defaults to an asterix wrapped 
+      #   Specify if the field required or not. By default this value is "guessed" by reflecting on
+      #   the model validations, with a fallback to `all_fields_required_by_default` configuration.
+      #   Required and optional labels have the `required_string` (defaults to an asterix wrapped
       #   in an `<abbr>` tag) or `optional_string` configuration variables appended to them.
       #
       # @option options [Symbol] :input_name
-      #   Gives the input to match for. This is needed when you want to call `f.label :authors` but 
+      #   Gives the input to match for. This is needed when you want to call `f.label :authors` but
       #   it should match `:author_ids`.
       #
       #
@@ -68,22 +68,22 @@ module Formtastic
           text = options_or_text
           options ||= {}
         end
-      
+
         text = localized_string(method, text, :label) || humanized_attribute_name(method)
         text += required_or_optional_string(options.delete(:required))
         text = Formtastic::Util.html_safe(text)
-      
+
         # special case for boolean (checkbox) labels, which have a nested input
         if options.key?(:label_prefix_for_nested_input)
           text = options.delete(:label_prefix_for_nested_input) + text
         end
-      
+
         input_name = options.delete(:input_name) || method
         super(input_name, text, options)
       end
-      
+
       protected
-      
+
       # Generates the required or optional string. If the value set is a proc,
       # it evaluates the proc first.
       #
@@ -96,14 +96,14 @@ module Formtastic
           else
             required
         end
-  
+
         if string_or_proc.is_a?(Proc)
           string_or_proc.call
         else
           string_or_proc.to_s
         end
       end
-      
+
     end
   end
 end

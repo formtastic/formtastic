@@ -29,12 +29,12 @@ require 'inputs/url_input'
 
 module Formtastic
   class FormBuilder < ActionView::Helpers::FormBuilder
-  
+
     def self.configure(name, value = nil)
       class_attribute(name)
-      self.send(:"#{name}=", value)  
+      self.send(:"#{name}=", value)
     end
-  
+
     configure :custom_namespace
     configure :default_text_field_size
     configure :default_text_area_height, 20
@@ -58,11 +58,11 @@ module Formtastic
     configure :default_inline_error_class, 'inline-errors'
     configure :default_error_list_class, 'errors'
     configure :default_hint_class, 'inline-hints'
-  
+
     attr_accessor :template
-    
+
     include Formtastic::HtmlAttributes
-    
+
     include Formtastic::Helpers::InputsHelper
     include Formtastic::Helpers::ButtonsHelper
     include Formtastic::Helpers::LabelHelper
@@ -87,7 +87,7 @@ module Formtastic
     include Formtastic::Inputs::TimeInput
     include Formtastic::Inputs::TimeZoneInput
     include Formtastic::Inputs::UrlInput
-    
+
   end
-  
+
 end

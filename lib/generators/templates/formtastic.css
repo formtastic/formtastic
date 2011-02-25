@@ -44,7 +44,7 @@ form.formtastic fieldset > ol > li { overflow:auto; } /* clearing contained floa
 form.formtastic fieldset > ol > li.required { }
 form.formtastic fieldset > ol > li.optional { }
 form.formtastic fieldset > ol > li.error { }
-  
+
 
 /* LABELS
 --------------------------------------------------------------------------------------------------*/
@@ -77,16 +77,16 @@ form.formtastic fieldset > ol > li ul.errors li { padding:0; border:none; displa
 
 /* STRING, NUMERIC, PASSWORD, EMAIL, URL, PHONE & SEARCH OVERRIDES
 --------------------------------------------------------------------------------------------------*/
-form.formtastic fieldset > ol > li.string input, 
-form.formtastic fieldset > ol > li.password input, 
+form.formtastic fieldset > ol > li.string input,
+form.formtastic fieldset > ol > li.password input,
 form.formtastic fieldset > ol > li.numeric input,
 form.formtastic fieldset > ol > li.email input,
 form.formtastic fieldset > ol > li.url input,
 form.formtastic fieldset > ol > li.phone input,
 form.formtastic fieldset > ol > li.search input { width:72%; }
 
-form.formtastic fieldset > ol > li.string input[size], 
-form.formtastic fieldset > ol > li.password input[size], 
+form.formtastic fieldset > ol > li.string input[size],
+form.formtastic fieldset > ol > li.password input[size],
 form.formtastic fieldset > ol > li.numeric input[size],
 form.formtastic fieldset > ol > li.email input[size],
 form.formtastic fieldset > ol > li.url input[size],
@@ -140,6 +140,6 @@ form.formtastic fieldset > ol > li.date fieldset ol li label,
 form.formtastic fieldset > ol > li.time fieldset ol li label,
 form.formtastic fieldset > ol > li.datetime fieldset ol li label { display:none; }
 
-form.formtastic fieldset > ol > li.date fieldset ol li label input, 
-form.formtastic fieldset > ol > li.time fieldset ol li label input, 
+form.formtastic fieldset > ol > li.date fieldset ol li label input,
+form.formtastic fieldset > ol > li.time fieldset ol li label input,
 form.formtastic fieldset > ol > li.datetime fieldset ol li label input { display:inline; margin:0; padding:0;  }

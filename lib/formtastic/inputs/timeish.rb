@@ -1,12 +1,12 @@
 module Formtastic
   module Inputs
 
-    # Outputs a complex input consisting of multiple select boxes for each fragment of a date 
+    # Outputs a complex input consisting of multiple select boxes for each fragment of a date
     # (year, month, day), time (hour, min, sec) or date time (year, month, day, hour, min, sec).
     #
-    # The output of this helper **looks** quite similar to Rails' own `date_select`, 
-    # `date_time_select` and `time_select` helpers in the browser, but under the hood the HTML 
-    # produced is quite different, trying to address many issues with the Rails helper's HTML 
+    # The output of this helper **looks** quite similar to Rails' own `date_select`,
+    # `date_time_select` and `time_select` helpers in the browser, but under the hood the HTML
+    # produced is quite different, trying to address many issues with the Rails helper's HTML
     # validity, semantics and accessibility.
     #
     # By default, Rails will return a series of `<select>` tags without a corresponding `<label>`
@@ -16,7 +16,7 @@ module Formtastic
     # The `<li>` date fragments are wrapped in an `<ol>` and a `<fieldset>` to indicate that the
     # fragments are part of a set of fields that should be grouped together.
     #
-    # The `<fieldset>` is then "labeled" with a `<legend>` tag that describes the set with the 
+    # The `<fieldset>` is then "labeled" with a `<legend>` tag that describes the set with the
     # same string that would normally be used for the `<label>` on a simpler input. The result
     # is something like this:
     #
@@ -55,20 +55,20 @@ module Formtastic
     # This obviously would look quite different in a browser to what Rails does, but this is
     # addressed in the presentation layer with formtastic.css instead:
     #
-    # * the `<li>` date fragments are floated left against each other so they appear all on one 
+    # * the `<li>` date fragments are floated left against each other so they appear all on one
     #   line next to each other
     # * the `<label>` tags for each fragment are hidden with `display:none`
     # * the <legend> is positioned and styled to look like a regular `<label>` on simpler inputs
     #   found elsewhere in the form (to the left of the select tags)
-    # * the `<ol>` is positioned and styled to appear where the `<input>` would usually be on 
+    # * the `<ol>` is positioned and styled to appear where the `<input>` would usually be on
     #   simpler inputs found elsewhere in the form (the the right of the label), as a container
     #   for the floated `<li>` fragments
     #
-    # The intent is to support many of Rails' built-in date helper arguments and options, and 
+    # The intent is to support many of Rails' built-in date helper arguments and options, and
     # to post the same form data to your controllers.
     #
     # @example Basic `:date` example with full form context and output
-    # 
+    #
     #   <%= semantic_form_for(@post) do |f| %>
     #     <%= f.inputs do %>
     #       <%= f.input :publish_at, :as => :date %>
@@ -160,31 +160,31 @@ module Formtastic
         inputs   = options.delete(:order) || i18n_date_order || [:year, :month, :day]
         inputs   = [] if options[:ignore_date]
         labels   = options.delete(:labels) || {}
-      
+
         time_inputs = [:hour, :minute]
         time_inputs << :second if options[:include_seconds]
-      
+
         list_items_capture = ""
         hidden_fields_capture = ""
-      
+
         datetime = @object.send(method) if @object && @object.send(method)
-      
+
         html_options = options.delete(:input_html) || {}
         input_ids    = []
-      
+
         (inputs + time_inputs).each do |input|
           input_ids << input_id = generate_html_id(method, "#{position[input]}i")
-      
+
           field_name = "#{method}(#{position[input]}i)"
           if options[:"discard_#{input}"]
             break if time_inputs.include?(input)
-      
+
             hidden_value = datetime.respond_to?(input) ? datetime.send(input) : datetime
             hidden_fields_capture << template.hidden_field_tag("#{@object_name}[#{field_name}]", (hidden_value || 1), :id => input_id)
           else
             opts = strip_formtastic_options(options).merge(:prefix => @object_name, :field_name => field_name, :default => datetime)
             item_label_text = labels[input] || ::I18n.t(input.to_s, :default => input.to_s.humanize, :scope => [:datetime, :prompts])
-      
+
             list_items_capture << template.content_tag(:li, Formtastic::Util.html_safe([
                 !item_label_text.blank? ? template.content_tag(:label, Formtastic::Util.html_safe(item_label_text), :for => input_id) : "",
                 template.send(:"select_#{input}", datetime, opts, html_options.merge(:id => input_id))
@@ -192,16 +192,16 @@ module Formtastic
             )
           end
         end
-      
+
         hidden_fields_capture << field_set_and_list_wrapping_for_method(method, options.merge(:label_for => input_ids.first), list_items_capture)
       end
-      
+
       # Generates a fieldset and an ordered list but with label based in
       # method. This methods is currently used by radio and datetime inputs.
       # @private
       def field_set_and_list_wrapping_for_method(method, options, contents)
         contents = contents.join if contents.respond_to?(:join)
-  
+
         template.content_tag(:fieldset,
             template.content_tag(:legend,
                 label(method, options_for_label(options).merge(:for => options.delete(:label_for))), :class => 'label'
@@ -209,7 +209,7 @@ module Formtastic
             template.content_tag(:ol, Formtastic::Util.html_safe(contents))
           )
       end
-  
+
     end
   end
 end

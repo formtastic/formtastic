@@ -1,9 +1,9 @@
 module Formtastic
   # @private
   module HtmlAttributes
-    
+
     protected
-    
+
     # Generate the html id for the li tag.
     # It takes into account options[:index] and @auto_index to generate li
     # elements with appropriate index scope. It also sanitizes the object
@@ -23,12 +23,12 @@ module Formtastic
 
       [custom_namespace, sanitized_object_name, index, sanitized_method_name, value].reject{|x|x.blank?}.join('_')
     end
-    
+
     # Used by FormBuilder generate_html_id
     def sanitized_object_name #:nodoc:
       @sanitized_object_name ||= @object_name.to_s.gsub(/\]\[|[^-a-zA-Z0-9:.]/, "_").sub(/_$/, "")
     end
-    
+
     def humanized_attribute_name(method)
       if @object && @object.class.respond_to?(:human_attribute_name)
         humanized_name = @object.class.human_attribute_name(method.to_s)
@@ -41,6 +41,6 @@ module Formtastic
         method.to_s.send(label_str_method)
       end
     end
-  
+
   end
 end

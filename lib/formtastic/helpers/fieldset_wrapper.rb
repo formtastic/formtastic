@@ -2,9 +2,9 @@ module Formtastic
   module Helpers
     # @private
     module FieldsetWrapper
-    
+
       protected
-      
+
       # Generates a fieldset and wraps the content in an ordered list. When working
       # with nested attributes, it allows %i as interpolation option in :name. So you can do:
       #
@@ -24,11 +24,11 @@ module Formtastic
       def field_set_and_list_wrapping(*args, &block) #:nodoc:
         contents = args.last.is_a?(::Hash) ? '' : args.pop.flatten
         html_options = args.extract_options!
-      
+
         legend  = html_options.dup.delete(:name).to_s
         legend %= parent_child_index(html_options[:parent]) if html_options[:parent]
         legend  = template.content_tag(:legend, template.content_tag(:span, Formtastic::Util.html_safe(legend))) unless legend.blank?
-      
+
         if block_given?
           contents = if template.respond_to?(:is_haml?) && template.is_haml?
             template.capture_haml(&block)
@@ -36,22 +36,22 @@ module Formtastic
             template.capture(&block)
           end
         end
-      
+
         # Ruby 1.9: String#to_s behavior changed, need to make an explicit join.
         contents = contents.join if contents.respond_to?(:join)
         fieldset = template.content_tag(:fieldset,
           Formtastic::Util.html_safe(legend) << template.content_tag(:ol, Formtastic::Util.html_safe(contents)),
           html_options.except(:builder, :parent)
         )
-      
+
         fieldset
       end
-      
+
       # Gets the nested_child_index value from the parent builder. It returns a hash with each
       # association that the parent builds.
       def parent_child_index(parent) #:nodoc:
         duck = parent[:builder].instance_variable_get('@nested_child_index')
-  
+
         child = parent[:for]
         child = child.first if child.respond_to?(:first)
         duck[child].to_i + 1
