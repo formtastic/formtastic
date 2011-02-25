@@ -1,6 +1,3 @@
-require 'reflection'
-require 'localized_string'
-
 module Formtastic
   module Inputs
     # @private

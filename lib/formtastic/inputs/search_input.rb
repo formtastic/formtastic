@@ -1,5 +1,3 @@
-require 'inputs/basic'
-
 module Formtastic
   module Inputs
 

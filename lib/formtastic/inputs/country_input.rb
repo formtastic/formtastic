@@ -1,5 +1,3 @@
-require 'inputs/base'
-
 module Formtastic
   module Inputs
     # Outputs a country select input, wrapping around a regular country_select helper.

@@ -1,6 +1,3 @@
-require 'helpers/fieldset_wrapper'
-require 'localized_string'
-
 module Formtastic
   module Helpers
 

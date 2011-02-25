@@ -1,7 +1,3 @@
-require 'helpers/file_column_detection'
-require 'reflection'
-require 'localized_string'
-
 module Formtastic
   module Helpers
     module ErrorsHelper

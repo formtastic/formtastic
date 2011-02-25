@@ -1,5 +1,3 @@
-require 'localized_string'
-
 module Formtastic
   module Helpers
     module LabelHelper

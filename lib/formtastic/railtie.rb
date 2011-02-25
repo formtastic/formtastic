@@ -1,8 +1,5 @@
 # encoding: utf-8
 
-require 'formtastic'
-require 'rails'
-
 module Formtastic
   # @private
   class Railtie < Rails::Railtie
