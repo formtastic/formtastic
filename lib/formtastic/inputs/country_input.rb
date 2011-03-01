@@ -50,7 +50,7 @@ module Formtastic
       include Formtastic::Inputs::Base
 
       def country_input(method, options)
-        raise "To use the :country input, please install a country_select plugin, like this one: http://github.com/rails/iso-3166-country-select" unless respond_to?(:country_select)
+        raise "To use the :country input, please install a country_select plugin, like this one: https://github.com/chrislerum/country_select.git" unless respond_to?(:country_select)
 
         html_options = options.delete(:input_html) || {}
         priority_countries = options.delete(:priority_countries) || self.priority_countries
