@@ -82,7 +82,6 @@ module Formtastic
     include Formtastic::Inputs::RadioInput
     include Formtastic::Inputs::SearchInput
     include Formtastic::Inputs::SelectInput
-    include Formtastic::Inputs::StringInput
     include Formtastic::Inputs::TextInput
     include Formtastic::Inputs::TimeInput
     include Formtastic::Inputs::TimeZoneInput

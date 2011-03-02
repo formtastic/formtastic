@@ -490,11 +490,6 @@ You can show errors on base (by default) and any other attribute just passing it
 </pre>
 
 
-h2. ValidationReflection plugin
-
-If you have the "ValidationReflection":http://github.com/redinger/validation_reflection plugin installed, you won't have to specify the @:required@ option (it checks the validations on the model instead).
-
-
 h2. Configuration
 
 Run @rails generate formtastic:install@ to copy a commented out config file into @config/initializers/formtastic.rb@. You can "view the configuration file on GitHub":http://github.com/justinfrench/formtastic/blob/master/generators/formtastic/templates/formtastic.rb

@@ -245,8 +245,11 @@ module Formtastic
       def input(method, options = {})
         options = options.dup # Allow options to be shared without being tainted by Formtastic
         
-        options[:required] = method_required?(method) unless options.key?(:required)
         options[:as]     ||= default_input_type(method, options)
+
+        return Formtastic::Inputs::StringInput.new(self, template, @object, @object_name, method, options).to_html if options[:as] == :string
+        
+        options[:required] = method_required?(method) unless options.key?(:required)
     
         html_class = [ options[:as], (options[:required] ? :required : :optional) ]
         html_class << 'error' if has_errors?(method, options)

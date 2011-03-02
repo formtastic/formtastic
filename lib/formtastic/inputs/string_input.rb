@@ -1,4 +1,4 @@
-require 'inputs/basic'
+require 'inputs/new_base'
 
 module Formtastic
   module Inputs
@@ -28,13 +28,15 @@ module Formtastic
     #   </form>
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
-    module StringInput
-      include Formtastic::Inputs::Base
-      include Formtastic::Inputs::Basic
-
-      def string_input(method, options)
-        basic_input_helper(:text_field, :string, method, options)
+    class StringInput < NewBase
+      
+      def input_html_options
+        super.merge(
+          :maxlength => options[:input_html].try(:[], :maxlength) || limit,
+          :size => builder.default_text_field_size
+        )
       end
+    
     end
   end
 end
