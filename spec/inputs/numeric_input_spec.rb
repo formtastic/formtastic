@@ -19,7 +19,7 @@ describe 'numeric input' do
   it_should_have_label_with_text(/Title/)
   it_should_have_label_for("post_title")
   it_should_have_input_with_id("post_title")
-  it_should_have_input_with_type(:text)
+  it_should_have_input_with_type(:number)
   it_should_have_input_with_name("post[title]")
   it_should_use_default_text_field_size_when_not_nil(:string)
   it_should_not_use_default_text_field_size_when_nil(:string)
@@ -37,7 +37,7 @@ describe 'numeric input' do
     it_should_have_label_with_text(/Title/)
     it_should_have_label_for("project_title")
     it_should_have_input_with_id("project_title")
-    it_should_have_input_with_type(:text)
+    it_should_have_input_with_type(:number)
     it_should_have_input_with_name("project[title]")
   end
 

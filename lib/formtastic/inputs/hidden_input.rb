@@ -1,3 +1,5 @@
+require 'inputs/new_base'
+
 module Formtastic
   module Inputs
     
@@ -28,15 +30,35 @@ module Formtastic
     #   form.formtastic li.hidden { display:none; }
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
-    module HiddenInput
-      include Formtastic::Inputs::Base
+    class HiddenInput < NewBase
       
-      def hidden_input(method, options)
-        options ||= {}
-        html_options = options.delete(:input_html) || strip_formtastic_options(options)
-        html_options[:id] ||= generate_html_id(method, "")
-        hidden_field(method, html_options)
+      def input_html_options
+        return {:value => options[:value]}.merge(super) if options.key?(:value)
+        super
       end
+      
+      def to_html
+        input_wrapping do
+          builder.hidden_field(method, input_html_options)
+        end
+      end
+      
+      def error_html
+        ""
+      end
+      
+      def errors?
+        false
+      end
+      
+      def hint_html
+        ""
+      end
+      
+      def hint?
+        false
+      end
+
     end
   end
 end

@@ -1,4 +1,5 @@
-require 'inputs/basic'
+require 'inputs/new_base'
+require 'inputs/stringish'
 
 module Formtastic
   module Inputs
@@ -31,12 +32,14 @@ module Formtastic
     #  <%= f.input :shoe_size, :as => :numeric, :input_html => { :min => 3, :max => 15, :step => 1 } %>
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
-    module NumericInput
-      include Formtastic::Inputs::Base
-      include Formtastic::Inputs::Basic
+    class NumericInput < NewBase
+      include Stringish
       
-      def numeric_input(method, options)
-        basic_input_helper(:text_field, :numeric, method, options)
+      def to_html
+        input_wrapping do
+          builder.label(method, label_html_options) <<
+          builder.number_field(method, input_html_options)
+        end
       end
     end
   end

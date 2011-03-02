@@ -1,3 +1,6 @@
+require 'inputs/new_base'
+require 'inputs/stringish'
+
 module Formtastic
   module Inputs
     
@@ -25,11 +28,14 @@ module Formtastic
     #   </form>
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
-    module UrlInput
-      include Formtastic::Inputs::Basic
+    class UrlInput < NewBase
+      include Stringish
       
-      def url_input(method, options)
-        basic_input_helper(:url_field, :url, method, options)
+      def to_html
+        input_wrapping do
+          builder.label(method, label_html_options) <<
+          builder.url_field(method, input_html_options)
+        end
       end
     end
   end

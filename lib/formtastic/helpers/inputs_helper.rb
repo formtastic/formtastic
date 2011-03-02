@@ -248,6 +248,15 @@ module Formtastic
         options[:as]     ||= default_input_type(method, options)
 
         return Formtastic::Inputs::StringInput.new(self, template, @object, @object_name, method, options).to_html if options[:as] == :string
+        return Formtastic::Inputs::PhoneInput.new(self, template, @object, @object_name, method, options).to_html  if options[:as] == :phone
+        return Formtastic::Inputs::SearchInput.new(self, template, @object, @object_name, method, options).to_html  if options[:as] == :search
+        return Formtastic::Inputs::NumericInput.new(self, template, @object, @object_name, method, options).to_html  if options[:as] == :numeric
+        return Formtastic::Inputs::EmailInput.new(self, template, @object, @object_name, method, options).to_html  if options[:as] == :email
+        return Formtastic::Inputs::FileInput.new(self, template, @object, @object_name, method, options).to_html  if options[:as] == :file
+        return Formtastic::Inputs::HiddenInput.new(self, template, @object, @object_name, method, options).to_html  if options[:as] == :hidden
+        return Formtastic::Inputs::PasswordInput.new(self, template, @object, @object_name, method, options).to_html  if options[:as] == :password
+        return Formtastic::Inputs::TextInput.new(self, template, @object, @object_name, method, options).to_html  if options[:as] == :text
+        return Formtastic::Inputs::UrlInput.new(self, template, @object, @object_name, method, options).to_html  if options[:as] == :url
         
         options[:required] = method_required?(method) unless options.key?(:required)
     

@@ -26,13 +26,16 @@ module Formtastic
     #   </form>
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
-    module SearchInput
-      include Formtastic::Inputs::Base
-      include Formtastic::Inputs::Basic
+    class SearchInput < NewBase
+      include Stringish
       
-      def search_input(method, options)
-        basic_input_helper(:search_field, :search, method, options)
+      def to_html
+        input_wrapping do
+          builder.label(method, label_html_options) <<
+          builder.search_field(method, input_html_options)
+        end
       end
     end
+
   end
 end

@@ -1,4 +1,5 @@
-require 'inputs/basic'
+require 'inputs/new_base'
+require 'inputs/stringish'
 
 module Formtastic
   module Inputs
@@ -27,14 +28,16 @@ module Formtastic
     #   </form>
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
-    module PhoneInput
-      include Formtastic::Inputs::Base
-      include Formtastic::Inputs::Basic
-
-      # Outputs a label and a standard Rails phone field inside the wrapper.
-      def phone_input(method, options)
-        basic_input_helper(:phone_field, :phone, method, options)
+    class PhoneInput < NewBase
+      include Stringish
+      
+      def to_html
+        input_wrapping do
+          builder.label(method, label_html_options) <<
+          builder.phone_field(method, input_html_options)
+        end
       end
     end
+    
   end
 end

@@ -1,5 +1,4 @@
-require 'inputs/basic'
-require 'inputs/base'
+require 'inputs/new_base'
 
 module Formtastic
   module Inputs
@@ -32,12 +31,12 @@ module Formtastic
     #   </form>
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
-    module FileInput
-      include Formtastic::Inputs::Base
-      include Formtastic::Inputs::Basic
-      
-      def file_input(method, options)
-        basic_input_helper(:file_field, :file, method, options)
+    class FileInput < NewBase
+      def to_html
+        input_wrapping do
+          builder.label(method, label_html_options) <<
+          builder.file_field(method, input_html_options)
+        end
       end
     end
   end
