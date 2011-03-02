@@ -142,7 +142,7 @@ module Formtastic
       
       
       def as
-        "string" # TODO
+        self.class.name.split("::").last.underscore.gsub(/_input$/, '')
       end
               
       def sanitized_object_name
