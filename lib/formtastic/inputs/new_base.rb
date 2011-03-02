@@ -73,7 +73,7 @@ module Formtastic
         opts[:class] << as
         opts[:class] << "error" if errors?
         opts[:class] << "optional" if optional?
-        #opts[:class] << "required" if required?
+        opts[:class] << "required" if required?
         opts[:class] = opts[:class].join(' ')
         
         opts[:id] = dom_id
