@@ -70,19 +70,12 @@ module Formtastic
 
     include Formtastic::Inputs::BooleanInput
     include Formtastic::Inputs::CheckBoxesInput
-    #include Formtastic::Inputs::CountryInput
     include Formtastic::Inputs::DateInput
     include Formtastic::Inputs::DatetimeInput
-    #include Formtastic::Inputs::EmailInput
-    #include Formtastic::Inputs::FileInput
-    #include Formtastic::Inputs::HiddenInput
-    #include Formtastic::Inputs::PasswordInput
     include Formtastic::Inputs::RadioInput
     include Formtastic::Inputs::SelectInput
-    #include Formtastic::Inputs::TextInput
     include Formtastic::Inputs::TimeInput
     include Formtastic::Inputs::TimeZoneInput
-    #include Formtastic::Inputs::UrlInput
     
   end
   
