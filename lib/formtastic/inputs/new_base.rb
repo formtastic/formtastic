@@ -138,19 +138,29 @@ module Formtastic
         keys << [association_primary_key(method)] if belongs_to?
         keys.flatten.compact.uniq
       end
-      
-      
-      
+
+
+
       
       def hint_html
         if hint?
-          template.content_tag(:p, "", :class => "hint")
+          template.content_tag(
+            :p, 
+            Formtastic::Util.html_safe(options[:hint]), 
+            :class => (options[:hint_class] || builder.default_hint_class)
+          )
         end
       end
       
       def hint?
-        true
+        !hint.blank? && !hint.kind_of?(Hash)
       end
+      
+      def hint
+        builder.send(:localized_string, method, options[:hint], :hint)
+      end
+      
+      
       
       
       def as
