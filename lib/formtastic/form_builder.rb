@@ -68,7 +68,6 @@ module Formtastic
     include Formtastic::Helpers::LabelHelper
     include Formtastic::Helpers::ErrorsHelper
 
-    include Formtastic::Inputs::BooleanInput
     include Formtastic::Inputs::CheckBoxesInput
     include Formtastic::Inputs::DateInput
     include Formtastic::Inputs::DatetimeInput

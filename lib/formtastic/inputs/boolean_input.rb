@@ -1,4 +1,4 @@
-require 'inputs/base'
+require 'inputs/new_base'
 
 module Formtastic
   module Inputs
@@ -31,31 +31,50 @@ module Formtastic
     #   <%= f.input :published, :checked_value => "yes", :unchecked_value => "no" %> 
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
-    module BooleanInput
-      include Formtastic::Inputs::Base
+    class BooleanInput < NewBase
       
-      def boolean_input(method, options)
-        html_options  = options.delete(:input_html) || {}
-        checked_value = options.delete(:checked_value) || '1'
-        unchecked_value = options.delete(:unchecked_value) || '0'
-        checked = @object && ActionView::Helpers::InstanceTag.check_box_checked?(@object.send(:"#{method}"), checked_value)
-  
-        html_options[:id] = html_options[:id] || generate_html_id(method, "")
-        input = template.check_box_tag(
-          "#{@object_name}[#{method}]",
-          checked_value,
-          checked,
-          html_options
-        )
-        
-        options = options_for_label(options)
-        options[:for] ||= html_options[:id]
-  
-        # the label() method will insert this nested input into the label at the last minute
-        options[:label_prefix_for_nested_input] = input
-  
-        template.hidden_field_tag((html_options[:name] || "#{@object_name}[#{method}]"), unchecked_value, :id => nil) << label(method, options)
+      def to_html
+        input_wrapping do
+          hidden_field << 
+          label_with_nested_checkbox
+        end
       end
+      
+      def hidden_field
+        template.hidden_field_tag(input_html_options[:name], unchecked_value, :id => nil)
+      end
+      
+      def label_with_nested_checkbox
+        builder.label(
+          method, 
+          input_html_options.merge(
+            :id => nil,
+            :for => input_html_options[:id],
+            :label_prefix_for_nested_input => check_box # the label() method will insert this nested input into the label at the last minute
+          )
+        )
+      end
+      
+      def check_box
+        template.check_box_tag("#{object_name}[#{method}]", checked_value, checked?, input_html_options)
+      end
+      
+      def unchecked_value
+        options[:unchecked_value] || '0'
+      end
+      
+      def checked_value
+        options[:checked_value] || '1'
+      end
+      
+      def input_html_options
+        {:name => "#{object_name}[#{method}]"}.merge(super)
+      end
+      
+      def checked?
+        object && ActionView::Helpers::InstanceTag.check_box_checked?(object.send(method), checked_value)
+      end
+
     end
   end
 end
