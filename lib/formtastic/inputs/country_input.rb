@@ -1,4 +1,4 @@
-require 'inputs/base'
+require 'inputs/new_base'
 
 module Formtastic
   module Inputs
@@ -48,23 +48,20 @@ module Formtastic
     #   </li>
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
-    module CountryInput
-      include Formtastic::Inputs::Base
-      
-      def country_input(method, options)
-        raise "To use the :country input, please install a country_select plugin, like this one: http://github.com/rails/iso-3166-country-select" unless respond_to?(:country_select)
-  
-        html_options = options.delete(:input_html) || {}
-        priority_countries = options.delete(:priority_countries) || self.priority_countries
-  
-        field_id = generate_html_id(method, "")
-        html_options[:id] ||= field_id
-        label_options = options_for_label(options)
-        label_options[:for] ||= html_options[:id]
-  
-        label(method, label_options) <<
-        country_select(method, priority_countries, strip_formtastic_options(options), html_options)
+    class CountryInput < NewBase
+
+      def to_html
+        raise "To use the :country input, please install a country_select plugin, like this one: http://github.com/rails/iso-3166-country-select" unless builder.respond_to?(:country_select)
+        input_wrapping do
+          builder.label(method, label_html_options) <<
+          builder.country_select(method, priority_countries, input_options, input_html_options)
+        end
       end
+      
+      def priority_countries
+        options[:priority_countries] || builder.priority_countries
+      end
+
     end
   end
 end

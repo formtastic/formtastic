@@ -70,7 +70,7 @@ module Formtastic
 
     include Formtastic::Inputs::BooleanInput
     include Formtastic::Inputs::CheckBoxesInput
-    include Formtastic::Inputs::CountryInput
+    #include Formtastic::Inputs::CountryInput
     include Formtastic::Inputs::DateInput
     include Formtastic::Inputs::DatetimeInput
     #include Formtastic::Inputs::EmailInput
