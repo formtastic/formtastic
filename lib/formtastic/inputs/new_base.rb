@@ -37,6 +37,18 @@ module Formtastic
       end
       
       
+      
+      def input_options
+        options.except(*formtastic_options)
+      end
+      
+      def formtastic_options
+        [:priority_countries, :value_method, :label_method, :collection, :required, :label, :as, :hint, :input_html, :label_html, :value_as_class, :find_options, :class]
+      end
+      
+      
+      
+      
       def input_html_options
         opts = options[:input_html] || {}
         opts[:id] ||= input_dom_id
