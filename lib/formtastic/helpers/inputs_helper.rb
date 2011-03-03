@@ -247,7 +247,7 @@ module Formtastic
         
         options[:as]     ||= default_input_type(method, options)
 
-        [:string, :country, :phone, :search, :numeric, :email, :file, :hidden, :password, :text, :url].each do |i|
+        [:string, :country, :time_zone, :phone, :search, :numeric, :email, :file, :hidden, :password, :text, :url].each do |i|
           klass = "Formtastic::Inputs::#{options[:as].to_s.camelize}Input".constantize
           return klass.new(self, template, @object, @object_name, method, options).to_html
         end

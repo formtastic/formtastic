@@ -1,3 +1,5 @@
+require 'inputs/new_base'
+
 module Formtastic
   module Inputs
     
@@ -27,17 +29,20 @@ module Formtastic
     #   </form>
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
-    
-    module TimeZoneInput
-      def time_zone_input(method, options)
-        html_options = options.delete(:input_html) || {}
-        field_id = generate_html_id(method, "")
-        html_options[:id] ||= field_id
-        label_options = options_for_label(options)
-        label_options[:for] ||= html_options[:id]
-        label(method, label_options) <<
-        time_zone_select(method, options.delete(:priority_zones),
-          strip_formtastic_options(options), html_options)
+    #
+    # @todo document :priority_zones option
+    # @todo configurable default :priority_zones?
+    class TimeZoneInput < NewBase
+
+      def to_html
+        input_wrapping do
+          builder.label(method, label_html_options) <<
+          builder.time_zone_select(method, priority_zones, input_options, input_html_options)
+        end
+      end
+      
+      def priority_zones
+        options[:priority_zones] || [] # TODO config?
       end
     end
   end
