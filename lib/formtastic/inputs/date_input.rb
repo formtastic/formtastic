@@ -1,15 +1,14 @@
-require 'inputs/timeish'
-require 'inputs/base'
+require 'inputs/new_base'
+require 'inputs/new_timeish'
 
 module Formtastic
   module Inputs
     # @see Formtastic::Inputs::Timeish Timeish module for documetation of date, time and datetime input options.
-    module DateInput
-      include Formtastic::Inputs::Base
-      include Formtastic::Inputs::Timeish
-      def date_input(method, options)
-        options = set_include_blank(options)
-        date_or_datetime_input(method, options.merge(:discard_hour => true))
+    class DateInput < NewBase
+      include NewTimeish
+      
+      def default_fragments
+        [:year, :month, :day]
       end
     end
   end
