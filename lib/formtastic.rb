@@ -6,20 +6,20 @@ require File.join(File.dirname(__FILE__), *%w[formtastic railtie]) if defined?(:
 module Formtastic #:nodoc:
 
   class SemanticFormBuilder < ActionView::Helpers::FormBuilder
-    
+
     configurables = [
       :default_text_field_size, :default_text_area_height, :default_text_area_width, :all_fields_required_by_default, :include_blank_for_select_by_default,
       :required_string, :optional_string, :inline_errors, :label_str_method, :collection_value_methods, :collection_label_methods, :file_metadata_suffixes,
       :inline_order, :custom_inline_order, :file_methods, :priority_countries, :i18n_lookups_by_default, :escape_html_entities_in_hints_and_labels,
       :default_commit_button_accesskey, :default_inline_error_class, :default_hint_class, :default_error_list_class
     ]
-    
+
     if respond_to?(:class_attribute)
       class_attribute *configurables
     else
       class_inheritable_accessor *configurables
     end
-    
+
     cattr_accessor :custom_namespace
 
     self.default_text_field_size = nil
@@ -109,7 +109,7 @@ module Formtastic #:nodoc:
     #
     def input(method, options = {})
       options = options.dup # Allow options to be shared without being tainted by Formtastic
-      
+
       options[:required] = method_required?(method) unless options.key?(:required)
       options[:as]     ||= default_input_type(method, options)
 
@@ -286,7 +286,7 @@ module Formtastic #:nodoc:
       html_options = args.extract_options!
       html_options[:class] ||= "inputs"
       html_options[:name] = title
-      
+
       if html_options[:for] # Nested form
         inputs_for_nested_attributes(*(args << html_options), &block)
       elsif block_given?
@@ -987,7 +987,7 @@ module Formtastic #:nodoc:
       # documentation of date_or_datetime_input() for more information.
       def time_input(method, options)
         options = set_include_blank(options)
-        date_or_datetime_input(method, options.merge(:discard_year => true, :discard_month => true, :discard_day => true))
+        date_or_datetime_input(method, options.merge(:discard_year => true, :discard_month => true, :discard_day => true, :skip_break => true))
       end
 
       # Helper method used by :as => (:date|:datetime|:time).  Generates a fieldset containing a
@@ -1040,6 +1040,7 @@ module Formtastic #:nodoc:
         inputs   = options.delete(:order) || i18n_date_order || [:year, :month, :day]
         inputs   = [] if options[:ignore_date]
         labels   = options.delete(:labels) || {}
+        skip_break = options.delete(:skip_break) || false
 
         time_inputs = [:hour, :minute]
         time_inputs << :second if options[:include_seconds]
@@ -1057,7 +1058,7 @@ module Formtastic #:nodoc:
 
           field_name = "#{method}(#{position[input]}i)"
           if options[:"discard_#{input}"]
-            break if time_inputs.include?(input)
+            break if time_inputs.include?(input) && !skip_break
 
             hidden_value = datetime.respond_to?(input) ? datetime.send(input) : datetime
             hidden_fields_capture << template.hidden_field_tag("#{@object_name}[#{field_name}]", (hidden_value || 1), :id => input_id)
@@ -1265,7 +1266,7 @@ module Formtastic #:nodoc:
           checked,
           html_options
         )
-        
+
         options = options_for_label(options)
         options[:for] ||= html_options[:id]
 
@@ -1694,7 +1695,7 @@ module Formtastic #:nodoc:
         column = column_for(method)
 
         if type == :text
-          { :rows => default_text_area_height, 
+          { :rows => default_text_area_height,
             :cols => default_text_area_width }
         elsif type == :numeric || column.nil? || !column.respond_to?(:limit) || column.limit.nil?
           { :maxlength => validation_max_limit,
