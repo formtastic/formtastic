@@ -71,7 +71,6 @@ module Formtastic
     include Formtastic::Inputs::CheckBoxesInput
     include Formtastic::Inputs::RadioInput
     include Formtastic::Inputs::SelectInput
-    include Formtastic::Inputs::TimeInput
     
   end
   
