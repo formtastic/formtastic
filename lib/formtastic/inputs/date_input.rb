@@ -7,8 +7,9 @@ module Formtastic
     class DateInput < NewBase
       include NewTimeish
       
-      def default_fragments
-        [:year, :month, :day]
+      # We don't want hour and minute fragments on a date input
+      def time_fragments
+        []
       end
     end
   end

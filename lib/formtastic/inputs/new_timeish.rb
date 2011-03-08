@@ -21,11 +21,19 @@ module Formtastic
       end
       
       def fragments
-        options[:order] || i18n_date_order || default_fragments
+        date_fragments + time_fragments
       end
       
-      def default_fragments
-        raise "please implement default_fragments (eg [:year, :month, :day])"
+      def time_fragments
+        options[:include_seconds] ? [:hour, :minute, :second] : [:hour, :minute]
+      end
+      
+      def date_fragments
+        options[:order] || i18n_date_fragments || default_date_fragments
+      end
+      
+      def default_date_fragments
+        [:year, :month, :day]
       end
       
       def fragment_wrapping(&block)
@@ -72,7 +80,7 @@ module Formtastic
         positions[fragment]
       end
       
-      def i18n_date_order
+      def i18n_date_fragments
         order = ::I18n.t(:order, :scope => [:date])
         order = nil unless order.is_a?(Array)
         order
