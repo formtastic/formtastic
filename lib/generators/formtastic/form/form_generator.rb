@@ -34,7 +34,8 @@ module Formtastic
     source_root File.expand_path('../../../templates', __FILE__)
 
     def create_or_show
-      @attributes = self.columns if @attributes.empty?
+      @attributes = reflected_attributes if @attributes.empty?
+      
       if options[:copy]
         template = File.read("#{self.class.source_root}/_form.html.#{template_type}")
         erb = ERB.new(template, nil, '-')
@@ -49,8 +50,6 @@ module Formtastic
 
     protected
 
-    IGNORED_COLUMNS = [:updated_at, :created_at].freeze
-
     def template_type
       @template_type ||= options[:haml] ? :haml : :erb
     end
@@ -63,8 +62,14 @@ module Formtastic
       end
     end
 
-    def columns
-      @columns ||= self.name.camelize.constantize.content_columns.reject { |column| IGNORED_COLUMNS.include?(column.name.to_sym) }
+    def reflected_attributes
+      columns = model.content_columns.map{|column| column.name}
+      columns += model.reflect_on_all_associations.map{|association| association.name.to_s}
+      columns -= %w(created_at updated_at)
+    end
+
+    def model
+      @model ||= name.camelize.constantize
     end
 
     def save_to_clipboard(data)
