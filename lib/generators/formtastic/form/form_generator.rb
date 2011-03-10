@@ -23,7 +23,7 @@ module Formtastic
                  :desc => "Generate HAML instead of ERB"
 
     class_option :partial, :type => :boolean, :default => true, :group => :formtastic,
-                 :desc => 'Generate a form partial in the model views path (eg `posts/_form.html.erb`'
+                 :desc => 'Generate a form partial in the model views path (eg `posts/_form.html.erb`)'
 
     class_option :copy, :type => :boolean, :default => false, :group => :formtastic,
                  :desc => 'Copy the generated code the clipboard instead of generating a partial file."'
