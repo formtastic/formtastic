@@ -17,7 +17,7 @@ module Formtastic
     desc "Generates a Formtastic form partial based on an existing model."
 
     argument :name, :type => :string, :required => true, :banner => 'MyExistingModel'
-    argument :attributes, :type => :array, :default => [], :banner => 'attribute:type attribute:type'
+    argument :attributes, :type => :array, :default => [], :banner => 'attribute attribute'
 
     class_option :haml, :type => :boolean, :default => false, :group => :formtastic,
                  :desc => "Generate HAML instead of ERB"
