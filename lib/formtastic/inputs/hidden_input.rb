@@ -30,7 +30,8 @@ module Formtastic
     #   form.formtastic li.hidden { display:none; }
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
-    class HiddenInput < NewBase
+    class HiddenInput 
+      include NewBase
       
       def input_html_options
         return {:value => options[:value]}.merge(super) if options.key?(:value)

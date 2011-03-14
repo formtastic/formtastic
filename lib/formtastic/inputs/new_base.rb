@@ -1,6 +1,6 @@
 module Formtastic
   module Inputs
-    class NewBase
+    module NewBase
       
       attr_accessor :builder, :template, :object, :object_name, :method, :options
       
@@ -20,6 +20,9 @@ module Formtastic
         end
       end
       
+      
+      
+      
       def column
         object.column_for_attribute(method) if object.respond_to?(:column_for_attribute)
       end
@@ -27,6 +30,10 @@ module Formtastic
       def column?
         !column.nil?
       end
+      
+      
+      
+      
       
       def column_limit
         column.limit if column?

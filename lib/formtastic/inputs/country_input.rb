@@ -48,7 +48,8 @@ module Formtastic
     #   </li>
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
-    class CountryInput < NewBase
+    class CountryInput 
+      include NewBase
 
       def to_html
         raise "To use the :country input, please install a country_select plugin, like this one: http://github.com/rails/iso-3166-country-select" unless builder.respond_to?(:country_select)

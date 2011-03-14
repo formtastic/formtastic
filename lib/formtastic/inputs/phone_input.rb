@@ -28,7 +28,8 @@ module Formtastic
     #   </form>
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
-    class PhoneInput < NewBase
+    class PhoneInput 
+      include NewBase
       include Stringish
       
       def to_html

@@ -32,7 +32,8 @@ module Formtastic
     #  <%= f.input :shoe_size, :as => :numeric, :input_html => { :min => 3, :max => 15, :step => 1 } %>
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
-    class NumericInput < NewBase
+    class NumericInput 
+      include NewBase
       include Stringish
       
       def to_html

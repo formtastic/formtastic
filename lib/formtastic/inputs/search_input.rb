@@ -24,7 +24,8 @@ module Formtastic
     #   </form>
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
-    class SearchInput < NewBase
+    class SearchInput 
+      include NewBase
       include Stringish
       
       def to_html

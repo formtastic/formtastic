@@ -28,7 +28,8 @@ module Formtastic
     #   </form>
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
-    class UrlInput < NewBase
+    class UrlInput 
+      include NewBase
       include Stringish
       
       def to_html

@@ -31,7 +31,8 @@ module Formtastic
     #   <%= f.input :published, :checked_value => "yes", :unchecked_value => "no" %> 
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
-    class BooleanInput < NewBase
+    class BooleanInput
+      include NewBase
       
       def to_html
         input_wrapping do

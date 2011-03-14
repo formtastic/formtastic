@@ -29,7 +29,8 @@ module Formtastic
     #   </form>
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
-    class StringInput < NewBase
+    class StringInput 
+      include NewBase
       include Stringish
     end
   end
