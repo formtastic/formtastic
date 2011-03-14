@@ -15,6 +15,11 @@ module Formtastic
         def belongs_to?
           association == :belongs_to
         end
+        
+        def association_primary_key
+          return reflection.options[:foreign_key] if reflection && !reflection.options[:foreign_key].blank?
+          :"#{method}_id"
+        end
       
       end
     end

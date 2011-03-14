@@ -70,7 +70,6 @@ module Formtastic
 
     include Formtastic::Inputs::CheckBoxesInput
     include Formtastic::Inputs::RadioInput
-    include Formtastic::Inputs::SelectInput
     
   end
   
