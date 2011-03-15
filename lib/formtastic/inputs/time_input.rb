@@ -1,4 +1,4 @@
-require 'inputs/timeish'
+require 'inputs/new_timeish'
 
 module Formtastic
   module Inputs
