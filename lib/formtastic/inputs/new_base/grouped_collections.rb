@@ -20,7 +20,9 @@ module Formtastic
         end
       
         def group_label_method_from_grouped_collection
-          label_and_value_method(raw_grouped_collection).first
+          :id
+          # TODO there's a bug in this that's returning an unexpected method_name
+          # label_and_value_method(raw_grouped_collection).first
         end
       
         def group_association
@@ -64,7 +66,7 @@ module Formtastic
           # class Customer
           #   has_many :tasks, :class_name => 'Project', :foreign_key => 'customer_id'
           # end
-          possible_associations = group_class.reflect_on_all_associations(:has_many).find_all{|assoc| assoc.klass == object_class}
+          possible_associations = group_class.reflect_on_all_associations(:has_many).find_all {|assoc| assoc.klass == reflection.klass }
           return possible_associations.first.name.to_sym if possible_associations.count == 1
       
           raise "Cannot infer group association for #{method} grouped by #{group_by}, there were #{possible_associations.empty? ? 'no' : possible_associations.size} possible associations. Please specify using :group_association"
