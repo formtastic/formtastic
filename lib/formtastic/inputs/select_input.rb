@@ -1,5 +1,6 @@
 require 'inputs/new_base'
-require 'inputs/collections'
+require 'inputs/new_base/collections'
+require 'inputs/new_base/grouped_collections'
 
 module Formtastic
   module Inputs
@@ -137,8 +138,8 @@ module Formtastic
     # @see Formtastic::Inputs::RadioInput RadioInput as an alternative for `belongs_to` associations
     class SelectInput
       include NewBase
-      include Collections
-      include GroupedCollections
+      include NewBase::Collections
+      include NewBase::GroupedCollections
       
       def to_html
         input_wrapping do
