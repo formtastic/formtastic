@@ -1,4 +1,4 @@
-require 'inputs/new_timeish'
+require 'inputs/new_base/timeish'
 require 'inputs/new_base'
 
 module Formtastic
@@ -6,7 +6,7 @@ module Formtastic
     # @see Formtastic::Inputs::Timeish Timeish module for documetation of date, time and datetime input options.
     class DatetimeInput 
       include NewBase
-      include NewTimeish
+      include NewBase::Timeish
 
       
     end

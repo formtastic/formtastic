@@ -1,5 +1,6 @@
 require 'inputs/new_base'
-require 'inputs/stringish'
+require 'inputs/new_base/timeish'
+require 'inputs/new_base/stringish'
 
 module Formtastic
   module Inputs
@@ -30,7 +31,7 @@ module Formtastic
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
     class EmailInput 
       include NewBase
-      include Stringish
+      include NewBase::Stringish
       
       def to_html
         input_wrapping do
