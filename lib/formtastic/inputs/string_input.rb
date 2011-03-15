@@ -1,5 +1,5 @@
 require 'inputs/new_base'
-require 'inputs/stringish'
+require 'inputs/timeish'
 
 module Formtastic
   module Inputs
@@ -31,7 +31,7 @@ module Formtastic
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
     class StringInput 
       include NewBase
-      include Stringish
+      include NewBase::Stringish
     end
   end
 end
