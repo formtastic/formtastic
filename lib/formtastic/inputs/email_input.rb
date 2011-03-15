@@ -1,5 +1,5 @@
 require 'inputs/new_base'
-require 'inputs/timeish'
+require 'inputs/new_base/timeish'
 require 'inputs/new_base/stringish'
 
 module Formtastic
