@@ -18,7 +18,7 @@ module Formtastic
         end
         
         def input_dom_id
-          options[:input_html].try(:[], :id) || dom_id('')
+          options[:input_html].try(:[], :id) || dom_id
         end
         
         def label_html_options
@@ -47,7 +47,7 @@ module Formtastic
           opts[:class] << "required" if required?
           opts[:class] = opts[:class].join(' ')
           
-          opts[:id] = dom_id
+          opts[:id] = wrapper_dom_id
         
           opts
         end
@@ -85,14 +85,17 @@ module Formtastic
           end
         end
         
-        def dom_id(value='input')
+        def dom_id
           [
             builder.custom_namespace, 
             sanitized_object_name, 
             dom_index, 
-            sanitized_method_name, 
-            value
+            sanitized_method_name
           ].reject { |x| x.blank? }.join('_')
+        end
+        
+        def wrapper_dom_id
+          "#{dom_id}_input"
         end
         
         def dom_index
