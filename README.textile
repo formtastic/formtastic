@@ -95,7 +95,7 @@ Formtastic edge (2.0) will be compatible with Rails 3 only, and the gem is "host
 Simply add Formtastic to your Gemfile and bundle it up:
 
 <pre>
-  gem 'formtastic', '~> 2.0.0'
+  gem 'formtastic', '~> 1.2.3'
 </pre>
 
 Optionally, run the generator to copy some stylesheets and a configuration initializer into your application:
