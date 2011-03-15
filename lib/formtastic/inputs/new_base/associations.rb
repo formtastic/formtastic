@@ -17,10 +17,13 @@ module Formtastic
         end
         
         def association_primary_key
-          return reflection.options[:foreign_key] if reflection && !reflection.options[:foreign_key].blank?
-          :"#{method}_id"
+          if association
+            return reflection.options[:foreign_key] unless reflection.options[:foreign_key].blank?
+            return :"#{method}_id" if belongs_to?
+            return "#{method.to_s.singularize}_id".pluralize.to_sym
+          end
         end
-      
+
       end
     end
   end

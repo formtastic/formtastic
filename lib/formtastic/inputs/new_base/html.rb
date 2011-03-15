@@ -90,12 +90,12 @@ module Formtastic
             builder.custom_namespace, 
             sanitized_object_name, 
             dom_index, 
-            sanitized_method_name
+            association_primary_key || sanitized_method_name
           ].reject { |x| x.blank? }.join('_')
         end
         
         def wrapper_dom_id
-          "#{dom_id}_input"
+          "#{dom_id.to_s.gsub(association_primary_key.to_s, sanitized_method_name.to_s)}_input"
         end
         
         def dom_index
