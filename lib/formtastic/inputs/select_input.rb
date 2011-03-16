@@ -157,7 +157,7 @@ module Formtastic
       end
       
       def select_html
-        builder.select(method, collection, input_options, input_html_options)
+        builder.select(input_name, collection, input_options, input_html_options)
       end
       
       def include_blank?
