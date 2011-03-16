@@ -184,6 +184,8 @@ describe 'select input' do
   
   describe "for a belongs_to association with :group_by => :author" do
     it "should call author.posts" do
+      ::Author.stub!(:reflect_on_all_associations).and_return { |macro| macro == :has_many ? [mock('reflection', :klass => Post, :name => :posts)] : []}
+      
       [@freds_post].each { |post| post.stub!(:to_label).and_return("Post - #{post.id}") }
       @fred.should_receive(:posts)
   
