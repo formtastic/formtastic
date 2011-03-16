@@ -86,7 +86,7 @@ module Formtastic
           end
         end
       
-      
+        # TODO this seems to overlap or be confused with association_primary_key
         def input_name
           if reflection
             if [:has_and_belongs_to_many, :has_many].include?(reflection.macro)

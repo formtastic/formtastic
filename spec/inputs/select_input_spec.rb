@@ -32,7 +32,8 @@ describe 'select input' do
     end
     
     describe "using a related model without reflection's options (Mongoid Document)" do
-      before do        
+      before do 
+        @new_post.stub!(:mongoid_reviewer)
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:mongoid_reviewer, :as => :select))
         end)
@@ -40,7 +41,7 @@ describe 'select input' do
       
       it 'should draw select options' do
         output_buffer.should have_tag('form li select')
-        output_buffer.should have_tag('form li select#post_reviewer_id')
+        output_buffer.should have_tag('form li select#post_custom_reviewer_id')
       end
     end
   
