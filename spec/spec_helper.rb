@@ -153,6 +153,7 @@ module FormtasticSpecHelper
 
     ::Author.stub!(:find).and_return([@fred, @bob])
     ::Author.stub!(:all).and_return([@fred, @bob])
+    ::Author.stub!(:where).and_return([@fred, @bob])
     ::Author.stub!(:human_attribute_name).and_return { |column_name| column_name.humanize }
     ::Author.stub!(:human_name).and_return('::Author')
     ::Author.stub!(:reflect_on_association).and_return { |column_name| mock('reflection', :options => {}, :klass => Post, :macro => :has_many) if column_name == :posts }
@@ -219,6 +220,7 @@ module FormtasticSpecHelper
     end
     ::Post.stub!(:find).and_return([@freds_post])
     ::Post.stub!(:all).and_return([@freds_post])
+    ::Post.stub!(:where).and_return([@freds_post])
     ::Post.stub!(:content_columns).and_return([mock('column', :name => 'title'), mock('column', :name => 'body'), mock('column', :name => 'created_at')])
     ::Post.stub!(:to_key).and_return(nil)
     ::Post.stub!(:persisted?).and_return(nil)

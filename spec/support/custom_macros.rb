@@ -234,7 +234,7 @@ module CustomMacros
 
     def it_should_call_find_on_association_class_when_no_collection_is_provided(as)
       it "should call find on the association class when no collection is provided" do
-        ::Author.should_receive(:all)
+        ::Author.should_receive(:where)
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:author, :as => as))
         end)
