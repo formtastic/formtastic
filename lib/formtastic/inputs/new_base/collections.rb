@@ -11,7 +11,7 @@ module Formtastic
           label_and_value_method(raw_collection).last
         end
       
-        def label_and_value_method(_collection)
+        def label_and_value_method(_collection, grouped=false)
           sample = _collection.first || _collection.last
       
           case sample
@@ -24,8 +24,8 @@ module Formtastic
           end
       
           # Order of preference: user supplied method, class defaults, auto-detect
-          label = options[:label_method] || label || builder.collection_label_methods.find { |m| sample.respond_to?(m) }
-          value = options[:value_method] || value || builder.collection_value_methods.find { |m| sample.respond_to?(m) }
+          label = (grouped ? options[:grouped_label_method] : options[:label_method]) || label || builder.collection_label_methods.find { |m| sample.respond_to?(m) }
+          value = (grouped ? options[:grouped_value_method] : options[:value_method]) || value || builder.collection_value_methods.find { |m| sample.respond_to?(m) }
       
           [label, value]
         end

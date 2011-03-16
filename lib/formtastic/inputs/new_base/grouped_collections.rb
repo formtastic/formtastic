@@ -20,9 +20,7 @@ module Formtastic
         end
       
         def group_label_method_from_grouped_collection
-          :id
-          # TODO there's a bug in this that's returning an unexpected method_name
-          # label_and_value_method(raw_grouped_collection).first
+          label_and_value_method(raw_grouped_collection, true).first
         end
       
         def group_association
