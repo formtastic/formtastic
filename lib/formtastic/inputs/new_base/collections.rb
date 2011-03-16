@@ -61,6 +61,7 @@ module Formtastic
             if conditions_from_options
               reflection.klass.where(conditions_from_reflection).where(conditions_from_options)
             else
+              find_options_from_options.merge!(:include => group_by) if group_by
               reflection.klass.all(find_options_from_options)
             end
           end
