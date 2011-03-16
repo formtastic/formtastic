@@ -41,7 +41,8 @@ describe 'select input' do
       
       it 'should draw select options' do
         output_buffer.should have_tag('form li select')
-        output_buffer.should have_tag('form li select#post_custom_reviewer_id')
+        output_buffer.should have_tag('form li select#post_reviewer_id')
+        output_buffer.should_not have_tag('form li select#post_mongoid_reviewer_id')
       end
     end
   
