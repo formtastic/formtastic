@@ -186,17 +186,18 @@ module Formtastic
       end
       
       def input_options
-        out = super
-        out = out.merge(:include_blank => include_blank?)
-        out
+        {:include_blank => include_blank?}.merge(super)
       end
       
       def input_html_options
-        out = super
-        out = out.merge(:multiple => multiple_by_association?) unless out.key?(:multiple)
-        out = out.merge(:name => "#{object_name}[#{association_primary_key}]") unless out.key?(:named)
-        out = out.merge(:include_blank => include_blank?)
-        out
+        extra_input_html_options.merge(super)
+      end
+      
+      def extra_input_html_options
+        {
+          :multiple => multiple_by_association?,
+          :name => "#{object_name}[#{association_primary_key}]"
+        }
       end
       
       def multiple_by_association?
