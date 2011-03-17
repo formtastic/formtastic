@@ -18,6 +18,14 @@ module Formtastic
         def attributized_method_name
           method.to_s.gsub(/_id$/, '').to_sym
         end
+        
+        def humanized_method_name
+          if object && object.class.respond_to?(:human_attribute_name)
+            object.class.human_attribute_name(method.to_s)
+          else
+            method.to_s.send(builder.label_str_method)
+          end
+        end
       
       end
     end

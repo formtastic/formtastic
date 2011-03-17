@@ -80,5 +80,24 @@ module Formtastic
       end
     end
     
+    # TODO: Temporarily make this work when included inside an Input instead of FormBuilder
+    def escape_html_entities(string) #:nodoc:
+      if builder
+        if builder.escape_html_entities_in_hints_and_labels
+          # Acceppt html_safe flag as indicator to skip escaping
+          string = template.escape_once(string) unless string.respond_to?(:html_safe?) && string.html_safe? == true
+        end
+        string
+      else
+        super
+      end
+    end
+    
+    # TODO: Temporarily make this work when included inside an Input instead of FormBuilder
+    def i18n_lookups_by_default
+      respond_to?(:builder) ? builder.i18n_lookups_by_default : super
+    end
+    
+    
   end
 end
