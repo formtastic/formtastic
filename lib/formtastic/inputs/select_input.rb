@@ -148,19 +148,8 @@ module Formtastic
         end
       end
       
-      def label_html_options
-        super.merge(:for => input_html_options[:id])
-      end
-      
       def select_html
         builder.select(input_name, collection, input_options, input_html_options)
-      end
-      
-      def include_blank?
-        return options[:prompt] if options.key?(:prompt)
-        return options[:include_blank] if options.key?(:include_blank)
-        return true if (single? && builder.include_blank_for_select_by_default)
-        false
       end
       
       def grouped_select_html
@@ -174,6 +163,17 @@ module Formtastic
           input_options, 
           input_html_options
         )
+      end
+      
+      def include_blank?
+        return options[:prompt] if options.key?(:prompt)
+        return options[:include_blank] if options.key?(:include_blank)
+        return true if (single? && builder.include_blank_for_select_by_default)
+        false
+      end
+
+      def label_html_options
+        super.merge(:for => input_html_options[:id])
       end
       
       def input_dom_id
