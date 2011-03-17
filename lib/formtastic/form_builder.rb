@@ -69,7 +69,6 @@ module Formtastic
     include Formtastic::Helpers::ErrorsHelper
 
     include Formtastic::Inputs::CheckBoxesInput
-    include Formtastic::Inputs::RadioInput
     
   end
   

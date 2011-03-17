@@ -1,3 +1,6 @@
+require 'inputs/new_base'
+require 'inputs/new_base/collections'
+
 module Formtastic
   module Inputs
     
@@ -105,41 +108,67 @@ module Formtastic
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
     # @see Formtastic::Inputs::Select RadioInput as an alternative for `belongs_to` associations
-    module RadioInput
-      include Formtastic::Inputs::Base
+    class RadioInput
+      include NewBase
+      include NewBase::Collections
       
-      # Finally, you can set :value_as_class => true if you want the li wrapper around each radio
-      # button / label combination to contain a class with the value of the radio button (useful for
-      # applying specific CSS or Javascript to a particular radio button).
-      def radio_input(method, options)
-        collection   = find_collection_for_column(method, options)
-        html_options = strip_formtastic_options(options).merge(options.delete(:input_html) || {})
-  
-        input_name = generate_association_input_name(method)
-        value_as_class = options.delete(:value_as_class)
-        input_ids = []
-  
-        list_item_content = collection.map do |c|
-          label = c.is_a?(Array) ? c.first : c
-          value = c.is_a?(Array) ? c.last  : c
-          input_id = generate_html_id(input_name, value.to_s.gsub(/\s/, '_').gsub(/\W/, '').downcase)
-          input_ids << input_id
-  
-          html_options[:id] = input_id
-  
-          li_content = template.content_tag(:label,
-            Formtastic::Util.html_safe("#{radio_button(input_name, value, html_options)} #{escape_html_entities(label)}"),
-            :for => input_id
+      def to_html
+        input_wrapping do
+          template.content_tag(:fieldset,
+            legend_html <<
+            template.content_tag(:ol,
+              collection.map { |choice| 
+
+                label = choice.is_a?(Array) ? choice.first : choice
+                value = choice.is_a?(Array) ? choice.last : choice
+
+                html_safe_value = value.to_s.gsub(/\s/, '_').gsub(/\W/, '').downcase
+                radio_input_id = "#{sanitized_object_name}_#{input_name}_#{html_safe_value}"
+                radio_input_id = "#{builder.custom_namespace}_#{radio_input_id}" unless builder.custom_namespace.blank?
+                
+                template.content_tag(:li, 
+                  template.content_tag(:label,
+                    builder.radio_button(input_name, value, input_html_options.merge(:id => radio_input_id)) << label,
+                    :for => radio_input_id
+                  ),
+                  :class => (value_as_class? ? "#{sanitized_method_name}_#{html_safe_value}" : nil)
+                ) 
+              }.join.html_safe
+            )
           )
-  
-          li_options = value_as_class ? { :class => [method.to_s.singularize, value.to_s.downcase].join('_') } : {}
-          template.content_tag(:li, Formtastic::Util.html_safe(li_content), li_options)
         end
-  
-        template.content_tag(:fieldset,
-          legend_tag(method, options) << template.content_tag(:ol, Formtastic::Util.html_safe(list_item_content.join))
-        )
       end
+
+      def value_as_class?
+        options[:value_as_class]
+      end
+      
+      def legend_html
+        if options[:label] == false
+          ""
+        else
+          template.content_tag(:legend,
+            template.content_tag(:label, label_text, label_html_options),
+            :class => "label"
+          )
+        end
+      end
+      
+      # Override to remove the for attribute since this isn't associated with any element, as it's
+      # nested inside the legend.
+      def label_html_options
+        super.merge(:for => nil)
+      end
+      
+      # TODO move to NewBase
+      # TODO i18n
+      # abbr tag from config
+      def label_text
+        text = method.to_s.humanize
+        text << template.content_tag(:abbr, "*")
+        text.html_safe
+      end
+            
     end
   end
 end
