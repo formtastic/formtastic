@@ -7,6 +7,7 @@ require 'inputs/new_base/errors'
 require 'inputs/new_base/database'
 require 'inputs/new_base/options'
 require 'inputs/new_base/html'
+require 'inputs/new_base/labelling'
 
 module Formtastic
   module Inputs
@@ -32,7 +33,8 @@ module Formtastic
       include Validations
       include Fileish
       include Associations
-
+      include Labelling
+      
     end
   end
 end

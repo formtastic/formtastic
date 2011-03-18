@@ -95,7 +95,7 @@ module Formtastic
         end
         
         def wrapper_dom_id
-          "#{dom_id.to_s.gsub(association_primary_key.to_s, sanitized_method_name.to_s)}_input"
+          @wrapper_dom_id ||= "#{dom_id.to_s.gsub((association_primary_key || method).to_s, sanitized_method_name.to_s)}_input"
         end
         
         def dom_index

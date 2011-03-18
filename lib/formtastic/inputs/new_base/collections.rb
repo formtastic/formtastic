@@ -86,21 +86,6 @@ module Formtastic
           end
         end
       
-        # TODO this seems to overlap or be confused with association_primary_key
-        def input_name
-          if reflection
-            if [:has_and_belongs_to_many, :has_many].include?(reflection.macro)
-              "#{method.to_s.singularize}_ids"
-            elsif reflection.respond_to? :foreign_key
-              reflection.foreign_key
-            else
-              reflection.options[:foreign_key] || "#{method}_id"
-            end
-          else
-            method
-          end.to_sym
-        end
-
       end
     end
   end
