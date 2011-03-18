@@ -23,7 +23,7 @@ end
 
 desc 'Test the formtastic inputs.'
 RSpec::Core::RakeTask.new('spec:inputs') do |t|
-  t.pattern = FileList['spec/inputs/*_spec.rb'] - ["spec/inputs/check_boxes_input_spec.rb"]
+  t.pattern = FileList['spec/inputs/*_spec.rb']
 end
 
 desc 'Test the formtastic plugin with specdoc formatting and colors'
