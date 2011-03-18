@@ -12,7 +12,7 @@ module Formtastic
         end
 
         def sanitized_method_name
-          method.to_s.gsub(/[\?\/\-]$/, '')
+          @sanitized_method_name ||= method.to_s.gsub(/[\?\/\-]$/, '')
         end
 
         def attributized_method_name
