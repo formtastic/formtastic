@@ -34,6 +34,7 @@ module Formtastic
       include NewBase
       
       def input_html_options
+        super[:id] = super[:id].gsub(/_id$/, '') # TODO: special case because we seem to test hidden input differently
         return {:value => options[:value]}.merge(super) if options.key?(:value)
         super
       end
