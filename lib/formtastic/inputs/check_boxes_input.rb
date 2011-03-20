@@ -1,4 +1,5 @@
-require 'inputs/base'
+require 'inputs/new_base'
+require 'inputs/new_base/collections'
 
 module Formtastic
   module Inputs
@@ -69,90 +70,126 @@ module Formtastic
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
     # @see Formtastic::Inputs::BooleanInput BooleanInput for a single checkbox for boolean (checked = true) inputs
-    module CheckBoxesInput
-      include Formtastic::Inputs::Base
+    class CheckBoxesInput
+      include NewBase
+      include NewBase::Collections
       
-      def check_boxes_input(method, options)
-        collection = find_collection_for_column(method, options)
-        html_options = options.delete(:input_html) || {}
-  
-        input_name      = generate_association_input_name(method)
-        hidden_fields   = options.delete(:hidden_fields)
-        value_as_class  = options.delete(:value_as_class)
-        unchecked_value = options.delete(:unchecked_value) || ''
-        html_options    = { :name => "#{@object_name}[#{input_name}][]" }.merge(html_options)
-        input_ids       = []
-  
-        selected_values = find_selected_values_for_column(method, options)
-        disabled_option_is_present = options.key?(:disabled)
-        disabled_values = [*options[:disabled]] if disabled_option_is_present
-  
-        li_options = value_as_class ? { :class => [method.to_s.singularize, 'default'].join('_') } : {}
-  
-        list_item_content = collection.map do |c|
-          label = c.is_a?(Array) ? c.first : c
-          value = c.is_a?(Array) ? c.last : c
-          input_id = generate_html_id(input_name, value.to_s.gsub(/\s/, '_').gsub(/\W/, '').downcase)
-          input_ids << input_id
-  
-          html_options[:checked] = selected_values.include?(value)
-          html_options[:disabled] = disabled_values.include?(value) if disabled_option_is_present
-          html_options[:id] = input_id
-  
-          li_content = template.content_tag(:label,
-            Formtastic::Util.html_safe("#{create_check_boxes(input_name, html_options, value, unchecked_value, hidden_fields)} #{escape_html_entities(label)}"),
-            :for => input_id
+      def to_html
+        input_wrapping do
+          template.content_tag(:fieldset, 
+            legend_html <<
+            hidden_field_for_all <<
+            template.content_tag(:ol,
+              collection.map { |choice|
+                
+                check_box_label = choice.is_a?(Array) ? choice.first : choice
+                check_box_value = choice.is_a?(Array) ? choice.last : choice
+                
+                html_safe_value = check_box_value.to_s.gsub(/\s/, '_').gsub(/\W/, '').downcase
+                check_box_input_id = "#{sanitized_object_name}_#{association_primary_key || method}_#{html_safe_value}"
+                check_box_input_id = "#{builder.custom_namespace}_#{check_box_input_id}" unless builder.custom_namespace.blank?
+                
+                template.content_tag(:li,
+                  template.content_tag(:label,
+                    hidden_fields? ? 
+                      check_box_with_hidden_input(check_box_value, check_box_input_id) : 
+                      check_box_without_hidden_input(check_box_value, check_box_input_id) <<
+                    check_box_label,
+                    label_html_options.merge(:for => check_box_input_id)
+                  ),
+                  :class => value_as_class? ? "#{sanitized_method_name.singularize}_#{html_safe_value}" : ''
+                )
+              }.join("\n").html_safe
+            )
           )
-  
-          li_options = value_as_class ? { :class => [method.to_s.singularize, value.to_s.downcase].join('_') } : {}
-          template.content_tag(:li, Formtastic::Util.html_safe(li_content), li_options)
         end
-  
-        fieldset_content = legend_tag(method, options)
-        fieldset_content << create_hidden_field_for_check_boxes(input_name, value_as_class) unless hidden_fields
-        fieldset_content << template.content_tag(:ol, Formtastic::Util.html_safe(list_item_content.join))
-        template.content_tag(:fieldset, fieldset_content)
       end
       
-      protected
+      def hidden_field_for_all
+        if hidden_fields?
+          ""
+        else
+          options = {}
+          options[:class] = [method.to_s.singularize, 'default'].join('_') if value_as_class?
+          options[:id] = [object_name, method, 'none'].join('_')
+          template.hidden_field_tag(input_name, '', options)
+        end
+      end
       
-      # Used by check_boxes input. The selected values will be set by retrieving the value
-      # through the association.
-      #
-      # If the collection is not a hash or an array of strings, fixnums or symbols,
-      # we use value_method to retrieve an array with the values
-      def find_selected_values_for_column(method, options)
+      def legend_html
+        if options[:label] == false
+          ""
+        else
+          template.content_tag(:legend,
+            template.content_tag(:label, label_text),
+            label_html_options.merge(:class => "label")
+          )
+        end
+      end
+      
+      def value_as_class?
+        options[:value_as_class]
+      end
+      
+      def hidden_fields?
+        options[:hidden_fields]
+      end
+      
+      def check_box_with_hidden_input(value, check_box_input_id)
+        builder.check_box(
+          association_primary_key || method, 
+          input_html_options.merge(:id => check_box_input_id, :name => input_name, :disabled => disabled?(value)), 
+          value, 
+          unchecked_value
+        )
+      end
+      
+      def check_box_without_hidden_input(value, check_box_input_id)
+        template.check_box_tag(
+          input_name, 
+          value, 
+          checked?(value), 
+          input_html_options.merge(:id => check_box_input_id, :disabled => disabled?(value))
+        ) 
+      end
+      
+      def checked?(value)
+        selected_values.include?(value)
+      end
+      
+      def disabled?(value)
+        disabled_values.include?(value)
+      end
+      
+      def selected_values
         if object.respond_to?(method)
-          collection = [object.send(method)].compact.flatten
-          label, value = detect_label_and_value_method!(collection, options)
-          [*collection.map { |o| send_or_call(value, o) }].compact
+          selected_items = [object.send(method)].compact.flatten
+          [*selected_items.map { |o| send_or_call(value_method, o) }].compact
         else
           []
         end
       end
       
-      # Outputs a custom hidden field for check_boxes
-      def create_hidden_field_for_check_boxes(method, value_as_class) #:nodoc:
-        options = value_as_class ? { :class => [method.to_s.singularize, 'default'].join('_') } : {}
-        input_name = "#{object_name}[#{method.to_s}][]"
-        template.hidden_field_tag(input_name, '', options)
-      end
-  
-      # Outputs a checkbox tag. If called with hidden_fields = true a plain check_box_tag is returned,
-      # otherwise the helper uses the output generated by the rails check_box method.
-      def create_check_boxes(input_name, html_options = {}, checked_value = "1", unchecked_value = "0", hidden_fields = false) #:nodoc:
-        return template.check_box_tag(input_name, checked_value, html_options[:checked], html_options) unless hidden_fields == true
-        check_box(input_name, html_options, checked_value, unchecked_value)
+      def disabled_values
+        vals = options[:disabled] || []
+        vals = [vals] unless vals.is_a?(Array)
+        vals
       end
       
-      def send_or_call(duck, object)
-        if duck.is_a?(Proc)
-          duck.call(object)
-        else
-          object.send(duck)
-        end
+      def unchecked_value
+        options[:unchecked_value] || ''
       end
-
+      
+      # Override to remove the for attribute since this isn't associated with any element, as it's
+      # nested inside the legend.
+      def label_html_options
+        super.merge(:for => nil)
+      end
+      
+      def input_name
+        "#{object_name}[#{association_primary_key || method}][]"
+      end
+      
     end
   end
 end

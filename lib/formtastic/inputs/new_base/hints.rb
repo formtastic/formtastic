@@ -8,7 +8,7 @@ module Formtastic
         end
 
         def hint
-          builder.send(:localized_string, method, options[:hint], :hint)
+          localized_string(method, options[:hint], :hint)
         end
 
       end
