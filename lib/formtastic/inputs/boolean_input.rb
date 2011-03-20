@@ -47,13 +47,17 @@ module Formtastic
       
       def label_with_nested_checkbox
         builder.label(
-          method, 
+          method,
+          label_text_with_embedded_checkbox, 
           input_html_options.merge(
             :id => nil,
-            :for => input_html_options[:id],
-            :label_prefix_for_nested_input => check_box # the label() method will insert this nested input into the label at the last minute
+            :for => input_html_options[:id]
           )
         )
+      end
+      
+      def label_text_with_embedded_checkbox
+        label_text << " " << check_box
       end
       
       def check_box
