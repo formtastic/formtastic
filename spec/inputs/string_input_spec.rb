@@ -132,6 +132,10 @@ describe 'string input' do
           @new_post.should_receive(:specify_maxlength).at_least(1).and_return(false)
           should_have_maxlength(42, :options => { :maximum => 42, :unless => :specify_maxlength })
         end
+
+        it 'should have maxlength even if allow_blank is true' do
+          should_have_maxlength(42, :options => { :maximum => 42, :allow_blank => true })
+        end
       end
     end
   end

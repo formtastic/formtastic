@@ -626,7 +626,11 @@ module Formtastic
           end
         else
           if @object && @object.class.respond_to?(:validators_on)
-            !@object.class.validators_on(attribute_sym).find{|validator| (validator.kind == :presence || validator.kind == :inclusion) && (validator.options.present? ? options_require_validation?(validator.options) : true)}.nil?
+            relevant_validators = @object.class.validators_on(attribute_sym).select{|validator| (validator.kind == :presence || validator.kind == :inclusion)}
+            active_validators = relevant_validators.select{|validator| validator.options.present? ? options_require_validation?(validator.options) : true}
+
+            return false if active_validators.empty?
+            !active_validators.any? {|validator| validator.options[:allow_blank]}
           else
             all_fields_required_by_default
           end
@@ -635,8 +639,6 @@ module Formtastic
 
       # Determines whether the given options evaluate to true
       def options_require_validation?(options) #nodoc
-        allow_blank = options[:allow_blank]
-        return !allow_blank unless allow_blank.nil?
         if_condition = !options[:if].nil?
         condition = if_condition ? options[:if] : options[:unless]
 
