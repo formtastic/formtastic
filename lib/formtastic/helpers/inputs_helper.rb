@@ -251,29 +251,7 @@ module Formtastic
           klass = "Formtastic::Inputs::#{options[:as].to_s.camelize}Input".constantize
           return klass.new(self, template, @object, @object_name, method, options).to_html if options[:as] == i
         end
-        
-        options[:required] = method_required?(method) unless options.key?(:required)
-    
-        html_class = [ options[:as], (options[:required] ? :required : :optional) ]
-        html_class << 'error' if has_errors?(method, options)
-    
-        wrapper_html = options.delete(:wrapper_html) || {}
-        wrapper_html[:id]  ||= generate_html_id(method)
-        wrapper_html[:class] = (html_class << wrapper_html[:class]).flatten.compact.join(' ')
-    
-        if options[:input_html] && options[:input_html][:id]
-          options[:label_html] ||= {}
-          options[:label_html][:for] ||= options[:input_html][:id]
-        end
-    
-        input_parts = (custom_inline_order[options[:as]] || inline_order).dup
-        input_parts = input_parts - [:errors, :hints] if options[:as] == :hidden
-    
-        list_item_content = input_parts.map do |type|
-          send(:"inline_#{type}_for", method, options)
-        end.compact.join("\n")
-    
-        return template.content_tag(:li, Formtastic::Util.html_safe(list_item_content), wrapper_html)
+      
       end
       
       # {#inputs} creates an input fieldset and ol tag wrapping for use around a set of inputs.  It can be
@@ -613,55 +591,6 @@ module Formtastic
         semantic_fields_for(*fields_for_args, &fields_for_block)
       end
       
-      # Determins if the attribute (eg :title) should be considered required or not.
-      #
-      # * if the :required option was provided in the options hash, the true/false value will be
-      #   returned immediately, allowing the view to override any guesswork that follows:
-      #
-      # * if the :required option isn't provided in the options hash, and the ValidationReflection
-      #   plugin is installed (http://github.com/redinger/validation_reflection), or the object is
-      #   an ActiveModel, true is returned
-      #   if the validates_presence_of macro has been used in the class for this attribute, or false
-      #   otherwise.
-      #
-      # * if the :required option isn't provided, and validates_presence_of can't be determined, the
-      #   configuration option all_fields_required_by_default is used.
-      def method_required?(attribute) #:nodoc:
-        attribute_sym = attribute.to_s.sub(/_id$/, '').to_sym
-  
-        if @object && @object.class.respond_to?(:reflect_on_validations_for)
-          @object.class.reflect_on_validations_for(attribute_sym).any? do |validation|
-            (validation.macro == :validates_presence_of || validation.macro == :validates_inclusion_of) &&
-            validation.name == attribute_sym &&
-            (validation.options.present? ? options_require_validation?(validation.options) : true)
-          end
-        else
-          if @object && @object.class.respond_to?(:validators_on)
-            !@object.class.validators_on(attribute_sym).find{|validator| (validator.kind == :presence || validator.kind == :inclusion) && (validator.options.present? ? options_require_validation?(validator.options) : true)}.nil?
-          else
-            all_fields_required_by_default
-          end
-        end
-      end
-      
-      # Determines whether the given options evaluate to true
-      def options_require_validation?(options) #nodoc
-        allow_blank = options[:allow_blank]
-        return !allow_blank unless allow_blank.nil?
-        if_condition = !options[:if].nil?
-        condition = if_condition ? options[:if] : options[:unless]
-  
-        condition = if condition.respond_to?(:call)
-                      condition.call(@object)
-                    elsif condition.is_a?(::Symbol) && @object.respond_to?(condition)
-                      @object.send(condition)
-                    else
-                      condition
-                    end
-  
-        if_condition ? !!condition : !condition
-      end
-      
       # For methods that have a database column, take a best guess as to what the input method
       # should be.  In most cases, it will just return the column type (eg :string), but for special
       # cases it will simplify (like the case of :integer, :float & :decimal to :numeric), or do
@@ -711,42 +640,7 @@ module Formtastic
       def column_for(method) #:nodoc:
         @object.column_for_attribute(method) if @object.respond_to?(:column_for_attribute)
       end
-      
-      # Generates an input for the given method using the type supplied with :as.
-      def inline_input_for(method, options)
-        send(:"#{options.delete(:as)}_input", method, options)
-      end
-  
-      # Generates hints for the given method using the text supplied in :hint.
-      def inline_hints_for(method, options) #:nodoc:
-        options[:hint] = localized_string(method, options[:hint], :hint)
-        return if options[:hint].blank? or options[:hint].kind_of? Hash
-        hint_class = options[:hint_class] || default_hint_class
-        template.content_tag(:p, Formtastic::Util.html_safe(options[:hint]), :class => hint_class)
-      end
-      
-      # Creates an error sentence by calling to_sentence on the errors array.
-      def error_sentence(errors, options = {}) #:nodoc:
-        error_class = options[:error_class] || default_inline_error_class
-        template.content_tag(:p, Formtastic::Util.html_safe(errors.to_sentence.untaint), :class => error_class)
-      end
-  
-      # Creates an error li list.
-      def error_list(errors, options = {}) #:nodoc:
-        error_class = options[:error_class] || default_error_list_class
-        list_elements = []
-        errors.each do |error|
-          list_elements <<  template.content_tag(:li, Formtastic::Util.html_safe(error.untaint))
-        end
-        template.content_tag(:ul, Formtastic::Util.html_safe(list_elements.join("\n")), :class => error_class)
-      end
-  
-      # Creates an error sentence containing only the first error
-      def error_first(errors, options = {}) #:nodoc:
-        error_class = options[:error_class] || default_inline_error_class
-        template.content_tag(:p, Formtastic::Util.html_safe(errors.first.untaint), :class => error_class)
-      end
-      
+            
       def field_set_title_from_args(*args) #:nodoc:
         options = args.extract_options!
         options[:name] ||= options.delete(:title)
