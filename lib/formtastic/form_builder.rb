@@ -6,6 +6,7 @@ require 'helpers/inputs_helper'
 require 'helpers/buttons_helper'
 require 'helpers/errors_helper'
 
+# TODO are these required any more?
 require 'inputs/boolean_input'
 require 'inputs/check_boxes_input'
 require 'inputs/country_input'
