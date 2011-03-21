@@ -6,9 +6,11 @@ describe 'Formtastic::Helpers::FormHelper.builder' do
   include FormtasticSpecHelper
 
   class MyCustomFormBuilder < Formtastic::FormBuilder
-    def awesome_input(method, options)
-      self.text_field(method)
-    end
+  end
+  
+  # TODO should be a separate spec for custom inputs
+  class Formtastic::Inputs::AwesomeInput
+    include Formtastic::Inputs::NewBase
   end
 
   before do
@@ -57,7 +59,8 @@ describe 'Formtastic::Helpers::FormHelper.builder' do
           builder.class.should == MyCustomFormBuilder
         end
       end
-
+      
+      # TODO should be a separate spec for custom inputs
       it "should allow me to call my custom input" do
         semantic_form_for(@new_post) do |builder|
           concat(builder.input(:title, :as => :awesome))
