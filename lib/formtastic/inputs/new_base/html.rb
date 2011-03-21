@@ -75,6 +75,10 @@ module Formtastic
           template.content_tag(:p, Formtastic::Util.html_safe(errors.first.untaint), :class => error_class)
         end
         
+        def error_none_html
+          ""
+        end
+        
         def hint_html
           if hint?
             template.content_tag(

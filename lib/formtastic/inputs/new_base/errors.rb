@@ -14,23 +14,16 @@ module Formtastic
               errors << object.errors[key] unless object.errors[key].blank?
             end
           end
-          errors.flatten
+          errors.flatten.compact.uniq
         end
         
         def error_keys
           keys = [method.to_sym]
-          keys << file_metadata_suffixes.map{|suffix| "#{method}_#{suffix}".to_sym} if file?
+          keys << builder.file_metadata_suffixes.map{|suffix| "#{method}_#{suffix}".to_sym} if file?
           keys << association_primary_key if belongs_to?
           keys.flatten.compact.uniq
         end
         
-        def error_keys
-          keys = [method.to_sym]
-          keys << file_metadata_suffixes.map{|suffix| "#{method}_#{suffix}".to_sym} if file?
-          keys << [association_primary_key] if belongs_to?
-          keys.flatten.compact.uniq
-        end
-
       end
     end
   end
