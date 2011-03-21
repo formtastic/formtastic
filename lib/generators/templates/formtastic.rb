@@ -58,12 +58,6 @@
 # Formtastic::FormBuilder.collection_label_methods = [
 #   "to_label", "display_name", "full_name", "name", "title", "username", "login", "value", "to_s"]
 
-# Formtastic by default renders inside li tags the input, hints and then
-# errors messages. Sometimes you want the hints to be rendered first than
-# the input, in the following order: hints, input and errors. You can
-# customize it doing just as below:
-# Formtastic::FormBuilder.inline_order = [:input, :hints, :errors]
-
 # Additionally, you can customize the order for specific types of inputs.
 # This is configured on a type basis and if a type is not found it will
 # fall back to the default order as defined by #inline_order

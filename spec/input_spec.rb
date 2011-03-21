@@ -8,47 +8,9 @@ describe 'Formtastic::FormBuilder#input' do
   before do
     @output_buffer = ''
     mock_everything
-  end
-
-  describe 'with inline order customization' do
-    it 'should allow input, hints, errors as order' do
-      Formtastic::FormBuilder.inline_order = [:input, :hints, :errors]
-
-      semantic_form_for(@new_post) do |builder|
-        builder.should_receive(:inline_input_for).once.ordered
-        builder.should_receive(:inline_hints_for).once.ordered
-        builder.should_receive(:inline_errors_for).once.ordered
-        concat(builder.input(:title))
-      end
-    end
-
-    it 'should allow hints, input, errors as order' do
-      Formtastic::FormBuilder.inline_order = [:hints, :input, :errors]
-
-      semantic_form_for(@new_post) do |builder|
-        builder.should_receive(:inline_hints_for).once.ordered
-        builder.should_receive(:inline_input_for).once.ordered
-        builder.should_receive(:inline_errors_for).once.ordered
-        concat(builder.input(:title))
-      end
-    end
-
-    it 'should allow errors, input, hint for a custom type while preserving original inline order' do
-      Formtastic::FormBuilder.custom_inline_order[:checkbox] = [:errors, :input, :hints]
-      Formtastic::FormBuilder.inline_order = [:hints, :input, :errors]
-
-      semantic_form_for(@new_post) do |builder|
-        builder.should_receive(:inline_errors_for).once.ordered
-        builder.should_receive(:inline_input_for).once.ordered
-        builder.should_receive(:inline_hints_for).once.ordered
-        concat(builder.input(:title, :as => :checkbox))
-        builder.should_receive(:inline_hints_for).once.ordered
-        builder.should_receive(:inline_input_for).once.ordered
-        builder.should_receive(:inline_errors_for).once.ordered
-        concat(builder.input(:title))
-      end
-    end
-
+    
+    @errors = mock('errors')
+    @new_post.stub!(:errors).and_return(@errors)
   end
 
   describe 'arguments and options' do

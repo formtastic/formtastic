@@ -47,7 +47,6 @@ module Formtastic
     configure :label_str_method, :humanize
     configure :collection_label_methods, %w[to_label display_name full_name name title username login value to_s]
     configure :collection_value_methods, %w[id to_s]
-    configure :inline_order, [ :input, :hints, :errors ]
     configure :custom_inline_order, {}
     configure :file_methods, [ :file?, :public_filename, :filename ]
     configure :file_metadata_suffixes, ['content_type', 'file_name', 'file_size']
