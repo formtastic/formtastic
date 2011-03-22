@@ -47,7 +47,9 @@ module Formtastic
           if validations?
             !validations.find { |validator| [:presence, :inclusion, :length].include?(validator.kind) }.nil?
           else
-            builder.all_fields_required_by_default
+            return false if options[:required] == false
+            return true if options[:required] == true
+            return builder.all_fields_required_by_default
           end
         end
         
@@ -56,7 +58,7 @@ module Formtastic
         end
         
         def column_limit
-          column.limit if column?
+          column.limit if column? && column.respond_to?(:limit)
         end
         
         def limit

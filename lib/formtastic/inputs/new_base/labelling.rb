@@ -6,14 +6,18 @@ module Formtastic
         include Formtastic::LocalizedString
         
         def label_text
-          ((localized_label || humanized_method_name) << required_or_optional_string).html_safe
+          ((localized_label || humanized_method_name) << requirement_text).html_safe
         end
 
-        def required_or_optional_string
-          case required?
-            when true then builder.required_string.call
-            when false then builder.optional_string.call
-            else options[:required] # TODO why?
+        def requirement_text_or_proc
+          required? ? builder.required_string : builder.optional_string
+        end
+        
+        def requirement_text
+          if requirement_text_or_proc.respond_to?(:call)
+            requirement_text_or_proc.call
+          else
+            requirement_text_or_proc
           end
         end
 

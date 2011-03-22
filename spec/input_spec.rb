@@ -10,11 +10,12 @@ describe 'Formtastic::FormBuilder#input' do
     mock_everything
     
     @errors = mock('errors')
+    @errors.stub!(:[]).and_return([])
     @new_post.stub!(:errors).and_return(@errors)
   end
 
   describe 'arguments and options' do
-
+  
     it 'should require the first argument (the method on form\'s object)' do
       lambda {
         concat(semantic_form_for(@new_post) do |builder|
@@ -26,30 +27,24 @@ describe 'Formtastic::FormBuilder#input' do
     describe ':required option' do
 
       describe 'when true' do
-
-        before do
-          @old_string = Formtastic::FormBuilder.required_string
-          @new_string = Formtastic::FormBuilder.required_string = " required yo!" # ensure there's something in the string
-          @new_post.class.should_not_receive(:reflect_on_all_validations)
-        end
-
-        after do
-          Formtastic::FormBuilder.required_string = @old_string
-        end
-
+        
         it 'should set a "required" class' do
-          concat(semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:title, :required => true))
-          end)
-          output_buffer.should_not have_tag('form li.optional')
-          output_buffer.should have_tag('form li.required')
+          with_config :required_string, " required yo!" do
+            concat(semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:title, :required => true))
+            end)
+            output_buffer.should_not have_tag('form li.optional')
+            output_buffer.should have_tag('form li.required')
+          end
         end
 
         it 'should append the "required" string to the label' do
-          concat(semantic_form_for(@new_post) do |builder|
-            concat(builder.input(:title, :required => true))
-          end)
-          output_buffer.should have_tag('form li.required label', /#{@new_string}$/)
+          with_config :required_string, " required yo!" do
+            concat(semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:title, :required => true))
+            end)
+            output_buffer.should have_tag('form li.required label', /required yo/)
+          end
         end
 
       end
