@@ -54,7 +54,7 @@ module Formtastic
       def to_html
         raise "To use the :country input, please install a country_select plugin, like this one: http://github.com/rails/iso-3166-country-select" unless builder.respond_to?(:country_select)
         input_wrapping do
-          builder.label(method, label_text, label_html_options) <<
+          label_html <<
           builder.country_select(method, priority_countries, input_options, input_html_options)
         end
       end

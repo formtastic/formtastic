@@ -5,9 +5,13 @@ module Formtastic
   
         def to_html
           input_wrapping do
-            builder.label(input_name, label_text, label_html_options) <<
+            label_html <<
             builder.text_field(method, input_html_options)
           end
+        end
+        
+        def label_html
+          render_label? ? builder.label(input_name, label_text, label_html_options) : ""
         end
         
         def input_html_options

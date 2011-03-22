@@ -103,10 +103,14 @@ module Formtastic
         end
         
         def fragments_label
-          template.content_tag(:legend, 
-            builder.label(method, :for => "#{input_html_options[:id]}_1i"), 
-            :class => "label"
-          )
+          if render_label?
+            template.content_tag(:legend, 
+              builder.label(method, :for => "#{input_html_options[:id]}_1i"), 
+              :class => "label"
+            )
+          else
+            ""
+          end
         end
         
         def fragments_inner_wrapping(&block)

@@ -30,7 +30,7 @@ module Formtastic
       
       def to_html
         input_wrapping do
-          builder.label(method, label_text, label_html_options) <<
+          label_html <<
           builder.search_field(method, input_html_options)
         end
       end

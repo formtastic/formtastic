@@ -25,6 +25,11 @@ module Formtastic
           localized_string(method, label_from_options, :label)
         end
         
+        def render_label?
+          return false if options[:label] == false
+          true
+        end
+        
       end
     end
   end

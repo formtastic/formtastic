@@ -143,7 +143,7 @@ module Formtastic
       
       def to_html
         input_wrapping do
-          builder.label(method, label_text, label_html_options) <<
+          label_html <<
           (options[:group_by] ? grouped_select_html : select_html)
         end
       end

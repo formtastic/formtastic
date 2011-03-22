@@ -37,7 +37,7 @@ module Formtastic
 
       def to_html
         input_wrapping do
-          builder.label(method, label_text, label_html_options) <<
+          label_html <<
           builder.time_zone_select(method, priority_zones, input_options, input_html_options)
         end
       end
