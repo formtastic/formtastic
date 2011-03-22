@@ -46,9 +46,10 @@ describe 'Formtastic::FormBuilder#label' do
 
   describe 'when label is given' do
     it 'should allow the text to be given as label option' do
-      semantic_form_for(@new_post) do |builder|
-        builder.label(:login, :required => true, :label => 'My label').should have_tag('label', :with => /My label/)
-      end
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input(:title, :label => 'My label')
+      end)
+      output_buffer.should have_tag('label', :with => /My label/)
     end
 
     it 'should return nil if label is false' do
