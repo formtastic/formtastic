@@ -400,107 +400,104 @@ describe 'Formtastic::FormBuilder#input' do
           default_input_type(:integer, :user_id).should == :select
           default_input_type(:integer, :section_id).should == :select
         end
-
+  
         it 'should default to :password for :string column types with "password" in the method name' do
           default_input_type(:string, :password).should == :password
           default_input_type(:string, :hashed_password).should == :password
           default_input_type(:string, :password_hash).should == :password
         end
-
+  
         it 'should default to :text for :text column types' do
           default_input_type(:text).should == :text
         end
-
+  
         it 'should default to :date for :date column types' do
           default_input_type(:date).should == :date
         end
-
+  
         it 'should default to :datetime for :datetime and :timestamp column types' do
           default_input_type(:datetime).should == :datetime
           default_input_type(:timestamp).should == :datetime
         end
-
+  
         it 'should default to :time for :time column types' do
           default_input_type(:time).should == :time
         end
-
+  
         it 'should default to :boolean for :boolean column types' do
           default_input_type(:boolean).should == :boolean
         end
-
+  
         it 'should default to :string for :string column types' do
           default_input_type(:string).should == :string
         end
-
+  
         it 'should default to :numeric for :integer, :float and :decimal column types' do
           default_input_type(:integer).should == :numeric
           default_input_type(:float).should == :numeric
           default_input_type(:decimal).should == :numeric
         end
-
+  
         it 'should default to :country for :string columns named country' do
           default_input_type(:string, :country).should == :country
         end
-
+  
         it 'should default to :email for :string columns matching email' do
           default_input_type(:string, :email).should == :email
           default_input_type(:string, :customer_email).should == :email
           default_input_type(:string, :email_work).should == :email
         end
-
+  
         it 'should default to :url for :string columns named url or website' do
           default_input_type(:string, :url).should == :url
           default_input_type(:string, :website).should == :url
           default_input_type(:string, :my_url).should == :url
           default_input_type(:string, :hurl).should_not == :url
         end
-
+  
         it 'should default to :phone for :string columns named phone or fax' do
           default_input_type(:string, :phone).should == :phone
           default_input_type(:string, :fax).should == :phone
         end
-
+  
         it 'should default to :search for :string columns named search' do
           default_input_type(:string, :search).should == :search
         end
-
+  
         describe 'defaulting to file column' do
           Formtastic::FormBuilder.file_methods.each do |method|
             it "should default to :file for attributes that respond to ##{method}" do
               @new_post.stub!(:column_for_attribute).and_return(nil)
               column = mock('column')
-
+  
               Formtastic::FormBuilder.file_methods.each do |test|
                 ### TODO: Check if this is ok
                 column.stub!(method).with(test).and_return(method == test)
               end
-
+  
               @new_post.should_receive(method).and_return(column)
-
+  
               semantic_form_for(@new_post) do |builder|
                 builder.send(:default_input_type, method).should == :file
               end
             end
           end
-
+  
         end
       end
-
-      it 'should call the corresponding input method' do
-        [:select, :time_zone, :radio, :date, :datetime, :time, :boolean, :check_boxes, :hidden].each do |input_style|
+  
+      it 'should call the corresponding input class with .to_html' do
+        [:select, :time_zone, :radio, :date, :datetime, :time, :boolean, :check_boxes, :hidden, :string, :password, :numeric, :text, :file].each do |input_style|
           @new_post.stub!(:generic_column_name)
           @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
           semantic_form_for(@new_post) do |builder|
-            builder.should_receive(:"#{input_style}_input").once.and_return("fake HTML output from #input")
-            concat(builder.input(:generic_column_name, :as => input_style))
-          end
-        end
+            input_instance = mock('Input instance')
+            input_class = "#{input_style.to_s}_input".classify
+            input_constant = "Formtastic::Inputs::#{input_class}".constantize
+            
+            input_constant.should_receive(:new).and_return(input_instance)
+            input_instance.should_receive(:to_html).and_return("some HTML")
 
-        [:string, :password, :numeric, :text, :file].each do |input_style|
-          @new_post.stub!(:generic_column_name)
-          @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
-          semantic_form_for(@new_post) do |builder|
-            builder.should_receive(:basic_input_helper).once.and_return("fake HTML output from #input")
             concat(builder.input(:generic_column_name, :as => input_style))
           end
         end
