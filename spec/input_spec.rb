@@ -96,136 +96,136 @@ describe 'Formtastic::FormBuilder#input' do
 
         end
 
-          describe 'and an object with :validators_on was given (ActiveModel, Active Resource)' do
-            before do
-              @new_post.stub!(:class).and_return(::PostModel)
-            end
-
-            after do
-              @new_post.stub!(:class).and_return(::Post)
-            end
-            describe 'and validates_presence_of was called for the method' do
-              it 'should be required' do
-
-                @new_post.class.should_receive(:validators_on).with(:title).any_number_of_times.and_return([
-                  active_model_presence_validator([:title])
-                ])
-
-                @new_post.class.should_receive(:validators_on).with(:body).any_number_of_times.and_return([
-                  active_model_presence_validator([:body], {:if => true})
-                ])
-
-                concat(semantic_form_for(@new_post) do |builder|
-                  concat(builder.input(:title))
-                  concat(builder.input(:body))
-                end)
-                output_buffer.should have_tag('form li.required')
-                output_buffer.should_not have_tag('form li.optional')
-              end
-
-              it 'should be not be required if the optional :if condition is not satisifed' do
-                should_be_required(:required => false, :options => { :if => false })
-              end
-
-              it 'should not be required if the optional :if proc evaluates to false' do
-                should_be_required(:required => false, :options => { :if => proc { |record| false } })
-              end
-
-              it 'should be required if the optional :if proc evaluates to true' do
-                should_be_required(:required => true, :options => { :if => proc { |record| true } })
-              end
-
-              it 'should not be required if the optional :unless proc evaluates to true' do
-                should_be_required(:required => false, :options => { :unless => proc { |record| true } })
-              end
-
-              it 'should be required if the optional :unless proc evaluates to false' do
-                should_be_required(:required => true, :options => { :unless => proc { |record| false } })
-              end
-
-              it 'should be required if the optional :if with a method string evaluates to true' do
-                @new_post.should_receive(:required_condition).at_least(2).and_return(true)
-                should_be_required(:required => true, :options => { :if => :required_condition })
-              end
-
-              it 'should be required if the optional :if with a method string evaluates to false' do
-                @new_post.should_receive(:required_condition).at_least(2).and_return(false)
-                should_be_required(:required => false, :options => { :if => :required_condition })
-              end
-
-              it 'should not be required if the optional :unless with a method string evaluates to false' do
-                 @new_post.should_receive(:required_condition).at_least(2).and_return(false)
-                should_be_required(:required => true, :options => { :unless => :required_condition })
-              end
-
-               it 'should be required if the optional :unless with a method string evaluates to true' do
-                 @new_post.should_receive(:required_condition).at_least(2).and_return(true)
-                 should_be_required(:required => false, :options => { :unless => :required_condition })
-               end
-            end
-
-            describe 'and validates_inclusion_of was called for the method' do
-              it 'should be required' do
-                @new_post.class.should_receive(:validators_on).with(:published).any_number_of_times.and_return([
-                  active_model_inclusion_validator([:published], {:in => [false, true]})
-                ])
-
-                concat(semantic_form_for(@new_post) do |builder|
-                  concat(builder.input(:published))
-                end)
-                output_buffer.should have_tag('form li.required')
-                output_buffer.should_not have_tag('form li.optional')
-              end
-              
-              it 'should not be required if allow_blank is true' do
-                @new_post.class.should_receive(:validators_on).with(:published).any_number_of_times.and_return([
-                  active_model_inclusion_validator([:published], {:in => [false, true], :allow_blank => true})
-                ])
-
-                concat(semantic_form_for(@new_post) do |builder|
-                  concat(builder.input(:published))
-                end)
-                output_buffer.should_not have_tag('form li.required')
-                output_buffer.should have_tag('form li.optional')
-              end
-            end
-
-            # TODO make a matcher for this?
-            def should_be_required(options)
-              @new_post.class.should_receive(:validators_on).with(:body).at_least(2).and_return([
-                active_model_presence_validator([:body], options[:options])
+        describe 'and an object with :validators_on was given (ActiveModel, Active Resource)' do
+          before do
+            @new_post.stub!(:class).and_return(::PostModel)
+          end
+        
+          after do
+            @new_post.stub!(:class).and_return(::Post)
+          end
+          describe 'and validates_presence_of was called for the method' do
+            it 'should be required' do
+        
+              @new_post.class.should_receive(:validators_on).with(:title).any_number_of_times.and_return([
+                active_model_presence_validator([:title])
               ])
-
+        
+              @new_post.class.should_receive(:validators_on).with(:body).any_number_of_times.and_return([
+                active_model_presence_validator([:body], {:if => true})
+              ])
+        
               concat(semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:title))
                 concat(builder.input(:body))
               end)
-
-              if options[:required]
-                output_buffer.should_not have_tag('form li.optional')
-                output_buffer.should have_tag('form li.required')
-              else
-                output_buffer.should have_tag('form li.optional')
-                output_buffer.should_not have_tag('form li.required')
-              end
+              output_buffer.should have_tag('form li.required')
+              output_buffer.should_not have_tag('form li.optional')
             end
-
-            describe 'and validates_presence_of was not called for the method' do
-              before do
-                @new_post.class.should_receive(:validators_on).with(:title).at_least(2).and_return([])
-              end
-
-              it 'should not be required' do
-                concat(semantic_form_for(@new_post) do |builder|
-                  concat(builder.input(:title))
-                end)
-                output_buffer.should_not have_tag('form li.required')
-                output_buffer.should have_tag('form li.optional')
-              end
+        
+            it 'should be not be required if the optional :if condition is not satisifed' do
+              should_be_required(:required => false, :options => { :if => false })
             end
-
+        
+            it 'should not be required if the optional :if proc evaluates to false' do
+              should_be_required(:required => false, :options => { :if => proc { |record| false } })
+            end
+        
+            it 'should be required if the optional :if proc evaluates to true' do
+              should_be_required(:required => true, :options => { :if => proc { |record| true } })
+            end
+        
+            it 'should not be required if the optional :unless proc evaluates to true' do
+              should_be_required(:required => false, :options => { :unless => proc { |record| true } })
+            end
+        
+            it 'should be required if the optional :unless proc evaluates to false' do
+              should_be_required(:required => true, :options => { :unless => proc { |record| false } })
+            end
+        
+            it 'should be required if the optional :if with a method string evaluates to true' do
+              @new_post.should_receive(:required_condition).at_least(2).and_return(true)
+              should_be_required(:required => true, :options => { :if => :required_condition })
+            end
+        
+            it 'should be required if the optional :if with a method string evaluates to false' do
+              @new_post.should_receive(:required_condition).at_least(2).and_return(false)
+              should_be_required(:required => false, :options => { :if => :required_condition })
+            end
+        
+            it 'should not be required if the optional :unless with a method string evaluates to false' do
+               @new_post.should_receive(:required_condition).at_least(2).and_return(false)
+              should_be_required(:required => true, :options => { :unless => :required_condition })
+            end
+        
+             it 'should be required if the optional :unless with a method string evaluates to true' do
+               @new_post.should_receive(:required_condition).at_least(2).and_return(true)
+               should_be_required(:required => false, :options => { :unless => :required_condition })
+             end
           end
-
-          describe 'and an object without :validators_on' do
+        
+          describe 'and validates_inclusion_of was called for the method' do
+            it 'should be required' do
+              @new_post.class.should_receive(:validators_on).with(:published).any_number_of_times.and_return([
+                active_model_inclusion_validator([:published], {:in => [false, true]})
+              ])
+        
+              concat(semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:published))
+              end)
+              output_buffer.should have_tag('form li.required')
+              output_buffer.should_not have_tag('form li.optional')
+            end
+            
+            it 'should not be required if allow_blank is true' do
+              @new_post.class.should_receive(:validators_on).with(:published).any_number_of_times.and_return([
+                active_model_inclusion_validator([:published], {:in => [false, true], :allow_blank => true})
+              ])
+        
+              concat(semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:published))
+              end)
+              output_buffer.should_not have_tag('form li.required')
+              output_buffer.should have_tag('form li.optional')
+            end
+          end
+        
+          # TODO make a matcher for this?
+          def should_be_required(options)
+            @new_post.class.should_receive(:validators_on).with(:body).at_least(2).and_return([
+              active_model_presence_validator([:body], options[:options])
+            ])
+        
+            concat(semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:body))
+            end)
+        
+            if options[:required]
+              output_buffer.should_not have_tag('form li.optional')
+              output_buffer.should have_tag('form li.required')
+            else
+              output_buffer.should have_tag('form li.optional')
+              output_buffer.should_not have_tag('form li.required')
+            end
+          end
+        
+          describe 'and validates_presence_of was not called for the method' do
+            before do
+              @new_post.class.should_receive(:validators_on).with(:title).at_least(2).and_return([])
+            end
+        
+            it 'should not be required' do
+              concat(semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:title))
+              end)
+              output_buffer.should_not have_tag('form li.required')
+              output_buffer.should have_tag('form li.optional')
+            end
+          end
+        
+        end
+        
+        describe 'and an object without :validators_on' do
 
             it 'should use the default value' do
               Formtastic::FormBuilder.all_fields_required_by_default.should == true
