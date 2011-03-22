@@ -11,22 +11,18 @@ describe 'Formtastic::FormBuilder#label' do
   end
 
   it 'should humanize the given attribute' do
-    semantic_form_for(@new_post) do |builder|
-      builder.label(:login).should have_tag('label', :with => /Login/)
-    end
+    concat(semantic_form_for(@new_post) do |builder|
+      builder.input(:title)
+    end)
+    output_buffer.should have_tag('label', :with => /Login/)
   end
 
   describe 'when required is given' do
     it 'should append a required note' do
-      semantic_form_for(@new_post) do |builder|
-        builder.label(:login, nil, :required => true).should have_tag('label abbr')
-      end
-    end
-
-    it 'should allow require option to be given as second argument' do
-      semantic_form_for(@new_post) do |builder|
-        builder.label(:login, :required => true).should have_tag('label abbr')
-      end
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input(:title, :required => true)
+      end)
+      output_buffer.should have_tag('label abbr', '*')
     end
   end
 
@@ -56,29 +52,34 @@ describe 'Formtastic::FormBuilder#label' do
     end
 
     it 'should return nil if label is false' do
-      semantic_form_for(@new_post) do |builder|
-        builder.label(:login, :label => false).should be_blank
-      end
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input(:title, :label => false)
+      end)
+      output_buffer.should_not have_tag('label')
     end
 
     it 'should html escape the label string by default' do
-      semantic_form_for(@new_post) do |builder|
-        builder.label(:login, :required => false, :label => '<b>My label</b>').should == "<label for=\"post_login\">&lt;b&gt;My label&lt;/b&gt;</label>"
-      end
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input(:title, :label => '<b>My label</b>')
+      end)
+      output_buffer.should include('&lt;b&gt;')
+      output_buffer.should_not include('<b>')
     end
 
     it 'should not html escape the label if configured that way' do
       Formtastic::FormBuilder.escape_html_entities_in_hints_and_labels = false
-      semantic_form_for(@new_post) do |builder|
-        builder.label(:login, :required => false, :label => '<b>My label</b>').should == "<label for=\"post_login\"><b>My label</b></label>"
-      end
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input(:title, :label => '<b>My label</b>')
+      end)
+      output_buffer.should have_tag("label b", "My label")
     end
 
     it 'should not html escape the label string for html_safe strings' do
       Formtastic::FormBuilder.escape_html_entities_in_hints_and_labels = true
-      semantic_form_for(@new_post) do |builder|
-        builder.label(:login, :required => false, :label => '<b>My label</b>'.html_safe).should == "<label for=\"post_login\"><b>My label</b></label>"
-      end
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input(:title, :label => '<b>My label</b>'.html_safe)
+      end)
+      output_buffer.should have_tag('label b')
     end
 
   end

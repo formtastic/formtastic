@@ -81,7 +81,8 @@ module Formtastic
     end
     
     def escape_html_entities(string) #:nodoc:
-      if (respond_to?(:builder) && builder.escape_html_entities_in_hints_and_labels) || escape_html_entities_in_hints_and_labels
+      if (respond_to?(:builder) && builder.escape_html_entities_in_hints_and_labels) || 
+         (self.respond_to?(:escape_html_entities_in_hints_and_labels) && escape_html_entities_in_hints_and_labels)
         string = template.escape_once(string) unless string.respond_to?(:html_safe?) && string.html_safe? == true # Acceppt html_safe flag as indicator to skip escaping
       end
       string
