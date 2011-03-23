@@ -208,18 +208,19 @@ describe 'Formtastic::FormBuilder#input' do
               output_buffer.should_not have_tag('form li.required')
             end
           end
-        
-          describe 'and validates_presence_of was not called for the method' do
+          
+          # TODO JF reversed this during refactor, need to make sure
+          describe 'and there are no requirement validations on the method' do
             before do
-              @new_post.class.should_receive(:validators_on).with(:title).at_least(2).and_return([])
+              @new_post.class.should_receive(:validators_on).with(:title).and_return([])
             end
         
-            it 'should not be required' do
+            it 'should use the default value' do
               concat(semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title))
               end)
-              output_buffer.should_not have_tag('form li.required')
-              output_buffer.should have_tag('form li.optional')
+              output_buffer.should have_tag('form li.required')
+              output_buffer.should_not have_tag('form li.optional')
             end
           end
         
