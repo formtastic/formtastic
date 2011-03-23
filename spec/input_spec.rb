@@ -144,22 +144,22 @@ describe 'Formtastic::FormBuilder#input' do
             end
         
             it 'should be required if the optional :if with a method string evaluates to true' do
-              @new_post.should_receive(:required_condition).at_least(2).and_return(true)
+              @new_post.should_receive(:required_condition).and_return(true)
               should_be_required(:required => true, :options => { :if => :required_condition })
             end
         
             it 'should be required if the optional :if with a method string evaluates to false' do
-              @new_post.should_receive(:required_condition).at_least(2).and_return(false)
+              @new_post.should_receive(:required_condition).and_return(false)
               should_be_required(:required => false, :options => { :if => :required_condition })
             end
         
             it 'should not be required if the optional :unless with a method string evaluates to false' do
-               @new_post.should_receive(:required_condition).at_least(2).and_return(false)
+               @new_post.should_receive(:required_condition).and_return(false)
               should_be_required(:required => true, :options => { :unless => :required_condition })
             end
         
              it 'should be required if the optional :unless with a method string evaluates to true' do
-               @new_post.should_receive(:required_condition).at_least(2).and_return(true)
+               @new_post.should_receive(:required_condition).and_return(true)
                should_be_required(:required => false, :options => { :unless => :required_condition })
              end
           end
