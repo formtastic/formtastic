@@ -8,9 +8,10 @@ module Formtastic
         def label_text
           ((localized_label || humanized_method_name) << requirement_text).html_safe
         end
-
+        
+        # TODO: why does this need to be memoized in order to make the inputs_spec tests pass? 
         def requirement_text_or_proc
-          required? ? builder.required_string : builder.optional_string
+          @requirement_text_or_proc ||= required? ? builder.required_string : builder.optional_string
         end
         
         def requirement_text

@@ -2,9 +2,9 @@ module Formtastic
   module Inputs
     module NewBase
       module Validations
-
+        
         def validations
-          if object && object.class.respond_to?(:validators_on) 
+          @validations ||= if object && object.class.respond_to?(:validators_on) 
             object.class.validators_on(attributized_method_name).select do |validator|
               validator_relevant?(validator)
             end
@@ -15,7 +15,7 @@ module Formtastic
         
         def validator_relevant?(validator)
           return true unless validator.options.key?(:if) || validator.options.key?(:unless)
-          conditional = validator.options[:if] || validator.options[:unless]
+          conditional = validator.options.key?(:if) ? validator.options[:if] : validator.options[:unless]
           
           result = if conditional.respond_to?(:call)
             conditional.call(object)
@@ -25,7 +25,10 @@ module Formtastic
             conditional
           end
           
-          validator.options.key?(:unless) ? !result : !!result
+          result = validator.options.key?(:unless) ? !result : !!result
+          not_required_through_negated_validation! if !result && [:presence, :inclusion, :length].include?(validator.kind)
+
+          result
         end
         
         def validation_limit
@@ -44,13 +47,22 @@ module Formtastic
         end
         
         def required?
+          return false if not_required_through_negated_validation?
           if validations?
             !validations.find { |validator| [:presence, :inclusion, :length].include?(validator.kind) }.nil?
           else
             return false if options[:required] == false
             return true if options[:required] == true
-            return builder.all_fields_required_by_default
+            return !!builder.all_fields_required_by_default
           end
+        end
+        
+        def not_required_through_negated_validation?
+          @not_required_through_negated_validation
+        end
+        
+        def not_required_through_negated_validation!
+          @not_required_through_negated_validation = true
         end
         
         def optional?

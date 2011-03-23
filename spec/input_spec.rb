@@ -192,7 +192,7 @@ describe 'Formtastic::FormBuilder#input' do
         
           # TODO make a matcher for this?
           def should_be_required(options)
-            @new_post.class.should_receive(:validators_on).with(:body).at_least(2).and_return([
+            @new_post.class.stub!(:validators_on).with(:body).and_return([
               active_model_presence_validator([:body], options[:options])
             ])
         
