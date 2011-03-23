@@ -49,7 +49,10 @@ module Formtastic
         def required?
           return false if not_required_through_negated_validation?
           if validations?
-            !validations.find { |validator| [:presence, :inclusion, :length].include?(validator.kind) }.nil?
+            validations.select { |validator| 
+              [:presence, :inclusion, :length].include?(validator.kind) &&
+              validator.options[:allow_blank] != true
+            }.any?
           else
             return false if options[:required] == false
             return true if options[:required] == true
