@@ -428,6 +428,7 @@ describe 'Formtastic::FormBuilder#input' do
       end
 
       describe 'when not provided' do
+        # TODO this test isn't really routing through i18n, is it valid?
         describe 'when localized label is provided' do
           describe 'and object is given' do
             describe 'and label_str_method not default' do
@@ -440,7 +441,7 @@ describe 'Formtastic::FormBuilder#input' do
                   concat(semantic_form_for(@new_post) do |builder|
                     concat(builder.input(:meta_description))
                   end)
-                  output_buffer.should have_tag('form li label', Regexp.new('^' + @localized_label_text))
+                  output_buffer.should have_tag('form li label', /Localized title/)
                 end
               end
             end
