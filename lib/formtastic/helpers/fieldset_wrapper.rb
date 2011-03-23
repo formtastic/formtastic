@@ -40,7 +40,7 @@ module Formtastic
         # Ruby 1.9: String#to_s behavior changed, need to make an explicit join.
         contents = contents.join if contents.respond_to?(:join)
         fieldset = template.content_tag(:fieldset,
-          Formtastic::Util.html_safe(legend) << template.content_tag(:ol, Formtastic::Util.html_safe(contents)),
+          Formtastic::Util.html_safe(legend) << template.content_tag(default_list_wrapper, Formtastic::Util.html_safe(contents)),
           html_options.except(:builder, :parent)
         )
 

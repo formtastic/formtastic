@@ -282,7 +282,10 @@ describe 'Formtastic::FormBuilder#inputs' do
     end
 
     describe 'when other options are provided' do
-      before do
+      after do
+        Formtastic::FormBuilder.default_list_wrapper = :ol
+      end
+      it 'should pass the options into the fieldset tag as attributes' do
         @id_option = 'advanced'
         @class_option = 'wide'
 
@@ -290,11 +293,19 @@ describe 'Formtastic::FormBuilder#inputs' do
           builder.inputs :id => @id_option, :class => @class_option do
           end
         end)
-      end
-
-      it 'should pass the options into the fieldset tag as attributes' do
+        
         output_buffer.should have_tag("form fieldset##{@id_option}")
         output_buffer.should have_tag("form fieldset.#{@class_option}")
+      end
+      
+      it 'should use the list element set by default_list_wrapper' do
+        Formtastic::FormBuilder.default_list_wrapper = :ul
+        concat(semantic_form_for(@new_post) do |builder|
+          builder.inputs do
+          end
+        end)
+
+        output_buffer.should have_tag("form fieldset > ul")
       end
     end
 

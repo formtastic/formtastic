@@ -78,3 +78,7 @@
 # You can add custom inputs or override parts of Formtastic by subclassing Formtastic::FormBuilder and
 # specifying that class here.  Defaults to Formtastic::FormBuilder.
 # Formtastic::Helpers::FormHelper.builder = MyCustomBuilder
+
+# Set the element form lists should use (ol/ul)
+# Default value: :ol
+# Formtastic::FormBuilder.default_list_wrapper = :ol
