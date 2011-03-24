@@ -13,7 +13,11 @@ describe 'Formtastic::FormBuilder#input' do
     @errors.stub!(:[]).and_return([])
     @new_post.stub!(:errors).and_return(@errors)
   end
-
+  
+  after do
+    ::I18n.backend.reload!
+  end
+  
   describe 'arguments and options' do
   
     it 'should require the first argument (the method on form\'s object)' do
@@ -428,15 +432,19 @@ describe 'Formtastic::FormBuilder#input' do
       end
 
       describe 'when not provided' do
-        # TODO this test isn't really routing through i18n, is it valid?
         describe 'when localized label is provided' do
           describe 'and object is given' do
-            describe 'and label_str_method not default' do
-              it 'should render a label with localized label (I18n)' do
-                with_config :label_str_method, :capitalize do
+            describe 'and label_str_method not :humanize' do
+              it 'should render a label with localized text and not apply the label_str_method' do
+                with_config :label_str_method, :reverse do
                   @localized_label_text = 'Localized title'
                   @new_post.stub!(:meta_description)
-                  @new_post.class.should_receive(:human_attribute_name).with('meta_description').and_return(@localized_label_text)
+                  ::I18n.backend.store_translations :en,
+                    :formtastic => {
+                      :labels => {
+                        :meta_description => @localized_label_text
+                      }
+                    }
 
                   concat(semantic_form_for(@new_post) do |builder|
                     concat(builder.input(:meta_description))
@@ -451,12 +459,13 @@ describe 'Formtastic::FormBuilder#input' do
         describe 'when localized label is NOT provided' do
           describe 'and object is not given' do
             it 'should default the humanized method name, passing it down to the label tag' do
-              Formtastic::FormBuilder.label_str_method = :humanize
-
-              concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
-                concat(builder.input(:meta_description))
-              end)
-              output_buffer.should have_tag("form li label", /#{'meta_description'.humanize}/)
+              ::I18n.backend.store_translations :en, :formtastic => {}
+              with_config :label_str_method, :humanize do
+                concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
+                  concat(builder.input(:meta_description))
+                end)
+                output_buffer.should have_tag("form li label", /#{'meta_description'.humanize}/)
+              end
             end
           end
 

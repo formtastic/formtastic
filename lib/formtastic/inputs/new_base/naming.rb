@@ -20,8 +20,13 @@ module Formtastic
         end
         
         def humanized_method_name
-          if object && object.class.respond_to?(:human_attribute_name)
-            object.class.human_attribute_name(method.to_s)
+          if builder.label_str_method != :humanize
+            # Special case where label_str_method should trump the human_attribute_name
+            # TODO: is this actually a desired bheavior, or should we ditch label_str_method and
+            # rely purely on :human_attribute_name.
+            method.to_s.send(builder.label_str_method)
+          elsif object && object.class.respond_to?(:human_attribute_name)
+            object.class.human_attribute_name(method.to_s).send(builder.label_str_method)
           else
             method.to_s.send(builder.label_str_method)
           end
