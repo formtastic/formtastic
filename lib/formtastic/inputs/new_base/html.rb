@@ -45,7 +45,7 @@ module Formtastic
         def wrapper_html_options
           opts = options[:wrapper_html] || {}
           opts[:class] ||= []
-          opts[:class] = opts[:class].to_a if opts[:class].is_a?(String)
+          opts[:class] = [opts[:class].to_s] unless opts[:class].is_a?(Array)
           opts[:class] << as
           opts[:class] << "error" if errors?
           opts[:class] << "optional" if optional?
