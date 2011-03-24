@@ -52,7 +52,7 @@ module Formtastic
           opts[:class] << "required" if required?
           opts[:class] = opts[:class].join(' ')
           
-          opts[:id] = wrapper_dom_id
+          opts[:id] ||= wrapper_dom_id
         
           opts
         end
