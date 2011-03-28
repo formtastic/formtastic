@@ -1,12 +1,7 @@
-require 'helpers/fieldset_wrapper'
-require 'helpers/file_column_detection'
-require 'reflection'
-require 'localized_string'
-
 module Formtastic
   module Helpers
-    
-    # InputsHelper encapsulates the responsibilties of the {#inputs} and {#input} helpers at the core of the 
+
+    # InputsHelper encapsulates the responsibilties of the {#inputs} and {#input} helpers at the core of the
     # Formtastic DSL.
     #
     # {#inputs} is used to wrap a series of form items in a `<fieldset>` and `<ol>`, with each item
@@ -40,7 +35,7 @@ module Formtastic
     #
     # It's important to note that the `semantic_form_for` and {#inputs} blocks wrap the
     # standard Rails `form_for` helper and form builder, so you have full access to every standard
-    # Rails form helper, with any HTML markup and ERB syntax, allowing you to "break free" from 
+    # Rails form helper, with any HTML markup and ERB syntax, allowing you to "break free" from
     # Formtastic when it doesn't suit:
     #
     #     <%= semantic_form_for @post do |f| %>
@@ -59,10 +54,10 @@ module Formtastic
       include Formtastic::Helpers::FileColumnDetection
       include Formtastic::Reflection
       include Formtastic::LocalizedString
-      
+
       # Which columns to skip when automatically rendering a form without any fields specified.
       SKIPPED_COLUMNS = [:created_at, :updated_at, :created_on, :updated_on, :lock_version, :version]
-      
+
       # Returns a chunk of HTML markup for a given `method` on the form object, wrapped in
       # an `<li>` wrapper tag with appropriate `class` and `id` attribute hooks for CSS and JS.
       # In many cases, the contents of the wrapper will be as simple as a `<label>` and an `<input>`:
@@ -74,8 +69,8 @@ module Formtastic
       #       <input type="text" name="post[title]" value="" id="post_title">
       #     </li>
       #
-      # In other cases (like a series of checkboxes for a `has_many` relationship), the wrapper may 
-      # include more complex markup, like a nested `<fieldset>` with a `<legend>` and an `<ol>` of 
+      # In other cases (like a series of checkboxes for a `has_many` relationship), the wrapper may
+      # include more complex markup, like a nested `<fieldset>` with a `<legend>` and an `<ol>` of
       # checkbox/label pairs for each choice:
       #
       #     <%= f.input :categories, :as => :check_boxes, :collection => Category.active.ordered %>
@@ -97,15 +92,15 @@ module Formtastic
       #       </fieldset>
       #     </li>
       #
-      # Sensible defaults for all options are guessed by looking at the method name, database column 
+      # Sensible defaults for all options are guessed by looking at the method name, database column
       # information, association information, validation information, etc. For example, a `:string`
       # database column will map to a `:string` input, but if the method name contains 'email', will
       # map to an `:email` input instead. `belongs_to` associations will have a `:select` input, etc.
-      #             
+      #
       # Formtastic supports many different styles of inputs, and you can/should override the default
-      # with the `:as` option. Internally, the symbol is used to map to a protected method 
-      # responsible for the details. For example, `:as => :string` will map to `string_input`, 
-      # defined in a module of the same name. Detailed documentation for each input style and it's 
+      # with the `:as` option. Internally, the symbol is used to map to a protected method
+      # responsible for the details. For example, `:as => :string` will map to `string_input`,
+      # defined in a module of the same name. Detailed documentation for each input style and it's
       # supported options is available on the `*_input` method in each module (links provided below).
       #
       # Available input styles:
@@ -132,25 +127,25 @@ module Formtastic
       #
       # @todo document the "guessing" of input style
       #
-      # @param [Symbol] method 
+      # @param [Symbol] method
       #   The database column or method name on the form object that this input represents
       #
-      # @option options :as [Symbol] 
+      # @option options :as [Symbol]
       #   Override the style of input should be rendered
       #
-      # @option options :label [String, Symbol, false] 
+      # @option options :label [String, Symbol, false]
       #   Override the label text
       #
-      # @option options :hint [String, Symbol, false]  
+      # @option options :hint [String, Symbol, false]
       #   Override hint text
       #
-      # @option options :required [Boolean] 
+      # @option options :required [Boolean]
       #   Override to mark the input as required (or not)
       #
-      # @option options :input_html [Hash]  
+      # @option options :input_html [Hash]
       #   Override or add to the HTML attributes to be passed down to the `<input>` tag
       #
-      # @option options :wrapper_html [Hash] 
+      # @option options :wrapper_html [Hash]
       #   Override or add to the HTML attributes to be passed down to the wrapping `<li>` tag
       #
       # @option options :collection [Array<ActiveModel, String, Symbol>, Hash{String => String, Boolean}, OrderedHash{String => String, Boolean}]
@@ -253,10 +248,10 @@ module Formtastic
         end
       
       end
-      
+
       # {#inputs} creates an input fieldset and ol tag wrapping for use around a set of inputs.  It can be
       # called either with a block (in which you can do the usual Rails form stuff, HTML, ERB, etc),
-      # or with a list of fields (accepting all default arguments and options). These two examples 
+      # or with a list of fields (accepting all default arguments and options). These two examples
       # are functionally equivalent:
       #
       #     # With a block:
@@ -266,12 +261,12 @@ module Formtastic
       #         <%= f.input :body %>
       #       <% end %>
       #     <% end %>
-      #     
+      #
       #     # With a list of fields (short hand syntax):
       #     <% semantic_form_for @post do |form| %>
       #       <%= f.inputs :title, :body %>
       #     <% end %>
-      #     
+      #
       #     # Output:
       #     <form ...>
       #       <fieldset class="inputs">
@@ -288,8 +283,8 @@ module Formtastic
       # without a block or a field list. In the case an input is rendered for **most** columns in
       # the model's database table (like Rails' scaffolding) plus inputs for some model associations.
       #
-      # In this case, all inputs are rendered with default options and arguments. You'll want more 
-      # control than this in a production application, but it's a great way to get started, then 
+      # In this case, all inputs are rendered with default options and arguments. You'll want more
+      # control than this in a production application, but it's a great way to get started, then
       # come back later to customise the form with a field list or a block of inputs.  Example:
       #
       #     <% semantic_form_for @post do |form| %>
@@ -298,7 +293,7 @@ module Formtastic
       #
       # **Nested Attributes**
       #
-      # One of the most complicated parts of Rails forms comes when nesting the inputs for 
+      # One of the most complicated parts of Rails forms comes when nesting the inputs for
       # attrinbutes on associated models. Formtastic can take the pain away for many (but not all)
       # situations.
       #
@@ -318,7 +313,7 @@ module Formtastic
       #
       #     <% semantic_form_for @user do |form| %>
       #       <%= f.inputs :name, :email %>
-      #     
+      #
       #       <% f.semantic_fields_for :profile do |profile| %>
       #         <% profile.inputs do %>
       #           <%= profile.input :biography %>
@@ -333,7 +328,7 @@ module Formtastic
       #
       #     <% semantic_form_for @user do |f| %>
       #       <%= f.inputs :name, :email %>
-      #     
+      #
       #       <% f.inputs :for => :profile do %>
       #         <%= profile.input :biography %>
       #         <%= profile.input :twitter_name %>
@@ -358,10 +353,10 @@ module Formtastic
       # @option *args :for [Symbol, ActiveModel, Array]
       #   The contents of this option is passed down to Rails' fields_for() helper, so it accepts the same values.
       #
-      # @option *args :name [String] 
+      # @option *args :name [String]
       #   The optional name passed into the `<legend>` tag within the fieldset (alias of `:title`)
       #
-      # @option *args :title [String] 
+      # @option *args :title [String]
       #   The optional name passed into the `<legend>` tag within the fieldset (alias of `:name`)
       #
       #
@@ -469,7 +464,7 @@ module Formtastic
         html_options = args.extract_options!
         html_options[:class] ||= "inputs"
         html_options[:name] = title
-        
+
         if html_options[:for] # Nested form
           inputs_for_nested_attributes(*(args << html_options), &block)
         elsif block_given?
@@ -484,11 +479,11 @@ module Formtastic
           legend = args.shift if args.first.is_a?(::String)
           contents = args.collect { |method| input(method.to_sym) }
           args.unshift(legend) if legend.present?
-    
+
           field_set_and_list_wrapping(*((args << html_options) << contents))
         end
       end
-      
+
       # A thin wrapper around Rails' `fields_for` helper to set `:builder => Formtastic::FormBuilder`
       # for nesting forms. Can be used in the same way as `fields_for` (see the Rails documentation),
       # but you'll also have access to Formtastic's helpers ({#input}, etc) inside the block.
@@ -499,7 +494,7 @@ module Formtastic
       #       <% author.inputs :name %>
       #     <% end %>
       #   <% end %>
-      #     
+      #
       #   <form ...>
       #     <fieldset class="inputs">
       #       <ol>
@@ -513,13 +508,13 @@ module Formtastic
         args.push(opts)
         fields_for(record_or_name_or_array, *args, &block)
       end
-      
-      # Generates error messages for the given method, used for displaying errors right near the 
+
+      # Generates error messages for the given method, used for displaying errors right near the
       # field for data entry. Uses the `:inline_errors` config to determin the right presentation,
       # which may be an ordered list, a paragraph sentence containing all errors, or a paragraph
       # containing just the first error. If configred to `:none`, no error is shown.
       #
-      # See the `:inline_errors` config documentation for more details. 
+      # See the `:inline_errors` config documentation for more details.
       #
       # This method is mostly used internally, but can be used in your forms when creating your own
       # custom inputs, so it's been made public and aliased to `errors_on`.
@@ -541,9 +536,9 @@ module Formtastic
         end
       end
       alias :errors_on :inline_errors_for
-      
+
       protected
-      
+
       # Collects association columns (relation columns) for the current form object class.
       def association_columns(*by_associations) #:nodoc:
         if @object.present? && @object.class.respond_to?(:reflections)
@@ -558,12 +553,12 @@ module Formtastic
           []
         end
       end
-      
+
       # Collects content columns (non-relation columns) for the current form object class.
       def content_columns #:nodoc:
         model_name.constantize.content_columns.collect { |c| c.name.to_sym }.compact rescue []
       end
-      
+
       # Deals with :for option when it's supplied to inputs methods. Additional
       # options to be passed down to :for should be supplied using :for_options
       # key.
@@ -572,7 +567,7 @@ module Formtastic
       def inputs_for_nested_attributes(*args, &block) #:nodoc:
         options = args.extract_options!
         args << options.merge!(:parent => { :builder => self, :for => options[:for] })
-  
+
         fields_for_block = if block_given?
           raise ArgumentError, 'You gave :for option with a block to inputs method, ' <<
                                'but the block does not accept any argument.' if block.arity <= 0
@@ -586,11 +581,11 @@ module Formtastic
             template.concat(contents)
           end
         end
-  
+
         fields_for_args = [options.delete(:for), options.delete(:for_options) || {}].flatten
         semantic_fields_for(*fields_for_args, &fields_for_block)
       end
-      
+
       # For methods that have a database column, take a best guess as to what the input method
       # should be.  In most cases, it will just return the column type (eg :string), but for special
       # cases it will simplify (like the case of :integer, :float & :decimal to :numeric), or do
@@ -618,7 +613,7 @@ module Formtastic
           when :timestamp
             return :datetime
           end
-  
+
           # Try look for hints in options hash. Quite common senario: Enum keys stored as string in the database.
           return :select    if column.type == :string && options.key?(:collection)
           # Try 3: Assume the input name will be the same as the column type (e.g. string_input).
@@ -626,26 +621,26 @@ module Formtastic
         else
           if @object
             return :select  if reflection_for(method)
-  
+
             return :file    if is_file?(method, options)
           end
-  
+
           return :select    if options.key?(:collection)
           return :password  if method.to_s =~ /password/
           return :string
         end
       end
-      
+
       # Get a column object for a specified attribute method - if possible.
       def column_for(method) #:nodoc:
         @object.column_for_attribute(method) if @object.respond_to?(:column_for_attribute)
       end
-            
+
       def field_set_title_from_args(*args) #:nodoc:
         options = args.extract_options!
         options[:name] ||= options.delete(:title)
         title = options[:name]
-  
+
         if title.blank?
           valid_name_classes = [::String, ::Symbol]
           valid_name_classes.delete(::Symbol) if !block_given? && (args.first.is_a?(::Symbol) && content_columns.include?(args.first))
@@ -654,7 +649,7 @@ module Formtastic
         title = localized_string(title, title, :title) if title.is_a?(::Symbol)
         title
       end
-      
+
     end
   end
 end

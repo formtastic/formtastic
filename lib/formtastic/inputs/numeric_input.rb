@@ -1,17 +1,13 @@
-require 'inputs/new_base'
-require 'inputs/new_base/timeish'
-require 'inputs/new_base/stringish'
-
 module Formtastic
   module Inputs
-    
+
     # Outputs a simple `<label>` with a HTML5 `<input type="number">` wrapped in the standard
     # `<li>` wrapper. This is the default input choice for all database columns of the type `:float`
-    # and `:decimal`, as well as `:integer` columns that aren't used for `belongs_to` associations`, 
+    # and `:decimal`, as well as `:integer` columns that aren't used for `belongs_to` associations`,
     # but can be applied to any text-like input with `:as => :numeric`.
     #
     # @example Full form context and output
-    # 
+    #
     #   <%= semantic_form_for(@user) do |f| %>
     #     <%= f.inputs do %>
     #       <%= f.input :shoe_size, :as => :numeric %>

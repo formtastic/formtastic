@@ -1,5 +1,3 @@
-require 'inputs/new_base'
-
 module Formtastic
   module Inputs
     # Boolean inputs are used to render an input for a single checkbox, typically for attributes
@@ -12,7 +10,7 @@ module Formtastic
     #       <%= f.input :published, :as => :boolean %>
     #     <% end %>
     #   <% end %>
-    #   
+    #
     #   <form...>
     #     <fieldset>
     #       <ol>
@@ -28,7 +26,7 @@ module Formtastic
     #   </form>
     #
     # @example Set the values for the checked and unchecked states
-    #   <%= f.input :published, :checked_value => "yes", :unchecked_value => "no" %> 
+    #   <%= f.input :published, :checked_value => "yes", :unchecked_value => "no" %>
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
     class BooleanInput

@@ -1,12 +1,12 @@
 module Formtastic
   module Inputs
-    
+
     # Outputs a simple `<label>` with a HTML5 `<input type="search">` wrapped in the standard
-    # `<li>` wrapper. This is the default input choice for attributes with a name matching 
+    # `<li>` wrapper. This is the default input choice for attributes with a name matching
     # `/^search$/`, but can be applied to any text-like input with `:as => :search`.
     #
     # @example Full form context and output
-    # 
+    #
     #   <%= semantic_form_for(@search, :html => { :method => :get }) do |f| %>
     #     <%= f.inputs do %>
     #       <%= f.input :q, :as => :search, :label => false, :input_html => { :name => "q" } %>

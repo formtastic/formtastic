@@ -1,13 +1,10 @@
-require 'helpers/fieldset_wrapper'
-require 'localized_string'
-
 module Formtastic
   module Helpers
-    
-    # ButtonsHelper encapsulates the responsibilties of the {#buttons} and {#commit_button} helpers 
+
+    # ButtonsHelper encapsulates the responsibilties of the {#buttons} and {#commit_button} helpers
     # for submitting forms.
     #
-    # {#buttons} is used to wrap the form's button(s) and actions in a `<fieldset>` and `<ol>`, 
+    # {#buttons} is used to wrap the form's button(s) and actions in a `<fieldset>` and `<ol>`,
     # with each item in the list containing the markup representing a single button.
     #
     # {#buttons} is usually called with a block containing a single {#commit_button} call:
@@ -34,12 +31,12 @@ module Formtastic
     #
     # While this may seem slightly over-engineered, it is consistent with the way form inputs are
     # handled, and makes room for other types of buttons and actions in future versions (such as
-    # cancel buttons or links, reset buttons and even alternate actions like 'save and continue 
+    # cancel buttons or links, reset buttons and even alternate actions like 'save and continue
     # editing').
     #
     # It's important to note that the `semantic_form_for` and {#buttons} blocks wrap the
     # standard Rails `form_for` helper and form builder, so you have full access to every standard
-    # Rails form helper, with any HTML markup and ERB syntax, allowing you to "break free" from 
+    # Rails form helper, with any HTML markup and ERB syntax, allowing you to "break free" from
     # Formtastic when it doesn't suit to create your own buttons, links and actions:
     #
     #     <%= semantic_form_for @post do |f| %>
@@ -59,7 +56,7 @@ module Formtastic
     module ButtonsHelper
       include Formtastic::Helpers::FieldsetWrapper
       include Formtastic::LocalizedString
-      
+
       # Creates a fieldset and ol tag wrapping for use around a set of buttons. It can be
       # called either with a block (in which you can do the usual Rails form stuff, HTML, ERB, etc),
       # or with a list of named buttons. These two examples are functionally equivalent:
@@ -71,12 +68,12 @@ module Formtastic
       #         <%= f.commit_button %>
       #       <% end %>
       #     <% end %>
-      #     
+      #
       #     # With a list of fields:
       #     <% semantic_form_for @post do |f| %>
       #       <%= f.buttons :commit %>
       #     <% end %>
-      #     
+      #
       #     # Output:
       #     <form ...>
       #       <fieldset class="inputs">
@@ -88,7 +85,7 @@ module Formtastic
       #       </fieldset>
       #     </form>
       #
-      # Only one type of named button is supported at this time (:commit), and it's assumed to be 
+      # Only one type of named button is supported at this time (:commit), and it's assumed to be
       # the default choice, so this is also functionally equivalent, but may change in the future:
       #
       #     # With no args:
@@ -99,11 +96,11 @@ module Formtastic
       #
       # While this may seem slightly over-engineered, it is consistent with the way form inputs are
       # handled, and makes room for other types of buttons and actions in future versions (such as
-      # cancel buttons or links, reset buttons and even alternate actions like 'save and continue 
+      # cancel buttons or links, reset buttons and even alternate actions like 'save and continue
       # editing').
       #
       # All options except `:name` and `:title` are passed down to the fieldset as HTML
-      # attributes (`id`, `class`, `style`...). If provided, the `:name` or `:title` option is 
+      # attributes (`id`, `class`, `style`...). If provided, the `:name` or `:title` option is
       # passed into a `<legend>` inside the `<fieldset>` to name the set of buttons.
       #
       # @example Quickly add button(s) to the form, accepting all default values, options and behaviors
@@ -170,7 +167,7 @@ module Formtastic
       def buttons(*args, &block)
         html_options = args.extract_options!
         html_options[:class] ||= "buttons"
-    
+
         if block_given?
           field_set_and_list_wrapping(html_options, &block)
         else
@@ -179,18 +176,18 @@ module Formtastic
           field_set_and_list_wrapping(html_options, contents)
         end
       end
-    
+
       # Creates a submit input tag with the value "Save [model name]" (for existing records) or
-      # "Create [model name]" (for new records) by default. The output is an `<input>` tag with the 
+      # "Create [model name]" (for new records) by default. The output is an `<input>` tag with the
       # `type` of `submit` and a class of either `create` or `update` (if Formtastic can determin if)
       # the record is new or not) with `submit` as a fallback class. The submit button is wrapped in
       # an `<li>` tag with a class of `commit`, and is intended to be rendered inside a {#buttons}
       # block which wraps the button in a `fieldset` and `ol`.
       #
-      # The textual value of the label can be changed from this default through the `:label` 
+      # The textual value of the label can be changed from this default through the `:label`
       # argument or through i18n.
       #
-      # You can pass HTML attributes down to the `<input>` tag with the `:button_html` option, and 
+      # You can pass HTML attributes down to the `<input>` tag with the `:button_html` option, and
       # pass HTML attributes to the wrapping `<li>` tag with the `:wrapper_html` option.
       #
       # @example Basic usage
@@ -226,13 +223,13 @@ module Formtastic
       #   <%= f.commit_button :label => "Go", :button_html => { :class => 'special', :id => 'whatever' } %>
       #   <%= f.commit_button "Go", :button_html => { :class => 'special', :id => 'whatever' } %>
       #
-      # @option *args :label [String, Symbol]  
+      # @option *args :label [String, Symbol]
       #   Override the label text with a String or a symbold for an i18n translation key
       #
-      # @option *args :button_html [Hash]  
+      # @option *args :button_html [Hash]
       #   Override or add to the HTML attributes to be passed down to the `<input>` tag
       #
-      # @option *args :wrapper_html [Hash] 
+      # @option *args :wrapper_html [Hash]
       #   Override or add to the HTML attributes to be passed down to the wrapping `<li>` tag
       #
       # @todo document i18n keys
@@ -240,10 +237,10 @@ module Formtastic
       def commit_button(*args)
         options = args.extract_options!
         text = options.delete(:label) || args.shift
-    
+
         if @object && (@object.respond_to?(:persisted?) || @object.respond_to?(:new_record?))
           key = @object.persisted? ? :update : :create
-    
+
           # Deal with some complications with ActiveRecord::Base.human_name and two name models (eg UserPost)
           # ActiveRecord::Base.human_name falls back to ActiveRecord::Base.name.humanize ("Userpost")
           # if there's no i18n, which is pretty crappy.  In this circumstance we want to detect this
@@ -260,17 +257,17 @@ module Formtastic
           key = :submit
           object_name = @object_name.to_s.send(label_str_method)
         end
-    
+
         text = (localized_string(key, text, :action, :model => object_name) ||
                 Formtastic::I18n.t(key, :model => object_name)) unless text.is_a?(::String)
-    
+
         button_html = options.delete(:button_html) || {}
         button_html.merge!(:class => [button_html[:class], key].compact.join(' '))
-    
+
         wrapper_html_class = ['commit'] # TODO: Add class reflecting on form action.
         wrapper_html = options.delete(:wrapper_html) || {}
         wrapper_html[:class] = (wrapper_html_class << wrapper_html[:class]).flatten.compact.join(' ')
-    
+
         accesskey = (options.delete(:accesskey) || default_commit_button_accesskey) unless button_html.has_key?(:accesskey)
         button_html = button_html.merge(:accesskey => accesskey) if accesskey
         template.content_tag(:li, Formtastic::Util.html_safe(submit(text, button_html)), wrapper_html)

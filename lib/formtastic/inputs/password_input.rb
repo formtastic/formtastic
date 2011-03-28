@@ -1,15 +1,12 @@
-require 'inputs/new_base'
-require 'inputs/new_base/timeish'
-
 module Formtastic
   module Inputs
-    
+
     # Outputs a simple `<label>` with a `<input type="password">` wrapped in the standard
-    # `<li>` wrapper. This is the default input choice for all attributes matching `/password/`, but 
+    # `<li>` wrapper. This is the default input choice for all attributes matching `/password/`, but
     # can be applied to any text-like input with `:as => :password`.
     #
     # @example Full form context and output
-    # 
+    #
     #   <%= semantic_form_for(@user) do |f| %>
     #     <%= f.inputs do %>
     #       <%= f.input :password, :as => :password %>

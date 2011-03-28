@@ -1,24 +1,21 @@
-require 'inputs/new_base'
-require 'inputs/new_base/collections'
-
 module Formtastic
   module Inputs
-    
-    # A radio input is used to render a series of radio inputs. This is an alternative input choice 
-    # for `belongs_to` associations like a `Post` belonging to a `Section` or an `Author`, or any 
+
+    # A radio input is used to render a series of radio inputs. This is an alternative input choice
+    # for `belongs_to` associations like a `Post` belonging to a `Section` or an `Author`, or any
     # case where the user needs to make a single selection from a pre-defined collectioon of choices.
     #
     # Within the standard `<li>` wrapper, the output is a `<fieldset>` with a `<legend>` to
-    # represent the "label" for the input, and an `<ol>` containing `<li>`s for each choice in 
-    # the association. Each `<li>` choice has a `<label>` containing an `<input type="radio">` and 
+    # represent the "label" for the input, and an `<ol>` containing `<li>`s for each choice in
+    # the association. Each `<li>` choice has a `<label>` containing an `<input type="radio">` and
     # the label text to describe each choice.
     #
-    # Radio inputs can be considered as an alternative where a (non-multi) select input is used, 
-    # especially in cases where there are only a few choices, however they are not used by default 
+    # Radio inputs can be considered as an alternative where a (non-multi) select input is used,
+    # especially in cases where there are only a few choices, however they are not used by default
     # for any type of association or model attribute. You can choose to use a radio input instead of
     # a select with `:as => :radio`.
     #
-    # Like a select input, the flexibility of the `:collection` option (see examples) makes the 
+    # Like a select input, the flexibility of the `:collection` option (see examples) makes the
     # :radio input viable as an alternative for many other input types. For example, instead of...
     #
     # * a `:string` input (where you want to force the user to choose from a few specific strings rather than entering anything)
@@ -28,16 +25,16 @@ module Formtastic
     # * a `:time_zone` input (where you want to provide your own small set of choices instead of relying on Rails)
     # * a `:country` input (where you want to provide a small set of choices, no need for a plugin really)
     #
-    # For radio inputs that map to associations on the object model, Formtastic will automatically 
-    # load in a collection of objects on the association as options to choose from. This might be an 
+    # For radio inputs that map to associations on the object model, Formtastic will automatically
+    # load in a collection of objects on the association as options to choose from. This might be an
     # `Author.all` on a `Post` form with an input for a `belongs_to :user` association, or a
-    # `Section.all` for a `Post` form with an input for a `belongs_to :section` association. 
+    # `Section.all` for a `Post` form with an input for a `belongs_to :section` association.
     # You can override or customise this collection through the `:collection` option (see examples).
     #
-    # The way on which Formtastic renders the `value` attribute and label for each choice is 
+    # The way on which Formtastic renders the `value` attribute and label for each choice is
     # customisable through the `:label_method` and `:value_method` options (see examples below).
-    # When not provided, we fall back to a list of methods to try on each object such as 
-    # `:to_label`, `:name` and `:to_s`, which are defined in the configurations 
+    # When not provided, we fall back to a list of methods to try on each object such as
+    # `:to_label`, `:name` and `:to_s`, which are defined in the configurations
     # `collection_label_methods` and `collection_value_methods`.
     #
     # @example Basic `belongs_to` example with full form context
@@ -47,7 +44,7 @@ module Formtastic
     #         <%= f.input :author, :as => :radio %>
     #       <% end %>
     #     <% end %>
-    #     
+    #
     #     <form...>
     #       <fieldset>
     #         <ol>
@@ -87,19 +84,19 @@ module Formtastic
     #   <%= f.input :author, :as => :radio, :collection => [["Justin", "1"], ["Kate", "3"]] %>
     #   <%= f.input :author, :as => :radio, :collection => [["Justin", 1], ["Kate", 3]] %>
     #   <%= f.input :author, :as => :radio, :collection => 1..5 %>
-    # 
+    #
     # @example The `:label_method` can be used to call a different method (or a Proc) on each object in the collection for rendering the label text (it'll try the methods like `to_s` in `collection_label_methods` config by default)
     #   <%= f.input :author, :as => :radio, :label_method => :name %>
     #   <%= f.input :author, :as => :radio, :label_method => :name_with_post_count
     #   <%= f.input :author, :as => :radio, :label_method => Proc.new { |a| "#{c.name} (#{pluralize("post", a.posts.count)})" }
-    # 
+    #
     # @example The `:value_method` can be used to call a different method (or a Proc) on each object in the collection for rendering the value for each checkbox (it'll try the methods like `id` in `collection_value_methods` config by default)
     #   <%= f.input :author, :as => :radio, :value_method => :login %>
     #   <%= f.input :author, :as => :radio, :value_method => Proc.new { |c| c.full_name.downcase.underscore }
-    # 
+    #
     # @example Set HTML attributes on each `<input type="radio">` tag with `:input_html`
     #   <%= f.input :author, :as => :radio, :input_html => { :size => 20, :multiple => true, :class => "special" } %>
-    # 
+    #
     # @example Set HTML attributes on the `<li>` wrapper with `:wrapper_html`
     #   <%= f.input :author, :as => :radio, :wrapper_html => { :class => "special" } %>
     #

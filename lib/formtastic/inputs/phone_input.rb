@@ -1,15 +1,12 @@
-require 'inputs/new_base'
-require 'inputs/new_base/timeish'
-
 module Formtastic
   module Inputs
-    
+
     # Outputs a simple `<label>` with a HTML5 `<input type="phone">` wrapped in the standard
-    # `<li>` wrapper. This is the default input choice for attributes with a name matching 
+    # `<li>` wrapper. This is the default input choice for attributes with a name matching
     # `/(phone|fax)/`, but can be applied to any text-like input with `:as => :phone`.
     #
     # @example Full form context and output
-    # 
+    #
     #   <%= semantic_form_for(@user) do |f| %>
     #     <%= f.inputs do %>
     #       <%= f.input :mobile, :as => :phone %>

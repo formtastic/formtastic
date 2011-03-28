@@ -1,14 +1,3 @@
-require 'inputs/new_base/associations'
-require 'inputs/new_base/fileish'
-require 'inputs/new_base/validations'
-require 'inputs/new_base/naming'
-require 'inputs/new_base/hints'
-require 'inputs/new_base/errors'
-require 'inputs/new_base/database'
-require 'inputs/new_base/options'
-require 'inputs/new_base/html'
-require 'inputs/new_base/labelling'
-
 module Formtastic
   module Inputs
     module NewBase
@@ -24,6 +13,23 @@ module Formtastic
         @options = options.dup
       end
       
+      extend ActiveSupport::Autoload
+      
+      autoload :Associations
+      autoload :Collections
+      autoload :Database
+      autoload :Errors
+      autoload :Fileish
+      autoload :GroupedCollections
+      autoload :Hints
+      autoload :Html
+      autoload :Labelling
+      autoload :Naming
+      autoload :Options
+      autoload :Stringish
+      autoload :Timeish
+      autoload :Validations
+      
       include Html
       include Options
       include Database
@@ -34,6 +40,8 @@ module Formtastic
       include Fileish
       include Associations
       include Labelling
+      
+      
       
     end
   end

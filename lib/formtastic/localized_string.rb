@@ -1,9 +1,9 @@
 module Formtastic
   # @private
   module LocalizedString
-    
+
     protected
-    
+
     # Internal generic method for looking up localized values within Formtastic
     # using I18n, if no explicit value is set and I18n-lookups are enabled.
     #
@@ -27,17 +27,17 @@ module Formtastic
     #
     def localized_string(key, value, type, options = {}) #:nodoc:
       key = value if value.is_a?(::Symbol)
-    
+
       if value.is_a?(::String)
         escape_html_entities(value)
       else
         use_i18n = value.nil? ? i18n_lookups_by_default : (value != false)
-    
+
         if use_i18n
           model_name, nested_model_name  = normalize_model_name(self.model_name.underscore)
           action_name = template.params[:action].to_s rescue ''
           attribute_name = key.to_s
-    
+
           defaults = Formtastic::I18n::SCOPES.reject do |i18n_scope|
             nested_model_name.nil? && i18n_scope.match(/nested_model/)
           end.collect do |i18n_scope|
@@ -50,9 +50,9 @@ module Formtastic
             i18n_path.to_sym
           end
           defaults << ''
-    
+
           defaults.uniq!
-    
+
           default_key = defaults.shift
           i18n_value = Formtastic::I18n.t(default_key,
             options.merge(:default => defaults, :scope => type.to_s.pluralize.to_sym))
@@ -67,11 +67,11 @@ module Formtastic
         end
       end
     end
-    
+
     def model_name
       @object.present? ? @object.class.name : @object_name.to_s.classify
     end
-    
+
     def normalize_model_name(name)
       if name =~ /(.+)\[(.+)\]/
         [$1, $2]

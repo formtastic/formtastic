@@ -1,20 +1,17 @@
-require 'reflection'
-require 'localized_string'
-
 module Formtastic
   module Inputs
     # @private
     module Base
       include Formtastic::Reflection
       include Formtastic::LocalizedString
-    
+
       def set_include_blank(options)
         unless options.key?(:include_blank) || options.key?(:prompt)
           options[:include_blank] = include_blank_for_select_by_default
         end
         options
       end
-      
+
       def escape_html_entities(string) #:nodoc:
         if escape_html_entities_in_hints_and_labels
           # Acceppt html_safe flag as indicator to skip escaping
@@ -22,18 +19,18 @@ module Formtastic
         end
         string
       end
-      
+
       # Prepare options to be sent to label
       def options_for_label(options) #:nodoc:
         options.slice(:label, :required).merge!(options.fetch(:label_html, {}))
       end
-      
+
       # Remove any Formtastic-specific options before passing the down options.
       def strip_formtastic_options(options) #:nodoc:
         options.except(:value_method, :label_method, :collection, :required, :label,
                        :as, :hint, :input_html, :label_html, :value_as_class, :find_options, :class)
       end
-      
+
       # Generates the legend for radiobuttons and checkboxes
       def legend_tag(method, options = {})
         if options[:label] == false
@@ -45,7 +42,7 @@ module Formtastic
           template.content_tag :legend, template.label_tag(nil, text, :for => nil), :class => :label
         end
       end
-      
+
       # Used by select and radio inputs. The collection can be retrieved by
       # three ways:
       #
@@ -59,19 +56,19 @@ module Formtastic
       #
       def find_collection_for_column(column, options) #:nodoc:
         collection = find_raw_collection_for_column(column, options)
-    
+
         # Return if we have a plain string
         return collection if collection.instance_of?(String) || collection.instance_of?(ActiveSupport::SafeBuffer)
-    
+
         # Return if we have an Array of strings, fixnums or arrays
         return collection if (collection.instance_of?(Array) || collection.instance_of?(Range)) &&
                              [Array, Fixnum, String, Symbol].include?(collection.first.class) &&
                              !(options.include?(:label_method) || options.include?(:value_method))
-    
+
         label, value = detect_label_and_value_method!(collection, options)
         collection.map { |o| [send_or_call(label, o), send_or_call(value, o)] }
       end
-      
+
       # Detects the label and value methods from a collection using methods set in
       # collection_label_methods and collection_value_methods. For some ruby core
       # classes sensible defaults have been defined. It will use and delete the options
@@ -79,7 +76,7 @@ module Formtastic
       #
       def detect_label_and_value_method!(collection, options = {})
         sample = collection.first || collection.last
-    
+
         case sample
         when Array
           label, value = :first, :last
@@ -88,14 +85,14 @@ module Formtastic
         when String, NilClass
           label, value = :to_s, :to_s
         end
-    
+
         # Order of preference: user supplied method, class defaults, auto-detect
         label = options[:label_method] || label || collection_label_methods.find { |m| sample.respond_to?(m) }
         value = options[:value_method] || value || collection_value_methods.find { |m| sample.respond_to?(m) }
-    
+
         [label, value]
       end
-      
+
       # Used by association inputs (select, radio) to generate the name that should
       # be used for the input
       #
@@ -117,7 +114,7 @@ module Formtastic
           method
         end.to_sym
       end
-    
+
     end
   end
 end

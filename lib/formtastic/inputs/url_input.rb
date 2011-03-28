@@ -1,15 +1,12 @@
-require 'inputs/new_base'
-require 'inputs/new_base/timeish'
-
 module Formtastic
   module Inputs
-    
+
     # Outputs a simple `<label>` with a HTML5 `<input type="url">` wrapped in the standard
-    # `<li>` wrapper. This is the default input choice for all attributes matching 
+    # `<li>` wrapper. This is the default input choice for all attributes matching
     # `/^url$|^website$|_url$/`, but can be applied to any text-like input with `:as => :url`.
     #
     # @example Full form context and output
-    # 
+    #
     #   <%= semantic_form_for(@user) do |f| %>
     #     <%= f.inputs do %>
     #       <%= f.input :home_page, :as => :url %>

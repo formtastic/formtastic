@@ -20,6 +20,6 @@ module Formtastic
         text
       end
     end
-    
+
   end
 end

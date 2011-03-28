@@ -1,40 +1,11 @@
-$LOAD_PATH.unshift(File.expand_path(File.join(File.dirname(__FILE__))))
-
-require 'html_attributes'
-
-require 'helpers/inputs_helper'
-require 'helpers/buttons_helper'
-require 'helpers/errors_helper'
-
-# TODO are these required any more?
-require 'inputs/boolean_input'
-require 'inputs/check_boxes_input'
-require 'inputs/country_input'
-require 'inputs/datetime_input'
-require 'inputs/date_input'
-require 'inputs/email_input'
-require 'inputs/file_input'
-require 'inputs/hidden_input'
-require 'inputs/numeric_input'
-require 'inputs/password_input'
-require 'inputs/phone_input'
-require 'inputs/radio_input'
-require 'inputs/search_input'
-require 'inputs/select_input'
-require 'inputs/string_input'
-require 'inputs/text_input'
-require 'inputs/time_input'
-require 'inputs/time_zone_input'
-require 'inputs/url_input'
-
 module Formtastic
   class FormBuilder < ActionView::Helpers::FormBuilder
-  
+
     def self.configure(name, value = nil)
       class_attribute(name)
-      self.send(:"#{name}=", value)  
+      self.send(:"#{name}=", value)
     end
-  
+
     configure :custom_namespace
     configure :default_text_field_size
     configure :default_text_area_height, 20
@@ -57,15 +28,14 @@ module Formtastic
     configure :default_inline_error_class, 'inline-errors'
     configure :default_error_list_class, 'errors'
     configure :default_hint_class, 'inline-hints'
-  
+
     attr_accessor :template
-    
+
     include Formtastic::HtmlAttributes
-    
+
     include Formtastic::Helpers::InputsHelper
     include Formtastic::Helpers::ButtonsHelper
     include Formtastic::Helpers::ErrorsHelper
-    
   end
-  
+
 end
