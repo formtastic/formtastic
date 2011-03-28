@@ -3,9 +3,10 @@ require 'rubygems'
 require 'rake'
 require 'rake/rdoctask'
 require 'rspec/core/rake_task'
+require 'tasks/verify_rcov'
 
 desc 'Default: run unit specs.'
-task :default => :spec
+task :default => :spec_and_verify_coverage
 
 desc 'Generate documentation for the formtastic plugin.'
 Rake::RDocTask.new(:rdoc) do |rdoc|
@@ -32,8 +33,17 @@ RSpec::Core::RakeTask.new('specdoc') do |t|
 end
 
 desc 'Run all examples with RCov'
-RSpec::Core::RakeTask.new('examples_with_rcov') do |t|
+RSpec::Core::RakeTask.new('rcov') do |t|
   t.pattern = FileList['spec/**/*_spec.rb']
   t.rcov = true
-  t.rcov_opts = ['--exclude', 'spec,Library']
+  t.rcov_opts = %w(--exclude gems/*,spec/*,.bundle/*, --aggregate coverage.data)
+end
+
+RCov::VerifyTask.new(:verify_coverage) do |t|
+  t.require_exact_threshold = false
+  t.threshold = 94.98
+end
+
+desc "Run all examples and verify coverage"
+task :spec_and_verify_coverage => [:rcov, :verify_coverage] do
 end
