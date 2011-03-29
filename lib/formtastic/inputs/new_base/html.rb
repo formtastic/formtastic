@@ -110,8 +110,6 @@ module Formtastic
         def dom_index
           if builder.options.has_key?(:index)
             builder.options[:index]
-          elsif options.has_key?(:index)
-            options[:index]
           elsif defined?(@auto_index)
             @auto_index
           else
