@@ -34,12 +34,12 @@ module Formtastic
       
       def to_html
         input_wrapping do
-          hidden_field << 
+          hidden_field_html << 
           label_with_nested_checkbox
         end
       end
       
-      def hidden_field
+      def hidden_field_html
         template.hidden_field_tag(input_html_options[:name], unchecked_value, :id => nil)
       end
       
@@ -47,18 +47,22 @@ module Formtastic
         builder.label(
           method,
           label_text_with_embedded_checkbox, 
-          input_html_options.merge(
-            :id => nil,
-            :for => input_html_options[:id]
-          )
+          label_html_options
+        )
+      end
+      
+      def label_html_options
+        input_html_options.merge(
+          :id => nil,
+          :for => input_html_options[:id]
         )
       end
       
       def label_text_with_embedded_checkbox
-        label_text << " " << check_box
+        label_text << " " << check_box_html
       end
       
-      def check_box
+      def check_box_html
         template.check_box_tag("#{object_name}[#{method}]", checked_value, checked?, input_html_options)
       end
       
