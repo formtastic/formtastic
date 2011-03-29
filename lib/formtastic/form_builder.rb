@@ -29,7 +29,7 @@ module Formtastic
     configure :default_error_list_class, 'errors'
     configure :default_hint_class, 'inline-hints'
 
-    attr_accessor :template
+    attr_reader :template
 
     include Formtastic::HtmlAttributes
 
