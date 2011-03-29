@@ -30,6 +30,8 @@ module Formtastic
     configure :default_hint_class, 'inline-hints'
 
     attr_reader :template
+    
+    attr_reader :auto_index
 
     include Formtastic::HtmlAttributes
 
