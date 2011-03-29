@@ -4,6 +4,15 @@ Formtastic is a Rails FormBuilder DSL (with some other goodies) to make it far e
 
 <a href='http://www.pledgie.com/campaigns/2178'><img alt='Click here to lend your support to: formtastic and make a donation at www.pledgie.com !' src='http://pledgie.com/campaigns/2178.png?skin_name=chrome' border='0' /></a>
 
+
+h2. Compatibility
+
+* Formtastic 1.x is compatible with both Rails 2 and 3, and is being maintained for bug fixes in the the "1.2-stable branch":https://github.com/justinfrench/formtastic/tree/1.2-stable.
+* Formtastic 2.0 will be Rails 3.x compatible only
+* If you're bundling Formtastic from edge/master, get ready for a bumpy ride. Try the "1.2-stable branch":https://github.com/justinfrench/formtastic/tree/1.2-stable.
+* Formtastic, much like Rails, is very ActiveRecord-centric. Many are successfully using other ActiveModel-like ORMs and objects (DataMapper, MongoMapper, Mongoid, Authlogic, Devise...) but we're not guaranteeing full compatibility at this stage. Patches are welcome!
+ 
+
 h2. The Story
 
 One day, I finally had enough, so I opened up my text editor, and wrote a DSL for how I'd like to author forms:
@@ -46,7 +55,7 @@ h2. It's better than _SomeOtherFormBuilder_ because...
 
 * it can handle @belongs_to@ associations (like Post belongs_to :author), rendering a select or set of radio inputs with choices from the parent model.
 * it can handle @has_many@ and @has_and_belongs_to_many@ associations (like: Post has_many :tags), rendering a multi-select with choices from the child models.
-* it's Rails 2.x and 3.x compatible (including nested forms).
+* it's Rails 3 compatible (including nested forms).
 * it has internationalization (I18n)!
 * it's _really_ quick to get started with a basic form in place (4 lines), then go back to add in more detail if you need it.
 * there's heaps of elements, id and class attributes for you to hook in your CSS and JS.
@@ -81,24 +90,18 @@ RDoc documentation _should_ be automatically generated after each commit and mad
 
 h2. Installation
 
-Formtastic is now compatible with both Rails 2 and Rails 3, and the gem is "hosted":http://rubygems.org/gems/formtastic on RubyGems.org.
-
-*You'll need to use Bundler (yes, even under Rails 2, due to the many ways gem dependencies suck). Follow "this tutorial":http://gembundler.com/rails23.html.*
+Formtastic edge (2.0) will be compatible with Rails 3 only, and the gem is "hosted":http://rubygems.org/gems/formtastic on RubyGems.org.
 
 Simply add Formtastic to your Gemfile and bundle it up:
 
 <pre>
-  gem 'formtastic', '~> 1.1.0'
+  gem 'formtastic', '~> 1.2.3'
 </pre>
 
 Optionally, run the generator to copy some stylesheets and a configuration initializer into your application:
 
 <pre>
-  # Rails 3:
   $ rails generate formtastic:install 
-  
-  # Or Rails 2:
-  $ ./script/generate formtastic 
 </pre>
 
 
@@ -109,35 +112,10 @@ A proof-of-concept stylesheet is provided which you can include in your layout. 
 <pre>
   <head>
     ...
-    <%= formtastic_stylesheet_link_tag %>
+    <%= stylesheet_link_tag 'formtastic', 'formtastic_changes' %>
     ...
   </head>
 </pre>
-
-
-h2. Syntax
-
-*Please note:* Formtastic makes use of a lot of ERB blocks and currently supports both Rails 2 and Rails 3, which means the syntax in these examples will differ depending on which version of Rails you're using.
-
-The difference is subtle, with most blocks in Rails 3 requiring the addition of an equals sign:
-
-<pre>
-  <!-- Rails 2 -->
-  <% semantic_form_for @user do |form| %>
-    <% form.inputs do %>
-      ...
-    <% end %>
-  <% end %>
-  
-  <!-- Rails 3 -->
-  <%= semantic_form_for @user do |form| %>
-    <%= form.inputs do %>
-      ...
-    <% end %>
-  <% end %>
-</pre>
-  
-This README is currently documenting the Rails 2 way only. If you're using Rails 3 and your forms aren't rendering everything as expected, try changing @<%@ to @<%=@.
 
 
 h2. Usage
@@ -256,8 +234,8 @@ Customize HTML attributes for any input using the @:input_html@ option. Typicall
 
 <pre>
   <% semantic_form_for @post do |form| %>
-    <%= form.input :title,      :input_html => { :size => 60 } %>
-    <%= form.input :body,       :input_html => { :class => 'autogrow' } %>
+    <%= form.input :title,      :input_html => {  :cols => 10 } %>
+    <%= form.input :body,       :input_html => { :class => 'autogrow', :rows => 10, :cols => 20, :maxlength => 10  } %>
     <%= form.input :created_at, :input_html => { :disabled => true } %>
     <%= form.buttons %>
   <% end %>
@@ -374,7 +352,7 @@ Formtastic supports localized *labels*, *hints*, *legends*, *actions* using the 
 *1. Enable I18n lookups by default (@config/initializers/formtastic.rb@):*
 
 <pre>
-  Formtastic::SemanticFormBuilder.i18n_lookups_by_default = true
+  Formtastic::FormBuilder.i18n_lookups_by_default = true
 </pre>
 
 *2. Add some cool label-translations/variants (@config/locale/en.yml@):*
@@ -448,7 +426,7 @@ _Note: Slightly different because Formtastic can't guess how you group fields in
 If I18n-lookups is disabled, i.e.:
 
 <pre>
-  Formtastic::SemanticFormBuilder.i18n_lookups_by_default = false
+  Formtastic::FormBuilder.i18n_lookups_by_default = false
 </pre>
 
 ...then you can enable I18n within the forms instead:
@@ -519,53 +497,27 @@ If you have the "ValidationReflection":http://github.com/redinger/validation_ref
 
 h2. Configuration
 
-Run @rails generate formtastic:install@ (Rails 3) or @./script/generate formtastic@ (Rails 2) to copy a commented out config file into @config/initializers/formtastic.rb@. You can "view the configuration file on GitHub":http://github.com/justinfrench/formtastic/blob/master/generators/formtastic/templates/formtastic.rb
+Run @rails generate formtastic:install@ to copy a commented out config file into @config/initializers/formtastic.rb@. You can "view the configuration file on GitHub":http://github.com/justinfrench/formtastic/blob/master/generators/formtastic/templates/formtastic.rb
 
 
 h2. Form Generator
 
-There's a Formtastic form code generator to make your transition to Formtastic easier. All you have to do is to *specify an existing model name*, and optionally specify view template framework (ERB/HAML), and you are good to go. *Note:* This won't overwrite any of your stuff.
+There's a Formtastic form code generator to make your transition to Formtastic easier. All you have to do is to *specify an existing model name*, and optionally specify view template framework (ERB/HAML), and you are good to go. *Note:* This won't overwrite any of your exsting files without confrmation.
 
 h3. Basic usage
 
-Rails 3:
-
 <pre>
   $ rails generate formtastic:form ModelName
-</pre>
-
-Rails 2:
-
-<pre>
-  $ ./script/generate form ModelName
-</pre>
-
-The results are something like this, with the ERB code printed out to the terminal 
-
-<pre>
-  $ rails generate formtastic:form Post
-  # ---------------------------------------------------------
-  #  GENERATED FORMTASTIC CODE
-  # ---------------------------------------------------------
-
-  <% f.inputs do %>
-    <%= f.input :title, :label => 'Title' %>
-    <%= f.input :body, :label => 'Body' %>
-    <%= f.input :published, :label => 'Published' %>
-  <% end %>
-
-  # ---------------------------------------------------------
-   Copied to clipboard - just paste it!
-</pre>
-
-h3. Generating a partial with @--partial@
-
-You can also ask Formtastic to *generate a partial* with the @--partial@ option, placing it in the correct location inside your @app/views@ directory:
-
-<pre>
-  $ rails generate formtastic:form Post --partial
       exists  app/views/posts
       create  app/views/posts/_form.html.erb
+</pre>
+
+The ERB code is saved to a partial file, but it will not overwrite existing files without a prompt.
+
+h3. Copying the ERB code to the clipboard instead with @--copy@
+
+<pre>
+  $ rails generate formtastic:form Post --copy
 </pre>
 
 h3. Specifying HAML instead of ERB with @--haml@
@@ -579,35 +531,44 @@ h3. Specifying HAML instead of ERB with @--haml@
 h3. Specifying controller namespace with @--controller@
 
 <pre>
-  $ rails generate formtastic:form Post --partial --controller admin/posts
+  $ rails generate formtastic:form Post --controller admin/posts
+      exists  app/views/admin/posts
+      create  app/views/admin/posts/_form.html.erb
+</pre>
+
+h3. Specifying which attributes need an input
+
+<pre>
+  $ rails generate formtastic:form Post title:string body:text publication_state:select
       exists  app/views/admin/posts
       create  app/views/admin/posts/_form.html.erb
 </pre>
 
 
+
 h2. Custom Inputs
 
-If you want to add your own input types to encapsulate your own logic or interface patterns, you can do so by subclassing SemanticFormBuilder and configuring Formtastic to use your custom builder class.
+If you want to add your own input types to encapsulate your own logic or interface patterns, you can do so by subclassing Formtastic::FormBuilder and configuring Formtastic to use your custom builder class.
 
-@Formtastic::SemanticFormHelper.builder = MyCustomBuilder@
+@Formtastic::Helpers::FormHelper.builder = MyCustomBuilder@
 
 Be aware that you should either set the options on custom builder or require it after setting options on formtastic default builder.
 
 <pre>
   # OK
-  Formtastic::SemanticFormBuilder.i18n_lookups_by_default = true
+  Formtastic::FormBuilder.i18n_lookups_by_default = true
   require 'formtastic/my_custom_builder'
-  Formtastic::SemanticFormHelper.builder = Formtastic::MyCustomBuilder
+  Formtastic::Helpers::FormHelper.builder = Formtastic::MyCustomBuilder
   
   # OK
   require 'formtastic/my_custom_builder'
-  Formtastic::SemanticFormHelper.builder = Formtastic::MyCustomBuilder
+  Formtastic::Helpers::FormHelper.builder = Formtastic::MyCustomBuilder
   Formtastic::MyCustomBuilder.i18n_lookups_by_default = true
   
   # WRONG!
   require 'formtastic/my_custom_builder'
-  Formtastic::SemanticFormBuilder.i18n_lookups_by_default = true
-  Formtastic::SemanticFormHelper.builder = Formtastic::MyCustomBuilder
+  Formtastic::FormBuilder.i18n_lookups_by_default = true
+  Formtastic::Helpers::FormHelper.builder = Formtastic::MyCustomBuilder
 </pre>
 
 
@@ -615,7 +576,7 @@ h2. Security
 
 By default formtastic escapes html entities in both labels and hints unless a string is marked as html_safe. If you are using an older rails version which doesn't know html_safe, or you want to globally turn this feature off, you can set the following in your initializer:
 
-Formtastic::SemanticFormBuilder.escape_html_entities_in_hints_and_labels = false
+Formtastic::FormBuilder.escape_html_entities_in_hints_and_labels = false
 
 
 h2. Dependencies
@@ -623,15 +584,9 @@ h2. Dependencies
 There are none, but...
 
 * if you have the "ValidationReflection":http://github.com/redinger/validation_reflection plugin is installed, you won't have to specify the @:required@ option (it checks the validations on the model instead).
-* if you want to use the @:country@ input, you'll need to install the "iso-3166-country-select plugin":http://github.com/rails/iso-3166-country-select (or any other country_select plugin with the same API).
+* if you want to use the @:country@ input, you'll need to install the "country-select plugin":https://github.com/chrislerum/country_select (or any other country_select plugin with the same API).
 * "rspec":http://github.com/dchelimsky/rspec/, "rspec_hpricot_matchers":http://rubyforge.org/projects/rspec-hpricot/ and "rcov":http://github.com/relevance/rcov gems (plus any of their own dependencies) are required for the test suite.
 
-
-h2. Compatibility
-
-* We're only testing Formtastic with the latest Rails 2.x and 3.x stable releases. Patches are welcome to allow backwards compatibility with older versions of Rails, of course.
-* Formtastic, much like Rails 2, is very ActiveRecord-centric. Many people are using Formtastic (especially the rails3 branch) successfully with other ActiveModel-like ORMs and classes (DataMapper, MongoMapper, Mongoid, Authlogic, Devise...) but we're not guaranteeing anything at this stage. Patches are welcome, but it's not our core focus right now.
- 
 
 h2. How to contribute
 
@@ -642,22 +597,6 @@ Please also keep your commits *atomic* so that they are more likely to apply cle
 For significant changes, you may wish to discuss your idea on the Formtastic Google group before coding to ensure that your change is likely to be accepted.  Formtastic relies heavily on i18n, so if you're unsure of the impact this has on your changes, please discuss them with the group.
 
 See below for installation of a development environment.
-
-
-h2. Development Environment
-
-We currently support both Rails 2 and Rails 3, under Ruby 1.8.7-ish (and 1.9.2-ish). That means, at a bare minimum, you'll want to set-up two rvm gemsets to run your specs against. So, fork the project on Github, clone it, make some gemsets, run bundler, run your specs and then finally set-up an .rvmrc file that specifies Rails 3 as your default gemset and cd back into that directory to load in the .rvmrc file. Something like this:
-
-<pre>
-  $ cd ~/code/formtastic
-  $ rvm gemset create formtastic      # If that's your thing
-  $ rvm gemset use formtastic         # Add that to your .rvmrc too
-  $ bundle install                    # Initial bundle command to build Gemfile.lock
-  $ RAILS_2=true bundle update rails  # Updates gemfile to run agains rails 2
-  $ RAILS_2=true rake                 # Run tests against rails 2
-  $ bundle update rails               # Updates gemfile to run agains rails 3
-  $ rake                              # Run tests against rails 3
-</pre>
 
 
 h2. Maintainers & Contributors

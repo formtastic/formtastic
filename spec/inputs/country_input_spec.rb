@@ -25,10 +25,10 @@ describe 'country input' do
   describe "when country_select is available as a helper (from a plugin)" do
 
     before do
-      @form = semantic_form_for(@new_post) do |builder|
+      concat(semantic_form_for(@new_post) do |builder|
         builder.stub!(:country_select).and_return(Formtastic::Util.html_safe("<select><option>...</option></select>"))
         concat(builder.input(:country, :as => :country))
-      end
+      end)
     end
 
     it_should_have_input_wrapper_with_class("country")
@@ -38,14 +38,12 @@ describe 'country input' do
     #it_should_apply_error_logic_for_input_type(:country)
 
     it 'should generate a label for the input' do
-      output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should have_tag('form li label')
       output_buffer.should have_tag('form li label[@for="post_country"]')
       output_buffer.should have_tag('form li label', /Country/)
     end
 
     it "should generate a select" do
-      output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should have_tag("form li select")
     end
 
@@ -64,7 +62,7 @@ describe 'country input' do
     end
 
     it "should default to the @@priority_countries config when absent" do
-      priority_countries = ::Formtastic::SemanticFormBuilder.priority_countries
+      priority_countries = Formtastic::FormBuilder.priority_countries
       priority_countries.should_not be_empty
       priority_countries.should_not be_nil
 
@@ -84,11 +82,11 @@ describe 'country input' do
       @output_buffer = ''
       mock_everything
 
-      @form = semantic_form_for(@new_post, :namespace => 'context2') do |builder|
+      concat(semantic_form_for(@new_post, :namespace => 'context2') do |builder|
         builder.stub!(:country_select).and_return(Formtastic::Util.html_safe("<select><option>...</option></select>"))
         builder.should_receive(:country_select).with(:country, [], {}, {:id => "context2_post_country"}).and_return(Formtastic::Util.html_safe("<select><option>...</option></select>"))
         concat(builder.input(:country, :priority_countries => []))
-      end
+      end)
     end
 
     it_should_have_input_wrapper_with_id("context2_post_country_input")
@@ -101,14 +99,13 @@ describe 'country input' do
     describe "when the attribute is 'country'" do
 
       before do
-        @form = semantic_form_for(@new_post) do |builder|
+        concat(semantic_form_for(@new_post) do |builder|
           builder.stub!(:country_select).and_return(Formtastic::Util.html_safe("<select><option>...</option></select>"))
           concat(builder.input(:country))
-        end
+        end)
       end
 
       it "should render a country input" do
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should have_tag "form li.country"
       end
     end
@@ -116,14 +113,13 @@ describe 'country input' do
     describe "whent the attribute is 'country_something'" do
 
       before do
-        @form = semantic_form_for(@new_post) do |builder|
+        concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:country_subdivision))
           concat(builder.input(:country_code))
-        end
+        end)
       end
 
       it "should render a country input" do
-        output_buffer.concat(@form) if Formtastic::Util.rails3?
         output_buffer.should_not have_tag "form li.country"
         output_buffer.should have_tag "form li.string", :count => 2
       end

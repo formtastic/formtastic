@@ -1,11 +1,11 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'Formtastic::SemanticFormHelper.builder' do
+describe 'Formtastic::Helpers::FormHelper.builder' do
 
   include FormtasticSpecHelper
 
-  class MyCustomFormBuilder < ::Formtastic::SemanticFormBuilder
+  class MyCustomFormBuilder < Formtastic::FormBuilder
     def awesome_input(method, options)
       self.text_field(method)
     end
@@ -16,18 +16,18 @@ describe 'Formtastic::SemanticFormHelper.builder' do
     mock_everything
   end
 
-  it 'is the Formtastic::SemanticFormBuilder by default' do
-    ::Formtastic::SemanticFormHelper.builder.should == ::Formtastic::SemanticFormBuilder
+  it 'is the Formtastic::FormBuilder by default' do
+    Formtastic::Helpers::FormHelper.builder.should == Formtastic::FormBuilder
   end
 
   it 'can be configured to use your own custom form builder' do
     # Set it to a custom builder class
-    ::Formtastic::SemanticFormHelper.builder = MyCustomFormBuilder
-    ::Formtastic::SemanticFormHelper.builder.should == MyCustomFormBuilder
+    Formtastic::Helpers::FormHelper.builder = MyCustomFormBuilder
+    Formtastic::Helpers::FormHelper.builder.should == MyCustomFormBuilder
 
     # Reset it to the default
-    ::Formtastic::SemanticFormHelper.builder = ::Formtastic::SemanticFormBuilder
-    ::Formtastic::SemanticFormHelper.builder.should == ::Formtastic::SemanticFormBuilder
+    Formtastic::Helpers::FormHelper.builder = Formtastic::FormBuilder
+    Formtastic::Helpers::FormHelper.builder.should == Formtastic::FormBuilder
   end
 
   it 'should allow custom settings per form builder subclass' do
@@ -35,7 +35,7 @@ describe 'Formtastic::SemanticFormHelper.builder' do
       MyCustomFormBuilder.all_fields_required_by_default = false
 
       MyCustomFormBuilder.all_fields_required_by_default.should be_false
-      ::Formtastic::SemanticFormBuilder.all_fields_required_by_default.should be_true
+      Formtastic::FormBuilder.all_fields_required_by_default.should be_true
     end
   end
 
@@ -43,11 +43,11 @@ describe 'Formtastic::SemanticFormHelper.builder' do
 
     before do
       @new_post.stub!(:title)
-      ::Formtastic::SemanticFormHelper.builder = MyCustomFormBuilder
+      Formtastic::Helpers::FormHelper.builder = MyCustomFormBuilder
     end
 
     after do
-      ::Formtastic::SemanticFormHelper.builder = ::Formtastic::SemanticFormBuilder
+      Formtastic::Helpers::FormHelper.builder = Formtastic::FormBuilder
     end
 
     describe "semantic_form_for" do

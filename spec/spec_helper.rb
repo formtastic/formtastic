@@ -11,7 +11,6 @@ require 'action_controller'
 
 require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic/util'))
 require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic'))
-require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic/layout_helper'))
 
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories in alphabetic order.
@@ -35,15 +34,7 @@ module FormtasticSpecHelper
   include ActiveSupport
   include ActionController::PolymorphicRoutes if defined?(ActionController::PolymorphicRoutes)
 
-  include Formtastic::SemanticFormHelper
-
-  def rails3?
-    ActionPack::VERSION::MAJOR > 2
-  end
-
-  def rails2?
-    ActionPack::VERSION::MAJOR == 2
-  end
+  include Formtastic::Helpers::FormHelper
 
   def default_input_type(column_type, column_name = :generic_column_name)
     @new_post.stub!(column_name)
@@ -221,6 +212,8 @@ module FormtasticSpecHelper
         mock('reflection', :options => {}, :klass => ::Post, :macro => :has_many)
       when :main_post
         mock('reflection', :options => {}, :klass => ::Post, :macro => :belongs_to)
+      when :mongoid_reviewer
+        mock('reflection', :options => {}, :klass => ::Author, :macro => :referenced_in, :foreign_key => "reviewer_id")
       end
 
     end
@@ -232,7 +225,7 @@ module FormtasticSpecHelper
     ::Post.stub!(:to_ary)
 
     @mock_file = mock('file')
-    ::Formtastic::SemanticFormBuilder.file_methods.each do |method|
+    Formtastic::FormBuilder.file_methods.each do |method|
       @mock_file.stub!(method).and_return(true)
     end
 
@@ -301,10 +294,10 @@ module FormtasticSpecHelper
   end
 
   def with_config(config_method_name, value, &block)
-    old_value = ::Formtastic::SemanticFormBuilder.send(config_method_name)
-    ::Formtastic::SemanticFormBuilder.send(:"#{config_method_name}=", value)
+    old_value = Formtastic::FormBuilder.send(config_method_name)
+    Formtastic::FormBuilder.send(:"#{config_method_name}=", value)
     yield
-    ::Formtastic::SemanticFormBuilder.send(:"#{config_method_name}=", old_value)
+    Formtastic::FormBuilder.send(:"#{config_method_name}=", old_value)
   end
 
 end

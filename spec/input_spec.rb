@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'SemanticFormBuilder#input' do
+describe 'Formtastic::FormBuilder#input' do
 
   include FormtasticSpecHelper
 
@@ -12,7 +12,7 @@ describe 'SemanticFormBuilder#input' do
 
   describe 'with inline order customization' do
     it 'should allow input, hints, errors as order' do
-      ::Formtastic::SemanticFormBuilder.inline_order = [:input, :hints, :errors]
+      Formtastic::FormBuilder.inline_order = [:input, :hints, :errors]
 
       semantic_form_for(@new_post) do |builder|
         builder.should_receive(:inline_input_for).once.ordered
@@ -23,7 +23,7 @@ describe 'SemanticFormBuilder#input' do
     end
 
     it 'should allow hints, input, errors as order' do
-      ::Formtastic::SemanticFormBuilder.inline_order = [:hints, :input, :errors]
+      Formtastic::FormBuilder.inline_order = [:hints, :input, :errors]
 
       semantic_form_for(@new_post) do |builder|
         builder.should_receive(:inline_hints_for).once.ordered
@@ -34,8 +34,8 @@ describe 'SemanticFormBuilder#input' do
     end
 
     it 'should allow errors, input, hint for a custom type while preserving original inline order' do
-      ::Formtastic::SemanticFormBuilder.custom_inline_order[:checkbox] = [:errors, :input, :hints]
-      ::Formtastic::SemanticFormBuilder.inline_order = [:hints, :input, :errors]
+      Formtastic::FormBuilder.custom_inline_order[:checkbox] = [:errors, :input, :hints]
+      Formtastic::FormBuilder.inline_order = [:hints, :input, :errors]
 
       semantic_form_for(@new_post) do |builder|
         builder.should_receive(:inline_errors_for).once.ordered
@@ -55,9 +55,9 @@ describe 'SemanticFormBuilder#input' do
 
     it 'should require the first argument (the method on form\'s object)' do
       lambda {
-        @form = semantic_form_for(@new_post) do |builder|
+        concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input()) # no args passed in at all
-        end
+        end)
       }.should raise_error(ArgumentError)
     end
 
@@ -66,29 +66,27 @@ describe 'SemanticFormBuilder#input' do
       describe 'when true' do
 
         before do
-          @old_string = ::Formtastic::SemanticFormBuilder.required_string
-          @new_string = ::Formtastic::SemanticFormBuilder.required_string = " required yo!" # ensure there's something in the string
+          @old_string = Formtastic::FormBuilder.required_string
+          @new_string = Formtastic::FormBuilder.required_string = " required yo!" # ensure there's something in the string
           @new_post.class.should_not_receive(:reflect_on_all_validations)
         end
 
         after do
-          ::Formtastic::SemanticFormBuilder.required_string = @old_string
+          Formtastic::FormBuilder.required_string = @old_string
         end
 
         it 'should set a "required" class' do
-          form = semantic_form_for(@new_post) do |builder|
+          concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :required => true))
-          end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          end)
           output_buffer.should_not have_tag('form li.optional')
           output_buffer.should have_tag('form li.required')
         end
 
         it 'should append the "required" string to the label' do
-          form = semantic_form_for(@new_post) do |builder|
+          concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :required => true))
-          end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          end)
           output_buffer.should have_tag('form li.required label', /#{@new_string}$/)
         end
 
@@ -97,28 +95,26 @@ describe 'SemanticFormBuilder#input' do
       describe 'when false' do
 
         before do
-          @string = ::Formtastic::SemanticFormBuilder.optional_string = " optional yo!" # ensure there's something in the string
+          @string = Formtastic::FormBuilder.optional_string = " optional yo!" # ensure there's something in the string
           @new_post.class.should_not_receive(:reflect_on_all_validations)
         end
 
         after do
-          ::Formtastic::SemanticFormBuilder.optional_string = ''
+          Formtastic::FormBuilder.optional_string = ''
         end
 
         it 'should set an "optional" class' do
-          form = semantic_form_for(@new_post) do |builder|
+          concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :required => false))
-          end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          end)
           output_buffer.should_not have_tag('form li.required')
           output_buffer.should have_tag('form li.optional')
         end
 
         it 'should append the "optional" string to the label' do
-          form = semantic_form_for(@new_post) do |builder|
+          concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :required => false))
-          end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          end)
           output_buffer.should have_tag('form li.optional label', /#{@string}$/)
         end
 
@@ -129,17 +125,16 @@ describe 'SemanticFormBuilder#input' do
         describe 'and an object was not given' do
 
           it 'should use the default value' do
-            ::Formtastic::SemanticFormBuilder.all_fields_required_by_default.should == true
-            ::Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
+            Formtastic::FormBuilder.all_fields_required_by_default.should == true
+            Formtastic::FormBuilder.all_fields_required_by_default = false
 
-            form = semantic_form_for(:project, :url => 'http://test.host/') do |builder|
+            concat(semantic_form_for(:project, :url => 'http://test.host/') do |builder|
               concat(builder.input(:title))
-            end
-            output_buffer.concat(form) if Formtastic::Util.rails3?
+            end)
             output_buffer.should_not have_tag('form li.required')
             output_buffer.should have_tag('form li.optional')
 
-            ::Formtastic::SemanticFormBuilder.all_fields_required_by_default = true
+            Formtastic::FormBuilder.all_fields_required_by_default = true
           end
 
         end
@@ -162,11 +157,10 @@ describe 'SemanticFormBuilder#input' do
                   mock('MacroReflection', :macro => :validates_presence_of, :name => :body, :options => {:if => true})
                 ])
 
-                form = semantic_form_for(@new_post) do |builder|
+                concat(semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:title))
                   concat(builder.input(:body))
-                end
-                output_buffer.concat(form) if Formtastic::Util.rails3?
+                end)
                 output_buffer.should have_tag('form li.required')
                 output_buffer.should_not have_tag('form li.optional')
               end
@@ -218,11 +212,9 @@ describe 'SemanticFormBuilder#input' do
                 mock('MacroReflection', :macro => :validates_presence_of, :name => :body, :options => options[:options])
               ])
 
-              form = semantic_form_for(@new_post) do |builder|
+              concat(semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:body))
-              end
-
-              output_buffer.concat(form) if Formtastic::Util.rails3?
+              end)
 
               if options[:required]
                 output_buffer.should_not have_tag('form li.optional')
@@ -239,10 +231,9 @@ describe 'SemanticFormBuilder#input' do
               end
 
               it 'should not be required' do
-                form = semantic_form_for(@new_post) do |builder|
+                concat(semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:title))
-                end
-                output_buffer.concat(form) if Formtastic::Util.rails3?
+                end)
                 output_buffer.should_not have_tag('form li.required')
                 output_buffer.should have_tag('form li.optional')
               end
@@ -269,11 +260,10 @@ describe 'SemanticFormBuilder#input' do
                   active_model_presence_validator([:body], {:if => true})
                 ])
 
-                form = semantic_form_for(@new_post) do |builder|
+                concat(semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:title))
                   concat(builder.input(:body))
-                end
-                output_buffer.concat(form) if Formtastic::Util.rails3?
+                end)
                 output_buffer.should have_tag('form li.required')
                 output_buffer.should_not have_tag('form li.optional')
               end
@@ -325,10 +315,9 @@ describe 'SemanticFormBuilder#input' do
                   active_model_inclusion_validator([:published], {:in => [false, true]})
                 ])
 
-                form = semantic_form_for(@new_post) do |builder|
+                concat(semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:published))
-                end
-                output_buffer.concat(form) if Formtastic::Util.rails3?
+                end)
                 output_buffer.should have_tag('form li.required')
                 output_buffer.should_not have_tag('form li.optional')
               end
@@ -338,10 +327,9 @@ describe 'SemanticFormBuilder#input' do
                   active_model_inclusion_validator([:published], {:in => [false, true], :allow_blank => true})
                 ])
 
-                form = semantic_form_for(@new_post) do |builder|
+                concat(semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:published))
-                end
-                output_buffer.concat(form) if Formtastic::Util.rails3?
+                end)
                 output_buffer.should_not have_tag('form li.required')
                 output_buffer.should have_tag('form li.optional')
               end
@@ -353,11 +341,9 @@ describe 'SemanticFormBuilder#input' do
                 active_model_presence_validator([:body], options[:options])
               ])
 
-              form = semantic_form_for(@new_post) do |builder|
+              concat(semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:body))
-              end
-
-              output_buffer.concat(form) if Formtastic::Util.rails3?
+              end)
 
               if options[:required]
                 output_buffer.should_not have_tag('form li.optional')
@@ -374,10 +360,9 @@ describe 'SemanticFormBuilder#input' do
               end
 
               it 'should not be required' do
-                form = semantic_form_for(@new_post) do |builder|
+                concat(semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:title))
-                end
-                output_buffer.concat(form) if Formtastic::Util.rails3?
+                end)
                 output_buffer.should_not have_tag('form li.required')
                 output_buffer.should have_tag('form li.optional')
               end
@@ -388,17 +373,16 @@ describe 'SemanticFormBuilder#input' do
           describe 'and the validation reflection plugin is not available' do
 
             it 'should use the default value' do
-              ::Formtastic::SemanticFormBuilder.all_fields_required_by_default.should == true
-              ::Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
+              Formtastic::FormBuilder.all_fields_required_by_default.should == true
+              Formtastic::FormBuilder.all_fields_required_by_default = false
 
-              form = semantic_form_for(@new_post) do |builder|
+              concat(semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title))
-              end
-              output_buffer.concat(form) if Formtastic::Util.rails3?
+              end)
               output_buffer.should_not have_tag('form li.required')
               output_buffer.should have_tag('form li.optional')
 
-              ::Formtastic::SemanticFormBuilder.all_fields_required_by_default = true
+              Formtastic::FormBuilder.all_fields_required_by_default = true
             end
 
           end
@@ -414,20 +398,18 @@ describe 'SemanticFormBuilder#input' do
       describe 'when not provided' do
 
         it 'should default to a string for forms without objects unless column is password' do
-          form = semantic_form_for(:project, :url => 'http://test.host') do |builder|
+          concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
             concat(builder.input(:anything))
-          end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          end)
           output_buffer.should have_tag('form li.string')
         end
 
         it 'should default to password for forms without objects if column is password' do
-          form = semantic_form_for(:project, :url => 'http://test.host') do |builder|
+          concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
             concat(builder.input(:password))
             concat(builder.input(:password_confirmation))
             concat(builder.input(:confirm_password))
-          end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          end)
           output_buffer.should have_tag('form li.password', :count => 3)
         end
 
@@ -526,12 +508,12 @@ describe 'SemanticFormBuilder#input' do
         end
 
         describe 'defaulting to file column' do
-          ::Formtastic::SemanticFormBuilder.file_methods.each do |method|
+          Formtastic::FormBuilder.file_methods.each do |method|
             it "should default to :file for attributes that respond to ##{method}" do
               @new_post.stub!(:column_for_attribute).and_return(nil)
               column = mock('column')
 
-              ::Formtastic::SemanticFormBuilder.file_methods.each do |test|
+              Formtastic::FormBuilder.file_methods.each do |test|
                 ### TODO: Check if this is ok
                 column.stub!(method).with(test).and_return(method == test)
               end
@@ -573,27 +555,23 @@ describe 'SemanticFormBuilder#input' do
 
       describe 'when provided' do
         it 'should be passed down to the label tag' do
-          form = semantic_form_for(@new_post) do |builder|
+          concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :label => "Kustom"))
-          end
-
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          end)
           output_buffer.should have_tag("form li label", /Kustom/)
         end
 
         it 'should not generate a label if false' do
-          form = semantic_form_for(@new_post) do |builder|
+          concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :label => false))
-          end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          end)
           output_buffer.should_not have_tag("form li label")
         end
 
         it 'should be dupped if frozen' do
-          form = semantic_form_for(@new_post) do |builder|
+          concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :label => "Kustom".freeze))
-          end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          end)
           output_buffer.should have_tag("form li label", /Kustom/)
         end
       end
@@ -608,11 +586,9 @@ describe 'SemanticFormBuilder#input' do
                   @new_post.stub!(:meta_description)
                   @new_post.class.should_receive(:human_attribute_name).with('meta_description').and_return(@localized_label_text)
 
-                  form = semantic_form_for(@new_post) do |builder|
+                  concat(semantic_form_for(@new_post) do |builder|
                     concat(builder.input(:meta_description))
-                  end
-
-                  output_buffer.concat(form) if Formtastic::Util.rails3?
+                  end)
                   output_buffer.should have_tag('form li label', Regexp.new('^' + @localized_label_text))
                 end
               end
@@ -623,13 +599,11 @@ describe 'SemanticFormBuilder#input' do
         describe 'when localized label is NOT provided' do
           describe 'and object is not given' do
             it 'should default the humanized method name, passing it down to the label tag' do
-              ::Formtastic::SemanticFormBuilder.label_str_method = :humanize
+              Formtastic::FormBuilder.label_str_method = :humanize
 
-              form = semantic_form_for(:project, :url => 'http://test.host') do |builder|
+              concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
                 concat(builder.input(:meta_description))
-              end
-
-              output_buffer.concat(form) if Formtastic::Util.rails3?
+              end)
               output_buffer.should have_tag("form li label", /#{'meta_description'.humanize}/)
             end
           end
@@ -639,11 +613,9 @@ describe 'SemanticFormBuilder#input' do
               @new_post.stub!(:meta_description) # a two word method name
               @new_post.class.should_receive(:human_attribute_name).with('meta_description').and_return('meta_description'.humanize)
 
-              form = semantic_form_for(@new_post) do |builder|
+              concat(semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:meta_description))
-              end
-
-              output_buffer.concat(form) if Formtastic::Util.rails3?
+              end)
               output_buffer.should have_tag("form li label", /#{'meta_description'.humanize}/)
             end
           end
@@ -653,11 +625,9 @@ describe 'SemanticFormBuilder#input' do
               with_config :label_str_method, :capitalize do
                 @new_post.stub!(:meta_description)
 
-                form = semantic_form_for(@new_post) do |builder|
+                concat(semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:meta_description))
-                end
-
-                output_buffer.concat(form) if Formtastic::Util.rails3?
+                end)
                 output_buffer.should have_tag("form li label", /#{'meta_description'.capitalize}/)
               end
             end
@@ -679,34 +649,35 @@ describe 'SemanticFormBuilder#input' do
                      }
                    }
                 }
-            ::Formtastic::SemanticFormBuilder.i18n_lookups_by_default = false
           end
 
           it 'should render a label with localized label (I18n)' do
-            form = semantic_form_for(@new_post) do |builder|
-              concat(builder.input(:title, :label => true))
-              concat(builder.input(:published, :as => :boolean, :label => true))
+            with_config :i18n_lookups_by_default, false do
+              concat(semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:title, :label => true))
+                concat(builder.input(:published, :as => :boolean, :label => true))
+              end)
+              output_buffer.should have_tag('form li label', Regexp.new('^' + @localized_label_text))
             end
-            output_buffer.concat(form) if Formtastic::Util.rails3?
-            output_buffer.should have_tag('form li label', Regexp.new('^' + @localized_label_text))
           end
 
           it 'should render a hint paragraph containing an optional localized label (I18n) if first is not set' do
-            ::I18n.backend.store_translations :en,
-              :formtastic => {
-                  :labels => {
-                    :post => {
-                      :title => nil,
-                      :published => nil
+            with_config :i18n_lookups_by_default, false do
+              ::I18n.backend.store_translations :en,
+                :formtastic => {
+                    :labels => {
+                      :post => {
+                        :title => nil,
+                        :published => nil
+                       }
                      }
-                   }
-                }
-            form = semantic_form_for(@new_post) do |builder|
-              concat(builder.input(:title, :label => true))
-              concat(builder.input(:published, :as => :boolean, :label => true))
+                  }
+              concat(semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:title, :label => true))
+                concat(builder.input(:published, :as => :boolean, :label => true))
+              end)
+              output_buffer.should have_tag('form li label', Regexp.new('^' + @default_localized_label_text))
             end
-            output_buffer.concat(form) if Formtastic::Util.rails3?
-            output_buffer.should have_tag('form li label', Regexp.new('^' + @default_localized_label_text))
           end
         end
       end
@@ -718,34 +689,31 @@ describe 'SemanticFormBuilder#input' do
       describe 'when provided' do
 
         after do
-          ::Formtastic::SemanticFormBuilder.default_hint_class = "inline-hints"
+          Formtastic::FormBuilder.default_hint_class = "inline-hints"
         end
 
         it 'should be passed down to the paragraph tag' do
           hint_text = "this is the title of the post"
-          form = semantic_form_for(@new_post) do |builder|
+          concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :hint => hint_text))
-          end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          end)
           output_buffer.should have_tag("form li p.inline-hints", hint_text)
         end
 
 				it 'should have a custom hint class if I ask for one' do
           hint_text = "this is the title of the post"
-          form = semantic_form_for(@new_post) do |builder|
+          concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :hint => hint_text, :hint_class => 'custom-hint-class'))
-          end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          end)
           output_buffer.should have_tag("form li p.custom-hint-class", hint_text)
         end
 
         it 'should have a custom hint class defaulted for all forms' do
           hint_text = "this is the title of the post"
-          ::Formtastic::SemanticFormBuilder.default_hint_class = "custom-hint-class"
-          form = semantic_form_for(@new_post) do |builder|
+          Formtastic::FormBuilder.default_hint_class = "custom-hint-class"
+          concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :hint => hint_text))
-          end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          end)
           output_buffer.should have_tag("form li p.custom-hint-class", hint_text)
         end
       end
@@ -761,7 +729,6 @@ describe 'SemanticFormBuilder#input' do
                     :title => @default_localized_hint_text,
                    }
                 }
-            ::Formtastic::SemanticFormBuilder.i18n_lookups_by_default = false
           end
 
           after do
@@ -770,81 +737,88 @@ describe 'SemanticFormBuilder#input' do
 
           describe 'when provided value (hint value) is set to TRUE' do
             it 'should render a hint paragraph containing a localized hint (I18n)' do
-              ::I18n.backend.store_translations :en,
-              :formtastic => {
-                  :hints => {
-                    :post => {
-                      :title => @localized_hint_text
+              with_config :i18n_lookups_by_default, false do
+                ::I18n.backend.store_translations :en,
+                :formtastic => {
+                    :hints => {
+                      :post => {
+                        :title => @localized_hint_text
+                       }
                      }
-                   }
-                }
-              form = semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:title, :hint => true))
+                  }
+                concat(semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:title, :hint => true))
+                end)
+                output_buffer.should have_tag('form li p.inline-hints', @localized_hint_text)
               end
-              output_buffer.concat(form) if Formtastic::Util.rails3?
-              output_buffer.should have_tag('form li p.inline-hints', @localized_hint_text)
             end
 
 						it 'should render a hint paragraph containing a localized hint (I18n) with a custom hint class if i ask for one' do
-              ::I18n.backend.store_translations :en,
-              :formtastic => {
-                  :hints => {
-                    :post => {
-                      :title => @localized_hint_text
+              with_config :i18n_lookups_by_default, false do
+                ::I18n.backend.store_translations :en,
+                :formtastic => {
+                    :hints => {
+                      :post => {
+                        :title => @localized_hint_text
+                       }
                      }
-                   }
-                }
-              form = semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:title, :hint => true, :hint_class => 'custom-hint-class'))
+                  }
+                concat(semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:title, :hint => true, :hint_class => 'custom-hint-class'))
+                end)
+                output_buffer.should have_tag('form li p.custom-hint-class', @localized_hint_text)
               end
-              output_buffer.concat(form) if Formtastic::Util.rails3?
-              output_buffer.should have_tag('form li p.custom-hint-class', @localized_hint_text)
             end
 
             it 'should render a hint paragraph containing an optional localized hint (I18n) if first is not set' do
-              form = semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:title, :hint => true))
+              with_config :i18n_lookups_by_default, false do
+                concat(semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:title, :hint => true))
+                end)
+                output_buffer.should have_tag('form li p.inline-hints', @default_localized_hint_text)
               end
-              output_buffer.concat(form) if Formtastic::Util.rails3?
-              output_buffer.should have_tag('form li p.inline-hints', @default_localized_hint_text)
             end
           end
 
           describe 'when provided value (label value) is set to FALSE' do
             it 'should not render a hint paragraph' do
-              form = semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:title, :hint => false))
+              with_config :i18n_lookups_by_default, false do
+                concat(semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:title, :hint => false))
+                end)
+                output_buffer.should_not have_tag('form li p.inline-hints', @localized_hint_text)
               end
-              output_buffer.concat(form) if Formtastic::Util.rails3?
-              output_buffer.should_not have_tag('form li p.inline-hints', @localized_hint_text)
             end
           end
         end
 
         describe 'when localized hint (I18n) is a model with attribute hints' do
           it "should see the provided hash as a blank entry" do
-            ::I18n.backend.store_translations :en,
-            :formtastic => {
-                :hints => {
-                  :title => { # movie title
-                    :summary => @localized_hint_text # summary of movie
+            with_config :i18n_lookups_by_default, false do
+              ::I18n.backend.store_translations :en,
+              :formtastic => {
+                  :hints => {
+                    :title => { # movie title
+                      :summary => @localized_hint_text # summary of movie
+                     }
                    }
-                 }
-              }
-            semantic_form_for(@new_post) do |builder|
-              concat(builder.input(:title, :hint => true))
+                }
+              semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:title, :hint => true))
+              end
+              output_buffer.should_not have_tag('form li p.inline-hints', @localized_hint_text)
             end
-            output_buffer.should_not have_tag('form li p.inline-hints', @localized_hint_text)
           end
         end
 
         describe 'when localized hint (I18n) is not provided' do
           it 'should not render a hint paragraph' do
-            form = semantic_form_for(@new_post) do |builder|
-              concat(builder.input(:title))
+            with_config :i18n_lookups_by_default, false do
+              concat(semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:title))
+              end)
+              output_buffer.should_not have_tag('form li p.inline-hints')
             end
-            output_buffer.concat(form) if Formtastic::Util.rails3?
-            output_buffer.should_not have_tag('form li p.inline-hints')
           end
         end
       end
@@ -855,28 +829,25 @@ describe 'SemanticFormBuilder#input' do
 
       describe 'when provided' do
         it 'should be passed down to the li tag' do
-          form = semantic_form_for(@new_post) do |builder|
+          concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :wrapper_html => {:id => :another_id}))
-          end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          end)
           output_buffer.should have_tag("form li#another_id")
         end
 
         it 'should append given classes to li default classes' do
-          form = semantic_form_for(@new_post) do |builder|
+          concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :wrapper_html => {:class => :another_class}, :required => true))
-          end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          end)
           output_buffer.should have_tag("form li.string")
           output_buffer.should have_tag("form li.required")
           output_buffer.should have_tag("form li.another_class")
         end
 
         it 'should allow classes to be an array' do
-          form = semantic_form_for(@new_post) do |builder|
+          concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :wrapper_html => {:class => [ :my_class, :another_class ]}))
-          end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          end)
           output_buffer.should have_tag("form li.string")
           output_buffer.should have_tag("form li.my_class")
           output_buffer.should have_tag("form li.another_class")
@@ -885,10 +856,9 @@ describe 'SemanticFormBuilder#input' do
 
       describe 'when not provided' do
         it 'should use default id and class' do
-          form = semantic_form_for(@new_post) do |builder|
+          concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title))
-          end
-          output_buffer.concat(form) if Formtastic::Util.rails3?
+          end)
           output_buffer.should have_tag("form li#post_title_input")
           output_buffer.should have_tag("form li.string")
         end
@@ -903,12 +873,10 @@ describe 'SemanticFormBuilder#input' do
       my_options = { :as => :string }
       output = ''
       
-      @form = semantic_form_for(@new_post) do |builder|
+      concat(semantic_form_for(@new_post) do |builder|
         concat(builder.input(:title, my_options))
         concat(builder.input(:publish_at, my_options))
-      end
-      output_buffer.concat(@form) if Formtastic::Util.rails3?
-      
+      end)
       output_buffer.should have_tag 'li.string', :count => 2
     end
     
