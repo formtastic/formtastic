@@ -5,6 +5,18 @@ module Formtastic
         
         include Formtastic::LocalizedString
         
+        def label_html
+          render_label? ? builder.label(input_name, label_text, label_html_options) : ""
+        end
+        
+        def label_html_options
+          # opts = options_for_label(options) # TODO
+          opts = {}
+          opts[:for] ||= input_dom_id
+          
+          opts
+        end
+        
         def label_text
           ((localized_label || humanized_method_name) << requirement_text).html_safe
         end

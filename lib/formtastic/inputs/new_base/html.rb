@@ -10,10 +10,6 @@ module Formtastic
           end
         end
         
-        def label_html
-          render_label? ? builder.label(input_name, label_text, label_html_options) : ""
-        end
-        
         def input_html_options
           opts = options[:input_html] || {}
           opts[:id] ||= input_dom_id
@@ -23,14 +19,6 @@ module Formtastic
         
         def input_dom_id
           options[:input_html].try(:[], :id) || dom_id
-        end
-        
-        def label_html_options
-          # opts = options_for_label(options) # TODO
-          opts = {}
-          opts[:for] ||= input_dom_id
-          
-          opts
         end
         
         def error_html
