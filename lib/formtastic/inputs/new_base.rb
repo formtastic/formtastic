@@ -17,6 +17,7 @@ module Formtastic
       
       autoload :Associations
       autoload :Collections
+      autoload :Choices
       autoload :Database
       autoload :Errors
       autoload :Fileish
