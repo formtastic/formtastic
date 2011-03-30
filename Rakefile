@@ -41,7 +41,7 @@ end
 
 RCov::VerifyTask.new(:verify_coverage) do |t|
   t.require_exact_threshold = false
-  t.threshold = 94.98
+  t.threshold = 95.11
 end
 
 desc "Run all examples and verify coverage"
