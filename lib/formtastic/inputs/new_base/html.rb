@@ -33,30 +33,6 @@ module Formtastic
           opts
         end
         
-        # Override this method if you want to change the display order (for example, rendering the
-        # errors before the body of the input).
-        def input_wrapping(&block)
-          template.content_tag(:li, 
-            [template.capture(&block), error_html, hint_html].join("\n").html_safe, 
-            wrapper_html_options
-          )
-        end
-        
-        def wrapper_html_options
-          opts = options[:wrapper_html] || {}
-          opts[:class] ||= []
-          opts[:class] = [opts[:class].to_s] unless opts[:class].is_a?(Array)
-          opts[:class] << as
-          opts[:class] << "error" if errors?
-          opts[:class] << "optional" if optional?
-          opts[:class] << "required" if required?
-          opts[:class] = opts[:class].join(' ')
-          
-          opts[:id] ||= wrapper_dom_id
-        
-          opts
-        end
-        
         def error_html
           errors? ? send(:"error_#{builder.inline_errors}_html") : ""
         end
@@ -101,10 +77,6 @@ module Formtastic
             dom_index, 
             association_primary_key || sanitized_method_name
           ].reject { |x| x.blank? }.join('_')
-        end
-        
-        def wrapper_dom_id
-          @wrapper_dom_id ||= "#{dom_id.to_s.gsub((association_primary_key || method).to_s, sanitized_method_name.to_s)}_input"
         end
         
         def dom_index

@@ -30,6 +30,7 @@ module Formtastic
       autoload :Stringish
       autoload :Timeish
       autoload :Validations
+      autoload :Wrapping
       
       include Html
       include Options
@@ -41,8 +42,7 @@ module Formtastic
       include Fileish
       include Associations
       include Labelling
-      
-      
+      include Wrapping
       
     end
   end
