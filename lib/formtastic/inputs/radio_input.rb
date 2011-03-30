@@ -104,51 +104,35 @@ module Formtastic
     #   <%= f.input :author, :as => :radio, :value_as_class => true %>
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
-    # @see Formtastic::Inputs::Select RadioInput as an alternative for `belongs_to` associations
+    # @see Formtastic::Inputs::RadioInput as an alternative for `belongs_to` associations
+    #
+    # @todo :disabled like CheckBoxes?
     class RadioInput
       include NewBase
       include NewBase::Collections
+      include NewBase::Choices
       
       def to_html
         input_wrapping do
-          template.content_tag(:fieldset,
+          choices_wrapping do
             legend_html <<
-            template.content_tag(:ol,
+            choices_group_wrapping do
               collection.map { |choice| 
-
-                label = choice.is_a?(Array) ? choice.first : choice
-                value = choice.is_a?(Array) ? choice.last : choice
-
-                html_safe_value = value.to_s.gsub(/\s/, '_').gsub(/\W/, '').downcase
-                radio_input_id = "#{sanitized_object_name}_#{input_name}_#{html_safe_value}"
-                radio_input_id = "#{builder.custom_namespace}_#{radio_input_id}" unless builder.custom_namespace.blank?
-                
-                template.content_tag(:li, 
-                  template.content_tag(:label,
-                    builder.radio_button(input_name, value, input_html_options.merge(:id => radio_input_id)) << label,
-                    :for => radio_input_id
-                  ),
-                  :class => (value_as_class? ? "#{sanitized_method_name}_#{html_safe_value}" : nil)
-                ) 
-              }.join.html_safe
-            )
-          )
+                choice_wrapping(choice_wrapping_html_options(choice)) do
+                  choice_html(choice)
+                end
+              }.join("\n").html_safe
+            end
+          end
         end
       end
 
-      def value_as_class?
-        options[:value_as_class]
-      end
-      
-      def legend_html
-        if options[:label] == false
-          ""
-        else
-          template.content_tag(:legend,
-            template.content_tag(:label, label_text, label_html_options),
-            :class => "label"
-          )
-        end
+      def choice_html(choice)        
+        template.content_tag(:label,
+          builder.radio_button(input_name, choice_value(choice), input_html_options.merge(:id => choice_input_dom_id(choice))) << 
+          choice_label(choice),
+          label_html_options.merge(:for => choice_input_dom_id(choice))
+        )
       end
       
       # Override to remove the for attribute since this isn't associated with any element, as it's
@@ -156,7 +140,7 @@ module Formtastic
       def label_html_options
         super.merge(:for => nil)
       end
-      
+
     end
   end
 end

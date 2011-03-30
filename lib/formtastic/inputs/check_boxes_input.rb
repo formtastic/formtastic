@@ -87,7 +87,17 @@ module Formtastic
           end
         end
       end
-
+      
+      def choice_html(choice)        
+        template.content_tag(:label,
+          hidden_fields? ? 
+            check_box_with_hidden_input(choice) : 
+            check_box_without_hidden_input(choice) <<
+          choice_label(choice),
+          label_html_options.merge(:for => choice_input_dom_id(choice))
+        )
+      end
+      
       def hidden_field_for_all
         if hidden_fields?
           ""
@@ -97,21 +107,6 @@ module Formtastic
           options[:id] = [object_name, method, 'none'].join('_')
           template.hidden_field_tag(input_name, '', options)
         end
-      end
-      
-      def legend_html
-        if render_label?
-          template.content_tag(:legend,
-            template.content_tag(:label, label_text),
-            label_html_options.merge(:class => "label")
-          )
-        else
-          ""
-        end
-      end
-      
-      def value_as_class?
-        options[:value_as_class]
       end
       
       def hidden_fields?
@@ -163,12 +158,6 @@ module Formtastic
       
       def unchecked_value
         options[:unchecked_value] || ''
-      end
-      
-      # Override to remove the for attribute since this isn't associated with any element, as it's
-      # nested inside the legend.
-      def label_html_options
-        super.merge(:for => nil)
       end
       
       def input_name

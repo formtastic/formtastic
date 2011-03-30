@@ -37,13 +37,7 @@ module Formtastic
         end
 
         def choice_html(choice)        
-          template.content_tag(:label,
-            hidden_fields? ? 
-              check_box_with_hidden_input(choice) : 
-              check_box_without_hidden_input(choice) <<
-            choice_label(choice),
-            label_html_options.merge(:for => choice_input_dom_id(choice))
-          )
+          raise "choice_html() needs to be implemented when including Formtastic::Inputs::NewBase::Choices"
         end
 
         def choice_label(choice)
@@ -67,6 +61,27 @@ module Formtastic
           ].compact.reject { |i| i.blank? }.join("_")
         end
         
+        def value_as_class?
+          options[:value_as_class]
+        end
+
+        def legend_html
+          if render_label?
+            template.content_tag(:legend,
+              template.content_tag(:label, label_text),
+              label_html_options.merge(:class => "label")
+            )
+          else
+            ""
+          end
+        end
+        
+        # Override to remove the for attribute since this isn't associated with any element, as it's
+        # nested inside the legend.
+        def label_html_options
+          super.merge(:for => nil)
+        end
+
       end
     end
   end
