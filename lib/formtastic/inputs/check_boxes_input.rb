@@ -73,33 +73,82 @@ module Formtastic
       
       def to_html
         input_wrapping do
-          template.content_tag(:fieldset, 
+          choices_wrapping do
             legend_html <<
             hidden_field_for_all <<
-            template.content_tag(:ol,
-              collection.map { |choice|
-                
-                check_box_label = choice.is_a?(Array) ? choice.first : choice
-                check_box_value = choice.is_a?(Array) ? choice.last : choice
-                
-                html_safe_value = check_box_value.to_s.gsub(/\s/, '_').gsub(/\W/, '').downcase
-                check_box_input_id = "#{sanitized_object_name}_#{association_primary_key || method}_#{html_safe_value}"
-                check_box_input_id = "#{builder.custom_namespace}_#{check_box_input_id}" unless builder.custom_namespace.blank?
-                
-                template.content_tag(:li,
-                  template.content_tag(:label,
-                    hidden_fields? ? 
-                      check_box_with_hidden_input(check_box_value, check_box_input_id) : 
-                      check_box_without_hidden_input(check_box_value, check_box_input_id) <<
-                    check_box_label,
-                    label_html_options.merge(:for => check_box_input_id)
-                  ),
-                  :class => value_as_class? ? "#{sanitized_method_name.singularize}_#{html_safe_value}" : ''
-                )
+            choices_group_wrapping do
+              collection.map { |choice| 
+                choice_wrapping(choice_wrapping_html_options(choice)) do
+                  choice_html(choice)
+                end
               }.join("\n").html_safe
-            )
-          )
+            end
+          end
         end
+      end
+      
+      def choices_wrapping(&block)
+        template.content_tag(:fieldset, 
+          template.capture(&block),
+          choices_wrapping_html_options
+        )
+      end
+      
+      def choices_wrapping_html_options
+        {}
+      end
+      
+      def choices_group_wrapping(&block)
+        template.content_tag(:ol, 
+          template.capture(&block),
+          choices_group_wrapping_html_options
+        )
+      end
+      
+      def choices_group_wrapping_html_options
+        {}
+      end
+      
+      def choice_wrapping(html_options, &block)
+        template.content_tag(:li, 
+          template.capture(&block),
+          html_options
+        )
+      end
+      
+      def choice_wrapping_html_options(choice)
+        { :class => value_as_class? ? "#{sanitized_method_name.singularize}_#{choice_html_safe_value(choice)}" : '' }
+      end
+      
+      def choice_html(choice)        
+        template.content_tag(:label,
+          hidden_fields? ? 
+            check_box_with_hidden_input(choice) : 
+            check_box_without_hidden_input(choice) <<
+          choice_label(choice),
+          label_html_options.merge(:for => choice_input_dom_id(choice))
+        )
+      end
+      
+      def choice_label(choice)
+        choice.is_a?(Array) ? choice.first : choice
+      end
+      
+      def choice_value(choice)
+        choice.is_a?(Array) ? choice.last : choice
+      end
+      
+      def choice_html_safe_value(choice)
+        choice_value(choice).to_s.gsub(/\s/, '_').gsub(/\W/, '').downcase
+      end
+      
+      def choice_input_dom_id(choice)
+        [
+          builder.custom_namespace,
+          sanitized_object_name,
+          association_primary_key || method,
+          choice_html_safe_value(choice)
+        ].compact.reject { |i| i.blank? }.join("_")
       end
       
       def hidden_field_for_all
@@ -132,21 +181,23 @@ module Formtastic
         options[:hidden_fields]
       end
       
-      def check_box_with_hidden_input(value, check_box_input_id)
+      def check_box_with_hidden_input(choice)
+        value = choice_value(choice)
         builder.check_box(
           association_primary_key || method, 
-          input_html_options.merge(:id => check_box_input_id, :name => input_name, :disabled => disabled?(value)), 
+          input_html_options.merge(:id => choice_input_dom_id(choice), :name => input_name, :disabled => disabled?(value)), 
           value, 
           unchecked_value
         )
       end
       
-      def check_box_without_hidden_input(value, check_box_input_id)
+      def check_box_without_hidden_input(choice)
+        value = choice_value(choice)
         template.check_box_tag(
           input_name, 
           value, 
           checked?(value), 
-          input_html_options.merge(:id => check_box_input_id, :disabled => disabled?(value))
+          input_html_options.merge(:id => choice_input_dom_id(choice), :disabled => disabled?(value))
         ) 
       end
       
