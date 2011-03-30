@@ -2,7 +2,17 @@ module Formtastic
   module Inputs
     module NewBase
       module Hints
-
+        
+        def hint_html
+          if hint?
+            template.content_tag(
+              :p, 
+              Formtastic::Util.html_safe(hint_text), 
+              :class => (options[:hint_class] || builder.default_hint_class)
+            )
+          end
+        end
+        
         def hint?
           !hint_text.blank? && !hint_text.kind_of?(Hash)
         end

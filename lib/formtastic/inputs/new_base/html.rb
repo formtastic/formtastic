@@ -21,16 +21,6 @@ module Formtastic
           options[:input_html].try(:[], :id) || dom_id
         end
         
-        def hint_html
-          if hint?
-            template.content_tag(
-              :p, 
-              Formtastic::Util.html_safe(hint_text), 
-              :class => (options[:hint_class] || builder.default_hint_class)
-            )
-          end
-        end
-        
         def dom_id
           [
             builder.custom_namespace, 
