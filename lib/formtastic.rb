@@ -12,4 +12,5 @@ module Formtastic
   autoload :Inputs
   autoload :LocalizedString
   autoload :Reflection
+  autoload :Util
 end
