@@ -1,7 +1,8 @@
-[v2 branch]
+[refactor branch]
 
 * Removed the "inline_order" configuration (redefine input_wrapping instead)
 * Removed the "special" implementation of label() from FormBuilder, so builder.label will call Rails' label helper, not ours
+* Changed the HTML id attribute used for hidden inputs to be consistent with all other inputs
 * Changed formtastic:form generator include the wrapping semantic_form_for block
 * Changed formtastic:form generator to generate a partial by default (instead of copying to clipboard, which can be done with --copy)
 * Removed formtastic_stylesheet_link_tag
