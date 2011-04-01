@@ -31,10 +31,12 @@ module Formtastic
     class HiddenInput 
       include NewBase
       
+      # Override to include :value set directly from options hash. The :value set in :input_html 
+      # hash will be preferred over :value set directly in the options.
+      #
+      # @todo this is inconsistent with all other inputs, deprecate and remove
       def input_html_options
-        super[:id] = super[:id].gsub(/_id$/, '') # TODO: special case because we seem to test hidden input differently
-        return {:value => options[:value]}.merge(super) if options.key?(:value)
-        super
+        {:value => options[:value]}.merge(super)
       end
       
       def to_html

@@ -12,7 +12,7 @@ module Formtastic
         def label_html_options
           # opts = options_for_label(options) # TODO
           opts = {}
-          opts[:for] ||= input_dom_id
+          opts[:for] ||= input_html_options[:id]
           
           opts
         end

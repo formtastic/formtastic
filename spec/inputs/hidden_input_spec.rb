@@ -42,7 +42,7 @@ describe 'hidden input' do
   end
 
   it "should prefer :input_html over directly supplied options" do
-    output_buffer.should have_tag("form li input#post_author[@type=\"hidden\"][@value=\"formtastic_value\"]")
+    output_buffer.should have_tag("form li input#post_author_id[@type=\"hidden\"][@value=\"formtastic_value\"]")
   end
 
   it "should not render inline errors" do
@@ -82,7 +82,7 @@ describe 'hidden input' do
       end)
     end
 
-    attributes_to_check = [:secret, :author_id, :published, :reviewer, :author]
+    attributes_to_check = [:secret, :author_id, :published, :reviewer]
     attributes_to_check.each do |a|
       it_should_have_input_wrapper_with_id("context2_post_#{a}_input")
     end

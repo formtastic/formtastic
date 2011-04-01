@@ -172,11 +172,6 @@ module Formtastic
         super.merge(:for => input_html_options[:id])
       end
       
-      def input_dom_id
-        return "#{object_name}_#{association_primary_key}" if belongs_to?
-        super
-      end
-      
       def input_options
         {:include_blank => include_blank?}.merge(super)
       end

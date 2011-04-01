@@ -11,14 +11,7 @@ module Formtastic
         end
         
         def input_html_options
-          opts = options[:input_html] || {}
-          opts[:id] ||= input_dom_id
-          
-          opts
-        end
-        
-        def input_dom_id
-          options[:input_html].try(:[], :id) || dom_id
+          { :id => dom_id }.merge(options[:input_html] || {})
         end
         
         def dom_id
