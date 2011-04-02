@@ -2,12 +2,20 @@ module Formtastic
   module Inputs
     module NewBase
       module Html
-  
+        
+        # Defines how the instance of an input should be rendered to a HTML string.
+        #
+        # @abstract Implement this method in your input class to describe how the input should render itself.
+        #
+        # @example A basic label and text field input inside a standard wrapping might look like this:
+        #     def to_html
+        #       input_wrapping do
+        #         label_html <<
+        #         builder.text_field(method, input_html_options)
+        #       end
+        #     end
         def to_html
-          input_wrapping do
-            label_html <<
-            builder.text_field(method, input_html_options)
-          end
+          raise NotImplementedError
         end
         
         def input_html_options
