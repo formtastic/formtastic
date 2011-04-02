@@ -27,8 +27,8 @@ module Formtastic
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
     class StringInput 
-      include NewBase
-      include NewBase::Stringish
+      include Base
+      include Base::Stringish
     end
   end
 end

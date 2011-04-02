@@ -1,6 +1,6 @@
 module Formtastic
   module Inputs
-    module NewBase
+    module Base
       module Stringish
         
         # @abstract Override this method in your input class to describe how the input should render itself.

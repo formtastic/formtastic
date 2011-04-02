@@ -10,7 +10,7 @@ describe 'Formtastic::Helpers::FormHelper.builder' do
   
   # TODO should be a separate spec for custom inputs
   class Formtastic::Inputs::AwesomeInput
-    include Formtastic::Inputs::NewBase
+    include Formtastic::Inputs::Base
   end
 
   before do

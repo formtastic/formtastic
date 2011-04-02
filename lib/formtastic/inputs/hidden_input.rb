@@ -29,7 +29,7 @@ module Formtastic
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
     class HiddenInput 
-      include NewBase
+      include Base
       
       # Override to include :value set directly from options hash. The :value set in :input_html 
       # hash will be preferred over :value set directly in the options.

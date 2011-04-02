@@ -68,9 +68,9 @@ module Formtastic
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
     # @see Formtastic::Inputs::BooleanInput BooleanInput for a single checkbox for boolean (checked = true) inputs
     class CheckBoxesInput
-      include NewBase
-      include NewBase::Collections
-      include NewBase::Choices
+      include Base
+      include Base::Collections
+      include Base::Choices
       
       def to_html
         input_wrapping do

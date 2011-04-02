@@ -26,7 +26,7 @@ module Formtastic
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
     class TextInput 
-      include NewBase
+      include Base
       
       def input_html_options
         { 

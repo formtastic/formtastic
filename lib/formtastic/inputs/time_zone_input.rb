@@ -31,7 +31,7 @@ module Formtastic
     # @todo document :priority_zones option
     # @todo configurable default :priority_zones?
     class TimeZoneInput 
-      include NewBase
+      include Base
 
       def to_html
         input_wrapping do

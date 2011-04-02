@@ -30,7 +30,7 @@ module Formtastic
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
     class FileInput 
-      include NewBase
+      include Base
       def to_html
         input_wrapping do
           label_html <<

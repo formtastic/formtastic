@@ -1,6 +1,6 @@
 module Formtastic
   module Inputs
-    module NewBase
+    module Base
       module Fileish
       
         def file?

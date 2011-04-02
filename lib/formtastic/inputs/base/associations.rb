@@ -1,6 +1,6 @@
 module Formtastic
   module Inputs
-    module NewBase
+    module Base
       module Associations
 
         # :belongs_to, etc

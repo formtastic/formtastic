@@ -1,6 +1,6 @@
 module Formtastic
   module Inputs
-    module NewBase
+    module Base
       module Html
         
         # Defines how the instance of an input should be rendered to a HTML string.

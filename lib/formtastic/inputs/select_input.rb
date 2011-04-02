@@ -133,9 +133,9 @@ module Formtastic
     # @see Formtastic::Inputs::CheckBoxesInput CheckBoxesInput as an alternative for `has_many` and `has_and_belongs_to_many` associations
     # @see Formtastic::Inputs::RadioInput RadioInput as an alternative for `belongs_to` associations
     class SelectInput
-      include NewBase
-      include NewBase::Collections
-      include NewBase::GroupedCollections
+      include Base
+      include Base::Collections
+      include Base::GroupedCollections
       
       def to_html
         input_wrapping do

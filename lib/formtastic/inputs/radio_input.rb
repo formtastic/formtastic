@@ -108,9 +108,9 @@ module Formtastic
     #
     # @todo :disabled like CheckBoxes?
     class RadioInput
-      include NewBase
-      include NewBase::Collections
-      include NewBase::Choices
+      include Base
+      include Base::Collections
+      include Base::Choices
       
       def to_html
         input_wrapping do

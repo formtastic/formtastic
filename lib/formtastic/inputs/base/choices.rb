@@ -1,6 +1,6 @@
 module Formtastic
   module Inputs
-    module NewBase
+    module Base
       module Choices
         
         def choices_wrapping(&block)
@@ -37,7 +37,7 @@ module Formtastic
         end
 
         def choice_html(choice)        
-          raise "choice_html() needs to be implemented when including Formtastic::Inputs::NewBase::Choices"
+          raise "choice_html() needs to be implemented when including Formtastic::Inputs::Base::Choices"
         end
 
         def choice_label(choice)

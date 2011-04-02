@@ -1,6 +1,6 @@
 module Formtastic
   module Inputs
-    module NewBase
+    module Base
       
       attr_accessor :builder, :template, :object, :object_name, :method, :options
       

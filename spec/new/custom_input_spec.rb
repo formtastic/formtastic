@@ -17,7 +17,7 @@ module TestInputs
   end
   
   class ::UnimplementedInput
-    include Formtastic::Inputs::NewBase
+    include Formtastic::Inputs::Base
   end
 
   class ::ImplementedInput < UnimplementedInput

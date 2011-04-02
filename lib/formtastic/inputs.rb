@@ -2,7 +2,7 @@ module Formtastic
   module Inputs
     extend ActiveSupport::Autoload
 
-    autoload :NewBase
+    autoload :Base
     autoload :Basic
     autoload :BooleanInput
     autoload :CheckBoxesInput
