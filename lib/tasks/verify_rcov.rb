@@ -1,4 +1,6 @@
 require 'colored'
+
+# @private
 module RCov
 
   class VerifyTask < Rake::TaskLib
