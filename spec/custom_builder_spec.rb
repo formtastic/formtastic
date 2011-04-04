@@ -11,6 +11,9 @@ describe 'Formtastic::Helpers::FormHelper.builder' do
   # TODO should be a separate spec for custom inputs
   class Formtastic::Inputs::AwesomeInput
     include Formtastic::Inputs::Base
+    def to_html
+      "Awesome!"
+    end
   end
 
   before do
