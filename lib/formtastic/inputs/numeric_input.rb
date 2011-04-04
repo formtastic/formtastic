@@ -25,10 +25,29 @@ module Formtastic
     #     </fieldset>
     #   </form>
     #
-    # @example Pass new HTML5 attrbutes down to the `<input>` tag
-    #  <%= f.input :shoe_size, :as => :numeric, :input_html => { :min => 3, :max => 15, :step => 1 } %>
+    # @example Default HTML5 min/max/step attributes are detected from the numericality validations
+    #
+    #   class Person < ActiveRecord::Base
+    #     validates_numericality_of :age, 
+    #       :less_than => 100, 
+    #       :greater_than => 17, 
+    #       :only_integer => true
+    #   end
+    #
+    #   <%= f.input :age, :as => :numeric %>
+    #
+    #   <li class="numeric">
+    #     <label for="persom_age">Age</label>
+    #     <input type="number" id="person_age" name="person[age]" min="18" max="99" step="1">
+    #   </li>
+    #
+    # @example Pass attributes down to the `<input>` tag
+    #  <%= f.input :shoe_size, :as => :numeric, :input_html => { :min => 3, :max => 15, :step => 1, :class => "special" } %>
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
+    # @see http://api.rubyonrails.org/classes/ActiveModel/Validations/HelperMethods.html#method-i-validates_numericality_of Rails' Numericality validation documentation
+    #
+    # @todo Rename/Alias to NumberInput
     class NumericInput 
       include Base
       include Base::Stringish
@@ -39,6 +58,15 @@ module Formtastic
           builder.number_field(method, input_html_options)
         end
       end
+      
+      def input_html_options
+        {
+          :min => validation_min,
+          :max => validation_max,
+          :step => validation_integer_only? ? 1 : nil 
+        }.merge(super)
+      end
+      
     end
   end
 end

@@ -42,6 +42,43 @@ module Formtastic
           end
         end
         
+        # Prefer :greater_than_or_equal_to over :greater_than, for no particular reason.
+        def validation_min
+          validation = validations? && validations.find do |validation|
+            validation.kind == :numericality
+          end
+          if validation
+            return validation.options[:greater_than_or_equal_to] if validation.options[:greater_than_or_equal_to]
+            return (validation.options[:greater_than] + 1) if validation.options[:greater_than]
+          else
+            nil
+          end
+        end
+
+        # Prefer :less_than_or_equal_to over :less_than, for no particular reason.
+        def validation_max
+          validation = validations? && validations.find do |validation|
+            validation.kind == :numericality
+          end
+          if validation
+            return validation.options[:less_than_or_equal_to] if validation.options[:less_than_or_equal_to]
+            return (validation.options[:less_than] - 1) if validation.options[:less_than]
+          else
+            nil
+          end
+        end
+
+        def validation_integer_only?
+          validation = validations? && validations.find do |validation|
+            validation.kind == :numericality
+          end
+          if validation
+            validation.options[:only_integer]
+          else
+            false
+          end
+        end
+        
         def validations?
           !validations.empty?
         end

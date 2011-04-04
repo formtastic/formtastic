@@ -61,5 +61,132 @@ describe 'numeric input' do
     end
   end
   
+  describe "when validations require a minimum value (:greater_than)" do
+    before do
+      @new_post.class.stub!(:validators_on).with(:title).and_return([
+        active_model_numericality_validator([:title], {:only_integer=>false, :allow_nil=>false, :greater_than=>2})
+      ])
+    end
+    
+    it "should add a max attribute to the input one greater than the validation" do
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input(:title, :as => :numeric)
+      end)
+      output_buffer.should have_tag('input[@min="3"]')
+    end
+    
+    it "should allow :input_html to override :min" do
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input(:title, :as => :numeric, :input_html => { :min => 102 })
+      end)
+      output_buffer.should have_tag('input[@min="102"]')
+    end
+  end
+  
+  describe "when validations require a minimum value (:greater_than_or_equal_to)" do
+    before do
+      @new_post.class.stub!(:validators_on).with(:title).and_return([
+        active_model_numericality_validator([:title], {:only_integer=>false, :allow_nil=>false, :greater_than_or_equal_to=>2})
+      ])
+    end
+    
+    it "should add a max attribute to the input equal to the validation" do
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input(:title, :as => :numeric)
+      end)
+      output_buffer.should have_tag('input[@min="2"]')
+    end
+  end
+  
+  describe "when validations require a maximum value (:less_than)" do
+    before do
+      @new_post.class.stub!(:validators_on).with(:title).and_return([
+        active_model_numericality_validator([:title], {:only_integer=>false, :allow_nil=>false, :less_than=>20})
+      ])
+    end
+    
+    it "should add a min attribute to the input one less than the validation" do
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input(:title, :as => :numeric)
+      end)
+      output_buffer.should have_tag('input[@max="19"]')
+    end
+    
+    it "should allow :input_html to override :min" do
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input(:title, :as => :numeric, :input_html => { :max => 48 })
+      end)
+      output_buffer.should have_tag('input[@max="48"]')
+    end
+  end  
+
+  describe "when validations require a maximum value (:less_than_or_equal_to)" do
+    before do
+      @new_post.class.stub!(:validators_on).with(:title).and_return([
+        active_model_numericality_validator([:title], {:only_integer=>false, :allow_nil=>false, :less_than_or_equal_to=>20})
+      ])
+    end
+    
+    it "should add a min attribute to the input one less than the validation" do
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input(:title, :as => :numeric)
+      end)
+      output_buffer.should have_tag('input[@max="20"]')
+    end
+  end
+  
+  describe "when validations require conflicting minimum values (:greater_than, :greater_than_or_equal_to)" do
+    before do
+      @new_post.class.stub!(:validators_on).with(:title).and_return([
+        active_model_numericality_validator([:title], {:only_integer=>false, :allow_nil=>false, :greater_than => 20, :greater_than_or_equal_to=>2})
+      ])
+    end
+    
+    it "should add a max attribute to the input equal to the :greater_than_or_equal_to validation" do
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input(:title, :as => :numeric)
+      end)
+      output_buffer.should have_tag('input[@min="2"]')
+    end
+  end
+  
+  describe "when validations require conflicting maximum values (:less_than, :less_than_or_equal_to)" do
+    before do
+      @new_post.class.stub!(:validators_on).with(:title).and_return([
+        active_model_numericality_validator([:title], {:only_integer=>false, :allow_nil=>false, :less_than => 20, :less_than_or_equal_to=>2})
+      ])
+    end
+    
+    it "should add a max attribute to the input equal to the :greater_than_or_equal_to validation" do
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input(:title, :as => :numeric)
+      end)
+      output_buffer.should have_tag('input[@max="2"]')
+    end
+  end
+  
+  describe "when validations require only an integer (:only_integer)" do
+    
+    before do
+      @new_post.class.stub!(:validators_on).with(:title).and_return([
+        active_model_numericality_validator([:title], {:allow_nil=>false, :only_integer=>true})
+      ])
+    end
+    
+    it "should add a step=1 attribute to the input to signify that only whole numbers are allowed" do
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input(:title, :as => :numeric)
+      end)
+      output_buffer.should have_tag('input[@step="1"]')
+    end
+    
+    it "should let input_html override :step" do
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input(:title, :as => :numeric, :input_html => { :step => 3 })
+      end)
+      output_buffer.should have_tag('input[@step="3"]')
+    end
+  end
+  
 end
 

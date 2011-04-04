@@ -14,6 +14,7 @@
 * Massive refactoring of formtastic.rb into around 30 files and modules like StringInput and ButtonsHelper
 * Removed chunks of Rails 2 specific code, tests and documentation
 * Added support for HTML5 required attribute on input, select and textarea tags
+* Added support for HTML5 min/max/step attributes on NumericInput
 
 
 1.2.4.beta (unreleased)

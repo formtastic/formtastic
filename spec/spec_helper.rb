@@ -64,6 +64,10 @@ module FormtasticSpecHelper
   def active_model_inclusion_validator(attributes, options = {})
     active_model_validator(:inclusion, attributes, options)
   end
+  
+  def active_model_numericality_validator(attributes, options = {})
+    active_model_validator(:numericality, attributes, options)
+  end
 
   class ::Post
     extend ActiveModel::Naming if defined?(ActiveModel::Naming)
