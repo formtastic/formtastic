@@ -125,6 +125,11 @@ module Formtastic
       # * `:time`         (see {Inputs::TimeInput})
       # * `:url`          (see {Inputs::UrlInput})
       #
+      # Calling `:as => :string` (for example) will call `#to_html` on a new instance of 
+      # `Formtastic::Inputs::StringInput`. Before this, Formtastic will try to instantiate a top-level
+      # namespace StringInput, meaning you can subclass and modify `Formtastic::Inputs::StringInput` 
+      # in `app/inputs/`. This also means you can create your own new input types in `app/inputs/`.
+      #
       # @todo document the "guessing" of input style
       #
       # @param [Symbol] method
@@ -236,17 +241,39 @@ module Formtastic
       # @example Specifying the text for a `:select` input's 'blank' first option to prompt selection:
       #   <%= f.input :author, :as => :select, :prompt => "Select an Author" %>
       #
+      # @example Modifying an input to suit your needs in `app/inputs`:
+      #   class StringInput < Formtastic::Inputs::StringInput
+      #     def to_html
+      #       puts "this is my custom version of StringInput"      
+      #       super
+      #     end
+      #   end
+      #
+      # @example Creating your own input to suit your needs in `app/inputs`:
+      #   class DatePickerInput
+      #     include Formtastic::Inputs::Base
+      #     def to_html
+      #       # ...
+      #     end
+      #   end
+      #
       # @todo Many many more examples. Some of the detail probably needs to be pushed out to the relevant methods too.
       def input(method, options = {})
         options = options.dup # Allow options to be shared without being tainted by Formtastic
         
         options[:as]     ||= default_input_type(method, options)
-
-        [:check_boxes, :string, :country, :boolean, :time_zone, :date, :datetime, :time, :select, :phone, :search, :numeric, :email, :file, :hidden, :password, :text, :url, :radio].each do |i|
-          klass = "Formtastic::Inputs::#{options[:as].to_s.camelize}Input".constantize
-          return klass.new(self, template, @object, @object_name, method, options).to_html if options[:as] == i
+        
+        begin
+          begin
+            klass = "#{options[:as].to_s.camelize}Input".constantize # as :string => StringInput
+          rescue NameError
+            klass = "Formtastic::Inputs::#{options[:as].to_s.camelize}Input".constantize # as :string => Formtastic::Inputs::StringInput
+          end
+        rescue NameError
+          raise Formtastic::UnknownInputError
         end
-      
+        
+        klass.new(self, template, @object, @object_name, method, options).to_html
       end
 
       # {#inputs} creates an input fieldset and ol tag wrapping for use around a set of inputs.  It can be

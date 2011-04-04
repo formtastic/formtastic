@@ -13,4 +13,8 @@ module Formtastic
   autoload :LocalizedString
   autoload :Reflection
   autoload :Util
+  
+  class UnknownInputError < NameError
+  end
+  
 end

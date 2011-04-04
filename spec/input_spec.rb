@@ -744,5 +744,49 @@ describe 'Formtastic::FormBuilder#input' do
     
   end
   
+  describe 'instantiating an input class' do
+    
+    context 'when a class does not exist' do
+      it "should raise an error" do
+        lambda {
+          concat(semantic_form_for(@new_post) do |builder|
+            builder.input(:title, :as => :non_existant)
+          end)
+        }.should raise_error(Formtastic::UnknownInputError)
+      end
+    end
+    
+    context 'when a customized top-level class does not exist' do
+      
+      it 'should instantiate the Formtastic input' do
+        input = mock('input', :to_html => 'some HTML')
+        Formtastic::Inputs::StringInput.should_receive(:new).and_return(input)
+        concat(semantic_form_for(@new_post) do |builder|
+          builder.input(:title, :as => :string)
+        end)
+      end
+      
+    end
+    
+    describe 'when a top-level input class exists' do
+      it "should instantiate the top-level input instead of the Formtastic one" do
+        class ::StringInput < Formtastic::Inputs::StringInput
+        end
+        
+        input = mock('input', :to_html => 'some HTML')
+        Formtastic::Inputs::StringInput.should_not_receive(:new).and_return(input)
+        ::StringInput.should_receive(:new).and_return(input)
+        
+        concat(semantic_form_for(@new_post) do |builder|
+          builder.input(:title, :as => :string)
+        end)
+      end
+    end
+  
+  end
+  
+  
+  
+  
 end
 
