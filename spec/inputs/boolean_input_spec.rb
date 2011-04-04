@@ -69,7 +69,8 @@ describe 'boolean input' do
     end
     
     output_buffer.concat(form) if Formtastic::Util.rails3?
-    output_buffer.should have_tag('form li label input[@disabled="disabled"]')
+    output_buffer.should have_tag('form li label input[@disabled="disabled"]', :count => 1)
+    output_buffer.should have_tag('form li input[@type="hidden"][@disabled="disabled"]', :count => 1)
   end
   
   it 'should generate an input[id] with matching label[for] when id passed in :input_html' do
