@@ -66,11 +66,12 @@ describe 'boolean input' do
     output_buffer.should have_tag('form li input[@type="hidden"][@name="foo"]', :count => 1)
   end
   
-  it "should generate a disabled input if :input_html is passed :disabled => 'disabled' " do
+  it "should generate a disabled input and hidden input if :input_html is passed :disabled => 'disabled' " do
     concat(semantic_form_for(@new_post) do |builder|
       concat(builder.input(:allow_comments, :as => :boolean, :input_html => {:disabled => 'disabled'}))
     end)
-    output_buffer.should have_tag('form li label input[@disabled="disabled"]')
+    output_buffer.should have_tag('form li label input[@disabled="disabled"]', :count => 1)
+    output_buffer.should have_tag('form li input[@type="hidden"][@disabled="disabled"]', :count => 1)
   end
   
   it 'should generate an input[id] with matching label[for] when id passed in :input_html' do
