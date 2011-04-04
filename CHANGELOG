@@ -13,6 +13,8 @@
 * Renamed Formtastic::SemanticFormBuilder to Formtastic::FormBuilder (SemanticFormBuilder still exists as a subclass, need to handle deprecation notices somehow)
 * Massive refactoring of formtastic.rb into around 30 files and modules like StringInput and ButtonsHelper
 * Removed chunks of Rails 2 specific code, tests and documentation
+* Added support for HTML5 required attribute on input, select and textarea tags
+
 
 1.2.4.beta (unreleased)
 
