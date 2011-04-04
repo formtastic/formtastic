@@ -55,7 +55,7 @@ describe 'country input' do
       priority_countries = ["Foo", "Bah"]
       semantic_form_for(@new_post) do |builder|
         builder.stub!(:country_select).and_return(Formtastic::Util.html_safe("<select><option>...</option></select>"))
-        builder.should_receive(:country_select).with(:country, priority_countries, {}, {:id => "post_country"}).and_return(Formtastic::Util.html_safe("<select><option>...</option></select>"))
+        builder.should_receive(:country_select).with(:country, priority_countries, {}, {:id => "post_country", :required => true}).and_return(Formtastic::Util.html_safe("<select><option>...</option></select>"))
 
         concat(builder.input(:country, :as => :country, :priority_countries => priority_countries))
       end
@@ -68,7 +68,7 @@ describe 'country input' do
 
       semantic_form_for(@new_post) do |builder|
         builder.stub!(:country_select).and_return(Formtastic::Util.html_safe("<select><option>...</option></select>"))
-        builder.should_receive(:country_select).with(:country, priority_countries, {}, {:id => "post_country"}).and_return(Formtastic::Util.html_safe("<select><option>...</option></select>"))
+        builder.should_receive(:country_select).with(:country, priority_countries, {}, {:id => "post_country", :required => true}).and_return(Formtastic::Util.html_safe("<select><option>...</option></select>"))
 
         concat(builder.input(:country, :as => :country))
       end
@@ -84,7 +84,7 @@ describe 'country input' do
 
       concat(semantic_form_for(@new_post, :namespace => 'context2') do |builder|
         builder.stub!(:country_select).and_return(Formtastic::Util.html_safe("<select><option>...</option></select>"))
-        builder.should_receive(:country_select).with(:country, [], {}, {:id => "context2_post_country"}).and_return(Formtastic::Util.html_safe("<select><option>...</option></select>"))
+        builder.should_receive(:country_select).with(:country, [], {}, {:id => "context2_post_country", :required => true}).and_return(Formtastic::Util.html_safe("<select><option>...</option></select>"))
         concat(builder.input(:country, :priority_countries => []))
       end)
     end

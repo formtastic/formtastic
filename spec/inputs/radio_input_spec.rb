@@ -13,7 +13,7 @@ describe 'radio input' do
   describe 'for belongs_to association' do
     before do
       concat(semantic_form_for(@new_post) do |builder|
-        concat(builder.input(:author, :as => :radio, :value_as_class => true))
+        concat(builder.input(:author, :as => :radio, :value_as_class => true, :required => true))
       end)
     end
 
@@ -53,6 +53,12 @@ describe 'radio input' do
       it 'should use values as li.class when value_as_class is true' do
         ::Author.all.each do |author|
           output_buffer.should have_tag("form li fieldset ol li.author_#{author.id} label")
+        end
+      end
+      
+      it "should add the required attribute to the input's html options" do
+        ::Author.all.each do |post|
+          output_buffer.should have_tag("form li fieldset ol li.author_#{post.id} input[@required]")
         end
       end
 

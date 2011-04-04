@@ -144,7 +144,16 @@ describe 'boolean input' do
     output_buffer.should have_tag('form li label input[@type="checkbox"]')
     output_buffer.should have_tag('form li label input[@name="project[allow_comments]"]')
   end
-
+  
+  context "when required" do
+    it "should add the required attribute to the input's html options" do
+      concat(semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:title, :as => :boolean, :required => true))
+      end)
+      output_buffer.should have_tag("input[@required]")
+    end
+  end
+  
   describe "when namespace is provided" do
 
     before do

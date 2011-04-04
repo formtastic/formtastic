@@ -19,7 +19,10 @@ module Formtastic
         end
         
         def input_html_options
-          { :id => dom_id }.merge(options[:input_html] || {})
+          { 
+            :id => dom_id,
+            :required => required?
+          }.merge(options[:input_html] || {})
         end
         
         def dom_id

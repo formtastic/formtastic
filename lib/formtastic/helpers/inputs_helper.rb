@@ -23,11 +23,11 @@ module Formtastic
     #         <ol>
     #           <li class="string required" id="post_title_input">
     #             <label for="post_title">Title*</label>
-    #             <input type="text" name="post[title]" id="post_title" value="">
+    #             <input type="text" name="post[title]" id="post_title" value="" required="required">
     #           </li>
     #           <li class="text required" id="post_body_input">
     #             <label for="post_title">Title*</label>
-    #             <textarea name="post[body]" id="post_body"></textarea>
+    #             <textarea name="post[body]" id="post_body" required="required"></textarea>
     #           </li>
     #         </ol>
     #       </fieldset>
@@ -66,7 +66,7 @@ module Formtastic
       #
       #     <li class="string required" id="post_title_input">
       #       <label for="post_title">Title<abbr title="Required">*</abbr></label>
-      #       <input type="text" name="post[title]" value="" id="post_title">
+      #       <input type="text" name="post[title]" value="" id="post_title" required="required">
       #     </li>
       #
       # In other cases (like a series of checkboxes for a `has_many` relationship), the wrapper may
@@ -145,7 +145,7 @@ module Formtastic
       #   Override hint text
       #
       # @option options :required [Boolean]
-      #   Override to mark the input as required (or not)
+      #   Override to mark the input as required (or not) — adds a required/optional class to the wrapper, and a HTML5 required attribute to the `<input>`
       #
       # @option options :input_html [Hash]
       #   Override or add to the HTML attributes to be passed down to the `<input>` tag

@@ -11,7 +11,7 @@ describe 'check_boxes input' do
       mock_everything
 
       concat(semantic_form_for(@fred) do |builder|
-        concat(builder.input(:posts, :as => :check_boxes, :value_as_class => true))
+        concat(builder.input(:posts, :as => :check_boxes, :value_as_class => true, :required => true))
       end)
     end
 
@@ -64,6 +64,12 @@ describe 'check_boxes input' do
       it 'should use values as li.class when value_as_class is true' do
         ::Post.all.each do |post|
           output_buffer.should have_tag("form li fieldset ol li.post_#{post.id} label")
+        end
+      end
+      
+      it "should add the required attribute to the input's html options" do
+        ::Post.all.each do |post|
+          output_buffer.should have_tag("form li fieldset ol li.post_#{post.id} input[@required]")
         end
       end
 

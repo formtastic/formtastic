@@ -39,6 +39,15 @@ describe 'phone input' do
     it_should_have_label_and_input_with_id("context2_post_phone")
 
   end
-
+  
+  describe "when required" do
+    it "should add the required attribute to the input's html options" do
+      concat(semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:title, :as => :phone, :required => true))
+      end)
+      output_buffer.should have_tag("input[@required]")
+    end
+  end
+  
 end
 

@@ -516,4 +516,13 @@ describe 'select input' do
     it_should_have_label_for("context2_post_author_ids")
   end
   
+  context "when required" do
+    it "should add the required attribute to the select's html options" do
+      concat(semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:author, :as => :select, :required => true))
+      end)
+      output_buffer.should have_tag("select[@required]")
+    end
+  end
+  
 end

@@ -92,6 +92,15 @@ describe 'hidden input' do
     end
 
   end
-
+  
+  context "when required" do
+    it "should not add the required attribute to the input's html options" do
+      concat(semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:title, :as => :hidden, :required => true))
+      end)
+      output_buffer.should_not have_tag("input[@required]")
+    end
+  end
+  
 end
 

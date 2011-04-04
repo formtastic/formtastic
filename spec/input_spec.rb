@@ -50,7 +50,6 @@ describe 'Formtastic::FormBuilder#input' do
             output_buffer.should have_tag('form li.required label', /required yo/)
           end
         end
-
       end
 
       describe 'when false' do

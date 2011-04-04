@@ -63,6 +63,7 @@ h2. It's better than _SomeOtherFormBuilder_ because...
 * it doesn't hijack or change any of the standard Rails form inputs, so you can still use them as expected (even mix and match).
 * it's got absolutely awesome spec coverage.
 * there's a bunch of people using and working on it (it's not just one developer building half a solution).
+* it has growing HTML5 support (new inputs like email, new attributes like required)
 
 
 h2. Why?
