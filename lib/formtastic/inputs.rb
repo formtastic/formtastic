@@ -16,6 +16,7 @@ module Formtastic
     autoload :PasswordInput
     autoload :PhoneInput
     autoload :RadioInput
+    autoload :RangeInput
     autoload :SearchInput
     autoload :SelectInput
     autoload :StringInput
@@ -26,3 +27,4 @@ module Formtastic
     autoload :UrlInput
   end
 end
+

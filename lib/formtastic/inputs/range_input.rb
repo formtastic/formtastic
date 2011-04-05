@@ -1,12 +1,18 @@
 module Formtastic
   module Inputs
-    module RangeInput
-      include Formtastic::Inputs::Base
-      
-      def range_input(method, options)
-        basic_input_helper(:range_field, :numeric, method, range_options_for(method, options))
+    class RangeInput
+      include Base
+      include Base::Stringish
+      include Helpers::ValidationsHelper
+
+      def to_html
+        input_wrapping do
+          label_html <<
+          builder.range_field(method, range_options_for(method, input_html_options))
+        end
       end
-  
+
     end
   end
 end
+
