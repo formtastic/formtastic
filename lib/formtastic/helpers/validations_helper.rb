@@ -1,8 +1,12 @@
 module Formtastic
   module Helpers
     module ValidationsHelper
+      include InputsHelper
 
       def range_options_for(method, options = {})
+        # If :float is detected, work ranges only for _or_equal_to.
+        column_type = column_for(method).type
+
         if options[:in]
           options[:step] = options.delete :step || 1
           return options
@@ -11,14 +15,15 @@ module Formtastic
         reflections = @object.class.reflect_on_validations_for(method) if @object.class.respond_to? :reflect_on_validations_for
         reflections ||= []
         reflections.each do |reflection|
-          p reflection.macro
           if reflection.macro == :validates_numericality_of
-            if reflection.options.include?(:greater_than)
+            if reflection.options.include?(:greater_than)\
+              and not column_type == :float
               range_start = (reflection.options[:greater_than] + 1)
             elsif reflection.options.include?(:greater_than_or_equal_to)
               range_start = reflection.options[:greater_than_or_equal_to]
             end
-            if reflection.options.include?(:less_than)
+            if reflection.options.include?(:less_than)\
+              and not column_type == :float
               range_end = (reflection.options[:less_than] - 1)
             elsif reflection.options.include?(:less_than_or_equal_to)
               range_end = reflection.options[:less_than_or_equal_to]
@@ -34,7 +39,8 @@ module Formtastic
             # However, this is non-standard option for ActiveModel.
             options[:step] = (reflection.options[:step] || 1)
 
-            options[:in] = (range_start..range_end)
+            # Taken in parenthesis for Floats to work.
+            options[:in] = ((range_start)..(range_end))
           end
         end
 
