@@ -1,37 +1,3 @@
-<<<<<<< HEAD
-=======
-$LOAD_PATH.unshift(File.expand_path(File.join(File.dirname(__FILE__))))
-
-require 'html_attributes'
-
-require 'helpers/inputs_helper'
-require 'helpers/buttons_helper'
-require 'helpers/label_helper'
-require 'helpers/errors_helper'
-require 'helpers/validations_helper'
-
-require 'inputs/boolean_input'
-require 'inputs/check_boxes_input'
-require 'inputs/country_input'
-require 'inputs/datetime_input'
-require 'inputs/date_input'
-require 'inputs/email_input'
-require 'inputs/file_input'
-require 'inputs/hidden_input'
-require 'inputs/numeric_input'
-require 'inputs/password_input'
-require 'inputs/phone_input'
-require 'inputs/radio_input'
-require 'inputs/range_input'
-require 'inputs/search_input'
-require 'inputs/select_input'
-require 'inputs/string_input'
-require 'inputs/text_input'
-require 'inputs/time_input'
-require 'inputs/time_zone_input'
-require 'inputs/url_input'
-
->>>>>>> okonski/range_helper
 module Formtastic
   class FormBuilder < ActionView::Helpers::FormBuilder
 
@@ -72,6 +38,8 @@ module Formtastic
     include Formtastic::Helpers::InputsHelper
     include Formtastic::Helpers::ButtonsHelper
     include Formtastic::Helpers::ErrorsHelper
+    include Formtastic::Helpers::ValidationsHelper
+
   end
 
 end
