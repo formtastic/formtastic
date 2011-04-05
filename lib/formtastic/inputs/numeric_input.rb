@@ -1,5 +1,3 @@
-require 'inputs/basic'
-
 module Formtastic
   module Inputs
 
@@ -31,21 +29,19 @@ module Formtastic
     #  <%= f.input :shoe_size, :as => :numeric, :input_html => { :min => 3, :max => 15, :step => 1 } %>
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
-    class NumericInput 
+    class NumericInput
       include Base
       include Base::Stringish
-      
+      include Helpers::ValidationsHelper
+
       def to_html
         input_wrapping do
+          p range_options_for(method, input_html_options)
           label_html <<
-          builder.number_field(method, input_html_options)
+          builder.number_field(method, range_options_for(method, input_html_options))
         end
-      end
-
-      # Outputs a label and standard Rails text field inside the wrapper.
-      def numeric_input(method, options)
-        basic_input_helper(:number_field, :numeric, method, range_options_for(method, options))
       end
     end
   end
 end
+

@@ -3,16 +3,15 @@ module Formtastic
     module ValidationsHelper
 
       def range_options_for(method, options = {})
-        options[:input_html] ||= {}
         if options[:in]
-          options[:input_html][:in] = options.delete :in
-          options[:input_html][:step] = options.delete :step || 1
+          options[:step] = options.delete :step || 1
           return options
         end
 
         reflections = @object.class.reflect_on_validations_for(method) if @object.class.respond_to? :reflect_on_validations_for
         reflections ||= []
         reflections.each do |reflection|
+          p reflection.macro
           if reflection.macro == :validates_numericality_of
             if reflection.options.include?(:greater_than)
               range_start = (reflection.options[:greater_than] + 1)
@@ -25,11 +24,19 @@ module Formtastic
               range_end = reflection.options[:less_than_or_equal_to]
             end
 
-            options[:input_html][:in] = (range_start..range_end)
+            # This ensures proper and default range,
+            # even if programmer has not entered any details for the macro
+            range_start ||= 0
+            range_end ||= 100
+
+            # When using macro `:validates_numericality_of`, you can
+            # use `:step` option to pre-define step for numeric fields.
+            # However, this is non-standard option for ActiveModel.
+            options[:step] = (reflection.options[:step] || 1)
+
+            options[:in] = (range_start..range_end)
           end
         end
-
-        options[:input_html][:step] ||= 1
 
         return options
       end
