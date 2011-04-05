@@ -313,6 +313,7 @@ The Formtastic input types:
 * @:phone@ - a text field (just like string). Default for columns with name matching @"phone"@ or @"fax"@. New in HTML5.
 * @:search@ - a text field (just like string). Default for columns with name matching @"search"@. New in HTML5. Works on Safari.
 * @:hidden@ - a hidden field. Creates a hidden field (added for compatibility).
+* @:range@ - a slider field.
 
 The comments in the code are pretty good for each of these (what it does, what the output is, what the options are, etc.) so go check it out.
 

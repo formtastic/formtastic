@@ -10,3 +10,4 @@ module Formtastic
     autoload :SemanticFormHelper, 'formtastic/helpers/semantic_form_helper'
   end
 end
+

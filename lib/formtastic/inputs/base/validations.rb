@@ -67,6 +67,17 @@ module Formtastic
             nil
           end
         end
+        
+        def validation_step
+          validation = validations? && validations.find do |validation|
+            validation.kind == :numericality
+          end
+          if validation
+            validation.options[:step]
+          else
+            nil
+          end
+        end
 
         def validation_integer_only?
           validation = validations? && validations.find do |validation|
