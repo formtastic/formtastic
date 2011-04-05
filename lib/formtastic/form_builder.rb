@@ -8,7 +8,7 @@ require 'helpers/inputs_helper'
 require 'helpers/buttons_helper'
 require 'helpers/label_helper'
 require 'helpers/errors_helper'
-require 'helpers/validation_helper'
+require 'helpers/validations_helper'
 
 require 'inputs/boolean_input'
 require 'inputs/check_boxes_input'
@@ -64,7 +64,7 @@ module Formtastic
     configure :default_hint_class, 'inline-hints'
 
     attr_reader :template
-    
+
     attr_reader :auto_index
 
     include Formtastic::HtmlAttributes
@@ -75,3 +75,4 @@ module Formtastic
   end
 
 end
+

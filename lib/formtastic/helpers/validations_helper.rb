@@ -1,7 +1,7 @@
 module Formtastic
   module Helpers
-    module ValidationHelper
-    
+    module ValidationsHelper
+
       def range_options_for(method, options = {})
         options[:input_html] ||= {}
         if options[:in]
@@ -9,7 +9,7 @@ module Formtastic
           options[:input_html][:step] = options.delete :step || 1
           return options
         end
-        
+
         reflections = @object.class.reflect_on_validations_for(method) if @object.class.respond_to? :reflect_on_validations_for
         reflections ||= []
         reflections.each do |reflection|
@@ -24,16 +24,17 @@ module Formtastic
             elsif reflection.options.include?(:less_than_or_equal_to)
               range_end = reflection.options[:less_than_or_equal_to]
             end
-              
+
             options[:input_html][:in] = (range_start..range_end)
           end
         end
-        
+
         options[:input_html][:step] ||= 1
-        
+
         return options
       end
-      
+
     end
   end
 end
+
