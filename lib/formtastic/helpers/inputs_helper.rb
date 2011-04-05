@@ -113,7 +113,7 @@ module Formtastic
       # * `:email`        (see {Inputs::EmailInput})
       # * `:file`         (see {Inputs::FileInput})
       # * `:hidden`       (see {Inputs::HiddenInput})
-      # * `:numeric`      (see {Inputs::NumericInput})
+      # * `:number`       (see {Inputs::NumberInput})
       # * `:password`     (see {Inputs::PasswordInput})
       # * `:phone`        (see {Inputs::PhoneInput})
       # * `:radio`        (see {Inputs::RadioInput})
@@ -615,7 +615,7 @@ module Formtastic
 
       # For methods that have a database column, take a best guess as to what the input method
       # should be.  In most cases, it will just return the column type (eg :string), but for special
-      # cases it will simplify (like the case of :integer, :float & :decimal to :numeric), or do
+      # cases it will simplify (like the case of :integer, :float & :decimal to :number), or do
       # something different (like :password and :select).
       #
       # If there is no column for the method (eg "virtual columns" with an attr_accessor), the
@@ -634,9 +634,9 @@ module Formtastic
             return :search    if method.to_s =~ /^search$/
           when :integer
             return :select    if reflection_for(method)
-            return :numeric
+            return :number
           when :float, :decimal
-            return :numeric
+            return :number
           when :timestamp
             return :datetime
           end

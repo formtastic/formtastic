@@ -288,10 +288,10 @@ describe 'Formtastic::FormBuilder#input' do
           default_input_type(nil, :password_method_without_a_database_column).should == :password
         end
 
-        it 'should default to :numeric for "integer" column with name ending in "_id"' do
+        it 'should default to :number for "integer" column with name ending in "_id"' do
           @new_post.stub!(:aws_instance_id)
           @new_post.stub!(:column_for_attribute).with(:aws_instance_id).and_return(mock('column', :type => :integer))
-          default_input_type(:integer, :aws_instance_id).should == :numeric
+          default_input_type(:integer, :aws_instance_id).should == :number
         end
         
         it 'should default to :select for associations' do
@@ -332,10 +332,10 @@ describe 'Formtastic::FormBuilder#input' do
           default_input_type(:string).should == :string
         end
   
-        it 'should default to :numeric for :integer, :float and :decimal column types' do
-          default_input_type(:integer).should == :numeric
-          default_input_type(:float).should == :numeric
-          default_input_type(:decimal).should == :numeric
+        it 'should default to :number for :integer, :float and :decimal column types' do
+          default_input_type(:integer).should == :number
+          default_input_type(:float).should == :number
+          default_input_type(:decimal).should == :number
         end
   
         it 'should default to :country for :string columns named country' do
@@ -387,7 +387,7 @@ describe 'Formtastic::FormBuilder#input' do
       end
   
       it 'should call the corresponding input class with .to_html' do
-        [:select, :time_zone, :radio, :date, :datetime, :time, :boolean, :check_boxes, :hidden, :string, :password, :numeric, :text, :file].each do |input_style|
+        [:select, :time_zone, :radio, :date, :datetime, :time, :boolean, :check_boxes, :hidden, :string, :password, :number, :text, :file].each do |input_style|
           @new_post.stub!(:generic_column_name)
           @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
           semantic_form_for(@new_post) do |builder|

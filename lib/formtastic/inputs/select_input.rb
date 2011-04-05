@@ -18,7 +18,7 @@ module Formtastic
     # * a `:string` input (where you want to force the user to choose from a few specific strings rather than entering anything)
     # * a `:boolean` checkbox input (where the user could choose yes or no, rather than checking a box)
     # * a `:date`, `:time` or `:datetime` input (where the user could choose from pre-selected dates)
-    # * a `:numeric` input (where the user could choose from a set of pre-defined numbers)
+    # * a `:number` input (where the user could choose from a set of pre-defined numbers)
     # * a `:time_zone` input (where you want to provide your own set of choices instead of relying on Rails)
     # * a `:country` input (no need for a plugin really)
     #

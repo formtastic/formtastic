@@ -4,13 +4,13 @@ module Formtastic
     # Outputs a simple `<label>` with a HTML5 `<input type="number">` wrapped in the standard
     # `<li>` wrapper. This is the default input choice for all database columns of the type `:float`
     # and `:decimal`, as well as `:integer` columns that aren't used for `belongs_to` associations`,
-    # but can be applied to any text-like input with `:as => :numeric`.
+    # but can be applied to any text-like input with `:as => :number`.
     #
     # @example Full form context and output
     #
     #   <%= semantic_form_for(@user) do |f| %>
     #     <%= f.inputs do %>
-    #       <%= f.input :shoe_size, :as => :numeric %>
+    #       <%= f.input :shoe_size, :as => :number %>
     #     <% end %>
     #   <% end %>
     #
@@ -34,7 +34,7 @@ module Formtastic
     #       :only_integer => true
     #   end
     #
-    #   <%= f.input :age, :as => :numeric %>
+    #   <%= f.input :age, :as => :number %>
     #
     #   <li class="numeric">
     #     <label for="persom_age">Age</label>
@@ -42,13 +42,13 @@ module Formtastic
     #   </li>
     #
     # @example Pass attributes down to the `<input>` tag
-    #  <%= f.input :shoe_size, :as => :numeric, :input_html => { :min => 3, :max => 15, :step => 1, :class => "special" } %>
+    #  <%= f.input :shoe_size, :as => :number, :input_html => { :min => 3, :max => 15, :step => 1, :class => "special" } %>
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
     # @see http://api.rubyonrails.org/classes/ActiveModel/Validations/HelperMethods.html#method-i-validates_numericality_of Rails' Numericality validation documentation
     #
     # @todo Rename/Alias to NumberInput
-    class NumericInput 
+    class NumberInput 
       include Base
       include Base::Stringish
       
