@@ -13,6 +13,7 @@ module Formtastic
     autoload :FileInput
     autoload :HiddenInput
     autoload :NumberInput
+    autoload :NumericInput
     autoload :PasswordInput
     autoload :PhoneInput
     autoload :RadioInput
