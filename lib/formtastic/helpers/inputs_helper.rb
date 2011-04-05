@@ -257,7 +257,17 @@ module Formtastic
       #     end
       #   end
       #
+      # @example Providing HTML5 placeholder text through i18n:
+      #   en:
+      #    formtastic:
+      #      placeholders:
+      #        user:
+      #          email: "you@yours.com"
+      #          first_name: "Joe"
+      #          last_name: "Smith"
+      #
       # @todo Many many more examples. Some of the detail probably needs to be pushed out to the relevant methods too.
+      # @todo More i18n examples.
       def input(method, options = {})
         options = options.dup # Allow options to be shared without being tainted by Formtastic
         

@@ -13,11 +13,17 @@ module Formtastic
         
         # Overrides standard `input_html_options` to provide a `maxlength` and `size` attribute.
         def input_html_options
-          super.merge(
+          {
             :maxlength => options[:input_html].try(:[], :maxlength) || limit,
-            :size => builder.default_text_field_size
-          )
+            :size => builder.default_text_field_size,
+            :placeholder => placeholder_text
+          }.merge(super)
         end
+        
+        def placeholder_text
+          localized_string(method, options[:placeholder], :placeholder)
+        end
+        
       end
     end
   end

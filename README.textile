@@ -63,7 +63,7 @@ h2. It's better than _SomeOtherFormBuilder_ because...
 * it doesn't hijack or change any of the standard Rails form inputs, so you can still use them as expected (even mix and match).
 * it's got absolutely awesome spec coverage.
 * there's a bunch of people using and working on it (it's not just one developer building half a solution).
-* it has growing HTML5 support (new inputs like email, new attributes like required/min/max/step)
+* it has growing HTML5 support (new inputs like email/phone/search, new attributes like required/min/max/step/placeholder)
 
 
 h2. Why?
@@ -365,7 +365,7 @@ Formtastic supports localized *labels*, *hints*, *legends*, *actions* using the 
         post_details: "Post details"
       labels:
         post:
-          title: "Choose a title..."
+          title: "Your Title"
           body: "Write something..."
           edit:
             title: "Edit title"
@@ -373,6 +373,12 @@ Formtastic supports localized *labels*, *hints*, *legends*, *actions* using the 
         post:
           title: "Choose a good title for you post."
           body: "Write something inspiring here."
+      placeholders:
+        post:
+          title: "Title your post"
+          slug: "Leave blank for an automatically generated slug"
+        user:
+          email: "you@yours.com"
       actions:
         create: "Create my %{model}"
         update: "Save changes"

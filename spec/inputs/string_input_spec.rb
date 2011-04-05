@@ -156,5 +156,6 @@ describe 'string input' do
       output_buffer.should have_tag("input[@required]")
     end
   end
+
 end
 

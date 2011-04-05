@@ -15,7 +15,7 @@
 * Removed chunks of Rails 2 specific code, tests and documentation
 * Added support for HTML5 required attribute on input, select and textarea tags
 * Added support for HTML5 min/max/step attributes on NumericInput
-
+* Added support for HTML5 placeholder attributes on Stringish inputs (string, email, phone, url, search, number, password)
 
 1.2.4.beta (unreleased)
 
