@@ -20,7 +20,7 @@ describe 'text input' do
   it_should_have_label_for("post_body")
   it_should_have_textarea_with_id("post_body")
   it_should_have_textarea_with_name("post[body]")
-  it_should_apply_error_logic_for_input_type(:numeric)
+  it_should_apply_error_logic_for_input_type(:number)
 
   it 'should use input_html to style inputs' do
     output_buffer.replace ''
@@ -85,7 +85,7 @@ describe 'text input' do
       concat(semantic_form_for(@new_post) do |builder|
         concat(builder.input(:title, :as => :text, :required => true))
       end)
-      output_buffer.should have_tag("input[@required]")
+      output_buffer.should have_tag("textarea[@required]")
     end
   end
   
