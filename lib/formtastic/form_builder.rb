@@ -22,7 +22,7 @@ module Formtastic
     configure :file_methods, [ :file?, :public_filename, :filename ]
     configure :file_metadata_suffixes, ['content_type', 'file_name', 'file_size']
     configure :priority_countries, ["Australia", "Canada", "United Kingdom", "United States"]
-    configure :i18n_lookups_by_default, false
+    configure :i18n_lookups_by_default, true
     configure :escape_html_entities_in_hints_and_labels, true
     configure :default_commit_button_accesskey
     configure :default_inline_error_class, 'inline-errors'

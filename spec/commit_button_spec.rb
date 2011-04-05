@@ -19,10 +19,12 @@ describe 'Formtastic::FormBuilder#commit_button' do
     end
 
     it 'should call :persisted?' do
-      @new_post.should_receive(:persisted?)
-      @new_post.should_not_receive(:new_record?)
-      semantic_form_for(@new_post) do |builder|
-        concat(builder.commit_button)
+      with_config :i18n_lookups_by_default, false do
+        @new_post.should_receive(:persisted?)
+        @new_post.should_not_receive(:new_record?)
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.commit_button)
+        end
       end
     end
 
