@@ -270,11 +270,9 @@ module Formtastic
       # @todo More i18n examples.
       def input(method, options = {})
         options = options.dup # Allow options to be shared without being tainted by Formtastic
-        
-        options[:as]     ||= default_input_type(method, options)
-        
-        klass = input_class(options[:as])
+        options[:as] ||= default_input_type(method, options)
 
+        klass = input_class(options[:as])
         klass.new(self, template, @object, @object_name, method, options).to_html
       end
 
