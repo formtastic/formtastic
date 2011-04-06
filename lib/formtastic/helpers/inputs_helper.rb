@@ -273,14 +273,7 @@ module Formtastic
         
         options[:as]     ||= default_input_type(method, options)
         
-        klass_name = "#{options[:as].to_s.camelize}Input"
-        if Object.const_defined?(klass_name)
-          klass = Object.const_get(klass_name)
-        elsif Formtastic::Inputs.const_defined?(klass_name)
-          klass = Formtastic::Inputs.const_get(klass_name)
-        else
-          raise Formtastic::UnknownInputError
-        end
+        klass = input_class(options[:as])
 
         klass.new(self, template, @object, @object_name, method, options).to_html
       end
@@ -574,6 +567,35 @@ module Formtastic
       alias :errors_on :inline_errors_for
 
       protected
+      
+      # Takes the `:as` option and attempts to return the corresponding input class. In the case of
+      # `:as => :string` it will first attempt to find a top level `StringInput` class (to allow the
+      # application to subclass and modify to suit), falling back to `Formtastic::Inputs::StringInput`.
+      #
+      # This also means that the application can define it's own custom inputs in the top level
+      # namespace (eg `DatepickerInput`).
+      #
+      # @param [Symbol] as A symbol representing the type of input to render
+      # @raise [Formtastic::UnknownInputError] An appropriate input class could not be found
+      # @return [Class] An input class constant
+      #
+      # @example Normal use
+      #   input_class(:string) #=> Formtastic::Inputs::StringInput
+      #   input_class(:date) #=> Formtastic::Inputs::DateInput
+      #
+      # @example When a top-level class is found
+      #   input_class(:string) #=> StringInput
+      #   input_class(:awesome) #=> AwesomeInput
+      def input_class(as)
+        klass_name = "#{as.to_s.camelize}Input"
+        if Object.const_defined?(klass_name)
+          klass = Object.const_get(klass_name)
+        elsif Formtastic::Inputs.const_defined?(klass_name)
+          klass = Formtastic::Inputs.const_get(klass_name)
+        else
+          raise Formtastic::UnknownInputError
+        end
+      end
 
       # Collects association columns (relation columns) for the current form object class.
       def association_columns(*by_associations) #:nodoc:
