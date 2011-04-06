@@ -273,16 +273,15 @@ module Formtastic
         
         options[:as]     ||= default_input_type(method, options)
         
-        begin
-          begin
-            klass = "#{options[:as].to_s.camelize}Input".constantize # as :string => StringInput
-          rescue NameError
-            klass = "Formtastic::Inputs::#{options[:as].to_s.camelize}Input".constantize # as :string => Formtastic::Inputs::StringInput
-          end
-        rescue NameError
+        klass_name = "#{options[:as].to_s.camelize}Input"
+        if Object.const_defined?(klass_name)
+          klass = Object.const_get(klass_name)
+        elsif Formtastic::Inputs.const_defined?(klass_name)
+          klass = Formtastic::Inputs.const_get(klass_name)
+        else
           raise Formtastic::UnknownInputError
         end
-        
+
         klass.new(self, template, @object, @object_name, method, options).to_html
       end
 
