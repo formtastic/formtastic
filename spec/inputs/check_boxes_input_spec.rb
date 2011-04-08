@@ -284,6 +284,11 @@ describe 'check_boxes input' do
       it "should not output the legend" do
         output_buffer.should_not have_tag("legend.label")
       end
+      
+      it "should not cause escaped HTML" do
+        output_buffer.should_not include("&gt;")
+      end
+      
     end
 
     describe "when :required option is true" do
