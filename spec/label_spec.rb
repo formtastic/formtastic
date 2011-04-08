@@ -57,6 +57,7 @@ describe 'Formtastic::FormBuilder#label' do
         builder.input(:title, :label => false)
       end)
       output_buffer.should_not have_tag('label')
+      output_buffer.should_not include("&gt;")
     end
 
     it 'should html escape the label string by default' do
