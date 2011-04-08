@@ -585,14 +585,28 @@ module Formtastic
       #   input_class(:string) #=> StringInput
       #   input_class(:awesome) #=> AwesomeInput
       def input_class(as)
-        klass_name = "#{as.to_s.camelize}Input"
-        if Object.const_defined?(klass_name)
-          klass = Object.const_get(klass_name)
-        elsif Formtastic::Inputs.const_defined?(klass_name)
-          klass = Formtastic::Inputs.const_get(klass_name)
-        else
-          raise Formtastic::UnknownInputError
+        @input_classes_cache ||= {}
+        @input_classes_cache[as] ||= begin
+          begin
+            begin
+              custom_input_class_name(as).constantize
+            rescue NameError
+              standard_input_class_name(as).constantize
+            end
+          rescue NameError
+            raise Formtastic::UnknownInputError
+          end
         end
+      end
+      
+      # :as => :string # => StringInput
+      def custom_input_class_name(as)
+        "#{as.to_s.camelize}Input"
+      end
+
+      # :as => :string # => Formtastic::Inputs::StringInput
+      def standard_input_class_name(as)
+        "Formtastic::Inputs::#{as.to_s.camelize}Input"
       end
 
       # Collects association columns (relation columns) for the current form object class.
