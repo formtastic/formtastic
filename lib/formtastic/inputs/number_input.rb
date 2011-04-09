@@ -61,9 +61,9 @@ module Formtastic
       
       def input_html_options
         {
-          :min => validation_min,
+          :min => validation_min || 0, # always need a min value
           :max => validation_max,
-          :step => validation_integer_only? ? 1 : nil 
+          :step => validation_step || 1 
         }.merge(super)
       end
       
