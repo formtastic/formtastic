@@ -270,19 +270,9 @@ module Formtastic
       # @todo More i18n examples.
       def input(method, options = {})
         options = options.dup # Allow options to be shared without being tainted by Formtastic
-        
-        options[:as]     ||= default_input_type(method, options)
-        
-        begin
-          begin
-            klass = "#{options[:as].to_s.camelize}Input".constantize # as :string => StringInput
-          rescue NameError
-            klass = "Formtastic::Inputs::#{options[:as].to_s.camelize}Input".constantize # as :string => Formtastic::Inputs::StringInput
-          end
-        rescue NameError
-          raise Formtastic::UnknownInputError
-        end
-        
+        options[:as] ||= default_input_type(method, options)
+
+        klass = input_class(options[:as])
         klass.new(self, template, @object, @object_name, method, options).to_html
       end
 
@@ -575,6 +565,49 @@ module Formtastic
       alias :errors_on :inline_errors_for
 
       protected
+      
+      # Takes the `:as` option and attempts to return the corresponding input class. In the case of
+      # `:as => :string` it will first attempt to find a top level `StringInput` class (to allow the
+      # application to subclass and modify to suit), falling back to `Formtastic::Inputs::StringInput`.
+      #
+      # This also means that the application can define it's own custom inputs in the top level
+      # namespace (eg `DatepickerInput`).
+      #
+      # @param [Symbol] as A symbol representing the type of input to render
+      # @raise [Formtastic::UnknownInputError] An appropriate input class could not be found
+      # @return [Class] An input class constant
+      #
+      # @example Normal use
+      #   input_class(:string) #=> Formtastic::Inputs::StringInput
+      #   input_class(:date) #=> Formtastic::Inputs::DateInput
+      #
+      # @example When a top-level class is found
+      #   input_class(:string) #=> StringInput
+      #   input_class(:awesome) #=> AwesomeInput
+      def input_class(as)
+        @input_classes_cache ||= {}
+        @input_classes_cache[as] ||= begin
+          begin
+            begin
+              custom_input_class_name(as).constantize
+            rescue NameError
+              standard_input_class_name(as).constantize
+            end
+          rescue NameError
+            raise Formtastic::UnknownInputError
+          end
+        end
+      end
+      
+      # :as => :string # => StringInput
+      def custom_input_class_name(as)
+        "#{as.to_s.camelize}Input"
+      end
+
+      # :as => :string # => Formtastic::Inputs::StringInput
+      def standard_input_class_name(as)
+        "Formtastic::Inputs::#{as.to_s.camelize}Input"
+      end
 
       # Collects association columns (relation columns) for the current form object class.
       def association_columns(*by_associations) #:nodoc:

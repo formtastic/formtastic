@@ -6,7 +6,7 @@ module Formtastic
         include Formtastic::LocalizedString
         
         def label_html
-          render_label? ? builder.label(input_name, label_text, label_html_options) : ""
+          render_label? ? builder.label(input_name, label_text, label_html_options) : "".html_safe
         end
         
         def label_html_options

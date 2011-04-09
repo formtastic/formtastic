@@ -72,7 +72,7 @@ module Formtastic
               label_html_options.merge(:class => "label")
             )
           else
-            ""
+            "".html_safe
           end
         end
         
