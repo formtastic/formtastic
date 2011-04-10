@@ -376,6 +376,10 @@ module Formtastic
       # All options except `:name`, `:title` and `:for` will be passed down to the fieldset as HTML
       # attributes (id, class, style, etc).
       #
+      # When nesting `inputs()` inside another `inputs()` block, the nested content will 
+      # automatically be wrapped in an `<li>` tag to preserve the HTML validity (a `<fieldset>`
+      # cannot be a direct descendant of an `<ol>`.
+      #
       #
       # @option *args :for [Symbol, ActiveModel, Array]
       #   The contents of this option is passed down to Rails' fields_for() helper, so it accepts the same values.
@@ -487,28 +491,37 @@ module Formtastic
       #     <% end %>
       #   <% end %>
       def inputs(*args, &block)
+        wrap_it = @already_in_an_inputs_block ? true : false
+        @already_in_an_inputs_block = true
+        
         title = field_set_title_from_args(*args)
         html_options = args.extract_options!
         html_options[:class] ||= "inputs"
         html_options[:name] = title
 
-        if html_options[:for] # Nested form
-          inputs_for_nested_attributes(*(args << html_options), &block)
-        elsif block_given?
-          field_set_and_list_wrapping(*(args << html_options), &block)
-        else
-          if @object && args.empty?
-            args  = association_columns(:belongs_to)
-            args += content_columns
-            args -= SKIPPED_COLUMNS
-            args.compact!
+        out = begin
+          if html_options[:for] # Nested form
+            inputs_for_nested_attributes(*(args << html_options), &block)
+          elsif block_given?
+            field_set_and_list_wrapping(*(args << html_options), &block)
+          else
+            if @object && args.empty?
+              args  = association_columns(:belongs_to)
+              args += content_columns
+              args -= SKIPPED_COLUMNS
+              args.compact!
+            end
+            legend = args.shift if args.first.is_a?(::String)
+            contents = args.collect { |method| input(method.to_sym) }
+            args.unshift(legend) if legend.present?
+          
+            field_set_and_list_wrapping(*((args << html_options) << contents))
           end
-          legend = args.shift if args.first.is_a?(::String)
-          contents = args.collect { |method| input(method.to_sym) }
-          args.unshift(legend) if legend.present?
-
-          field_set_and_list_wrapping(*((args << html_options) << contents))
         end
+        
+        out = template.content_tag(:li, out) if wrap_it
+        @already_in_an_inputs_block = false
+        out
       end
 
       # A thin wrapper around Rails' `fields_for` helper to set `:builder => Formtastic::FormBuilder`

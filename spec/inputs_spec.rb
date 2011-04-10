@@ -436,4 +436,79 @@ describe 'Formtastic::FormBuilder#inputs' do
     end
 
   end
+
+  describe 'nesting' do
+    
+    context "when not nested" do
+      it "should not wrap the inputs in an li block" do
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.inputs do
+          end)
+        end)
+        output_buffer.should_not have_tag('form > li')
+      end
+    end
+    
+    context "when nested (with block)" do
+      it "should wrap the nested inputs in an li block to maintain HTML validity" do
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.inputs do
+            concat(builder.inputs do
+            end)
+          end)
+        end)
+        output_buffer.should have_tag('form > fieldset.inputs > ol > li > fieldset.inputs > ol')
+      end
+    end
+    
+    context "when nested (with block and :for)" do
+      it "should wrap the nested inputs in an li block to maintain HTML validity" do
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.inputs do
+            concat(builder.inputs(:for => :author) do |author_builder|
+            end)
+          end)
+        end)
+        output_buffer.should have_tag('form > fieldset.inputs > ol > li > fieldset.inputs > ol')
+      end
+    end
+    
+    context "when nested (without block)" do
+      it "should wrap the nested inputs in an li block to maintain HTML validity" do
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.inputs do
+            concat(builder.inputs(:title))
+          end)
+        end)
+        output_buffer.should have_tag('form > fieldset.inputs > ol > li > fieldset.inputs > ol')
+      end
+    end
+
+    context "when nested (without block, with :for)" do
+      it "should wrap the nested inputs in an li block to maintain HTML validity" do
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.inputs do
+            concat(builder.inputs(:name, :for => :author))
+          end)
+        end)
+        output_buffer.should have_tag('form > fieldset.inputs > ol > li > fieldset.inputs > ol')
+      end
+    end
+
+    context "when double nested" do
+      it "should wrap the nested inputs in an li block to maintain HTML validity" do
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.inputs do
+            concat(builder.inputs do
+              concat(builder.inputs do
+              end)
+            end)
+          end)
+        end)
+        output_buffer.should have_tag('form > fieldset.inputs > ol > li > fieldset.inputs > ol > li > fieldset.inputs > ol')
+      end
+    end
+    
+  end
+
 end

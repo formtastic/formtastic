@@ -16,6 +16,8 @@
 * Added support for HTML5 required attribute on input, select and textarea tags
 * Added support for HTML5 min/max/step attributes on NumericInput
 * Added support for HTML5 placeholder attributes on Stringish inputs (string, email, phone, url, search, number, password)
+* Changed nested inputs() blocks to be automatically wrapped in an `<li>` tag to preserve HTML validity
+
 
 1.2.4.beta (unreleased)
 
