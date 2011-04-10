@@ -512,7 +512,12 @@ module Formtastic
               args.compact!
             end
             legend = args.shift if args.first.is_a?(::String)
-            contents = args.collect { |method| input(method.to_sym) }
+            contents = args.collect do |method| 
+              if @object && (@object.class.reflect_on_association(method.to_sym) && @object.class.reflect_on_association(method.to_sym).options[:polymorphic] == true)
+                raise PolymorphicInputWithoutCollectionError.new("Please provide a collection for :#{method} input (you'll need to use block form syntax). Inputs for polymorphic associations can only be used when an explicit :collection is provided.")
+              end
+              input(method.to_sym)
+            end
             args.unshift(legend) if legend.present?
           
             field_set_and_list_wrapping(*((args << html_options) << contents))
@@ -622,12 +627,16 @@ module Formtastic
         "Formtastic::Inputs::#{as.to_s.camelize}Input"
       end
 
-      # Collects association columns (relation columns) for the current form object class.
+      # Collects association columns (relation columns) for the current form object class. Skips
+      # polymorphic associations because we can't guess which class to use for an automatically
+      # generated input.
       def association_columns(*by_associations) #:nodoc:
         if @object.present? && @object.class.respond_to?(:reflections)
           @object.class.reflections.collect do |name, association_reflection|
             if by_associations.present?
-              name if by_associations.include?(association_reflection.macro)
+              if by_associations.include?(association_reflection.macro) && association_reflection.options[:polymorphic] != true
+                name 
+              end
             else
               name
             end

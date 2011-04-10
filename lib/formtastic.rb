@@ -17,4 +17,7 @@ module Formtastic
   class UnknownInputError < NameError
   end
   
+  class PolymorphicInputWithoutCollectionError < ArgumentError
+  end
+  
 end
