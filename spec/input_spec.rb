@@ -725,6 +725,31 @@ describe 'Formtastic::FormBuilder#input' do
       end
 
     end
+
+    describe ':collection option' do
+      
+      it "should be required on polymorphic associations" do
+        @new_post.stub!(:commentable)
+        @new_post.class.stub!(:reflections).and_return({ 
+          :commentable => mock('macro_reflection', :options => { :polymorphic => true }, :macro => :belongs_to)
+        })
+        @new_post.stub!(:column_for_attribute).with(:commentable).and_return(
+          mock('column', :type => :integer)
+        )
+        @new_post.class.stub!(:reflect_on_association).with(:commentable).and_return(
+          mock('reflection', :macro => :belongs_to, :options => { :polymorphic => true })
+        )
+        expect { 
+          concat(semantic_form_for(@new_post) do |builder|
+            concat(builder.inputs do 
+              concat(builder.input :commentable)
+            end)
+          end)
+        }.to raise_error(Formtastic::PolymorphicInputWithoutCollectionError)
+      end
+      
+    end
+
   end
   
   describe 'options re-use' do

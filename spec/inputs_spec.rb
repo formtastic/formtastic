@@ -10,7 +10,7 @@ describe 'Formtastic::FormBuilder#inputs' do
     mock_everything
   end
 
-  describe 'with a block' do
+  describe 'with a block (block forms syntax)' do
 
     describe 'when no options are provided' do
       before do
@@ -317,7 +317,7 @@ describe 'Formtastic::FormBuilder#inputs' do
       @new_post.stub!(:column_for_attribute).with(:author).and_return(nil)
     end
 
-    describe 'with no args' do
+    describe 'with no args (quick forms syntax)' do
       before do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.inputs)
@@ -361,9 +361,30 @@ describe 'Formtastic::FormBuilder#inputs' do
       it 'should not render timestamps inputs by default' do
         output_buffer.should_not have_tag('form > fieldset.inputs > ol > li.datetime')
       end
+    
+      context "with a polymorphic association" do
+        
+        before do 
+          @new_post.stub!(:commentable)
+          @new_post.class.stub!(:reflections).and_return({ 
+            :commentable => mock('macro_reflection', :options => { :polymorphic => true }, :macro => :belongs_to)
+          })
+          @new_post.stub!(:column_for_attribute).with(:commentable).and_return(
+            mock('column', :type => :integer)
+          )
+        end
+        
+        it 'should not render an input for the polymorphic association (the collection class cannot be guessed)' do
+          concat(semantic_form_for(@new_post) do |builder|
+            concat(builder.inputs)
+          end)
+          output_buffer.should_not have_tag('li#post_commentable_input')
+        end
+        
+      end
     end
 
-    describe 'with column names as args' do
+    describe 'with column names as args (short hand forms syntax)' do
       describe 'and an object is given' do
         it 'should render a form with a fieldset containing two list items' do
           concat(semantic_form_for(@new_post) do |builder|
@@ -385,6 +406,30 @@ describe 'Formtastic::FormBuilder#inputs' do
           output_buffer.should have_tag('form > fieldset.inputs > ol > li.string', :count => 2)
         end
       end
+      
+      context "with a polymorphic association" do
+        
+        it 'should raise an error for polymorphic associations (the collection class cannot be guessed)' do
+          @new_post.stub!(:commentable)
+          @new_post.class.stub!(:reflections).and_return({ 
+            :commentable => mock('macro_reflection', :options => { :polymorphic => true }, :macro => :belongs_to)
+          })
+          @new_post.stub!(:column_for_attribute).with(:commentable).and_return(
+            mock('column', :type => :integer)
+          )
+          @new_post.class.stub!(:reflect_on_association).with(:commentable).and_return(
+            mock('reflection', :macro => :belongs_to, :options => { :polymorphic => true })
+          )
+          
+          expect { 
+            concat(semantic_form_for(@new_post) do |builder|
+              concat(builder.inputs :commentable)
+            end)
+          }.to raise_error(Formtastic::PolymorphicInputWithoutCollectionError)
+        end
+        
+      end
+      
     end
 
     describe 'when a :for option is provided' do
