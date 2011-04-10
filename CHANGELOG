@@ -1,4 +1,4 @@
-[refactor branch]
+[master]
 
 * Removed the "inline_order" configuration (redefine input_wrapping instead)
 * Removed the "special" implementation of label() from FormBuilder, so builder.label will call Rails' label helper, not ours
