@@ -529,9 +529,14 @@ module Formtastic
         out
       end
 
-      # A thin wrapper around Rails' `fields_for` helper to set `:builder => Formtastic::FormBuilder`
-      # for nesting forms. Can be used in the same way as `fields_for` (see the Rails documentation),
-      # but you'll also have access to Formtastic's helpers ({#input}, etc) inside the block.
+      # A thin wrapper around `ActionView::Helpers::FormBuilder#fields_for` helper to set 
+      # `:builder => Formtastic::FormBuilder` for nesting forms inside the builder. Can be used in 
+      # the same way, but you'll also have access to the helpers in `Formtastic::FormBuilder` 
+      # (such as {#input}, etc) inside the block.
+      #
+      # @see http://api.rubyonrails.org/classes/ActionView/Helpers/FormBuilder.html#method-i-fields_for ActionView::Helpers::FormBuilder#fields_for
+      # @see http://api.rubyonrails.org/classes/ActionView/Helpers/FormHelper.html#method-i-fields_for ActionView::Helpers::FormHelper#fields_for
+      # @see Formtastic::Helpers::FormHelper#semantic_fields_for
       #
       # @example
       #   <% semantic_form_for @post do |post| %>
