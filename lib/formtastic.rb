@@ -14,9 +14,11 @@ module Formtastic
   autoload :Reflection
   autoload :Util
   
+  # @private
   class UnknownInputError < NameError
   end
   
+  # @private
   class PolymorphicInputWithoutCollectionError < ArgumentError
   end
   
