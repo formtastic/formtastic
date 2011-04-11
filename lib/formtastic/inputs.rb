@@ -1,5 +1,4 @@
 module Formtastic
-  # @private
   module Inputs
     extend ActiveSupport::Autoload
 
