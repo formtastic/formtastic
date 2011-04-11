@@ -35,6 +35,7 @@ module Formtastic
 
     include Formtastic::HtmlAttributes
 
+    include Formtastic::Helpers::InputHelper
     include Formtastic::Helpers::InputsHelper
     include Formtastic::Helpers::ButtonsHelper
     include Formtastic::Helpers::ErrorsHelper
