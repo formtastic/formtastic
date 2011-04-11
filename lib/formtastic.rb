@@ -11,7 +11,6 @@ module Formtastic
   autoload :I18n
   autoload :Inputs
   autoload :LocalizedString
-  autoload :Reflection
   autoload :Util
   
   # @private
