@@ -1,4 +1,5 @@
 module Formtastic
+  # @private
   module Helpers
     autoload :ButtonsHelper, 'formtastic/helpers/buttons_helper'
     autoload :ErrorsHelper, 'formtastic/helpers/errors_helper'
