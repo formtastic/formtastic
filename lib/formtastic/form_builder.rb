@@ -38,6 +38,37 @@ module Formtastic
     include Formtastic::Helpers::InputsHelper
     include Formtastic::Helpers::ButtonsHelper
     include Formtastic::Helpers::ErrorsHelper
+    
+    # A thin wrapper around `ActionView::Helpers::FormBuilder#fields_for` helper to set 
+    # `:builder => Formtastic::FormBuilder` for nesting forms inside the builder. Can be used in 
+    # the same way, but you'll also have access to the helpers in `Formtastic::FormBuilder` 
+    # (such as {#input}, etc) inside the block.
+    #
+    # @see http://api.rubyonrails.org/classes/ActionView/Helpers/FormBuilder.html#method-i-fields_for ActionView::Helpers::FormBuilder#fields_for
+    # @see http://api.rubyonrails.org/classes/ActionView/Helpers/FormHelper.html#method-i-fields_for ActionView::Helpers::FormHelper#fields_for
+    # @see Formtastic::Helpers::FormHelper#semantic_fields_for
+    #
+    # @example
+    #   <% semantic_form_for @post do |post| %>
+    #     <% post.semantic_fields_for :author do |author| %>
+    #       <% author.inputs :name %>
+    #     <% end %>
+    #   <% end %>
+    #
+    #   <form ...>
+    #     <fieldset class="inputs">
+    #       <ol>
+    #         <li class="string"><input type='text' name='post[author][name]' id='post_author_name' /></li>
+    #       </ol>
+    #     </fieldset>
+    #   </form>
+    def semantic_fields_for(record_or_name_or_array, *args, &block)
+      opts = args.extract_options!
+      opts[:builder] ||= self.class
+      args.push(opts)
+      fields_for(record_or_name_or_array, *args, &block)
+    end
+    
   end
 
 end
