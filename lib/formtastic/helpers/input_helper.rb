@@ -35,7 +35,7 @@ module Formtastic
     # @see Formtastic::Helpers::InputsHelper#inputs
     # @see Formtastic::Helpers::FormHelper#semantic_form_for
     module InputHelper
-      include Formtastic::Reflection
+      include Formtastic::Helpers::Reflection
       include Formtastic::Helpers::FileColumnDetection
       
       # Returns a chunk of HTML markup for a given `method` on the form object, wrapped in

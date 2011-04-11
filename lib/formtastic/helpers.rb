@@ -10,6 +10,7 @@ module Formtastic
     autoload :InputsHelper, 'formtastic/helpers/inputs_helper'
     autoload :LabelHelper, 'formtastic/helpers/label_helper'
     autoload :SemanticFormHelper, 'formtastic/helpers/semantic_form_helper'
+    autoload :Reflection, 'formtastic/helpers/reflection'
   end
 end
 

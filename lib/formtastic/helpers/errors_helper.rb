@@ -2,7 +2,7 @@ module Formtastic
   module Helpers
     module ErrorsHelper
       include Formtastic::Helpers::FileColumnDetection
-      include Formtastic::Reflection
+      include Formtastic::Helpers::Reflection
       include Formtastic::LocalizedString
 
       INLINE_ERROR_TYPES = [:sentence, :list, :first]
