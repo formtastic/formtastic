@@ -116,10 +116,12 @@ describe 'Formtastic::FormBuilder#errors_on' do
     end
 
     it 'should return nil when inline_errors config is :sentence, :list or :none' do
-      [:sentence, :list, :none].each do |config|
-        with_config :inline_errors, config do
-          semantic_form_for(@new_post) do |builder|
-            builder.errors_on(:title).should be_nil
+      with_deprecation_silenced do
+        [:sentence, :list, :none].each do |config|
+          with_config :inline_errors, config do
+            semantic_form_for(@new_post) do |builder|
+              builder.errors_on(:title).should be_nil
+            end
           end
         end
       end
@@ -132,10 +134,12 @@ describe 'Formtastic::FormBuilder#errors_on' do
     end
 
     it 'should return nil when inline_errors config is :sentence, :list or :none' do
-      [:sentence, :list, :none].each do |config|
-        Formtastic::FormBuilder.inline_errors = config
-        semantic_form_for(@new_post) do |builder|
-          builder.errors_on(:title).should be_nil
+      with_deprecation_silenced do
+        [:sentence, :list, :none].each do |config|
+          Formtastic::FormBuilder.inline_errors = config
+          semantic_form_for(@new_post) do |builder|
+            builder.errors_on(:title).should be_nil
+          end
         end
       end
     end
