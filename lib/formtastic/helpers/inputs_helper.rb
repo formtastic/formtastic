@@ -280,21 +280,10 @@ module Formtastic
           elsif block_given?
             field_set_and_list_wrapping(*(args << html_options), &block)
           else
-            if @object && args.empty?
-              args  = association_columns(:belongs_to)
-              args += content_columns
-              args -= SKIPPED_COLUMNS
-              args.compact!
-            end
             legend = args.shift if args.first.is_a?(::String)
-            contents = args.collect do |method| 
-              if @object && (@object.class.reflect_on_association(method.to_sym) && @object.class.reflect_on_association(method.to_sym).options[:polymorphic] == true)
-                raise PolymorphicInputWithoutCollectionError.new("Please provide a collection for :#{method} input (you'll need to use block form syntax). Inputs for polymorphic associations can only be used when an explicit :collection is provided.")
-              end
-              input(method.to_sym)
-            end
+            args = default_columns_for_object if @object && args.empty?
+            contents = fieldset_contents_from_column_list(args)
             args.unshift(legend) if legend.present?
-          
             field_set_and_list_wrapping(*((args << html_options) << contents))
           end
         end
@@ -305,6 +294,22 @@ module Formtastic
       end
 
       protected
+      
+      def default_columns_for_object
+        cols  = association_columns(:belongs_to)
+        cols += content_columns
+        cols -= SKIPPED_COLUMNS
+        cols.compact
+      end
+      
+      def fieldset_contents_from_column_list(columns)
+        columns.collect do |method| 
+          if @object && (@object.class.reflect_on_association(method.to_sym) && @object.class.reflect_on_association(method.to_sym).options[:polymorphic] == true)
+            raise PolymorphicInputWithoutCollectionError.new("Please provide a collection for :#{method} input (you'll need to use block form syntax). Inputs for polymorphic associations can only be used when an explicit :collection is provided.")
+          end
+          input(method.to_sym)
+        end
+      end
       
       # Collects association columns (relation columns) for the current form object class. Skips
       # polymorphic associations because we can't guess which class to use for an automatically
