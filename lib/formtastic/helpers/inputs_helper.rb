@@ -322,7 +322,10 @@ module Formtastic
       #       <%= f.errors_on(:body) %>
       #     </li>
       #   <% end %>
-      def inline_errors_for(method, options = {}) #:nodoc:
+      #
+      # @deprecated See the README for the currently supported approach to custom inputs.
+      def inline_errors_for(method, options = {})
+        ActiveSupport::Deprecation.warn('inline_errors_for and errors_on are deprecated and will be removed on or after version 2.1', caller)
         if render_inline_errors?
           errors = error_keys(method, options).map{|x| @object.errors[x] }.flatten.compact.uniq
           send(:"error_#{inline_errors}", [*errors], options) if errors.any?
