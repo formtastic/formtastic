@@ -408,6 +408,22 @@ module CustomMacros
             end
           end
 
+          describe 'as a method object' do
+            before do
+              def reverse_login(a)
+                a.login.reverse
+              end
+              concat(semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:author, :as => as, :label_method => method(:reverse_login)))
+              end)
+            end
+
+            it 'should have options with the proc applied to each' do
+              ::Author.all.each do |author|
+                output_buffer.should have_tag("form li.#{as}", /#{author.login.reverse}/)
+              end
+            end
+          end
         end
 
         describe 'when the :label_method option is not provided' do
@@ -453,6 +469,23 @@ module CustomMacros
             before do
               concat(semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:author, :as => as, :value_method => Proc.new {|a| a.login.reverse }))
+              end)
+            end
+
+            it 'should have options with the proc applied to each value' do
+              ::Author.all.each do |author|
+                output_buffer.should have_tag("form li.#{as} #{countable}[@value='#{author.login.reverse}']")
+              end
+            end
+          end
+
+          describe 'as a method object' do
+            before do
+              def reverse_login(a)
+                a.login.reverse
+              end
+              concat(semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:author, :as => as, :value_method => method(:reverse_login)))
               end)
             end
 
