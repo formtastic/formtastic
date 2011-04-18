@@ -111,7 +111,8 @@ module Formtastic
       #     end
       #
       # Formtastic provides a helper called `semantic_fields_for`, which wraps around Rails' built-in
-      # `fields_for` helper, allowing you to combine Rails-style nested fields with Formtastic inputs:
+      # `fields_for` helper for backwards compatibility with previous versions of Formtastic, and for
+      # a consistent method naming API. The following examples are functionally equivalent:
       #
       #     <% semantic_form_for @user do |form| %>
       #       <%= f.inputs :name, :email %>
@@ -120,13 +121,23 @@ module Formtastic
       #         <% profile.inputs do %>
       #           <%= profile.input :biography %>
       #           <%= profile.input :twitter_name %>
-      #           <%= profile.input :shoe_size %>
       #         <% end %>
       #       <% end %>
       #     <% end %>
       #
-      # {#inputs} also provides a DSL similar to `semantic_fields_for` to reduce the lines of code a
-      # little:
+      #     <% semantic_form_for @user do |form| %>
+      #       <%= f.inputs :name, :email %>
+      #
+      #       <% f.fields_for :profile do |profile| %>
+      #         <% profile.inputs do %>
+      #           <%= profile.input :biography %>
+      #           <%= profile.input :twitter_name %>
+      #         <% end %>
+      #       <% end %>
+      #     <% end %>
+      #
+      # {#inputs} also provides a DSL similar to `fields_for` / `semantic_fields_for` to reduce the 
+      # lines of code a little:
       #
       #     <% semantic_form_for @user do |f| %>
       #       <%= f.inputs :name, :email %>
@@ -359,7 +370,7 @@ module Formtastic
         end
 
         fields_for_args = [options.delete(:for), options.delete(:for_options) || {}].flatten
-        semantic_fields_for(*fields_for_args, &fields_for_block)
+        fields_for(*fields_for_args, &fields_for_block)
       end
 
       def field_set_title_from_args(*args) #:nodoc:
