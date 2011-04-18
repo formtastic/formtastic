@@ -40,10 +40,13 @@ module Formtastic
     include Formtastic::Helpers::ButtonsHelper
     include Formtastic::Helpers::ErrorsHelper
     
-    # A thin wrapper around `ActionView::Helpers::FormBuilder#fields_for` helper to set 
-    # `:builder => Formtastic::FormBuilder` for nesting forms inside the builder. Can be used in 
-    # the same way, but you'll also have access to the helpers in `Formtastic::FormBuilder` 
-    # (such as {#input}, etc) inside the block.
+    # This is a wrapper around Rails' `ActionView::Helpers::FormBuilder#fields_for`, originally 
+    # provided to ensure that the `:builder` from `semantic_form_for` was passed down into
+    # the nested `fields_for`. Rails 3 no longer requires us to do this, so this method is
+    # provided purely for backwards compatibility and DSL consistency.
+    #
+    # When constructing a `fields_for` form fragment *outside* of `semantic_form_for`, please use
+    # `Formtastic::Helpers::FormHelper#semantic_fields_for`.
     #
     # @see http://api.rubyonrails.org/classes/ActionView/Helpers/FormBuilder.html#method-i-fields_for ActionView::Helpers::FormBuilder#fields_for
     # @see http://api.rubyonrails.org/classes/ActionView/Helpers/FormHelper.html#method-i-fields_for ActionView::Helpers::FormHelper#fields_for
@@ -63,10 +66,9 @@ module Formtastic
     #       </ol>
     #     </fieldset>
     #   </form>
+    #
+    # @todo is there a way to test the params structure of the Rails helper we wrap to ensure forward compatibility?
     def semantic_fields_for(record_or_name_or_array, *args, &block)
-      opts = args.extract_options!
-      opts[:builder] ||= self.class
-      args.push(opts)
       fields_for(record_or_name_or_array, *args, &block)
     end
     

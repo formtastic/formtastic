@@ -133,7 +133,7 @@ describe 'Formtastic::I18n' do
     it 'should be able to translate nested objects with nested translations' do
       with_config :i18n_lookups_by_default, true do
         concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
-          builder.semantic_fields_for(:task) do |f|
+          builder.fields_for(:task) do |f|
             concat(f.input(:name))
           end
         end)
@@ -144,7 +144,7 @@ describe 'Formtastic::I18n' do
     it 'should be able to translate nested objects with top level translations' do
       with_config :i18n_lookups_by_default, true do
         concat(semantic_form_for(:order, :url => 'http://test.host') do |builder|
-          builder.semantic_fields_for(:line_item) do |f|
+          builder.fields_for(:line_item) do |f|
             concat(f.input(:name))
           end
         end)

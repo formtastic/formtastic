@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'Formtastic::FormBuilder#semantic_fields_for' do
+describe 'Formtastic::FormBuilder#fields_for' do
 
   include FormtasticSpecHelper
 
@@ -13,7 +13,7 @@ describe 'Formtastic::FormBuilder#semantic_fields_for' do
 
   it 'yields an instance of FormHelper.builder' do
     semantic_form_for(@new_post) do |builder|
-      builder.semantic_fields_for(:author) do |nested_builder|
+      builder.fields_for(:author) do |nested_builder|
         nested_builder.class.should == Formtastic::Helpers::FormHelper.builder
       end
     end
@@ -21,7 +21,7 @@ describe 'Formtastic::FormBuilder#semantic_fields_for' do
 
   it 'nests the object name' do
     semantic_form_for(@new_post) do |builder|
-      builder.semantic_fields_for(@bob) do |nested_builder|
+      builder.fields_for(@bob) do |nested_builder|
         nested_builder.object_name.should == 'post[author]'
       end
     end
@@ -30,7 +30,7 @@ describe 'Formtastic::FormBuilder#semantic_fields_for' do
   it 'should sanitize html id for li tag' do
     @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
     concat(semantic_form_for(@new_post) do |builder|
-      concat(builder.semantic_fields_for(@bob, :index => 1) do |nested_builder|
+      concat(builder.fields_for(@bob, :index => 1) do |nested_builder|
         concat(nested_builder.inputs(:login))
       end)
     end)
@@ -43,7 +43,7 @@ describe 'Formtastic::FormBuilder#semantic_fields_for' do
   it 'should use namespace provided in nested fields' do
     @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
     concat(semantic_form_for(@new_post, :namespace => 'context2') do |builder|
-      concat(builder.semantic_fields_for(@bob, :index => 1) do |nested_builder|
+      concat(builder.fields_for(@bob, :index => 1) do |nested_builder|
         concat(nested_builder.inputs(:login))
       end)
     end)
@@ -60,7 +60,7 @@ describe 'Formtastic::FormBuilder#semantic_fields_for' do
       @fred.stub!(:posts_attributes=)
 
       concat(semantic_form_for(@fred) do |builder|
-        concat(builder.semantic_fields_for(:posts) do |nested_builder|
+        concat(builder.fields_for(:posts) do |nested_builder|
           concat(nested_builder.input(:id, :as => :hidden))
           concat(nested_builder.input(:title))
         end)
