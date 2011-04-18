@@ -59,7 +59,7 @@ describe 'Formtastic::Helpers::FormHelper.builder' do
 
       it "should yield an instance of the custom builder" do
         semantic_form_for(@new_post) do |builder|
-          builder.class.should == MyCustomFormBuilder
+          builder.class.should.kind_of?(MyCustomFormBuilder)
         end
       end
       
@@ -75,9 +75,13 @@ describe 'Formtastic::Helpers::FormHelper.builder' do
     describe "fields_for" do
 
       it "should yield an instance of the parent form builder" do
-        semantic_form_for(@new_post) do |builder|
-          builder.fields_for(:author) do |nested_builder|
-            nested_builder.class.should == MyCustomFormBuilder
+        @new_post.stub!(:comment).and_return([@fred])
+        @new_post.stub!(:comment_attributes=)
+        semantic_form_for(@new_post, :builder => MyCustomFormBuilder) do |builder|
+          builder.class.should.kind_of?(MyCustomFormBuilder)
+          
+          builder.fields_for(:comment) do |nested_builder|
+            nested_builder.class.should.kind_of?(MyCustomFormBuilder)
           end
         end
       end
@@ -91,9 +95,10 @@ describe 'Formtastic::Helpers::FormHelper.builder' do
     describe "fields_for" do
 
       it "should yield an instance of the parent form builder" do
+        @new_post.stub!(:author_attributes=)
         semantic_form_for(@new_post, :builder => MyCustomFormBuilder) do |builder|
           builder.fields_for(:author) do |nested_builder|
-            nested_builder.class.should == MyCustomFormBuilder
+            nested_builder.class.should.kind_of?(MyCustomFormBuilder)
           end
         end
       end

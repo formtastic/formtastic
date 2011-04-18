@@ -125,8 +125,8 @@ describe 'FormHelper' do
 
   describe '#semantic_fields_for' do
     it 'yields an instance of Formtastic::FormBuilder' do
-      semantic_fields_for(@new_post, :url => '/hello') do |builder|
-        builder.class.should == Formtastic::FormBuilder
+      semantic_fields_for(@new_post) do |builder|
+        builder.class.should.kind_of?(Formtastic::FormBuilder)
       end
     end
   end
