@@ -131,21 +131,5 @@ describe 'FormHelper' do
     end
   end
 
-  describe '#semantic_form_remote_for' do
-    it 'yields an instance of Formtastic::FormBuilder' do
-      semantic_form_remote_for(@new_post, :url => '/hello') do |builder|
-        builder.class.should == Formtastic::FormBuilder
-      end
-    end
-  end
-
-  describe '#semantic_form_for_remote' do
-    it 'yields an instance of Formtastic::FormBuilder' do
-      semantic_remote_form_for(@new_post, :url => '/hello') do |builder|
-        builder.class.should == Formtastic::FormBuilder
-      end
-    end
-  end
-
 end
 

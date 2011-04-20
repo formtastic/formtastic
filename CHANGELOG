@@ -20,6 +20,7 @@
 * Changed quick forms to skip polymorphic associations (they didn't work)
 * Changed short hand forms to raise an error when trying to render an input for a polymorphic association (it didn't work, need a collection)
 * Changed input() to raise an error when a :collection is not provided for a polymorphic association (we can't guess which class to use)
+* Removed semantic_remote_form_for etc, the remote_form_for helpers don't exist in Rails 3
 
 1.2.4.beta (unreleased)
 
