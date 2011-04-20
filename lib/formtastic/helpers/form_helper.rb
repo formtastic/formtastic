@@ -151,29 +151,6 @@ module Formtastic
         form_helper_wrapper(:fields_for, record_or_name_or_array, *args, &proc)
       end
 
-      # Wrapper around Rails' own `remote_form_for` helper to set the `:builder` option to
-      # `Formtastic::FormBuilder` and to set some class names on the `<form>` tag such as
-      # `formtastic` and the downcased and underscored model name.
-      #
-      # @see #semantic_form_for
-      # @todo why isn't YARD rendering this method?
-      def semantic_remote_form_for(record_or_name_or_array, *args, &proc)
-        form_helper_wrapper(:remote_form_for, record_or_name_or_array, *args, &proc)
-      end
-
-      def semantic_remote_form_for_wrapper(record_or_name_or_array, *args, &proc)
-        options = args.extract_options!
-        if respond_to? :remote_form_for
-          semantic_remote_form_for_real(record_or_name_or_array, *(args << options), &proc)
-        else
-          options[:remote] = true
-          semantic_form_for(record_or_name_or_array, *(args << options), &proc)
-        end
-      end
-      alias :semantic_remote_form_for_real :semantic_remote_form_for
-      alias :semantic_remote_form_for :semantic_remote_form_for_wrapper
-      alias :semantic_form_remote_for :semantic_remote_form_for
-
       protected
 
       # @todo pretty sure some of this (like HTML classes and record naming are exlusive to `form_for`)
