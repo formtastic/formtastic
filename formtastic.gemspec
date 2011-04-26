@@ -34,7 +34,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.6}
 
-  s.add_dependency(%q<rails>, ["~> 3.0.0"])
+  s.add_dependency(%q<rails>, ["~> 3.0"])
 
   s.add_development_dependency(%q<rspec-rails>, ["~> 2.5"])
   s.add_development_dependency(%q<rspec_tag_matchers>, [">= 1.0.0"])
