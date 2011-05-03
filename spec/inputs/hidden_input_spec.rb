@@ -28,6 +28,10 @@ describe 'hidden input' do
     output_buffer.should have_tag("form li input#post_secret[@name=\"post[secret]\"]")
   end
 
+  it "should get value from the object" do
+    output_buffer.should have_tag("form li input#post_secret[@type=\"hidden\"][@value=\"1\"]")
+  end
+  
   it "should pass any explicitly specified value - using :value" do
     output_buffer.should have_tag("form li input#post_author_id[@type=\"hidden\"][@value=\"99\"]")
   end
