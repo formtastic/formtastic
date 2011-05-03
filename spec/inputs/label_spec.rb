@@ -14,7 +14,14 @@ describe 'Formtastic::FormBuilder#label' do
     concat(semantic_form_for(@new_post) do |builder|
       builder.input(:title)
     end)
-    output_buffer.should have_tag('label', :with => /Login/)
+    output_buffer.should have_tag('label', /Title/)
+  end
+
+  it 'should humanize the given attribute for date fields' do
+    concat(semantic_form_for(@new_post) do |builder|
+      builder.input(:publish_at)
+    end)
+    output_buffer.should have_tag('label', /Publish at/)
   end
 
   describe 'when required is given' do
@@ -31,7 +38,7 @@ describe 'Formtastic::FormBuilder#label' do
       concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
         concat(builder.input(:author_id, :as => :check_boxes, :collection => [:a, :b, :c], :value_method => :to_s, :label_method => proc {|f| ('Label_%s' % [f])}))
       end)
-      output_buffer.should have_tag('form li fieldset ol li label', :with => /Label_[abc]/, :count => 3)
+      output_buffer.should have_tag('form li fieldset ol li label', /Label_[abc]/, :count => 3)
     end
 
     it 'should use a supplied value_method for simple collections' do
@@ -49,7 +56,14 @@ describe 'Formtastic::FormBuilder#label' do
       concat(semantic_form_for(@new_post) do |builder|
         builder.input(:title, :label => 'My label')
       end)
-      output_buffer.should have_tag('label', :with => /My label/)
+      output_buffer.should have_tag('label', /My label/)
+    end
+    
+    it 'should allow the text to be given as label option for date fields' do
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input(:publish_at, :label => 'My other label')
+      end)
+      output_buffer.should have_tag('label', /My other label/)
     end
 
     it 'should return nil if label is false' do
