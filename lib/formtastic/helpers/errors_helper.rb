@@ -94,7 +94,7 @@ module Formtastic
         @methods_for_error[method] ||= begin
           methods_for_error = [method.to_sym]
           methods_for_error << file_metadata_suffixes.map{|suffix| "#{method}_#{suffix}".to_sym} if is_file?(method, options)
-          methods_for_error << [association_primary_key(method)] if association_macro_for_method(method) == :belongs_to
+          methods_for_error << [association_primary_key_for_method(method)] if association_macro_for_method(method) == :belongs_to
           methods_for_error.flatten.compact.uniq
         end
       end
@@ -107,18 +107,6 @@ module Formtastic
       def render_inline_errors?
         @object && @object.respond_to?(:errors) && Formtastic::FormBuilder::INLINE_ERROR_TYPES.include?(inline_errors)
       end
-
-      def association_macro_for_method(method) #:nodoc:
-        reflection = reflection_for(method)
-        reflection.macro if reflection
-      end
-
-      def association_primary_key(method)
-        reflection = reflection_for(method)
-        reflection.options[:foreign_key] if reflection && !reflection.options[:foreign_key].blank?
-        :"#{method}_id"
-      end
-
     end
   end
 end
