@@ -178,7 +178,7 @@ module FormtasticSpecHelper
     @new_post.stub!(:to_key).and_return(nil)
     @new_post.stub!(:to_model).and_return(@new_post)
     @new_post.stub!(:persisted?).and_return(nil)
-
+    
     @freds_post = mock('post')
     @freds_post.stub!(:to_ary)
     @freds_post.stub!(:class).and_return(::Post)
@@ -245,7 +245,7 @@ module FormtasticSpecHelper
     @new_post.stub!(:published)
     @new_post.stub!(:publish_at)
     @new_post.stub!(:created_at)
-    @new_post.stub!(:secret)
+    @new_post.stub!(:secret).and_return(1)
     @new_post.stub!(:url)
     @new_post.stub!(:email)
     @new_post.stub!(:search)
