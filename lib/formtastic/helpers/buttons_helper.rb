@@ -127,7 +127,7 @@ module Formtastic
       #     <% semantic_form_for @post do |f| %>
       #       ...
       #       <%= f.buttons do %>
-      #         <%= f.commit_button :label => "Go", :input_html => { ... }, :wrapper_html => { ... }
+      #         <%= f.commit_button :label => "Go", :button_html => { :class => "pretty" :disable_with => "Wait..." }, :wrapper_html => { ... }
       #       <% end %>
       #     <% end %>
       #
@@ -214,14 +214,14 @@ module Formtastic
       #   <%= f.commit_button "Go" %>
       #
       # @example Pass HTML attributes down to the `<input>`
-      #   <%= f.commit_button :button_html => { :class => 'pretty', :accesskey => 'g' } %>
-      #   <%= f.commit_button :label => "Go", :button_html => { :class => 'pretty', :accesskey => 'g' } %>
-      #   <%= f.commit_button "Go", :button_html => { :class => 'pretty', :accesskey => 'g' } %>
+      #   <%= f.commit_button :button_html => { :class => 'pretty', :accesskey => 'g', :disable_with => "Wait..." } %>
+      #   <%= f.commit_button :label => "Go", :button_html => { :class => 'pretty', :accesskey => 'g', :disable_with => "Wait..." } %>
+      #   <%= f.commit_button "Go", :button_html => { :class => 'pretty', :accesskey => 'g', :disable_with => "Wait..." } %>
       #
       # @example Pass HTML attributes down to the `<li>` wrapper
-      #   <%= f.commit_button :button_html => { :class => 'special', :id => 'whatever' } %>
-      #   <%= f.commit_button :label => "Go", :button_html => { :class => 'special', :id => 'whatever' } %>
-      #   <%= f.commit_button "Go", :button_html => { :class => 'special', :id => 'whatever' } %>
+      #   <%= f.commit_button :wrapper_html => { :class => 'special', :id => 'whatever' } %>
+      #   <%= f.commit_button :label => "Go", :wrapper_html => { :class => 'special', :id => 'whatever' } %>
+      #   <%= f.commit_button "Go", :wrapper_html => { :class => 'special', :id => 'whatever' } %>
       #
       # @option *args :label [String, Symbol]
       #   Override the label text with a String or a symbold for an i18n translation key
