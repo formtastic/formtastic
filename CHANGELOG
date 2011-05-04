@@ -21,6 +21,13 @@
 * Changed short hand forms to raise an error when trying to render an input for a polymorphic association (it didn't work, need a collection)
 * Changed input() to raise an error when a :collection is not provided for a polymorphic association (we can't guess which class to use)
 * Removed semantic_remote_form_for etc, the remote_form_for helpers don't exist in Rails 3
+* Changed :label_method option to :member_label (with backwards compat and deprecation warnings)
+* Changed :value_method option to :member_value (with backwards compat and deprecation warnings)
+* Changed :grouped_label_method option to :grouped_label (with backwards compat and deprecation warnings)
+* Added support for a Method objects to :member_label/:member_value (aka :label_method/:value_method)
+* Improved support for Mongoid 
+* Changed Rails dependency from ~> 3.0.0 to ~> 3.0 to allow experimentation with Rails 3.1 betas
+
 
 1.2.4.beta (unreleased)
 
