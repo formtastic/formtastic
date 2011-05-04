@@ -81,7 +81,7 @@ module Formtastic
         end
       
         def send_or_call(duck, object)
-          if duck.is_a?(Proc)
+          if duck.respond_to?(:call)
             duck.call(object)
           else
             object.send(duck)
