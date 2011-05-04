@@ -71,6 +71,17 @@ describe 'Formtastic::FormBuilder#input' do
           output_buffer.should have_tag('form li.optional')
         end
 
+        it 'should set and "optional" class also when there is presence validator' do
+          @new_post.class.should_receive(:validators_on).with(:title).any_number_of_times.and_return([
+            active_model_presence_validator([:title])
+          ])
+          concat(semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:title, :required => false))
+          end)
+          output_buffer.should_not have_tag('form li.required')
+          output_buffer.should have_tag('form li.optional')
+        end
+
         it 'should append the "optional" string to the label' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :required => false))
