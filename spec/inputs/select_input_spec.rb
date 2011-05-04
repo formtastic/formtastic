@@ -315,7 +315,11 @@ describe 'select input' do
     it 'should have a multi-select select' do
       output_buffer.should have_tag('form li select[@multiple="multiple"]')
     end
-
+    
+    it 'should append [] to the name attribute for multiple select' do
+      output_buffer.should have_tag('form li select[@multiple="multiple"][@name="author[post_ids][]"]')
+    end
+    
     it 'should have a select option for each Post' do
       output_buffer.should have_tag('form li select option', :count => ::Post.all.size)
       ::Post.all.each do |post|
