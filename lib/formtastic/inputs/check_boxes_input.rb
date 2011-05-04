@@ -55,12 +55,20 @@ module Formtastic
     # @example `:label_method` can be used to call a different method (or a Proc) on each object in the collection for rendering the label text (it'll try the methods like `to_s` in `collection_label_methods` config by default)
     #   <%= f.input :categories, :as => :check_boxes, :label_method => :name %>
     #   <%= f.input :categories, :as => :check_boxes, :label_method => :name_with_post_count
-    #   <%= f.input :categories, :as => :check_boxes, :label_method => Proc.new { |c| "#{c.name} (#{pluralize("post", c.posts.count)})" }
+    #   <%= f.input :categories, :as => :check_boxes, :label_method => { |c| "#{c.name} (#{pluralize("post", c.posts.count)})" }
+    #
+    # @example `:label_method` can be used with a helper method (both examples have the same result)
+    #   <%= f.input :categories, :as => :check_boxes, :label_method => method(:fancy_label)
+    #   <%= f.input :categories, :as => :check_boxes, :label_method => Proc.new { |category| fancy_label(category) }
     #
     # @example `:value_method` can be used to call a different method (or a Proc) on each object in the collection for rendering the value for each checkbox (it'll try the methods like `id` in `collection_value_methods` config by default)
     #   <%= f.input :categories, :as => :check_boxes, :value_method => :code %>
     #   <%= f.input :categories, :as => :check_boxes, :value_method => :isbn
     #   <%= f.input :categories, :as => :check_boxes, :value_method => Proc.new { |c| c.name.downcase.underscore }
+    #
+    # @example `:value_method` can be used with a helper method (both examples have the same result)
+    #   <%= f.input :categories, :as => :check_boxes, :value_method => method(:some_helper)
+    #   <%= f.input :categories, :as => :check_boxes, :value_method => Proc.new { |category| some_helper(category) }
     #
     # @example `:value_as_class` can be used to add a class to the `<li>` wrapped around each choice using the checkbox value for custom styling of each choice
     #   <%= f.input :categories, :as => :check_boxes, :value_as_class => true %>
