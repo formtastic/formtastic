@@ -248,7 +248,7 @@ The same can be done for buttons with the @:button_html@ option:
   <% semantic_form_for @post do |form| %>
     ...
     <% form.buttons do %>
-      <%= form.commit_button :button_html => { :class => "primary" } %>
+      <%= form.commit_button :button_html => { :class => "primary", :disable_with => 'Wait...' } %>
     <% end %>
   <% end %>
 </pre>
