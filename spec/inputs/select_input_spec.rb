@@ -243,9 +243,9 @@ describe 'select input' do
 
       concat(semantic_form_for(@new_post) do |builder|
         concat(builder.input(:author, :as => :select, :group_by => :continent ) )
-        concat(builder.input(:author, :as => :select, :group_by => :continent, :group_label_method => :id ) )
-        concat(builder.input(:author, :as => :select, :group_by => :continent, :label_method => :login ) )
-        concat(builder.input(:author, :as => :select, :group_by => :continent, :label_method => :login, :group_label_method => :id ) )
+        concat(builder.input(:author, :as => :select, :group_by => :continent, :group_label => :id ) )
+        concat(builder.input(:author, :as => :select, :group_by => :continent, :member_label => :login ) )
+        concat(builder.input(:author, :as => :select, :group_by => :continent, :member_label => :login, :group_label => :id ) )
       end)
     end
 

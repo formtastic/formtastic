@@ -136,11 +136,17 @@ module Formtastic
       # @option options :collection [Array<ActiveModel, String, Symbol>, Hash{String => String, Boolean}, OrderedHash{String => String, Boolean}]
       #   Override collection of objects in the association (`:select`, `:radio` & `:check_boxes` inputs only)
       #
-      # @option options :label_method [Symbol, Proc, Method]
+      # @option options :member_label [Symbol, Proc, Method]
       #   Override the method called on each object in the `:collection` for use as the `<label>` content (`:check_boxes` & `:radio` inputs) or `<option>` content (`:select` inputs)
       #
-      # @option options :value_method [Symbol, Proc, Method]
+      # @option options :label_method [Symbol, Proc, Method]
+      #   Deprecated, renamed to :member_label
+      #
+      # @option options :member_value [Symbol, Proc, Method]
       #   Override the method called on each object in the `:collection` for use as the `value` attribute in the `<input>` (`:check_boxes` & `:radio` inputs) or `<option>` (`:select` inputs)
+      #
+      # @option options :value_method [Symbol, Proc, Method]
+      #   Deprecated, renamed to :member_value
       #
       # @option options :hint_class [String]
       #   Override the `class` attribute applied to the `<p>` tag used when a `:hint` is rendered for an input
@@ -158,6 +164,9 @@ module Formtastic
       #   TODO will probably be deprecated
       #
       # @option options :group_label_method [Symbol]
+      #   Deprecated, use `:group_label`
+      #
+      # @option options :group_label [Symbol]
       #   TODO will probably be deprecated
       #
       # @option options :include_blank [Boolean]
@@ -167,7 +176,7 @@ module Formtastic
       #   Specify the text in the first ('blank') `:select` input `<option>` to prompt a user to make a selection (implicitly sets `:include_blank` to `true`)
       #
       # @todo Can we kill `:hint_class` & `:error_class`? What's the use case for input-by-input? Shift to config or burn!
-      # @todo Can we kill `:group_by` & `:group_label_method`? Should be done with :collection => grouped_options_for_select(...)
+      # @todo Can we kill `:group_by` & `:group_label`/`:group_label_method`? Should be done with :collection => grouped_options_for_select(...)
       # @todo Can we kill `:find_options`? Should be done with MyModel.some_scope.where(...).order(...).whatever_scope
       # @todo Can we kill `:label`, `:hint` & `:prompt`? All strings could be shifted to i18n!
       #

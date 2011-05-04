@@ -33,7 +33,7 @@ module Formtastic
     # the `:collection` option (see examples).
     #
     # The way on which Formtastic renders the `value` attribute and content of each `<option>` tag
-    # is customisable through the `:label_method` and `:value_method` options. When not provided,
+    # is customisable through the `:member_label` and `:member_value` options. When not provided,
     # we fall back to a list of methods to try on each object such as `:to_label`, `:name` and
     # `:to_s`, which are defined in the configurations `collection_label_methods` and
     # `collection_value_methods` (see examples below).
@@ -106,14 +106,14 @@ module Formtastic
     #   <%= f.input :author, :as => :select, :collection => grouped_options_for_select(...) %>
     #   <%= f.input :author, :as => :select, :collection => time_zone_options_for_select(...) %>
     #
-    # @example The `:label_method` can be used to call a different method (or a Proc) on each object in the collection for rendering the label text (it'll try the methods like `to_s` in `collection_label_methods` config by default)
-    #   <%= f.input :author, :as => :select, :label_method => :name %>
-    #   <%= f.input :author, :as => :select, :label_method => :name_with_post_count
-    #   <%= f.input :author, :as => :select, :label_method => Proc.new { |a| "#{c.name} (#{pluralize("post", a.posts.count)})" }
+    # @example The `:member_label` can be used to call a different method (or a Proc) on each object in the collection for rendering the label text (it'll try the methods like `to_s` in `collection_label_methods` config by default)
+    #   <%= f.input :author, :as => :select, :member_label => :name %>
+    #   <%= f.input :author, :as => :select, :member_label => :name_with_post_count
+    #   <%= f.input :author, :as => :select, :member_label => Proc.new { |a| "#{c.name} (#{pluralize("post", a.posts.count)})" }
     #
-    # @example The `:value_method` can be used to call a different method (or a Proc) on each object in the collection for rendering the value for each checkbox (it'll try the methods like `id` in `collection_value_methods` config by default)
-    #   <%= f.input :author, :as => :select, :value_method => :login %>
-    #   <%= f.input :author, :as => :select, :value_method => Proc.new { |c| c.full_name.downcase.underscore }
+    # @example The `:member_value` can be used to call a different method (or a Proc) on each object in the collection for rendering the value for each checkbox (it'll try the methods like `id` in `collection_value_methods` config by default)
+    #   <%= f.input :author, :as => :select, :member_value => :login %>
+    #   <%= f.input :author, :as => :select, :member_value => Proc.new { |c| c.full_name.downcase.underscore }
     #
     # @example Set HTML attributes on the `<select>` tag with `:input_html`
     #   <%= f.input :authors, :as => :select, :input_html => { :size => 20, :multiple => true, :class => "special" } %>
@@ -126,7 +126,7 @@ module Formtastic
     #   <%= f.input :author, :as => :select, :input_html => { :include_blank => true } %>
     #   <%= f.input :author, :as => :select, :input_html => { :prompt => "Please select an Author..." } %>
     #
-    # @example Group options an `<optgroup>` with the `:group_by` and `:group_label_method` options (`belongs_to` associations only)
+    # @example Group options an `<optgroup>` with the `:group_by` and `:group_label` options (`belongs_to` associations only)
     #   <%= f.input :author, :as => :select, :group_by => :continent %>
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.

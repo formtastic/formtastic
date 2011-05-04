@@ -332,7 +332,7 @@ describe 'check_boxes input' do
   end
 
   describe 'for an association when a :collection is provided' do
-    describe 'it should use the specified :value_method option' do
+    describe 'it should use the specified :member_value option' do
       before do
         @output_buffer = ''
         mock_everything
@@ -345,7 +345,7 @@ describe 'check_boxes input' do
         item.should_receive(:custom_value).exactly(3).times
         @new_post.author.should_receive(:custom_value).exactly(3).times
         concat(semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:author, :as => :check_boxes, :value_method => :custom_value, :collection => [item, item, item]))
+          concat(builder.input(:author, :as => :check_boxes, :member_value => :custom_value, :collection => [item, item, item]))
         end)
         output_buffer.should have_tag('input[@type=checkbox][@value="custom_value"]', :count => 3)
       end
