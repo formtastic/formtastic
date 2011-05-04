@@ -136,10 +136,10 @@ module Formtastic
       # @option options :collection [Array<ActiveModel, String, Symbol>, Hash{String => String, Boolean}, OrderedHash{String => String, Boolean}]
       #   Override collection of objects in the association (`:select`, `:radio` & `:check_boxes` inputs only)
       #
-      # @option options :label_method [Symbol, Proc]
+      # @option options :label_method [Symbol, Proc, Method]
       #   Override the method called on each object in the `:collection` for use as the `<label>` content (`:check_boxes` & `:radio` inputs) or `<option>` content (`:select` inputs)
       #
-      # @option options :value_method [Symbol, Proc]
+      # @option options :value_method [Symbol, Proc, Method]
       #   Override the method called on each object in the `:collection` for use as the `value` attribute in the `<input>` (`:check_boxes` & `:radio` inputs) or `<option>` (`:select` inputs)
       #
       # @option options :hint_class [String]

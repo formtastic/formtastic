@@ -90,9 +90,17 @@ module Formtastic
     #   <%= f.input :author, :as => :radio, :label_method => :name_with_post_count
     #   <%= f.input :author, :as => :radio, :label_method => Proc.new { |a| "#{c.name} (#{pluralize("post", a.posts.count)})" }
     #
+    # @example `:label_method` can be used with a helper method (both examples have the same result)
+    #   <%= f.input :author, :as => :radio, :label_method => method(:fancy_label)
+    #   <%= f.input :author, :as => :radio, :label_method => Proc.new { |author| fancy_label(author) }
+    #
     # @example The `:value_method` can be used to call a different method (or a Proc) on each object in the collection for rendering the value for each checkbox (it'll try the methods like `id` in `collection_value_methods` config by default)
     #   <%= f.input :author, :as => :radio, :value_method => :login %>
     #   <%= f.input :author, :as => :radio, :value_method => Proc.new { |c| c.full_name.downcase.underscore }
+    #
+    # @example `:value_method` can be used with a helper method (both examples have the same result)
+    #   <%= f.input :author, :as => :radio, :value_method => method(:some_helper)
+    #   <%= f.input :author, :as => :radio, :value_method => Proc.new { |author| some_helper(author) }
     #
     # @example Set HTML attributes on each `<input type="radio">` tag with `:input_html`
     #   <%= f.input :author, :as => :radio, :input_html => { :size => 20, :multiple => true, :class => "special" } %>
