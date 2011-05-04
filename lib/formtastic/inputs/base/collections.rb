@@ -54,11 +54,11 @@ module Formtastic
       
         def collection_from_association
           if reflection
-            raise PolymorphicInputWithoutCollectionError.new("A collection must be supplied for #{method} input. Collections cannot be guessed for polymorphic associations.") if reflection.options[:polymorphic] == true
+            raise PolymorphicInputWithoutCollectionError.new("A collection must be supplied for #{method} input. Collections cannot be guessed for polymorphic associations.") if reflection.options && reflection.options[:polymorphic] == true
 
             find_options_from_options = options[:find_options] || {}
             conditions_from_options = find_options_from_options[:conditions] || {}
-            conditions_from_reflection = reflection.options[:conditions] || {}
+            conditions_from_reflection = reflection.options && reflection.options[:conditions] || {}
             
             if conditions_from_options.any?
               reflection.klass.where(
