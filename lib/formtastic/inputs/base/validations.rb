@@ -84,6 +84,8 @@ module Formtastic
         end
         
         def required?
+          return false if options[:required] == false
+          return true if options[:required] == true
           return false if not_required_through_negated_validation?
           if validations?
             validations.select { |validator| 
@@ -91,8 +93,6 @@ module Formtastic
               validator.options[:allow_blank] != true
             }.any?
           else
-            return false if options[:required] == false
-            return true if options[:required] == true
             return !!builder.all_fields_required_by_default
           end
         end
