@@ -171,7 +171,7 @@ If you want to customize the label text, or render some hint text below the fiel
     <% form.inputs :name => "Advanced Options", :id => "advanced" do %>
       <%= form.input :slug, :label => "URL Title", :hint => "Created automatically if left blank", :required => false %>
       <%= form.input :section, :as => :radio %>
-      <%= form.input :user, :label => "Author", :label_method => :full_name %>
+      <%= form.input :user, :label => "Author", :member_label => :full_name %>
       <%= form.input :categories, :required => false %>
       <%= form.input :created_at, :as => :string, :label => "Publication Date", :required => false %>
     <% end %>

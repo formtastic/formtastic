@@ -16,7 +16,7 @@ module Formtastic
         end
       
         def group_label_method_from_options
-          options[:group_label_method]
+          options[:group_label]
         end
       
         def group_label_method_from_grouped_collection

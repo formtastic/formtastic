@@ -24,8 +24,8 @@ module Formtastic
           end
       
           # Order of preference: user supplied method, class defaults, auto-detect
-          label = (grouped ? options[:grouped_label_method] : options[:label_method]) || label || builder.collection_label_methods.find { |m| sample.respond_to?(m) }
-          value = (grouped ? options[:grouped_value_method] : options[:value_method]) || value || builder.collection_value_methods.find { |m| sample.respond_to?(m) }
+          label = (grouped ? options[:grouped_label_method] : options[:member_label]) || label || builder.collection_label_methods.find { |m| sample.respond_to?(m) }
+          value = (grouped ? options[:grouped_value_method] : options[:member_value]) || value || builder.collection_value_methods.find { |m| sample.respond_to?(m) }
       
           [label, value]
         end
@@ -41,7 +41,7 @@ module Formtastic
           # Return if we have an Array of strings, fixnums or arrays
           return raw_collection if (raw_collection.instance_of?(Array) || raw_collection.instance_of?(Range)) &&
                                [Array, Fixnum, String, Symbol].include?(raw_collection.first.class) &&
-                               !(options.include?(:label_method) || options.include?(:value_method))
+                               !(options.include?(:member_label) || options.include?(:member_value))
                        
           raw_collection.map { |o| [send_or_call(label_method, o), send_or_call(value_method, o)] }
         end

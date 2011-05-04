@@ -36,14 +36,14 @@ describe 'Formtastic::FormBuilder#label' do
   describe 'when a collection is given' do
     it 'should use a supplied label_method for simple collections' do
       concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
-        concat(builder.input(:author_id, :as => :check_boxes, :collection => [:a, :b, :c], :value_method => :to_s, :label_method => proc {|f| ('Label_%s' % [f])}))
+        concat(builder.input(:author_id, :as => :check_boxes, :collection => [:a, :b, :c], :member_value => :to_s, :member_label => proc {|f| ('Label_%s' % [f])}))
       end)
       output_buffer.should have_tag('form li fieldset ol li label', /Label_[abc]/, :count => 3)
     end
 
     it 'should use a supplied value_method for simple collections' do
       concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
-        concat(builder.input(:author_id, :as => :check_boxes, :collection => [:a, :b, :c], :value_method => proc {|f| ('Value_%s' % [f.to_s])}))
+        concat(builder.input(:author_id, :as => :check_boxes, :collection => [:a, :b, :c], :member_value => proc {|f| ('Value_%s' % [f.to_s])}))
       end)
       output_buffer.should have_tag('form li fieldset ol li label input[value="Value_a"]')
       output_buffer.should have_tag('form li fieldset ol li label input[value="Value_b"]')
