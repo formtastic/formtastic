@@ -113,11 +113,14 @@ describe 'Formtastic::FormBuilder#inputs' do
               concat(author.input(:login))
             end
           end)
-
+          
           output_buffer.should have_tag("form fieldset.inputs", :count => 2)
           output_buffer.should have_tag("form fieldset.inputs legend", :count => 2)
+          output_buffer.should have_tag("form fieldset.inputs legend", "1", :count => 1)
+          output_buffer.should have_tag("form fieldset.inputs legend", "2")
           output_buffer.should have_tag("form input[@name='post[authors_attributes][0][login]']")
           output_buffer.should have_tag("form input[@name='post[authors_attributes][1][login]']")
+          output_buffer.should_not have_tag('form fieldset[@name]')
         end
       end
 
