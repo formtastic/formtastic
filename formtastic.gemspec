@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.summary = %q{A Rails form builder plugin/gem with semantically rich and accessible markup}
   s.email = %q{justin@indent.com.au}
   s.extra_rdoc_files = ["README.textile"]
-  s.files = Dir.glob("lib/**/*") + %w(MIT-LICENSE README.textile)
+  s.files = Dir.glob("{lib,spec}/**/*") + %w(MIT-LICENSE README.textile)
   s.homepage = %q{http://github.com/justinfrench/formtastic/tree/master}
   s.post_install_message = %q{
   ========================================================================
