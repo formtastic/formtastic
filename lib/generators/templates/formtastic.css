@@ -30,7 +30,7 @@ form.formtastic ul.errors li { padding:0; border:none; display:list-item; }
 
 /* FIELDSETS & LISTS
 --------------------------------------------------------------------------------------------------*/
-form.formtastic fieldset { overflow:auto; } /* clearing contained floats */
+form.formtastic fieldset { overflow:hidden; } /* clearing contained floats */
 form.formtastic fieldset.inputs { }
 form.formtastic fieldset.buttons { padding-left:25%; }
 form.formtastic fieldset ol { }
@@ -39,7 +39,7 @@ form.formtastic fieldset.buttons li { float:left; padding-right:0.5em; }
 /* INPUT LIs
 --------------------------------------------------------------------------------------------------*/
 form.formtastic fieldset > ol > li { padding:0.5em 0; margin-top:-0.5em; margin-bottom:1em; } /* padding and negative margin juggling is for Firefox */
-form.formtastic fieldset > ol > li { overflow:auto; } /* clearing contained floats */
+form.formtastic fieldset > ol > li { overflow:hidden; } /* clearing contained floats */
 
 form.formtastic fieldset > ol > li.required { }
 form.formtastic fieldset > ol > li.optional { }
