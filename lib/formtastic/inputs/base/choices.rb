@@ -45,7 +45,11 @@ module Formtastic
         end
 
         def choice_value(choice)
-          choice.is_a?(Array) ? choice.last : choice
+          choice.is_a?(Array) ? choice[1] : choice
+        end
+
+        def choice_options(choice)
+          ((choice.is_a?(Array) && choice.size > 2) ? choice.last : {}).merge(:id => choice_input_dom_id(choice))
         end
 
         def choice_html_safe_value(choice)
