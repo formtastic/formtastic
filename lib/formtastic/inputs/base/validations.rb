@@ -140,7 +140,11 @@ module Formtastic
         def optional?
           !required?
         end
-        
+
+        def autofocus?
+          !!options[:autofocus]
+        end
+
         def column_limit
           column.limit if column? && column.respond_to?(:limit)
         end

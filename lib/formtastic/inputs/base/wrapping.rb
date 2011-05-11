@@ -21,6 +21,7 @@ module Formtastic
           opts[:class] << "error" if errors?
           opts[:class] << "optional" if optional?
           opts[:class] << "required" if required?
+          opts[:class] << "autofocus" if autofocus?
           opts[:class] = opts[:class].join(' ')
           
           opts[:id] ||= wrapper_dom_id
