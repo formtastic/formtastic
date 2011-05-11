@@ -88,7 +88,20 @@ describe 'text input' do
       output_buffer.should have_tag("textarea[@required]")
     end
   end
-  
+
+  context "when :autofocus is provided in :input_html" do
+    before(:each) do
+      concat(semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:title, :input_html => {:autofocus => true}))
+      end)
+    end
+
+    it_should_have_input_wrapper_with_class("autofocus")
+
+    it "should add the autofocus attribute to the input's html options" do
+      output_buffer.should have_tag("input[@autofocus]")
+    end
+  end
 
   context "when :rows is missing in :input_html" do
     before do
