@@ -125,6 +125,7 @@ module FormtasticSpecHelper
     @fred.stub!(:class).and_return(::Author)
     @fred.stub!(:to_label).and_return('Fred Smith')
     @fred.stub!(:login).and_return('fred_smith')
+    @fred.stub!(:age).and_return(27)
     @fred.stub!(:id).and_return(37)
     @fred.stub!(:new_record?).and_return(false)
     @fred.stub!(:errors).and_return(mock('errors', :[] => nil))
@@ -134,6 +135,7 @@ module FormtasticSpecHelper
     @bob = ::Author.new
     @bob.stub!(:to_label).and_return('Bob Rock')
     @bob.stub!(:login).and_return('bob')
+    @bob.stub!(:age).and_return(43)
     @bob.stub!(:created_at)
     @bob.stub!(:id).and_return(42)
     @bob.stub!(:posts).and_return([])
@@ -146,6 +148,7 @@ module FormtasticSpecHelper
     @james = ::Author.new
     @james.stub!(:to_label).and_return('James Shock')
     @james.stub!(:login).and_return('james')
+    @james.stub!(:age).and_return(38)
     @james.stub!(:id).and_return(75)
     @james.stub!(:posts).and_return([])
     @james.stub!(:post_ids).and_return([])

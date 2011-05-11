@@ -18,3 +18,4 @@ module Formtastic
     end
   end
 end
+

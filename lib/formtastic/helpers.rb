@@ -13,3 +13,4 @@ module Formtastic
     autoload :Reflection, 'formtastic/helpers/reflection'
   end
 end
+

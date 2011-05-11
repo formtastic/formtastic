@@ -1,13 +1,12 @@
 module Formtastic
   module Inputs
-
-    # Outputs a simple `<label>` with a HTML5 `<input type="number">` wrapped in the standard
-    # `<li>` wrapper. This is the default input choice for all database columns of the type `:float`
-    # and `:decimal`, as well as `:integer` columns that aren't used for `belongs_to` associations,
-    # but can be applied to any text-like input with `:as => :number`.
+    
+    # Outputs a simple `<label>` with a HTML5 `<input type="range">` wrapped in the standard
+    # `<li>` wrapper. This is an alternative input choice to a number input.
     #
-    # Sensible default values for the `min`, `max` and `step` attributes are found by reflecting on 
-    # the model's validations (when provided). An `IndeterminableMinimumAttributeError` exception 
+    # Sensible default for the `min`, `max` and `step` attributes are found by reflecting on 
+    # the model's validations. When validations are not provided, the `min` and `step` default to
+    # `1` and the `max` default to `100`. An `IndeterminableMinimumAttributeError` exception 
     # will be raised when the following conditions are all true:
     #
     # * you haven't specified a `:min` or `:max` for the input
@@ -24,7 +23,7 @@ module Formtastic
     #
     #   <%= semantic_form_for(@user) do |f| %>
     #     <%= f.inputs do %>
-    #       <%= f.input :shoe_size, :as => :number %>
+    #       <%= f.input :shoe_size, :as => :range %>
     #     <% end %>
     #   <% end %>
     #
@@ -33,7 +32,7 @@ module Formtastic
     #       <ol>
     #         <li class="numeric">
     #           <label for="user_shoe_size">Shoe size</label>
-    #           <input type="number" id="user_shoe_size" name="user[shoe_size]">
+    #           <input type="range" id="user_shoe_size" name="user[shoe_size]" min="1" max="100" step="1">
     #         </li>
     #       </ol>
     #     </fieldset>
@@ -52,29 +51,29 @@ module Formtastic
     #
     #   <li class="numeric">
     #     <label for="persom_age">Age</label>
-    #     <input type="number" id="person_age" name="person[age]" min="18" max="100" step="1">
+    #     <input type="range" id="person_age" name="person[age]" min="18" max="100" step="1">
     #   </li>
     #
     # @example Pass attributes down to the `<input>` tag with :input_html
-    #  <%= f.input :shoe_size, :as => :number, :input_html => { :min => 3, :max => 15, :step => 1, :class => "special" } %>
+    #  <%= f.input :shoe_size, :as => :range, :input_html => { :min => 3, :max => 15, :step => 1, :class => "special" } %>
     #
     # @example Min/max/step also work as options
-    #  <%= f.input :shoe_size, :as => :number, :min => 3, :max => 15, :step => 1, :input_html => { :class => "special" } %>
+    #  <%= f.input :shoe_size, :as => :range, :min => 3, :max => 15, :step => 1, :input_html => { :class => "special" } %>
     #
     # @example Use :in with a Range as a shortcut for :min/:max
-    #  <%= f.input :shoe_size, :as => :number, :in => 3..15, :step => 1 %>
-    #  <%= f.input :shoe_size, :as => :number, :input_html => { :in => 3..15, :step => 1 } %>
+    #  <%= f.input :shoe_size, :as => :range, :in => 3..15, :step => 1 %>
+    #  <%= f.input :shoe_size, :as => :range, :input_html => { :in => 3..15, :step => 1 } %>
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
     # @see http://api.rubyonrails.org/classes/ActiveModel/Validations/HelperMethods.html#method-i-validates_numericality_of Rails' Numericality validation documentation
-    class NumberInput 
+    class RangeInput
       include Base
       include Base::Stringish
-      
+
       def to_html
         input_wrapping do
           label_html <<
-          builder.number_field(method, input_html_options)
+          builder.range_field(method, input_html_options)
         end
       end
       
@@ -101,12 +100,12 @@ module Formtastic
       
       def min_option
         return options[:min] if options.key?(:min)
-        validation_min
+        validation_min || 1
       end
       
       def max_option
         return options[:max] if options.key?(:max)
-        validation_max
+        validation_max || 100
       end
       
       def in_option
