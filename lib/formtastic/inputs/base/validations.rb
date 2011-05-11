@@ -142,7 +142,9 @@ module Formtastic
         end
 
         def autofocus?
-          !!options[:autofocus]
+          opt_autofocus = options[:input_html] && options[:input_html][:autofocus]
+
+          !!opt_autofocus
         end
 
         def column_limit
