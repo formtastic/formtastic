@@ -29,8 +29,27 @@ describe 'Formtastic::FormBuilder#commit_button' do
     end
 
   end
+  
+  describe 'when not persisted' do
 
+    before do
+      @new_post.stub(:respond_to?).with(:to_model).and_return("X")
+      @new_post.stub(:respond_to?).with(:persisted?).and_return(false)
+      @new_post.stub(:respond_to?).with(:new_record?).and_return(false)
+    end
 
+    it 'should have a submit button label' do
+      with_config :i18n_lookups_by_default, false do
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.commit_button)
+        end)
+      end
+      
+      output_buffer.should have_tag('.commit input[@value="Submit Post"]')
+    end
+  end
+  
+  
   describe 'when used on any record' do
 
     before do
@@ -443,8 +462,5 @@ describe 'Formtastic::FormBuilder#commit_button' do
     end
 
   end
-
-  
-  
   
 end
