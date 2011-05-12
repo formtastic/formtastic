@@ -527,8 +527,8 @@ h3. Specifying HAML instead of ERB with @--haml@
 
 <pre>
   $ rails generate formtastic:form Post --haml
-      exists  app/views/admin/posts
-      create  app/views/admin/posts/_form.html.haml
+      exists  app/views/posts
+      create  app/views/posts/_form.html.haml
 </pre>
 
 h3. Specifying controller namespace with @--controller@
@@ -543,8 +543,8 @@ h3. Specifying which attributes need an input
 
 <pre>
   $ rails generate formtastic:form Post title:string body:text publication_state:select
-      exists  app/views/admin/posts
-      create  app/views/admin/posts/_form.html.erb
+      exists  app/views/posts
+      create  app/views/posts/_form.html.erb
 </pre>
 
 
