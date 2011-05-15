@@ -26,7 +26,7 @@ module Formtastic
             # rely purely on :human_attribute_name.
             method.to_s.send(builder.label_str_method)
           elsif object && object.class.respond_to?(:human_attribute_name)
-            object.class.human_attribute_name(method.to_s).send(builder.label_str_method)
+            object.class.human_attribute_name(method.to_s)
           else
             method.to_s.send(builder.label_str_method)
           end
