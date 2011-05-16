@@ -66,6 +66,8 @@ module Formtastic
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
     # @see http://api.rubyonrails.org/classes/ActiveModel/Validations/HelperMethods.html#method-i-validates_numericality_of Rails' Numericality validation documentation
+    #
+    # @todo Is it still correct for this to be Stringish?
     class RangeInput
       include Base
       include Base::Stringish

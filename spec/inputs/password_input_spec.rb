@@ -15,6 +15,7 @@ describe 'password input' do
   end
 
   it_should_have_input_wrapper_with_class(:password)
+  it_should_have_input_wrapper_with_class(:stringish)
   it_should_have_input_wrapper_with_id("post_title_input")
   it_should_have_label_with_text(/Title/)
   it_should_have_label_for("post_title")

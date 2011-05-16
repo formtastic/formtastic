@@ -18,6 +18,7 @@ describe 'phone input' do
     end
 
     it_should_have_input_wrapper_with_class(:phone)
+    it_should_have_input_wrapper_with_class(:stringish)
     it_should_have_input_wrapper_with_id("post_phone_input")
     it_should_have_label_with_text(/Phone/)
     it_should_have_label_for("post_phone")
