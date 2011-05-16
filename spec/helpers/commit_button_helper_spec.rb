@@ -62,6 +62,10 @@ describe 'Formtastic::FormBuilder#commit_button' do
     it 'should render a commit li' do
       output_buffer.should have_tag('li.commit')
     end
+    
+    it 'should render a button li' do
+      output_buffer.should have_tag('li.button')
+    end
 
     it 'should render an input with a type attribute of "submit"' do
       output_buffer.should have_tag('li.commit input[@type="submit"]')

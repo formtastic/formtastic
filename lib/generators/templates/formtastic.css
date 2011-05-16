@@ -37,7 +37,7 @@ This stylesheet forms part of the Formtastic Rails Plugin
 
 /* BUTTONS
 --------------------------------------------------------------------------------------------------*/
-.formtastic .buttons li { float:left; padding-right:0.5em; }
+.formtastic .buttons .button { float:left; padding-right:0.5em; }
 
 
 /* INPUT LIs

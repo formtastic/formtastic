@@ -264,7 +264,7 @@ module Formtastic
         button_html = options.delete(:button_html) || {}
         button_html.merge!(:class => [button_html[:class], key].compact.join(' '))
 
-        wrapper_html_class = ['commit'] # TODO: Add class reflecting on form action.
+        wrapper_html_class = ['commit', 'button'] # TODO: Add class reflecting on form action.
         wrapper_html = options.delete(:wrapper_html) || {}
         wrapper_html[:class] = (wrapper_html_class << wrapper_html[:class]).flatten.compact.join(' ')
 
