@@ -1,4 +1,4 @@
-1.2.4.beta (unreleased)
+1.2.4.beta2 (unreleased)
 
 * Changed :boolean inputs to use Rails' check_box_checked? instead of our own logic
 * Changed developer instructions in README
@@ -7,6 +7,11 @@
 * Fixed that tiny scroll bars were appearing on legends in date/time/radio/cbheckboxes fielsets (GH-477)    
 * Fixed an issue when formtastic fails to determine if a checkbox is checked with custom checked and unchecked values (thanks to Eugene Bolshakov)
 * Fixed that the hidden input rendered with a boolean checkbox did nt use the custom :name from :input_html options hash
+* Fixed issue where Firefox 4 gives focus to the <li> wrapper (fixes #524).
+* Fixed that a shared input options hash could not be re-used in the view without being altered by each input
+* Improved compatibility with Mongoid Documents
+* Updated i18n dependency to ~> 0.4
+
 
 1.2.3
 
