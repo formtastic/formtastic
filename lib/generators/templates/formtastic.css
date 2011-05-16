@@ -53,8 +53,16 @@ This stylesheet forms part of the Formtastic Rails Plugin
 /* LABELS
 --------------------------------------------------------------------------------------------------*/
 .formtastic .input label { display:block; width:25%; float:left; padding-top:.2em; }
+
+
+/* CHECKBOXES AND RADIO LABELS
+--------------------------------------------------------------------------------------------------*/
 .formtastic .input li label { line-height:100%; padding-top:0; }
-.formtastic .input li label input { line-height:100%; vertical-align:middle; margin-top:-0.1em;}
+
+
+/* CHECKBOXES AND RADIO INPUTS
+--------------------------------------------------------------------------------------------------*/
+.formtastic .input li label input { line-height:100%; vertical-align:middle; margin-top:-0.1em; }
 
 
 /* NESTED FIELDSETS AND LEGENDS (radio, check boxes and date/time inputs use nested fieldsets)
