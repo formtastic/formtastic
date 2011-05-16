@@ -17,7 +17,8 @@ This stylesheet forms part of the Formtastic Rails Plugin
 .formtastic em, .formtastic strong { font-style:normal; font-weight:normal; }
 .formtastic ol, .formtastic ul { list-style:none; }
 .formtastic abbr, .formtastic acronym { border:0; font-variant:normal; }
-.formtastic input, .formtastic textarea, .formtastic select { font-family:inherit; font-size:inherit; font-weight:inherit; }
+.formtastic input, .formtastic textarea { font-family:inherit; font-size:inherit; font-weight:inherit; }
+.formtastic select { font-size:inherit; font-weight:inherit; }
 .formtastic input, .formtastic textarea, .formtastic select { font-size:100%; }
 .formtastic legend { white-space:normal; color:#000; }
 
@@ -57,7 +58,7 @@ This stylesheet forms part of the Formtastic Rails Plugin
 
 /* CHECKBOXES AND RADIO LABELS
 --------------------------------------------------------------------------------------------------*/
-.formtastic .boolean li label,
+.formtastic .radio li label,
 .formtastuc .check_boxes li label { line-height:100%; padding-top:0; margin-bottom:0.6em; }
 
 
