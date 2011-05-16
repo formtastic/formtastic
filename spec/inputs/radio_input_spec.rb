@@ -83,6 +83,15 @@ describe 'radio input' do
         output_buffer.should have_tag("form li fieldset ol li label input[@checked='checked']")
       end
 
+      it "should mark the input as disabled if options attached for disabling" do
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:author, :as => :radio, :collection => [["Test", 'test'], ["Try", "try", {:disabled => true}]]))
+        end)
+
+        output_buffer.should_not have_tag("form li fieldset ol li label input[@value='test'][@disabled='disabled']")
+        output_buffer.should have_tag("form li fieldset ol li label input[@value='try'][@disabled='disabled']")
+      end
+
       it "should not contain invalid HTML attributes" do
 
         concat(semantic_form_for(@new_post) do |builder|
