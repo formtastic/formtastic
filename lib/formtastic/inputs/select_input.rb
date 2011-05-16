@@ -132,6 +132,8 @@ module Formtastic
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
     # @see Formtastic::Inputs::CheckBoxesInput CheckBoxesInput as an alternative for `has_many` and `has_and_belongs_to_many` associations
     # @see Formtastic::Inputs::RadioInput RadioInput as an alternative for `belongs_to` associations
+    #
+    # @todo Do/can we support the per-item HTML options like RadioInput?
     class SelectInput
       include Base
       include Base::Collections

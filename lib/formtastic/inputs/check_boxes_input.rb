@@ -75,6 +75,8 @@ module Formtastic
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
     # @see Formtastic::Inputs::BooleanInput BooleanInput for a single checkbox for boolean (checked = true) inputs
+    #
+    # @todo Do/can we support the per-item HTML options like RadioInput?
     class CheckBoxesInput
       include Base
       include Base::Collections
