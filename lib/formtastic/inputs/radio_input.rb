@@ -137,7 +137,7 @@ module Formtastic
 
       def choice_html(choice)        
         template.content_tag(:label,
-          builder.radio_button(input_name, choice_value(choice), input_html_options.merge(choice_options(choice))) << 
+          builder.radio_button(input_name, choice_value(choice), input_html_options.merge(choice_html_options(choice))) << 
           choice_label(choice),
           label_html_options.merge(:for => choice_input_dom_id(choice))
         )
