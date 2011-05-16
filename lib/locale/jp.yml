@@ -1,0 +1,8 @@
+jp:
+  formtastic:
+    :yes: 'はい'
+    :no: 'いえ'
+    :create: '%{model}を作る'
+    :update: '%{model}をアップデートする'
+    :submit: '%{model}をサブミットする'
+    :required: '必要'
