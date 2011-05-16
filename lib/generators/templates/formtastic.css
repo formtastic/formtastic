@@ -57,7 +57,8 @@ This stylesheet forms part of the Formtastic Rails Plugin
 
 /* CHECKBOXES AND RADIO LABELS
 --------------------------------------------------------------------------------------------------*/
-.formtastic .input li label { line-height:100%; padding-top:0; margin-bottom:0.6em; }
+.formtastic .boolean li label,
+.formtastuc .check_boxes li label { line-height:100%; padding-top:0; margin-bottom:0.6em; }
 
 
 /* CHECKBOXES AND RADIO INPUTS
