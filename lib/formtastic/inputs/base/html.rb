@@ -21,7 +21,8 @@ module Formtastic
         def input_html_options
           { 
             :id => dom_id,
-            :required => required?
+            :required => required?,
+            :autofocus => autofocus?
           }.merge(options[:input_html] || {})
         end
         
@@ -44,7 +45,7 @@ module Formtastic
             ""
           end
         end
-        
+
       end
     end
   end

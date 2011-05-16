@@ -36,7 +36,7 @@ module Formtastic
       #
       # @todo this is inconsistent with all other inputs, deprecate and remove
       def input_html_options
-        options.slice(:value).merge(super).merge(:required => nil)
+        options.slice(:value).merge(super).merge(:required => nil).merge(:autofocus => nil)
       end
       
       def to_html

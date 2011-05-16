@@ -105,6 +105,15 @@ describe 'hidden input' do
       output_buffer.should_not have_tag("input[@required]")
     end
   end
-  
+
+  context "when :autofocus is provided in :input_html" do
+    it "should not add the autofocus attribute to the input's html options" do
+      concat(semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:title, :as => :hidden, :input_html => {:autofocus => true}))
+      end)
+      output_buffer.should_not have_tag("input[@autofocus]")
+    end
+  end
+
 end
 
