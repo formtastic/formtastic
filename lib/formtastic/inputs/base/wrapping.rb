@@ -18,6 +18,7 @@ module Formtastic
           opts[:class] ||= []
           opts[:class] = [opts[:class].to_s] unless opts[:class].is_a?(Array)
           opts[:class] << as
+          opts[:class] << "input"
           opts[:class] << "error" if errors?
           opts[:class] << "optional" if optional?
           opts[:class] << "required" if required?

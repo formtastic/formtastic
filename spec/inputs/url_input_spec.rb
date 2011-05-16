@@ -18,6 +18,7 @@ describe 'url input' do
     end
 
     it_should_have_input_wrapper_with_class(:url)
+    it_should_have_input_wrapper_with_class(:input)
     it_should_have_input_wrapper_with_class(:stringish)
     it_should_have_input_wrapper_with_id("post_url_input")
     it_should_have_label_with_text(/Url/)

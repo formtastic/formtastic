@@ -44,6 +44,7 @@ describe 'time input' do
       end
 
       it_should_have_input_wrapper_with_class("time")
+      it_should_have_input_wrapper_with_class(:input)
       it_should_have_input_wrapper_with_id("post_publish_at_input")
       it_should_have_a_nested_fieldset
       it_should_apply_error_logic_for_input_type(:time)

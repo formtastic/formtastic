@@ -15,6 +15,7 @@ describe 'boolean input' do
   end
 
   it_should_have_input_wrapper_with_class("boolean")
+  it_should_have_input_wrapper_with_class(:input)
   it_should_have_input_wrapper_with_id("post_allow_comments_input")
   it_should_apply_error_logic_for_input_type(:boolean)
 

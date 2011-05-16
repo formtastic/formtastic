@@ -19,6 +19,7 @@ describe 'hidden input' do
   end
 
   it_should_have_input_wrapper_with_class("hidden")
+  it_should_have_input_wrapper_with_class(:input)
   it_should_have_input_wrapper_with_id("post_secret_input")
   it_should_not_have_a_label
 

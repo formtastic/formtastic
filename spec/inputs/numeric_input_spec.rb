@@ -25,6 +25,7 @@ describe 'numeric input' do
       end)
     end
     output_buffer.should have_tag('li.numeric')
+    output_buffer.should have_tag('li.input')
   end
   
   it "should warn that :numeric is deprecated in favor of :number" do

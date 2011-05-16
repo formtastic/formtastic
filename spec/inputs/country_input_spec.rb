@@ -32,6 +32,7 @@ describe 'country input' do
     end
 
     it_should_have_input_wrapper_with_class("country")
+    it_should_have_input_wrapper_with_class(:input)
     it_should_have_input_wrapper_with_id("post_country_input")
 
     # TODO -- needs stubbing inside the builder block, tricky!
