@@ -12,7 +12,6 @@ This stylesheet forms part of the Formtastic Rails Plugin
 /* NORMALIZE AND RESET - obviously inspired by Yahoo's reset.css, but scoped to just .formtastic
 --------------------------------------------------------------------------------------------------*/
 .formtastic,
-
 .formtastic ul,
 .formtastic ol,
 .formtastic li,
@@ -25,37 +24,45 @@ This stylesheet forms part of the Formtastic Rails Plugin
   margin:0;
   padding:0;
 }
+
 .formtastic fieldset {
   border:0;
 }
+
 .formtastic em,
 .formtastic strong {
   font-style:normal; font-weight:normal;
 }
+
 .formtastic ol,
 .formtastic ul {
   list-style:none;
 }
+
 .formtastic abbr,
 .formtastic acronym {
   border:0;
   font-variant:normal;
 }
+
 .formtastic input,
 .formtastic textarea {
   font-family:inherit;
   font-size:inherit;
   font-weight:inherit;
 }
+
 .formtastic select {
   font-size:inherit;
   font-weight:inherit;
 }
+
 .formtastic input,
 .formtastic textarea,
 .formtastic select {
   font-size:100%;
 }
+
 .formtastic legend {
   white-space:normal;
   color:#000;
@@ -104,15 +111,6 @@ This stylesheet forms part of the Formtastic Rails Plugin
 
 .formtastic .input {
   overflow:hidden; /* clearing contained floats */
-}
-
-.formtastic .required {
-}
-
-.formtastic .optional {
-}
-
-.formtastic .error {
 }
 
 
@@ -256,18 +254,6 @@ This stylesheet forms part of the Formtastic Rails Plugin
 .formtastic .choice label input {
   margin-right:0.2em;
   line-height:100%;
-}
-
-
-/* RADIO OVERRIDES
---------------------------------------------------------------------------------------------------*/
-.formtastic .radio {
-}
-
-
-/* CHECK BOXES (COLLECTION) OVERRIDES
---------------------------------------------------------------------------------------------------*/
-.formtastic .check_boxes {
 }
 
 
