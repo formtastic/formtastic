@@ -56,17 +56,6 @@ This stylesheet forms part of the Formtastic Rails Plugin
 .formtastic .input label { display:block; width:25%; float:left; padding-top:.2em; }
 
 
-/* CHECKBOXES AND RADIO LABELS
---------------------------------------------------------------------------------------------------*/
-.formtastic .radio .choice label,
-.formtastuc .check_boxes .choice label { line-height:100%; padding-top:0; margin-bottom:0.6em; }
-
-
-/* CHECKBOXES AND RADIO INPUTS
---------------------------------------------------------------------------------------------------*/
-.formtastic .choice label input { line-height:100%; }
-
-
 /* NESTED FIELDSETS AND LEGENDS (radio, check boxes and date/time inputs use nested fieldsets)
 --------------------------------------------------------------------------------------------------*/
 .formtastic .choices { position:relative; }
@@ -117,8 +106,8 @@ This stylesheet forms part of the Formtastic Rails Plugin
 .formtastic .choices { overflow:visible; }
 .formtastic .choices-group { margin-bottom:-0.5em; }
 .formtastic .choice { margin:0.1em 0 0.5em 0; overflow:visible; }
-.formtastic .choice label { float:none; width:100%; }
-.formtastic .choice label input { margin-right:0.2em; }
+.formtastic .choice label { float:none; width:100%; line-height:100%; padding-top:0; margin-bottom:0.6em; }
+.formtastic .choice label input { margin-right:0.2em; line-height:100%; }
 
 
 /* RADIO OVERRIDES
