@@ -112,29 +112,27 @@ This stylesheet forms part of the Formtastic Rails Plugin
 .formtastic .boolean label input { margin:0 0.5em 0 0.2em; }
 
 
+/* CHOICE GROUPS
+--------------------------------------------------------------------------------------------------*/
+.formtastic .choices { overflow:visible; }
+.formtastic .choices-group { margin-bottom:-0.5em; }
+.formtastic .choice { margin:0.1em 0 0.5em 0; overflow:visible; }
+.formtastic .choice label { float:none; width:100%; }
+.formtastic .choice label input { margin-right:0.2em; }
+
+
 /* RADIO OVERRIDES
 --------------------------------------------------------------------------------------------------*/
 .formtastic .radio { }
-.formtastic .radio .choices { overflow:visible; }
-.formtastic .radio .choices .choices-group { margin-bottom:-0.5em; }
-.formtastic .radio .choices .choices-group .choice { margin:0.1em 0 0.5em 0; overflow:visible; }
-.formtastic .radio .choices .choices-group .choice label { float:none; width:100%; }
-.formtastic .radio .choices .choices-group .choice label input { margin-right:0.2em; }
 
 
 /* CHECK BOXES (COLLECTION) OVERRIDES
 --------------------------------------------------------------------------------------------------*/
 .formtastic .check_boxes { }
-.formtastic .check_boxes .choices { overflow:visible; }
-.formtastic .check_boxes .choices .choices-group { margin-bottom:-0.5em; }
-.formtastic .check_boxes .choices .choices-group .choice { margin:0.1em 0 0.5em 0; overflow:visible; }
-.formtastic .check_boxes .choices .choices-group .choice label { float:none; width:100%; }
-.formtastic .check_boxes .choices .choices-group .choice label input { margin-right:0.2em; }
 
 
 /* DATE & TIME OVERRIDES
 --------------------------------------------------------------------------------------------------*/
-
 .formtastic .fragments { position:relative; }
 .formtastic .fragments legend { position:absolute; width:95%; left: 0px; }
 .formtastic .fragments legend span { position:absolute; }
