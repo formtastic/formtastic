@@ -5,7 +5,7 @@ this one in your layouts (eg formtastic_changes.css) and override the styles to 
 This will allow you to update formtastic.css with new releases without clobbering your own changes.
 
 This stylesheet forms part of the Formtastic Rails Plugin
-(c) 2008 Justin French
+(c) 2008-2011 Justin French
 
 --------------------------------------------------------------------------------------------------*/
 
@@ -29,23 +29,17 @@ This stylesheet forms part of the Formtastic Rails Plugin
 .formtastic .errors li { padding:0; border:none; display:list-item; }
 
 
-/* OUTER FIELDSETS
---------------------------------------------------------------------------------------------------*/
-.formtastic .inputs,
-.formtastic .buttons { overflow:hidden; } /* clearing contained floats */
-.formtastic .buttons { padding-left:25%; }
-
-
 /* BUTTONS
 --------------------------------------------------------------------------------------------------*/
+.formtastic .buttons { overflow:hidden; padding-left:25%; }
 .formtastic .button { float:left; padding-right:0.5em; }
 
 
-/* INPUT LIs
+/* INPUTS
 --------------------------------------------------------------------------------------------------*/
+.formtastic .inputs { overflow:hidden; }
 .formtastic .input { padding:0.5em 0; margin-top:-0.5em; margin-bottom:1em; } /* padding and negative margin juggling is for Firefox */
 .formtastic .input { overflow:hidden; } /* clearing contained floats */
-
 .formtastic .required { }
 .formtastic .optional { }
 .formtastic .error { }
