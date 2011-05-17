@@ -58,23 +58,23 @@ This stylesheet forms part of the Formtastic Rails Plugin
 
 /* CHECKBOXES AND RADIO LABELS
 --------------------------------------------------------------------------------------------------*/
-.formtastic .radio li label,
-.formtastuc .check_boxes li label { line-height:100%; padding-top:0; margin-bottom:0.6em; }
+.formtastic .radio .choice label,
+.formtastuc .check_boxes .choice label { line-height:100%; padding-top:0; margin-bottom:0.6em; }
 
 
 /* CHECKBOXES AND RADIO INPUTS
 --------------------------------------------------------------------------------------------------*/
-.formtastic .input li label input { line-height:100%; }
+.formtastic .input .choice label input { line-height:100%; }
 
 
 /* NESTED FIELDSETS AND LEGENDS (radio, check boxes and date/time inputs use nested fieldsets)
 --------------------------------------------------------------------------------------------------*/
-.formtastic .input fieldset { position:relative; }
-.formtastic .input fieldset legend { position:absolute; width:95%; left: 0px; }
-.formtastic .input fieldset legend span { position:absolute; }
-.formtastic .input fieldset legend.label label { position:absolute; }
-.formtastic .input fieldset ol { float:left; width:74%; margin:0; padding:0 0 0 25%; }
-.formtastic .input fieldset ol li { padding:0; border:0; }
+.formtastic .input .choices { position:relative; }
+.formtastic .input .choices legend { position:absolute; width:95%; left: 0px; }
+.formtastic .input .choices legend span { position:absolute; }
+.formtastic .input .choices legend.label label { position:absolute; }
+.formtastic .input .choices .choices-group { float:left; width:74%; margin:0; padding:0 0 0 25%; }
+.formtastic .input .choices .choices-group .choice { padding:0; border:0; }
 
 
 /* INLINE HINTS
@@ -115,33 +115,33 @@ This stylesheet forms part of the Formtastic Rails Plugin
 /* RADIO OVERRIDES
 --------------------------------------------------------------------------------------------------*/
 .formtastic .radio { }
-.formtastic .radio fieldset { overflow:visible; }
-.formtastic .radio fieldset ol { margin-bottom:-0.5em; }
-.formtastic .radio fieldset ol li { margin:0.1em 0 0.5em 0; overflow:visible; }
-.formtastic .radio fieldset ol li label { float:none; width:100%; }
-.formtastic .radio fieldset ol li label input { margin-right:0.2em; }
+.formtastic .radio .choices { overflow:visible; }
+.formtastic .radio .choices .choices-group { margin-bottom:-0.5em; }
+.formtastic .radio .choices .choices-group .choice { margin:0.1em 0 0.5em 0; overflow:visible; }
+.formtastic .radio .choices .choices-group .choice label { float:none; width:100%; }
+.formtastic .radio .choices .choices-group .choice label input { margin-right:0.2em; }
 
 
 /* CHECK BOXES (COLLECTION) OVERRIDES
 --------------------------------------------------------------------------------------------------*/
 .formtastic .check_boxes { }
-.formtastic .check_boxes fieldset { overflow:visible; }
-.formtastic .check_boxes fieldset ol { margin-bottom:-0.5em; }
-.formtastic .check_boxes fieldset ol li { margin:0.1em 0 0.5em 0; overflow:visible; }
-.formtastic .check_boxes fieldset ol li label { float:none; width:100%; }
-.formtastic .check_boxes fieldset ol li label input { margin-right:0.2em; }
+.formtastic .check_boxes .choices { overflow:visible; }
+.formtastic .check_boxes .choices .choices-group { margin-bottom:-0.5em; }
+.formtastic .check_boxes .choices .choices-group .choice { margin:0.1em 0 0.5em 0; overflow:visible; }
+.formtastic .check_boxes .choices .choices-group .choice label { float:none; width:100%; }
+.formtastic .check_boxes .choices .choices-group .choice label input { margin-right:0.2em; }
 
 
 /* DATE & TIME OVERRIDES
 --------------------------------------------------------------------------------------------------*/
-.formtastic .date fieldset ol li,
-.formtastic .time fieldset ol li,
-.formtastic .datetime fieldset ol li { float:left; width:auto; margin:0 .3em 0 0; }
 
-.formtastic .date fieldset ol li label,
-.formtastic .time fieldset ol li label,
-.formtastic .datetime fieldset ol li label { display:none; }
+.formtastic .fragments { position:relative; }
+.formtastic .fragments legend { position:absolute; width:95%; left: 0px; }
+.formtastic .fragments legend span { position:absolute; }
+.formtastic .fragments legend.label label { position:absolute; }
+.formtastic .fragments .fragments-group { float:left; width:74%; margin:0; padding:0 0 0 25%; }
+.formtastic .fragments .fragments-group .fragment { padding:0; border:0; }
+.formtastic .fragments .fragments-group .fragment { float:left; width:auto; margin:0 .3em 0 0; }
+.formtastic .fragments .fragments-group .fragment label { display:none; }
+.formtastic .fragments .fragments-group .fragment label input { display:inline; margin:0; padding:0;  }
 
-.formtastic .date fieldset ol li label input,
-.formtastic .time fieldset ol li label input,
-.formtastic .datetime fieldset ol li label input { display:inline; margin:0; padding:0;  }

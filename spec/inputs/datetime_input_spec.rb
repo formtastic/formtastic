@@ -24,6 +24,8 @@ describe 'datetime input' do
     it_should_have_input_wrapper_with_class(:input)
     it_should_have_input_wrapper_with_id("post_publish_at_input")
     it_should_have_a_nested_fieldset
+    it_should_have_a_nested_fieldset_with_class('fragments')
+    it_should_have_a_nested_ordered_list_with_class('fragments-group')
     it_should_apply_error_logic_for_input_type(:datetime)
     
     it 'should have a legend and label with the label text inside the fieldset' do
@@ -38,8 +40,8 @@ describe 'datetime input' do
     end
     
     it 'should have an ordered list of five items inside the fieldset' do
-      output_buffer.should have_tag('form li.datetime fieldset ol')
-      output_buffer.should have_tag('form li.datetime fieldset ol li', :count => 5)
+      output_buffer.should have_tag('form li.datetime fieldset ol.fragments-group')
+      output_buffer.should have_tag('form li.datetime fieldset ol li.fragment', :count => 5)
     end
 
     it 'should have five labels for year, month and day' do

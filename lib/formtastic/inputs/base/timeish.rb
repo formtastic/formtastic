@@ -7,15 +7,14 @@ module Formtastic
           input_wrapping do
             fragments_wrapping do
               fragments_label <<
-              template.content_tag(:fieldset,
-                template.content_tag(:ol,
-                  fragments.map do |fragment|
-                    fragment_wrapping do
-                      fragment_label_html(fragment) <<
-                      fragment_input_html(fragment)
-                    end
-                  end.join.html_safe # TODO is this safe?
-                )
+              template.content_tag(:ol,
+                fragments.map do |fragment|
+                  fragment_wrapping do
+                    fragment_label_html(fragment) <<
+                    fragment_input_html(fragment)
+                  end
+                end.join.html_safe, # TODO is this safe?
+                { :class => 'fragments-group' } # TODO refactor to fragments_group_wrapping
               )
             end
           end
@@ -38,7 +37,11 @@ module Formtastic
         end
         
         def fragment_wrapping(&block)
-          template.content_tag(:li, template.capture(&block))
+          template.content_tag(:li, template.capture(&block), fragment_wrapping_html_options)
+        end
+        
+        def fragment_wrapping_html_options
+          { :class => 'fragment' }
         end
         
         def fragment_label(fragment)
@@ -99,7 +102,7 @@ module Formtastic
         end
         
         def fragments_wrapping_html_options
-          {}
+          { :class => "fragments" }
         end
         
         def fragments_label

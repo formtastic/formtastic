@@ -11,7 +11,7 @@ module Formtastic
         end
 
         def choices_wrapping_html_options
-          {}
+          { :class => "choices" }
         end
 
         def choices_group_wrapping(&block)
@@ -22,7 +22,7 @@ module Formtastic
         end
 
         def choices_group_wrapping_html_options
-          {}
+          { :class => "choices-group" }
         end
 
         def choice_wrapping(html_options, &block)
@@ -33,7 +33,10 @@ module Formtastic
         end
 
         def choice_wrapping_html_options(choice)
-          { :class => value_as_class? ? "#{sanitized_method_name.singularize}_#{choice_html_safe_value(choice)}" : '' }
+          classes = ['choice']
+          classes << "#{sanitized_method_name.singularize}_#{choice_html_safe_value(choice)}" if value_as_class?
+          
+          { :class => classes.join(" ") }
         end
 
         def choice_html(choice)        
