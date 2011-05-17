@@ -48,12 +48,7 @@ This stylesheet forms part of the Formtastic Rails Plugin
 
 .formtastic input,
 .formtastic textarea {
-  font-family:inherit;
-  font-size:inherit;
-  font-weight:inherit;
-}
-
-.formtastic select {
+  font-family:sans-serif;
   font-size:inherit;
   font-weight:inherit;
 }
