@@ -131,15 +131,14 @@ This stylesheet forms part of the Formtastic Rails Plugin
 .formtastic .check_boxes { }
 
 
-/* DATE & TIME OVERRIDES
+/* FRAGMENTED INPUTS (DATE/TIME/DATETIME)
 --------------------------------------------------------------------------------------------------*/
 .formtastic .fragments { position:relative; }
 .formtastic .fragments legend { position:absolute; width:95%; left: 0px; }
 .formtastic .fragments legend span { position:absolute; }
 .formtastic .fragments legend.label label { position:absolute; }
-.formtastic .fragments .fragments-group { float:left; width:74%; margin:0; padding:0 0 0 25%; }
-.formtastic .fragments .fragments-group .fragment { padding:0; border:0; }
-.formtastic .fragments .fragments-group .fragment { float:left; width:auto; margin:0 .3em 0 0; }
-.formtastic .fragments .fragments-group .fragment label { display:none; }
-.formtastic .fragments .fragments-group .fragment label input { display:inline; margin:0; padding:0;  }
+.formtastic .fragments-group { float:left; width:74%; margin:0; padding:0 0 0 25%; }
+.formtastic .fragment { float:left; width:auto; margin:0 .3em 0 0; padding:0; border:0; }
+.formtastic .fragment label { display:none; }
+.formtastic .fragment label input { display:inline; margin:0; padding:0;  }
 
