@@ -223,10 +223,6 @@ This stylesheet forms part of the Formtastic Rails Plugin
   width:auto;
 }
 
-.formtastic .boolean label input {
-  margin:0 0.5em 0 0.2em;
-}
-
 
 /* CHOICE GROUPS
 --------------------------------------------------------------------------------------------------*/
@@ -246,8 +242,12 @@ This stylesheet forms part of the Formtastic Rails Plugin
   margin-bottom:0.6em;
 }
 
-.formtastic .choice label input {
-  margin-right:0.2em;
+
+/* ADJUSTMENTS FOR INPUTS INSIDE LABELS (boolean input, radio input, check_boxes input)
+--------------------------------------------------------------------------------------------------*/
+.formtastic .choice label input,
+.formtastic .boolean label input {
+  margin:0 0.3em 0 0.2em;
   line-height:100%;
 }
 
