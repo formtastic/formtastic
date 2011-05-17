@@ -505,7 +505,7 @@ Run @rails generate formtastic:install@ to copy a commented out config file into
 
 h2. Form Generator
 
-There's a Formtastic form code generator to make your transition to Formtastic easier. All you have to do is to *specify an existing model name*, and optionally specify view template framework (ERB/HAML), and you are good to go. *Note:* This won't overwrite any of your exsting files without confrmation.
+There's a Formtastic form code generator to make your transition to Formtastic easier. All you have to do is to *specify an existing model name*, and optionally specify view template framework (ERB/HAML), and you are good to go. *Note:* This won't overwrite any of your exsting files without confirmation.
 
 h3. Basic usage
 
