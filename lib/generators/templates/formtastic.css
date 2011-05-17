@@ -25,8 +25,8 @@ This stylesheet forms part of the Formtastic Rails Plugin
 
 /* SEMANTIC ERRORS
 --------------------------------------------------------------------------------------------------*/
-.formtastic ul.errors { color:#cc0000; margin:0.5em 0 1.5em 25%; list-style:square; }
-.formtastic ul.errors li { padding:0; border:none; display:list-item; }
+.formtastic .errors { color:#cc0000; margin:0.5em 0 1.5em 25%; list-style:square; }
+.formtastic .errors li { padding:0; border:none; display:list-item; }
 
 
 /* OUTER FIELDSETS
@@ -38,7 +38,7 @@ This stylesheet forms part of the Formtastic Rails Plugin
 
 /* BUTTONS
 --------------------------------------------------------------------------------------------------*/
-.formtastic .buttons .button { float:left; padding-right:0.5em; }
+.formtastic .button { float:left; padding-right:0.5em; }
 
 
 /* INPUT LIs
@@ -64,29 +64,29 @@ This stylesheet forms part of the Formtastic Rails Plugin
 
 /* CHECKBOXES AND RADIO INPUTS
 --------------------------------------------------------------------------------------------------*/
-.formtastic .input .choice label input { line-height:100%; }
+.formtastic .choice label input { line-height:100%; }
 
 
 /* NESTED FIELDSETS AND LEGENDS (radio, check boxes and date/time inputs use nested fieldsets)
 --------------------------------------------------------------------------------------------------*/
-.formtastic .input .choices { position:relative; }
-.formtastic .input .choices legend { position:absolute; width:95%; left: 0px; }
-.formtastic .input .choices legend span { position:absolute; }
-.formtastic .input .choices legend.label label { position:absolute; }
-.formtastic .input .choices .choices-group { float:left; width:74%; margin:0; padding:0 0 0 25%; }
-.formtastic .input .choices .choices-group .choice { padding:0; border:0; }
+.formtastic .choices { position:relative; }
+.formtastic .choices legend { position:absolute; width:95%; left: 0px; }
+.formtastic .choices legend span { position:absolute; }
+.formtastic .choices legend.label label { position:absolute; }
+.formtastic .choices-group { float:left; width:74%; margin:0; padding:0 0 0 25%; }
+.formtastic .choice { padding:0; border:0; }
 
 
 /* INLINE HINTS
 --------------------------------------------------------------------------------------------------*/
-.formtastic .input p.inline-hints { color:#666; margin:0.5em 0 0 25%; }
+.formtastic .input .inline-hints { color:#666; margin:0.5em 0 0 25%; }
 
 
 /* INLINE ERRORS
 --------------------------------------------------------------------------------------------------*/
-.formtastic .input p.inline-errors { color:#cc0000; margin:0.5em 0 0 25%; }
-.formtastic .input ul.errors { color:#cc0000; margin:0.5em 0 0 25%; list-style:square; }
-.formtastic .input ul.errors li { padding:0; border:none; display:list-item; }
+.formtastic .inline-errors { color:#cc0000; margin:0.5em 0 0 25%; }
+.formtastic .errors { color:#cc0000; margin:0.5em 0 0 25%; list-style:square; }
+.formtastic .errors li { padding:0; border:none; display:list-item; }
 
 
 /* STRING, NUMERIC, PASSWORD, EMAIL, URL, PHONE, SEARCH (ETC) OVERRIDES
