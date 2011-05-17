@@ -230,17 +230,12 @@ This stylesheet forms part of the Formtastic Rails Plugin
 
 /* CHOICE GROUPS
 --------------------------------------------------------------------------------------------------*/
-.formtastic .choices {
-  overflow:visible;
-}
-
 .formtastic .choices-group {
   margin-bottom:-0.5em;
 }
 
 .formtastic .choice {
   margin:0.1em 0 0.5em 0;
-  overflow:visible;
 }
 
 .formtastic .choice label {
