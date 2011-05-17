@@ -31,7 +31,8 @@ This stylesheet forms part of the Formtastic Rails Plugin
 
 .formtastic em,
 .formtastic strong {
-  font-style:normal; font-weight:normal;
+  font-style:normal;
+  font-weight:normal;
 }
 
 .formtastic ol,
