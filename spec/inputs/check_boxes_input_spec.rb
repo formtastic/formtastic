@@ -19,6 +19,8 @@ describe 'check_boxes input' do
     it_should_have_input_wrapper_with_class(:input)
     it_should_have_input_wrapper_with_id("author_posts_input")
     it_should_have_a_nested_fieldset
+    it_should_have_a_nested_fieldset_with_class('choices')
+    it_should_have_a_nested_ordered_list_with_class('choices-group')
     it_should_apply_error_logic_for_input_type(:check_boxes)
     it_should_call_find_on_association_class_when_no_collection_is_provided(:check_boxes)
     it_should_use_the_collection_when_provided(:check_boxes, 'input[@type="checkbox"]')
@@ -32,9 +34,9 @@ describe 'check_boxes input' do
       output_buffer.should_not have_tag('form li fieldset legend label[@for^="author_post_ids_"]')
     end
 
-    it 'should generate an ordered list with a list item for each choice' do
+    it 'should generate an ordered list with an li.choice for each choice' do
       output_buffer.should have_tag('form li fieldset ol')
-      output_buffer.should have_tag('form li fieldset ol li input[@type=checkbox]', :count => ::Post.all.size)
+      output_buffer.should have_tag('form li fieldset ol li.choice input[@type=checkbox]', :count => ::Post.all.size)
     end
 
     it 'should have one option with a "checked" attribute' do

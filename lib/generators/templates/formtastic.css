@@ -5,7 +5,7 @@ this one in your layouts (eg formtastic_changes.css) and override the styles to 
 This will allow you to update formtastic.css with new releases without clobbering your own changes.
 
 This stylesheet forms part of the Formtastic Rails Plugin
-(c) 2008 Justin French
+(c) 2008-2011 Justin French
 
 --------------------------------------------------------------------------------------------------*/
 
@@ -17,34 +17,29 @@ This stylesheet forms part of the Formtastic Rails Plugin
 .formtastic em, .formtastic strong { font-style:normal; font-weight:normal; }
 .formtastic ol, .formtastic ul { list-style:none; }
 .formtastic abbr, .formtastic acronym { border:0; font-variant:normal; }
-.formtastic input, .formtastic textarea, .formtastic select { font-family:inherit; font-size:inherit; font-weight:inherit; }
+.formtastic input, .formtastic textarea { font-family:inherit; font-size:inherit; font-weight:inherit; }
+.formtastic select { font-size:inherit; font-weight:inherit; }
 .formtastic input, .formtastic textarea, .formtastic select { font-size:100%; }
 .formtastic legend { white-space:normal; color:#000; }
 
 
 /* SEMANTIC ERRORS
 --------------------------------------------------------------------------------------------------*/
-.formtastic ul.errors { color:#cc0000; margin:0.5em 0 1.5em 25%; list-style:square; }
-.formtastic ul.errors li { padding:0; border:none; display:list-item; }
-
-
-/* OUTER FIELDSETS
---------------------------------------------------------------------------------------------------*/
-.formtastic .inputs,
-.formtastic .buttons { overflow:hidden; } /* clearing contained floats */
-.formtastic .buttons { padding-left:25%; }
+.formtastic .errors { color:#cc0000; margin:0.5em 0 1.5em 25%; list-style:square; }
+.formtastic .errors li { padding:0; border:none; display:list-item; }
 
 
 /* BUTTONS
 --------------------------------------------------------------------------------------------------*/
-.formtastic .buttons .button { float:left; padding-right:0.5em; }
+.formtastic .buttons { overflow:hidden; padding-left:25%; }
+.formtastic .button { float:left; padding-right:0.5em; }
 
 
-/* INPUT LIs
+/* INPUTS
 --------------------------------------------------------------------------------------------------*/
+.formtastic .inputs { overflow:hidden; }
 .formtastic .input { padding:0.5em 0; margin-top:-0.5em; margin-bottom:1em; } /* padding and negative margin juggling is for Firefox */
 .formtastic .input { overflow:hidden; } /* clearing contained floats */
-
 .formtastic .required { }
 .formtastic .optional { }
 .formtastic .error { }
@@ -53,30 +48,28 @@ This stylesheet forms part of the Formtastic Rails Plugin
 /* LABELS
 --------------------------------------------------------------------------------------------------*/
 .formtastic .input label { display:block; width:25%; float:left; padding-top:.2em; }
-.formtastic .input li label { line-height:100%; padding-top:0; }
-.formtastic .input li label input { line-height:100%; vertical-align:middle; margin-top:-0.1em;}
 
 
 /* NESTED FIELDSETS AND LEGENDS (radio, check boxes and date/time inputs use nested fieldsets)
 --------------------------------------------------------------------------------------------------*/
-.formtastic .input fieldset { position:relative; }
-.formtastic .input fieldset legend { position:absolute; width:95%; left: 0px; }
-.formtastic .input fieldset legend span { position:absolute; }
-.formtastic .input fieldset legend.label label { position:absolute; }
-.formtastic .input fieldset ol { float:left; width:74%; margin:0; padding:0 0 0 25%; }
-.formtastic .input fieldset ol li { padding:0; border:0; }
+.formtastic .choices { position:relative; }
+.formtastic .choices legend { position:absolute; width:95%; left: 0px; }
+.formtastic .choices legend span { position:absolute; }
+.formtastic .choices legend.label label { position:absolute; }
+.formtastic .choices-group { float:left; width:74%; margin:0; padding:0 0 0 25%; }
+.formtastic .choice { padding:0; border:0; }
 
 
 /* INLINE HINTS
 --------------------------------------------------------------------------------------------------*/
-.formtastic .input p.inline-hints { color:#666; margin:0.5em 0 0 25%; }
+.formtastic .input .inline-hints { color:#666; margin:0.5em 0 0 25%; }
 
 
 /* INLINE ERRORS
 --------------------------------------------------------------------------------------------------*/
-.formtastic .input p.inline-errors { color:#cc0000; margin:0.5em 0 0 25%; }
-.formtastic .input ul.errors { color:#cc0000; margin:0.5em 0 0 25%; list-style:square; }
-.formtastic .input ul.errors li { padding:0; border:none; display:list-item; }
+.formtastic .inline-errors { color:#cc0000; margin:0.5em 0 0 25%; }
+.formtastic .errors { color:#cc0000; margin:0.5em 0 0 25%; list-style:square; }
+.formtastic .errors li { padding:0; border:none; display:list-item; }
 
 
 /* STRING, NUMERIC, PASSWORD, EMAIL, URL, PHONE, SEARCH (ETC) OVERRIDES
@@ -102,36 +95,33 @@ This stylesheet forms part of the Formtastic Rails Plugin
 .formtastic .boolean label input { margin:0 0.5em 0 0.2em; }
 
 
+/* CHOICE GROUPS
+--------------------------------------------------------------------------------------------------*/
+.formtastic .choices { overflow:visible; }
+.formtastic .choices-group { margin-bottom:-0.5em; }
+.formtastic .choice { margin:0.1em 0 0.5em 0; overflow:visible; }
+.formtastic .choice label { float:none; width:100%; line-height:100%; padding-top:0; margin-bottom:0.6em; }
+.formtastic .choice label input { margin-right:0.2em; line-height:100%; }
+
+
 /* RADIO OVERRIDES
 --------------------------------------------------------------------------------------------------*/
 .formtastic .radio { }
-.formtastic .radio fieldset { overflow:visible; }
-.formtastic .radio fieldset ol { margin-bottom:-0.5em; }
-.formtastic .radio fieldset ol li { margin:0.1em 0 0.5em 0; overflow:visible; }
-.formtastic .radio fieldset ol li label { float:none; width:100%; }
-.formtastic .radio fieldset ol li label input { margin-right:0.2em; }
 
 
 /* CHECK BOXES (COLLECTION) OVERRIDES
 --------------------------------------------------------------------------------------------------*/
 .formtastic .check_boxes { }
-.formtastic .check_boxes fieldset { overflow:visible; }
-.formtastic .check_boxes fieldset ol { margin-bottom:-0.5em; }
-.formtastic .check_boxes fieldset ol li { margin:0.1em 0 0.5em 0; overflow:visible; }
-.formtastic .check_boxes fieldset ol li label { float:none; width:100%; }
-.formtastic .check_boxes fieldset ol li label input { margin-right:0.2em; }
 
 
-/* DATE & TIME OVERRIDES
+/* FRAGMENTED INPUTS (DATE/TIME/DATETIME)
 --------------------------------------------------------------------------------------------------*/
-.formtastic .date fieldset ol li,
-.formtastic .time fieldset ol li,
-.formtastic .datetime fieldset ol li { float:left; width:auto; margin:0 .3em 0 0; }
+.formtastic .fragments { position:relative; }
+.formtastic .fragments legend { position:absolute; width:95%; left: 0px; }
+.formtastic .fragments legend span { position:absolute; }
+.formtastic .fragments legend.label label { position:absolute; }
+.formtastic .fragments-group { float:left; width:74%; margin:0; padding:0 0 0 25%; }
+.formtastic .fragment { float:left; width:auto; margin:0 .3em 0 0; padding:0; border:0; }
+.formtastic .fragment label { display:none; }
+.formtastic .fragment label input { display:inline; margin:0; padding:0;  }
 
-.formtastic .date fieldset ol li label,
-.formtastic .time fieldset ol li label,
-.formtastic .datetime fieldset ol li label { display:none; }
-
-.formtastic .date fieldset ol li label input,
-.formtastic .time fieldset ol li label input,
-.formtastic .datetime fieldset ol li label input { display:inline; margin:0; padding:0;  }

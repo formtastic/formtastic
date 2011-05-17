@@ -31,6 +31,18 @@ module CustomMacros
         output_buffer.should have_tag("form li fieldset")
       end
     end
+    
+    def it_should_have_a_nested_fieldset_with_class(klass)
+      it "should have a nested_fieldset with class #{klass}" do
+        output_buffer.should have_tag("form li fieldset.#{klass}")
+      end
+    end
+    
+    def it_should_have_a_nested_ordered_list_with_class(klass)
+      it "should have a nested fieldset with class #{klass}" do
+        output_buffer.should have_tag("form li ol.#{klass}")
+      end
+    end
 
     def it_should_have_label_with_text(string_or_regex)
       it "should have a label with text '#{string_or_regex}'" do

@@ -21,6 +21,8 @@ describe 'radio input' do
     it_should_have_input_wrapper_with_class(:input)
     it_should_have_input_wrapper_with_id("post_author_input")
     it_should_have_a_nested_fieldset
+    it_should_have_a_nested_fieldset_with_class('choices')
+    it_should_have_a_nested_ordered_list_with_class('choices-group')
     it_should_apply_error_logic_for_input_type(:radio)
     it_should_use_the_collection_when_provided(:radio, 'input')
 
@@ -35,7 +37,7 @@ describe 'radio input' do
 
     it 'should generate an ordered list with a list item for each choice' do
       output_buffer.should have_tag('form li fieldset ol')
-      output_buffer.should have_tag('form li fieldset ol li', :count => ::Author.all.size)
+      output_buffer.should have_tag('form li fieldset ol li.choice', :count => ::Author.all.size)
     end
 
     it 'should have one option with a "checked" attribute' do
