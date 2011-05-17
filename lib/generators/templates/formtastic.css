@@ -9,119 +9,310 @@ This stylesheet forms part of the Formtastic Rails Plugin
 
 --------------------------------------------------------------------------------------------------*/
 
-
 /* NORMALIZE AND RESET - obviously inspired by Yahoo's reset.css, but scoped to just .formtastic
 --------------------------------------------------------------------------------------------------*/
-.formtastic, .formtastic ul, .formtastic ol, .formtastic li, .formtastic fieldset, .formtastic legend, .formtastic input, .formtastic textarea, .formtastic select, .formtastic p { margin:0; padding:0; }
-.formtastic fieldset { border:0; }
-.formtastic em, .formtastic strong { font-style:normal; font-weight:normal; }
-.formtastic ol, .formtastic ul { list-style:none; }
-.formtastic abbr, .formtastic acronym { border:0; font-variant:normal; }
-.formtastic input, .formtastic textarea { font-family:inherit; font-size:inherit; font-weight:inherit; }
-.formtastic select { font-size:inherit; font-weight:inherit; }
-.formtastic input, .formtastic textarea, .formtastic select { font-size:100%; }
-.formtastic legend { white-space:normal; color:#000; }
+.formtastic,
+
+.formtastic ul,
+.formtastic ol,
+.formtastic li,
+.formtastic fieldset,
+.formtastic legend,
+.formtastic input,
+.formtastic textarea,
+.formtastic select,
+.formtastic p {
+  margin:0;
+  padding:0;
+}
+.formtastic fieldset {
+  border:0;
+}
+.formtastic em,
+.formtastic strong {
+  font-style:normal; font-weight:normal;
+}
+.formtastic ol,
+.formtastic ul {
+  list-style:none;
+}
+.formtastic abbr,
+.formtastic acronym {
+  border:0;
+  font-variant:normal;
+}
+.formtastic input,
+.formtastic textarea {
+  font-family:inherit;
+  font-size:inherit;
+  font-weight:inherit;
+}
+.formtastic select {
+  font-size:inherit;
+  font-weight:inherit;
+}
+.formtastic input,
+.formtastic textarea,
+.formtastic select {
+  font-size:100%;
+}
+.formtastic legend {
+  white-space:normal;
+  color:#000;
+}
 
 
 /* SEMANTIC ERRORS
 --------------------------------------------------------------------------------------------------*/
-.formtastic .errors { color:#cc0000; margin:0.5em 0 1.5em 25%; list-style:square; }
-.formtastic .errors li { padding:0; border:none; display:list-item; }
+.formtastic .errors {
+  color:#cc0000;
+  margin:0.5em 0 1.5em 25%;
+  list-style:square;
+}
+
+.formtastic .errors li {
+  padding:0;
+  border:none;
+  display:list-item;
+}
 
 
 /* BUTTONS
 --------------------------------------------------------------------------------------------------*/
-.formtastic .buttons { overflow:hidden; padding-left:25%; }
-.formtastic .button { float:left; padding-right:0.5em; }
+.formtastic .buttons {
+  overflow:hidden;
+  padding-left:25%;
+}
+
+.formtastic .button {
+  float:left;
+  padding-right:0.5em;
+}
 
 
 /* INPUTS
 --------------------------------------------------------------------------------------------------*/
-.formtastic .inputs { overflow:hidden; }
-.formtastic .input { padding:0.5em 0; margin-top:-0.5em; margin-bottom:1em; } /* padding and negative margin juggling is for Firefox */
-.formtastic .input { overflow:hidden; } /* clearing contained floats */
-.formtastic .required { }
-.formtastic .optional { }
-.formtastic .error { }
+.formtastic .inputs {
+  overflow:hidden;
+}
+
+.formtastic .input {
+  padding:0.5em 0; /* padding and negative margin juggling is for Firefox */
+  margin-top:-0.5em;
+  margin-bottom:1em;
+}
+
+.formtastic .input {
+  overflow:hidden; /* clearing contained floats */
+}
+
+.formtastic .required {
+}
+
+.formtastic .optional {
+}
+
+.formtastic .error {
+}
 
 
 /* LABELS
 --------------------------------------------------------------------------------------------------*/
-.formtastic .input label { display:block; width:25%; float:left; padding-top:.2em; }
+.formtastic .input label {
+  display:block;
+  width:25%;
+  float:left;
+  padding-top:.2em;
+}
 
 
 /* NESTED FIELDSETS AND LEGENDS (radio, check boxes and date/time inputs use nested fieldsets)
 --------------------------------------------------------------------------------------------------*/
-.formtastic .choices { position:relative; }
-.formtastic .choices legend { position:absolute; width:95%; left: 0px; }
-.formtastic .choices legend span { position:absolute; }
-.formtastic .choices legend.label label { position:absolute; }
-.formtastic .choices-group { float:left; width:74%; margin:0; padding:0 0 0 25%; }
-.formtastic .choice { padding:0; border:0; }
+.formtastic .choices {
+  position:relative;
+}
+
+.formtastic .choices legend {
+  position:absolute;
+  width:95%;
+  left:0px;
+}
+
+.formtastic .choices legend span {
+  position:absolute;
+}
+
+.formtastic .choices legend.label label {
+  position:absolute;
+}
+
+.formtastic .choices-group {
+  float:left;
+  width:74%;
+  margin:0;
+  padding:0 0 0 25%;
+}
+
+.formtastic .choice {
+  padding:0;
+  border:0;
+}
 
 
 /* INLINE HINTS
 --------------------------------------------------------------------------------------------------*/
-.formtastic .input .inline-hints { color:#666; margin:0.5em 0 0 25%; }
+.formtastic .input .inline-hints {
+  color:#666;
+  margin:0.5em 0 0 25%;
+}
 
 
 /* INLINE ERRORS
 --------------------------------------------------------------------------------------------------*/
-.formtastic .inline-errors { color:#cc0000; margin:0.5em 0 0 25%; }
-.formtastic .errors { color:#cc0000; margin:0.5em 0 0 25%; list-style:square; }
-.formtastic .errors li { padding:0; border:none; display:list-item; }
+.formtastic .inline-errors {
+  color:#cc0000;
+  margin:0.5em 0 0 25%;
+}
+
+.formtastic .errors {
+  color:#cc0000;
+  margin:0.5em 0 0 25%;
+  list-style:square;
+}
+
+.formtastic .errors li {
+  padding:0;
+  border:none;
+  display:list-item;
+}
 
 
 /* STRING, NUMERIC, PASSWORD, EMAIL, URL, PHONE, SEARCH (ETC) OVERRIDES
 --------------------------------------------------------------------------------------------------*/
-.formtastic .stringish input { width:72%; }
-.formtastic .stringish input[size] { width:auto; max-width:72%; }
+.formtastic .stringish input {
+  width:72%;
+}
+
+.formtastic .stringish input[size] {
+  width:auto;
+  max-width:72%;
+}
 
 
 /* TEXTAREA OVERRIDES
 --------------------------------------------------------------------------------------------------*/
-.formtastic .text textarea { width:72%; }
-.formtastic .text textarea[cols] { width:auto; max-width:72%; }
+.formtastic .text textarea {
+  width:72%;
+}
+
+.formtastic .text textarea[cols] {
+  width:auto;
+  max-width:72%;
+}
 
 
 /* HIDDEN OVERRIDES
 --------------------------------------------------------------------------------------------------*/
-.formtastic .hidden { display:none; }
+.formtastic .hidden {
+  display:none;
+}
 
 
 /* BOOLEAN OVERRIDES
 --------------------------------------------------------------------------------------------------*/
-.formtastic .boolean label { padding-left:25%; width:auto; }
-.formtastic .boolean label input { margin:0 0.5em 0 0.2em; }
+.formtastic .boolean label {
+  padding-left:25%;
+  width:auto;
+}
+
+.formtastic .boolean label input {
+  margin:0 0.5em 0 0.2em;
+}
 
 
 /* CHOICE GROUPS
 --------------------------------------------------------------------------------------------------*/
-.formtastic .choices { overflow:visible; }
-.formtastic .choices-group { margin-bottom:-0.5em; }
-.formtastic .choice { margin:0.1em 0 0.5em 0; overflow:visible; }
-.formtastic .choice label { float:none; width:100%; line-height:100%; padding-top:0; margin-bottom:0.6em; }
-.formtastic .choice label input { margin-right:0.2em; line-height:100%; }
+.formtastic .choices {
+  overflow:visible;
+}
+
+.formtastic .choices-group {
+  margin-bottom:-0.5em;
+}
+
+.formtastic .choice {
+  margin:0.1em 0 0.5em 0;
+  overflow:visible;
+}
+
+.formtastic .choice label {
+  float:none;
+  width:100%;
+  line-height:100%;
+  padding-top:0;
+  margin-bottom:0.6em;
+}
+
+.formtastic .choice label input {
+  margin-right:0.2em;
+  line-height:100%;
+}
 
 
 /* RADIO OVERRIDES
 --------------------------------------------------------------------------------------------------*/
-.formtastic .radio { }
+.formtastic .radio {
+}
 
 
 /* CHECK BOXES (COLLECTION) OVERRIDES
 --------------------------------------------------------------------------------------------------*/
-.formtastic .check_boxes { }
+.formtastic .check_boxes {
+}
 
 
 /* FRAGMENTED INPUTS (DATE/TIME/DATETIME)
 --------------------------------------------------------------------------------------------------*/
-.formtastic .fragments { position:relative; }
-.formtastic .fragments legend { position:absolute; width:95%; left: 0px; }
-.formtastic .fragments legend span { position:absolute; }
-.formtastic .fragments legend.label label { position:absolute; }
-.formtastic .fragments-group { float:left; width:74%; margin:0; padding:0 0 0 25%; }
-.formtastic .fragment { float:left; width:auto; margin:0 .3em 0 0; padding:0; border:0; }
-.formtastic .fragment label { display:none; }
-.formtastic .fragment label input { display:inline; margin:0; padding:0;  }
+.formtastic .fragments {
+  position:relative;
+}
+
+.formtastic .fragments legend {
+  position:absolute;
+  width:95%;
+  left:0px;
+}
+
+.formtastic .fragments legend span {
+  position:absolute;
+}
+
+.formtastic .fragments legend.label label {
+  position:absolute;
+}
+
+.formtastic .fragments-group {
+  float:left;
+  width:74%;
+  margin:0;
+  padding:0 0 0 25%;
+}
+
+.formtastic .fragment {
+  float:left;
+  width:auto;
+  margin:0 .3em 0 0;
+  padding:0;
+  border:0;
+}
+
+.formtastic .fragment label {
+  display:none;
+}
+
+.formtastic .fragment label input {
+  display:inline;
+  margin:0;
+  padding:0;
+}
 
