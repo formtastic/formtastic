@@ -500,7 +500,7 @@ You can show errors on base (by default) and any other attribute just passing it
 
 h2. Configuration
 
-Run @rails generate formtastic:install@ to copy a commented out config file into @config/initializers/formtastic.rb@. You can "view the configuration file on GitHub":http://github.com/justinfrench/formtastic/blob/master/generators/formtastic/templates/formtastic.rb
+Run @rails generate formtastic:install@ to copy a commented out config file into @config/initializers/formtastic.rb@. You can "view the configuration file on GitHub":http://github.com/justinfrench/formtastic/blob/master/lib/generators/templates/formtastic.rb
 
 
 h2. Form Generator
