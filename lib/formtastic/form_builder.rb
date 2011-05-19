@@ -69,6 +69,12 @@ module Formtastic
     #
     # @todo is there a way to test the params structure of the Rails helper we wrap to ensure forward compatibility?
     def semantic_fields_for(record_or_name_or_array, *args, &block)
+      # Add a :parent_builder to the args so that nested translations can be possible in Rails 3
+      options = args.shift || {}
+      options[:parent_builder] ||= self
+      args.unshift(options)
+      
+      # Wrap the Rails helper
       fields_for(record_or_name_or_array, *args, &block)
     end
     

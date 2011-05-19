@@ -35,6 +35,7 @@ module Formtastic
 
         if use_i18n
           model_name, nested_model_name  = normalize_model_name(self.model_name.underscore)
+          
           action_name = template.params[:action].to_s rescue ''
           attribute_name = key.to_s
 
@@ -73,9 +74,17 @@ module Formtastic
     end
 
     def normalize_model_name(name)
-      if name =~ /(.+)\[(.+)\]/
+      if !name =~ /\[/ && self.respond_to?(:builder) && builder.respond_to?(:parent_builder) && builder.parent_builder.object_name
+        # Rails 3.1 nested builder case
+        [builder.parent_builder.object_name.to_s, name]
+      elsif name =~ /(.+)\[(.+)\]/
+        # Rails 3 (and 3.1?) nested builder case with :post rather than @post
         [$1, $2]
+      elsif self.respond_to?(:builder) && builder.respond_to?(:options) && builder.options.key?(:parent_builder)
+        # Rails 3.0 nested builder work-around case, where :parent_builder is provided by f.semantic_form_for
+        [builder.options[:parent_builder].object_name.to_s, name]
       else
+        # Non-nested case
         [name]
       end
     end
