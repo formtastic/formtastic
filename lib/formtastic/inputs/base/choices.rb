@@ -64,7 +64,7 @@ module Formtastic
         end
 
         def choice_html_safe_value(choice)
-          choice_value(choice).to_s.gsub(/\s/, '_').gsub(/\W/, '').downcase
+          choice_value(choice).to_s.gsub(/\s/, '_').gsub(/[^\w-]/, '').downcase
         end
 
         def choice_input_dom_id(choice)
