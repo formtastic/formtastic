@@ -296,7 +296,7 @@ module CustomMacros
               output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_category_name_general']")
               output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_category_name_design']")
               output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_category_name_development']")
-              output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_category_name_quasiserious_inventions']")
+              output_buffer.should have_tag("form li fieldset ol li label[@for='post_author_category_name_quasi-serious_inventions']")
             end
           end
         end
