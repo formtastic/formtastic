@@ -26,6 +26,14 @@ describe 'Formtastic::FormBuilder#fields_for' do
       end
     end
   end
+  
+  it 'supports passing collection as second parameter' do
+    semantic_form_for(@new_post) do |builder|
+      builder.semantic_fields_for(:author, [@fred,@bob]) do |nested_builder|
+        nested_builder.object_name.should =~ /post\[author_attributes\]\[\d+\]/
+      end
+    end
+  end
 
   it 'should sanitize html id for li tag' do
     @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
