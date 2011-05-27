@@ -47,7 +47,7 @@ module Formtastic
         def error_keys
           keys = [method.to_sym]
           keys << builder.file_metadata_suffixes.map{|suffix| "#{method}_#{suffix}".to_sym} if file?
-          keys << association_primary_key if belongs_to?
+          keys << association_primary_key if belongs_to? || has_many?
           keys.flatten.compact.uniq
         end
         

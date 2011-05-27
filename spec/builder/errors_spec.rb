@@ -181,5 +181,13 @@ describe 'Formtastic::FormBuilder#errors_on' do
 
   end
 
+  describe "when there are errors on a has_many association" do
+    it "should include the association ids error messages" do
+      semantic_form_for(@new_post) do |builder|
+        builder.send(:error_keys, :sub_posts, {}).should include(:sub_post_ids)
+      end
+    end
+  end
+
 end
 
