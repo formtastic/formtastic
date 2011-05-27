@@ -614,23 +614,18 @@ For significant changes, you may wish to discuss your idea on the Formtastic Goo
 See below for installation of a development environment.
 
 
-h2. Maintainers & Contributors
-
-Formtastic is maintained by "Justin French":http://github.com/justinfrench, "Morton Jonuschat":http://github.com/yabawock and "Gabriel Sobrinho":http://github.com/sobrinho. "Denis Major":http://github.com/denismajor1 is doing some amazing documentation work in the wiki, and we very much appreciate the past efforts of "José Valim":http://github.com/josevalim and "Jonas Grimfelt":http://github.com/grimen and over 40 other contributors.
-
-@git shortlog -n -s --no-merges@
-
-
 h2. Google Group, Twitter, etc
 
 Please join the "Formtastic Google Group":http://groups.google.com.au/group/formtastic, especially if you'd like to talk about a new feature, or report a bug.
 
 You can also "follow @formtastic on Twitter":http://twitter.com/formtastic for announcements, tutorials and awesome Formtastic links.
 
-
 h2. Project Info
 
-Formtastic is hosted on Github: "http://github.com/justinfrench/formtastic":http://github.com/justinfrench/formtastic, where your contributions, forkings, comments and feedback are greatly welcomed.
+Formtastic was created by "Justin French":http://www.justinfrench.com with contributions from over 100 awesome developers.
 
+Run @git shortlog -n -s@ to see the awesome.
+
+The project is hosted on Github: "http://github.com/justinfrench/formtastic":http://github.com/justinfrench/formtastic, where your contributions, forkings, comments, issues and feedback are greatly welcomed.
 
 Copyright (c) 2007-2010 Justin French, released under the MIT license.
