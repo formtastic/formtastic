@@ -17,6 +17,10 @@ module Formtastic
           association == :belongs_to
         end
 
+        def has_many?
+          association == :has_many
+        end
+
         def association_primary_key
           association_primary_key_for_method(method)
         end

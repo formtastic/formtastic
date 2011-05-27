@@ -94,7 +94,7 @@ module Formtastic
         @methods_for_error[method] ||= begin
           methods_for_error = [method.to_sym]
           methods_for_error << file_metadata_suffixes.map{|suffix| "#{method}_#{suffix}".to_sym} if is_file?(method, options)
-          methods_for_error << [association_primary_key_for_method(method)] if association_macro_for_method(method) == :belongs_to
+          methods_for_error << [association_primary_key_for_method(method)] if [:belongs_to, :has_many].include? association_macro_for_method(method)
           methods_for_error.flatten.compact.uniq
         end
       end
