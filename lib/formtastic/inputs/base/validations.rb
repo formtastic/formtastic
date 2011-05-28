@@ -125,7 +125,7 @@ module Formtastic
               validator.options[:allow_blank] != true
             }.any?
           else
-            return responds_to_global_required? &&!!builder.all_fields_required_by_default
+            return responds_to_global_required? && !!builder.all_fields_required_by_default
           end
         end
 
