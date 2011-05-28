@@ -8,48 +8,33 @@ describe 'numeric input' do
   before do
     @output_buffer = ''
     mock_everything
+  end
 
-    @form = semantic_form_for(@new_post) do |builder|
+  it "should call NumberInput.new" do
+    input = mock('input', :to_html => "HTML codez")
+    ::Formtastic::Inputs::NumericInput.should_receive(:new).and_return(input)
+    concat(semantic_form_for(@new_post) do |builder|
       concat(builder.input(:title, :as => :numeric))
-    end
+    end)
   end
-
-  it_should_have_input_wrapper_with_class(:numeric)
-  it_should_have_input_wrapper_with_id("post_title_input")
-  it_should_have_label_with_text(/Title/)
-  it_should_have_label_for("post_title")
-  it_should_have_input_with_id("post_title")
-  it_should_have_input_with_type(:text)
-  it_should_have_input_with_name("post[title]")
-  it_should_use_default_text_field_size_when_not_nil(:string)
-  it_should_not_use_default_text_field_size_when_nil(:string)
-  it_should_apply_custom_input_attributes_when_input_html_provided(:string)
-  it_should_apply_custom_for_to_label_when_input_html_id_provided(:string)
-  it_should_apply_error_logic_for_input_type(:numeric)
-
-  describe "when no object is provided" do
-    before do
-      @form = semantic_form_for(:project, :url => 'http://test.host/') do |builder|
+  
+  it "should have an li.numeric" do
+    with_deprecation_silenced do
+      concat(semantic_form_for(@new_post) do |builder|
         concat(builder.input(:title, :as => :numeric))
-      end
+      end)
     end
-
-    it_should_have_label_with_text(/Title/)
-    it_should_have_label_for("project_title")
-    it_should_have_input_with_id("project_title")
-    it_should_have_input_with_type(:text)
-    it_should_have_input_with_name("project[title]")
+    output_buffer.should have_tag('li.numeric')
+    output_buffer.should have_tag('li.input')
   end
-
-  describe "when namespace provided" do
-    before do
-      @form = semantic_form_for(@new_post, :namespace => :context2) do |builder|
+  
+  it "should warn that :numeric is deprecated in favor of :number" do
+    ::ActiveSupport::Deprecation.should_receive(:warn)
+    with_deprecation_silenced do
+      concat(semantic_form_for(@new_post) do |builder|
         concat(builder.input(:title, :as => :numeric))
-      end
+      end)
     end
-
-    it_should_have_input_wrapper_with_id("context2_post_title_input")
-    it_should_have_label_and_input_with_id("context2_post_title")
   end
 
 end

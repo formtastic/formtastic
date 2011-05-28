@@ -1,6 +1,7 @@
 .DS_Store
 .rvmrc
 coverage
+coverage.data
 pkg
 *~
 *watchr.rb
@@ -8,3 +9,5 @@ log/*
 .rvmrc
 .bundle
 Gemfile.lock
+.yardoc
+doc/

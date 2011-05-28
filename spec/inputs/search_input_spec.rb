@@ -12,17 +12,19 @@ describe 'search input' do
 
   describe "when object is provided" do
     before do
-      @form = semantic_form_for(@new_post) do |builder|
+      concat(semantic_form_for(@new_post) do |builder|
         concat(builder.input(:search))
-      end
+      end)
     end
 
     it_should_have_input_wrapper_with_class(:search)
+    it_should_have_input_wrapper_with_class(:input)
+    it_should_have_input_wrapper_with_class(:stringish)
     it_should_have_input_wrapper_with_id("post_search_input")
     it_should_have_label_with_text(/Search/)
     it_should_have_label_for("post_search")
     it_should_have_input_with_id("post_search")
-    it_should_have_input_with_type(Formtastic::Util.rails3? ? :search : :text)
+    it_should_have_input_with_type(:search)
     it_should_have_input_with_name("post[search]")
 
   end
@@ -30,15 +32,24 @@ describe 'search input' do
   describe "when namespace is provided" do
 
     before do
-      @form = semantic_form_for(@new_post, :namespace => "context2") do |builder|
+      concat(semantic_form_for(@new_post, :namespace => "context2") do |builder|
         concat(builder.input(:search))
-      end
+      end)
     end
 
     it_should_have_input_wrapper_with_id("context2_post_search_input")
     it_should_have_label_and_input_with_id("context2_post_search")
 
   end
-
+  
+  describe "when required" do
+    it "should add the required attribute to the input's html options" do
+      concat(semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:title, :as => :search, :required => true))
+      end)
+      output_buffer.should have_tag("input[@required]")
+    end
+  end
+  
 end
 

@@ -1,4 +1,5 @@
-= f.inputs do
-<% attributes.each do |attribute| -%>
-  = f.input :<%= attribute.name %>
-<% end -%>
+= semantic_form_for @<%= name.underscore %> do |f|
+  = f.inputs do
+  <% @attributes.each do |attribute| -%>
+    = f.input :<%= attribute %>
+  <% end -%>

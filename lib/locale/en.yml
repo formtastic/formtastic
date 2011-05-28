@@ -4,4 +4,5 @@ en:
     :no: 'No'
     :create: 'Create %{model}'
     :update: 'Update %{model}'
+    :submit: 'Submit %{model}'
     :required: 'required'

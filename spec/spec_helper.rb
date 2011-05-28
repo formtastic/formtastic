@@ -7,15 +7,17 @@ require 'active_support'
 require 'action_pack'
 require 'action_view'
 require 'action_controller'
-#require 'action_mailer'
+require 'action_dispatch'
 
 require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic/util'))
 require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic'))
-require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic/layout_helper'))
 
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories in alphabetic order.
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].sort.each {|f| require f}
+
+module FakeHelpersModule
+end
 
 module FormtasticSpecHelper
   include ActionPack
@@ -35,15 +37,7 @@ module FormtasticSpecHelper
   include ActiveSupport
   include ActionController::PolymorphicRoutes if defined?(ActionController::PolymorphicRoutes)
 
-  include Formtastic::SemanticFormHelper
-
-  def rails3?
-    ActionPack::VERSION::MAJOR > 2
-  end
-
-  def rails2?
-    ActionPack::VERSION::MAJOR == 2
-  end
+  include Formtastic::Helpers::FormHelper
 
   def default_input_type(column_type, column_name = :generic_column_name)
     @new_post.stub!(column_name)
@@ -72,6 +66,10 @@ module FormtasticSpecHelper
 
   def active_model_inclusion_validator(attributes, options = {})
     active_model_validator(:inclusion, attributes, options)
+  end
+  
+  def active_model_numericality_validator(attributes, options = {})
+    active_model_validator(:numericality, attributes, options)
   end
 
   class ::Post
@@ -102,6 +100,9 @@ module FormtasticSpecHelper
 
     def to_label
     end
+    
+    def persisted?
+    end
   end
   class ::Continent
     extend ActiveModel::Naming if defined?(ActiveModel::Naming)
@@ -110,6 +111,27 @@ module FormtasticSpecHelper
   class ::PostModel
     extend ActiveModel::Naming if defined?(ActiveModel::Naming)
     include ActiveModel::Conversion if defined?(ActiveModel::Conversion)
+  end
+  
+  def _routes
+    url_helpers = mock('url_helpers')
+    url_helpers.stub!(:hash_for_posts_path).and_return({})
+    url_helpers.stub!(:hash_for_post_path).and_return({})
+    url_helpers.stub!(:hash_for_post_models_path).and_return({})
+    url_helpers.stub!(:hash_for_authors_path).and_return({})
+    
+    mock('_routes', 
+      :url_helpers => url_helpers,
+      :url_for => "/mock/path"
+    )
+  end
+    
+  def controller
+    mock('controller', :controller_path= => '', :params => {})
+  end
+  
+  def default_url_options
+    {}
   end
 
   def mock_everything
@@ -130,15 +152,18 @@ module FormtasticSpecHelper
     @fred.stub!(:class).and_return(::Author)
     @fred.stub!(:to_label).and_return('Fred Smith')
     @fred.stub!(:login).and_return('fred_smith')
+    @fred.stub!(:age).and_return(27)
     @fred.stub!(:id).and_return(37)
     @fred.stub!(:new_record?).and_return(false)
     @fred.stub!(:errors).and_return(mock('errors', :[] => nil))
     @fred.stub!(:to_key).and_return(nil)
     @fred.stub!(:persisted?).and_return(nil)
+    @fred.stub!(:name).and_return('Fred')
 
     @bob = ::Author.new
     @bob.stub!(:to_label).and_return('Bob Rock')
     @bob.stub!(:login).and_return('bob')
+    @bob.stub!(:age).and_return(43)
     @bob.stub!(:created_at)
     @bob.stub!(:id).and_return(42)
     @bob.stub!(:posts).and_return([])
@@ -147,10 +172,12 @@ module FormtasticSpecHelper
     @bob.stub!(:errors).and_return(mock('errors', :[] => nil))
     @bob.stub!(:to_key).and_return(nil)
     @bob.stub!(:persisted?).and_return(nil)
+    @bob.stub!(:name).and_return('Bob')
 
     @james = ::Author.new
     @james.stub!(:to_label).and_return('James Shock')
     @james.stub!(:login).and_return('james')
+    @james.stub!(:age).and_return(38)
     @james.stub!(:id).and_return(75)
     @james.stub!(:posts).and_return([])
     @james.stub!(:post_ids).and_return([])
@@ -158,10 +185,12 @@ module FormtasticSpecHelper
     @james.stub!(:errors).and_return(mock('errors', :[] => nil))
     @james.stub!(:to_key).and_return(nil)
     @james.stub!(:persisted?).and_return(nil)
+    @james.stub!(:name).and_return('James')
 
 
     ::Author.stub!(:find).and_return([@fred, @bob])
     ::Author.stub!(:all).and_return([@fred, @bob])
+    ::Author.stub!(:where).and_return([@fred, @bob])
     ::Author.stub!(:human_attribute_name).and_return { |column_name| column_name.humanize }
     ::Author.stub!(:human_name).and_return('::Author')
     ::Author.stub!(:reflect_on_association).and_return { |column_name| mock('reflection', :options => {}, :klass => Post, :macro => :has_many) if column_name == :posts }
@@ -176,13 +205,16 @@ module FormtasticSpecHelper
     @new_post.stub!(:new_record?).and_return(true)
     @new_post.stub!(:errors).and_return(mock('errors', :[] => nil))
     @new_post.stub!(:author).and_return(nil)
+    @new_post.stub!(:author_attributes=).and_return(nil)
+    @new_post.stub!(:authors).and_return([@fred])
+    @new_post.stub!(:authors_attributes=)
     @new_post.stub!(:reviewer).and_return(nil)
     @new_post.stub!(:main_post).and_return(nil)
     @new_post.stub!(:sub_posts).and_return([]) #TODO should be a mock with methods for adding sub posts
     @new_post.stub!(:to_key).and_return(nil)
     @new_post.stub!(:to_model).and_return(@new_post)
     @new_post.stub!(:persisted?).and_return(nil)
-
+    
     @freds_post = mock('post')
     @freds_post.stub!(:to_ary)
     @freds_post.stub!(:class).and_return(::Post)
@@ -222,19 +254,20 @@ module FormtasticSpecHelper
       when :main_post
         mock('reflection', :options => {}, :klass => ::Post, :macro => :belongs_to)
       when :mongoid_reviewer
-        mock('reflection', :options => {}, :klass => ::Author, :macro => :referenced_in, :foreign_key => "reviewer_id")
+        mock('reflection', :options => nil, :klass => ::Author, :macro => :referenced_in, :foreign_key => "reviewer_id") # custom id
       end
 
     end
     ::Post.stub!(:find).and_return([@freds_post])
     ::Post.stub!(:all).and_return([@freds_post])
+    ::Post.stub!(:where).and_return([@freds_post])
     ::Post.stub!(:content_columns).and_return([mock('column', :name => 'title'), mock('column', :name => 'body'), mock('column', :name => 'created_at')])
     ::Post.stub!(:to_key).and_return(nil)
     ::Post.stub!(:persisted?).and_return(nil)
     ::Post.stub!(:to_ary)
 
     @mock_file = mock('file')
-    ::Formtastic::SemanticFormBuilder.file_methods.each do |method|
+    Formtastic::FormBuilder.file_methods.each do |method|
       @mock_file.stub!(method).and_return(true)
     end
 
@@ -248,7 +281,7 @@ module FormtasticSpecHelper
     @new_post.stub!(:published)
     @new_post.stub!(:publish_at)
     @new_post.stub!(:created_at)
-    @new_post.stub!(:secret)
+    @new_post.stub!(:secret).and_return(1)
     @new_post.stub!(:url)
     @new_post.stub!(:email)
     @new_post.stub!(:search)
@@ -298,15 +331,19 @@ module FormtasticSpecHelper
       def protect_against_forgery?
         false
       end
-
+      
+      def _helpers
+        FakeHelpersModule
+      end
+      
     end
   end
 
   def with_config(config_method_name, value, &block)
-    old_value = ::Formtastic::SemanticFormBuilder.send(config_method_name)
-    ::Formtastic::SemanticFormBuilder.send(:"#{config_method_name}=", value)
+    old_value = Formtastic::FormBuilder.send(config_method_name)
+    Formtastic::FormBuilder.send(:"#{config_method_name}=", value)
     yield
-    ::Formtastic::SemanticFormBuilder.send(:"#{config_method_name}=", old_value)
+    Formtastic::FormBuilder.send(:"#{config_method_name}=", old_value)
   end
 
 end
