@@ -175,7 +175,7 @@ describe 'Formtastic::I18n' do
     it 'should be able to translate nested helper label as Rails does' do
       with_config :i18n_lookups_by_default, true do
         concat(semantic_form_for(@new_post) do |builder|
-          concat(builder.inputs :for => @new_post.author do |f|
+          concat(builder.inputs(:for => @new_post.author) do |f|
             concat(f.input(:login))
           end)
         end)
