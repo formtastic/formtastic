@@ -91,15 +91,19 @@ RDoc documentation _should_ be automatically generated after each commit and mad
 
 h2. Installation
 
-Formtastic edge (2.0) will be compatible with Rails 3 only, and the gem is "hosted":http://rubygems.org/gems/formtastic on RubyGems.org.
-
 Simply add Formtastic to your Gemfile and bundle it up:
 
 <pre>
   gem 'formtastic', '~> 1.2.3'
 </pre>
 
-Optionally, run the generator to copy some stylesheets and a configuration initializer into your application:
+If you want to try out our work towards Formtastic 2.0 (Rails >= 3 only), bundle in Formtastic directly from Github with the @:git@ option instead:
+
+<pre>
+  gem 'formtastic', :git => 'http://github.com/justinfrench/formtastic', :branch => 'master'
+</pre>
+
+Optionally, run the generator to copy a stylesheet (Rails 3.0.x only) and a configuration initializer into your application:
 
 <pre>
   $ rails generate formtastic:install 
@@ -108,14 +112,26 @@ Optionally, run the generator to copy some stylesheets and a configuration initi
 
 h2. Stylesheets
 
-A proof-of-concept stylesheet is provided which you can include in your layout. Customization is best achieved by overriding these styles in an additional stylesheet so that the Formtastic styles can be updated without clobbering your changes. If you want to use these stylesheets, add both to your layout with this helper:
+A proof-of-concept stylesheet is provided which you can include in your layout. Customization is best achieved by overriding these styles in an additional stylesheet.
+
+h3. Stylesheet usage in Rails < 3.1:
 
 <pre>
-  <head>
-    ...
-    <%= stylesheet_link_tag 'formtastic', 'formtastic_changes' %>
-    ...
-  </head>
+  $ rails generate formtastic:install 
+</pre>
+
+<pre>
+  # app/views/layouts/application.html.erb
+  <%= stylesheet_link_tag 'formtastic', 'my_formtastic_changes' %>
+</pre>
+
+h3. Stylesheet usage in Rails >= 3.1:
+
+Rails 3.1 introduces an asset pipeline that allows plugins like Formtastic to serve their own Stylesheets, Javascripts, etc without having to run generators that copy them accross to the host application.
+
+<pre>
+  # app/assets/stylesheets/application.css
+  *= require formtastic
 </pre>
 
 
