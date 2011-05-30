@@ -142,7 +142,7 @@ module Formtastic
       #     <% semantic_form_for @user do |f| %>
       #       <%= f.inputs :name, :email %>
       #
-      #       <% f.inputs :for => :profile do %>
+      #       <% f.inputs :for => @user.profile do %>
       #         <%= profile.input :biography %>
       #         <%= profile.input :twitter_name %>
       #         <%= profile.input :shoe_size %>
@@ -151,9 +151,9 @@ module Formtastic
       #
       # The `:for` option also works with short hand syntax:
       #
-      #     <% semantic_form_for @post do |form| %>
+      #     <% semantic_form_for @user do |form| %>
       #       <%= f.inputs :name, :email %>
-      #       <%= f.inputs :biography, :twitter_name, :shoe_size, :for => :profile %>
+      #       <%= f.inputs :biography, :twitter_name, :shoe_size, :for => @user.profile %>
       #     <% end %>
       #
       # {#inputs} will always create a new `<fieldset>` wrapping, so only use it when it makes sense
@@ -233,7 +233,7 @@ module Formtastic
       #       <%= f.input :name ... %>
       #       <%= f.input :email ... %>
       #     <% end %>
-      #     <%= f.inputs :for => :profile do |profile| %>
+      #     <%= f.inputs :for => @user.profile do |profile| %>
       #       <%= profile.input :user ... %>
       #       <%= profile.input :categories ... %>
       #     <% end %>
