@@ -18,9 +18,8 @@
 # Formtastic::FormBuilder.default_text_area_width = 50
 
 # Should all fields be considered "required" by default?
-# Rails 2 only, ignored by Rails 3 because it will never fall back to this default.
-# Defaults to true.
-# Formtastic::FormBuilder.all_fields_required_by_default = true
+# Defaults to false.
+# Formtastic::FormBuilder.all_fields_required_by_default = false
 
 # Should select fields have a blank option/prompt by default?
 # Defaults to true.

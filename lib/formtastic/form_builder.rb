@@ -10,7 +10,7 @@ module Formtastic
     configure :default_text_field_size
     configure :default_text_area_height, 20
     configure :default_text_area_width
-    configure :all_fields_required_by_default, true
+    configure :all_fields_required_by_default, false
     configure :include_blank_for_select_by_default, true
     configure :required_string, proc { Formtastic::Util.html_safe(%{<abbr title="#{Formtastic::I18n.t(:required)}">*</abbr>}) }
     configure :optional_string, ''
