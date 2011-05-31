@@ -40,6 +40,7 @@ module Formtastic
       #   <% end %>
       def semantic_errors(*args)
         html_options = args.extract_options!
+        args = args - [:base]
         full_errors = args.inject([]) do |array, method|
           attribute = localized_string(method, method.to_sym, :label) || humanized_attribute_name(method)
           errors = Array(@object.errors[method.to_sym]).to_sentence
