@@ -17,8 +17,8 @@ Gem::Specification.new do |s|
   ========================================================================
   Thanks for installing Formtastic!
   ------------------------------------------------------------------------
-  You can now (optionally) run the generator to copy some stylesheets and
-  a config initializer into your application:
+  You can now (optionally) run the generator to copy a config initializer 
+  (and some stylesheets, in Rails 3.0.x) into your application:
     rails generate formtastic:install
 
   To generate some semantic form markup for your existing models, just run:
@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
 
   Find out more and get involved:
     http://github.com/justinfrench/formtastic
+    http://rdoc.info/github/justinfrench/formtastic/master/frames
     http://groups.google.com.au/group/formtastic
     http://twitter.com/formtastic
   ========================================================================
