@@ -130,6 +130,15 @@ describe 'Formtastic::I18n' do
       end
     end
 
+    it "should be able to translate when method name is same as model" do
+      with_config :i18n_lookups_by_default, true do
+        concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
+          concat(builder.input(:author))
+        end)
+        output_buffer.should have_tag("form label", /Author/)
+      end
+    end
+
     it 'should be able to translate nested objects with nested translations' do
       with_config :i18n_lookups_by_default, true do
         concat(semantic_form_for(@new_post) do |builder|
