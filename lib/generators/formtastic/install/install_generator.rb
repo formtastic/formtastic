@@ -20,10 +20,12 @@ module Formtastic
       end
     else
       # Rails 3.0 doesn't have an asset pipeline, so we copy in CSS too
-      desc "Copies formtastic.css to public/stylesheets/ and a config initializer to config/initializers/formtastic.rb"
+      desc "Copies some CSS files to public/stylesheets/ and a config initializer to config/initializers/formtastic.rb"
       def copy_files
-        copy_file 'formtastic.rb', 'config/initializers/formtastic.rb'
-        copy_file '../../../app/assets/stylesheets/formtastic.css', 'public/stylesheets/formtastic.css'
+        template 'formtastic.rb', 'config/initializers/formtastic.rb'
+        template '../../../app/assets/stylesheets/formtastic.css',     'public/stylesheets/formtastic.css'
+        template '../../../app/assets/stylesheets/formtastic_ie6.css', 'public/stylesheets/formtastic_ie6.css'
+        template '../../../app/assets/stylesheets/formtastic_ie7.css', 'public/stylesheets/formtastic_ie7.css'
       end
     end
 
