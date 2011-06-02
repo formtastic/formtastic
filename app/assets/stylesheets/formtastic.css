@@ -210,7 +210,7 @@ This stylesheet forms part of the Formtastic Rails Plugin
 --------------------------------------------------------------------------------------------------*/
 .formtastic .boolean label {
   padding-left:25%;
-  width:auto;
+  display:block;
 }
 
 
