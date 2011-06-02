@@ -20,55 +20,55 @@
     <fieldset class="inputs">
       <ol>
         <li class="input string stringish optional" id="gem_summary_input">
-          <label for="gem_summary">Summary</label>
+          <label class="label" for="gem_summary">Summary</label>
           <input id="gem_summary" name="gem[summary]" type="text" value="A Rails form builder plugin/gem with semantically rich and accessible markup" maxlength="255">
         </li>
 
         <li class="input text optional" id="gem_description_input">
-          <label for="gem_description">Description</label>
+          <label class="label" for="gem_description">Description</label>
           <textarea id="gem_description" rows="5">A Rails form builder plugin/gem with semantically rich and accessible markup</textarea>
         </li>
 
         <li class="input url stringish optional" id="gem_url_input">
-          <label for="gem_url">URL</label>
+          <label class="label" for="gem_url">URL</label>
           <input id="gem_url" name="gem[url]" type="url">
           <p class="inline-hints">Example: https://github.com/justinfrench/formtastic</p>
         </li>
 
         <li class="input password stringish required" id="gem_password_input">
-          <label for="gem_password">Password<abbr title="required">*</abbr></label>
+          <label class="label" for="gem_password">Password<abbr title="required">*</abbr></label>
           <input id="gem_password" name="gem[password]" type="password">
           <p class="inline-errors">can't be blank</p>
         </li>
 
         <li class="input password stringish required" id="gem_password_input">
-          <label for="gem_password_confirmation">Password confirmation<abbr title="required">*</abbr></label>
+          <label class="label" for="gem_password_confirmation">Password confirmation<abbr title="required">*</abbr></label>
           <input id="gem_password_confirmation" name="gem[password_confirmation]" type="password">
           <p class="inline-errors">can't be blank</p>
         </li>
 
         <li class="input numeric stringish optional" id="gem_downloads_input">
-          <label for="gem_downloads">Downloads</label>
+          <label class="label" for="gem_downloads">Downloads</label>
           <input id="gem_downloads" name="gem[downloads]" type="numeric" value="209,354">
         </li>
 
         <li class="input file optional" id="gem_file_input">
-          <label for="gem_file">File</label>
+          <label class="label" for="gem_file">File</label>
           <input id="gem_file" name="gem[file]" type="file" value="value">
         </li>
 
         <li class="input email stringish optional" id="gem_email_input">
-          <label for="gem_email">Email</label>
+          <label class="label" for="gem_email">Email</label>
           <input id="gem_email" name="gem[email]" type="email">
         </li>
 
         <li class="input phone stringish optional" id="gem_phone_input">
-          <label for="gem_phone">Phone</label>
+          <label class="label" for="gem_phone">Phone</label>
           <input id="gem_phone" name="gem[phone]" type="phone">
         </li>
 
         <li class="input search stringish optional" id="gem_search_input">
-          <label for="gem_search">Search</label>
+          <label class="label" for="gem_search">Search</label>
           <input id="gem_search" name="gem[search]" type="search">
         </li>
 
@@ -99,7 +99,7 @@
         </li>
 
         <li class="input string stringish optional autofocus" id="gem_autofocus_input">
-          <label for="gem_autofocus">Autofocus</label>
+          <label class="label" for="gem_autofocus">Autofocus</label>
           <input id="gem_autofocus" name="gem[autofocus]" type="text" value="The focus is set to this field" autofocus="autofocus">
         </li>
 
@@ -111,7 +111,7 @@
         </li>
         
         <li class="input select optional" id="gem_awesomeness_input">
-          <label for="gem_awesomeness">Select</label>
+          <label class="label" for="gem_awesomeness">Select</label>
           <select id="gem_awesomeness" name="gem[awesomeness]">
             <option value="5">First choice</option>
             <option value="4">Second choice</option>

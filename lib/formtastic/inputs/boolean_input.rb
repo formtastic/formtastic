@@ -52,9 +52,14 @@ module Formtastic
       end
 
       def label_html_options
+        prev = super
+        prev[:class] = prev[:class] - ['label']
+        
         input_html_options.merge(
-          :id => nil,
-          :for => input_html_options[:id]
+          prev.merge(
+            :id => nil,
+            :for => input_html_options[:id]
+          )
         )
       end
 

@@ -20,6 +20,9 @@ describe 'boolean input' do
   it_should_apply_error_logic_for_input_type(:boolean)
 
   it 'should generate a label containing the input' do
+    output_buffer.should_not have_tag('label.label')
+    
+    
     output_buffer.should have_tag('form li label', :count => 1)
     output_buffer.should have_tag('form li label[@for="post_allow_comments"]')
     output_buffer.should have_tag('form li label', /Allow comments/)
@@ -174,7 +177,7 @@ describe 'boolean input' do
     end
 
     it_should_have_input_wrapper_with_id("context2_post_allow_comments_input")
-    it_should_have_label_for("context2_post_allow_comments")
+    it_should_have_an_inline_label_for("context2_post_allow_comments")
 
   end
 

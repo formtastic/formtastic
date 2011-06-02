@@ -52,6 +52,12 @@ module CustomMacros
 
     def it_should_have_label_for(element_id)
       it "should have a label for ##{element_id}" do
+        output_buffer.should have_tag("form li label.label[@for='#{element_id}']")
+      end
+    end
+    
+    def it_should_have_an_inline_label_for(element_id)
+      it "should have a label for ##{element_id}" do
         output_buffer.should have_tag("form li label[@for='#{element_id}']")
       end
     end

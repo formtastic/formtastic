@@ -109,7 +109,7 @@ This stylesheet forms part of the Formtastic Rails Plugin
 
 /* LABELS
 --------------------------------------------------------------------------------------------------*/
-.formtastic .input label {
+.formtastic .input .label {
   display:block;
   width:25%;
   float:left;
@@ -123,17 +123,13 @@ This stylesheet forms part of the Formtastic Rails Plugin
   position:relative;
 }
 
-.formtastic .choices legend {
+.formtastic .choices .label {
   position:absolute;
   width:95%;
   left:0px;
 }
 
-.formtastic .choices legend span {
-  position:absolute;
-}
-
-.formtastic .choices legend.label label {
+.formtastic .choices .label label {
   position:absolute;
 }
 
@@ -251,17 +247,13 @@ This stylesheet forms part of the Formtastic Rails Plugin
   position:relative;
 }
 
-.formtastic .fragments legend {
+.formtastic .fragments .label {
   position:absolute;
   width:95%;
   left:0px;
 }
 
-.formtastic .fragments legend span {
-  position:absolute;
-}
-
-.formtastic .fragments legend.label label {
+.formtastic .fragments .label label {
   position:absolute;
 }
 

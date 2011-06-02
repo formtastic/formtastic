@@ -13,6 +13,8 @@ module Formtastic
           # opts = options_for_label(options) # TODO
           opts = {}
           opts[:for] ||= input_html_options[:id]
+          opts[:class] = [opts[:class]]
+          opts[:class] << 'label'
           
           opts
         end
