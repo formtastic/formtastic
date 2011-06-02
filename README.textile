@@ -593,9 +593,10 @@ To create your own new types of inputs from scratch:
 
 <pre>
   # f.input(:created_at, :as => :date_picker)
-  class DatePicker
-    def input_html_options
-      super.merge(:class => "date-picker")
+  class DatePickerInput
+    include Formtastic::Inputs::Base
+    def to_html
+      # ...
     end
   end
 </pre>
