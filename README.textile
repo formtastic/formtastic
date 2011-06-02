@@ -112,7 +112,7 @@ Optionally, run the generator to copy a stylesheet (Rails 3.0.x only) and a conf
 
 h2. Stylesheets
 
-A proof-of-concept stylesheet is provided which you can include in your layout. Customization is best achieved by overriding these styles in an additional stylesheet.
+A proof-of-concept set of stylesheets are provided which you can include in your layout. Customization is best achieved by overriding these styles in an additional stylesheet.
 
 h3. Stylesheet usage in Rails < 3.1:
 
@@ -123,16 +123,33 @@ h3. Stylesheet usage in Rails < 3.1:
 <pre>
   # app/views/layouts/application.html.erb
   <%= stylesheet_link_tag 'formtastic', 'my_formtastic_changes' %>
+  <!--[if IE 6]><%= stylesheet_link_tag 'formtastic_ie6' %><![endif]-->
+  <!--[if IE 7]><%= stylesheet_link_tag 'formtastic_ie7' %><![endif]-->
 </pre>
 
 h3. Stylesheet usage in Rails >= 3.1:
 
-Rails 3.1 introduces an asset pipeline that allows plugins like Formtastic to serve their own Stylesheets, Javascripts, etc without having to run generators that copy them accross to the host application.
+Rails 3.1 introduces an asset pipeline that allows plugins like Formtastic to serve their own Stylesheets, Javascripts, etc without having to run generators that copy them accross to the host application. Formtastic makes three stylesheets available as an Engine, you just need to require them in your global stylesheets.
 
 <pre>
   # app/assets/stylesheets/application.css
   *= require formtastic
+  *= require my_formtastic_changes
+  
+  # app/assets/stylesheets/ie6.css
+  *= require formtastic_ie6
+  
+  # app/assets/stylesheets/ie7.css
+  *= require formtastic_ie7
 </pre>
+
+<pre>
+  # app/views/layouts/application.html.erb
+  <%= stylesheet_link_tag 'application' %>
+  <!--[if IE 6]><%= stylesheet_link_tag 'ie6' %><![endif]-->
+  <!--[if IE 7]><%= stylesheet_link_tag 'ie7' %><![endif]-->
+</pre>
+
 
 
 h2. Usage
