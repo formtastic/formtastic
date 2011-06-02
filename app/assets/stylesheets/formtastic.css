@@ -237,7 +237,7 @@ This stylesheet forms part of the Formtastic Rails Plugin
 --------------------------------------------------------------------------------------------------*/
 .formtastic .choice label input,
 .formtastic .boolean label input {
-  margin:0 0.3em 0 0.2em;
+  margin:0 0.3em 0 0.1em;
   line-height:100%;
 }
 
