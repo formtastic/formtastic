@@ -107,7 +107,7 @@ This stylesheet forms part of the Formtastic Rails Plugin
 }
 
 
-/* LABELS
+/* LEFT ALIGNED LABELS
 --------------------------------------------------------------------------------------------------*/
 .formtastic .input .label {
   display:block;
@@ -116,21 +116,22 @@ This stylesheet forms part of the Formtastic Rails Plugin
   padding-top:.2em;
 }
 
-
-/* NESTED FIELDSETS AND LEGENDS (radio, check boxes and date/time inputs use nested fieldsets)
---------------------------------------------------------------------------------------------------*/
-.formtastic .choices {
-  position:relative;
-}
-
+.formtastic .fragments .label,
 .formtastic .choices .label {
   position:absolute;
   width:95%;
   left:0px;
 }
 
+.formtastic .fragments .label label,
 .formtastic .choices .label label {
   position:absolute;
+}
+
+/* NESTED FIELDSETS AND LEGENDS (radio, check boxes and date/time inputs use nested fieldsets)
+--------------------------------------------------------------------------------------------------*/
+.formtastic .choices {
+  position:relative;
 }
 
 .formtastic .choices-group {
@@ -205,7 +206,7 @@ This stylesheet forms part of the Formtastic Rails Plugin
 }
 
 
-/* BOOLEAN OVERRIDES
+/* BOOLEAN LABELS
 --------------------------------------------------------------------------------------------------*/
 .formtastic .boolean label {
   padding-left:25%;
@@ -245,16 +246,6 @@ This stylesheet forms part of the Formtastic Rails Plugin
 --------------------------------------------------------------------------------------------------*/
 .formtastic .fragments {
   position:relative;
-}
-
-.formtastic .fragments .label {
-  position:absolute;
-  width:95%;
-  left:0px;
-}
-
-.formtastic .fragments .label label {
-  position:absolute;
 }
 
 .formtastic .fragments-group {
