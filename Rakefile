@@ -4,6 +4,9 @@ require 'rake'
 require 'rake/rdoctask'
 require 'rspec/core/rake_task'
 require 'tasks/verify_rcov'
+require 'bundler'
+
+Bundler::GemHelper.install_tasks
 
 desc 'Default: run unit specs.'
 task :default => :spec_and_verify_coverage
