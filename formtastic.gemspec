@@ -26,9 +26,6 @@ Gem::Specification.new do |s|
   (and some stylesheets, in Rails 3.0.x) into your application:
     rails generate formtastic:install
 
-  To generate some semantic form markup for your existing models, just run:
-    rails generate formtastic:form MODEL_NAME
-
   Find out more and get involved:
     http://github.com/justinfrench/formtastic
     http://rdoc.info/github/justinfrench/formtastic/master/frames

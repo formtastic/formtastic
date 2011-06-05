@@ -35,6 +35,8 @@
 * Added non-standard zoom:1; to clearfixes to support IE better
 * Changed CSS coding style to multi-line so we can annotate the styles better
 * Fixed that overly specific CSS rules weren't applied to nested form elements properly
+* Removed formtastic:form generator and changed formtastic:install generator
+to override scaffold generator
 
 1.2.4.beta (unreleased)
 
