@@ -8,11 +8,11 @@ module Formtastic
       # Generates a fieldset and wraps the content in an ordered list. When working
       # with nested attributes, it allows %i as interpolation option in :name. So you can do:
       #
-      #   f.inputs :name => 'Task #%i', :for => @project.tasks
+      #   f.inputs :name => 'Task #%i', :for => :tasks
       #
       # or the shorter equivalent:
       #
-      #   f.inputs 'Task #%i', :for => @project.tasks
+      #   f.inputs 'Task #%i', :for => :tasks
       #
       # And it will generate a fieldset for each task with legend 'Task #1', 'Task #2',
       # 'Task #3' and so on.

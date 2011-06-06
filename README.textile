@@ -36,7 +36,7 @@ One day, I finally had enough, so I opened up my text editor, and wrote a DSL fo
       <%= form.input :url_title, :required => false %>
     <% end %>
 
-    <%= form.inputs :name => "Author", :for => @article.author do |author_form| %>
+    <%= form.inputs :name => "Author", :for => :author do |author_form| %>
       <%= author_form.input :first_name %>
       <%= author_form.input :last_name %>
     <% end %>
@@ -225,7 +225,7 @@ Nested forms are also supported (don't forget your models need to be setup corre
 <pre>
   <%= semantic_form_for @post do |form| %>
     <%= form.inputs :title, :body, :created_at %>
-    <%= form.semantic_fields_for @post.author do |author| %>
+    <%= form.semantic_fields_for :author do |author| %>
       <%= author.inputs :first_name, :last_name, :name => "Author" %>
     <% end %>
     <%= form.buttons %>
@@ -237,7 +237,7 @@ Or the Formtastic way with the @:for@ option:
 <pre>
   <%= semantic_form_for @post do |form| %>
     <%= form.inputs :title, :body, :created_at %>
-    <%= form.inputs :first_name, :last_name, :for => @post.author, :name => "Author" %>
+    <%= form.inputs :first_name, :last_name, :for => :author, :name => "Author" %>
     <%= form.buttons %>
   <% end %>
 </pre>
@@ -247,7 +247,7 @@ When working in has many association, you can even supply @"%i"@ in your fieldse
 <pre>
   <%= semantic_form_for @post do |form| %>
     <%= form.inputs %>
-    <%= form.inputs :name => 'Category #%i', :for => @post.categories %>
+    <%= form.inputs :name => 'Category #%i', :for => :categories %>
     <%= form.buttons %>
   <% end %>
 </pre>
