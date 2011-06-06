@@ -142,7 +142,7 @@ describe 'Formtastic::I18n' do
     it 'should be able to translate nested objects with nested translations' do
       with_config :i18n_lookups_by_default, true do
         concat(semantic_form_for(@new_post) do |builder|
-          concat(builder.semantic_fields_for(@new_post.author) do |f|
+          concat(builder.semantic_fields_for(:author) do |f|
             concat(f.input(:name))
           end)
         end)
@@ -153,7 +153,7 @@ describe 'Formtastic::I18n' do
     it 'should be able to translate nested objects with top level translations' do
       with_config :i18n_lookups_by_default, true do
         concat(semantic_form_for(@new_post) do |builder|
-          builder.semantic_fields_for(@new_post.author) do |f|
+          builder.semantic_fields_for(:author) do |f|
             concat(f.input(:name))
           end
         end)
@@ -184,7 +184,7 @@ describe 'Formtastic::I18n' do
     it 'should be able to translate nested helper label as Rails does' do
       with_config :i18n_lookups_by_default, true do
         concat(semantic_form_for(@new_post) do |builder|
-          concat(builder.inputs(:for => @new_post.author) do |f|
+          concat(builder.inputs(:for => :author) do |f|
             concat(f.input(:login))
           end)
         end)
