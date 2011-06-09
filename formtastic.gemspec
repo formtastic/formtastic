@@ -5,11 +5,11 @@ require "formtastic/version"
 Gem::Specification.new do |s|
   s.name        = %q{formtastic}
   s.version     = Formtastic::VERSION
-  s.date        = %q{2011-01-07}
+  s.date        = %q{2011-06-09}
   s.platform    = Gem::Platform::RUBY
   s.authors     = [%q{Justin French}]
   s.email       = [%q{justin@indent.com.au}]
-  s.homepage    = %q{http://github.com/justinfrench/formtastic/tree/master}
+  s.homepage    = %q{http://github.com/justinfrench/formtastic}
   s.summary     = %q{A Rails form builder plugin/gem with semantically rich and accessible markup}
   s.description = %q{A Rails form builder plugin/gem with semantically rich and accessible markup}
 
