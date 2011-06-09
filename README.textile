@@ -536,52 +536,6 @@ h2. Configuration
 Run @rails generate formtastic:install@ to copy a commented out config file into @config/initializers/formtastic.rb@. You can "view the configuration file on GitHub":http://github.com/justinfrench/formtastic/blob/master/lib/generators/templates/formtastic.rb
 
 
-h2. Form Generator
-
-There's a Formtastic form code generator to make your transition to Formtastic easier. All you have to do is to *specify an existing model name*, and optionally specify view template framework (ERB/HAML), and you are good to go. *Note:* This won't overwrite any of your exsting files without confirmation.
-
-h3. Basic usage
-
-<pre>
-  $ rails generate formtastic:form ModelName
-      exists  app/views/posts
-      create  app/views/posts/_form.html.erb
-</pre>
-
-The ERB code is saved to a partial file, but it will not overwrite existing files without a prompt.
-
-h3. Copying the ERB code to the clipboard instead with @--copy@
-
-<pre>
-  $ rails generate formtastic:form Post --copy
-</pre>
-
-h3. Specifying HAML instead of ERB with @--haml@
-
-<pre>
-  $ rails generate formtastic:form Post --haml
-      exists  app/views/posts
-      create  app/views/posts/_form.html.haml
-</pre>
-
-h3. Specifying controller namespace with @--controller@
-
-<pre>
-  $ rails generate formtastic:form Post --controller admin/posts
-      exists  app/views/admin/posts
-      create  app/views/admin/posts/_form.html.erb
-</pre>
-
-h3. Specifying which attributes need an input
-
-<pre>
-  $ rails generate formtastic:form Post title:string body:text publication_state:select
-      exists  app/views/posts
-      create  app/views/posts/_form.html.erb
-</pre>
-
-
-
 h2. Modified & Custom Inputs
 
 If you want to change the behaviour of an input, you can subclass it in your app. For example, to tweak @StringInput@, create a new file @app/inputs/string_input.rb@:
