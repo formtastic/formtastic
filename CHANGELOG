@@ -42,7 +42,25 @@ to override scaffold generator
 * Added support for Rails 3.1 asset pipeline as well as previous generated CSS for Rails < 3.1
 * Made many subtle visual improvements to CSS, especially in IE
 
-1.2.4.beta (unreleased)
+1.2.4
+
+* no changes
+
+1.2.4.beta2
+
+* Changed :boolean inputs to use Rails' check_box_checked? instead of our own logic
+* Changed developer instructions in README
+* Fixed :boolean inputs to disable the included hidden input when disabling the actual checkbox
+* Fixed that Formtastic was making changes to the options hash directly instead of on a duplicate, causing problems for those trying to reuse options on multiple inputs in the view 
+* Fixed that tiny scroll bars were appearing on legends in date/time/radio/cbheckboxes fielsets (GH-477)    
+* Fixed an issue when formtastic fails to determine if a checkbox is checked with custom checked and unchecked values (thanks to Eugene Bolshakov)
+* Fixed that the hidden input rendered with a boolean checkbox did nt use the custom :name from :input_html options hash
+* Fixed issue where Firefox 4 gives focus to the <li> wrapper (fixes #524).
+* Fixed that a shared input options hash could not be re-used in the view without being altered by each input
+* Improved compatibility with Mongoid Documents
+* Updated i18n dependency to ~> 0.4
+
+1.2.4.beta
 
 * Changed :boolean inputs to use Rails' check_box_checked? instead of our own logic
 * Changed developer instructions in README
