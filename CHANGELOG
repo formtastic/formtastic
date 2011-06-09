@@ -1,4 +1,4 @@
-[master]
+2.0.0.rc1
 
 * Removed the "inline_order" configuration (redefine input_wrapping instead)
 * Removed the "special" implementation of label() from FormBuilder, so builder.label will call Rails' label helper, not ours
@@ -37,6 +37,10 @@
 * Fixed that overly specific CSS rules weren't applied to nested form elements properly
 * Removed formtastic:form generator and changed formtastic:install generator
 to override scaffold generator
+* Refactored and consolidated CSS by adding extra class names into the mark-up, preferring to style by class instead of element wherever possible
+* Added IE6 and IE7 stylesheets for specific fixes if needed (uncomplicates formtastic.css)
+* Added support for Rails 3.1 asset pipeline as well as previous generated CSS for Rails < 3.1
+* Made many subtle visual improvements to CSS, especially in IE
 
 1.2.4.beta (unreleased)
 
