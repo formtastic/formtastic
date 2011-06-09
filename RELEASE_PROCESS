@@ -1,4 +1,5 @@
-# edit gemspec version number, date
+# edit version.rb
+# edit gemspec release date
 git ci formtastic.gemspec -m "new gemspec" # commit changes
 git tag X.X.X                              # tag the new version in the code base too
 gem build formtastic.gemspec               # build the gem
