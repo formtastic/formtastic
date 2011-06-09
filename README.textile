@@ -97,13 +97,13 @@ Simply add Formtastic to your Gemfile and bundle it up:
   gem 'formtastic', '~> 1.2.3'
 </pre>
 
-If you want to try out our work towards Formtastic 2.0 (Rails >= 3 only), bundle in Formtastic directly from Github with the @:git@ option instead:
+If you want to try out our work towards Formtastic 2.0 (Rails 3.x only):
 
 <pre>
-  gem 'formtastic', :git => 'http://github.com/justinfrench/formtastic', :branch => 'master'
+  gem 'formtastic', '2.0.0.rc1'
 </pre>
 
-Optionally, run the generator to copy a stylesheet (Rails 3.0.x only) and a configuration initializer into your application:
+Run the installation generator to copy a stylesheet (Rails 3.0.x only) and a configuration initializer into your application:
 
 <pre>
   $ rails generate formtastic:install 
