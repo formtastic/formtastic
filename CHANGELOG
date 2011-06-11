@@ -1,3 +1,7 @@
+2.0.0.rc2
+
+* Fixed that the checkbox was mistakenly placed after the label text in BooleanInput, not before it as per 1.x
+
 2.0.0.rc1
 
 * Removed the "inline_order" configuration (redefine input_wrapping instead)
