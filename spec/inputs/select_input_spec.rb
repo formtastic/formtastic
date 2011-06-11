@@ -418,7 +418,7 @@ describe 'select input' do
     end
 
     it 'should have a select with prompt' do
-      output_buffer.should have_tag("form li select option[@value='']", /choose author/)
+      output_buffer.should have_tag("form li select option[@value='']", /choose author/, :count => 1)
     end
 
     it 'should not have a blank select option' do

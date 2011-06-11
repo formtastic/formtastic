@@ -175,7 +175,7 @@ module Formtastic
       end
       
       def input_options
-        {:include_blank => include_blank?}.merge(super)
+        super.merge({:include_blank => include_blank?, :prompt => nil})
       end
       
       def input_html_options
