@@ -5,7 +5,7 @@ require "formtastic/version"
 Gem::Specification.new do |s|
   s.name        = %q{formtastic}
   s.version     = Formtastic::VERSION
-  s.date        = %q{2011-06-09}
+  s.date        = %q{2011-06-13}
   s.platform    = Gem::Platform::RUBY
   s.authors     = [%q{Justin French}]
   s.email       = [%q{justin@indent.com.au}]
