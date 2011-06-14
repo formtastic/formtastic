@@ -1,6 +1,9 @@
 2.0.0.rc2
 
-* Fixed that the checkbox was mistakenly placed after the label text in BooleanInput, not before it as per 1.x
+* Fixed install instructions in readme to reflect 2.0.0.rc1
+* Fixed that the checkbox was mistakenly placed after the label text in BooleanInput, not before it as per 1.x (#591)
+* Fixed that select inputs had two "blank" options at the top in some cases (#590)
+* Added documentation for Timeish inputs (date, datetime, time) (#589)
 
 2.0.0.rc1
 
