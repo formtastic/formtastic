@@ -104,7 +104,7 @@ module Formtastic
             check_box_with_hidden_input(choice) : 
             check_box_without_hidden_input(choice) <<
           choice_label(choice),
-          label_html_options.merge(:for => choice_input_dom_id(choice))
+          label_html_options.merge(:for => choice_input_dom_id(choice), :class => nil)
         )
       end
       

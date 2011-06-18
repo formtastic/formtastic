@@ -45,7 +45,11 @@ describe 'radio input' do
     end
 
     describe "each choice" do
-
+      
+      it 'should not give the choice label the .label class' do
+        output_buffer.should_not have_tag('li.choice label.label')
+      end
+      
       it 'should contain a label for the radio input with a nested input and label text' do
         ::Author.all.each do |author|
           output_buffer.should have_tag('form li fieldset ol li label', /#{author.to_label}/)

@@ -56,7 +56,11 @@ describe 'check_boxes input' do
     end
 
     describe "each choice" do
-
+      
+      it 'should not give the choice label the .label class' do
+        output_buffer.should_not have_tag('li.choice label.label')
+      end
+      
       it 'should contain a label for the radio input with a nested input and label text' do
         ::Post.all.each do |post|
           output_buffer.should have_tag('form li fieldset ol li label', /#{post.to_label}/)
@@ -365,8 +369,11 @@ describe 'check_boxes input' do
         concat(builder.input(:posts, :as => :check_boxes))
       end)
     end
+    
+    it "should have a label for #context2_author_post_ids_19" do
+      output_buffer.should have_tag("form li label[@for='context2_author_post_ids_19']")
+    end
 
-    it_should_have_label_for('context2_author_post_ids_19')
     it_should_have_input_with_id('context2_author_post_ids_19')
     it_should_have_input_wrapper_with_id("context2_author_posts_input")
   end
