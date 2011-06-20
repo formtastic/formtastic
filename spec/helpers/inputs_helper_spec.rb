@@ -566,7 +566,7 @@ describe 'Formtastic::FormBuilder#inputs' do
       end
     end
     it "should throw PolymorphicInputWithoutCollectionError on sub_posts" do
-      ::MongoPost.should_receive(:associations).exactly(3).times
+      ::MongoPost.should_receive(:associations).at_least(3).times
       expect { generate_form }.to raise_error(Formtastic::PolymorphicInputWithoutCollectionError)
     end
   end
