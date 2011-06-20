@@ -1,3 +1,7 @@
+2.0.0.rc3
+
+* Fixed that .label class was incorrectly applied to <label> tags inside a .choice on radio and checkbox inputs (#599)
+
 2.0.0.rc2
 
 * Fixed install instructions in readme to reflect 2.0.0.rc1
