@@ -5,7 +5,11 @@ module Formtastic
       # If an association method is passed in (f.input :author) try to find the
       # reflection object.
       def reflection_for(method) #:nodoc:
-        @object.class.reflect_on_association(method) if @object.class.respond_to?(:reflect_on_association)
+        if @object.class.respond_to?(:reflect_on_association)
+          @object.class.reflect_on_association(method) 
+        elsif @object.class.respond_to?(:associations) # MongoMapper uses the 'associations(method)' instead
+          @object.class.associations(method) 
+        end
       end
 
       def association_macro_for_method(method) #:nodoc:

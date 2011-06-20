@@ -72,6 +72,17 @@ module FormtasticSpecHelper
     active_model_validator(:numericality, attributes, options)
   end
 
+  class ::MongoPost
+    include MongoMapper::Document if defined?(MongoMapper::Document)
+
+    def id
+    end
+
+    def persisted?
+    end
+  end
+
+
   class ::Post
     extend ActiveModel::Naming if defined?(ActiveModel::Naming)
     include ActiveModel::Conversion if defined?(ActiveModel::Conversion)
@@ -256,7 +267,6 @@ module FormtasticSpecHelper
       when :mongoid_reviewer
         mock('reflection', :options => nil, :klass => ::Author, :macro => :referenced_in, :foreign_key => "reviewer_id") # custom id
       end
-
     end
     ::Post.stub!(:find).and_return([@freds_post])
     ::Post.stub!(:all).and_return([@freds_post])
@@ -265,6 +275,34 @@ module FormtasticSpecHelper
     ::Post.stub!(:to_key).and_return(nil)
     ::Post.stub!(:persisted?).and_return(nil)
     ::Post.stub!(:to_ary)
+
+
+    ::MongoPost.stub!(:human_attribute_name).and_return { |column_name| column_name.humanize }
+    ::MongoPost.stub!(:human_name).and_return('MongoPost')
+    ::MongoPost.stub!(:associations).and_return do |column_name|
+      case column_name
+      when :sub_posts
+        mock('reflection', :options => {:polymorphic => true}, :klass => ::MongoPost, :macro => :has_many)
+      end
+    end
+    ::MongoPost.stub!(:find).and_return([@freds_post])
+    ::MongoPost.stub!(:all).and_return([@freds_post])
+    ::MongoPost.stub!(:where).and_return([@freds_post])
+    ::MongoPost.stub!(:to_key).and_return(nil)
+    ::MongoPost.stub!(:persisted?).and_return(nil)
+    ::MongoPost.stub!(:to_ary)
+    ::MongoPost.stub!(:model_name).and_return( mock(:model_name_mock, :singular => "post", :plural => "posts") ) 
+
+    @new_mm_post = mock('mm_post')
+    @new_mm_post.stub!(:class).and_return(::MongoPost)
+    @new_mm_post.stub!(:id).and_return(nil)
+    @new_mm_post.stub!(:new_record?).and_return(true)
+    @new_mm_post.stub!(:errors).and_return(mock('errors', :[] => nil))
+    @new_mm_post.stub!(:title).and_return("Hello World")    
+    @new_mm_post.stub!(:sub_posts).and_return([]) #TODO should be a mock with methods for adding sub posts
+    @new_mm_post.stub!(:to_key).and_return(nil)
+    @new_mm_post.stub!(:to_model).and_return(@new_mm_post)
+    @new_mm_post.stub!(:persisted?).and_return(nil)
 
     @mock_file = mock('file')
     Formtastic::FormBuilder.file_methods.each do |method|

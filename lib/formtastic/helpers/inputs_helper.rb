@@ -314,9 +314,17 @@ module Formtastic
       end
       
       def fieldset_contents_from_column_list(columns)
-        columns.collect do |method| 
-          if @object && (@object.class.reflect_on_association(method.to_sym) && @object.class.reflect_on_association(method.to_sym).options[:polymorphic] == true)
-            raise PolymorphicInputWithoutCollectionError.new("Please provide a collection for :#{method} input (you'll need to use block form syntax). Inputs for polymorphic associations can only be used when an explicit :collection is provided.")
+        columns.collect do |method|
+          if @object
+            if @object.class.respond_to?(:reflect_on_association)
+              if (@object.class.reflect_on_association(method.to_sym) && @object.class.reflect_on_association(method.to_sym).options[:polymorphic] == true)
+                raise PolymorphicInputWithoutCollectionError.new("Please provide a collection for :#{method} input (you'll need to use block form syntax). Inputs for polymorphic associations can only be used when an explicit :collection is provided.")
+              end
+            elsif @object.class.respond_to?(:associations)
+              if (@object.class.associations(method.to_sym) && @object.class.associations(method.to_sym).options[:polymorphic] == true)
+                raise PolymorphicInputWithoutCollectionError.new("Please provide a collection for :#{method} input (you'll need to use block form syntax). Inputs for polymorphic associations can only be used when an explicit :collection is provided.")
+              end            
+            end            
           end
           input(method.to_sym)
         end
