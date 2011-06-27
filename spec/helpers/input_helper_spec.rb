@@ -229,9 +229,33 @@ describe 'Formtastic::FormBuilder#input' do
               output_buffer.should_not have_tag('form li.optional')
             end
 
-            it 'should not be required if only :maximum is set' do
+            it 'should not be required if :within allows zero length' do
               @new_post.class.should_receive(:validators_on).with(:title).any_number_of_times {[
-                active_model_length_validator([:title], {:maximum => 4})
+                active_model_length_validator([:title], {:within => 0..5})
+              ]}
+
+              concat(semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:title))
+              end)
+              output_buffer.should have_tag('form li.optional')
+              output_buffer.should_not have_tag('form li.required')
+            end
+
+            it 'should not be required if only :minimum is zero' do
+              @new_post.class.should_receive(:validators_on).with(:title).any_number_of_times {[
+                active_model_length_validator([:title], {:minimum => 0})
+              ]}
+
+              concat(semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:title))
+              end)
+              output_buffer.should have_tag('form li.optional')
+              output_buffer.should_not have_tag('form li.required')
+            end
+
+            it 'should not be required if only :minimum is not set' do
+              @new_post.class.should_receive(:validators_on).with(:title).any_number_of_times {[
+                active_model_length_validator([:title], {:maximum => 5})
               ]}
 
               concat(semantic_form_for(@new_post) do |builder|
