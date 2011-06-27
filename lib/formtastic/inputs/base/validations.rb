@@ -121,8 +121,18 @@ module Formtastic
           return false if not_required_through_negated_validation?
           if validations?
             validations.select { |validator|
-              [:presence, :inclusion, :length].include?(validator.kind) &&
-              validator.options[:allow_blank] != true
+              case validator.kind
+              when :presence
+                true
+              when :inclusion
+                validator.options[:allow_blank] != true
+              when :length
+                validator.options[:allow_blank] != true &&
+                validator.options[:minimum].to_i > 0 ||
+                validator.options[:within].try(:first).to_i > 0
+              else
+                false
+              end
             }.any?
           else
             return responds_to_global_required? && !!builder.all_fields_required_by_default
