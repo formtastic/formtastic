@@ -203,7 +203,45 @@ describe 'Formtastic::FormBuilder#input' do
               output_buffer.should have_tag('form li.optional')
             end
           end
-        
+
+          describe 'and validates_length_of was called for the method' do
+            it 'should be required if minimum is set' do
+              @new_post.class.should_receive(:validators_on).with(:title).any_number_of_times {[
+                active_model_length_validator([:title], {:minimum => 1})
+              ]}
+
+              concat(semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:title))
+              end)
+              output_buffer.should have_tag('form li.required')
+              output_buffer.should_not have_tag('form li.optional')
+            end
+
+            it 'should be required if :within is set' do
+              @new_post.class.should_receive(:validators_on).with(:title).any_number_of_times {[
+                active_model_length_validator([:title], {:within => 1..5})
+              ]}
+
+              concat(semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:title))
+              end)
+              output_buffer.should have_tag('form li.required')
+              output_buffer.should_not have_tag('form li.optional')
+            end
+
+            it 'should not be required if only :maximum is set' do
+              @new_post.class.should_receive(:validators_on).with(:title).any_number_of_times {[
+                active_model_length_validator([:title], {:maximum => 4})
+              ]}
+
+              concat(semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:title))
+              end)
+              output_buffer.should have_tag('form li.optional')
+              output_buffer.should_not have_tag('form li.required')
+            end
+          end
+
           # TODO make a matcher for this?
           def should_be_required(options)
             @new_post.class.stub!(:validators_on).with(:body).and_return([
