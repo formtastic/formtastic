@@ -107,6 +107,16 @@ describe 'Formtastic::FormBuilder#errors_on' do
       output_buffer.should_not have_tag('p.inine-errors')
       output_buffer.should_not have_tag('ul.errors')
     end
+    
+    it 'should allow calling deprecated errors_on and inline_errors_for helpers' do
+      Formtastic::FormBuilder.inline_errors = :sentence
+      with_deprecation_silenced do
+        concat(semantic_form_for(@new_post) do |builder|
+          builder.errors_on :title
+          builder.inline_errors_for :title
+        end)
+      end
+    end
 
   end
 

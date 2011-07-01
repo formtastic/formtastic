@@ -89,6 +89,28 @@ module Formtastic
       
 
       protected
+      
+      # @deprecated This should be removed with inline_errors_for in 2.1
+      def error_sentence(errors, options = {})
+        error_class = options[:error_class] || default_inline_error_class
+        template.content_tag(:p, Formtastic::Util.html_safe(errors.to_sentence.untaint), :class => error_class)
+      end
+      
+      # @deprecated This should be removed with inline_errors_for in 2.1
+      def error_list(errors, options = {})
+        error_class = options[:error_class] || default_error_list_class
+        list_elements = []
+        errors.each do |error|
+          list_elements <<  template.content_tag(:li, Formtastic::Util.html_safe(error.untaint))
+        end
+        template.content_tag(:ul, Formtastic::Util.html_safe(list_elements.join("\n")), :class => error_class)
+      end
+      
+      # @deprecated This should be removed with inline_errors_for in 2.1
+      def error_first(errors, options = {})
+        error_class = options[:error_class] || default_inline_error_class
+        template.content_tag(:p, Formtastic::Util.html_safe(errors.first.untaint), :class => error_class)
+      end
 
       def error_keys(method, options)
         @methods_for_error ||= {}
