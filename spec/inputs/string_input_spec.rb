@@ -151,12 +151,29 @@ describe 'string input' do
   end
   
   describe "when required" do
-    it "should add the required attribute to the input's html options" do
-      concat(semantic_form_for(@new_post) do |builder|
-        concat(builder.input(:title, :as => :string, :required => true))
-      end)
-      output_buffer.should have_tag("input[@required]")
+    
+    context "and configured to use HTML5 attribute" do
+      it "should add the required attribute to the input's html options" do
+        with_config :use_required_attribute, true do
+          concat(semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:title, :as => :string, :required => true))
+          end)
+          output_buffer.should have_tag("input[@required]")
+        end
+      end
     end
+
+    context "and configured to not use HTML5 attribute" do
+      it "should add the required attribute to the input's html options" do
+        with_config :use_required_attribute, false do
+          concat(semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:title, :as => :string, :required => true))
+          end)
+          output_buffer.should_not have_tag("input[@required]")
+        end
+      end
+    end
+    
   end
 
 end
