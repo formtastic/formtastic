@@ -69,9 +69,16 @@ module Formtastic
           if validation
             # We can't determine an appropriate value for :greater_than with a float/decimal column
             raise IndeterminableMinimumAttributeError if validation.options[:greater_than] && column? && [:float, :decimal].include?(column.type)
-
-            return validation.options[:greater_than_or_equal_to] if validation.options[:greater_than_or_equal_to]
-            return (validation.options[:greater_than] + 1)       if validation.options[:greater_than]
+ 
+            if validation.options[:greater_than_or_equal_to]
+              return (validation.options[:greater_than_or_equal_to].call) if validation.options[:greater_than_or_equal_to].kind_of?(Proc)
+              return (validation.options[:greater_than_or_equal_to])
+            end
+            
+            if validation.options[:greater_than]
+              return (validation.options[:greater_than].call + 1) if validation.options[:greater_than].kind_of?(Proc)
+              return (validation.options[:greater_than] + 1)
+            end
           end
         end
 
@@ -83,9 +90,16 @@ module Formtastic
           if validation
             # We can't determine an appropriate value for :greater_than with a float/decimal column
             raise IndeterminableMaximumAttributeError if validation.options[:less_than] && column? && [:float, :decimal].include?(column.type)
-
-            return validation.options[:less_than_or_equal_to] if validation.options[:less_than_or_equal_to]
-            return (validation.options[:less_than] - 1)       if validation.options[:less_than]
+                 
+            if validation.options[:less_than_or_equal_to]
+              return (validation.options[:less_than_or_equal_to].call) if validation.options[:less_than_or_equal_to].kind_of?(Proc)
+              return (validation.options[:less_than_or_equal_to])
+            end
+            
+            if validation.options[:less_than]
+              return (validation.options[:less_than].call - 1) if validation.options[:less_than].kind_of?(Proc)
+              return (validation.options[:less_than] - 1)
+            end
           end
         end
 
