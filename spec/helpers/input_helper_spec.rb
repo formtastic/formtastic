@@ -263,12 +263,12 @@ describe 'Formtastic::FormBuilder#input' do
               @new_post.class.should_receive(:validators_on).with(:title).and_return([])
             end
         
-            it 'should use the default value' do
+            it 'should not be required' do
               concat(semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title))
               end)
-              output_buffer.should have_tag('form li.required')
-              output_buffer.should_not have_tag('form li.optional')
+              output_buffer.should_not have_tag('form li.required')
+              output_buffer.should have_tag('form li.optional')
             end
           end
         
