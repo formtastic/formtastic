@@ -27,7 +27,7 @@ module Formtastic
               validator_relevant?(validator)
             end
           else
-            []
+            nil
           end
         end
 
@@ -126,7 +126,7 @@ module Formtastic
         end
 
         def validations?
-          !validations.empty?
+          validations != nil
         end
 
         def required?
