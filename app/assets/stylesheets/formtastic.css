@@ -83,7 +83,7 @@ This stylesheet forms part of the Formtastic Rails Plugin
 /* BUTTONS
 --------------------------------------------------------------------------------------------------*/
 .formtastic .buttons {
-  overflow:hidden; zoom:1; /* clear containing floats */
+  overflow:hidden; /* clear containing floats */
   padding-left:25%;
 }
 
@@ -96,11 +96,11 @@ This stylesheet forms part of the Formtastic Rails Plugin
 /* INPUTS
 --------------------------------------------------------------------------------------------------*/
 .formtastic .inputs {
-  overflow:hidden; zoom:1; /* clear containing floats */
+  overflow:hidden; /* clear containing floats */
 }
 
 .formtastic .input {
-  overflow:hidden; zoom:1; /* clear containing floats */
+  overflow:hidden; /* clear containing floats */
   padding:0.5em 0; /* padding and negative margin juggling is for Firefox */
   margin-top:-0.5em;
   margin-bottom:1em;

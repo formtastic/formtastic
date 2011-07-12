@@ -25,3 +25,9 @@
 .formtastic .fragment {
   padding-left:3px;
 }
+
+.formtastic .buttons,
+.formtastic .inputs,
+.formtastic .input {
+  zoom:1;
+}
