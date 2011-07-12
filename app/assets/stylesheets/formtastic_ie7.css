@@ -15,3 +15,9 @@
   margin-left:0;
   margin-right:0;
 }
+
+.formtastic .buttons,
+.formtastic .inputs,
+.formtastic .input {
+  zoom:1;
+}
