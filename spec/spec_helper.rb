@@ -291,7 +291,7 @@ module FormtasticSpecHelper
     ::MongoPost.stub!(:to_key).and_return(nil)
     ::MongoPost.stub!(:persisted?).and_return(nil)
     ::MongoPost.stub!(:to_ary)
-    ::MongoPost.stub!(:model_name).and_return( mock(:model_name_mock, :singular => "post", :plural => "posts") ) 
+    ::MongoPost.stub!(:model_name).and_return( mock(:model_name_mock, :singular => "post", :plural => "posts", :param_key => "post", :route_key => "posts") ) 
 
     @new_mm_post = mock('mm_post')
     @new_mm_post.stub!(:class).and_return(::MongoPost)
