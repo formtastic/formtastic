@@ -156,7 +156,7 @@ describe 'number input' do
   describe "when validations require a minimum value (:greater_than) that takes a proc" do
     before do
       @new_post.class.stub!(:validators_on).with(:title).and_return([
-        active_model_numericality_validator([:title], {:only_integer=>false, :allow_nil=>false, :greater_than=> Proc.new {|x| 2}})
+        active_model_numericality_validator([:title], {:only_integer=>false, :allow_nil=>false, :greater_than=> Proc.new {|post| 2}})
       ])
     end
     
@@ -299,7 +299,7 @@ describe 'number input' do
   describe "when validations require a minimum value (:greater_than_or_equal_to) that takes a Proc" do
      before do
        @new_post.class.stub!(:validators_on).with(:title).and_return([
-         active_model_numericality_validator([:title], {:only_integer=>false, :allow_nil=>false, :greater_than_or_equal_to=> Proc.new { |x| 2}})
+         active_model_numericality_validator([:title], {:only_integer=>false, :allow_nil=>false, :greater_than_or_equal_to=> Proc.new { |post| 2}})
        ])
      end
 
@@ -448,7 +448,7 @@ describe 'number input' do
     
    before do
      @new_post.class.stub!(:validators_on).with(:title).and_return([
-       active_model_numericality_validator([:title], {:only_integer=>false, :allow_nil=>false, :less_than=> Proc.new {|x| 20 }})
+       active_model_numericality_validator([:title], {:only_integer=>false, :allow_nil=>false, :less_than=> Proc.new {|post| 20 }})
      ])
    end
    
@@ -595,7 +595,7 @@ describe 'number input' do
   describe "when validations require a maximum value (:less_than_or_equal_to) that takes a proc" do
      before do
        @new_post.class.stub!(:validators_on).with(:title).and_return([
-         active_model_numericality_validator([:title], {:only_integer=>false, :allow_nil=>false, :less_than_or_equal_to=> Proc.new { |x| 20 }})
+         active_model_numericality_validator([:title], {:only_integer=>false, :allow_nil=>false, :less_than_or_equal_to=> Proc.new { |post| 20 }})
        ])
      end
 

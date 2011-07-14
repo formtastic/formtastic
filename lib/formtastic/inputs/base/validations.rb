@@ -71,12 +71,12 @@ module Formtastic
             raise IndeterminableMinimumAttributeError if validation.options[:greater_than] && column? && [:float, :decimal].include?(column.type)
  
             if validation.options[:greater_than_or_equal_to]
-              return (validation.options[:greater_than_or_equal_to].call) if validation.options[:greater_than_or_equal_to].kind_of?(Proc)
+              return (validation.options[:greater_than_or_equal_to].call(object)) if validation.options[:greater_than_or_equal_to].kind_of?(Proc)
               return (validation.options[:greater_than_or_equal_to])
             end
             
             if validation.options[:greater_than]
-              return (validation.options[:greater_than].call + 1) if validation.options[:greater_than].kind_of?(Proc)
+              return (validation.options[:greater_than].call(object) + 1) if validation.options[:greater_than].kind_of?(Proc)
               return (validation.options[:greater_than] + 1)
             end
           end
@@ -92,12 +92,12 @@ module Formtastic
             raise IndeterminableMaximumAttributeError if validation.options[:less_than] && column? && [:float, :decimal].include?(column.type)
                  
             if validation.options[:less_than_or_equal_to]
-              return (validation.options[:less_than_or_equal_to].call) if validation.options[:less_than_or_equal_to].kind_of?(Proc)
+              return (validation.options[:less_than_or_equal_to].call(object)) if validation.options[:less_than_or_equal_to].kind_of?(Proc)
               return (validation.options[:less_than_or_equal_to])
             end
             
             if validation.options[:less_than]
-              return (validation.options[:less_than].call - 1) if validation.options[:less_than].kind_of?(Proc)
+              return ((validation.options[:less_than].call(object)) - 1) if validation.options[:less_than].kind_of?(Proc)
               return (validation.options[:less_than] - 1)
             end
           end
