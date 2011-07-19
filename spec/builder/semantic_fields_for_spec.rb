@@ -11,6 +11,32 @@ describe 'Formtastic::FormBuilder#fields_for' do
     @new_post.stub!(:author).and_return(::Author.new)
   end
 
+  context 'outside a form_for block' do
+    it 'yields an instance of FormHelper.builder' do
+      semantic_fields_for(@new_post) do |nested_builder|
+        nested_builder.class.should == Formtastic::Helpers::FormHelper.builder
+      end
+      semantic_fields_for(@new_post.author) do |nested_builder|
+        nested_builder.class.should == Formtastic::Helpers::FormHelper.builder
+      end
+      semantic_fields_for(:author, @new_post.author) do |nested_builder|
+        nested_builder.class.should == Formtastic::Helpers::FormHelper.builder
+      end
+    end
+    
+    it 'should respond to input' do
+      semantic_fields_for(@new_post) do |nested_builder|
+        nested_builder.respond_to?(:input).should be_true
+      end
+      semantic_fields_for(@new_post.author) do |nested_builder|
+        nested_builder.respond_to?(:input).should be_true
+      end
+      semantic_fields_for(:author, @new_post.author) do |nested_builder|
+        nested_builder.respond_to?(:input).should be_true
+      end
+    end
+  end
+  
   context 'within a form_for block' do
     it 'yields an instance of FormHelper.builder' do
       semantic_form_for(@new_post) do |builder|
