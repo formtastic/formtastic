@@ -93,6 +93,7 @@ module FormtasticSpecHelper
     def persisted?
     end
   end
+  
   module ::Namespaced
     class Post
       extend ActiveModel::Naming if defined?(ActiveModel::Naming)
@@ -105,6 +106,7 @@ module FormtasticSpecHelper
       end
     end
   end
+  
   class ::Author
     extend ActiveModel::Naming if defined?(ActiveModel::Naming)
     include ActiveModel::Conversion if defined?(ActiveModel::Conversion)
@@ -115,10 +117,21 @@ module FormtasticSpecHelper
     def persisted?
     end
   end
+  
+  class ::HashBackedAuthor < Hash
+    extend ActiveModel::Naming if defined?(ActiveModel::Naming)
+    include ActiveModel::Conversion if defined?(ActiveModel::Conversion)
+    def persisted?; false; end
+    def name
+      'hash backed author'
+    end
+  end
+  
   class ::Continent
     extend ActiveModel::Naming if defined?(ActiveModel::Naming)
     include ActiveModel::Conversion if defined?(ActiveModel::Conversion)
   end
+  
   class ::PostModel
     extend ActiveModel::Naming if defined?(ActiveModel::Naming)
     include ActiveModel::Conversion if defined?(ActiveModel::Conversion)
@@ -209,6 +222,8 @@ module FormtasticSpecHelper
     ::Author.stub!(:to_key).and_return(nil)
     ::Author.stub!(:persisted?).and_return(nil)
 
+    @hash_backed_author = HashBackedAuthor.new
+    
     # Sometimes we need a mock @post object and some Authors for belongs_to
     @new_post = mock('post')
     @new_post.stub!(:class).and_return(::Post)

@@ -22,6 +22,9 @@ describe 'Formtastic::FormBuilder#fields_for' do
       semantic_fields_for(:author, @new_post.author) do |nested_builder|
         nested_builder.class.should == Formtastic::Helpers::FormHelper.builder
       end
+      semantic_fields_for(:author, @hash_backed_author) do |nested_builder|
+        nested_builder.class.should == Formtastic::Helpers::FormHelper.builder
+      end
     end
     
     it 'should respond to input' do
@@ -34,6 +37,9 @@ describe 'Formtastic::FormBuilder#fields_for' do
       semantic_fields_for(:author, @new_post.author) do |nested_builder|
         nested_builder.respond_to?(:input).should be_true
       end
+      semantic_fields_for(:author, @hash_backed_author) do |nested_builder|
+        nested_builder.respond_to?(:input).should be_true
+      end
     end
   end
   
@@ -41,6 +47,14 @@ describe 'Formtastic::FormBuilder#fields_for' do
     it 'yields an instance of FormHelper.builder' do
       semantic_form_for(@new_post) do |builder|
         builder.semantic_fields_for(:author) do |nested_builder|
+          nested_builder.class.should == Formtastic::Helpers::FormHelper.builder
+        end
+      end
+    end
+    
+    it 'yields an instance of FormHelper.builder with hash-like model' do
+      semantic_form_for(:user) do |builder|
+        builder.semantic_fields_for(:author, @hash_backed_author) do |nested_builder|
           nested_builder.class.should == Formtastic::Helpers::FormHelper.builder
         end
       end
@@ -113,4 +127,3 @@ describe 'Formtastic::FormBuilder#fields_for' do
   end
 
 end
-
