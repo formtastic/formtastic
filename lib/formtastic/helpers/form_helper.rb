@@ -140,21 +140,6 @@ module Formtastic
       #
       # @option *args [String] :namespace
       def semantic_form_for(record_or_name_or_array, *args, &proc)
-        form_helper_wrapper(:form_for, record_or_name_or_array, *args, &proc)
-      end
-
-      # Wrapper around Rails' own `fields_for` helper to set the `:builder` option to
-      # `Formtastic::FormBuilder`.
-      #
-      # @see #semantic_form_for
-      def semantic_fields_for(record_or_name_or_array, *args, &proc)
-        form_helper_wrapper(:fields_for, record_or_name_or_array, *args, &proc)
-      end
-
-      protected
-
-      # @todo pretty sure some of this (like HTML classes and record naming are exlusive to `form_for`)
-      def form_helper_wrapper(rails_helper_method_name, record_or_name_or_array, *args, &proc)
         options = args.extract_options!
         options[:builder] ||= @@builder
         options[:html] ||= {}
@@ -172,9 +157,37 @@ module Formtastic
         options[:html][:class] = class_names.join(" ")
 
         with_custom_field_error_proc do
-          self.send(rails_helper_method_name, record_or_name_or_array, *(args << options), &proc)
+          self.form_for(record_or_name_or_array, *(args << options), &proc)
         end
       end
+
+      # Wrapper around Rails' own `fields_for` helper to set the `:builder` option to
+      # `Formtastic::FormBuilder`.
+      #
+      # @see #semantic_form_for
+      def semantic_fields_for(record_or_name_or_array, *args, &proc)
+        options = args.extract_options!
+        options[:builder] ||= @@builder
+        options[:html] ||= {}
+        @@builder.custom_namespace = options[:namespace].to_s
+
+        singularizer = defined?(ActiveModel::Naming.singular) ? ActiveModel::Naming.method(:singular) : ActionController::RecordIdentifier.method(:singular_class_name)
+
+        class_names = options[:html][:class] ? options[:html][:class].split(" ") : []
+        class_names << @@default_form_class
+        class_names << case record_or_name_or_array
+          when String, Symbol then record_or_name_or_array.to_s                                  # :post => "post"
+          when Array then options[:as] || singularizer.call(record_or_name_or_array.last.class)  # [@post, @comment] # => "comment"
+          else options[:as] || singularizer.call(record_or_name_or_array.class)                  # @post => "post"
+        end
+        options[:html][:class] = class_names.join(" ")
+
+        with_custom_field_error_proc do
+          self.fields_for(record_or_name_or_array, *(args << options), &proc)
+        end
+      end
+      
+      protected
 
       # Override the default ActiveRecordHelper behaviour of wrapping the input.
       # This gets taken care of semantically by adding an error class to the LI tag
