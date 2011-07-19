@@ -165,13 +165,13 @@ module Formtastic
       # `Formtastic::FormBuilder`.
       #
       # @see #semantic_form_for
-      def semantic_fields_for(record_or_name_or_array, *args, &proc)
-        options = args.extract_options!
+      def semantic_fields_for(record_name, record_object = nil, options = {}, &block)
+        options, record_object = record_object, nil if record_object.is_a?(Hash)
         options[:builder] ||= @@builder
         @@builder.custom_namespace = options[:namespace].to_s # TODO needed?
 
         with_custom_field_error_proc do
-          self.fields_for(record_or_name_or_array, *(args << options), &proc)
+          self.fields_for(record_name, record_object, options, &block)
         end
       end
       
