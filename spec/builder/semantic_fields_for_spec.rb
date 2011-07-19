@@ -11,51 +11,53 @@ describe 'Formtastic::FormBuilder#fields_for' do
     @new_post.stub!(:author).and_return(::Author.new)
   end
 
-  it 'yields an instance of FormHelper.builder' do
-    semantic_form_for(@new_post) do |builder|
-      builder.semantic_fields_for(:author) do |nested_builder|
-        nested_builder.class.should == Formtastic::Helpers::FormHelper.builder
+  context 'within a form_for block' do
+    it 'yields an instance of FormHelper.builder' do
+      semantic_form_for(@new_post) do |builder|
+        builder.semantic_fields_for(:author) do |nested_builder|
+          nested_builder.class.should == Formtastic::Helpers::FormHelper.builder
+        end
       end
     end
-  end
-
-  it 'nests the object name' do
-    semantic_form_for(@new_post) do |builder|
-      builder.semantic_fields_for(@bob) do |nested_builder|
-        nested_builder.object_name.should == 'post[author]'
+    
+    it 'nests the object name' do
+      semantic_form_for(@new_post) do |builder|
+        builder.semantic_fields_for(@bob) do |nested_builder|
+          nested_builder.object_name.should == 'post[author]'
+        end
       end
     end
-  end
-  
-  it 'supports passing collection as second parameter' do
-    semantic_form_for(@new_post) do |builder|
-      builder.semantic_fields_for(:author, [@fred,@bob]) do |nested_builder|
-        nested_builder.object_name.should =~ /post\[author_attributes\]\[\d+\]/
+    
+    it 'supports passing collection as second parameter' do
+      semantic_form_for(@new_post) do |builder|
+        builder.semantic_fields_for(:author, [@fred,@bob]) do |nested_builder|
+          nested_builder.object_name.should =~ /post\[author_attributes\]\[\d+\]/
+        end
       end
     end
-  end
-
-  it 'should sanitize html id for li tag' do
-    @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
-    concat(semantic_form_for(@new_post) do |builder|
-      concat(builder.semantic_fields_for(@bob, :index => 1) do |nested_builder|
-        concat(nested_builder.inputs(:login))
+    
+    it 'should sanitize html id for li tag' do
+      @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
+      concat(semantic_form_for(@new_post) do |builder|
+        concat(builder.semantic_fields_for(@bob, :index => 1) do |nested_builder|
+          concat(nested_builder.inputs(:login))
+        end)
       end)
-    end)
-    output_buffer.should have_tag('form fieldset.inputs #post_author_1_login_input')
-    # Not valid selector, so using good ol' regex
-    output_buffer.should_not =~ /id="post\[author\]_1_login_input"/
-    # <=> output_buffer.should_not have_tag('form fieldset.inputs #post[author]_1_login_input')
-  end
-
-  it 'should use namespace provided in nested fields' do
-    @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
-    concat(semantic_form_for(@new_post, :namespace => 'context2') do |builder|
-      concat(builder.semantic_fields_for(@bob, :index => 1) do |nested_builder|
-        concat(nested_builder.inputs(:login))
+      output_buffer.should have_tag('form fieldset.inputs #post_author_1_login_input')
+      # Not valid selector, so using good ol' regex
+      output_buffer.should_not =~ /id="post\[author\]_1_login_input"/
+      # <=> output_buffer.should_not have_tag('form fieldset.inputs #post[author]_1_login_input')
+    end
+    
+    it 'should use namespace provided in nested fields' do
+      @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
+      concat(semantic_form_for(@new_post, :namespace => 'context2') do |builder|
+        concat(builder.semantic_fields_for(@bob, :index => 1) do |nested_builder|
+          concat(nested_builder.inputs(:login))
+        end)
       end)
-    end)
-    output_buffer.should have_tag('form fieldset.inputs #context2_post_author_1_login_input')
+      output_buffer.should have_tag('form fieldset.inputs #context2_post_author_1_login_input')
+    end
   end
   
   context "when I rendered my own hidden id input" do 
