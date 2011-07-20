@@ -50,6 +50,11 @@ describe 'radio input' do
         output_buffer.should_not have_tag('li.choice label.label')
       end
       
+      it 'should not add the required attribute to each input' do
+        output_buffer.should_not have_tag('li.choice input[@required]')
+      end
+      
+      
       it 'should contain a label for the radio input with a nested input and label text' do
         ::Author.all.each do |author|
           output_buffer.should have_tag('form li fieldset ol li label', /#{author.to_label}/)
@@ -63,12 +68,6 @@ describe 'radio input' do
         end
       end
       
-      it "should add the required attribute to the input's html options" do
-        ::Author.all.each do |post|
-          output_buffer.should have_tag("form li fieldset ol li.author_#{post.id} input[@required]")
-        end
-      end
-
       it "should have a radio input" do
         ::Author.all.each do |author|
           output_buffer.should have_tag("form li fieldset ol li label input#post_author_id_#{author.id}")

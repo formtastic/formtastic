@@ -127,7 +127,7 @@ module Formtastic
         value = choice_value(choice)
         builder.check_box(
           association_primary_key || method, 
-          input_html_options.merge(:id => choice_input_dom_id(choice), :name => input_name, :disabled => disabled?(value)), 
+          input_html_options.merge(:id => choice_input_dom_id(choice), :name => input_name, :disabled => disabled?(value), :required => false), 
           value, 
           unchecked_value
         )
@@ -139,7 +139,7 @@ module Formtastic
           input_name, 
           value, 
           checked?(value), 
-          input_html_options.merge(:id => choice_input_dom_id(choice), :disabled => disabled?(value))
+          input_html_options.merge(:id => choice_input_dom_id(choice), :disabled => disabled?(value), :required => false)
         ) 
       end
       

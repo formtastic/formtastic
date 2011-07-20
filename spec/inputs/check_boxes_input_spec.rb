@@ -61,6 +61,10 @@ describe 'check_boxes input' do
         output_buffer.should_not have_tag('li.choice label.label')
       end
       
+      it 'should not be marked as required' do
+        output_buffer.should_not have_tag('li.choice input[@required]')
+      end
+      
       it 'should contain a label for the radio input with a nested input and label text' do
         ::Post.all.each do |post|
           output_buffer.should have_tag('form li fieldset ol li label', /#{post.to_label}/)
@@ -74,12 +78,6 @@ describe 'check_boxes input' do
         end
       end
       
-      it "should add the required attribute to the input's html options" do
-        ::Post.all.each do |post|
-          output_buffer.should have_tag("form li fieldset ol li.post_#{post.id} input[@required]")
-        end
-      end
-
       it 'should have a checkbox input but no hidden field for each post' do
         ::Post.all.each do |post|
           output_buffer.should have_tag("form li fieldset ol li label input#author_post_ids_#{post.id}")
