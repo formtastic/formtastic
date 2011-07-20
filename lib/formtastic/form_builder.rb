@@ -29,6 +29,7 @@ module Formtastic
     configure :default_error_list_class, 'errors'
     configure :default_hint_class, 'inline-hints'
     configure :use_required_attribute, true
+    configure :perform_browser_validations, true
 
     attr_reader :template
 
