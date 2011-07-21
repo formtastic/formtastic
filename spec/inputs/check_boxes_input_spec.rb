@@ -356,6 +356,23 @@ describe 'check_boxes input' do
       end
     end
   end
+  
+  describe 'when :collection is provided' do
+    before do
+      @output_buffer = ''
+      mock_everything
+      @fred.stub(:genres) { ['ficton', 'biography'] }
+      
+      concat(semantic_form_for(@fred) do |builder|
+        concat(builder.input(:genres, :as => :check_boxes, :collection => [['Fiction', 'fiction'], ['Non-fiction', 'non_fiction'], ['Biography', 'biography']]))
+      end)
+    end
+    
+    it 'should check the correct checkboxes' do
+      output_buffer.should have_tag("form li fieldset ol li label input[@value='fiction'][@checked='checked']")
+      output_buffer.should have_tag("form li fieldset ol li label input[@value='biography'][@checked='checked']")
+    end
+  end
 
   describe "when namespace is provided" do
 
