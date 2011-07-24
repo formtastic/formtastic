@@ -404,7 +404,7 @@ end
 ::ActiveSupport::Deprecation.silenced = false
 
 
-Rspec.configure do |config|
+RSpec.configure do |config|
   config.before(:all) do
     DeferredGarbageCollection.start
   end
