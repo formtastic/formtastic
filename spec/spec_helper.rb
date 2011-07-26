@@ -403,12 +403,11 @@ end
 
 ::ActiveSupport::Deprecation.silenced = false
 
-
 RSpec.configure do |config|
   config.before(:all) do
-    DeferredGarbageCollection.start
+    DeferredGarbageCollection.start unless ENV["DEFER_GC"] == "false"
   end
   config.after(:all) do
-    DeferredGarbageCollection.reconsider
+    DeferredGarbageCollection.reconsider unless ENV["DEFER_GC"] == "false"
   end
 end
