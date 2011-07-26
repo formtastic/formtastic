@@ -4,6 +4,3 @@ rvm:
   - jruby
   - ree
   - rbx-2.0
-notifications:
-  recipients:
-    - graf.otodrakula@gmail.com
