@@ -4,3 +4,5 @@ rvm:
   - jruby
   - ree
   - rbx-2.0
+env:
+  - DEFER_GC=false
