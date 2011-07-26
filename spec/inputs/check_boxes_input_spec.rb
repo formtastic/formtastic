@@ -361,7 +361,7 @@ describe 'check_boxes input' do
     before do
       @output_buffer = ''
       mock_everything
-      @fred.stub(:genres) { ['ficton', 'biography'] }
+      @fred.stub(:genres) { ['fiction', 'biography'] }
       
       concat(semantic_form_for(@fred) do |builder|
         concat(builder.input(:genres, :as => :check_boxes, :collection => [['Fiction', 'fiction'], ['Non-fiction', 'non_fiction'], ['Biography', 'biography']]))

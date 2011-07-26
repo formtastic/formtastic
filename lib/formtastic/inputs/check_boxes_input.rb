@@ -154,7 +154,7 @@ module Formtastic
       def selected_values
         if object.respond_to?(method)
           selected_items = [object.send(method)].compact.flatten
-          [*selected_items.map { |o| send_or_call(value_method, o) }].compact
+          [*selected_items.map { |o| send_or_call_or_object(value_method, o) }].compact
         else
           []
         end
