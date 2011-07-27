@@ -267,6 +267,9 @@ module Formtastic
       
       protected
       
+      # First try if we can detect special things like :file. With CarrierWave the method does have
+      # an underlying column so we don't want :string to get selected.
+      #
       # For methods that have a database column, take a best guess as to what the input method
       # should be.  In most cases, it will just return the column type (eg :string), but for special
       # cases it will simplify (like the case of :integer, :float & :decimal to :number), or do
@@ -275,6 +278,12 @@ module Formtastic
       # If there is no column for the method (eg "virtual columns" with an attr_accessor), the
       # default is a :string, a similar behaviour to Rails' scaffolding.
       def default_input_type(method, options = {}) #:nodoc:
+        if @object
+          return :select  if reflection_for(method)
+
+          return :file    if is_file?(method, options)
+        end
+
         if column = column_for(method)
           # Special cases where the column type doesn't map to an input method.
           case column.type
@@ -300,12 +309,6 @@ module Formtastic
           # Try 3: Assume the input name will be the same as the column type (e.g. string_input).
           return column.type
         else
-          if @object
-            return :select  if reflection_for(method)
-
-            return :file    if is_file?(method, options)
-          end
-
           return :select    if options.key?(:collection)
           return :password  if method.to_s =~ /password/
           return :string
@@ -363,4 +366,3 @@ module Formtastic
     end
   end
 end
-      

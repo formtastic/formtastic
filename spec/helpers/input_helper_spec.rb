@@ -412,7 +412,6 @@ describe 'Formtastic::FormBuilder#input' do
         describe 'defaulting to file column' do
           Formtastic::FormBuilder.file_methods.each do |method|
             it "should default to :file for attributes that respond to ##{method}" do
-              @new_post.stub!(:column_for_attribute).and_return(nil)
               column = mock('column')
   
               Formtastic::FormBuilder.file_methods.each do |test|
