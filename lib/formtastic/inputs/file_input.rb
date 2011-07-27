@@ -13,7 +13,7 @@ module Formtastic
     #
     #   <%= semantic_form_for(@user, :html => { :multipart => true }) do |f| %>
     #     <%= f.inputs do %>
-    #       <%= f.input :email_address, :as => :email %>
+    #       <%= f.input :avatar, :as => :file %>
     #     <% end %>
     #   <% end %>
     #
@@ -21,8 +21,8 @@ module Formtastic
     #     <fieldset>
     #       <ol>
     #         <li class="email">
-    #           <label for="user_email_address">Email address</label>
-    #           <input type="email" id="user_email_address" name="user[email_address]">
+    #           <label for="user_avatar">Avatar</label>
+    #           <input type="file" id="user_avatar" name="user[avatar]">
     #         </li>
     #       </ol>
     #     </fieldset>
