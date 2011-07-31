@@ -73,6 +73,14 @@ describe 'Formtastic::FormBuilder#label' do
       output_buffer.should_not have_tag('label')
       output_buffer.should_not include("&gt;")
     end
+    
+    it 'should return nil if label is false for timeish fragments' do
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input(:title, :as => :time, :label => false)
+      end)
+      output_buffer.should_not have_tag('li.time > label')
+      output_buffer.should_not include("&gt;")
+    end
 
     it 'should html escape the label string by default' do
       concat(semantic_form_for(@new_post) do |builder|
