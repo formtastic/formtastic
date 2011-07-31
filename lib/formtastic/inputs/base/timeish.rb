@@ -196,7 +196,7 @@ module Formtastic
               :class => "label"
             )
           else
-            ""
+            "".html_safe
           end
         end
         
