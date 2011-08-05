@@ -28,7 +28,7 @@ describe 'FormHelper' do
       with_config :perform_browser_validations, true do
         concat(semantic_form_for(@new_post, :url => '/hello') do |builder|
         end)
-        output_buffer.should have_tag("form[@novalidate]")
+        output_buffer.should_not have_tag("form[@novalidate]")
       end
     end
     
@@ -36,7 +36,7 @@ describe 'FormHelper' do
       with_config :perform_browser_validations, false do
         concat(semantic_form_for(@new_post, :url => '/hello') do |builder|
         end)
-        output_buffer.should_not have_tag("form[@novalidate]")
+        output_buffer.should have_tag("form[@novalidate]")
       end
     end
 
