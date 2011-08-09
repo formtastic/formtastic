@@ -756,11 +756,11 @@ describe 'number input' do
       ])
     end
     
-    it "should default step to 1" do
+    it "should default step to 'any'" do
       concat(semantic_form_for(@new_post) do |builder|
         builder.input(:title, :as => :number)
       end)
-      output_buffer.should have_tag('input[@step="1"]')
+      output_buffer.should have_tag('input[@step="any"]')
     end
     
     it "should let input_html set :step" do
