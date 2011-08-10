@@ -96,7 +96,7 @@ module Formtastic
         return options[:step] if options.key?(:step)
         return validation_step if validation_step
         return 1 if validation_integer_only?
-        1
+        "any"
       end
       
       def min_option
