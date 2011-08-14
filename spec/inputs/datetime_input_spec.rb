@@ -89,17 +89,36 @@ describe 'datetime input' do
           output_buffer.should have_tag('form li.datetime fieldset ol li label', f == field ? /another #{f} label/i : /#{f}/i)
         end
       end
-  
-      #it "should not display the label for the #{field} field when :labels[:#{field}] is blank" do
-      #  output_buffer.replace ''
-      #  concat(semantic_form_for(@new_post) do |builder|
-      #    concat(builder.input(:created_at, :as => :datetime, :labels => { field => "" }))
-      #  end)
-      #  output_buffer.should have_tag('form li.datetime fieldset ol li label', :count => fields.length-1)
-      #  fields.each do |f|
-      #    output_buffer.should have_tag('form li.datetime fieldset ol li label', /#{f}/i) unless field == f
-      #  end
-      #end
+      
+      it "should not display the label for the #{field} field when :labels[:#{field}] is blank" do
+        output_buffer.replace ''
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:created_at, :as => :datetime, :labels => { field => "" }))
+        end)
+        output_buffer.should have_tag('form li.datetime fieldset ol li label', :count => fields.length-1)
+        fields.each do |f|
+          output_buffer.should have_tag('form li.datetime fieldset ol li label', /#{f}/i) unless field == f
+        end
+      end
+      
+      it "should not display the label for the #{field} field when :labels[:#{field}] is false" do
+        output_buffer.replace ''
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:created_at, :as => :datetime, :labels => { field => false }))
+        end)
+        output_buffer.should have_tag('form li.datetime fieldset ol li label', :count => fields.length-1)
+        fields.each do |f|
+          output_buffer.should have_tag('form li.datetime fieldset ol li label', /#{f}/i) unless field == f
+        end
+      end
+      
+      it "should not render unsafe HTML when :labels[:#{field}] is false" do 
+        output_buffer.replace ''
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:created_at, :as => :time, :include_seconds => true, :labels => { field => false }))
+        end)
+        output_buffer.should_not include("&gt;")
+      end
     end
   end
   

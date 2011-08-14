@@ -147,7 +147,7 @@ module Formtastic
         
         def fragment_label_html(fragment)
           text = fragment_label(fragment)
-          text.blank? ? "" : template.content_tag(:label, text, :for => fragment_id(fragment))
+          text.blank? ? "".html_safe : template.content_tag(:label, text, :for => fragment_id(fragment))
         end
         
         def value
