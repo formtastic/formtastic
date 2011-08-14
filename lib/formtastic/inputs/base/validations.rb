@@ -69,12 +69,12 @@ module Formtastic
           if validation
             # We can't determine an appropriate value for :greater_than with a float/decimal column
             raise IndeterminableMinimumAttributeError if validation.options[:greater_than] && column? && [:float, :decimal].include?(column.type)
- 
+
             if validation.options[:greater_than_or_equal_to]
               return (validation.options[:greater_than_or_equal_to].call(object)) if validation.options[:greater_than_or_equal_to].kind_of?(Proc)
               return (validation.options[:greater_than_or_equal_to])
             end
-            
+
             if validation.options[:greater_than]
               return (validation.options[:greater_than].call(object) + 1) if validation.options[:greater_than].kind_of?(Proc)
               return (validation.options[:greater_than] + 1)
@@ -90,12 +90,12 @@ module Formtastic
           if validation
             # We can't determine an appropriate value for :greater_than with a float/decimal column
             raise IndeterminableMaximumAttributeError if validation.options[:less_than] && column? && [:float, :decimal].include?(column.type)
-                 
+
             if validation.options[:less_than_or_equal_to]
               return (validation.options[:less_than_or_equal_to].call(object)) if validation.options[:less_than_or_equal_to].kind_of?(Proc)
               return (validation.options[:less_than_or_equal_to])
             end
-            
+
             if validation.options[:less_than]
               return ((validation.options[:less_than].call(object)) - 1) if validation.options[:less_than].kind_of?(Proc)
               return (validation.options[:less_than] - 1)
@@ -135,6 +135,9 @@ module Formtastic
           return false if not_required_through_negated_validation?
           if validations?
             validations.select { |validator|
+              if validator.options.key?(:on)
+                return false if (validator.options[:on] != :save) && ((object.new_record? && validator.options[:on] != :create) || (!object.new_record? && validator.options[:on] != :update))
+              end
               case validator.kind
               when :presence
                 true
@@ -152,7 +155,7 @@ module Formtastic
             return responds_to_global_required? && !!builder.all_fields_required_by_default
           end
         end
-        
+
         def required_attribute?
           required? && builder.use_required_attribute
         end
