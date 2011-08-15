@@ -162,15 +162,15 @@ module FormtasticSpecHelper
 
     # Resource-oriented styles like form_for(@post) will expect a path method for the object,
     # so we're defining some here.
-    def post_models_path; "/postmodels/1"; end
+    def post_models_path(*args); "/postmodels/1"; end
 
-    def post_path(o); "/posts/1"; end
-    def posts_path; "/posts"; end
-    def new_post_path; "/posts/new"; end
+    def post_path(*args); "/posts/1"; end
+    def posts_path(*args); "/posts"; end
+    def new_post_path(*args); "/posts/new"; end
 
-    def author_path(o); "/authors/1"; end
-    def authors_path; "/authors"; end
-    def new_author_path; "/authors/new"; end
+    def author_path(*args); "/authors/1"; end
+    def authors_path(*args); "/authors"; end
+    def new_author_path(*args); "/authors/new"; end
     
     @fred = ::Author.new
     @fred.stub!(:class).and_return(::Author)
