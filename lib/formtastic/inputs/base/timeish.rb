@@ -90,6 +90,7 @@ module Formtastic
         def to_html
           input_wrapping do
             fragments_wrapping do
+              hidden_fragments <<
               fragments_label <<
               template.content_tag(:ol,
                 fragments.map do |fragment|
@@ -204,6 +205,10 @@ module Formtastic
           template.content_tag(:ol,
             template.capture(&block)
           )
+        end
+        
+        def hidden_fragments
+          "".html_safe
         end
         
       end

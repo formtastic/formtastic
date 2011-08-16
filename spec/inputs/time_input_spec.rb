@@ -16,22 +16,46 @@ describe 'time input' do
       output_buffer.replace ''
     end
 
-    describe "with :ignore_date" do
+    describe "with :ignore_date => true" do
       before do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:publish_at, :as => :time, :ignore_date => true))
         end)
       end
 
-      it 'should not have an input for day, month and year' do
-        output_buffer.should_not have_tag('#post_publish_at_1i')
-        output_buffer.should_not have_tag('#post_publish_at_2i')
-        output_buffer.should_not have_tag('#post_publish_at_3i')
+      it 'should not have hidden inputs for day, month and year' do
+        output_buffer.should_not have_tag('input#post_publish_at_1i')
+        output_buffer.should_not have_tag('input#post_publish_at_2i')
+        output_buffer.should_not have_tag('input#post_publish_at_3i')
       end
 
       it 'should have an input for hour and minute' do
-        output_buffer.should have_tag('#post_publish_at_4i')
-        output_buffer.should have_tag('#post_publish_at_5i')
+        output_buffer.should have_tag('select#post_publish_at_4i')
+        output_buffer.should have_tag('select#post_publish_at_5i')
+      end
+
+    end
+    
+    describe "with :ignore_date => false" do
+      before do
+        @new_post.stub(:publish_at).and_return(Time.parse('2010-11-07'))
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:publish_at, :as => :time, :ignore_date => false))
+        end)
+      end
+
+      it 'should have a hidden input for day, month and year' do
+        output_buffer.should have_tag('input#post_publish_at_1i')
+        output_buffer.should have_tag('input#post_publish_at_2i')
+        output_buffer.should have_tag('input#post_publish_at_3i')
+        output_buffer.should have_tag('input#post_publish_at_1i[@value="2010"]')
+        output_buffer.should have_tag('input#post_publish_at_2i[@value="11"]')
+        output_buffer.should have_tag('input#post_publish_at_3i[@value="7"]')
+      end
+
+      it 'should have an select for hour and minute' do
+        output_buffer.should have_tag('select#post_publish_at_4i')
+        output_buffer.should have_tag('select#post_publish_at_5i')
       end
 
     end
