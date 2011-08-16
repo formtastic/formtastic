@@ -17,21 +17,6 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.post_install_message = %q{
-  ========================================================================
-  Thanks for installing Formtastic!
-  ------------------------------------------------------------------------
-  You can now (optionally) run the generator to copy a config initializer 
-  (and some stylesheets, in Rails 3.0.x) into your application:
-    rails generate formtastic:install
-
-  Find out more and get involved:
-    http://github.com/justinfrench/formtastic
-    http://rdoc.info/github/justinfrench/formtastic/master/frames
-    http://groups.google.com.au/group/formtastic
-    http://twitter.com/formtastic
-  ========================================================================
-  }
   s.rdoc_options = ["--charset=UTF-8"]
   s.extra_rdoc_files = ["README.textile"]
 
