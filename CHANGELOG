@@ -1,3 +1,25 @@
+2.0.0.rc4
+
+* Fixed that TimeInput was not rendering hidden y/m/d inputs by default.
+* Fixed test suite under Rails 3.1.0.rc5
+* Fixed false and blank fragment labels on date/time inputs producing unsafe HTML.
+* Fixed that inputs were 'required' withput considering `:on => :create` validations
+* Fixed that collections of strings in CheckBoxesInput were ot being correctly checked be checked if they match the model
+* Fixed that the required attribute was added to the choices in a :radio or :check_boxes input, instead of just the parent input wrapper
+* Fixed semantic_fields_for when used with a hash-like model
+* Fixed that models without defined validations (even if validators_on exists) should not be considered required
+* Fixed min/max attributes when the validation uses a Proc
+* Fixed that inputs should not be considered required if :allow_blank => true is set on validates_inclusion_of
+* Fixed that inputs should not be considered required if if either :allow_blank => true, :minimum is > 0, or :within's least value is > 0 is set on validates_length_of 
+* Fixed a typo in the config template
+* Fixed semantic_fields_for to work with Rails 3 *and* 3.1's method sigs (I hope), many thanks to the simple_form guys for figuring this out
+* Changed HTML5 `step` attribute to default to "any" instead of "1"
+* Added CarrierWave support for to file input detection
+* Added a configuration 'perform_browser_validations' to opt out of HTML5 browser validations.
+* Added more support for mongo documents, including MongoMapper-specific reflection capability
+* Added IE specific stylesheets & moved those styles out of main stylesheet, include them yourself if needed
+* Added a new configuration to opt out of HTML5 required attribute
+
 2.0.0.rc3
 
 * Fixed that .label class was incorrectly applied to <label> tags inside a .choice on radio and checkbox inputs (#599)
