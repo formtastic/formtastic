@@ -44,7 +44,7 @@ end
 
 RCov::VerifyTask.new(:verify_coverage) do |t|
   t.require_exact_threshold = false
-  t.threshold = 95
+  t.threshold = (RUBY_VERSION == "1.8.7" ? 95 : 0)
 end
 
 desc "Run all examples and verify coverage"
