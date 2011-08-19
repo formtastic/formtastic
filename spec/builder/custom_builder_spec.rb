@@ -70,6 +70,13 @@ describe 'Formtastic::Helpers::FormHelper.builder' do
         end
       end
 
+      # See: https://github.com/justinfrench/formtastic/issues/657
+      it "should not conflict with navigasmic" do
+        stub!(:builder).and_return('navigasmic')
+
+        lambda { semantic_form_for(@new_post) }.should_not raise_error(NoMethodError)
+      end
+
     end
 
     describe "fields_for" do
