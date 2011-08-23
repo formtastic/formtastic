@@ -120,10 +120,12 @@ describe 'date input' do
   
   describe "when required" do
     it "should add the required attribute to the input's html options" do
-      concat(semantic_form_for(@new_post) do |builder|
-        concat(builder.input(:title, :as => :date, :required => true))
-      end)
-      output_buffer.should have_tag("select[@required]", :count => 3)
+      with_config :use_required_attribute, true do 
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:title, :as => :date, :required => true))
+        end)
+        output_buffer.should have_tag("select[@required]", :count => 3)
+      end
     end
   end
   

@@ -150,19 +150,25 @@ describe 'boolean input' do
   end
 
   context "when required" do
+    
     it "should add the required attribute to the input's html options" do
-      concat(semantic_form_for(@new_post) do |builder|
-        concat(builder.input(:title, :as => :boolean, :required => true))
-      end)
-      output_buffer.should have_tag("input[@required]")
+      with_config :use_required_attribute, true do
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:title, :as => :boolean, :required => true))
+        end)
+        output_buffer.should have_tag("input[@required]")
+      end
     end
-
+      
     it "should not add the required attribute to the boolean fields input's html options" do
-      concat(semantic_form_for(@new_post) do |builder|
-        concat(builder.input(:title, :as => :boolean))
-      end)
-      output_buffer.should_not have_tag("input[@required]")
+      with_config :use_required_attribute, true do
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:title, :as => :boolean))
+        end)
+        output_buffer.should_not have_tag("input[@required]")
+      end
     end
+    
   end
 
   describe "when namespace is provided" do

@@ -68,10 +68,12 @@ describe 'number input' do
   
   describe "when required" do
     it "should add the required attribute to the input's html options" do
-      concat(semantic_form_for(@new_post) do |builder|
-        concat(builder.input(:title, :as => :number, :required => true))
-      end)
-      output_buffer.should have_tag("input[@required]")
+      with_config :use_required_attribute, true do 
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:title, :as => :number, :required => true))
+        end)
+        output_buffer.should have_tag("input[@required]")
+      end
     end
   end
   
