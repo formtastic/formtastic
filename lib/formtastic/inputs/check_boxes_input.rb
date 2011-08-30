@@ -81,14 +81,14 @@ module Formtastic
       include Base
       include Base::Collections
       include Base::Choices
-      
+
       def to_html
         input_wrapping do
           choices_wrapping do
             legend_html <<
             hidden_field_for_all <<
             choices_group_wrapping do
-              collection.map { |choice| 
+              collection.map { |choice|
                 choice_wrapping(choice_wrapping_html_options(choice)) do
                   choice_html(choice)
                 end
@@ -97,17 +97,17 @@ module Formtastic
           end
         end
       end
-      
-      def choice_html(choice)        
+
+      def choice_html(choice)
         template.content_tag(:label,
-          hidden_fields? ? 
-            check_box_with_hidden_input(choice) : 
+          hidden_fields? ?
+            check_box_with_hidden_input(choice) :
             check_box_without_hidden_input(choice) <<
           choice_label(choice),
           label_html_options.merge(:for => choice_input_dom_id(choice), :class => nil)
         )
       end
-      
+
       def hidden_field_for_all
         if hidden_fields?
           ""
@@ -118,62 +118,67 @@ module Formtastic
           template.hidden_field_tag(input_name, '', options)
         end
       end
-      
+
       def hidden_fields?
         options[:hidden_fields]
       end
-      
+
       def check_box_with_hidden_input(choice)
         value = choice_value(choice)
         builder.check_box(
-          association_primary_key || method, 
-          input_html_options.merge(:id => choice_input_dom_id(choice), :name => input_name, :disabled => disabled?(value), :required => false), 
-          value, 
+          association_primary_key || method,
+          input_html_options.merge(:id => choice_input_dom_id(choice), :name => input_name, :disabled => disabled?(value), :required => false),
+          value,
           unchecked_value
         )
       end
-      
+
       def check_box_without_hidden_input(choice)
         value = choice_value(choice)
         template.check_box_tag(
-          input_name, 
-          value, 
-          checked?(value), 
+          input_name,
+          value,
+          checked?(value),
           input_html_options.merge(:id => choice_input_dom_id(choice), :disabled => disabled?(value), :required => false)
-        ) 
+        )
       end
-      
+
       def checked?(value)
         selected_values.include?(value)
       end
-      
+
       def disabled?(value)
         disabled_values.include?(value)
       end
-      
+
       def selected_values
         if object.respond_to?(method)
-          selected_items = [object.send(method)].compact.flatten
+          if options[:collection].nil?
+            selected_items = [object.send(method)].compact.flatten
+          else
+            selected_items = options[:collection].to_a # for error readability
+          end
+
           [*selected_items.map { |o| send_or_call_or_object(value_method, o) }].compact
         else
           []
         end
       end
-      
+
       def disabled_values
         vals = options[:disabled] || []
         vals = [vals] unless vals.is_a?(Array)
         vals
       end
-      
+
       def unchecked_value
         options[:unchecked_value] || ''
       end
-      
+
       def input_name
         "#{object_name}[#{association_primary_key || method}][]"
       end
-      
+
     end
   end
 end

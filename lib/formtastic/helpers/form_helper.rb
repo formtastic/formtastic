@@ -175,7 +175,7 @@ module Formtastic
           self.fields_for(record_name, record_object, options, &block)
         end
       end
-      
+
       protected
 
       # Override the default ActiveRecordHelper behaviour of wrapping the input.

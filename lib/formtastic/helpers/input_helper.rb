@@ -1,12 +1,13 @@
+# -*- coding: utf-8 -*-
 module Formtastic
   module Helpers
-    
-    # {#input} is used to render all content (labels, form widgets, error messages, hints, etc) for 
-    # a single form input (or field), usually representing a single method or attribute on the 
+
+    # {#input} is used to render all content (labels, form widgets, error messages, hints, etc) for
+    # a single form input (or field), usually representing a single method or attribute on the
     # form's object or model.
     #
-    # The content is wrapped in an `<li>` tag, so it's usually called inside an {Formtastic::Helpers::InputsHelper#inputs inputs} block 
-    # (which renders an `<ol>` inside a `<fieldset>`), which should be inside a {Formtastic::Helpers::FormHelper#semantic_form_for `semantic_form_for`} 
+    # The content is wrapped in an `<li>` tag, so it's usually called inside an {Formtastic::Helpers::InputsHelper#inputs inputs} block
+    # (which renders an `<ol>` inside a `<fieldset>`), which should be inside a {Formtastic::Helpers::FormHelper#semantic_form_for `semantic_form_for`}
     # block:
     #
     #     <%= semantic_form_for @post do |f| %>
@@ -37,7 +38,7 @@ module Formtastic
     module InputHelper
       include Formtastic::Helpers::Reflection
       include Formtastic::Helpers::FileColumnDetection
-      
+
       # Returns a chunk of HTML markup for a given `method` on the form object, wrapped in
       # an `<li>` wrapper tag with appropriate `class` and `id` attribute hooks for CSS and JS.
       # In many cases, the contents of the wrapper will be as simple as a `<label>` and an `<input>`:
@@ -105,9 +106,9 @@ module Formtastic
       # * `:time`         (see {Inputs::TimeInput})
       # * `:url`          (see {Inputs::UrlInput})
       #
-      # Calling `:as => :string` (for example) will call `#to_html` on a new instance of 
+      # Calling `:as => :string` (for example) will call `#to_html` on a new instance of
       # `Formtastic::Inputs::StringInput`. Before this, Formtastic will try to instantiate a top-level
-      # namespace StringInput, meaning you can subclass and modify `Formtastic::Inputs::StringInput` 
+      # namespace StringInput, meaning you can subclass and modify `Formtastic::Inputs::StringInput`
       # in `app/inputs/`. This also means you can create your own new input types in `app/inputs/`.
       #
       # @todo document the "guessing" of input style
@@ -233,7 +234,7 @@ module Formtastic
       # @example Modifying an input to suit your needs in `app/inputs`:
       #   class StringInput < Formtastic::Inputs::StringInput
       #     def to_html
-      #       puts "this is my custom version of StringInput"      
+      #       puts "this is my custom version of StringInput"
       #       super
       #     end
       #   end
@@ -260,13 +261,14 @@ module Formtastic
       def input(method, options = {})
         options = options.dup # Allow options to be shared without being tainted by Formtastic
         options[:as] ||= default_input_type(method, options)
-      
+
         klass = input_class(options[:as])
+
         klass.new(self, template, @object, @object_name, method, options).to_html
       end
-      
+
       protected
-      
+
       # First try if we can detect special things like :file. With CarrierWave the method does have
       # an underlying column so we don't want :string to get selected.
       #
@@ -314,7 +316,7 @@ module Formtastic
           return :string
         end
       end
-      
+
       # Get a column object for a specified attribute method - if possible.
       def column_for(method) #:nodoc:
         @object.column_for_attribute(method) if @object.respond_to?(:column_for_attribute)
@@ -352,7 +354,7 @@ module Formtastic
           end
         end
       end
-      
+
       # :as => :string # => StringInput
       def custom_input_class_name(as)
         "#{as.to_s.camelize}Input"
