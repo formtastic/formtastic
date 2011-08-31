@@ -393,5 +393,24 @@ describe 'check_boxes input' do
     it_should_have_input_wrapper_with_id("context2_author_posts_input")
   end
 
+  describe "when collection is an array" do
+    before do
+      @output_buffer = ''
+      @_collection = [["First", 1], ["Second", 2]]
+      mock_everything
+
+      concat(semantic_form_for(@fred) do |builder|
+        concat(builder.input(:posts, :as => :check_boxes, :collection => @_collection))
+      end)
+    end
+
+    it "should use array items for labels and values" do
+      @_collection.each do |post|
+        output_buffer.should have_tag('form li fieldset ol li label', /#{post.first}/)
+        output_buffer.should have_tag("form li fieldset ol li label[@for='author_post_ids_#{post.last}']")
+      end
+    end
+  end
+  
 end
 
