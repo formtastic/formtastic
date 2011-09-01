@@ -461,7 +461,7 @@ describe 'Formtastic::FormBuilder#commit_button' do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.commit_button('text'))
         end)
-        output_buffer.should have_tag("form li.commit")
+        output_buffer.should have_tag("form li.commit.button")
       end
     end
 
