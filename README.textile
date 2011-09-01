@@ -7,9 +7,8 @@ Formtastic is a Rails FormBuilder DSL (with some other goodies) to make it far e
 
 h2. Compatibility
 
-* Formtastic 1.x is compatible with both Rails 2 and 3, and is being maintained for bug fixes in the the "1.2-stable branch":https://github.com/justinfrench/formtastic/tree/1.2-stable.
-* Formtastic 2.0 will be Rails 3.x compatible only
-* If you're bundling Formtastic from edge/master, get ready for a bumpy ride. Try the "1.2-stable branch":https://github.com/justinfrench/formtastic/tree/1.2-stable.
+* Formtastic 2.0 is Rails 3.x compatible only
+* Formtastic 1.x is compatible with both Rails 2 and 3, and is being maintained for bug fixes in the the "1.2-stable branch":https://github.com/justinfrench/formtastic/tree/1.2-stable. View the README in that branch for installation instructions, etc.
 * Formtastic, much like Rails, is very ActiveRecord-centric. Many are successfully using other ActiveModel-like ORMs and objects (DataMapper, MongoMapper, Mongoid, Authlogic, Devise...) but we're not guaranteeing full compatibility at this stage. Patches are welcome!
  
 
@@ -94,16 +93,10 @@ h2. Installation
 Simply add Formtastic to your Gemfile and bundle it up:
 
 <pre>
-  gem 'formtastic', '~> 1.2.3'
+  gem 'formtastic'
 </pre>
 
-If you want to try out our work towards Formtastic 2.0 (Rails 3.x only):
-
-<pre>
-  gem 'formtastic', '2.0.0.rc1'
-</pre>
-
-Run the installation generator to copy a stylesheet (Rails 3.0.x only) and a configuration initializer into your application:
+Run the installation generator:
 
 <pre>
   $ rails generate formtastic:install 
@@ -419,8 +412,6 @@ Formtastic supports localized *labels*, *hints*, *legends*, *actions* using the 
         dummie: "Launch!"
 </pre>
 
-*Note:* We are using English here still, but you get the point.
-
 *3. ...and now you'll get:*
 
 <pre>
@@ -531,11 +522,6 @@ You can show errors on base (by default) and any other attribute just passing it
 </pre>
 
 
-h2. Configuration
-
-Run @rails generate formtastic:install@ to copy a commented out config file into @config/initializers/formtastic.rb@. You can "view the configuration file on GitHub":http://github.com/justinfrench/formtastic/blob/master/lib/generators/templates/formtastic.rb
-
-
 h2. Modified & Custom Inputs
 
 If you want to change the behaviour of an input, you can subclass it in your app. For example, to tweak @StringInput@, create a new file @app/inputs/string_input.rb@:
@@ -572,12 +558,12 @@ To create your own new types of inputs from scratch:
   end
 </pre>
 
-It was previously advised to subclass Formtastic::FormBuilder to add your own inputs. This is no longer advised, and may not work as expected.
+It was previously recommended in Formtastic 1.x to subclass Formtastic::FormBuilder to add your own inputs. This is no longer recommended in Formtastic 2, and will not work as expected.
 
 
 h2. Security
 
-By default formtastic escapes html entities in both labels and hints unless a string is marked as html_safe. If you are using an older rails version which doesn't know html_safe, or you want to globally turn this feature off, you can set the following in your initializer:
+By default Formtastic escapes html entities in both labels and hints unless a string is marked as html_safe. If you are using an older rails version which doesn't know html_safe, or you want to globally turn this feature off, you can set the following in your initializer:
 
 Formtastic::FormBuilder.escape_html_entities_in_hints_and_labels = false
 
