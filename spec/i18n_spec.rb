@@ -3,7 +3,9 @@ require 'spec_helper'
 
 describe 'Formtastic::I18n' do
 
-  FORMTASTIC_KEYS = [:required, :yes, :no, :create, :update].freeze
+  unless defined?(FORMTASTIC_KEYS)
+    FORMTASTIC_KEYS = [:required, :yes, :no, :create, :update].freeze
+  end
 
   it "should be defined" do
     lambda { Formtastic::I18n }.should_not raise_error(::NameError)
