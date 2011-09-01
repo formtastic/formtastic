@@ -67,7 +67,7 @@ module FormtasticSpecHelper
   def active_model_inclusion_validator(attributes, options = {})
     active_model_validator(:inclusion, attributes, options)
   end
-  
+
   def active_model_numericality_validator(attributes, options = {})
     active_model_validator(:numericality, attributes, options)
   end
@@ -93,7 +93,7 @@ module FormtasticSpecHelper
     def persisted?
     end
   end
-  
+
   module ::Namespaced
     class Post
       extend ActiveModel::Naming if defined?(ActiveModel::Naming)
@@ -106,18 +106,18 @@ module FormtasticSpecHelper
       end
     end
   end
-  
+
   class ::Author
     extend ActiveModel::Naming if defined?(ActiveModel::Naming)
     include ActiveModel::Conversion if defined?(ActiveModel::Conversion)
 
     def to_label
     end
-    
+
     def persisted?
     end
   end
-  
+
   class ::HashBackedAuthor < Hash
     extend ActiveModel::Naming if defined?(ActiveModel::Naming)
     include ActiveModel::Conversion if defined?(ActiveModel::Conversion)
@@ -126,34 +126,34 @@ module FormtasticSpecHelper
       'hash backed author'
     end
   end
-  
+
   class ::Continent
     extend ActiveModel::Naming if defined?(ActiveModel::Naming)
     include ActiveModel::Conversion if defined?(ActiveModel::Conversion)
   end
-  
+
   class ::PostModel
     extend ActiveModel::Naming if defined?(ActiveModel::Naming)
     include ActiveModel::Conversion if defined?(ActiveModel::Conversion)
   end
-  
+
   def _routes
     url_helpers = mock('url_helpers')
     url_helpers.stub!(:hash_for_posts_path).and_return({})
     url_helpers.stub!(:hash_for_post_path).and_return({})
     url_helpers.stub!(:hash_for_post_models_path).and_return({})
     url_helpers.stub!(:hash_for_authors_path).and_return({})
-    
-    mock('_routes', 
+
+    mock('_routes',
       :url_helpers => url_helpers,
       :url_for => "/mock/path"
     )
   end
-    
+
   def controller
     mock('controller', :controller_path= => '', :params => {})
   end
-  
+
   def default_url_options
     {}
   end
@@ -171,7 +171,7 @@ module FormtasticSpecHelper
     def author_path(*args); "/authors/1"; end
     def authors_path(*args); "/authors"; end
     def new_author_path(*args); "/authors/new"; end
-    
+
     @fred = ::Author.new
     @fred.stub!(:class).and_return(::Author)
     @fred.stub!(:to_label).and_return('Fred Smith')
@@ -212,6 +212,7 @@ module FormtasticSpecHelper
     @james.stub!(:name).and_return('James')
 
 
+    ::Author.stub!(:scoped).and_return(::Author)
     ::Author.stub!(:find).and_return([@fred, @bob])
     ::Author.stub!(:all).and_return([@fred, @bob])
     ::Author.stub!(:where).and_return([@fred, @bob])
@@ -223,7 +224,7 @@ module FormtasticSpecHelper
     ::Author.stub!(:persisted?).and_return(nil)
 
     @hash_backed_author = HashBackedAuthor.new
-    
+
     # Sometimes we need a mock @post object and some Authors for belongs_to
     @new_post = mock('post')
     @new_post.stub!(:class).and_return(::Post)
@@ -240,7 +241,7 @@ module FormtasticSpecHelper
     @new_post.stub!(:to_key).and_return(nil)
     @new_post.stub!(:to_model).and_return(@new_post)
     @new_post.stub!(:persisted?).and_return(nil)
-    
+
     @freds_post = mock('post')
     @freds_post.stub!(:to_ary)
     @freds_post.stub!(:class).and_return(::Post)
@@ -258,6 +259,7 @@ module FormtasticSpecHelper
     @fred.stub!(:posts).and_return([@freds_post])
     @fred.stub!(:post_ids).and_return([@freds_post.id])
 
+    ::Post.stub!(:scoped).and_return(::Post)
     ::Post.stub!(:human_attribute_name).and_return { |column_name| column_name.humanize }
     ::Post.stub!(:human_name).and_return('Post')
     ::Post.stub!(:reflect_on_all_validations).and_return([])
@@ -291,7 +293,6 @@ module FormtasticSpecHelper
     ::Post.stub!(:persisted?).and_return(nil)
     ::Post.stub!(:to_ary)
 
-
     ::MongoPost.stub!(:human_attribute_name).and_return { |column_name| column_name.humanize }
     ::MongoPost.stub!(:human_name).and_return('MongoPost')
     ::MongoPost.stub!(:associations).and_return do |column_name|
@@ -306,14 +307,14 @@ module FormtasticSpecHelper
     ::MongoPost.stub!(:to_key).and_return(nil)
     ::MongoPost.stub!(:persisted?).and_return(nil)
     ::MongoPost.stub!(:to_ary)
-    ::MongoPost.stub!(:model_name).and_return( mock(:model_name_mock, :singular => "post", :plural => "posts", :param_key => "post", :route_key => "posts") ) 
+    ::MongoPost.stub!(:model_name).and_return( mock(:model_name_mock, :singular => "post", :plural => "posts", :param_key => "post", :route_key => "posts") )
 
     @new_mm_post = mock('mm_post')
     @new_mm_post.stub!(:class).and_return(::MongoPost)
     @new_mm_post.stub!(:id).and_return(nil)
     @new_mm_post.stub!(:new_record?).and_return(true)
     @new_mm_post.stub!(:errors).and_return(mock('errors', :[] => nil))
-    @new_mm_post.stub!(:title).and_return("Hello World")    
+    @new_mm_post.stub!(:title).and_return("Hello World")
     @new_mm_post.stub!(:sub_posts).and_return([]) #TODO should be a mock with methods for adding sub posts
     @new_mm_post.stub!(:to_key).and_return(nil)
     @new_mm_post.stub!(:to_model).and_return(@new_mm_post)
@@ -384,11 +385,11 @@ module FormtasticSpecHelper
       def protect_against_forgery?
         false
       end
-      
+
       def _helpers
         FakeHelpersModule
       end
-      
+
     end
   end
 

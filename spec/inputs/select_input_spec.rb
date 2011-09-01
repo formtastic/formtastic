@@ -208,7 +208,7 @@ describe 'select input' do
     end
 
     it "should call author.find with association conditions" do
-      ::Author.should_receive(:where).with(:active => true)
+      ::Author.should_receive(:scoped).with(:conditions => {:active => true})
 
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:author, :as => :select))
@@ -216,7 +216,8 @@ describe 'select input' do
     end
 
     it "should call author.find with association conditions and find_options conditions" do
-      ::Author.should_receive(:where).with({:active => true, :publisher => true})
+      ::Author.should_receive(:scoped).with(:conditions => {:active => true})
+      ::Author.should_receive(:where).with({:publisher => true})
 
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:author, :as => :select, :find_options => {:conditions => {:publisher => true}}))
@@ -316,11 +317,11 @@ describe 'select input' do
     it 'should have a multi-select select' do
       output_buffer.should have_tag('form li select[@multiple="multiple"]')
     end
-    
+
     it 'should append [] to the name attribute for multiple select' do
       output_buffer.should have_tag('form li select[@multiple="multiple"][@name="author[post_ids][]"]')
     end
-    
+
     it 'should have a select option for each Post' do
       output_buffer.should have_tag('form li select option', :count => ::Post.all.size)
       ::Post.all.each do |post|
@@ -535,7 +536,7 @@ describe 'select input' do
 
   context "when required" do
     it "should add the required attribute to the select's html options" do
-      with_config :use_required_attribute, true do 
+      with_config :use_required_attribute, true do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:author, :as => :select, :required => true))
         end)
