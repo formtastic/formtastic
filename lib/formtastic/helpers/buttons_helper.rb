@@ -238,9 +238,23 @@ module Formtastic
         options = args.extract_options!
         text = options.delete(:label) || args.shift
 
-        if @object && (@object.respond_to?(:persisted?) || @object.respond_to?(:new_record?))
-          key = @object.persisted? ? :update : :create
+        text = (localized_string(commit_button_i18n_key, text, :action, :model => commit_button_object_name) ||
+                Formtastic::I18n.t(commit_button_i18n_key, :model => commit_button_object_name)) unless text.is_a?(::String)
 
+        button_html = options.delete(:button_html) || {}
+        button_html.merge!(:class => [button_html[:class], commit_button_i18n_key].compact.join(' '))
+
+        wrapper_html = options.delete(:wrapper_html) || {}
+        wrapper_html[:class] = (commit_button_wrapper_html_class << wrapper_html[:class]).flatten.compact.join(' ')
+
+        accesskey = (options.delete(:accesskey) || default_commit_button_accesskey) unless button_html.has_key?(:accesskey)
+        button_html = button_html.merge(:accesskey => accesskey) if accesskey
+        
+        template.content_tag(:li, Formtastic::Util.html_safe(submit(text, button_html)), wrapper_html)
+      end
+
+      def commit_button_object_name
+        if new_or_persisted_object?
           # Deal with some complications with ActiveRecord::Base.human_name and two name models (eg UserPost)
           # ActiveRecord::Base.human_name falls back to ActiveRecord::Base.name.humanize ("Userpost")
           # if there's no i18n, which is pretty crappy.  In this circumstance we want to detect this
@@ -254,27 +268,30 @@ module Formtastic
             object_name = (object_human_name == crappy_human_name) ? decent_human_name : object_human_name
           end
         else
-          key = :submit
           object_name = @object_name.to_s.send(label_str_method)
         end
-
-        text = (localized_string(key, text, :action, :model => object_name) ||
-                Formtastic::I18n.t(key, :model => object_name)) unless text.is_a?(::String)
-
-        button_html = options.delete(:button_html) || {}
-        button_html.merge!(:class => [button_html[:class], key].compact.join(' '))
-
-        wrapper_html = options.delete(:wrapper_html) || {}
-        wrapper_html[:class] = (commit_button_wrapper_html_class << wrapper_html[:class]).flatten.compact.join(' ')
-
-        accesskey = (options.delete(:accesskey) || default_commit_button_accesskey) unless button_html.has_key?(:accesskey)
-        button_html = button_html.merge(:accesskey => accesskey) if accesskey
-        template.content_tag(:li, Formtastic::Util.html_safe(submit(text, button_html)), wrapper_html)
+        
+        object_name
       end
       
+      def commit_button_i18n_key
+        if new_or_persisted_object?
+          key = @object.persisted? ? :update : :create
+        else
+          key = :submit
+        end
+
+        key
+      end
+
       def commit_button_wrapper_html_class
         ['commit', 'button'] # TODO: Add class reflecting on form action.
       end
+      
+      def new_or_persisted_object?
+        @object && (@object.respond_to?(:persisted?) || @object.respond_to?(:new_record?))
+      end
+      
     end
   end
 end
