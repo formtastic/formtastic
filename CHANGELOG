@@ -1,6 +1,8 @@
 2.0.0.rc5
 
 * Changed perform_browser_validations and use_required_attribute configuration defaults from true to false for a better out-of-the-box experience and upgrade path
+* Fixed that the `novalidate` attribute was being applied to the `<form>` tag when it shouldn't have been (and vice-versa)
+* Fixed `undefined method `last' for #<Classname>` with a `:collection` containing an array of arrays
 
 2.0.0.rc4
 
