@@ -23,17 +23,17 @@ describe 'Formtastic::I18n' do
   describe "when I18n locales are available" do
 
     before do
-      @formtastic_strings = {
-          :yes            => 'Default Yes',
-          :no             => 'Default No',
-          :create         => 'Default Create %{model}',
-          :update         => 'Default Update %{model}',
-          :custom_scope   => {
-              :duck           => 'Duck',
-              :duck_pond      => '%{ducks} ducks in a pond'
-            }
-        }
-      ::I18n.backend.store_translations :en, :formtastic => @formtastic_strings
+      formtastic_strings = {
+        :yes          => 'Default Yes',
+        :no           => 'Default No',
+        :create       => 'Default Create %{model}',
+        :update       => 'Default Update %{model}',
+        :custom_scope => {
+          :duck      => 'Duck',
+          :duck_pond => '%{ducks} ducks in a pond'
+        },
+      }
+      ::I18n.backend.store_translations :en, :formtastic => formtastic_strings
     end
 
     after do
@@ -57,8 +57,8 @@ describe 'Formtastic::I18n' do
       Formtastic::I18n.t(:duck_pond, :scope => [:custom_scope], :ducks => 15).should == '15 ducks in a pond'
     end
 
-    it "should be possible to override default values" do
-      Formtastic::I18n.t(:required, :default => 'Nothing found!').should == 'Nothing found!'
+    it "should be possible to specify a default when a translation does not exist" do
+      Formtastic::I18n.t(:does_not_exist, :default => 'Nothing found!').should == 'Nothing found!'
     end
 
   end
