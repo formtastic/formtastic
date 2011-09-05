@@ -13,7 +13,7 @@ module Formtastic
 
         def label_and_value_method(_collection, grouped=false)
           sample = _collection.first || _collection.last
-
+          
           case sample
           when Array
             label, value = :first, :last
@@ -73,7 +73,7 @@ module Formtastic
         def collection_for_boolean
           true_text = options[:true] || Formtastic::I18n.t(:yes)
           false_text = options[:false] || Formtastic::I18n.t(:no)
-
+          
           # TODO options[:value_as_class] = true unless options.key?(:value_as_class)
 
           [ [true_text, true], [false_text, false] ]
@@ -82,7 +82,7 @@ module Formtastic
         def send_or_call(duck, object)
           if duck.respond_to?(:call)
             duck.call(object)
-          else
+          elsif object.respond_to? duck.to_sym
             object.send(duck)
           end
         end
