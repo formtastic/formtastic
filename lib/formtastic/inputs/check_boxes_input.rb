@@ -97,7 +97,7 @@ module Formtastic
           end
         end
       end
-
+      
       def choice_html(choice)
         template.content_tag(:label,
           hidden_fields? ?
@@ -142,7 +142,7 @@ module Formtastic
           input_html_options.merge(:id => choice_input_dom_id(choice), :disabled => disabled?(value), :required => false)
         )
       end
-
+      
       def checked?(value)
         selected_values.include?(value)
       end
@@ -153,14 +153,8 @@ module Formtastic
 
       def selected_values
         if object.respond_to?(method)
-          if options[:collection].is_a?(Array) and
-              options[:collection].flatten.all? {|i| i.is_a?(String) or i.is_a?(Integer)}
-
-            selected_items = options[:collection]
-          else
-            selected_items = [object.send(method)].compact.flatten
-          end
-
+          selected_items = [object.send(method)].compact.flatten
+          
           [*selected_items.map { |o| send_or_call_or_object(value_method, o) }].compact
         else
           []
@@ -172,7 +166,7 @@ module Formtastic
         vals = [vals] unless vals.is_a?(Array)
         vals
       end
-
+      
       def unchecked_value
         options[:unchecked_value] || ''
       end
