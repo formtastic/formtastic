@@ -82,7 +82,7 @@ module Formtastic
         def send_or_call(duck, object)
           if duck.respond_to?(:call)
             duck.call(object)
-          else
+          elsif object.respond_to? duck.to_sym
             object.send(duck)
           end
         end
