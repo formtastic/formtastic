@@ -153,10 +153,14 @@ module Formtastic
 
       def selected_values
         if object.respond_to?(method)
-          selected_items = [object.send(method)].compact.flatten
-        elsif options[:collection].is_a?(Array) and
+          if options[:collection].is_a?(Array) and
               options[:collection].flatten.all? {|i| i.is_a?(String) or i.is_a?(Integer)}
+
             selected_items = options[:collection]
+          else
+            selected_items = [object.send(method)].compact.flatten
+          end
+
           [*selected_items.map { |o| send_or_call_or_object(value_method, o) }].compact
         else
           []
