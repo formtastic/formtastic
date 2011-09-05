@@ -410,6 +410,10 @@ describe 'check_boxes input' do
         output_buffer.should have_tag("form li fieldset ol li label[@for='author_post_ids_#{post.last}']")
       end
     end
+
+    it "should not check any items" do
+      output_buffer.should have_tag('form li input[@checked]', :count => 0)
+    end    
   end
   
 end
