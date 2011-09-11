@@ -75,6 +75,16 @@ describe 'select input' do
         end
       end
     end
+    
+    describe 'using a nil name' do
+      before do
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:title, :as => :select, :collection => [], :input_html => {:name => nil}))
+        end)
+      end
+
+      it_should_have_select_with_name("post[title]")
+    end
   end
 
   describe 'for boolean columns' do
