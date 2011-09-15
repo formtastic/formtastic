@@ -847,6 +847,12 @@ module Formtastic #:nodoc:
         label_options[:for] ||= html_options[:id]
         label(method, label_options) << select_html
       end
+      
+      # Outputs a select input for columns of type 'enum'. Collection is taken as column.limit.
+      # This is used with plugins like enum_column
+      def enum_input(method, options)
+        select_input(method, options.merge({:collection => column_for(method).limit}))
+      end
 
       # Outputs a timezone select input as Rails' time_zone_select helper. You
       # can give priority zones as option.
