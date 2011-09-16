@@ -8,10 +8,11 @@ module Formtastic
     DEFAULT_VALUES = YAML.load_file(File.expand_path("../../locale/en.yml", __FILE__))["en"]["formtastic"].freeze
     SCOPES = [
         '%{model}.%{nested_model}.%{action}.%{attribute}',
-        '%{model}.%{action}.%{attribute}',
         '%{model}.%{nested_model}.%{attribute}',
-        '%{model}.%{attribute}',
+        '%{nested_model}.%{action}.%{attribute}',
         '%{nested_model}.%{attribute}',
+        '%{model}.%{action}.%{attribute}',
+        '%{model}.%{attribute}',
         '%{attribute}'
       ]
 
