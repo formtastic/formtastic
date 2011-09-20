@@ -80,7 +80,7 @@ h2. Opinions
 * it should be easier to do things the right way than the wrong way.
 * sometimes _more mark-up_ is better.
 * elements and attribute hooks are _gold_ for stylesheet authors.
-* make the common things we do easy, yet still ensure uncommon things are still possible.
+* make the common things we do easy, yet ensure uncommon things are still possible.
 
 
 h2. Documentation
