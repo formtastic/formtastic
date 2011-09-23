@@ -50,7 +50,7 @@ One day, I finally had enough, so I opened up my text editor, and wrote a DSL fo
 I also wrote the accompanying HTML output I expected, favoring something very similar to the fieldsets, lists and other semantic elements Aaron Gustafson presented in "Learning to Love Forms":http://www.slideshare.net/AaronGustafson/learning-to-love-forms-web-directions-south-07, hacking together enough Ruby to prove it could be done.
 
 
-h2. It's better than _SomeOtherFormBuilder_ because...
+h2. It's awesome because...
 
 * it can handle @belongs_to@ associations (like Post belongs_to :author), rendering a select or set of radio inputs with choices from the parent model.
 * it can handle @has_many@ and @has_and_belongs_to_many@ associations (like: Post has_many :tags), rendering a multi-select with choices from the child models.
@@ -63,16 +63,6 @@ h2. It's better than _SomeOtherFormBuilder_ because...
 * it's got absolutely awesome spec coverage.
 * there's a bunch of people using and working on it (it's not just one developer building half a solution).
 * it has growing HTML5 support (new inputs like email/phone/search, new attributes like required/min/max/step/placeholder)
-
-
-h2. Why?
-
-* web apps = lots of forms.
-* forms are so friggin' boring to code.
-* semantically rich & accessible forms really are possible.
-* the "V" is way behind the "M" and "C" in Rails' MVC – it's the ugly sibling.
-* best practices and common patterns have to start somewhere.
-* i need a challenge.
 
 
 h2. Opinions
@@ -158,9 +148,9 @@ This renders a set of inputs (one for _most_ columns in the database table, and 
   <% end %>
 </pre>
 
-This is a great way to get something up fast, but like scaffolding, it's not recommended for production.
+This is a great way to get something up fast, but like scaffolding, it's *not recommended for production*. Don't be so lazy!
 
-You probably want to specify the order of the fields, skip some of the fields or even add in fields that Formtastic couldn't detect, you can pass in a list of field names to @inputs@ and list of button names to @buttons@:
+To specify the order of the fields, skip some of the fields or even add in fields that Formtastic couldn't infer. You can pass in a list of field names to @inputs@ and list of button names to @buttons@:
 
 <pre>
   <%= semantic_form_for @user do |form| %>
@@ -169,7 +159,7 @@ You probably want to specify the order of the fields, skip some of the fields or
   <% end %>
 </pre>
 
-You probably want control over the input type Formtastic uses for each field, you can expand the @inputs@ and @buttons@ blocks. This specifies the @:section@ input should be a set of radio buttons (rather than the default select box), and that the @:created_at@ field should be a string (rather than the default datetime selects):
+You probably want control over the input type Formtastic uses for each field. You can expand the @inputs@ and @buttons@ to block helper format and use the @:as@ option to specify an exact input type:
 
 <pre>
   <%= semantic_form_for @post do |form| %>
