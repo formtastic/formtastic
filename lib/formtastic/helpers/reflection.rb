@@ -8,7 +8,7 @@ module Formtastic
         if @object.class.respond_to?(:reflect_on_association)
           @object.class.reflect_on_association(method) 
         elsif @object.class.respond_to?(:associations) # MongoMapper uses the 'associations(method)' instead
-          @object.class.associations(method) 
+          @object.class.associations[method]
         end
       end
 

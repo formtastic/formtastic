@@ -321,7 +321,7 @@ module Formtastic
                 raise PolymorphicInputWithoutCollectionError.new("Please provide a collection for :#{method} input (you'll need to use block form syntax). Inputs for polymorphic associations can only be used when an explicit :collection is provided.")
               end
             elsif @object.class.respond_to?(:associations)
-              if (@object.class.associations(method.to_sym) && @object.class.associations(method.to_sym).options[:polymorphic] == true)
+              if (@object.class.associations[method.to_sym] && @object.class.associations[method.to_sym].options[:polymorphic] == true)
                 raise PolymorphicInputWithoutCollectionError.new("Please provide a collection for :#{method} input (you'll need to use block form syntax). Inputs for polymorphic associations can only be used when an explicit :collection is provided.")
               end            
             end            
