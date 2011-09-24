@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.rubygems_version = %q{1.3.6}
 
-  s.add_dependency(%q<rails>, ["~> 3.0"])
+  s.add_dependency(%q<railties>, ["~> 3.0"])
 
   s.add_development_dependency(%q<rspec-rails>, ["~> 2.5"])
   s.add_development_dependency(%q<rspec_tag_matchers>, [">= 1.0.0"])
