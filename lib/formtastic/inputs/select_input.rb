@@ -194,7 +194,7 @@ module Formtastic
       end
       
       def multiple_by_options?
-        options[:multiple]
+        options[:input_html] && options[:input_html][:multiple]
       end
       
       def multiple?
