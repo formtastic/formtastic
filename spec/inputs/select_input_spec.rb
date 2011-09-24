@@ -471,6 +471,16 @@ describe 'select input' do
     it 'should still generate a valid name attribute' do
       output_buffer.should have_tag("form li select[@name='project[author_name]']")
     end
+    
+    describe 'and :multiple is set to true' do
+      it "should make the select a multi-select" do
+        concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
+          concat(builder.input(:author_name, :as => :select, :input_html => {:multiple => true} ))
+        end)
+        output_buffer.should have_tag("form li select[@multiple]")
+      end
+    end
+    
   end
 
   describe 'when a grouped collection collection is given' do
