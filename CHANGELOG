@@ -1,3 +1,11 @@
+2.0.0
+
+* Fixed that all check boxes were incorrectly checked if an Array was passed in to :collection 
+* Improved README 
+* Added form generator template for Slim template engine
+* Added support for Proc conditions in collection_from_association
+* Refactored commit button. Split it into a couple of different methods to make it easier to override.
+
 2.0.0.rc5
 
 * Changed perform_browser_validations and use_required_attribute configuration defaults from true to false for a better out-of-the-box experience and upgrade path
