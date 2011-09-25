@@ -1,8 +1,6 @@
 # encoding: utf-8
 require 'rubygems'
-require 'bundler'
-Bundler.setup
-
+require 'bundler/setup'
 require 'active_support'
 require 'action_pack'
 require 'action_view'
