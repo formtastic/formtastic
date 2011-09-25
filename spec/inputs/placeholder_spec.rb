@@ -19,9 +19,6 @@ describe 'string input' do
     [:email, :number, :password, :phone, :search, :string, :url, :text].each do |type|
       
       describe "for #{type} inputs" do
-        before do
-          @text_or_textarea = type == :text ? 'textarea' : 'input'
-        end
         
         describe "when found in i18n" do
           it "should have a placeholder containing i18n text" do
@@ -30,7 +27,7 @@ describe 'string input' do
               concat(semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title, :as => type))
               end)
-              output_buffer.should have_tag(@text_or_textarea+'[placeholder="War and Peace"]')
+              output_buffer.should have_tag((type == :text ? 'textarea' : 'input') + '[@placeholder="War and Peace"]')
             end
           end
         end
@@ -40,7 +37,7 @@ describe 'string input' do
             concat(semantic_form_for(@new_post) do |builder|
               concat(builder.input(:title, :as => type))
             end)
-            output_buffer.should_not have_tag(@text_or_textarea+'[placeholder]')
+            output_buffer.should_not have_tag((type == :text ? 'textarea' : 'input') + '[@placeholder]')
           end
         end
         
@@ -51,7 +48,7 @@ describe 'string input' do
               concat(semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title, :as => type, :input_html => { :placeholder => "Foo" }))
               end)
-              output_buffer.should have_tag(@text_or_textarea+'[placeholder="Foo"]')
+              output_buffer.should have_tag((type == :text ? 'textarea' : 'input') + '[@placeholder="Foo"]')
             end
           end
         end
@@ -61,7 +58,7 @@ describe 'string input' do
             concat(semantic_form_for(@new_post) do |builder|
               concat(builder.input(:title, :as => type, :input_html => { :placeholder => "Untitled" }))
             end)
-            output_buffer.should have_tag(@text_or_textarea+'[placeholder="Untitled"]')
+            output_buffer.should have_tag((type == :text ? 'textarea' : 'input') + '[@placeholder="Untitled"]')
           end
         end
         
