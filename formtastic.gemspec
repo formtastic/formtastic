@@ -32,4 +32,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency(%q<yard>, ["~> 0.6"])
   s.add_development_dependency(%q<rcov>, ["~> 0.9.9"])
   s.add_development_dependency(%q<colored>)
+  s.add_development_dependency(%q<tzinfo>)
 end
