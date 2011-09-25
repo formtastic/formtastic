@@ -1,6 +1,5 @@
 # encoding: utf-8
 require 'spec_helper'
-require 'active_record'
 
 describe 'range input' do
 
