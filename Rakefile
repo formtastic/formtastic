@@ -9,7 +9,7 @@ require 'bundler'
 Bundler::GemHelper.install_tasks
 
 desc 'Default: run unit specs.'
-task :default => :spec_and_verify_coverage
+task :default => :spec
 
 desc 'Generate documentation for the formtastic plugin.'
 Rake::RDocTask.new(:rdoc) do |rdoc|
