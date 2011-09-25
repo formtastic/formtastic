@@ -9,7 +9,6 @@ RSpec.configure do |config|
 end
 
 require "action_controller/railtie"
-require "active_resource/railtie"
 require 'active_model'
 
 # Create a simple rails application for use in testing the viewhelper
