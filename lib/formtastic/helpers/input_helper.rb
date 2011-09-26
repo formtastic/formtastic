@@ -281,8 +281,8 @@ module Formtastic
       # default is a :string, a similar behaviour to Rails' scaffolding.
       def default_input_type(method, options = {}) #:nodoc:
         if @object
-          return :select  if reflection_for(method)
-
+          return :select  if reflection_for(method) || state_field_values(method)
+          
           return :file    if is_file?(method, options)
         end
 
@@ -306,7 +306,7 @@ module Formtastic
             return :datetime
           end
 
-          # Try look for hints in options hash. Quite common senario: Enum keys stored as string in the database.
+          # Try look for hints in options hash. Quite common`` senario: Enum keys stored as string in the database.
           return :select    if column.type == :string && options.key?(:collection)
           # Try 3: Assume the input name will be the same as the column type (e.g. string_input).
           return column.type
