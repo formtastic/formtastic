@@ -86,6 +86,12 @@ module CustomMacros
       end
     end
 
+    def it_should_have_select_with_name(name)
+      it "should have an input named #{name}" do
+        output_buffer.should have_tag("form li select[@name=\"#{name}\"]")
+      end
+    end
+
     def it_should_have_textarea_with_name(name)
       it "should have an input named #{name}" do
         output_buffer.should have_tag("form li textarea[@name=\"#{name}\"]")
