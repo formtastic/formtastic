@@ -17,31 +17,31 @@ h2. The Story
 One day, I finally had enough, so I opened up my text editor, and wrote a DSL for how I'd like to author forms:
 
 <pre>
-  <%= semantic_form_for @article do |form| %>
+  <%= semantic_form_for @article do |f| %>
 
-    <%= form.inputs :name => "Basic" do %>
-      <%= form.input :title %>
-      <%= form.input :body %>
-      <%= form.input :section %>
-      <%= form.input :publication_state, :as => :radio %>
-      <%= form.input :category %>
-      <%= form.input :allow_comments, :label => "Allow commenting on this article" %>
+    <%= f.inputs :name => "Basic" do %>
+      <%= f.input :title %>
+      <%= f.input :body %>
+      <%= f.input :section %>
+      <%= f.input :publication_state, :as => :radio %>
+      <%= f.input :category %>
+      <%= f.input :allow_comments, :label => "Allow commenting on this article" %>
     <% end %>
 
-    <%= form.inputs :name => "Advanced" do %>
-      <%= form.input :keywords, :required => false, :hint => "Example: ruby, rails, forms" %>
-      <%= form.input :extract, :required => false %>
-      <%= form.input :description, :required => false %>
-      <%= form.input :url_title, :required => false %>
+    <%= f.inputs :name => "Advanced" do %>
+      <%= f.input :keywords, :required => false, :hint => "Example: ruby, rails, forms" %>
+      <%= f.input :extract, :required => false %>
+      <%= f.input :description, :required => false %>
+      <%= f.input :url_title, :required => false %>
     <% end %>
 
-    <%= form.inputs :name => "Author", :for => :author do |author_form| %>
+    <%= f.inputs :name => "Author", :for => :author do |author_form| %>
       <%= author_form.input :first_name %>
       <%= author_form.input :last_name %>
     <% end %>
 
-    <%= form.buttons do %>
-      <%= form.commit_button %>
+    <%= f.buttons do %>
+      <%= f.commit_button %>
     <% end %>
 
   <% end %>
@@ -142,9 +142,9 @@ Forms are really boring to code... you want to get onto the good stuff as fast a
 This renders a set of inputs (one for _most_ columns in the database table, and one for each ActiveRecord @belongs_to@-association), followed by a submit button:
 
 <pre>
-  <%= semantic_form_for @user do |form| %>
-    <%= form.inputs %>
-    <%= form.buttons %>
+  <%= semantic_form_for @user do |f| %>
+    <%= f.inputs %>
+    <%= f.buttons %>
   <% end %>
 </pre>
 
@@ -153,25 +153,25 @@ This is a great way to get something up fast, but like scaffolding, it's *not re
 To specify the order of the fields, skip some of the fields or even add in fields that Formtastic couldn't infer. You can pass in a list of field names to @inputs@ and list of button names to @buttons@:
 
 <pre>
-  <%= semantic_form_for @user do |form| %>
-    <%= form.inputs :title, :body, :section, :categories, :created_at %>
-    <%= form.buttons :commit %>
+  <%= semantic_form_for @user do |f| %>
+    <%= f.inputs :title, :body, :section, :categories, :created_at %>
+    <%= f.buttons :commit %>
   <% end %>
 </pre>
 
 You probably want control over the input type Formtastic uses for each field. You can expand the @inputs@ and @buttons@ to block helper format and use the @:as@ option to specify an exact input type:
 
 <pre>
-  <%= semantic_form_for @post do |form| %>
-    <%= form.inputs do %>
-      <%= form.input :title %>
-      <%= form.input :body %>
-      <%= form.input :section, :as => :radio %>
-      <%= form.input :categories %>
-      <%= form.input :created_at, :as => :string %>
+  <%= semantic_form_for @post do |f| %>
+    <%= f.inputs do %>
+      <%= f.input :title %>
+      <%= f.input :body %>
+      <%= f.input :section, :as => :radio %>
+      <%= f.input :categories %>
+      <%= f.input :created_at, :as => :string %>
     <% end %>
-    <%= form.buttons do %>
-      <%= form.commit_button %>
+    <%= f.buttons do %>
+      <%= f.commit_button %>
     <% end %>
   <% end %>
 </pre>
@@ -179,20 +179,20 @@ You probably want control over the input type Formtastic uses for each field. Yo
 If you want to customize the label text, or render some hint text below the field, specify which fields are required/optional, or break the form into two fieldsets, the DSL is pretty comprehensive:
 
 <pre>
-  <%= semantic_form_for @post do |form| %>
-    <%= form.inputs "Basic", :id => "basic" do %>
-      <%= form.input :title %>
-      <%= form.input :body %>
+  <%= semantic_form_for @post do |f| %>
+    <%= f.inputs "Basic", :id => "basic" do %>
+      <%= f.input :title %>
+      <%= f.input :body %>
     <% end %>
-    <%= form.inputs :name => "Advanced Options", :id => "advanced" do %>
-      <%= form.input :slug, :label => "URL Title", :hint => "Created automatically if left blank", :required => false %>
-      <%= form.input :section, :as => :radio %>
-      <%= form.input :user, :label => "Author", :member_label => :full_name %>
-      <%= form.input :categories, :required => false %>
-      <%= form.input :created_at, :as => :string, :label => "Publication Date", :required => false %>
+    <%= f.inputs :name => "Advanced Options", :id => "advanced" do %>
+      <%= f.input :slug, :label => "URL Title", :hint => "Created automatically if left blank", :required => false %>
+      <%= f.input :section, :as => :radio %>
+      <%= f.input :user, :label => "Author", :member_label => :full_name %>
+      <%= f.input :categories, :required => false %>
+      <%= f.input :created_at, :as => :string, :label => "Publication Date", :required => false %>
     <% end %>
-    <%= form.buttons do %>
-      <%= form.commit_button %>
+    <%= f.buttons do %>
+      <%= f.commit_button %>
     <% end %>
   <% end %>
 </pre>
@@ -200,74 +200,74 @@ If you want to customize the label text, or render some hint text below the fiel
 You can create forms for nested resources:
 
 <pre>
-	<%= semantic_form_for [@author, @post] do |form| %>
+	<%= semantic_form_for [@author, @post] do |f| %>
 </pre>
 
 Nested forms are also supported (don't forget your models need to be setup correctly with @accepts_nested_attributes_for@). You can do it in the Rails way:
 
 <pre>
-  <%= semantic_form_for @post do |form| %>
-    <%= form.inputs :title, :body, :created_at %>
-    <%= form.semantic_fields_for :author do |author| %>
+  <%= semantic_form_for @post do |f| %>
+    <%= f.inputs :title, :body, :created_at %>
+    <%= f.semantic_fields_for :author do |author| %>
       <%= author.inputs :first_name, :last_name, :name => "Author" %>
     <% end %>
-    <%= form.buttons %>
+    <%= f.buttons %>
   <% end %>
 </pre>
 
 Or the Formtastic way with the @:for@ option:
 
 <pre>
-  <%= semantic_form_for @post do |form| %>
-    <%= form.inputs :title, :body, :created_at %>
-    <%= form.inputs :first_name, :last_name, :for => :author, :name => "Author" %>
-    <%= form.buttons %>
+  <%= semantic_form_for @post do |f| %>
+    <%= f.inputs :title, :body, :created_at %>
+    <%= f.inputs :first_name, :last_name, :for => :author, :name => "Author" %>
+    <%= f.buttons %>
   <% end %>
 </pre>
 
 When working in has many association, you can even supply @"%i"@ in your fieldset name; they will be properly interpolated with the child index. For example:
 
 <pre>
-  <%= semantic_form_for @post do |form| %>
-    <%= form.inputs %>
-    <%= form.inputs :name => 'Category #%i', :for => :categories %>
-    <%= form.buttons %>
+  <%= semantic_form_for @post do |f| %>
+    <%= f.inputs %>
+    <%= f.inputs :name => 'Category #%i', :for => :categories %>
+    <%= f.buttons %>
   <% end %>
 </pre>
 
 If you have more than one form on the same page, it may lead to HTML invalidation because of the way HTML element id attributes are assigned. You can provide a namespace for your form to ensure uniqueness of id attributes on form elements. The namespace attribute will be prefixed with underscore on the generate HTML id. For example:
 
 <pre>
-  <%= semantic_form_for(@post, :namespace => 'cat_form') do |form| %>
+  <%= semantic_form_for(@post, :namespace => 'cat_form') do |f| %>
     <%= f.inputs do %>
-      <%= form.input :title %>        # id="cat_form_post_title"
-      <%= form.input :body %>         # id="cat_form_post_body"
-      <%= form.input :created_at %>   # id="cat_form_post_created_at"
+      <%= f.input :title %>        # id="cat_form_post_title"
+      <%= f.input :body %>         # id="cat_form_post_body"
+      <%= f.input :created_at %>   # id="cat_form_post_created_at"
     <% end %>
-    <%= form.buttons %>
+    <%= f.buttons %>
   <% end %>
 </pre>
 
 Customize HTML attributes for any input using the @:input_html@ option. Typically this is used to disable the input, change the size of a text field, change the rows in a textarea, or even to add a special class to an input to attach special behavior like "autogrow":http://plugins.jquery.com/project/autogrowtextarea textareas:
 
 <pre>
-  <%= semantic_form_for @post do |form| %>
+  <%= semantic_form_for @post do |f| %>
     <%= f.inputs do %>
-      <%= form.input :title,      :input_html => {  :cols => 10 } %>
-      <%= form.input :body,       :input_html => { :class => 'autogrow', :rows => 10, :cols => 20, :maxlength => 10  } %>
-      <%= form.input :created_at, :input_html => { :disabled => true } %>
+      <%= f.input :title,      :input_html => {  :cols => 10 } %>
+      <%= f.input :body,       :input_html => { :class => 'autogrow', :rows => 10, :cols => 20, :maxlength => 10  } %>
+      <%= f.input :created_at, :input_html => { :disabled => true } %>
     <% end %>
-    <%= form.buttons %>
+    <%= f.buttons %>
   <% end %>
 </pre>
 
 The same can be done for buttons with the @:button_html@ option:
 
 <pre>
-  <%= semantic_form_for @post do |form| %>
+  <%= semantic_form_for @post do |f| %>
     ...
-    <%= form.buttons do %>
-      <%= form.commit_button :button_html => { :class => "primary", :disable_with => 'Wait...' } %>
+    <%= f.buttons do %>
+      <%= f.commit_button :button_html => { :class => "primary", :disable_with => 'Wait...' } %>
     <% end %>
   <% end %>
 </pre>
@@ -275,11 +275,11 @@ The same can be done for buttons with the @:button_html@ option:
 Customize the HTML attributes for the @<li>@ wrapper around every input with the @:wrapper_html@ option hash. There's one special key in the hash: (@:class@), which will actually _append_ your string of classes to the existing classes provided by Formtastic (like @"required string error"@).
 
 <pre>
-  <%= semantic_form_for @post do |form| %>
+  <%= semantic_form_for @post do |f| %>
     <%= f.inputs do %>
-      <%= form.input :title, :wrapper_html => { :class => "important" } %>
-      <%= form.input :body %>
-      <%= form.input :description, :wrapper_html => { :style => "display:none;" } %>
+      <%= f.input :title, :wrapper_html => { :class => "important" } %>
+      <%= f.input :body %>
+      <%= f.input :description, :wrapper_html => { :style => "display:none;" } %>
     <% end %>
     ...
   <% end %>
@@ -288,9 +288,9 @@ Customize the HTML attributes for the @<li>@ wrapper around every input with the
 Customize the default class used for hints on each attribute or globally in the @config/formtastic.rb@ file. Similarly, you can customize the error classes on an attribute level or globally.
 
 <pre>
-  <%= semantic_form_for @post do |form| %>
+  <%= semantic_form_for @post do |f| %>
     <%= f.inputs do %>
-      <%= form.input :title, :hint_class => 'custom-html-class', :error_class => 'custom-error-class' %>
+      <%= f.input :title, :hint_class => 'custom-html-class', :error_class => 'custom-error-class' %>
     <% end %>
   <% end %>
 </pre>
@@ -361,11 +361,11 @@ Formtastic has some neat I18n-features. ActiveRecord object names and attributes
 Basic localization (labels only, with ActiveRecord):
 
 <pre>
-  <%= semantic_form_for @post do |form| %>
+  <%= semantic_form_for @post do |f| %>
     <%= f.inputs do %>
-      <%= form.input :title %>        # => :label => I18n.t('activerecord.attributes.user.title')    or 'Title'
-      <%= form.input :body %>         # => :label => I18n.t('activerecord.attributes.user.body')     or 'Body'
-      <%= form.input :section %>      # => :label => I18n.t('activerecord.attributes.user.section')  or 'Section'
+      <%= f.input :title %>        # => :label => I18n.t('activerecord.attributes.user.title')    or 'Title'
+      <%= f.input :body %>         # => :label => I18n.t('activerecord.attributes.user.body')     or 'Body'
+      <%= f.input :section %>      # => :label => I18n.t('activerecord.attributes.user.section')  or 'Section'
     <% end %>
   <% end %>
 </pre>
@@ -414,14 +414,14 @@ Formtastic supports localized *labels*, *hints*, *legends*, *actions* using the 
 *3. ...and now you'll get:*
 
 <pre>
-  <%= semantic_form_for Post.new do |form| %>
-    <%= form.inputs do %>
-      <%= form.input :title %>      # => :label => "Choose a title...", :hint => "Choose a good title for your post."
-      <%= form.input :body %>       # => :label => "Write something...", :hint => "Write something inspiring here."
-      <%= form.input :section %>    # => :label => I18n.t('activerecord.attributes.user.section')  or 'Section'
+  <%= semantic_form_for Post.new do |f| %>
+    <%= f.inputs do %>
+      <%= f.input :title %>      # => :label => "Choose a title...", :hint => "Choose a good title for your post."
+      <%= f.input :body %>       # => :label => "Write something...", :hint => "Write something inspiring here."
+      <%= f.input :section %>    # => :label => I18n.t('activerecord.attributes.user.section')  or 'Section'
     <% end %>
-    <%= form.buttons do %>
-      <%= form.commit_button %>     # => "Create my %{model}"
+    <%= f.buttons do %>
+      <%= f.commit_button %>     # => "Create my %{model}"
     <% end %>
   <% end %>
 </pre>
@@ -431,8 +431,8 @@ Formtastic supports localized *labels*, *hints*, *legends*, *actions* using the 
 _Note: Slightly different because Formtastic can't guess how you group fields in a form. Legend text can be set with first (as in the sample below) specified value, or :name/:title options - depending on what flavor is preferred._
 
 <pre>
-  <%= semantic_form_for @post do |form| %>
-    <%= form.inputs :post_details do %>   # => :title => "Post details"
+  <%= semantic_form_for @post do |f| %>
+    <%= f.inputs :post_details do %>   # => :title => "Post details"
       # ...
     <% end %>
     # ...
@@ -442,14 +442,14 @@ _Note: Slightly different because Formtastic can't guess how you group fields in
 *5. Override I18n settings:*
 
 <pre>
-  <%= semantic_form_for @post do |form| %>
-    <%= form.inputs do %>
-      <%= form.input :title %>      # => :label => "Choose a title...", :hint => "Choose a good title for your post."
-      <%= form.input :body, :hint => false %>                 # => :label => "Write something..."
-      <%= form.input :section, :label => 'Some section' %>    # => :label => 'Some section'
+  <%= semantic_form_for @post do |f| %>
+    <%= f.inputs do %>
+      <%= f.input :title %>      # => :label => "Choose a title...", :hint => "Choose a good title for your post."
+      <%= f.input :body, :hint => false %>                 # => :label => "Write something..."
+      <%= f.input :section, :label => 'Some section' %>    # => :label => 'Some section'
     <% end %>
-    <%= form.buttons do %>
-      <%= form.commit_button :dummie %>     # => "Launch!"
+    <%= f.buttons do %>
+      <%= f.commit_button :dummie %>     # => "Launch!"
     <% end %>
   <% end %>
 </pre>
@@ -463,14 +463,14 @@ If I18n-lookups is disabled, i.e.:
 ...then you can enable I18n within the forms instead:
 
 <pre>
-  <%= semantic_form_for @post do |form| %>
-    <%= form.inputs do %>
-      <%= form.input :title, :label => true %>      # => :label => "Choose a title..."
-      <%= form.input :body, :label => true %>       # => :label => "Write something..."
-      <%= form.input :section, :label => true %>    # => :label => I18n.t('activerecord.attributes.user.section')  or 'Section'
+  <%= semantic_form_for @post do |f| %>
+    <%= f.inputs do %>
+      <%= f.input :title, :label => true %>      # => :label => "Choose a title..."
+      <%= f.input :body, :label => true %>       # => :label => "Write something..."
+      <%= f.input :section, :label => true %>    # => :label => I18n.t('activerecord.attributes.user.section')  or 'Section'
     <% end %>
-    <%= form.buttons do %>
-      <%= form.commit_button true %>                # => "Update %{model}" (if we are in edit that is...)
+    <%= f.buttons do %>
+      <%= f.commit_button true %>                # => "Update %{model}" (if we are in edit that is...)
     <% end %>
   <% end %>
 </pre>
@@ -515,8 +515,8 @@ h2. Semantic errors
 You can show errors on base (by default) and any other attribute just passing it name to semantic_errors method:
 
 <pre>
-  <%= semantic_form_for @post do |form| %>
-    <%= form.semantic_errors :state %>
+  <%= semantic_form_for @post do |f| %>
+    <%= f.semantic_errors :state %>
   <% end %>
 </pre>
 
