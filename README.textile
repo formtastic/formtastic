@@ -434,7 +434,7 @@ _Note: Slightly different because Formtastic can't guess how you group fields in
 <pre>
   <%= semantic_form_for @post do |form| %>
     <%= form.inputs do %>
-      <%= form.input :title %>      # => :label => "Choose a title...", :hint => "Choose a good title for you post."
+      <%= form.input :title %>      # => :label => "Choose a title...", :hint => "Choose a good title for your post."
       <%= form.input :body, :hint => false %>                 # => :label => "Write something..."
       <%= form.input :section, :label => 'Some section' %>    # => :label => 'Some section'
     <% end %>
@@ -513,7 +513,17 @@ You can show errors on base (by default) and any other attribute just passing it
 
 h2. Modified & Custom Inputs
 
-If you want to change the behaviour of an input, you can subclass it in your app. For example, to tweak @StringInput@, create a new file @app/inputs/string_input.rb@:
+You can modify existing inputs, subclass them, or create your own from scratch. Here's the basic process:
+
+* Create a file in @app/inputs@ with a filename ending in @_input.rb@. For example, @app/inputs/hat_size_input.rb@. Formtastic will automatically look in @app/inputs@ and find the file.
+* In that file, declare a classname ending in @Input@. For example, @class HatSizeInput@. It must have a @to_html@ method for rendering.
+* To use that input, leave off the word "input" in your @as@ statement. For example, @f.input(:size, :as => :hat_size)@
+
+Specific examples follow.
+
+h3. Changing Existing Input Behavior
+
+To modify the behavior of @StringInput@, subclass it in a new file, @app/inputs/string_input.rb@:
 
 <pre>
   class StringInput < Formtastic::Inputs::StringInput
@@ -524,10 +534,13 @@ If you want to change the behaviour of an input, you can subclass it in your app
   end
 </pre>
 
-To create your own new types of inputs based on existing inputs, the process is similar:
+You can use your modified version with @:as => :string@.
+
+h3. Creating New Inputs Based on Existing Ones
+
+To create your own new types of inputs based on existing inputs, the process is similar. For example, to create @FlexibleTextInput@ based on @StringInput@, put the following in @app/inputs/flexible_text_input.rb@:
 
 <pre>
-  # f.input(:body, :as => :flexible_text)
   class FlexibleTextInput < Formtastic::Inputs::StringInput
     def input_html_options
       super.merge(:class => "flexible-text-area")
@@ -535,10 +548,13 @@ To create your own new types of inputs based on existing inputs, the process is 
   end
 </pre>
 
-To create your own new types of inputs from scratch:
+You can use your new input with @:as => :flexible_text@.
+
+h3. Creating New Inputs From Scratch
+
+To create a custom @DatePickerInput@ from scratch, put the following in @app/inputs/date_picker_input.rb@:
 
 <pre>
-  # f.input(:created_at, :as => :date_picker)
   class DatePickerInput
     include Formtastic::Inputs::Base
     def to_html
@@ -546,6 +562,10 @@ To create your own new types of inputs from scratch:
     end
   end
 </pre>
+
+You can use your new input with @:as => :date_picker@.
+
+h3. Don't subclass Formtastic::FormBuilder anymore
 
 It was previously recommended in Formtastic 1.x to subclass Formtastic::FormBuilder to add your own inputs. This is no longer recommended in Formtastic 2, and will not work as expected.
 
