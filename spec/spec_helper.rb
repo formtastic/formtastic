@@ -1,8 +1,6 @@
 # encoding: utf-8
 require 'rubygems'
-require 'bundler'
-Bundler.setup
-
+require 'bundler/setup'
 require 'active_support'
 require 'action_pack'
 require 'action_view'
@@ -295,12 +293,10 @@ module FormtasticSpecHelper
 
     ::MongoPost.stub!(:human_attribute_name).and_return { |column_name| column_name.humanize }
     ::MongoPost.stub!(:human_name).and_return('MongoPost')
-    ::MongoPost.stub!(:associations).and_return do |column_name|
-      case column_name
-      when :sub_posts
-        mock('reflection', :options => {:polymorphic => true}, :klass => ::MongoPost, :macro => :has_many)
-      end
-    end
+    ::MongoPost.stub!(:associations).and_return({
+      :sub_posts => mock('reflection', :options => {:polymorphic => true}, :klass => ::MongoPost, :macro => :has_many),
+      :options => []
+    })
     ::MongoPost.stub!(:find).and_return([@freds_post])
     ::MongoPost.stub!(:all).and_return([@freds_post])
     ::MongoPost.stub!(:where).and_return([@freds_post])

@@ -75,7 +75,7 @@ describe 'select input' do
         end
       end
     end
-    
+
     describe 'using state-fields with CONSTANT' do
       before do
         concat(semantic_form_for(@fred) do |builder|
@@ -90,6 +90,16 @@ describe 'select input' do
           output_buffer.should have_tag("option[@value='#{gender}']", /^#{gender}$/)
         end
       end 
+    end
+    
+    describe 'using a nil name' do
+      before do
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:title, :as => :select, :collection => [], :input_html => {:name => nil}))
+        end)
+      end
+
+      it_should_have_select_with_name("post[title]")
     end
   end
 
@@ -468,20 +478,27 @@ describe 'select input' do
   end
 
   describe 'when no association exists' do
-    before(:each) do
+
+    it 'should still generate a valid name attribute' do
       concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
         concat(builder.input(:author_name, :as => :select, :collection => ::Author.all))
       end)
-    end
-
-    it 'should still generate a valid name attribute' do
       output_buffer.should have_tag("form li select[@name='project[author_name]']")
+    end
+    
+    describe 'and :multiple is set to true through :input_html' do
+      it "should make the select a multi-select" do
+        concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
+          concat(builder.input(:author_name, :as => :select, :input_html => {:multiple => true} ))
+        end)
+        output_buffer.should have_tag("form li select[@multiple]")
+      end
     end
     
     describe 'and :multiple is set to true' do
       it "should make the select a multi-select" do
         concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
-          concat(builder.input(:author_name, :as => :select, :input_html => {:multiple => true} ))
+          concat(builder.input(:author_name, :as => :select, :multiple => true, :collection => ["Fred", "Bob"]))
         end)
         output_buffer.should have_tag("form li select[@multiple]")
       end

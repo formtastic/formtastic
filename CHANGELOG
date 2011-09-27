@@ -1,3 +1,7 @@
+HEAD
+
+* Fixed that MongoMapper does not use `associations(method)`. `.associations` is an accessor.
+
 2.0.0
 
 * Fixed that all check boxes were incorrectly checked if an Array was passed in to :collection 

@@ -52,25 +52,25 @@ I also wrote the accompanying HTML output I expected, favoring something very si
 
 h2. It's awesome because...
 
-* it can handle @belongs_to@ associations (like Post belongs_to :author), rendering a select or set of radio inputs with choices from the parent model.
-* it can handle @has_many@ and @has_and_belongs_to_many@ associations (like: Post has_many :tags), rendering a multi-select with choices from the child models.
-* it's Rails 3 compatible (including nested forms).
-* it has internationalization (I18n)!
-* it's _really_ quick to get started with a basic form in place (4 lines), then go back to add in more detail if you need it.
-* there's heaps of elements, id and class attributes for you to hook in your CSS and JS.
-* it handles real world stuff like inline hints, inline error messages & help text.
-* it doesn't hijack or change any of the standard Rails form inputs, so you can still use them as expected (even mix and match).
-* it's got absolutely awesome spec coverage.
-* there's a bunch of people using and working on it (it's not just one developer building half a solution).
-* it has growing HTML5 support (new inputs like email/phone/search, new attributes like required/min/max/step/placeholder)
+* It can handle @belongs_to@ associations (like Post belongs_to :author), rendering a select or set of radio inputs with choices from the parent model.
+* It can handle @has_many@ and @has_and_belongs_to_many@ associations (like: Post has_many :tags), rendering a multi-select with choices from the child models.
+* It's Rails 3 compatible (including nested forms).
+* It has internationalization (I18n)!
+* It's _really_ quick to get started with a basic form in place (4 lines), then go back to add in more detail if you need it.
+* There's heaps of elements, id and class attributes for you to hook in your CSS and JS.
+* It handles real world stuff like inline hints, inline error messages & help text.
+* It doesn't hijack or change any of the standard Rails form inputs, so you can still use them as expected (even mix and match).
+* It's got absolutely awesome spec coverage.
+* There's a bunch of people using and working on it (it's not just one developer building half a solution).
+* It has growing HTML5 support (new inputs like email/phone/search, new attributes like required/min/max/step/placeholder)
 
 
 h2. Opinions
 
-* it should be easier to do things the right way than the wrong way.
-* sometimes _more mark-up_ is better.
-* elements and attribute hooks are _gold_ for stylesheet authors.
-* make the common things we do easy, yet ensure uncommon things are still possible.
+* It should be easier to do things the right way than the wrong way.
+* Sometimes _more mark-up_ is better.
+* Elements and attribute hooks are _gold_ for stylesheet authors.
+* Make the common things we do easy, yet ensure uncommon things are still possible.
 
 
 h2. Documentation
@@ -225,7 +225,7 @@ Or the Formtastic way with the @:for@ option:
   <% end %>
 </pre>
 
-When working in has many association, you can even supply @"%i"@ in your fieldset name that it will be properly interpolated with the child index. For example:
+When working in has many association, you can even supply @"%i"@ in your fieldset name; they will be properly interpolated with the child index. For example:
 
 <pre>
   <%= semantic_form_for @post do |form| %>
@@ -235,8 +235,7 @@ When working in has many association, you can even supply @"%i"@ in your fieldse
   <% end %>
 </pre>
 
-If you have more than one form on the same page, it may lead to HTML invalidation because of the way HTML element id attributes are assigned. You can provide
-a namespace for your form to ensure uniqueness of id attributes on form elements. The namespace attribute will be prefixed with underscore on the generate html id. For example:
+If you have more than one form on the same page, it may lead to HTML invalidation because of the way HTML element id attributes are assigned. You can provide a namespace for your form to ensure uniqueness of id attributes on form elements. The namespace attribute will be prefixed with underscore on the generate HTML id. For example:
 
 <pre>
   <%= semantic_form_for(@post, :namespace => 'cat_form') do |form| %>
@@ -247,7 +246,7 @@ a namespace for your form to ensure uniqueness of id attributes on form elements
   <% end %>
 </pre>
 
-Customize HTML attributes for any input using the @:input_html@ option. Typically this is used to disable the input, change the size of a text field, change the rows in a textarea, or even to add a special class to an input to attach special behavior like "autogrow":http://plugins.jquery.com/project/autogrow textareas:
+Customize HTML attributes for any input using the @:input_html@ option. Typically this is used to disable the input, change the size of a text field, change the rows in a textarea, or even to add a special class to an input to attach special behavior like "autogrow":http://plugins.jquery.com/project/autogrowtextarea textareas:
 
 <pre>
   <%= semantic_form_for @post do |form| %>
@@ -269,7 +268,7 @@ The same can be done for buttons with the @:button_html@ option:
   <% end %>
 </pre>
 
-Customize the HTML attributes for the @<li>@ wrapper around every input with the @:wrapper_html@ option hash. There's one special key in the hash (@:class@), which will actually _append_ your string of classes to the existing classes provided by Formtastic (like @"required string error"@).
+Customize the HTML attributes for the @<li>@ wrapper around every input with the @:wrapper_html@ option hash. There's one special key in the hash: (@:class@), which will actually _append_ your string of classes to the existing classes provided by Formtastic (like @"required string error"@).
 
 <pre>
   <%= semantic_form_for @post do |form| %>
@@ -280,7 +279,7 @@ Customize the HTML attributes for the @<li>@ wrapper around every input with the
   <% end %>
 </pre>
 
-Customize the default class used for hints on each attribute or globally in the @config/formtastic.rb@ file. Similarly you can customize the error classes on an attribute level or globally.
+Customize the default class used for hints on each attribute or globally in the @config/formtastic.rb@ file. Similarly, you can customize the error classes on an attribute level or globally.
 
 <pre>
   <%= semantic_form_for @post do |form| %>
@@ -349,7 +348,7 @@ h2. Internationalization (I18n)
 
 h3. Basic Localization
 
-Formtastic got some neat I18n-features. ActiveRecord object names and attributes are, by default, taken from calling @@object.human_name@ and @@object.human_attribute_name(attr)@ respectively. There are a few words specific to Formtastic that can be translated. See @lib/locale/en.yml@ for more information.
+Formtastic has some neat I18n-features. ActiveRecord object names and attributes are, by default, taken from calling @@object.human_name@ and @@object.human_attribute_name(attr)@ respectively. There are a few words specific to Formtastic that can be translated. See @lib/locale/en.yml@ for more information.
 
 Basic localization (labels only, with ActiveRecord):
 
@@ -388,7 +387,7 @@ Formtastic supports localized *labels*, *hints*, *legends*, *actions* using the 
             title: "Edit title"
       hints:
         post:
-          title: "Choose a good title for you post."
+          title: "Choose a good title for your post."
           body: "Write something inspiring here."
       placeholders:
         post:
@@ -407,7 +406,7 @@ Formtastic supports localized *labels*, *hints*, *legends*, *actions* using the 
 <pre>
   <%= semantic_form_for Post.new do |form| %>
     <%= form.inputs do %>
-      <%= form.input :title %>      # => :label => "Choose a title...", :hint => "Choose a good title for you post."
+      <%= form.input :title %>      # => :label => "Choose a title...", :hint => "Choose a good title for your post."
       <%= form.input :body %>       # => :label => "Write something...", :hint => "Write something inspiring here."
       <%= form.input :section %>    # => :label => I18n.t('activerecord.attributes.user.section')  or 'Section'
     <% end %>
@@ -468,7 +467,7 @@ If I18n-lookups is disabled, i.e.:
 
 *6. Advanced I18n lookups*
 
-For more flexible forms; Formtastic find translations using a bottom-up approach taking the following variables in account:
+For more flexible forms; Formtastic finds translations using a bottom-up approach taking the following variables in account:
 
 * @MODEL@, e.g. "post"
 * @ACTION@, e.g. "edit"
@@ -553,7 +552,7 @@ It was previously recommended in Formtastic 1.x to subclass Formtastic::FormBuil
 
 h2. Security
 
-By default Formtastic escapes html entities in both labels and hints unless a string is marked as html_safe. If you are using an older rails version which doesn't know html_safe, or you want to globally turn this feature off, you can set the following in your initializer:
+By default, Formtastic escapes HTML entities in both labels and hints unless a string is marked as html_safe. If you are using an older rails version which doesn't know html_safe, or you want to globally turn this feature off, you can set the following in your initializer:
 
 Formtastic::FormBuilder.escape_html_entities_in_hints_and_labels = false
 
@@ -562,7 +561,7 @@ h2. Dependencies
 
 There are none, but...
 
-* if you want to use the @:country@ input, you'll need to install the "country-select plugin":https://github.com/chrislerum/country_select (or any other country_select plugin with the same API).
+* If you want to use the @:country@ input, you'll need to install the "country-select plugin":https://github.com/chrislerum/country_select (or any other country_select plugin with the same API).
 * "rspec":http://github.com/dchelimsky/rspec/, "rspec_hpricot_matchers":http://rubyforge.org/projects/rspec-hpricot/ and "rcov":http://github.com/relevance/rcov gems (plus any of their own dependencies) are required for the test suite.
 
 
