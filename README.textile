@@ -239,9 +239,11 @@ If you have more than one form on the same page, it may lead to HTML invalidatio
 
 <pre>
   <%= semantic_form_for(@post, :namespace => 'cat_form') do |form| %>
-    <%= form.input :title %>        # id="cat_form_post_title"
-    <%= form.input :body %>         # id="cat_form_post_body"
-    <%= form.input :created_at %>   # id="cat_form_post_created_at"
+    <%= f.inputs do %>
+      <%= form.input :title %>        # id="cat_form_post_title"
+      <%= form.input :body %>         # id="cat_form_post_body"
+      <%= form.input :created_at %>   # id="cat_form_post_created_at"
+    <% end %>
     <%= form.buttons %>
   <% end %>
 </pre>
@@ -250,9 +252,11 @@ Customize HTML attributes for any input using the @:input_html@ option. Typicall
 
 <pre>
   <%= semantic_form_for @post do |form| %>
-    <%= form.input :title,      :input_html => {  :cols => 10 } %>
-    <%= form.input :body,       :input_html => { :class => 'autogrow', :rows => 10, :cols => 20, :maxlength => 10  } %>
-    <%= form.input :created_at, :input_html => { :disabled => true } %>
+    <%= f.inputs do %>
+      <%= form.input :title,      :input_html => {  :cols => 10 } %>
+      <%= form.input :body,       :input_html => { :class => 'autogrow', :rows => 10, :cols => 20, :maxlength => 10  } %>
+      <%= form.input :created_at, :input_html => { :disabled => true } %>
+    <% end %>
     <%= form.buttons %>
   <% end %>
 </pre>
@@ -272,9 +276,11 @@ Customize the HTML attributes for the @<li>@ wrapper around every input with the
 
 <pre>
   <%= semantic_form_for @post do |form| %>
-    <%= form.input :title, :wrapper_html => { :class => "important" } %>
-    <%= form.input :body %>
-    <%= form.input :description, :wrapper_html => { :style => "display:none;" } %>
+    <%= f.inputs do %>
+      <%= form.input :title, :wrapper_html => { :class => "important" } %>
+      <%= form.input :body %>
+      <%= form.input :description, :wrapper_html => { :style => "display:none;" } %>
+    <% end %>
     ...
   <% end %>
 </pre>
@@ -283,7 +289,9 @@ Customize the default class used for hints on each attribute or globally in the 
 
 <pre>
   <%= semantic_form_for @post do |form| %>
-    <%= form.input :title, :hint_class => 'custom-html-class', :error_class => 'custom-error-class' %>
+    <%= f.inputs do %>
+      <%= form.input :title, :hint_class => 'custom-html-class', :error_class => 'custom-error-class' %>
+    <% end %>
   <% end %>
 </pre>
 
@@ -354,9 +362,11 @@ Basic localization (labels only, with ActiveRecord):
 
 <pre>
   <%= semantic_form_for @post do |form| %>
-    <%= form.input :title %>        # => :label => I18n.t('activerecord.attributes.user.title')    or 'Title'
-    <%= form.input :body %>         # => :label => I18n.t('activerecord.attributes.user.body')     or 'Body'
-    <%= form.input :section %>      # => :label => I18n.t('activerecord.attributes.user.section')  or 'Section'
+    <%= f.inputs do %>
+      <%= form.input :title %>        # => :label => I18n.t('activerecord.attributes.user.title')    or 'Title'
+      <%= form.input :body %>         # => :label => I18n.t('activerecord.attributes.user.body')     or 'Body'
+      <%= form.input :section %>      # => :label => I18n.t('activerecord.attributes.user.section')  or 'Section'
+    <% end %>
   <% end %>
 </pre>
 
