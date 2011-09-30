@@ -11,3 +11,4 @@ log/*
 Gemfile.lock
 .yardoc
 doc/
+tmp
