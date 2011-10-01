@@ -49,6 +49,7 @@ module Formtastic
         legend  = (html_options[:name] || '').to_s
         legend %= parent_child_index(html_options[:parent]) if html_options[:parent]
         legend  = template.content_tag(:legend, template.content_tag(:span, Formtastic::Util.html_safe(legend))) unless legend.blank?
+        legend
       end
 
       # Gets the nested_child_index value from the parent builder. It returns a hash with each
