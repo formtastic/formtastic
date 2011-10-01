@@ -185,6 +185,10 @@ describe 'check_boxes input' do
       it 'should not generate empty hidden inputs' do
         output_buffer.should_not have_tag("form li fieldset ol li label input[@type='hidden'][@value='']", :count => ::Post.all.length)
       end
+
+      it 'should not generate any hidden inputs' do
+        output_buffer.should_not have_tag("form li fieldset input[@type='hidden']")
+      end
     end
 
     describe 'when :disabled is set' do

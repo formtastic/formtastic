@@ -109,7 +109,9 @@ module Formtastic
       end
 
       def hidden_field_for_all
-        if hidden_fields?
+        show_fantom = options[:hidden_fields]
+        show_fantom = true if show_fantom.nil?
+        unless show_fantom
           ""
         else
           options = {}
