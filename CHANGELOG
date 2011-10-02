@@ -1,3 +1,7 @@
+2.0.1
+
+* fixed that `:multiple => true` wasn't working when no association present
+
 2.0.0
 
 * Fixed that all check boxes were incorrectly checked if an Array was passed in to :collection 
