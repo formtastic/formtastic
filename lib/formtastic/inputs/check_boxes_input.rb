@@ -109,9 +109,7 @@ module Formtastic
       end
 
       def hidden_field_for_all
-        show_fantom = options[:hidden_fields]
-        show_fantom = true if show_fantom.nil?
-        unless show_fantom
+        unless hidden_collection?
           ""
         else
           options = {}
@@ -122,7 +120,13 @@ module Formtastic
       end
 
       def hidden_fields?
-        options[:hidden_fields]
+        render_hidden = options[:hidden_fields]
+        return false if render_hidden == :never
+        render_hidden
+      end
+
+      def hidden_collection?
+        options[:hidden_fields] != :never
       end
 
       def check_box_with_hidden_input(choice)
