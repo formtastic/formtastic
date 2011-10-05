@@ -1,3 +1,7 @@
+2.0.2
+
+* fixed MongoMapper argument errors on associations
+
 2.0.1
 
 * fixed that `:multiple => true` wasn't working when no association present
