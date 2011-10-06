@@ -138,69 +138,70 @@ module Formtastic
       include Base
       include Base::Collections
       include Base::GroupedCollections
-      
+
       def to_html
         input_wrapping do
           label_html <<
           (options[:group_by] ? grouped_select_html : select_html)
         end
       end
-      
+
       def select_html
         builder.select(input_name, collection, input_options, input_html_options)
       end
-      
+
       def grouped_select_html
         builder.grouped_collection_select(
-          input_name, 
+          input_name,
           grouped_collection,
-          group_association, 
+          group_association,
           group_label_method,
-          value_method, 
+          value_method,
           label_method,
-          input_options, 
+          input_options,
           input_html_options
         )
       end
-      
+
       def include_blank?
-        return options[:prompt] if options.key?(:prompt)
-        return options[:include_blank] if options.key?(:include_blank)
-        return true if (single? && builder.include_blank_for_select_by_default)
-        false
+        options.key?(:include_blank) ? !!options[:include_blank] : (single? && builder.include_blank_for_select_by_default)
+      end
+
+      def prompt?
+        !!options[:prompt]
       end
 
       def label_html_options
         super.merge(:for => input_html_options[:id])
       end
-      
+
       def input_options
-        super.merge({:include_blank => include_blank?, :prompt => nil})
+        super.merge :include_blank => include_blank? && !prompt?
       end
-      
+
       def input_html_options
         extra_input_html_options.merge(super)
       end
-      
+
       def extra_input_html_options
         {
           :multiple => multiple?,
           :name => "#{object_name}[#{association_primary_key}]#{'[]' if multiple?}"
         }
       end
-      
+
       def multiple_by_association?
         reflection && [ :has_many, :has_and_belongs_to_many ].include?(reflection.macro)
       end
-      
+
       def multiple_by_options?
         options[:multiple] || (options[:input_html] && options[:input_html][:multiple])
       end
-      
+
       def multiple?
-        multiple_by_options? || multiple_by_association? 
+        multiple_by_options? || multiple_by_association?
       end
-      
+
       def single?
         !multiple?
       end
