@@ -162,21 +162,20 @@ module Formtastic
           input_html_options
         )
       end
-            
+      
       def include_blank?
-        options[:include_blank] == true || (single? && builder.include_blank_for_select_by_default)
-      end      
-
-      def prompt?
-        !!options[:prompt]
-      end      
+        return options[:prompt] if options.key?(:prompt)
+        return options[:include_blank] if options.key?(:include_blank)
+        return true if (single? && builder.include_blank_for_select_by_default)
+        false
+      end
 
       def label_html_options
         super.merge(:for => input_html_options[:id])
       end
       
       def input_options
-        super.merge :include_blank => include_blank? && !prompt?
+        super.merge({:include_blank => include_blank?, :prompt => nil})
       end
       
       def input_html_options

@@ -432,8 +432,7 @@ describe 'select input' do
       output_buffer.should have_tag("form li select option[@value='']", /choose author/, :count => 1)
     end
 
-    it 'should not have a second blank select option' do
-      output_buffer.should have_tag("form li select option[@value='']", :count => 1)
+    it 'should not have a blank select option' do
       output_buffer.should_not have_tag("form li select option[@value='']", "")
     end
   end
