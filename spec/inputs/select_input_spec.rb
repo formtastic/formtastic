@@ -75,7 +75,7 @@ describe 'select input' do
         end
       end
     end
-    
+
     describe 'using a nil name' do
       before do
         concat(semantic_form_for(@new_post) do |builder|
@@ -432,8 +432,8 @@ describe 'select input' do
       output_buffer.should have_tag("form li select option[@value='']", /choose author/, :count => 1)
     end
 
-    it 'should not have a blank select option' do
-      output_buffer.should_not have_tag("form li select option[@value='']", "")
+    it 'should not have a second blank select option' do
+      output_buffer.should have_tag("form li select option[@value='']", :count => 1)
     end
   end
 
@@ -469,7 +469,7 @@ describe 'select input' do
       end)
       output_buffer.should have_tag("form li select[@name='project[author_name]']")
     end
-    
+
     describe 'and :multiple is set to true through :input_html' do
       it "should make the select a multi-select" do
         concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
@@ -478,7 +478,7 @@ describe 'select input' do
         output_buffer.should have_tag("form li select[@multiple]")
       end
     end
-    
+
     describe 'and :multiple is set to true' do
       it "should make the select a multi-select" do
         concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
@@ -487,7 +487,7 @@ describe 'select input' do
         output_buffer.should have_tag("form li select[@multiple]")
       end
     end
-    
+
   end
 
   describe 'when a grouped collection collection is given' do
