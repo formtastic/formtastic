@@ -509,6 +509,13 @@ For more flexible forms; Formtastic finds translations using a bottom-up approac
 
 Values for @labels@/@hints@/@actions@ are can take values: @String@ (explicit value), @Symbol@ (i18n-lookup-key relative to the current "type", e.g. actions:), @true@ (force I18n lookup), @false@ (force no I18n lookup). Titles (legends) can only take: @String@ and @Symbol@ - true/false have no meaning.
 
+h3. Customized Localization
+
+If you want to customize your localization even further, create your own localizer class with a @localize@ method (see @Formtastic::Localizer@ for an example), and in @config/initializers/formtastic.rb@, add a line like this:
+
+<pre>
+    configure :i18n_localizer, MyApp::MyLocalizerClass
+</pre>
 
 h2. Semantic errors
 
