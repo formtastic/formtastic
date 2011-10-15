@@ -1,0 +1,8 @@
+nl:
+  formtastic:
+    :yes: 'Ja'
+    :no: 'Nee'
+    :create: 'Maak %{model} aan'
+    :update: 'Wijzig %{model}'
+    :submit: 'Voeg %{model} toe'
+    :required: 'verplicht'
