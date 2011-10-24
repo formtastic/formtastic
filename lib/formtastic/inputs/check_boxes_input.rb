@@ -152,13 +152,7 @@ module Formtastic
       end
 
       def selected_values
-        if object.respond_to?(method)
-          selected_items = [object.send(method)].compact.flatten
-
-          [*selected_items.map { |o| send_or_call_or_object(value_method, o) }].compact
-        else
-          []
-        end
+        @selected_values ||= make_selected_values
       end
 
       def disabled_values
@@ -175,6 +169,17 @@ module Formtastic
         "#{object_name}[#{association_primary_key || method}][]"
       end
 
+      protected
+
+      def make_selected_values
+        if object.respond_to?(method)
+          selected_items = [object.send(method)].compact.flatten
+
+          [*selected_items.map { |o| send_or_call_or_object(value_method, o) }].compact
+        else
+          []
+        end
+      end
     end
   end
 end
