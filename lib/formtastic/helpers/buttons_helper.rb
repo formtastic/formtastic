@@ -22,7 +22,7 @@ module Formtastic
     #       ...
     #       <fieldset class="buttons">
     #         <ol>
-    #           <li class="commit">
+    #           <li class="commit button">
     #             <input type="submit" name="commit" value="Create Post" class="create">
     #           </li>
     #         </ol>
@@ -76,9 +76,9 @@ module Formtastic
       #
       #     # Output:
       #     <form ...>
-      #       <fieldset class="inputs">
+      #       <fieldset class="buttons">
       #         <ol>
-      #           <li class="commit">
+      #           <li class="commit button">
       #             <input type="submit" ...>
       #           </li>
       #         </ol>
@@ -203,7 +203,11 @@ module Formtastic
       #   <form ...>
       #     ...
       #     <fieldset class="buttons">
-      #       <input name="commit" type="submit" value="Create Post" class="create">
+      #       <ol>
+      #         <li class="commit button">
+      #           <input name="commit" type="submit" value="Create Post" class="create">
+      #         </li>
+      #       </ol>
       #     </fieldset>
       #   </form>
       #
