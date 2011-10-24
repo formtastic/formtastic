@@ -567,7 +567,7 @@ describe 'Formtastic::FormBuilder#inputs' do
             end)
           end)
         end)
-        output_buffer.should have_tag('form > fieldset.inputs > ol > li > fieldset.inputs > ol', count: 2)
+        output_buffer.should have_tag('form > fieldset.inputs > ol > li > fieldset.inputs > ol', :count => 2)
       end
     end
     
