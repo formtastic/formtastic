@@ -556,6 +556,20 @@ describe 'Formtastic::FormBuilder#inputs' do
         output_buffer.should have_tag('form > fieldset.inputs > ol > li > fieldset.inputs > ol > li > fieldset.inputs > ol')
       end
     end
+
+    context "when several are nested" do
+      it "should wrap each of the nested inputs in an li block to maintain HTML validity" do
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.inputs do
+            concat(builder.inputs do
+            end)
+            concat(builder.inputs do
+            end)
+          end)
+        end)
+        output_buffer.should have_tag('form > fieldset.inputs > ol > li > fieldset.inputs > ol', count: 2)
+      end
+    end
     
   end
 
