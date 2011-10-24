@@ -68,6 +68,12 @@
 # i.e. :label => true, or :hint => true (or opposite depending on initialized value)
 # Formtastic::FormBuilder.i18n_lookups_by_default = false
 
+# Specifies the class to use for localization lookups. You can create your own
+# class and use it instead. It must have a `localize` method - see
+# `Formtastic::Localizer` for details. (You may want to inherit from that
+# class to call `super`.)
+# Formtastic::FormBuilder.i18n_localizer = Formtastic::Localizer
+
 # You can add custom inputs or override parts of Formtastic by subclassing Formtastic::FormBuilder and
 # specifying that class here.  Defaults to Formtastic::FormBuilder.
 # Formtastic::Helpers::FormHelper.builder = MyCustomBuilder
