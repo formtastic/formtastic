@@ -1,4 +1,28 @@
 module Formtastic
+  # Implementation for looking up localized values within Formtastic using I18n, if no 
+  # explicit value (like the `:label` option) is set and I18n-lookups are enabled in the
+  # configuration.
+  #
+  # You can subclass this to implement your own Localizer, and configure Formtastic to use this
+  # localizer with:
+  #
+  #   Formtastic::FormBuilder.i18n_localizer
+  #
+  # Enabled/disable i18n lookups completely with:
+  #
+  #   Formtastic::FormBuilder.i18n_lookups_by_default = true/false
+  #
+  # Lookup priority:
+  #
+  #   'formtastic.%{type}.%{model}.%{action}.%{attribute}'
+  #   'formtastic.%{type}.%{model}.%{attribute}'
+  #   'formtastic.%{type}.%{attribute}'
+  #
+  # Example:
+  #
+  #   'formtastic.labels.post.edit.title'
+  #   'formtastic.labels.post.title'
+  #   'formtastic.labels.title'
   class Localizer
 
     attr_accessor :builder
@@ -7,27 +31,6 @@ module Formtastic
       self.builder = current_builder 
     end
 
-    # Internal generic method for looking up localized values within Formtastic
-    # using I18n, if no explicit value is set and I18n-lookups are enabled.
-    #
-    # Enabled/Disable this by setting:
-    #
-    #   Formtastic::FormBuilder.i18n_lookups_by_default = true/false
-    #
-    # Lookup priority:
-    #
-    #   'formtastic.%{type}.%{model}.%{action}.%{attribute}'
-    #   'formtastic.%{type}.%{model}.%{attribute}'
-    #   'formtastic.%{type}.%{attribute}'
-    #
-    # Example:
-    #
-    #   'formtastic.labels.post.edit.title'
-    #   'formtastic.labels.post.title'
-    #   'formtastic.labels.title'
-    #
-    # NOTE: Generic, but only used for form input titles/labels/hints/actions (titles = legends, actions = buttons).
-    #
     def localize(key, value, type, options = {}) #:nodoc:
       key = value if value.is_a?(::Symbol)
 
