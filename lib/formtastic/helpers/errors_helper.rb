@@ -56,62 +56,8 @@ module Formtastic
         end
       end
       
-      # Generates error messages for the given method, used for displaying errors right near the
-      # field for data entry. Uses the `:inline_errors` config to determin the right presentation,
-      # which may be an ordered list, a paragraph sentence containing all errors, or a paragraph
-      # containing just the first error. If configred to `:none`, no error is shown.
-      #
-      # See the `:inline_errors` config documentation for more details.
-      #
-      # This method is mostly used internally, but can be used in your forms when creating your own
-      # custom inputs, so it's been made public and aliased to `errors_on`.
-      #
-      # @example
-      #   <%= semantic_form_for @post do |f| %>
-      #     <li class='my-custom-text-input'>
-      #       <%= f.label(:body) %>
-      #       <%= f.text_field(:body) %>
-      #       <%= f.errors_on(:body) %>
-      #     </li>
-      #   <% end %>
-      #
-      # @deprecated See the README for the currently supported approach to custom inputs.
-      def inline_errors_for(method, options = {})
-        ActiveSupport::Deprecation.warn('inline_errors_for and errors_on are deprecated and will be removed on or after version 2.1', caller)
-        if render_inline_errors?
-          errors = error_keys(method, options).map{|x| @object.errors[x] }.flatten.compact.uniq
-          send(:"error_#{inline_errors}", [*errors], options) if errors.any?
-        else
-          nil
-        end
-      end
-      alias :errors_on :inline_errors_for
-      
-
       protected
       
-      # @deprecated This should be removed with inline_errors_for in 2.1
-      def error_sentence(errors, options = {})
-        error_class = options[:error_class] || default_inline_error_class
-        template.content_tag(:p, Formtastic::Util.html_safe(errors.to_sentence.untaint), :class => error_class)
-      end
-      
-      # @deprecated This should be removed with inline_errors_for in 2.1
-      def error_list(errors, options = {})
-        error_class = options[:error_class] || default_error_list_class
-        list_elements = []
-        errors.each do |error|
-          list_elements <<  template.content_tag(:li, Formtastic::Util.html_safe(error.untaint))
-        end
-        template.content_tag(:ul, Formtastic::Util.html_safe(list_elements.join("\n")), :class => error_class)
-      end
-      
-      # @deprecated This should be removed with inline_errors_for in 2.1
-      def error_first(errors, options = {})
-        error_class = options[:error_class] || default_inline_error_class
-        template.content_tag(:p, Formtastic::Util.html_safe(errors.first.untaint), :class => error_class)
-      end
-
       def error_keys(method, options)
         @methods_for_error ||= {}
         @methods_for_error[method] ||= begin
