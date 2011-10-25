@@ -6,7 +6,6 @@ module Formtastic
   extend ActiveSupport::Autoload
 
   autoload :FormBuilder
-  autoload :SemanticFormBuilder
   autoload :Helpers
   autoload :HtmlAttributes
   autoload :I18n
