@@ -12,16 +12,22 @@ module Formtastic
         @method = method
         @options = options.dup
         
-        warn_and_correct_option!(:label_method, :member_label)
-        warn_and_correct_option!(:value_method, :member_value)
-        warn_and_correct_option!(:group_label_method, :group_label)
+        removed_option!(:label_method)
+        removed_option!(:value_method)
+        removed_option!(:group_label_method)
       end
       
+      # Usefull for deprecating options.
       def warn_and_correct_option!(old_option_name, new_option_name)
         if options.key?(old_option_name)
           ::ActiveSupport::Deprecation.warn("The :#{old_option_name} option is deprecated in favour of :#{new_option_name} and will be removed from Formtastic after 2.0")
           options[new_option_name] = options.delete(old_option_name)
         end
+      end
+      
+      # Usefull for raising an error on previously supported option.
+      def removed_option!(old_option_name)
+        raise ArgumentError, ":#{old_option_name} is no longer available" if options.key?(old_option_name)
       end
       
       extend ActiveSupport::Autoload
