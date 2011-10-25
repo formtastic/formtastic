@@ -163,8 +163,8 @@ module Formtastic
         )
       end
 
-      def include_blank?
-        options.key?(:include_blank) ? !!options[:include_blank] : (single? && builder.include_blank_for_select_by_default)
+      def include_blank
+        options.key?(:include_blank) ? options[:include_blank] : (single? && builder.include_blank_for_select_by_default)
       end
 
       def prompt?
@@ -176,7 +176,7 @@ module Formtastic
       end
 
       def input_options
-        super.merge :include_blank => include_blank? && !prompt?
+        super.merge :include_blank => (include_blank unless prompt?)
       end
 
       def input_html_options
