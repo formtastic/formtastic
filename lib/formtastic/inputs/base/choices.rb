@@ -71,6 +71,7 @@ module Formtastic
           [
             builder.custom_namespace,
             sanitized_object_name,
+            builder.options[:index],
             association_primary_key || method,
             choice_html_safe_value(choice)
           ].compact.reject { |i| i.blank? }.join("_")
