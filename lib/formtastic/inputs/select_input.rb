@@ -186,8 +186,20 @@ module Formtastic
       def extra_input_html_options
         {
           :multiple => multiple?,
-          :name => "#{object_name}[#{association_primary_key}]#{'[]' if multiple?}"
+          :name => multiple? ? input_html_options_name_multiple : input_html_options_name
         }
+      end
+      
+      def input_html_options_name
+        if builder.options.key?(:index)
+          "#{object_name}[#{builder.options[:index]}][#{association_primary_key}]"
+        else
+          "#{object_name}[#{association_primary_key}]"
+        end
+      end
+
+      def input_html_options_name_multiple
+        input_html_options_name + "[]"
       end
 
       def multiple_by_association?
