@@ -26,10 +26,18 @@ module Formtastic
       def hidden_fragments
         if !options[:ignore_date]
           date_fragments.map do |fragment|
-            template.hidden_field_tag("#{object_name}[#{fragment_name(fragment)}]", fragment_value(fragment), :id => fragment_id(fragment), :disabled => input_html_options[:disabled] )
+            template.hidden_field_tag(hidden_field_name(fragment), fragment_value(fragment), :id => fragment_id(fragment), :disabled => input_html_options[:disabled] )
           end.join.html_safe
         else
           super
+        end
+      end
+      
+      def hidden_field_name(fragment)
+        if builder.options.key?(:index)
+          "#{object_name}[#{builder.options[:index]}][#{fragment_name(fragment)}]"
+        else
+          "#{object_name}[#{fragment_name(fragment)}]"
         end
       end
       
