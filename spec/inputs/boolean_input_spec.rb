@@ -184,5 +184,36 @@ describe 'boolean input' do
     it_should_have_an_inline_label_for("context2_post_allow_comments")
 
   end
+  
+  describe "when index is provided" do
+
+    before do
+      @output_buffer = ''
+      mock_everything
+
+      concat(semantic_form_for(@new_post) do |builder|
+        concat(builder.fields_for :author, :index => 3 do |author|
+          concat(author.input(:name, :as => :boolean))
+        end)
+      end)
+    end
+    
+    it 'should index the id of the wrapper' do
+      output_buffer.should have_tag("li#post_author_attributes_3_name_input")
+    end
+    
+    it 'should index the id of the input tag' do
+      output_buffer.should have_tag("input#post_author_attributes_3_name")
+    end
+    
+    it 'should index the name of the hidden input' do
+      output_buffer.should have_tag("input[@type='hidden'][@name='post[author_attributes][3][name]']")
+    end
+
+    it 'should index the name of the checkbox input' do
+      output_buffer.should have_tag("input[@type='checkbox'][@name='post[author_attributes][3][name]']")
+    end
+    
+  end
 
 end

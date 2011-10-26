@@ -84,7 +84,15 @@ module Formtastic
       end
 
       def input_html_options
-        {:name => "#{object_name}[#{method}]"}.merge(super)
+        {:name => input_html_options_name}.merge(super)
+      end
+      
+      def input_html_options_name
+        if builder.options.key?(:index)
+          "#{object_name}[#{builder.options[:index]}][#{method}]"
+        else
+          "#{object_name}[#{method}]"
+        end
       end
 
       def checked?
