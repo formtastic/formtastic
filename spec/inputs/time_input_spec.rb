@@ -202,7 +202,7 @@ describe 'time input' do
 
     before do
       concat(semantic_form_for(@new_post) do |builder|
-        concat(builder.fields_for :author, :index => 3 do |author|
+        concat(builder.fields_for(:author, :index => 3) do |author|
           concat(author.input(:created_at, :as => :time))
         end)
       end)
