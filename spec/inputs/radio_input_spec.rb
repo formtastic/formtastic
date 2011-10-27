@@ -233,5 +233,34 @@ describe 'radio input' do
     end
     it_should_have_input_wrapper_with_id("custom_prefix_post_authors_input")
   end
+  
+  describe "when index is provided" do
+
+    before do
+      @output_buffer = ''
+      mock_everything
+
+      concat(semantic_form_for(@new_post) do |builder|
+        concat(builder.fields_for :author, :index => 3 do |author|
+          concat(author.input(:name, :as => :radio))
+        end)
+      end)
+    end
+    
+    it 'should index the id of the wrapper' do
+      output_buffer.should have_tag("li#post_author_attributes_3_name_input")
+    end
+    
+    it 'should index the id of the select tag' do
+      output_buffer.should have_tag("input#post_author_attributes_3_name_true")
+      output_buffer.should have_tag("input#post_author_attributes_3_name_false")
+    end
+    
+    it 'should index the name of the select tag' do
+      output_buffer.should have_tag("input[@name='post[author_attributes][3][name]']")
+    end
+    
+  end
+  
 
 end

@@ -101,7 +101,6 @@ describe 'date input' do
     end
     
   end
-  
 
   describe ':labels option' do
     fields = [:year, :month, :day]
