@@ -400,7 +400,7 @@ describe 'check_boxes input' do
       mock_everything
 
       concat(semantic_form_for(@fred) do |builder|
-        concat(builder.fields_for @fred.posts.first, :index => 3 do |author|
+        concat(builder.fields_for(@fred.posts.first, :index => 3) do |author|
           concat(author.input(:authors, :as => :check_boxes))
         end)
       end)
