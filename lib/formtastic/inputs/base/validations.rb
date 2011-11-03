@@ -183,7 +183,14 @@ module Formtastic
         end
 
         def column_limit
-          column.limit if column? && column.respond_to?(:limit)
+          if column? && column.respond_to?(:limit)
+            case column.type
+            when :integer
+              (2 ** (column.limit * 8)).to_s.length + 1
+            else
+              column.limit
+            end
+          end
         end
 
         def limit
