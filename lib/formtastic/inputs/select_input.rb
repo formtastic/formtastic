@@ -122,8 +122,8 @@ module Formtastic
     #   <%= f.input :authors, :as => :select, :wrapper_html => { :class => "special" } %>
     #
     # @example Exclude or include the blank option at the top of the select, or change the prompt
-    #   <%= f.input :author, :as => :select, :input_html => { :include_blank => false } %>
-    #   <%= f.input :author, :as => :select, :input_html => { :include_blank => true } %>
+    #   <%= f.input :author, :as => :select, :include_blank => false %>
+    #   <%= f.input :author, :as => :select, :include_blank => true %>
     #   <%= f.input :author, :as => :select, :input_html => { :prompt => "Please select an Author..." } %>
     #
     # @example Group options an `<optgroup>` with the `:group_by` and `:group_label` options (`belongs_to` associations only)
