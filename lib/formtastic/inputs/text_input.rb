@@ -9,16 +9,16 @@ module Formtastic
     #
     #   <%= semantic_form_for(@user) do |f| %>
     #     <%= f.inputs do %>
-    #       <%= f.input :first_name, :as => :string %>
+    #       <%= f.input :first_name, :as => :text %>
     #     <% end %>
     #   <% end %>
     #
     #   <form...>
     #     <fieldset>
     #       <ol>
-    #         <li class="string">
+    #         <li class="text">
     #           <label for="user_first_name">First name</label>
-    #           <input type="text" id="user_first_name" name="user[first_name]">
+    #           <textarea cols="30" id="user_first_name" name="user[first_name]" rows="20"></textarea>
     #         </li>
     #       </ol>
     #     </fieldset>
