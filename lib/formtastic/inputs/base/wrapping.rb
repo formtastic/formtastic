@@ -14,9 +14,16 @@ module Formtastic
         end
         
         def wrapper_html_options
-          opts = options[:wrapper_html] || {}
-          opts[:class] ||= []
-          opts[:class] = [opts[:class].to_s] unless opts[:class].is_a?(Array)
+          opts = (options[:wrapper_html] || {}).dup
+          opts[:class] =
+            case opts[:class]
+            when Array
+              opts[:class].dup
+            when nil
+              []
+            else
+              [opts[:class].to_s]
+            end
           opts[:class] << as
           opts[:class] << "input"
           opts[:class] << "error" if errors?
