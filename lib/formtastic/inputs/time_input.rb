@@ -15,12 +15,8 @@ module Formtastic
         time_fragments
       end
       
-      def value_or_default_value
-        value ? value : Time.current
-      end
-      
       def fragment_value(fragment)
-        value_or_default_value.send(fragment)
+        value ? value.send(fragment) : ""
       end
       
       def hidden_fragments
