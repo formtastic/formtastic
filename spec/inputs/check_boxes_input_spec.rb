@@ -185,6 +185,25 @@ describe 'check_boxes input' do
       it 'should not generate empty hidden inputs' do
         output_buffer.should_not have_tag("form li fieldset ol li label input[@type='hidden'][@value='']", :count => ::Post.all.length)
       end
+
+      it 'should generate collection hidden input' do
+        output_buffer.should have_tag("form input[@type='hidden'][@name='author[post_ids][]']", :count => 1)
+      end
+    end
+
+    describe 'when :hidden_fields is set to :never' do
+      before do
+        @output_buffer = ''
+        mock_everything
+
+        concat(semantic_form_for(@fred) do |builder|
+          concat(builder.input(:posts, :as => :check_boxes, :value_as_class => true, :hidden_fields => :never))
+        end)
+      end
+
+      it 'should not generate any hidden inputs' do
+        output_buffer.should_not have_tag("form li input[@type='hidden']")
+      end
     end
 
     describe 'when :disabled is set' do
