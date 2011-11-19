@@ -166,7 +166,11 @@ module Formtastic
       end
 
       def input_name
-        "#{object_name}[#{association_primary_key || method}][]"
+        if builder.options.key?(:index)
+          "#{object_name}[#{builder.options[:index]}][#{association_primary_key || method}][]"
+        else
+          "#{object_name}[#{association_primary_key || method}][]"
+        end
       end
 
       protected

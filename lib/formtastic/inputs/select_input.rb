@@ -122,8 +122,8 @@ module Formtastic
     #   <%= f.input :authors, :as => :select, :wrapper_html => { :class => "special" } %>
     #
     # @example Exclude or include the blank option at the top of the select, or change the prompt
-    #   <%= f.input :author, :as => :select, :input_html => { :include_blank => false } %>
-    #   <%= f.input :author, :as => :select, :input_html => { :include_blank => true } %>
+    #   <%= f.input :author, :as => :select, :include_blank => false %>
+    #   <%= f.input :author, :as => :select, :include_blank => true %>
     #   <%= f.input :author, :as => :select, :input_html => { :prompt => "Please select an Author..." } %>
     #
     # @example Group options an `<optgroup>` with the `:group_by` and `:group_label` options (`belongs_to` associations only)
@@ -186,8 +186,20 @@ module Formtastic
       def extra_input_html_options
         {
           :multiple => multiple?,
-          :name => "#{object_name}[#{association_primary_key}]#{'[]' if multiple?}"
+          :name => multiple? ? input_html_options_name_multiple : input_html_options_name
         }
+      end
+      
+      def input_html_options_name
+        if builder.options.key?(:index)
+          "#{object_name}[#{builder.options[:index]}][#{association_primary_key}]"
+        else
+          "#{object_name}[#{association_primary_key}]"
+        end
+      end
+
+      def input_html_options_name_multiple
+        input_html_options_name + "[]"
       end
 
       def multiple_by_association?

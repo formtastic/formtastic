@@ -560,6 +560,33 @@ describe 'select input' do
     it_should_have_select_with_id("context2_post_author_ids")
     it_should_have_label_for("context2_post_author_ids")
   end
+  
+  describe "when index is provided" do
+  
+    before do
+      @output_buffer = ''
+      mock_everything
+  
+      concat(semantic_form_for(@new_post) do |builder|
+        concat(builder.fields_for(:author, :index => 3) do |author|
+          concat(author.input(:name, :as => :select))
+        end)
+      end)
+    end
+    
+    it 'should index the id of the wrapper' do
+      output_buffer.should have_tag("li#post_author_attributes_3_name_input")
+    end
+    
+    it 'should index the id of the select tag' do
+      output_buffer.should have_tag("select#post_author_attributes_3_name")
+    end
+    
+    it 'should index the name of the select' do
+      output_buffer.should have_tag("select[@name='post[author_attributes][3][name]']")
+    end
+    
+  end
 
   context "when required" do
     it "should add the required attribute to the select's html options" do

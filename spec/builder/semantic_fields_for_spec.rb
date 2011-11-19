@@ -98,6 +98,20 @@ describe 'Formtastic::FormBuilder#fields_for' do
       end)
       output_buffer.should have_tag('form fieldset.inputs #context2_post_author_1_login_input')
     end
+    
+    it 'should render errors on the nested inputs' do
+      @errors = mock('errors')
+      @errors.stub!(:[]).with(:login).and_return(['oh noes'])
+      @bob.stub!(:errors).and_return(@errors)
+      
+      concat(semantic_form_for(@new_post, :namespace => 'context2') do |builder|
+        concat(builder.semantic_fields_for(@bob) do |nested_builder|
+          concat(nested_builder.inputs(:login))
+        end)
+      end)
+      output_buffer.should =~ /oh noes/
+    end
+    
   end
   
   context "when I rendered my own hidden id input" do 

@@ -76,6 +76,42 @@ describe 'datetime input' do
   
   end
   
+  describe "when index is provided" do
+
+    before do
+      @output_buffer = ''
+      mock_everything
+
+      concat(semantic_form_for(@new_post) do |builder|
+        concat(builder.fields_for(:author, :index => 3) do |author|
+          concat(author.input(:created_at, :as => :datetime))
+        end)
+      end)
+    end
+    
+    it 'should index the id of the wrapper' do
+      output_buffer.should have_tag("li#post_author_attributes_3_created_at_input")
+    end
+    
+    it 'should index the id of the select tag' do
+      output_buffer.should have_tag("select#post_author_attributes_3_created_at_1i")
+      output_buffer.should have_tag("select#post_author_attributes_3_created_at_2i")
+      output_buffer.should have_tag("select#post_author_attributes_3_created_at_3i")
+      output_buffer.should have_tag("select#post_author_attributes_3_created_at_4i")
+      output_buffer.should have_tag("select#post_author_attributes_3_created_at_5i")
+    end
+    
+    it 'should index the name of the select tag' do
+      output_buffer.should have_tag("select[@name='post[author_attributes][3][created_at(1i)]']")
+      output_buffer.should have_tag("select[@name='post[author_attributes][3][created_at(2i)]']")
+      output_buffer.should have_tag("select[@name='post[author_attributes][3][created_at(3i)]']")
+      output_buffer.should have_tag("select[@name='post[author_attributes][3][created_at(4i)]']")
+      output_buffer.should have_tag("select[@name='post[author_attributes][3][created_at(5i)]']")
+    end
+    
+  end
+  
+  
   describe ':labels option' do
     fields = [:year, :month, :day, :hour, :minute]
     fields.each do |field|

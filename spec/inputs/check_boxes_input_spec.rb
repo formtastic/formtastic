@@ -392,6 +392,34 @@ describe 'check_boxes input' do
     it_should_have_input_with_id('context2_author_post_ids_19')
     it_should_have_input_wrapper_with_id("context2_author_posts_input")
   end
+  
+  describe "when index is provided" do
+
+    before do
+      @output_buffer = ''
+      mock_everything
+
+      concat(semantic_form_for(@fred) do |builder|
+        concat(builder.fields_for(@fred.posts.first, :index => 3) do |author|
+          concat(author.input(:authors, :as => :check_boxes))
+        end)
+      end)
+    end
+    
+    it 'should index the id of the wrapper' do
+      output_buffer.should have_tag("li#author_post_3_authors_input")
+    end
+    
+    it 'should index the id of the input tag' do
+      output_buffer.should have_tag("input#author_post_3_author_ids_42")
+    end
+
+    it 'should index the name of the checkbox input' do
+      output_buffer.should have_tag("input[@type='checkbox'][@name='author[post][3][author_ids][]']")
+    end
+    
+  end
+  
 
   describe "when collection is an array" do
     before do

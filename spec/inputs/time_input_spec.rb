@@ -60,6 +60,33 @@ describe 'time input' do
 
     end
 
+    describe "with :ignore_date => false and no initial Time" do
+      before do
+        @new_post.stub(:publish_at)
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:publish_at, :as => :time, :ignore_date => false))
+        end)
+      end
+
+      it 'should have a hidden input for day, month and year' do
+        output_buffer.should have_tag('input#post_publish_at_1i')
+        output_buffer.should have_tag('input#post_publish_at_2i')
+        output_buffer.should have_tag('input#post_publish_at_3i')
+      end
+
+      it 'should not have values in hidden inputs for day, month and year' do
+        output_buffer.should have_tag('input#post_publish_at_1i[@value=""]')
+        output_buffer.should have_tag('input#post_publish_at_2i[@value=""]')
+        output_buffer.should have_tag('input#post_publish_at_3i[@value=""]')
+      end
+
+      it 'should have an select for hour and minute' do
+        output_buffer.should have_tag('select#post_publish_at_4i')
+        output_buffer.should have_tag('select#post_publish_at_5i')
+      end
+
+    end
+
     describe "without seconds" do
       before do
         concat(semantic_form_for(@new_post) do |builder|
@@ -198,4 +225,39 @@ describe 'time input' do
     end
   end
   
+  describe "when index is provided" do
+
+    before do
+      concat(semantic_form_for(@new_post) do |builder|
+        concat(builder.fields_for(:author, :index => 3) do |author|
+          concat(author.input(:created_at, :as => :time))
+        end)
+      end)
+    end
+
+    it 'should index the id of the wrapper' do
+      output_buffer.should have_tag("li#post_author_attributes_3_created_at_input")
+    end
+
+    it 'should index the id of the select tag' do
+      output_buffer.should have_tag("input#post_author_attributes_3_created_at_1i")
+      output_buffer.should have_tag("input#post_author_attributes_3_created_at_2i")
+      output_buffer.should have_tag("input#post_author_attributes_3_created_at_3i")
+      output_buffer.should have_tag("select#post_author_attributes_3_created_at_4i")
+      output_buffer.should have_tag("select#post_author_attributes_3_created_at_5i")
+    end
+
+    it 'should index the name of the select tag' do
+      output_buffer.should have_tag("input[@name='post[author_attributes][3][created_at(1i)]']")
+      output_buffer.should have_tag("input[@name='post[author_attributes][3][created_at(2i)]']")
+      output_buffer.should have_tag("input[@name='post[author_attributes][3][created_at(3i)]']")
+      output_buffer.should have_tag("select[@name='post[author_attributes][3][created_at(4i)]']")
+      output_buffer.should have_tag("select[@name='post[author_attributes][3][created_at(5i)]']")
+    end
+
+  end
+  
 end
+
+
+

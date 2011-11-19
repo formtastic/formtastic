@@ -156,8 +156,16 @@ module Formtastic
         end
         
         def fragment_input_html(fragment)
-          opts = input_options.merge(:prefix => object_name, :field_name => fragment_name(fragment), :default => value, :include_blank => include_blank?)
+          opts = input_options.merge(:prefix => fragment_prefix, :field_name => fragment_name(fragment), :default => value, :include_blank => include_blank?)
           template.send(:"select_#{fragment}", value, opts, input_html_options.merge(:id => fragment_id(fragment)))
+        end
+        
+        def fragment_prefix
+          if builder.options.key?(:index)
+            object_name + "[#{builder.options[:index]}]"
+          else
+            object_name
+          end
         end
         
         # TODO extract to BlankOptions or similar -- Select uses similar code
