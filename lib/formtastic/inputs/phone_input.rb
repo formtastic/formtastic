@@ -18,7 +18,7 @@ module Formtastic
     #       <ol>
     #         <li class="phone">
     #           <label for="user_mobile">Mobile</label>
-    #           <input type="phone" id="user_mobile" name="user[mobile]">
+    #           <input type="tel" id="user_mobile" name="user[mobile]">
     #         </li>
     #       </ol>
     #     </fieldset>
