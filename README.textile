@@ -285,7 +285,7 @@ Customize the HTML attributes for the @<li>@ wrapper around every input with the
   <% end %>
 </pre>
 
-Customize the default class used for hints on each attribute or globally in the @config/formtastic.rb@ file. Similarly, you can customize the error classes on an attribute level or globally.
+Customize the default class used for hints on each attribute or globally in the @config/initializers/formtastic.rb@ file. Similarly, you can customize the error classes on an attribute level or globally.
 
 <pre>
   <%= semantic_form_for @post do |f| %>
