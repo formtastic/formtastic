@@ -488,6 +488,11 @@ describe 'Formtastic::FormBuilder#input' do
             end
           end
 
+          it "should detect :select field for state-fields" do
+            semantic_form_for(::Author.new) do |builder|
+              builder.send(:default_input_type, :gender).should == :select
+            end
+          end
         end
       end
 

@@ -32,6 +32,18 @@ module Formtastic
           method.to_sym
         end
       end
+
+      def state_field_values(method)
+        if @object.class.respond_to?(:state_machines) && @object.class.state_machines[method]
+          machine = @object.class.state_machines[method]
+          return machine.states.keys
+        end
+        const_name = method.to_s.gsub("?", "").pluralize.upcase
+        if @object.class.const_defined?(const_name)
+          return @object.class.const_get(const_name)
+        end
+        nil
+      end
     end
   end
 end

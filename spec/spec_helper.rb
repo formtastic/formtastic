@@ -110,7 +110,7 @@ module FormtasticSpecHelper
   class ::Author
     extend ActiveModel::Naming if defined?(ActiveModel::Naming)
     include ActiveModel::Conversion if defined?(ActiveModel::Conversion)
-
+    GENDERS = %W{Male Female}
     def to_label
     end
 
@@ -270,7 +270,7 @@ module FormtasticSpecHelper
     @freds_post.stub!(:persisted?).and_return(nil)
     @fred.stub!(:posts).and_return([@freds_post])
     @fred.stub!(:post_ids).and_return([@freds_post.id])
-
+    @fred.stub!(:gender).and_return("Male")
     ::Post.stub!(:scoped).and_return(::Post)
     ::Post.stub!(:human_attribute_name).and_return { |column_name| column_name.humanize }
     ::Post.stub!(:human_name).and_return('Post')
