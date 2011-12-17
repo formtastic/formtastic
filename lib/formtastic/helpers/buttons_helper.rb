@@ -246,6 +246,7 @@ module Formtastic
                 Formtastic::I18n.t(commit_button_i18n_key, :model => commit_button_object_name)) unless text.is_a?(::String)
 
         button_html = options.delete(:button_html) || {}
+        button_html[:id] ||= "#{@object_name}_submit"
         button_html.merge!(:class => [button_html[:class], commit_button_i18n_key].compact.join(' '))
 
         wrapper_html = options.delete(:wrapper_html) || {}
@@ -253,7 +254,7 @@ module Formtastic
 
         accesskey = (options.delete(:accesskey) || default_commit_button_accesskey) unless button_html.has_key?(:accesskey)
         button_html = button_html.merge(:accesskey => accesskey) if accesskey
-        
+
         template.content_tag(:li, Formtastic::Util.html_safe(submit(text, button_html)), wrapper_html)
       end
 
@@ -274,10 +275,10 @@ module Formtastic
         else
           object_name = @object_name.to_s.send(label_str_method)
         end
-        
+
         object_name
       end
-      
+
       def commit_button_i18n_key
         if new_or_persisted_object?
           key = @object.persisted? ? :update : :create
@@ -291,11 +292,11 @@ module Formtastic
       def commit_button_wrapper_html_class
         ['commit', 'button'] # TODO: Add class reflecting on form action.
       end
-      
+
       def new_or_persisted_object?
         @object && (@object.respond_to?(:persisted?) || @object.respond_to?(:new_record?))
       end
-      
+
     end
   end
 end
