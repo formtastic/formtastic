@@ -45,16 +45,16 @@ describe 'radio input' do
     end
 
     describe "each choice" do
-      
+
       it 'should not give the choice label the .label class' do
         output_buffer.should_not have_tag('li.choice label.label')
       end
-      
+
       it 'should not add the required attribute to each input' do
         output_buffer.should_not have_tag('li.choice input[@required]')
       end
-      
-      
+
+
       it 'should contain a label for the radio input with a nested input and label text' do
         ::Author.all.each do |author|
           output_buffer.should have_tag('form li fieldset ol li label', /#{author.to_label}/)
@@ -67,7 +67,7 @@ describe 'radio input' do
           output_buffer.should have_tag("form li fieldset ol li.author_#{author.id} label")
         end
       end
-      
+
       it "should have a radio input" do
         ::Author.all.each do |author|
           output_buffer.should have_tag("form li fieldset ol li label input#post_author_id_#{author.id}")
@@ -201,7 +201,7 @@ describe 'radio input' do
       output_buffer.should_not have_tag("legend.label")
       output_buffer.should_not include("&gt;")
     end
-    
+
     it "should not cause escaped HTML" do
       output_buffer.should_not include("&gt;")
     end
@@ -233,7 +233,7 @@ describe 'radio input' do
     end
     it_should_have_input_wrapper_with_id("custom_prefix_post_authors_input")
   end
-  
+
   describe "when index is provided" do
 
     before do
@@ -246,21 +246,37 @@ describe 'radio input' do
         end)
       end)
     end
-    
+
     it 'should index the id of the wrapper' do
       output_buffer.should have_tag("li#post_author_attributes_3_name_input")
     end
-    
+
     it 'should index the id of the select tag' do
       output_buffer.should have_tag("input#post_author_attributes_3_name_true")
       output_buffer.should have_tag("input#post_author_attributes_3_name_false")
     end
-    
+
     it 'should index the name of the select tag' do
       output_buffer.should have_tag("input[@name='post[author_attributes][3][name]']")
     end
-    
+
   end
-  
+
+  describe "when collection contains integers" do
+    before do
+      @output_buffer = ''
+      mock_everything
+
+      concat(semantic_form_for(:project) do |builder|
+        concat(builder.input(:author_id, :as => :radio, :collection => [1, 2, 3]))
+      end)
+    end
+
+    it 'should output the correct labels' do
+      output_buffer.should have_tag("li.choice label", /1/)
+      output_buffer.should have_tag("li.choice label", /2/)
+      output_buffer.should have_tag("li.choice label", /3/)
+    end
+  end
 
 end
