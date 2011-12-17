@@ -44,7 +44,11 @@ module Formtastic
         end
 
         def choice_label(choice)
-          choice.is_a?(Array) ? choice.first : choice
+          if choice.is_a?(Array)
+            choice.first
+          else
+            choice
+          end.to_s
         end
 
         def choice_value(choice)
