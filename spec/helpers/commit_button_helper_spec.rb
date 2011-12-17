@@ -29,7 +29,7 @@ describe 'Formtastic::FormBuilder#commit_button' do
     end
 
   end
-  
+
   describe 'when not persisted' do
 
     before do
@@ -44,12 +44,12 @@ describe 'Formtastic::FormBuilder#commit_button' do
           concat(builder.commit_button)
         end)
       end
-      
+
       output_buffer.should have_tag('.commit input[@value="Submit Post"]')
     end
   end
-  
-  
+
+
   describe 'when used on any record' do
 
     before do
@@ -62,7 +62,7 @@ describe 'Formtastic::FormBuilder#commit_button' do
     it 'should render a commit li' do
       output_buffer.should have_tag('li.commit')
     end
-    
+
     it 'should render a button li' do
       output_buffer.should have_tag('li.button')
     end
@@ -204,11 +204,11 @@ describe 'Formtastic::FormBuilder#commit_button' do
                   }
                }
          end
-         
+
          after do
            ::I18n.backend.reload!
          end
-         
+
          it 'should render an input with localized label (I18n)' do
            with_config :i18n_lookups_by_default, true do
              ::I18n.backend.store_translations :en,
@@ -225,7 +225,7 @@ describe 'Formtastic::FormBuilder#commit_button' do
              output_buffer.should have_tag(%Q{li.commit input[@value="Custom Submit Post"][@class~="submit"]})
            end
          end
-         
+
          it 'should render an input with anoptional localized label (I18n) - if first is not set' do
            with_config :i18n_lookups_by_default, true do
              concat(semantic_form_for(:post, :url => 'http://example.com') do |builder|
@@ -427,7 +427,7 @@ describe 'Formtastic::FormBuilder#commit_button' do
     end
 
   end
-  
+
   describe ':wrapper_html option' do
 
     describe 'when provided' do
@@ -457,14 +457,21 @@ describe 'Formtastic::FormBuilder#commit_button' do
     end
 
     describe 'when not provided' do
-      it 'should use default id and class' do
+      it 'should use default class' do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.commit_button('text'))
         end)
         output_buffer.should have_tag("form li.commit.button")
       end
+
+      it 'should use default id' do
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.commit_button('text'))
+        end)
+        output_buffer.should have_tag("form li.commit.button input#post_submit")
+      end
     end
 
   end
-  
+
 end
