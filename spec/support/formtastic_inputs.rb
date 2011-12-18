@@ -1,15 +1,26 @@
+require 'active_support/core_ext/string/inflections'
+
 module FormtasticInputs
-  def formtastic_inputs
-    @formtastic_inputs ||= Hash[*input_classes.map do |klass|
-      [klass, klass.to_s.demodulize.underscore.sub(/_input$/, '')]
-    end.flatten]
+  class InputFinder
+    def to_hash
+      Hash[*names.flatten]
+    end
+
+    private
+
+    def paths
+      Dir[File.expand_path('../../../lib/formtastic/inputs/*_input.rb', __FILE__)]
+    end
+
+    def names
+      paths.map do |path|
+        base = File.basename(path, '.rb')
+        [base.camelize.to_sym, base.sub(/_input$/, '')]
+      end.compact
+    end
   end
 
-  private
-
-  def input_classes
-    Formtastic::Inputs.constants.select do |constant|
-      constant.to_s =~ /Input$/
-    end
+  def formtastic_inputs
+    InputFinder.new.to_hash
   end
 end
