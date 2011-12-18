@@ -57,13 +57,24 @@ describe "*select: options[:include_blank]" do
     end
   end
 
-  describe 'when :include_blank => true is set' do
+  describe 'when :include_blank is set to true' do
     it 'should have a blank select option' do
       @select_input_types.each do |as, attribute|
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(attribute, :as => as, :include_blank => true))
         end)
         output_buffer.should have_tag("form li select option[@value='']", "")
+      end
+    end
+  end
+
+  describe 'when :include_blank is set to a string' do
+    it 'should have a select option with blank value but that string as text' do
+      @select_input_types.each do |as, attribute|
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.input(attribute, :as => as, :include_blank => 'string'))
+        end)
+        output_buffer.should have_tag("form li select option[@value='']", "string")
       end
     end
   end
