@@ -108,12 +108,12 @@ module Formtastic
     #
     # @example The `:member_label` can be used to call a different method (or a Proc) on each object in the collection for rendering the label text (it'll try the methods like `to_s` in `collection_label_methods` config by default)
     #   <%= f.input :author, :as => :select, :member_label => :name %>
-    #   <%= f.input :author, :as => :select, :member_label => :name_with_post_count
-    #   <%= f.input :author, :as => :select, :member_label => Proc.new { |a| "#{c.name} (#{pluralize("post", a.posts.count)})" }
+    #   <%= f.input :author, :as => :select, :member_label => :name_with_post_count %>
+    #   <%= f.input :author, :as => :select, :member_label => Proc.new { |a| "#{c.name} (#{pluralize("post", a.posts.count)})" } %>
     #
     # @example The `:member_value` can be used to call a different method (or a Proc) on each object in the collection for rendering the value for each checkbox (it'll try the methods like `id` in `collection_value_methods` config by default)
     #   <%= f.input :author, :as => :select, :member_value => :login %>
-    #   <%= f.input :author, :as => :select, :member_value => Proc.new { |c| c.full_name.downcase.underscore }
+    #   <%= f.input :author, :as => :select, :member_value => Proc.new { |c| c.full_name.downcase.underscore } %>
     #
     # @example Set HTML attributes on the `<select>` tag with `:input_html`
     #   <%= f.input :authors, :as => :select, :input_html => { :size => 20, :multiple => true, :class => "special" } %>
@@ -121,10 +121,16 @@ module Formtastic
     # @example Set HTML attributes on the `<li>` wrapper with `:wrapper_html`
     #   <%= f.input :authors, :as => :select, :wrapper_html => { :class => "special" } %>
     #
-    # @example Exclude or include the blank option at the top of the select, or change the prompt
+    # @example Exclude, include, or customize the blank option at the top of the select. Always shown, even if the field already has a value. Suitable for optional inputs.
     #   <%= f.input :author, :as => :select, :include_blank => false %>
-    #   <%= f.input :author, :as => :select, :include_blank => true %>
-    #   <%= f.input :author, :as => :select, :input_html => { :prompt => "Please select an Author..." } %>
+    #   <%= f.input :author, :as => :select, :include_blank => true %>   =>   <option value=""></option>
+    #   <%= f.input :author, :as => :select, :include_blank => "No author" %>
+    #
+    # @example Exclude, include, or customize the prompt at the top of the select. Only shown if the field does not have a value. Suitable for required inputs.
+    #   <%= f.input :author, :as => :select, :prompt => false %>
+    #   <%= f.input :author, :as => :select, :prompt => true %>   =>   <option value="">Please select</option>
+    #   <%= f.input :author, :as => :select, :prompt => "Please select an author" %>
+    #
     #
     # @example Group options an `<optgroup>` with the `:group_by` and `:group_label` options (`belongs_to` associations only)
     #   <%= f.input :author, :as => :select, :group_by => :continent %>
