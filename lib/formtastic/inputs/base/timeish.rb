@@ -219,6 +219,14 @@ module Formtastic
           "".html_safe
         end
         
+        def hidden_field_name(fragment)
+          if builder.options.key?(:index)
+            "#{object_name}[#{builder.options[:index]}][#{fragment_name(fragment)}]"
+          else
+            "#{object_name}[#{fragment_name(fragment)}]"
+          end
+        end
+        
       end
     end
   end
