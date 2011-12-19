@@ -160,4 +160,55 @@ describe 'date input' do
     end
   end
   
+  describe "when order does not include day" do
+    before do
+      output_buffer.replace ''
+      concat(semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:publish_at, :as => :date, :order => [:year, :month]))
+      end)
+    end
+
+    it "should include a hidden input for day" do
+      output_buffer.should have_tag('input[@type="hidden"][@name="post[publish_at(3i)]"][@value="1"]')
+    end
+
+    it "should not include a select for day" do
+      output_buffer.should_not have_tag('select[@name="post[publish_at(3i)]"]')
+    end
+  end
+
+  describe "when order does not include month" do
+    before do
+      output_buffer.replace ''
+      concat(semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:publish_at, :as => :date, :order => [:year, :day]))
+      end)
+    end
+
+    it "should include a hidden input for month" do
+      output_buffer.should have_tag('input[@type="hidden"][@name="post[publish_at(2i)]"][@value="1"]')
+    end
+
+    it "should not include a select for month" do
+      output_buffer.should_not have_tag('select[@name="post[publish_at(2i)]"]')
+    end
+  end
+
+  describe "when order does not include year" do
+    before do
+      output_buffer.replace ''
+      concat(semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:publish_at, :as => :date, :order => [:month, :day]))
+      end)
+    end
+
+    it "should include a hidden input for month" do
+      output_buffer.should have_tag("input[@type=\"hidden\"][@name=\"post[publish_at(1i)]\"][@value=\"#{Time.now.year}\"]")
+    end
+
+    it "should not include a select for month" do
+      output_buffer.should_not have_tag('select[@name="post[publish_at(1i)]"]')
+    end
+  end
+
 end
