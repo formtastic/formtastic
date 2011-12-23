@@ -58,6 +58,10 @@ describe 'time input' do
         output_buffer.should have_tag('select#post_publish_at_5i')
       end
 
+      it 'should associate the legend label with the hour select' do
+        output_buffer.should have_tag('form li.time fieldset legend.label label[@for="post_publish_at_4i"]')
+      end
+
     end
 
     describe "with :ignore_date => false and no initial Time" do
@@ -107,7 +111,7 @@ describe 'time input' do
       end
 
       it 'should associate the legend label with the first select' do
-        output_buffer.should have_tag('form li.time fieldset legend.label label[@for="post_publish_at_1i"]')
+        output_buffer.should have_tag('form li.time fieldset legend.label label[@for="post_publish_at_4i"]')
       end
 
       it 'should have an ordered list of two items inside the fieldset' do
