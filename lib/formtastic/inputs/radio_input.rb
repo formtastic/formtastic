@@ -114,7 +114,7 @@ module Formtastic
     # @example Set HTML options on a specific radio input option with a 3rd element in the array for a collection member
     #   <%= f.input :author, :as => :radio, :collection => [["Test", 'test'], ["Try", "try", {:disabled => true}]]
     #
-    # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
+    # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
     # @see Formtastic::Inputs::RadioInput as an alternative for `belongs_to` associations
     #
     # @todo :disabled like CheckBoxes?
