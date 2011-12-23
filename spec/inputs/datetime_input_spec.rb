@@ -168,5 +168,18 @@ describe 'datetime input' do
       end
     end
   end
+
+  describe "when order does not have year first" do
+    before do
+      output_buffer.replace ''
+      concat(semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:publish_at, :as => :datetime, :order => [:day, :month, :year]))
+      end)
+    end
+
+    it 'should associate the legend label with the new first select' do
+      output_buffer.should have_tag('form li.datetime fieldset legend.label label[@for="post_publish_at_3i"]')
+    end
+  end
   
 end
