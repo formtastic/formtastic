@@ -73,7 +73,7 @@ module Formtastic
     # @example `:value_as_class` can be used to add a class to the `<li>` wrapped around each choice using the checkbox value for custom styling of each choice
     #   <%= f.input :categories, :as => :check_boxes, :value_as_class => true %>
     #
-    # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
+    # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
     # @see Formtastic::Inputs::BooleanInput BooleanInput for a single checkbox for boolean (checked = true) inputs
     #
     # @todo Do/can we support the per-item HTML options like RadioInput?

@@ -78,9 +78,9 @@ module Formtastic
       # @example Include seconds with times (excluded by default)
       #   <%= f.input :publish_at, :as => :time, :include_seconds => true %>
       #
-      # @example Specify if there should be a blank option at the start of each select or not
-      #   <%= f.input :publish_at, :as => :time, :include_blank=> true %>
-      #   <%= f.input :publish_at, :as => :time, :include_blank=> false %>
+      # @example Specify if there should be a blank option at the start of each select or not. Note that, unlike select inputs, :include_blank does not accept a string value.
+      #   <%= f.input :publish_at, :as => :time, :include_blank => true %>
+      #   <%= f.input :publish_at, :as => :time, :include_blank => false %>
       #
       # @todo Document i18n
       # @todo Check what other Rails options are supported (`start_year`, `end_year`, `use_month_numbers`, `use_short_month`, `add_month_numbers`, `prompt`), write tests for them, and otherwise support them

@@ -64,7 +64,7 @@ module Formtastic
     #  <%= f.input :shoe_size, :as => :range, :in => 3..15, :step => 1 %>
     #  <%= f.input :shoe_size, :as => :range, :input_html => { :in => 3..15, :step => 1 } %>
     #
-    # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
+    # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
     # @see http://api.rubyonrails.org/classes/ActiveModel/Validations/HelperMethods.html#method-i-validates_numericality_of Rails' Numericality validation documentation
     #
     # @todo Is it still correct for this to be Stringish?
