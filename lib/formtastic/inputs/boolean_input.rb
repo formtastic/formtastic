@@ -28,7 +28,7 @@ module Formtastic
     # @example Set the values for the checked and unchecked states
     #   <%= f.input :published, :checked_value => "yes", :unchecked_value => "no" %>
     #
-    # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
+    # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
     class BooleanInput
       include Base
 

@@ -27,7 +27,7 @@ module Formtastic
     #
     #   form.formtastic li.hidden { display:none; }
     #
-    # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
+    # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
     class HiddenInput 
       include Base
       

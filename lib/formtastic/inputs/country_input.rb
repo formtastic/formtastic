@@ -8,7 +8,7 @@ module Formtastic
     # * install any other country_select plugin that behaves in a similar way
     # * roll your own `country_select` helper with the same args and options as the Rails one
     #
-    # By default, Formtastic includes a handfull of English-speaking countries as "priority
+    # By default, Formtastic includes a handful of English-speaking countries as "priority
     # counties", which can be set in the `priority_countries` configuration array in the
     # formtastic.rb initializer to suit your market and user base (see README for more info on
     # configuration). Additionally, it is possible to set the :priority_countries on a per-input
@@ -45,7 +45,7 @@ module Formtastic
     #       # ...
     #   </li>
     #
-    # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
+    # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
     class CountryInput 
       include Base
 

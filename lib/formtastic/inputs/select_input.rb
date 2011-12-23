@@ -135,7 +135,7 @@ module Formtastic
     # @example Group options an `<optgroup>` with the `:group_by` and `:group_label` options (`belongs_to` associations only)
     #   <%= f.input :author, :as => :select, :group_by => :continent %>
     #
-    # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
+    # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
     # @see Formtastic::Inputs::CheckBoxesInput CheckBoxesInput as an alternative for `has_many` and `has_and_belongs_to_many` associations
     # @see Formtastic::Inputs::RadioInput RadioInput as an alternative for `belongs_to` associations
     #

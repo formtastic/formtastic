@@ -25,7 +25,7 @@ module Formtastic
     #     </fieldset>
     #   </form>
     #
-    # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documetation of all possible options.
+    # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
     class StringInput 
       include Base
       include Base::Stringish

@@ -5,7 +5,7 @@ module Formtastic
     # well, defaulting to `Time.current` if the form object doesn't have a value, much like Rails' 
     # own `time_select`.
     #
-    # @see Formtastic::Inputs::Timeish Timeish module for documetation of date, time and datetime input options.
+    # @see Formtastic::Inputs::Base::Timeish Timeish module for documentation of date, time and datetime input options.
     class TimeInput 
       include Base
       include Base::Timeish
