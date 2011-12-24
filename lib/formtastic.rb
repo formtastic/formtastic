@@ -1,5 +1,4 @@
 # encoding: utf-8
-require 'formtastic/railtie' if defined?(::Rails)
 require 'formtastic/engine' if defined?(::Rails)
 
 module Formtastic
