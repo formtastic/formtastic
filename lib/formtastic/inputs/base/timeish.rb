@@ -201,7 +201,7 @@ module Formtastic
         def fragments_label
           if render_label?
             template.content_tag(:legend, 
-              builder.label(method, label_text, :for => "#{input_html_options[:id]}_1i"), 
+              builder.label(method, label_text, :for => fragment_id(fragments.first)), 
               :class => "label"
             )
           else
