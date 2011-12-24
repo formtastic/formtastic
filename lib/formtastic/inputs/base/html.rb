@@ -19,11 +19,9 @@ module Formtastic
         end
         
         def input_html_options
-          { 
-            :id => dom_id,
-            :required => required_attribute?,
-            :autofocus => autofocus?
-          }.merge(options[:input_html] || {})
+          default_input_html_options.tap do |html_options|
+            html_options[:data] = options[:data] if options[:data]
+          end
         end
         
         def dom_id
@@ -46,6 +44,15 @@ module Formtastic
           end
         end
 
+        private
+
+        def default_input_html_options
+          {
+            :id => dom_id,
+            :required => required_attribute?,
+            :autofocus => autofocus?
+          }.merge(options[:input_html] || {})
+        end
       end
     end
   end

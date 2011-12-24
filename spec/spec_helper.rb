@@ -417,6 +417,8 @@ end
 ::ActiveSupport::Deprecation.silenced = false
 
 RSpec.configure do |config|
+  config.extend FormtasticInputs
+
   config.before(:all) do
     DeferredGarbageCollection.start unless ENV["DEFER_GC"] == "false"
   end
