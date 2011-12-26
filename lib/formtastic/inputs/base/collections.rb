@@ -19,7 +19,7 @@ module Formtastic
             label, value = :first, :last
           when Integer
             label, value = :to_s, :to_i
-          when String, NilClass
+          when Symbol, String, NilClass
             label, value = :to_s, :to_s
           end
 
