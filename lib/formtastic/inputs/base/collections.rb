@@ -48,8 +48,14 @@ module Formtastic
 
         def collection_from_options
           items = options[:collection]
-          items = items.to_a if items.is_a?(Hash)
-          items
+          case items
+          when Hash
+            items.to_a
+          when Range
+            items.to_a.collect{ |c| [c.to_s, c] }
+          else
+            items
+          end
         end
 
         def collection_from_association
