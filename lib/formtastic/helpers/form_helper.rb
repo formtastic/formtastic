@@ -144,7 +144,7 @@ module Formtastic
         options[:builder] ||= @@builder
         options[:html] ||= {}
         options[:html][:novalidate] = !@@builder.perform_browser_validations unless options[:html].key?(:novalidate)
-        @@builder.custom_namespace = options[:namespace].to_s
+        @@builder.custom_namespace = options.delete(:namespace).to_s
 
         singularizer = defined?(ActiveModel::Naming.singular) ? ActiveModel::Naming.method(:singular) : ActionController::RecordIdentifier.method(:singular_class_name)
 
@@ -169,7 +169,7 @@ module Formtastic
       def semantic_fields_for(record_name, record_object = nil, options = {}, &block)
         options, record_object = record_object, nil if record_object.is_a?(Hash) && record_object.extractable_options?
         options[:builder] ||= @@builder
-        @@builder.custom_namespace = options[:namespace].to_s # TODO needed?
+        @@builder.custom_namespace = options.delete(:namespace).to_s # TODO needed?
 
         with_custom_field_error_proc do
           self.fields_for(record_name, record_object, options, &block)
