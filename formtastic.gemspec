@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency(%q<actionpack>, ["~> 3.0"])
 
-  s.add_development_dependency(%q<rspec-rails>, ["~> 2.6.0"])
+  s.add_development_dependency(%q<rspec-rails>, ["~> 2.8.0.rc2"])
   s.add_development_dependency(%q<rspec_tag_matchers>, [">= 1.0.0"])
   s.add_development_dependency(%q<hpricot>, ["~> 0.8.3"])
   s.add_development_dependency(%q<BlueCloth>) # for YARD
@@ -33,7 +33,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency(%q<rcov>, ["~> 0.9.9"])
   s.add_development_dependency(%q<colored>)
   s.add_development_dependency(%q<tzinfo>)
-  s.add_development_dependency(%q<ammeter>, ["~> 0.1.2"])
+  s.add_development_dependency(%q<ammeter>, ["~> 0.2.2"])
   s.add_development_dependency(%q<appraisal>)
   s.add_development_dependency(%q<rake>)
 end
