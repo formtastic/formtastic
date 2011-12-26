@@ -3,7 +3,7 @@ require 'bundler/setup'
 require 'appraisal'
 require 'rubygems'
 require 'rake'
-require 'rake/rdoctask'
+require 'rdoc/task'
 require 'rspec/core/rake_task'
 require 'tasks/verify_rcov'
 
