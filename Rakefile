@@ -1,15 +1,21 @@
 # encoding: utf-8
+require 'bundler/setup'
+require 'appraisal'
 require 'rubygems'
 require 'rake'
 require 'rake/rdoctask'
 require 'rspec/core/rake_task'
 require 'tasks/verify_rcov'
-require 'bundler'
 
 Bundler::GemHelper.install_tasks
 
 desc 'Default: run unit specs.'
-task :default => :spec
+task :default => :all
+
+desc 'Test formtastic with all supported Rails versions.'
+task :all => ["appraisal:install"] do
+  exec('rake appraisal spec')
+end
 
 desc 'Generate documentation for the formtastic plugin.'
 Rake::RDocTask.new(:rdoc) do |rdoc|

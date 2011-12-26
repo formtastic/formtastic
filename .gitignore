@@ -12,3 +12,4 @@ Gemfile.lock
 .yardoc
 doc/
 tmp
+gemfiles/*.lock
