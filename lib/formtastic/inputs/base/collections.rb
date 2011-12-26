@@ -40,7 +40,7 @@ module Formtastic
 
           # Return if we have an Array of strings, fixnums or arrays
           return raw_collection if (raw_collection.instance_of?(Array) || raw_collection.instance_of?(Range)) &&
-                               [Array, Fixnum, String, Symbol].include?(raw_collection.first.class) &&
+                               [Array, Fixnum, String].include?(raw_collection.first.class) &&
                                !(options.include?(:member_label) || options.include?(:member_value))
 
           raw_collection.map { |o| [send_or_call(label_method, o), send_or_call(value_method, o)] }
@@ -48,8 +48,14 @@ module Formtastic
 
         def collection_from_options
           items = options[:collection]
-          items = items.to_a if items.is_a?(Hash)
-          items
+          case items
+          when Hash
+            items.to_a
+          when Range
+            items.to_a.collect{ |c| [c.to_s, c] }
+          else
+            items
+          end
         end
 
         def collection_from_association
