@@ -100,6 +100,7 @@ describe 'select input' do
       end
 
       after do
+        ::I18n.load_path = []
         ::I18n.backend.store_translations :en, {}
       end
 
