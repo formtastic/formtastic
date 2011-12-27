@@ -20,7 +20,7 @@ module Formtastic
         end
       
         def group_label_method_from_grouped_collection
-          label_and_value_method(raw_grouped_collection, true).first
+          label_and_value_method_from_collection(raw_grouped_collection).first
         end
       
         def group_association
