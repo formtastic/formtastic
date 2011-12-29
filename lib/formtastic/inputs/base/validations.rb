@@ -108,7 +108,7 @@ module Formtastic
             validation.kind == :numericality
           end
           if validation
-            validation.options[:step]
+            validation.options[:step] || (1 if validation_integer_only?)
           else
             nil
           end
