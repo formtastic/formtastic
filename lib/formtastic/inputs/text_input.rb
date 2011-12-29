@@ -27,12 +27,12 @@ module Formtastic
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
     class TextInput 
       include Base
+      include Base::Placeholder
       
       def input_html_options
         { 
           :cols => builder.default_text_area_width,
-          :rows => builder.default_text_area_height,
-          :placeholder => placeholder_text
+          :rows => builder.default_text_area_height
         }.merge(super)
       end
       
@@ -41,10 +41,6 @@ module Formtastic
           label_html <<
           builder.text_area(method, input_html_options)
         end
-      end
-      
-      def placeholder_text
-        localized_string(method, options[:placeholder], :placeholder)
       end
     
     end
