@@ -4,6 +4,10 @@ module Formtastic
       module Numeric
         def input_html_options
           defaults = super
+
+          # override rails default size - not valid on numeric inputs
+          #@todo document/spec
+          defaults[:size] = nil
           
           if in_option
             defaults[:min] = in_option.to_a.min
