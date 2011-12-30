@@ -40,7 +40,7 @@ module Formtastic
         end
         
         def wrapper_html_options
-          new_class = [super[:class], "numeric"].compact.join(" ")
+          new_class = [super[:class], "numeric", "stringish"].compact.join(" ")
           super.merge(:class => new_class)
         end
         
