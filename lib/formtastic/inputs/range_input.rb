@@ -67,10 +67,9 @@ module Formtastic
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
     # @see http://api.rubyonrails.org/classes/ActiveModel/Validations/HelperMethods.html#method-i-validates_numericality_of Rails' Numericality validation documentation
     #
-    # @todo Is it still correct for this to be Stringish?
     class RangeInput
       include Base
-      include Base::Stringish
+      include Base::Numeric
 
       def to_html
         input_wrapping do
@@ -78,40 +77,17 @@ module Formtastic
           builder.range_field(method, input_html_options)
         end
       end
-      
-      def input_html_options
-        defaults = super
-        
-        if in_option
-          defaults[:min] = in_option.to_a.min
-          defaults[:max] = in_option.to_a.max
-        else
-          defaults[:min]  ||= min_option
-          defaults[:max]  ||= max_option
-        end
-        defaults[:step] ||= step_option
-        defaults
-      end
-      
-      def step_option
-        return options[:step] if options.key?(:step)
-        return validation_step if validation_step
-        return 1 if validation_integer_only?
-        1
-      end
-      
+
       def min_option
-        return options[:min] if options.key?(:min)
-        validation_min || 1
+        super || 1
       end
       
       def max_option
-        return options[:max] if options.key?(:max)
-        validation_max || 100
+        super || 100
       end
-      
-      def in_option
-        options[:in]
+
+      def step_option
+        super || 1
       end
       
     end

@@ -28,6 +28,7 @@ module Formtastic
     class PasswordInput 
       include Base
       include Base::Stringish
+      include Base::Placeholder
       
       def to_html
         input_wrapping do
