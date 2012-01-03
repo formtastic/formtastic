@@ -43,7 +43,9 @@ module Formtastic
       autoload :Html
       autoload :Labelling
       autoload :Naming
+      autoload :Numeric
       autoload :Options
+      autoload :Placeholder
       autoload :Stringish
       autoload :Timeish
       autoload :Validations

@@ -19,7 +19,8 @@ describe 'range input' do
 
     it_should_have_input_wrapper_with_class(:range)
     it_should_have_input_wrapper_with_class(:input)
-    it_should_have_input_wrapper_with_class(:stringish) # might be removed
+    it_should_have_input_wrapper_with_class(:numeric)
+    it_should_have_input_wrapper_with_class(:stringish)
     it_should_have_input_wrapper_with_id("author_age_input")
     it_should_have_label_with_text(/Age/)
     it_should_have_label_for("author_age")
