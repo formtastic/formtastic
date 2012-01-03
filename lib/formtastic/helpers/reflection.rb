@@ -7,10 +7,7 @@ module Formtastic
       def reflection_for(method) #:nodoc:
         if @object.class.respond_to?(:reflect_on_association)
           @object.class.reflect_on_association(method) 
-        
-        # MongoMapper uses the 'associations(method)' instead
-        # ReactiveResource does as well but its an array. Also make sure we are working with a hash
-        elsif @object.class.respond_to?(:associations) && @object.class.is_a?(Hash)
+        elsif @object.class.respond_to?(:associations) # MongoMapper uses the 'associations(method)' instead
           @object.class.associations[method]
         end
       end
