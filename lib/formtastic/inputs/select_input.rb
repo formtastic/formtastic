@@ -147,6 +147,7 @@ module Formtastic
 
       def to_html
         input_wrapping do
+          hidden_input <<
           label_html <<
           (options[:group_by] ? grouped_select_html : select_html)
         end
@@ -172,6 +173,14 @@ module Formtastic
       def include_blank
         options.key?(:include_blank) ? options[:include_blank] : (single? && builder.include_blank_for_select_by_default)
       end
+      
+      def hidden_input
+        if multiple?
+          template.hidden_field_tag(input_html_options_name_multiple, '', :id => nil)
+        else
+          "".html_safe
+        end
+      end
 
       def prompt?
         !!options[:prompt]
@@ -188,7 +197,7 @@ module Formtastic
       def input_html_options
         extra_input_html_options.merge(super)
       end
-
+      
       def extra_input_html_options
         {
           :multiple => multiple?,
