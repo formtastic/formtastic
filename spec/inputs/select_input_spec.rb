@@ -163,6 +163,10 @@ describe 'select input' do
     it 'should not create a multi-select' do
       output_buffer.should_not have_tag('form li select[@multiple]')
     end
+    
+    it 'should not add a hidden input' do
+      output_buffer.should_not have_tag('form li input[@type="hidden"]')
+    end
 
     it 'should create a select without size' do
       output_buffer.should_not have_tag('form li select[@size]')
@@ -328,9 +332,13 @@ describe 'select input' do
     it 'should have a multi-select select' do
       output_buffer.should have_tag('form li select[@multiple="multiple"]')
     end
-
+    
     it 'should append [] to the name attribute for multiple select' do
       output_buffer.should have_tag('form li select[@multiple="multiple"][@name="author[post_ids][]"]')
+    end
+
+    it 'should have a hidden field' do
+      output_buffer.should have_tag('form li input[@type="hidden"][@name="author[post_ids][]"]')
     end
 
     it 'should have a select option for each Post' do
