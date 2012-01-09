@@ -438,7 +438,7 @@ describe 'Formtastic::FormBuilder#inputs' do
   
       describe 'and no object is given' do
         it 'should render a form with a fieldset containing two list items' do
-          concat(semantic_form_for(:post, :url => 'http://test.host') do |builder|
+          concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
             concat(builder.inputs(:title, :body))
           end)
   
@@ -486,11 +486,11 @@ describe 'Formtastic::FormBuilder#inputs' do
   
       describe 'and no object is given' do
         it 'should render nested inputs' do
-          concat(semantic_form_for(:post, :url => 'http://test.host/') do |builder|
+          concat(semantic_form_for(:project, :url => 'http://test.host/') do |builder|
             concat(builder.inputs(:login, :for => @bob))
           end)
-          output_buffer.should have_tag("form fieldset.inputs #post_author_login")
-          output_buffer.should_not have_tag("form fieldset.inputs #post_login")
+          output_buffer.should have_tag("form fieldset.inputs #project_author_login")
+          output_buffer.should_not have_tag("form fieldset.inputs #project_login")
         end
       end
     end
