@@ -409,6 +409,8 @@ Formtastic supports localized *labels*, *hints*, *legends*, *actions* using the 
       actions:
         create: "Create my %{model}"
         update: "Save changes"
+        reset: "Reset form"
+        cancel: "Cancel and go back"
         dummie: "Launch!"
 </pre>
 
