@@ -40,8 +40,9 @@ One day, I finally had enough, so I opened up my text editor, and wrote a DSL fo
       <%= author_form.input :last_name %>
     <% end %>
 
-    <%= f.buttons do %>
-      <%= f.commit_button %>
+    <%= f.actions do %>
+      <%= f.action :submit, :as => :button %>
+      <%= f.action :cancel, :as => :link %>
     <% end %>
 
   <% end %>
@@ -139,27 +140,27 @@ h2. Usage
 
 Forms are really boring to code... you want to get onto the good stuff as fast as possible.
 
-This renders a set of inputs (one for _most_ columns in the database table, and one for each ActiveRecord @belongs_to@-association), followed by a submit button:
+This renders a set of inputs (one for _most_ columns in the database table, and one for each ActiveRecord @belongs_to@-association), followed by default action buttons (an input submit button):
 
 <pre>
   <%= semantic_form_for @user do |f| %>
     <%= f.inputs %>
-    <%= f.buttons %>
+    <%= f.actions %>
   <% end %>
 </pre>
 
 This is a great way to get something up fast, but like scaffolding, it's *not recommended for production*. Don't be so lazy!
 
-To specify the order of the fields, skip some of the fields or even add in fields that Formtastic couldn't infer. You can pass in a list of field names to @inputs@ and list of button names to @buttons@:
+To specify the order of the fields, skip some of the fields or even add in fields that Formtastic couldn't infer. You can pass in a list of field names to @inputs@ and list of action names to @actions@:
 
 <pre>
   <%= semantic_form_for @user do |f| %>
     <%= f.inputs :title, :body, :section, :categories, :created_at %>
-    <%= f.buttons :commit %>
+    <%= f.actions :submit, :cancel %>
   <% end %>
 </pre>
 
-You probably want control over the input type Formtastic uses for each field. You can expand the @inputs@ and @buttons@ to block helper format and use the @:as@ option to specify an exact input type:
+You probably want control over the input type Formtastic uses for each field. You can expand the @inputs@ and @actions@ to block helper format and use the @:as@ option to specify an exact input type:
 
 <pre>
   <%= semantic_form_for @post do |f| %>
@@ -170,8 +171,9 @@ You probably want control over the input type Formtastic uses for each field. Yo
       <%= f.input :categories %>
       <%= f.input :created_at, :as => :string %>
     <% end %>
-    <%= f.buttons do %>
-      <%= f.commit_button %>
+    <%= f.actions do %>
+      <%= f.action :submit, :as => :button %>
+      <%= f.action :cancel, :as => :link %>
     <% end %>
   <% end %>
 </pre>
@@ -191,8 +193,8 @@ If you want to customize the label text, or render some hint text below the fiel
       <%= f.input :categories, :required => false %>
       <%= f.input :created_at, :as => :string, :label => "Publication Date", :required => false %>
     <% end %>
-    <%= f.buttons do %>
-      <%= f.commit_button %>
+    <%= f.actions do %>
+      <%= f.action(:submit) %>
     <% end %>
   <% end %>
 </pre>
@@ -211,7 +213,7 @@ Nested forms are also supported (don't forget your models need to be setup corre
     <%= f.semantic_fields_for :author do |author| %>
       <%= author.inputs :first_name, :last_name, :name => "Author" %>
     <% end %>
-    <%= f.buttons %>
+    <%= f.actions %>
   <% end %>
 </pre>
 
@@ -221,7 +223,7 @@ Or the Formtastic way with the @:for@ option:
   <%= semantic_form_for @post do |f| %>
     <%= f.inputs :title, :body, :created_at %>
     <%= f.inputs :first_name, :last_name, :for => :author, :name => "Author" %>
-    <%= f.buttons %>
+    <%= f.actions %>
   <% end %>
 </pre>
 
@@ -231,7 +233,7 @@ When working in has many association, you can even supply @"%i"@ in your fieldse
   <%= semantic_form_for @post do |f| %>
     <%= f.inputs %>
     <%= f.inputs :name => 'Category #%i', :for => :categories %>
-    <%= f.buttons %>
+    <%= f.actions %>
   <% end %>
 </pre>
 
@@ -244,7 +246,7 @@ If you have more than one form on the same page, it may lead to HTML invalidatio
       <%= f.input :body %>         # id="cat_form_post_body"
       <%= f.input :created_at %>   # id="cat_form_post_created_at"
     <% end %>
-    <%= f.buttons %>
+    <%= f.actions %>
   <% end %>
 </pre>
 
@@ -258,17 +260,17 @@ Customize HTML attributes for any input using the @:input_html@ option. Typicall
       <%= f.input :created_at, :input_html => { :disabled => true } %>
       <%= f.input :updated_at, :input_html => { :readonly => true } %>
     <% end %>
-    <%= f.buttons %>
+    <%= f.actions %>
   <% end %>
 </pre>
 
-The same can be done for buttons with the @:button_html@ option:
+The same can be done for actions with the @:button_html@ option:
 
 <pre>
   <%= semantic_form_for @post do |f| %>
     ...
-    <%= f.buttons do %>
-      <%= f.commit_button :button_html => { :class => "primary", :disable_with => 'Wait...' } %>
+    <%= f.actions do %>
+      <%= f.action :submit, :button_html => { :class => "primary", :disable_with => 'Wait...' } %>
     <% end %>
   <% end %>
 </pre>
@@ -423,8 +425,8 @@ Formtastic supports localized *labels*, *hints*, *legends*, *actions* using the 
       <%= f.input :body %>       # => :label => "Write something...", :hint => "Write something inspiring here."
       <%= f.input :section %>    # => :label => I18n.t('activerecord.attributes.user.section')  or 'Section'
     <% end %>
-    <%= f.buttons do %>
-      <%= f.commit_button %>     # => "Create my %{model}"
+    <%= f.actions do %>
+      <%= f.action(:submit) %>   # => "Create my %{model}"
     <% end %>
   <% end %>
 </pre>
@@ -451,8 +453,8 @@ _Note: Slightly different because Formtastic can't guess how you group fields in
       <%= f.input :body, :hint => false %>                 # => :label => "Write something..."
       <%= f.input :section, :label => 'Some section' %>    # => :label => 'Some section'
     <% end %>
-    <%= f.buttons do %>
-      <%= f.commit_button :dummie %>     # => "Launch!"
+    <%= f.actions do %>
+      <%= f.actions(:submit, :label => :dummie) %>         # => "Launch!"
     <% end %>
   <% end %>
 </pre>
@@ -472,8 +474,8 @@ If I18n-lookups is disabled, i.e.:
       <%= f.input :body, :label => true %>       # => :label => "Write something..."
       <%= f.input :section, :label => true %>    # => :label => I18n.t('activerecord.attributes.user.section')  or 'Section'
     <% end %>
-    <%= f.buttons do %>
-      <%= f.commit_button true %>                # => "Update %{model}" (if we are in edit that is...)
+    <%= f.actions do %>
+      <%= f.action :submit, :label => true %>    # => "Update %{model}" (if we are in edit that is...)
     <% end %>
   <% end %>
 </pre>
