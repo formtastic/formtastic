@@ -351,7 +351,10 @@ module Formtastic
 
       # Collects content columns (non-relation columns) for the current form object class.
       def content_columns #:nodoc:
-        model_name.constantize.content_columns.collect { |c| c.name.to_sym }.compact rescue []
+        # TODO: NameError is raised by Inflector.constantize. Consider checking if it exists instead.
+        begin klass = model_name.constantize; rescue NameError; return [] end
+        return [] unless klass.respond_to?(:content_columns)
+        klass.content_columns.collect { |c| c.name.to_sym }.compact
       end
 
       # Deals with :for option when it's supplied to inputs methods. Additional
