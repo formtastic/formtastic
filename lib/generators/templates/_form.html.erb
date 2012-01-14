@@ -5,7 +5,7 @@
   <%- end -%>
   <%% end %>
 
-  <%%= f.buttons do %>
-    <%%= f.commit_button %>
+  <%%= f.actions do %>
+    <%%= f.action(:submit, :as => :input) %>
   <%% end %>
 <%% end %>
