@@ -34,7 +34,11 @@ describe 'ButtonAction', 'when resetting' do
   end
   
   it 'should render a reset type of button' do
-    output_buffer.should have_tag('li.action.button_action button[@type="reset"]')
+    output_buffer.should have_tag('li.action.button_action button[@type="reset"]', :text => "Reset Post")
+  end
+
+  it 'should not render a value attribute' do
+    output_buffer.should_not have_tag('li.action.button_action button[@value]')
   end
   
 end

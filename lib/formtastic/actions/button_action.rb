@@ -63,7 +63,7 @@ module Formtastic
           if template.respond_to?(:button_tag)
             template.button_tag(text, button_html)
           else
-            template.submit_tag(text, button_html).gsub('<input', '<button').html_safe
+            template.content_tag(:button, text, button_html)
           end
         end
       end
