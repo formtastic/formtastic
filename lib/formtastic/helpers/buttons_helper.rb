@@ -53,6 +53,8 @@ module Formtastic
     #
     # There are many other syntax variations and arguments to customize your form. See the
     # full documentation of {#buttons} and {#commit_button} for details.
+    #
+    # @deprecated ButtonsHelper will be removed after 2.2
     module ButtonsHelper
       include Formtastic::Helpers::FieldsetWrapper
       include Formtastic::LocalizedString
@@ -164,7 +166,10 @@ module Formtastic
       #   Optionally specify text for the legend of the fieldset (alias for `:label`)
       #
       # @todo document i18n keys
+      # @deprecated f.buttons is deprecated in favor of f.actions and will be removed after 2.2
       def buttons(*args, &block)
+        ::ActiveSupport::Deprecation.warn("f.buttons is deprecated in favour of f.actions and will be removed from Formtastic after 2.2. Please see ActionsHelper and InputAction or ButtonAction for more information")
+        
         html_options = args.extract_options!
         html_options[:class] ||= "buttons"
 
@@ -238,7 +243,10 @@ module Formtastic
       #
       # @todo document i18n keys
       # @todo strange that `:accesskey` seems to be supported in the top level args as well as `:button_html`
+      # @deprecated f.commit_button is deprecated in favor of f.actions and will be removed after 2.2
       def commit_button(*args)
+        ::ActiveSupport::Deprecation.warn("f.commit_button is deprecated in favour of f.action(:submit) and will be removed from Formtastic after 2.2. Please see ActionsHelper and InputAction or ButtonAction for more information")
+        
         options = args.extract_options!
         text = options.delete(:label) || args.shift
 

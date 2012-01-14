@@ -13,12 +13,14 @@ describe 'Formtastic::FormBuilder#buttons' do
   describe 'with a block' do
     describe 'when no options are provided' do
       before do
-        concat(semantic_form_for(@new_post) do |builder|
-          buttons = builder.buttons do
-            concat('hello')
-          end
-          concat(buttons)
-        end)
+        with_deprecation_silenced do
+          concat(semantic_form_for(@new_post) do |builder|
+            buttons = builder.buttons do
+              concat('hello')
+            end
+            concat(buttons)
+          end)
+        end
       end
 
       it 'should render a fieldset inside the form, with a class of "inputs"' do
@@ -42,14 +44,18 @@ describe 'Formtastic::FormBuilder#buttons' do
       before do
         @legend_text = "Advanced options"
 
-        concat(semantic_form_for(@new_post) do |builder|
-          builder.buttons :name => @legend_text do
-          end
-        end)
+        with_deprecation_silenced do
+          concat(semantic_form_for(@new_post) do |builder|
+            builder.buttons :name => @legend_text do
+            end
+          end)
+        end
       end
+      
       it 'should render a fieldset inside the form' do
         output_buffer.should have_tag("form fieldset legend", /#{@legend_text}/)
       end
+
     end
 
     describe 'when other options are provided' do
@@ -57,15 +63,19 @@ describe 'Formtastic::FormBuilder#buttons' do
         @id_option = 'advanced'
         @class_option = 'wide'
 
-        concat(semantic_form_for(@new_post) do |builder|
-          builder.buttons :id => @id_option, :class => @class_option do
-          end
-        end)
+        with_deprecation_silenced do
+          concat(semantic_form_for(@new_post) do |builder|
+            builder.buttons :id => @id_option, :class => @class_option do
+            end
+          end)
+        end
       end
+      
       it 'should pass the options into the fieldset tag as attributes' do
         output_buffer.should have_tag("form fieldset##{@id_option}")
         output_buffer.should have_tag("form fieldset.#{@class_option}")
       end
+
     end
 
   end
@@ -75,9 +85,11 @@ describe 'Formtastic::FormBuilder#buttons' do
     describe 'with no args (default buttons)' do
 
       before do
-        concat(semantic_form_for(@new_post) do |builder|
-          concat(builder.buttons)
-        end)
+        with_deprecation_silenced do
+          concat(semantic_form_for(@new_post) do |builder|
+            concat(builder.buttons)
+          end)
+        end
       end
 
       it 'should render a form' do
@@ -109,9 +121,11 @@ describe 'Formtastic::FormBuilder#buttons' do
     describe 'with button names as args' do
 
       before do
-        concat(semantic_form_for(@new_post) do |builder|
-          concat(builder.buttons(:commit))
-        end)
+        with_deprecation_silenced do
+          concat(semantic_form_for(@new_post) do |builder|
+            concat(builder.buttons(:commit))
+          end)
+        end
       end
 
       it 'should render a form with a fieldset containing a list item for each button arg' do
@@ -124,9 +138,11 @@ describe 'Formtastic::FormBuilder#buttons' do
     describe 'with button names as args and an options hash' do
 
       before do
-        concat(semantic_form_for(@new_post) do |builder|
-          concat(builder.buttons(:commit, :name => "Now click a button", :id => "my-id"))
-        end)
+        with_deprecation_silenced do
+          concat(semantic_form_for(@new_post) do |builder|
+            concat(builder.buttons(:commit, :name => "Now click a button", :id => "my-id"))
+          end)
+        end
       end
 
       it 'should render a form with a fieldset containing a list item for each button arg' do
