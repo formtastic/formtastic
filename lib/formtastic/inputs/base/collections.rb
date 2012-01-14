@@ -43,7 +43,7 @@ module Formtastic
         end
 
         def raw_collection
-          @raw_collection ||= (collection_from_options || collection_from_association || collection_for_boolean)
+          @raw_collection ||= (collection_from_options || collection_from_association || collection_for_state_field || collection_for_boolean)
         end
 
         def collection
@@ -68,6 +68,12 @@ module Formtastic
           else
             items
           end
+        end
+
+        def collection_for_state_field
+          items = state_field_values(method)
+          items = items.to_a if items.is_a?(Hash)
+          items
         end
 
         def collection_from_association

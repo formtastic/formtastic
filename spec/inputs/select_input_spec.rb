@@ -87,6 +87,22 @@ describe 'select input' do
     end
   end
 
+  describe 'using state-fields with CONSTANT' do
+    before do
+      concat(semantic_form_for(@fred) do |builder|
+        concat(builder.input(:gender))
+      end)
+    end
+
+    it "should build select with options in constant" do
+      output_buffer.should have_tag('form li select')
+
+      ::Author::GENDERS.each do |gender|
+        output_buffer.should have_tag("option[@value='#{gender}']", /^#{gender}$/)
+      end
+    end
+  end
+
   describe 'for boolean columns' do
     describe 'default formtastic locale' do
       before do
