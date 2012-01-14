@@ -18,6 +18,7 @@ This stylesheet forms part of the Formtastic Rails Plugin
 .formtastic fieldset,
 .formtastic legend,
 .formtastic input,
+.formtastic button,
 .formtastic textarea,
 .formtastic select,
 .formtastic p {
@@ -47,6 +48,7 @@ This stylesheet forms part of the Formtastic Rails Plugin
 }
 
 .formtastic input,
+.formtastic button,
 .formtastic textarea {
   font-family:sans-serif;
   font-size:inherit;
@@ -80,16 +82,27 @@ This stylesheet forms part of the Formtastic Rails Plugin
 }
 
 
-/* BUTTONS
+/* BUTTONS & ACTIONS
 --------------------------------------------------------------------------------------------------*/
-.formtastic .buttons {
+.formtastic .buttons, 
+.formtastic .actions {
   overflow:hidden; /* clear containing floats */
   padding-left:25%;
 }
 
-.formtastic .button {
+.formtastic .button, 
+.formtastic .action {
   float:left;
   padding-right:0.5em;
+}
+
+.formtastic .button_action button {
+  padding:3px 8px;
+}
+
+.formtastic .link_action a {
+  display:block;
+  padding:3px 0;
 }
 
 
