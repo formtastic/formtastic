@@ -122,18 +122,6 @@ describe 'Formtastic::FormBuilder#inputs' do
           output_buffer.should have_tag("form input[@name='post[authors_attributes][1][login]']")
           output_buffer.should_not have_tag('form fieldset[@name]')
         end
-        
-        it 'should include an indexed :label input for each item' do
-          concat(semantic_form_for(@new_post) do |post|
-            post.inputs :for => :authors do |author|
-              concat(author.input(:login, :label => '%i', :required => false))
-            end
-          end)
-          
-          output_buffer.should have_tag("form fieldset.inputs label", "1", :count => 1)
-          output_buffer.should have_tag("form fieldset.inputs label", "2", :count => 1)
-          output_buffer.should_not have_tag('form fieldset legend')
-        end
       end
   
       describe 'as an array containing the a symbole for the association name and the associated object' do
@@ -199,7 +187,7 @@ describe 'Formtastic::FormBuilder#inputs' do
         output_buffer.should_not have_tag('fieldset[@builder="Formtastic::Helpers::FormHelper"]')
       end
   
-      it 'should send parent_builder as an option to allow child index interpolation for legends' do
+      it 'should send parent_builder as an option to allow child index interpolation' do
         concat(semantic_form_for(@new_post) do |builder|
           builder.instance_variable_set('@nested_child_index', 0)
           inputs = builder.inputs :for => [:author, @bob], :name => 'Author #%i' do |bob_builder|
@@ -211,7 +199,7 @@ describe 'Formtastic::FormBuilder#inputs' do
         output_buffer.should have_tag('fieldset legend', 'Author #1')
       end
   
-      it 'should also provide child index interpolation for legends when nested child index is a hash' do
+      it 'should also provide child index interpolation when nested child index is a hash' do
         concat(semantic_form_for(@new_post) do |builder|
           builder.instance_variable_set('@nested_child_index', :author => 10)
           inputs = builder.inputs :for => [:author, @bob], :name => 'Author #%i' do |bob_builder|
@@ -221,30 +209,6 @@ describe 'Formtastic::FormBuilder#inputs' do
         end)
   
         output_buffer.should have_tag('fieldset legend', 'Author #11')
-      end
-
-      it 'should send parent_builder as an option to allow child index interpolation for labels' do
-        concat(semantic_form_for(@new_post) do |builder|
-          builder.instance_variable_set('@nested_child_index', 'post[author_attributes]' => 0)
-          inputs = builder.inputs :for => [:author, @bob] do |bob_builder|
-            concat(bob_builder.input(:name, :label => 'Author #%i', :required => false))
-          end
-          concat(inputs)
-        end)
-        
-        output_buffer.should have_tag('fieldset label', 'Author #1')
-      end
-
-      it 'should also provide child index interpolation for labels when nested child index is a hash' do
-        concat(semantic_form_for(@new_post) do |builder|
-          builder.instance_variable_set('@nested_child_index', 'post[author_attributes]' => 10)
-          inputs = builder.inputs :for => [:author, @bob] do |bob_builder|
-            concat(bob_builder.input(:name, :label => 'Author #%i', :required => false))
-          end
-          concat(inputs)
-        end)
-        
-        output_buffer.should have_tag('fieldset label', 'Author #11')
       end
     end
   
