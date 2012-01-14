@@ -29,6 +29,5 @@ module Formtastic
   # @private
   class UnsupportedMethodForAction < ArgumentError
   end
-  
-  
+
 end

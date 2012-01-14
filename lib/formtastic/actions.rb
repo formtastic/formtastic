@@ -9,4 +9,3 @@ module Formtastic
     autoload :ButtonAction
   end
 end
-
