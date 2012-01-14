@@ -14,7 +14,7 @@ describe 'ButtonAction', 'when submitting' do
     end)
   end
   
-  it 'should render a submit type of input' do
+  it 'should render a submit type of button' do
     output_buffer.should have_tag('li.action.button_action button[@type="submit"]')
   end
 
@@ -33,7 +33,7 @@ describe 'ButtonAction', 'when resetting' do
     end)
   end
   
-  it 'should render a reset type of input' do
+  it 'should render a reset type of button' do
     output_buffer.should have_tag('li.action.button_action button[@type="reset"]')
   end
   
