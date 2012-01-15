@@ -598,27 +598,25 @@ There are none, but...
 
 h2. How to contribute
 
-Please ensure that you provide appropriate spec/test coverage and ensure the documentation is up-to-date.  Bonus points if you perform your changes in a clean topic branch rather than master, and if you create a pull request for your changes to be discussed and reviewed.
+* Fork the project on Github
+* Create a topic branch for your changes
+* Ensure that all tests pass (`bundle exec rake`)
+* Ensure that the changes in your branch are as atomic as possible
+* Create a pull request on Github
 
-Please also keep your commits *atomic* so that they are more likely to apply cleanly.  That means that each commit should contain the smallest possible logical change.  Don't commit two features at once, don't update the gemspec at the same time you add a feature, don't fix a whole bunch of whitespace in a file at the same time you change a few lines, etc, etc.
-
-For significant changes, you may wish to discuss your idea on the Formtastic Google group before coding to ensure that your change is likely to be accepted.  Formtastic relies heavily on i18n, so if you're unsure of the impact this has on your changes, please discuss them with the group.
-
-See below for installation of a development environment.
+For significant changes, you may wish to discuss your idea on the Formtastic Google group before coding to ensure that your change is likely to be accepted. Formtastic relies heavily on i18n, so if you're unsure of the impact this has on your changes, please discuss them with the group.
 
 
 h2. Google Group, Twitter, etc
 
 Please join the "Formtastic Google Group":http://groups.google.com.au/group/formtastic, especially if you'd like to talk about a new feature, or report a bug.
 
-You can also "follow @formtastic on Twitter":http://twitter.com/formtastic for announcements, tutorials and awesome Formtastic links.
+You can also follow "@justinfrench":http://twitter.com/formtastic or  "@formtastic":http://twitter.com/formtastic on Twitter for announcements, tutorials and links.
 
 h2. Project Info
 
-Formtastic was created by "Justin French":http://www.justinfrench.com with contributions from over 100 awesome developers.
-
-Run @git shortlog -n -s@ to see the awesome.
+Formtastic was created by "Justin French":http://www.justinfrench.com with contributions from around 150 awesome developers. Run @git shortlog -n -s@ to see the awesome.
 
 The project is hosted on Github: "http://github.com/justinfrench/formtastic":http://github.com/justinfrench/formtastic, where your contributions, forkings, comments, issues and feedback are greatly welcomed.
 
-Copyright (c) 2007-2010 Justin French, released under the MIT license.
+Copyright (c) 2007-2012 Justin French, released under the MIT license.
