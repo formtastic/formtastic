@@ -163,7 +163,9 @@ module FormtasticSpecHelper
   end
 
   def controller
-    mock('controller', :controller_path= => '', :params => {})
+    env = mock('env', :[] => nil)
+    request = mock('request', :env => env)
+    mock('controller', :controller_path= => '', :params => {}, :request => request)
   end
 
   def default_url_options

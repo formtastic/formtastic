@@ -41,6 +41,8 @@ module Formtastic
     include Formtastic::Helpers::InputHelper
     include Formtastic::Helpers::InputsHelper
     include Formtastic::Helpers::ButtonsHelper
+    include Formtastic::Helpers::ActionHelper
+    include Formtastic::Helpers::ActionsHelper
     include Formtastic::Helpers::ErrorsHelper
     
     # This is a wrapper around Rails' `ActionView::Helpers::FormBuilder#fields_for`, originally 
