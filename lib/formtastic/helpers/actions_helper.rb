@@ -10,8 +10,8 @@ module Formtastic
     #     <%= semantic_form_for @post do |f| %>
     #       ...
     #       <%= f.actions do %>
-    #         <%= f.action(:submit)
-    #         <%= f.action(:cancel)
+    #         <%= f.action :submit
+    #         <%= f.action :cancel
     #       <% end %>
     #     <% end %>
     #
@@ -62,8 +62,8 @@ module Formtastic
       #     <% semantic_form_for @post do |f| %>
       #       ...
       #       <% f.actions do %>
-      #         <%= f.action(:submit) %>
-      #         <%= f.action(:cancel) %>
+      #         <%= f.action :submit %>
+      #         <%= f.action :cancel %>
       #       <% end %>
       #     <% end %>
       #

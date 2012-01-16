@@ -17,9 +17,9 @@ module Formtastic
       #   <%= semantic_form_for @post do |f| %>
       #     ...
       #     <%= f.actions do %>
-      #       <%= f.action(:submit) %>
-      #       <%= f.action(:reset) %>
-      #       <%= f.action(:cancel) %>
+      #       <%= f.action :submit %>
+      #       <%= f.action :reset %>
+      #       <%= f.action :cancel %>
       #     <% end %>
       #   <% end %>
       #
