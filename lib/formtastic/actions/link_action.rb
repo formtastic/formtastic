@@ -19,9 +19,9 @@
 #     <fieldset class="actions">
 #       <ol>
 #         <li class="action input_action" id="post_submit_action">
-#           <input type="reset" value="Reset">
+#           <input type="submit" value="Create Post">
 #         </li>
-#         <li class="action link_action" id="post_reset_action">
+#         <li class="action link_action" id="post_cancel_action">
 #           <a href="javascript:history.back()">Cancel</a>
 #         </li>
 #       </ol>

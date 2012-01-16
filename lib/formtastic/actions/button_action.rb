@@ -14,10 +14,10 @@
 #   <form...>
 #     <fieldset class="actions">
 #       <ol>
-#         <li class="action button_action" id="post_submit_action">
+#         <li class="action button_action" id="post_reset_action">
 #           <button type="reset" value="Reset">
 #         </li>
-#         <li class="action button_action" id="post_reset_action">
+#         <li class="action button_action" id="post_submit_action">
 #           <button type="submit" value="Create Post">
 #         </li>
 #       </ol>
