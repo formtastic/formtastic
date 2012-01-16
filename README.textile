@@ -194,7 +194,7 @@ If you want to customize the label text, or render some hint text below the fiel
       <%= f.input :created_at, :as => :string, :label => "Publication Date", :required => false %>
     <% end %>
     <%= f.actions do %>
-      <%= f.action(:submit) %>
+      <%= f.action :submit %>
     <% end %>
   <% end %>
 </pre>
@@ -426,7 +426,7 @@ Formtastic supports localized *labels*, *hints*, *legends*, *actions* using the 
       <%= f.input :section %>    # => :label => I18n.t('activerecord.attributes.user.section')  or 'Section'
     <% end %>
     <%= f.actions do %>
-      <%= f.action(:submit) %>   # => "Create my %{model}"
+      <%= f.action :submit %>   # => "Create my %{model}"
     <% end %>
   <% end %>
 </pre>
@@ -454,7 +454,7 @@ _Note: Slightly different because Formtastic can't guess how you group fields in
       <%= f.input :section, :label => 'Some section' %>    # => :label => 'Some section'
     <% end %>
     <%= f.actions do %>
-      <%= f.actions(:submit, :label => :dummie) %>         # => "Launch!"
+      <%= f.action :submit, :label => :dummie %>         # => "Launch!"
     <% end %>
   <% end %>
 </pre>
