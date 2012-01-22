@@ -65,21 +65,25 @@ module Formtastic
     class LinkAction
 
       include Base
-      
+
       def supported_methods
         [:cancel]
       end
-      
+
       # TODO reset_action class?
       def to_html
         wrapper do
           template.link_to(text, url, button_html)
         end
       end
-      
+
       def url
         return options[:url] if options.key?(:url)
-        :back
+        if @object && @object.errors.any?
+          'javascript:history.go(-2)'
+        else
+          :back
+        end
       end
 
     end
