@@ -213,6 +213,7 @@ describe 'InputAction::Base' do
                       }
                     }
                  }
+
              concat(semantic_form_for(:post, :url => 'http://example.com') do |builder|
                concat(builder.action(:submit, :as => :generic))
                concat(builder.action(:reset, :as => :generic))

@@ -23,6 +23,7 @@ module Formtastic
     configure :file_metadata_suffixes, ['content_type', 'file_name', 'file_size']
     configure :priority_countries, ["Australia", "Canada", "United Kingdom", "United States"]
     configure :i18n_lookups_by_default, true
+    configure :i18n_cache_lookups, true
     configure :i18n_localizer, Formtastic::Localizer
     configure :escape_html_entities_in_hints_and_labels, true
     configure :default_commit_button_accesskey
