@@ -12,8 +12,8 @@ describe 'Data Attributes' do
 
   def authors_path(*args) '/authors'; end
 
-  def author
-    @author ||= ::Author.new.tap do |author|
+  let(:author) do
+    ::Author.new.tap do |author|
       time = Time.now
 
       attributes_for_input_mock = {
