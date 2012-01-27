@@ -17,6 +17,14 @@ module Formtastic
         removed_option!(:group_label_method)
       end
 
+      # Useful for deprecating options.
+      def warn_and_correct_option!(old_option_name, new_option_name)
+        if options.key?(old_option_name)
+          ::ActiveSupport::Deprecation.warn("The :#{old_option_name} option is deprecated in favour of :#{new_option_name} and will be removed from Formtastic after 2.0")
+          options[new_option_name] = options.delete(old_option_name)
+        end
+      end
+
       # Useful for raising an error on previously supported option.
       def removed_option!(old_option_name)
         raise ArgumentError, ":#{old_option_name} is no longer available" if options.key?(old_option_name)
