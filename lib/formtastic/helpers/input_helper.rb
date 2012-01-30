@@ -330,22 +330,7 @@ module Formtastic
       #
       # @example When a top-level class is found
       #   input_class(:string) #=> StringInput
-      #   input_class(:awesome) #=> AwesomeInput
-      def input_class(as)
-        @input_classes_cache ||= {}
-        @input_classes_cache[as] ||= begin
-          begin
-            begin
-              custom_input_class_name(as).constantize
-            rescue NameError
-              standard_input_class_name(as).constantize
-            end
-          rescue NameError
-            raise Formtastic::UnknownInputError
-          end
-        end
-      end
-      
+      #   input_class(:awesome) #=> AwesomeInput      
       def input_class(as)
         @input_classes_cache ||= {}
         @input_classes_cache[as] ||= begin
