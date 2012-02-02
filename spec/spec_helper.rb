@@ -419,10 +419,14 @@ end
 ::ActiveSupport::Deprecation.silenced = false
 
 RSpec.configure do |config|
+  config.before(:each) do
+    Formtastic::Localizer.cache.clear!    
+  end
+  
   config.before(:all) do
     DeferredGarbageCollection.start unless ENV["DEFER_GC"] == "false"
   end
   config.after(:all) do
-    DeferredGarbageCollection.reconsider unless ENV["DEFER_GC"] == "false"
+    DeferredGarbageCollection.reconsider unless ENV["DEFER_GC"] == "false"    
   end
 end
