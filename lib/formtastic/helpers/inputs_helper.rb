@@ -380,7 +380,7 @@ module Formtastic
           end
         end
 
-        fields_for_args = [options.delete(:for), options.delete(:for_options) || {}].flatten
+        fields_for_args = [options.delete(:for), options.delete(:for_options) || {}].flatten(1)
         fields_for(*fields_for_args, &fields_for_block)
       end
 
