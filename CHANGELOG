@@ -1,4 +1,40 @@
-HEAD
+2.1.0.rc
+
+* documentation improvements
+* improved performance by caching of Formtastic's i18n lookups
+* improved performance in production by checking for defined constants instead of catching the exception
+* fixed arguments passed into fields_for being flattened one level too deep
+
+2.1.0.beta
+
+* Added Rails 3.2 compatibility
+* Added a new Actions DSL (f.actions, f.action) — see below for deprecation of the Buttons DSL
+* Added new i18n_localizer configuration, allowing you to use your own localiser class instead of Formtastic::Localizer
+* Added a hidden input before mutli-selects, to allow full clearing of the select (like we do for checkboxes)
+* Added support for integers in a :collection for radio and check_boxes inputs
+* Added support for time inputs with no current value to default render blank inputs rather than pre-selecting the current time
+* Brought back the Form Generator from 1.2.x versions of Formtastic
+* Added support for placeholder text on textareas (text inputs)
+* Deprecated the Buttons DSL (f.buttons, f.commit_button) in favor of the new Actions DSL — see above
+* Removed the previously deprecated :label_method, :value_method & :group_label_method options
+* Removed the previously deprecated :as => :numeric
+* Removed the previously deprecated inline_errors_for and related methods
+* Removed the previously deprecated SemanticFormHelper and SemanticFormBuilder
+* Fixed the behavior of :include_blank and :prompt options to be inline with Rails’
+* Fixed that :input_html => { :multiple => true } did not force a single choice select into a multi choice
+* Fixed date, time and datetime legend labels to correspond to the first visible input, rather than the first input (which may be hidden)
+* Fixed that DateInput should treat fragments excluded from :order option as discarded
+* Fixed that the :wrapper_html options could not be reused in the view (like in a with_options block) because they were modified by Formtastic
+* Fixed numerous Mongoid and MongoMapper compatibility issues
+* Fixed that we should be calculating the length of integer columns as bytes
+* Fixed many inputs (date, datetime, time, checkboxes, select & boolean) that did not correctly use the :index option in fields_for
+* Fixed Haml and Slim template indentation
+* Fixed invalid html output for nested inputs with multiple siblings
+* Fixed i18n keys with nested objects
+* Many documentation fixes and improvements
+* A few performance improvements
+
+2.0.2
 
 * Fixed that MongoMapper does not use `associations(method)`. `.associations` is an accessor.
 
