@@ -238,6 +238,21 @@ When working in has many association, you can even supply @"%i"@ in your fieldse
   <% end %>
 </pre>
 
+Alternatively, the current index can be accessed via the `inputs` block's arguments for use anywhere:
+
+<pre>
+  <%= semantic_form_for @post do |f| %>
+    <%= f.inputs :for => :categories do |category, i| %>
+      <% if i <= 2 %>
+        <%= f.inputs :name => "Category ##{i}" %>
+      <% else %>
+        <%= f.inputs :name => "Category ##{i} (optional)" %>
+      <% end %>
+    <% end %>
+    <%= f.actions %>
+  <% end %>
+</pre>
+
 If you have more than one form on the same page, it may lead to HTML invalidation because of the way HTML element id attributes are assigned. You can provide a namespace for your form to ensure uniqueness of id attributes on form elements. The namespace attribute will be prefixed with underscore on the generate HTML id. For example:
 
 <pre>
