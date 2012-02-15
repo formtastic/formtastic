@@ -370,7 +370,14 @@ module Formtastic
           raise ArgumentError, 'You gave :for option with a block to inputs method, ' <<
                                'but the block does not accept any argument.' if block.arity <= 0
           lambda do |f|
-            contents = f.inputs(*args){ block.call(f) }
+            contents = f.inputs(*args) do
+              if block.arity == 1  # for backwards compatibility with REE & Ruby 1.8.x
+                block.call(f)
+              else
+                index = parent_child_index(options[:parent]) if options[:parent]
+                block.call(f, index)
+              end
+            end
             template.concat(contents)
           end
         else
