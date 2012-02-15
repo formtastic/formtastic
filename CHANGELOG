@@ -4,6 +4,7 @@
 * improved performance by caching of Formtastic's i18n lookups
 * improved performance in production by checking for defined constants instead of catching the exception
 * fixed arguments passed into fields_for being flattened one level too deep
+* added an optional `index` that an inputs() block can access for use in labels and other HTML attributes
 
 2.1.0.beta
 
