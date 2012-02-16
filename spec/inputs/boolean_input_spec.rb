@@ -29,6 +29,10 @@ describe 'boolean input' do
     output_buffer.should_not have_tag('form li label input[@type="hidden"]', :count => 1) # invalid HTML5
   end
 
+  it 'should not add a "name" attribute to the label' do
+    output_buffer.should_not have_tag('form li label[@name]')
+  end
+
   it 'should generate a checkbox input' do
     output_buffer.should have_tag('form li label input')
     output_buffer.should have_tag('form li label input#post_allow_comments')
