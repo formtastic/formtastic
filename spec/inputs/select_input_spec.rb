@@ -370,6 +370,15 @@ describe 'select input' do
       output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should have_tag('form li select option[@selected]', :count => 1)
     end
+
+    it 'should have a hidden input for multiple selects' do
+      @form = semantic_form_for(@fred) do |builder|
+        concat(builder.input(:posts, :as => :select, :multiple => true, :include_blank => true))
+      end
+
+      output_buffer.concat(@form) if Formtastic::Util.rails3?
+      output_buffer.should have_tag("form li input[@type='hidden']")
+    end
   end
 
   describe 'for a has_and_belongs_to_many association' do
