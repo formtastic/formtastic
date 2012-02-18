@@ -844,7 +844,7 @@ module Formtastic #:nodoc:
         end
 
         if html_options[:multiple]
-          select_html << create_hidden_field_for_multiple_select(input_name)
+          select_html = create_hidden_field_for_multiple_select(input_name) << select_html
         end
 
         label_options = options_for_label(options).merge(:input_name => input_name)
