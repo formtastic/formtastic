@@ -377,7 +377,7 @@ describe 'select input' do
       end
 
       output_buffer.concat(@form) if Formtastic::Util.rails3?
-      output_buffer.should have_tag("form li input[@type='hidden']")
+      output_buffer.should have_tag("form li input[@type='hidden'][@name='author[post_ids][]']")
     end
   end
 
