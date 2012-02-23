@@ -20,7 +20,7 @@ module Formtastic
         end
         
         def label_text
-          ((localized_label || humanized_method_name) << requirement_text).html_safe
+          ((localized_label || humanized_method_name) + requirement_text).html_safe
         end
         
         # TODO: why does this need to be memoized in order to make the inputs_spec tests pass? 
