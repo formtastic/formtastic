@@ -10,6 +10,28 @@ describe 'Formtastic::FormBuilder#label' do
     mock_everything
   end
 
+  it 'should add "required string" only once with caching enabled' do
+    with_config :i18n_cache_lookups, true do
+      ::I18n.backend.store_translations :en, { formtastic: { labels: { post: { title: "I18n title" } } } }
+      required_string = "[req_string]"
+      default_required_str = Formtastic::FormBuilder.required_string
+      Formtastic::FormBuilder.required_string = required_string
+
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input(:title, required: true, label: true)
+      end)
+      output_buffer.clear
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input(:title, required: true, label: true)
+      end)
+
+      ::I18n.backend.store_translations :en, { formtastic: { labels: { post: { title: nil } } } }
+      Formtastic::FormBuilder.required_string = default_required_str
+
+      output_buffer.scan(required_string).count.should == 1
+    end
+  end
+
   it 'should humanize the given attribute' do
     concat(semantic_form_for(@new_post) do |builder|
       builder.input(:title)
