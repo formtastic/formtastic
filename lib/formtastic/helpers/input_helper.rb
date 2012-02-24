@@ -161,9 +161,9 @@ module Formtastic
       # @option options :prompt [String]
       #   Specify the text in the first ('blank') `:select` input `<option>` to prompt a user to make a selection (implicitly sets `:include_blank` to `true`)
       #
-      # @todo Can we kill `:group_by` & `:group_label`? Should be done with :collection => grouped_options_for_select(...)
-      # @todo Can we kill `:find_options`? Should be done with MyModel.some_scope.where(...).order(...).whatever_scope
-      # @todo Can we kill `:label`, `:hint` & `:prompt`? All strings could be shifted to i18n!
+      # @todo Can we deprecate & kill `:group_by` & `:group_label`? Should be done with :collection => grouped_options_for_select(...)
+      # @todo Can we deprecate & kill `:find_options`? Should be done with MyModel.some_scope.where(...).order(...).whatever_scope
+      # @todo Can we deprecate & kill `:label`, `:hint` & `:prompt`? All strings could be shifted to i18n!
       #
       # @example Accept all default options
       #   <%= f.input :title %>
