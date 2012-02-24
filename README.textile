@@ -317,14 +317,14 @@ Customize the default class used for hints on each attribute or globally in the 
 Many inputs provide a collection of options to choose from (like @:select@, @:radio@, @:check_boxes@, @:boolean@). In many cases, Formtastic can find choices through the model associations, but if you want to use your own set of choices, the @:collection@ option is what you want.  You can pass in an Array of objects, an array of Strings, a Hash... Throw almost anything at it! Examples:
 
 <pre>
-  f.input :authors, :as => :check_boxes, :collection => User.find(:all, :order => "last_name ASC")
+  f.input :authors, :as => :check_boxes, :collection => User.order("last_name ASC").all
   f.input :authors, :as => :check_boxes, :collection => current_user.company.users.active
   f.input :authors, :as => :check_boxes, :collection => [@justin, @kate]
   f.input :authors, :as => :check_boxes, :collection => ["Justin", "Kate", "Amelia", "Gus", "Meg"]
-  f.input :author,  :as => :select,      :collection => Author.find(:all)
+  f.input :author,  :as => :select,      :collection => Author.all
   f.input :author,  :as => :select,      :collection => { @justin.name => @justin.id, @kate.name => @kate.id }
   f.input :author,  :as => :select,      :collection => ["Justin", "Kate", "Amelia", "Gus", "Meg"]
-  f.input :author,  :as => :radio,       :collection => User.find(:all)
+  f.input :author,  :as => :radio,       :collection => User.all
   f.input :author,  :as => :radio,       :collection => [@justin, @kate]
   f.input :author,  :as => :radio,       :collection => { @justin.name => @justin.id, @kate.name => @kate.id }
   f.input :author,  :as => :radio,       :collection => ["Justin", "Kate", "Amelia", "Gus", "Meg"]
