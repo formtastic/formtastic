@@ -15,7 +15,7 @@ describe Formtastic::InstallGenerator do
     describe 'config/initializers/formtastic.rb' do
       subject { file('config/initializers/formtastic.rb') }
       it { should exist }
-      it { should contain "# Please note: If you're subclassing Formtastic::FormBuilder" }
+      it { should contain "#" }
     end
 
     describe 'lib/templates/erb/scaffold/_form.html.erb' do
