@@ -12,10 +12,6 @@ module Formtastic
         @method = method
         @options = options.dup
         
-        removed_option!(:label_method)
-        removed_option!(:value_method)
-        removed_option!(:group_label_method)
-        
         warn_deprecated_option!(:value, ":input_html => { :value => '...'}")
         warn_deprecated_option!(:hint_class, "default_hint_class configuration")
         warn_deprecated_option!(:error_class, "default_error_class configuration")
