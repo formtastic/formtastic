@@ -1,3 +1,9 @@
+HEAD
+
+* removed deprecated buttons DSL, ButtonHelper and commit_button helper
+
+2.1.0
+
 2.1.0.rc
 
 * documentation improvements
