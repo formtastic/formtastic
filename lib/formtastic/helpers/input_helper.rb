@@ -143,12 +143,6 @@ module Formtastic
       # @option options :member_value [Symbol, Proc, Method]
       #   Override the method called on each object in the `:collection` for use as the `value` attribute in the `<input>` (`:check_boxes` & `:radio` inputs) or `<option>` (`:select` inputs)
       #
-      # @option options :hint_class [String]
-      #   Override the `class` attribute applied to the `<p>` tag used when a `:hint` is rendered for an input
-      #
-      # @option options :error_class [String]
-      #   Override the `class` attribute applied to the `<p>` or `<ol>` tag used when inline errors are rendered for an input
-      #
       # @option options :multiple [Boolean]
       #   Specify if the `:select` input should allow multiple selections or not (defaults to `belongs_to` associations, and `true` for `has_many` and `has_and_belongs_to_many` associations)
       #
@@ -167,7 +161,6 @@ module Formtastic
       # @option options :prompt [String]
       #   Specify the text in the first ('blank') `:select` input `<option>` to prompt a user to make a selection (implicitly sets `:include_blank` to `true`)
       #
-      # @todo Can we kill `:hint_class` & `:error_class`? What's the use case for input-by-input? Shift to config or burn!
       # @todo Can we kill `:group_by` & `:group_label`? Should be done with :collection => grouped_options_for_select(...)
       # @todo Can we kill `:find_options`? Should be done with MyModel.some_scope.where(...).order(...).whatever_scope
       # @todo Can we kill `:label`, `:hint` & `:prompt`? All strings could be shifted to i18n!

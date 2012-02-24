@@ -17,6 +17,8 @@ module Formtastic
         removed_option!(:group_label_method)
         
         warn_deprecated_option!(:value, ":input_html => { :value => '...'}")
+        warn_deprecated_option!(:hint_class, "default_hint_class configuration")
+        warn_deprecated_option!(:error_class, "default_error_class configuration")
       end
       
       # Usefull for deprecating options.
@@ -27,6 +29,7 @@ module Formtastic
         end
       end
       
+      # Usefull for deprecating options.
       def warn_deprecated_option!(old_option_name, instructions)
         if options.key?(old_option_name)
           ::ActiveSupport::Deprecation.warn("The :#{old_option_name} option is deprecated in favour of `#{instructions}` and will be removed in the next version")
