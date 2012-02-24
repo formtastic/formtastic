@@ -1,6 +1,7 @@
 HEAD
 
 * removed deprecated buttons DSL, ButtonHelper and commit_button helper
+* deprecated the top-level :value option that is only used by HiddenInput
 
 2.1.0
 

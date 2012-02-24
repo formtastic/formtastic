@@ -15,6 +15,8 @@ module Formtastic
         removed_option!(:label_method)
         removed_option!(:value_method)
         removed_option!(:group_label_method)
+        
+        warn_deprecated_option!(:value, ":input_html => { :value => '...'}")
       end
       
       # Usefull for deprecating options.
@@ -22,6 +24,12 @@ module Formtastic
         if options.key?(old_option_name)
           ::ActiveSupport::Deprecation.warn("The :#{old_option_name} option is deprecated in favour of :#{new_option_name} and will be removed from Formtastic in the next version")
           options[new_option_name] = options.delete(old_option_name)
+        end
+      end
+      
+      def warn_deprecated_option!(old_option_name, instructions)
+        if options.key?(old_option_name)
+          ::ActiveSupport::Deprecation.warn("The :#{old_option_name} option is deprecated in favour of `#{instructions}` and will be removed in the next version")
         end
       end
       

@@ -34,7 +34,7 @@ module Formtastic
       # Override to include :value set directly from options hash. The :value set in :input_html 
       # hash will be preferred over :value set directly in the options.
       #
-      # @todo this is inconsistent with all other inputs, deprecate and remove
+      # @deprecated :value option
       def input_html_options
         options.slice(:value).merge(super).merge(:required => nil).merge(:autofocus => nil)
       end
