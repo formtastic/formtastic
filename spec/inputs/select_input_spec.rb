@@ -236,8 +236,10 @@ describe 'select input' do
       ::Author.should_receive(:scoped).with(:conditions => {:active => true})
       ::Author.should_receive(:where).with({:publisher => true})
 
-      semantic_form_for(@new_post) do |builder|
-        concat(builder.input(:author, :as => :select, :find_options => {:conditions => {:publisher => true}}))
+      with_deprecation_silenced do
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:author, :as => :select, :find_options => {:conditions => {:publisher => true}}))
+        end
       end
     end
   end

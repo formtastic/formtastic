@@ -146,16 +146,12 @@ module Formtastic
       # @option options :multiple [Boolean]
       #   Specify if the `:select` input should allow multiple selections or not (defaults to `belongs_to` associations, and `true` for `has_many` and `has_and_belongs_to_many` associations)
       #
-      # @option options :find_options [Symbol]
-      #   TODO will probably be deprecated
-      #
       # @option options :include_blank [Boolean]
       #   Specify if a `:select` input should include a blank option or not (defaults to `include_blank_for_select_by_default` configuration)
       #
       # @option options :prompt [String]
       #   Specify the text in the first ('blank') `:select` input `<option>` to prompt a user to make a selection (implicitly sets `:include_blank` to `true`)
       #
-      # @todo Can we deprecate & kill `:find_options`? Should be done with MyModel.some_scope.where(...).order(...).whatever_scope
       # @todo Can we deprecate & kill `:label`, `:hint` & `:prompt`? All strings could be shifted to i18n!
       #
       # @example Accept all default options
