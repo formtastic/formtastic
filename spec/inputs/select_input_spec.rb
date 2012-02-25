@@ -207,9 +207,11 @@ describe 'select input' do
       [@freds_post].each { |post| post.stub!(:to_label).and_return("Post - #{post.id}") }
       @fred.should_receive(:posts)
 
-      concat(semantic_form_for(@new_post) do |builder|
-        concat(builder.input(:main_post, :as => :select, :group_by => :author ) )
-      end)
+      with_deprecation_silenced do
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:main_post, :as => :select, :group_by => :author ) )
+        end)
+      end
     end
   end
 
@@ -258,12 +260,14 @@ describe 'select input' do
         continent.stub!(:authors).and_return([@authors[i]])
       end
 
-      concat(semantic_form_for(@new_post) do |builder|
-        concat(builder.input(:author, :as => :select, :group_by => :continent ) )
-        concat(builder.input(:author, :as => :select, :group_by => :continent, :group_label => :id ) )
-        concat(builder.input(:author, :as => :select, :group_by => :continent, :member_label => :login ) )
-        concat(builder.input(:author, :as => :select, :group_by => :continent, :member_label => :login, :group_label => :id ) )
-      end)
+      with_deprecation_silenced do
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:author, :as => :select, :group_by => :continent ) )
+          concat(builder.input(:author, :as => :select, :group_by => :continent, :group_label => :id ) )
+          concat(builder.input(:author, :as => :select, :group_by => :continent, :member_label => :login ) )
+          concat(builder.input(:author, :as => :select, :group_by => :continent, :member_label => :login, :group_label => :id ) )
+        end)
+      end
     end
 
     it_should_have_input_wrapper_with_class("select")
@@ -303,8 +307,10 @@ describe 'select input' do
     it 'should call find with :include for more optimized queries' do
       Author.should_receive(:where).with(:include => :continent)
 
-      semantic_form_for(@new_post) do |builder|
-        concat(builder.input(:author, :as => :select, :group_by => :continent ) )
+      with_deprecation_silenced do 
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:author, :as => :select, :group_by => :continent ) )
+        end
       end
     end
   end
