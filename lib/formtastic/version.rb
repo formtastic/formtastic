@@ -1,3 +1,3 @@
 module Formtastic
-  VERSION = "2.1.0.rc"
+  VERSION = "2.1.0"
 end
