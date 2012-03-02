@@ -57,8 +57,9 @@ module Formtastic
         
         input_html_options.merge(
           prev.merge(
-            :id => nil,
-            :for => input_html_options[:id]
+            :id   => nil,
+            :name => nil,
+            :for  => input_html_options[:id]
           )
         )
       end

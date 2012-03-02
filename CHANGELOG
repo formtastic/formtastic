@@ -1,3 +1,13 @@
+2.1.1
+
+* Documentation improvements and updates
+* Fixed that the required string was appended to the label over and over due to localizer caching
+* Fixed that the checkbox's `name` attribute was included in the attributes of the matching label element on boolean fields
+
+2.1.0
+
+* no changes
+
 2.1.0.rc
 
 * documentation improvements
