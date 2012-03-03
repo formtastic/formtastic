@@ -843,9 +843,19 @@ module Formtastic #:nodoc:
           select(input_name, collection, strip_formtastic_options(options), html_options)
         end
 
+        if html_options[:multiple]
+          select_html = create_hidden_field_for_multiple_select(input_name) << select_html
+        end
+
         label_options = options_for_label(options).merge(:input_name => input_name)
         label_options[:for] ||= html_options[:id]
         label(method, label_options) << select_html
+      end
+
+      # Outputs a custom hidden field for multiple selects
+      def create_hidden_field_for_multiple_select(method) #:nodoc:
+        input_name = "#{object_name}[#{method.to_s}][]"
+        template.hidden_field_tag(input_name, '')
       end
 
       # Outputs a timezone select input as Rails' time_zone_select helper. You
