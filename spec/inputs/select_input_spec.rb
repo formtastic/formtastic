@@ -63,7 +63,7 @@ describe 'select input' do
 
     describe 'using a string' do
       before do
-        @string ="<option value='0'>0</option><option value='1'>1</option>"
+        @string ="<option value='0'>0</option><option value='1'>1</option>".html_safe
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:title, :as => :select, :collection => @string))
         end)
