@@ -329,6 +329,7 @@ Many inputs provide a collection of options to choose from (like @:select@, @:ra
   f.input :author,  :as => :radio,       :collection => { @justin.name => @justin.id, @kate.name => @kate.id }
   f.input :author,  :as => :radio,       :collection => ["Justin", "Kate", "Amelia", "Gus", "Meg"]
   f.input :admin,   :as => :radio,       :collection => ["Yes!", "No"]
+  f.input :book_id, :as => :select,      :collection => Hash[Book.all.map{|b| [b.name,b.id]}]
 </pre>
 
 
