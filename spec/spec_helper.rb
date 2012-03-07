@@ -413,7 +413,31 @@ module FormtasticSpecHelper
     yield
     Formtastic::FormBuilder.send(:"#{config_method_name}=", old_value)
   end
-
+  
+  class ToSMatcher
+    def initialize(str)
+      @str=str.to_s
+    end
+    
+    def matches?(value)
+      value.to_s==@str
+    end
+    
+    def failure_message_for_should
+      "Expected argument that converted to #{@str}"
+    end
+  end
+  
+  def errors_matcher(method)
+    # In edge rails (Rails 4) tags store method_name as a string and index the errors object using a string
+    # therefore allow stubs to match on either string or symbol.  The errors object calls to_sym on all index 
+    # accesses so @object.errors[:abc] is equivalent to @object.errors["abc"]
+    if Rails::VERSION::MAJOR == 4
+      ToSMatcher.new(method)
+    else
+      method
+    end
+  end
 end
 
 ::ActiveSupport::Deprecation.silenced = false
