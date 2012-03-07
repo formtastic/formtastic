@@ -1,0 +1,7 @@
+before_install: gem update --system
+rvm:
+  - 1.8.7
+  - ree
+env:
+  - DEFER_GC=false
+  - DEFER_GC=false RAILS_2=true
