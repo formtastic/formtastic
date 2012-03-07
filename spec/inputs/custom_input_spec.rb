@@ -11,8 +11,11 @@ module TestInputs
     @method = :title
     @options = {}
     @proc = Proc.new {}
-    @builder = Formtastic::FormBuilder.new(@object_name, @object, @template, @options, @proc)
-    
+    if Rails::VERSION::MAJOR == 4
+      @builder = Formtastic::FormBuilder.new(@object_name, @object, @template, @options)
+    else
+      @builder = Formtastic::FormBuilder.new(@object_name, @object, @template, @options, @proc)
+    end
     [@builder, @template, @object, @object_name, @method, @options]
   end
   
