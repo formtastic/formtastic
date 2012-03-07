@@ -35,7 +35,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.6}
   
-  s.add_dependency(%q<i18n>, ["~> 0.5.0"])
+  s.add_dependency(%q<i18n>, ["~> 0.4.0"])
   
   if ENV['RAILS_2']
     s.add_development_dependency(%q<rails>, ["~> 2.3.8"])
