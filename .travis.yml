@@ -4,5 +4,17 @@ rvm:
   - ree
   - 1.9.2
   - 1.9.3
+gemfile:
+  - gemfiles/rails-3.0.gemfile
+  - gemfiles/rails-3.1.gemfile
+  - gemfiles/rails-3.2.gemfile
+  - gemfiles/rails-4.gemfile
 env:
   - DEFER_GC=false
+script: "rake spec"
+matrix:
+  exclude:
+    - rvm: 1.8.7
+      gemfile: gemfiles/rails-4.gemfile
+    - rvm: ree
+      gemfile: gemfiles/rails-4.gemfile
