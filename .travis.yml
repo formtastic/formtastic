@@ -20,3 +20,7 @@ matrix:
     - rvm: ree
       gemfile: gemfiles/rails-4.gemfile
       env: DEFER_GC=false
+    - rvm: 1.9.2
+      gemfile: gemfiles/rails-4.gemfile
+      env: DEFER_GC=false
+      
