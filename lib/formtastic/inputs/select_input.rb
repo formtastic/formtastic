@@ -195,7 +195,7 @@ module Formtastic
       end
 
       def input_html_options
-        extra_input_html_options.merge(super.reject {|k,v| k==:name && v.nil?} )
+        extra_input_html_options.merge(super)
       end
       
       def extra_input_html_options
