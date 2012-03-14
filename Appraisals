@@ -12,4 +12,5 @@ end
 
 appraise 'rails-4' do
   gem 'rails',      :git => 'git://github.com/rails/rails.git'
+  gem 'sprockets-rails', :git => 'https://github.com/rails/sprockets-rails.git'  
 end
