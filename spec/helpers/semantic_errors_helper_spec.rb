@@ -17,7 +17,7 @@ describe 'Formtastic::FormBuilder#semantic_errors' do
 
   describe 'when there is only one error on base' do
     before do
-      @errors.stub!(:[]).with(errors_matcher(:base)).and_return(@base_error)
+      @errors.stub!(:[]).with(:base).and_return(@base_error)
     end
 
     it 'should render an unordered list' do
@@ -29,7 +29,7 @@ describe 'Formtastic::FormBuilder#semantic_errors' do
 
   describe 'when there is more than one error on base' do
     before do
-      @errors.stub!(:[]).with(errors_matcher(:base)).and_return(@base_errors)
+      @errors.stub!(:[]).with(:base).and_return(@base_errors)
     end
 
     it 'should render an unordered list' do
@@ -44,8 +44,8 @@ describe 'Formtastic::FormBuilder#semantic_errors' do
 
   describe 'when there are errors on title' do
     before do
-      @errors.stub!(:[]).with(errors_matcher(:title)).and_return(@title_errors)
-      @errors.stub!(:[]).with(errors_matcher(:base)).and_return([])
+      @errors.stub!(:[]).with(:title).and_return(@title_errors)
+      @errors.stub!(:[]).with(:base).and_return([])
     end
 
     it 'should render an unordered list' do
@@ -58,8 +58,8 @@ describe 'Formtastic::FormBuilder#semantic_errors' do
 
   describe 'when there are errors on title and base' do
     before do
-      @errors.stub!(:[]).with(errors_matcher(:title)).and_return(@title_errors)
-      @errors.stub!(:[]).with(errors_matcher(:base)).and_return(@base_error)
+      @errors.stub!(:[]).with(:title).and_return(@title_errors)
+      @errors.stub!(:[]).with(:base).and_return(@base_error)
     end
 
     it 'should render an unordered list' do
@@ -73,8 +73,8 @@ describe 'Formtastic::FormBuilder#semantic_errors' do
 
   describe 'when there are no errors' do
     before do
-      @errors.stub!(:[]).with(errors_matcher(:title)).and_return(nil)
-      @errors.stub!(:[]).with(errors_matcher(:base)).and_return(nil)
+      @errors.stub!(:[]).with(:title).and_return(nil)
+      @errors.stub!(:[]).with(:base).and_return(nil)
     end
 
     it 'should return nil' do
@@ -86,7 +86,7 @@ describe 'Formtastic::FormBuilder#semantic_errors' do
 
   describe 'when there is one error on base and options with class is passed' do
     before do
-      @errors.stub!(:[]).with(errors_matcher(:base)).and_return(@base_error)
+      @errors.stub!(:[]).with(:base).and_return(@base_error)
     end
 
     it 'should render an unordered list with given class' do
@@ -98,7 +98,7 @@ describe 'Formtastic::FormBuilder#semantic_errors' do
   
   describe 'when :base is passed in as an argument' do
     before do
-      @errors.stub!(:[]).with(errors_matcher(:base)).and_return(@base_error)
+      @errors.stub!(:[]).with(:base).and_return(@base_error)
     end
 
     it 'should ignore :base and only render base errors once' do

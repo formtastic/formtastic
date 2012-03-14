@@ -101,7 +101,7 @@ describe 'Formtastic::FormBuilder#fields_for' do
     
     it 'should render errors on the nested inputs' do
       @errors = mock('errors')
-      @errors.stub!(:[]).with(errors_matcher(:login)).and_return(['oh noes'])      
+      @errors.stub!(:[]).with(:login).and_return(['oh noes'])
       @bob.stub!(:errors).and_return(@errors)
       
       concat(semantic_form_for(@new_post, :namespace => 'context2') do |builder|
