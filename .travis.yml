@@ -10,18 +10,17 @@ gemfile:
   - gemfiles/rails-3.2.gemfile
   - gemfiles/rails-4.gemfile
 env:
-  - DEFER_GC=false
-  - RAILS_EDGE=true
+  - DEFER_GC=false RAILS_EDGE=true
 script: "rake spec"
 matrix:
   exclude:
     - rvm: 1.8.7
       gemfile: gemfiles/rails-4.gemfile
-      env: DEFER_GC=false
+      env: DEFER_GC=false RAILS_EDGE=true
     - rvm: ree
       gemfile: gemfiles/rails-4.gemfile
-      env: DEFER_GC=false
+      env: DEFER_GC=false RAILS_EDGE=true
     - rvm: 1.9.2
       gemfile: gemfiles/rails-4.gemfile
-      env: DEFER_GC=false
+      env: DEFER_GC=false RAILS_EDGE=true
       
