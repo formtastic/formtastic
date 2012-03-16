@@ -11,6 +11,7 @@ gemfile:
   - gemfiles/rails-4.gemfile
 env:
   - DEFER_GC=false
+  - RAILS_EDGE=true
 script: "rake spec"
 matrix:
   exclude:
