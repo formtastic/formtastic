@@ -14,27 +14,32 @@ module Formtastic
         end
         
         def wrapper_html_options
-          opts = (options[:wrapper_html] || {}).dup
-          opts[:class] =
-            case opts[:class]
-            when Array
-              opts[:class].dup
-            when nil
-              []
-            else
-              [opts[:class].to_s]
-            end
-          opts[:class] << as
-          opts[:class] << "input"
-          opts[:class] << "error" if errors?
-          opts[:class] << "optional" if optional?
-          opts[:class] << "required" if required?
-          opts[:class] << "autofocus" if autofocus?
-          opts[:class] = opts[:class].join(' ')
-          
-          opts[:id] ||= wrapper_dom_id
-        
+          opts = wrapper_html_options_raw
+          opts[:class] = wrapper_classes
+          opts[:id] ||= wrapper_dom_id 
           opts
+        end
+        
+        def wrapper_html_options_raw
+          (options[:wrapper_html] || {}).dup
+        end
+        
+        def wrapper_classes_raw
+          classes = wrapper_html_options_raw[:class] || []
+          return classes.dup if classes.is_a?(Array)
+          return [classes]
+        end
+        
+        def wrapper_classes
+          classes = wrapper_classes_raw
+          classes << as
+          classes << "input"
+          classes << "error" if errors?
+          classes << "optional" if optional?
+          classes << "required" if required?
+          classes << "autofocus" if autofocus?
+
+          classes.join(' ')
         end
         
         def wrapper_dom_id
