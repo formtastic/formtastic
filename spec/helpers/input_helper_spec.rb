@@ -417,17 +417,17 @@ describe 'Formtastic::FormBuilder#input' do
           default_input_type(:text).should == :text
         end
 
-        it 'should default to :date for :date column types' do
-          default_input_type(:date).should == :date
+        it 'should default to :date_select for :date column types' do
+          default_input_type(:date).should == :date_select
         end
 
-        it 'should default to :datetime for :datetime and :timestamp column types' do
-          default_input_type(:datetime).should == :datetime
-          default_input_type(:timestamp).should == :datetime
+        it 'should default to :datetime_select for :datetime and :timestamp column types' do
+          default_input_type(:datetime).should == :datetime_select
+          default_input_type(:timestamp).should == :datetime_select
         end
 
-        it 'should default to :time for :time column types' do
-          default_input_type(:time).should == :time
+        it 'should default to :time_select for :time column types' do
+          default_input_type(:time).should == :time_select
         end
 
         it 'should default to :boolean for :boolean column types' do
@@ -492,7 +492,7 @@ describe 'Formtastic::FormBuilder#input' do
       end
 
       it 'should call the corresponding input class with .to_html' do
-        [:select, :time_zone, :radio, :date, :datetime, :time, :boolean, :check_boxes, :hidden, :string, :password, :number, :text, :file].each do |input_style|
+        [:select, :time_zone, :radio, :date_select, :datetime_select, :time_select, :boolean, :check_boxes, :hidden, :string, :password, :number, :text, :file].each do |input_style|
           @new_post.stub!(:generic_column_name)
           @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
           semantic_form_for(@new_post) do |builder|
