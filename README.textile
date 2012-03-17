@@ -304,16 +304,6 @@ Customize the HTML attributes for the @<li>@ wrapper around every input with the
   <% end %>
 </pre>
 
-Customize the default class used for hints on each attribute or globally in the @config/initializers/formtastic.rb@ file. Similarly, you can customize the error classes on an attribute level or globally.
-
-<pre>
-  <%= semantic_form_for @post do |f| %>
-    <%= f.inputs do %>
-      <%= f.input :title, :hint_class => 'custom-html-class', :error_class => 'custom-error-class' %>
-    <% end %>
-  <% end %>
-</pre>
-
 Many inputs provide a collection of options to choose from (like @:select@, @:radio@, @:check_boxes@, @:boolean@). In many cases, Formtastic can find choices through the model associations, but if you want to use your own set of choices, the @:collection@ option is what you want.  You can pass in an Array of objects, an array of Strings, a Hash... Throw almost anything at it! Examples:
 
 <pre>
