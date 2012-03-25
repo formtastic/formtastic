@@ -15,9 +15,9 @@ describe "*select: options[:include_blank]" do
 
   SELECT_INPUT_TYPES = {
       :select => :author,
-      :datetime => :publish_at,
-      :date => :publish_at,
-      :time => :publish_at
+      :datetime_select => :publish_at,
+      :date_select => :publish_at,
+      :time_select => :publish_at
     }
 
   SELECT_INPUT_TYPES.each do |as, attribute|

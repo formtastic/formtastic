@@ -10,7 +10,9 @@ module Formtastic
     autoload :DateInput
     autoload :DatePickerInput
     autoload :DatetimePickerInput
+    autoload :DateSelectInput
     autoload :DatetimeInput
+    autoload :DatetimeSelectInput
     autoload :EmailInput
     autoload :FileInput
     autoload :HiddenInput
@@ -26,6 +28,7 @@ module Formtastic
     autoload :TextInput
     autoload :TimeInput
     autoload :TimePickerInput
+    autoload :TimeSelectInput
     autoload :TimeZoneInput
     autoload :Timeish
     autoload :UrlInput
