@@ -8,6 +8,8 @@ module Formtastic
     autoload :CheckBoxesInput
     autoload :CountryInput
     autoload :DateInput
+    autoload :DatePickerInput
+    autoload :DatetimePickerInput
     autoload :DatetimeInput
     autoload :EmailInput
     autoload :FileInput
@@ -23,6 +25,7 @@ module Formtastic
     autoload :StringInput
     autoload :TextInput
     autoload :TimeInput
+    autoload :TimePickerInput
     autoload :TimeZoneInput
     autoload :Timeish
     autoload :UrlInput

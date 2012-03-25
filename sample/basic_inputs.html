@@ -101,7 +101,27 @@
             </ol>
           </fieldset>
         </li>
-
+        
+        <li class="input date_picker optional">
+          <label class="label" for="gem_expiry">Expiry date</label>
+          <input id="gem_expiry" name="gem[gem_expiry]" type="date" size="10" maxlength="10" min="2012-01-01" max="2012-12-31" step="1" value="2012-01-01">
+        </li>
+        
+        <li class="input datetime_picker optional">
+          <label class="label" for="gem_expiry">Expiry datetime-local</label>
+          <input id="gem_expiry" name="gem[gem_expiry]" type="datetime-local" size="16" maxlength="16" min="2012-01-01T00:00" max="2012-12-31T23:59" step="1800">
+        </li>
+        
+        <li class="input datetime_picker optional">
+          <label class="label" for="gem_expiry">Expiry datetime</label>
+          <input id="gem_expiry" name="gem[gem_expiry]" type="datetime" size="16" maxlength="16" min="2012-01-01T00:00" max="2012-12-31T23:59" step="1800">
+        </li>
+        
+        <li class="input time_picker optional">
+          <label class="label" for="gem_expiry">Expiry time</label>
+          <input id="gem_expiry" name="gem[gem_expiry]" type="time" size="5" maxlength="5" min="T00:00" max="23:59" step="60">
+        </li>
+        
         <li class="input string stringish optional autofocus" id="gem_autofocus_input">
           <label class="label" for="gem_autofocus">Autofocus</label>
           <input id="gem_autofocus" name="gem[autofocus]" type="text" value="The focus is set to this field" autofocus="autofocus">

@@ -42,6 +42,7 @@ module Formtastic
       
       extend ActiveSupport::Autoload
       
+      autoload :DatetimePickerish
       autoload :Associations
       autoload :Collections
       autoload :Choices
@@ -63,6 +64,7 @@ module Formtastic
       
       include Html
       include Options
+      include Database
       include Database
       include Errors
       include Hints
