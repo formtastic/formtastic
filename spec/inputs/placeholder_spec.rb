@@ -16,7 +16,7 @@ describe 'string input' do
   
   describe "placeholder text" do
     
-    [:email, :number, :password, :phone, :search, :string, :url, :text].each do |type|
+    [:email, :number, :password, :phone, :search, :string, :url, :text, :date_picker, :time_picker, :datetime_picker].each do |type|
       
       describe "for #{type} inputs" do
         
