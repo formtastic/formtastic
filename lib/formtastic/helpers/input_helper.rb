@@ -89,8 +89,8 @@ module Formtastic
       # * `:boolean`      (see {Inputs::BooleanInput})
       # * `:check_boxes`  (see {Inputs::CheckBoxesInput})
       # * `:country`      (see {Inputs::CountryInput})
-      # * `:datetime`     (see {Inputs::DatetimeInput})
-      # * `:date`         (see {Inputs::DateInput})
+      # * `:datetime_select` (see {Inputs::DatetimeSelectInput})
+      # * `:date_select` (see {Inputs::DateSelectInput})
       # * `:email`        (see {Inputs::EmailInput})
       # * `:file`         (see {Inputs::FileInput})
       # * `:hidden`       (see {Inputs::HiddenInput})
@@ -103,7 +103,7 @@ module Formtastic
       # * `:string`       (see {Inputs::StringInput})
       # * `:text`         (see {Inputs::TextInput})
       # * `:time_zone`    (see {Inputs::TimeZoneInput})
-      # * `:time`         (see {Inputs::TimeInput})
+      # * `:time_select`  (see {Inputs::TimeSelectInput})
       # * `:url`          (see {Inputs::UrlInput})
       #
       # Calling `:as => :string` (for example) will call `#to_html` on a new instance of
@@ -275,8 +275,12 @@ module Formtastic
             return :number
           when :float, :decimal
             return :number
-          when :timestamp
-            return :datetime
+          when :datetime, :timestamp
+            return :datetime_select
+          when :time
+            return :time_select
+          when :date
+            return :date_select
           end
 
           # Try look for hints in options hash. Quite common senario: Enum keys stored as string in the database.

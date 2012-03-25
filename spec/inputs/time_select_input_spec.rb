@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'time input' do
+describe 'time select input' do
 
   include FormtasticSpecHelper
 
@@ -19,7 +19,7 @@ describe 'time input' do
     describe "with :ignore_date => true" do
       before do
         concat(semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:publish_at, :as => :time, :ignore_date => true))
+          concat(builder.input(:publish_at, :as => :time_select, :ignore_date => true))
         end)
       end
 
@@ -40,7 +40,7 @@ describe 'time input' do
       before do
         @new_post.stub(:publish_at).and_return(Time.parse('2010-11-07'))
         concat(semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:publish_at, :as => :time, :ignore_date => false))
+          concat(builder.input(:publish_at, :as => :time_select, :ignore_date => false))
         end)
       end
 
@@ -59,7 +59,7 @@ describe 'time input' do
       end
 
       it 'should associate the legend label with the hour select' do
-        output_buffer.should have_tag('form li.time fieldset legend.label label[@for="post_publish_at_4i"]')
+        output_buffer.should have_tag('form li.time_select fieldset legend.label label[@for="post_publish_at_4i"]')
       end
 
     end
@@ -68,7 +68,7 @@ describe 'time input' do
       before do
         @new_post.stub(:publish_at)
         concat(semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:publish_at, :as => :time, :ignore_date => false))
+          concat(builder.input(:publish_at, :as => :time_select, :ignore_date => false))
         end)
       end
 
@@ -94,58 +94,58 @@ describe 'time input' do
     describe "without seconds" do
       before do
         concat(semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:publish_at, :as => :time))
+          concat(builder.input(:publish_at, :as => :time_select))
         end)
       end
 
-      it_should_have_input_wrapper_with_class("time")
+      it_should_have_input_wrapper_with_class("time_select")
       it_should_have_input_wrapper_with_class(:input)
       it_should_have_input_wrapper_with_id("post_publish_at_input")
       it_should_have_a_nested_fieldset
       it_should_have_a_nested_fieldset_with_class('fragments')
       it_should_have_a_nested_ordered_list_with_class('fragments-group')
-      it_should_apply_error_logic_for_input_type(:time)
+      it_should_apply_error_logic_for_input_type(:time_select)
 
       it 'should have a legend and label with the label text inside the fieldset' do
-        output_buffer.should have_tag('form li.time fieldset legend.label label', /Publish at/)
+        output_buffer.should have_tag('form li.time_select fieldset legend.label label', /Publish at/)
       end
 
       it 'should associate the legend label with the first select' do
-        output_buffer.should have_tag('form li.time fieldset legend.label label[@for="post_publish_at_4i"]')
+        output_buffer.should have_tag('form li.time_select fieldset legend.label label[@for="post_publish_at_4i"]')
       end
 
       it 'should have an ordered list of two items inside the fieldset' do
-        output_buffer.should have_tag('form li.time fieldset ol.fragments-group')
-        output_buffer.should have_tag('form li.time fieldset ol li.fragment', :count => 2)
+        output_buffer.should have_tag('form li.time_select fieldset ol.fragments-group')
+        output_buffer.should have_tag('form li.time_select fieldset ol li.fragment', :count => 2)
       end
 
       it 'should have five labels for hour and minute' do
-        output_buffer.should have_tag('form li.time fieldset ol li label', :count => 2)
-        output_buffer.should have_tag('form li.time fieldset ol li label', /hour/i)
-        output_buffer.should have_tag('form li.time fieldset ol li label', /minute/i)
+        output_buffer.should have_tag('form li.time_select fieldset ol li label', :count => 2)
+        output_buffer.should have_tag('form li.time_select fieldset ol li label', /hour/i)
+        output_buffer.should have_tag('form li.time_select fieldset ol li label', /minute/i)
       end
 
       it 'should have two selects for hour and minute' do
-        output_buffer.should have_tag('form li.time fieldset ol li', :count => 2)
+        output_buffer.should have_tag('form li.time_select fieldset ol li', :count => 2)
       end
     end
 
     describe "with seconds" do
       before do
         concat(semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:publish_at, :as => :time, :include_seconds => true))
+          concat(builder.input(:publish_at, :as => :time_select, :include_seconds => true))
         end)
       end
 
       it 'should have five labels for hour and minute' do
-        output_buffer.should have_tag('form li.time fieldset ol li label', :count => 3)
-        output_buffer.should have_tag('form li.time fieldset ol li label', /hour/i)
-        output_buffer.should have_tag('form li.time fieldset ol li label', /minute/i)
-        output_buffer.should have_tag('form li.time fieldset ol li label', /second/i)
+        output_buffer.should have_tag('form li.time_select fieldset ol li label', :count => 3)
+        output_buffer.should have_tag('form li.time_select fieldset ol li label', /hour/i)
+        output_buffer.should have_tag('form li.time_select fieldset ol li label', /minute/i)
+        output_buffer.should have_tag('form li.time_select fieldset ol li label', /second/i)
       end
 
       it 'should have three selects for hour, minute and seconds' do
-        output_buffer.should have_tag('form li.time fieldset ol li', :count => 3)
+        output_buffer.should have_tag('form li.time_select fieldset ol li', :count => 3)
       end
 
       it 'should generate a sanitized label and matching ids for attribute' do
@@ -163,40 +163,40 @@ describe 'time input' do
       it "should replace the #{field} label with the specified text if :labels[:#{field}] is set" do
         output_buffer.replace ''
         concat(semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:created_at, :as => :time, :include_seconds => true, :labels => { field => "another #{field} label" }))
+          concat(builder.input(:created_at, :as => :time_select, :include_seconds => true, :labels => { field => "another #{field} label" }))
         end)
-        output_buffer.should have_tag('form li.time fieldset ol li label', :count => fields.length)
+        output_buffer.should have_tag('form li.time_select fieldset ol li label', :count => fields.length)
         fields.each do |f|
-          output_buffer.should have_tag('form li.time fieldset ol li label', f == field ? /another #{f} label/i : /#{f}/i)
+          output_buffer.should have_tag('form li.time_select fieldset ol li label', f == field ? /another #{f} label/i : /#{f}/i)
         end
       end
 
       it "should not display the label for the #{field} field when :labels[:#{field}] is blank" do
         output_buffer.replace ''
         concat(semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:created_at, :as => :time, :include_seconds => true, :labels => { field => "" }))
+          concat(builder.input(:created_at, :as => :time_select, :include_seconds => true, :labels => { field => "" }))
         end)
-        output_buffer.should have_tag('form li.time fieldset ol li label', :count => fields.length-1)
+        output_buffer.should have_tag('form li.time_select fieldset ol li label', :count => fields.length-1)
         fields.each do |f|
-          output_buffer.should have_tag('form li.time fieldset ol li label', /#{f}/i) unless field == f
+          output_buffer.should have_tag('form li.time_select fieldset ol li label', /#{f}/i) unless field == f
         end
       end
       
       it "should not render the label when :labels[:#{field}] is false" do 
         output_buffer.replace ''
         concat(semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:created_at, :as => :time, :include_seconds => true, :labels => { field => false }))
+          concat(builder.input(:created_at, :as => :time_select, :include_seconds => true, :labels => { field => false }))
         end)
-        output_buffer.should have_tag('form li.time fieldset ol li label', :count => fields.length-1)
+        output_buffer.should have_tag('form li.time_select fieldset ol li label', :count => fields.length-1)
         fields.each do |f|
-          output_buffer.should have_tag('form li.time fieldset ol li label', /#{f}/i) unless field == f
+          output_buffer.should have_tag('form li.time_select fieldset ol li label', /#{f}/i) unless field == f
         end
       end
       
       it "should not render unsafe HTML when :labels[:#{field}] is false" do 
         output_buffer.replace ''
         concat(semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:created_at, :as => :time, :include_seconds => true, :labels => { field => false }))
+          concat(builder.input(:created_at, :as => :time_select, :include_seconds => true, :labels => { field => false }))
         end)
         output_buffer.should_not include("&gt;")
       end
@@ -207,7 +207,7 @@ describe 'time input' do
   describe ':namespace option' do
     before do
       concat(semantic_form_for(@new_post, :namespace => 'form2') do |builder|
-        concat(builder.input(:publish_at, :as => :time))
+        concat(builder.input(:publish_at, :as => :time_select))
       end)
     end
 
@@ -222,7 +222,7 @@ describe 'time input' do
     it "should add the required attribute to the input's html options" do
       with_config :use_required_attribute, true do 
         concat(semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:title, :as => :time, :required => true))
+          concat(builder.input(:title, :as => :time_select, :required => true))
         end)
         output_buffer.should have_tag("select[@required]", :count => 2)
       end
@@ -234,7 +234,7 @@ describe 'time input' do
     before do
       concat(semantic_form_for(@new_post) do |builder|
         concat(builder.fields_for(:author, :index => 3) do |author|
-          concat(author.input(:created_at, :as => :time))
+          concat(author.input(:created_at, :as => :time_select))
         end)
       end)
     end
