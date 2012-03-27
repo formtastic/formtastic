@@ -1,4 +1,4 @@
-HEAD
+2.2.0.rc
 
 * removed deprecated buttons DSL, ButtonHelper and commit_button helper
 * deprecated the top-level :value option that is only used by HiddenInput
@@ -9,6 +9,12 @@ HEAD
 * renamed TimeInput (:as => :time) to TimeSelectInput (:as => :time_select), aliased and deprecated TimeInput
 * renamed DatetimeInput (:as => :datetime) to DatetimeSelectInput (:as => :datetime_select), aliased and deprecated DatetimeInput
 * renamed DateInput (:as => :date) to TimeSelectInput (:as => :date_select), aliased and deprecated DateInput
+* added DatePickerInput (:as => :date_picker) for HTML5 date inputs
+* added TimePickerInput (:as => :time_picker) for HTML5 time inputs
+* added DateTimePickerInput (:as => :datetime_picker) for HTML5 datetime and datetime-local inputs
+* added support for Rails 4 (edge)
+* improved error message on Formtastic::UnknownInputError
+* improved documentation for asset pipeline and condition stylesheets (IE)
 
 2.1.1
 
