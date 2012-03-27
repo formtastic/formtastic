@@ -114,13 +114,17 @@ h3. Stylesheet usage in Rails < 3.1:
 
 h3. Stylesheet usage in Rails >= 3.1:
 
-Rails 3.1 introduces an asset pipeline that allows plugins like Formtastic to serve their own Stylesheets, Javascripts, etc without having to run generators that copy them accross to the host application. Formtastic makes three stylesheets available as an Engine, you just need to require them in your global stylesheets.
+Rails 3.1 introduces an asset pipeline that allows plugins like Formtastic to serve their own Stylesheets, Javascripts, etc without having to run generators that copy them across to the host application. Formtastic makes three stylesheets available as an Engine, you just need to require them in your global stylesheets.
 
 <pre>
   # app/assets/stylesheets/application.css
   *= require formtastic
   *= require my_formtastic_changes
-  
+</pre>
+
+Conditional stylesheets need to be compiled separately to prevent them being bundled and included with other application styles.  Remove @require_tree .@ from application.css and specify required stylesheets individually.
+
+<pre>
   # app/assets/stylesheets/ie6.css
   *= require formtastic_ie6
   
@@ -135,7 +139,10 @@ Rails 3.1 introduces an asset pipeline that allows plugins like Formtastic to se
   <!--[if IE 7]><%= stylesheet_link_tag 'ie7' %><![endif]-->
 </pre>
 
-
+<pre>
+  # config/environments/production.rb
+  config.assets.precompile += %w( ie6.css ie7.css )  
+</pre>
 
 h2. Usage
 
