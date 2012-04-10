@@ -7,8 +7,9 @@ module Formtastic
   #   $ rails generate formtastic:form Post
   # @example Copy the partial code to the pasteboard rather than generating a partial
   #   $ rails generate formtastic:form Post --copy
-  # @example Return HAML output instead of default template engine
-  #   $ rails generate formtastic:form Post --haml
+  # @example Return HAML or Slim output instead of default ERB
+  #   $ rails generate formtastic:form Post --template-engine haml
+  #   $ rails generate formtastic:form Post --template-engine slim
   # @example Generate a form for specific model attributes
   #   $ rails generate formtastic:form Post title:string body:text
   # @example Generate a form for a specific controller

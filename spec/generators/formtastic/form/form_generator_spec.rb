@@ -21,6 +21,10 @@ describe Formtastic::FormGenerator do
       mock('reflection', :name => :attachment, :options => {:polymorphic => true}, :macro => :belongs_to),
     ])
   end
+  
+  after do
+    FileUtils.rm_rf(File.expand_path("../../../../../tmp", __FILE__))
+  end
 
   describe 'without model' do
     it 'should raise Thor::RequiredArgumentMissingError' do
@@ -78,13 +82,22 @@ describe Formtastic::FormGenerator do
     end
 
     describe 'haml' do
-      before { run_generator %w(Post --template-engine haml) }
-
+      
       describe 'app/views/posts/_form.html.haml' do
+        before { run_generator %w(Post --template-engine haml) }
         subject { file('app/views/posts/_form.html.haml') }
         it { should exist }
         it { should contain "= semantic_form_for @post do |f|" }
       end
+      
+      context 'with copy option' do
+        describe 'app/views/posts/_form.html.haml' do
+          before { run_generator %w(Post --copy --template-engine haml) }
+          subject { file('app/views/posts/_form.html.haml') }
+          it { should_not exist }
+        end
+      end
+      
     end
 
     describe 'slim' do
@@ -97,10 +110,10 @@ describe Formtastic::FormGenerator do
       end
     end
   end
-
+  
   describe 'with copy option' do
     before { run_generator %w(Post --copy) }
-
+  
     describe 'app/views/posts/_form.html.erb' do
       subject { file('app/views/posts/_form.html.erb') }
       it { should_not exist }
