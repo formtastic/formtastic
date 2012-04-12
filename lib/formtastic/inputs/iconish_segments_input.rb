@@ -1,5 +1,84 @@
 module Formtastic
   module Inputs
+
+    # Outputs a simple `<label> with input groups `<div class="iconish-segments-controls">` wrapped in the standard
+    # `<li>` wrapper. Input groups provide an easy way to give more context to your inputs. Context is given by
+    # appending and/or prepending `<span class="add-on">` to `<input type="text">`. If you need to render a button
+    # next to your field just pass in a code block with `:input_append => lambda { button_tag }`. This will render
+    # `<button>` instead of `<span class="add-on">`. It is also possible to render an image inside
+    # `<span class="add-on">` with `:input_prepend => lambda { image_tag("icon.png") }`. This will output a simple
+    # `<img />` wrapped in the default `<span class="add-on"` wrapper.
+    #
+    # @example Full form context and output
+    #
+    #  <= semantic_form_for(@bank_account) do |f| %>
+    #    <%= f.inputs do %>
+    #      <%= f.input :money, :as => :iconish_segments, :input_prepend => '$', :input_append => '.00' %>
+    #    <% end %>
+    #  <% end %>
+    #
+    #  <form...>
+    #    <fieldset...>
+    #      <ol>
+    #        <li... class="iconish_segments">
+    #          <label... for="bank_account_money"><Money/label>
+    #          <div class="iconish-segments-controls input-prepend input-append">
+    #            <span class="add-on">$</span>
+    #            <input type="text" id="bank_account_money" name="bank_account[money]" />
+    #            <span class="add-on">.00</span>
+    #          </div>
+    #        </li>
+    #      </ol>
+    #    </fieldset>
+    #  </form>
+    #
+    # @example Pass in a block
+    #
+    #  <= semantic_form_for(@bank_account) do |f| %>
+    #    <%= f.inputs do %>
+    #      <%= f.input :money, :as => :iconish_segments, :input_prepend => lambda { image_tag("money.png") } %>
+    #    <% end %>
+    #  <% end %>
+    #
+    #  <form...>
+    #    <fieldset...>
+    #      <ol>
+    #        <li... class="iconish_segments">
+    #          <label... for="bank_account_money"><Money/label>
+    #          <div class="iconish-segments-controls input-prepend">
+    #            <span class="add-on">
+    #              <img src="/images/money.png" alt="Money" />
+    #            </span>
+    #            <input type="text" id="bank_account_money" name="bank_account[money]" />
+    #          </div>
+    #        </li>
+    #      </ol>
+    #    </fieldset>
+    #  </form>
+    #
+    # @example Append with button
+    #
+    #  <= semantic_form_for(@user) do |f| %>
+    #    <%= f.inputs do %>
+    #      <%= f.input :mobile, :as => :iconish_segments, :input_append => lambda { button_tag("Send", :disable_with => "Sending...") } %>
+    #    <% end %>
+    #  <% end %>
+    #
+    #  <form...>
+    #    <fieldset...>
+    #      <ol>
+    #        <li... class="iconish_segments">
+    #          <label... for="user_mobile"><Money/label>
+    #          <div class="iconish-segments-controls input-append">
+    #            <input type="text" id="user_mobile" name="user[mobile]" />
+    #            <button data-disable-with="Sending..." name="button" type="submit">Send</button>
+    #          </div>
+    #        </li>
+    #      </ol>
+    #    </fieldset>
+    #  </form>
+    #
+    # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
     class IconishSegmentsInput
       include Base
       include Base::Stringish
