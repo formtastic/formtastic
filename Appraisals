@@ -13,6 +13,6 @@ end
 if ENV["RAILS_EDGE"] == "true"
   appraise 'rails-4' do
     gem 'rails', :git => 'git://github.com/rails/rails.git'
-    gem 'sprockets-rails', :git => 'https://github.com/rails/sprockets-rails.git'  
+    gem 'active_record_deprecated_finders', :git=>'https://github.com/rails/active_record_deprecated_finders.git'
   end
 end
