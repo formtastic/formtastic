@@ -6,7 +6,6 @@ require 'action_pack'
 require 'action_view'
 require 'action_controller'
 require 'action_dispatch'
-require 'active_support/ordered_hash' #Rails 4 no longer autoloads ActiveSupport::OrderedHash
 
 require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic/util'))
 require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic'))
