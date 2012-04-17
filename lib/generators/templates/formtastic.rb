@@ -49,12 +49,6 @@
 # Formtastic::FormBuilder.collection_label_methods = [
 #   "to_label", "display_name", "full_name", "name", "title", "username", "login", "value", "to_s"]
 
-# Additionally, you can customize the order for specific types of inputs.
-# This is configured on a type basis and if a type is not found it will
-# fall back to the default order as defined by #inline_order
-# Formtastic::FormBuilder.custom_inline_order[:checkbox] = [:errors, :hints, :input]
-# Formtastic::FormBuilder.custom_inline_order[:select] = [:hints, :input, :errors]
-
 # Specifies if labels/hints for input fields automatically be looked up using I18n.
 # Default value: true. Overridden for specific fields by setting value to true,
 # i.e. :label => true, or :hint => true (or opposite depending on initialized value)
