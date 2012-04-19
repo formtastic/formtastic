@@ -88,7 +88,7 @@ Formtastic is now compatible with both Rails 2 and Rails 3, and the gem is "host
 Simply add Formtastic to your Gemfile and bundle it up:
 
 <pre>
-  gem 'formtastic', '~> 1.1.0'
+  gem 'formtastic', '~> 1.2.4'
 </pre>
 
 Optionally, run the generator to copy some stylesheets and a configuration initializer into your application:
