@@ -232,15 +232,19 @@ module Formtastic
       # @todo Many many more examples. Some of the detail probably needs to be pushed out to the relevant methods too.
       # @todo More i18n examples.
       def input(method, options = {})
+        raw_input(method, options).to_html
+      end
+
+      protected
+
+      def raw_input(method, options = {})
         options = options.dup # Allow options to be shared without being tainted by Formtastic
         options[:as] ||= default_input_type(method, options)
 
         klass = input_class(options[:as])
 
-        klass.new(self, template, @object, @object_name, method, options).to_html
+        klass.new(self, template, @object, @object_name, method, options)
       end
-
-      protected
 
       # First try if we can detect special things like :file. With CarrierWave the method does have
       # an underlying column so we don't want :string to get selected.
