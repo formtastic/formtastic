@@ -1,3 +1,15 @@
+2.2.1
+
+* Rails 4 compatibilty updates
+* corrected configuration template for i18n lookups, which default to true
+* removed custom_inline_order from configuration and template (code was removed in 2.0)
+* added documentation for button/action i18n keys
+* other documentation improvements
+
+2.2.0
+
+* documentation improvements for generator
+
 2.2.0.rc
 
 * removed deprecated buttons DSL, ButtonHelper and commit_button helper
