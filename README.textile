@@ -5,6 +5,15 @@ Formtastic is a Rails FormBuilder DSL (with some other goodies) to make it far e
 <a href='http://www.pledgie.com/campaigns/2178'><img alt='Click here to lend your support to: formtastic and make a donation at www.pledgie.com !' src='http://pledgie.com/campaigns/2178.png?skin_name=chrome' border='0' /></a>
 
 
+h2. Documentation & Support
+
+* "Documentation is available on rdoc.info":http://rdoc.info/projects/justinfrench/formtastic
+* "We track issues & bugs on GitHub":http://github.com/justinfrench/formtastic/issues
+* "We have a wiki on GitHub":http://github.com/justinfrench/formtastic/wiki
+* "StackOverflow can help":http://stackoverflow.com/questions/tagged/formtastic
+* "Follow @formtastic on Twitter for news & updates":http://twitter.com/formtastic
+
+
 h2. Compatibility
 
 * Formtastic 2.1.x is Rails 3.x compatible
@@ -73,11 +82,6 @@ h2. Opinions
 * Sometimes _more mark-up_ is better.
 * Elements and attribute hooks are _gold_ for stylesheet authors.
 * Make the common things we do easy, yet ensure uncommon things are still possible.
-
-
-h2. Documentation
-
-RDoc documentation _should_ be automatically generated after each commit and made available on the "rdoc.info website":http://rdoc.info/projects/justinfrench/formtastic.
 
 
 h2. Installation
@@ -608,28 +612,20 @@ Formtastic::FormBuilder.escape_html_entities_in_hints_and_labels = false
 
 h2. Dependencies
 
-There are none, but...
+There are none other than Rails itself, but...
 
 * If you want to use the @:country@ input, you'll need to install the "country-select plugin":https://github.com/chrislerum/country_select (or any other country_select plugin with the same API).
-* "rspec":http://github.com/dchelimsky/rspec/, "rspec_hpricot_matchers":http://rubyforge.org/projects/rspec-hpricot/ and "rcov":http://github.com/relevance/rcov gems (plus any of their own dependencies) are required for the test suite.
+* There are a bunch of development dependencies
 
 
 h2. How to contribute
 
 * Fork the project on Github
 * Create a topic branch for your changes
+* Ensure that you provide test coverage for your changes
 * Ensure that all tests pass (`bundle exec rake`)
-* Ensure that the changes in your branch are as atomic as possible
 * Create a pull request on Github
 
-For significant changes, you may wish to discuss your idea on the Formtastic Google group before coding to ensure that your change is likely to be accepted. Formtastic relies heavily on i18n, so if you're unsure of the impact this has on your changes, please discuss them with the group.
-
-
-h2. Google Group, Twitter, etc
-
-Please join the "Formtastic Google Group":http://groups.google.com.au/group/formtastic, especially if you'd like to talk about a new feature, or report a bug.
-
-You can also follow "@justinfrench":http://twitter.com/formtastic or  "@formtastic":http://twitter.com/formtastic on Twitter for announcements, tutorials and links.
 
 h2. Project Info
 
