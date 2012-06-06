@@ -12,6 +12,22 @@ module Formtastic
       # The textual value of the label can be changed from the default through the `:label`
       # argument or through i18n.
       #
+      # If using i18n, you'll need to provide the following translations:
+      #
+      #   en:
+      #     formtastic:
+      #       actions:
+      #         create: "Create new %{model}"
+      #         update: "Save %{model}"
+      #         cancel: "Cancel"
+      #         reset: "Reset form"
+      #         submit: "Submit"
+      #
+      # For forms with an object present, the `update` key will be used if calling `persisted?` on 
+      # the object returns true (saving changes to a record), otherwise the `create` ey will be 
+      # used. The `submit` key is used as a fallback when there is no object or we cannot determine 
+      # if `create` or `update` is appropriate.
+      #
       # @example Basic usage
       #   # form
       #   <%= semantic_form_for @post do |f| %>
