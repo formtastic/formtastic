@@ -38,6 +38,16 @@ describe 'Formtastic::FormBuilder#label' do
     end)
     output_buffer.should have_tag('label', /Title/)
   end
+  
+  it 'should use i18n instead of the method name when method given as a String' do
+    with_config :i18n_cache_lookups, true do
+      ::I18n.backend.store_translations :en, { :formtastic => { :labels => { :post => { :title => "I18n title" } } } }
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input("title")
+      end)
+      output_buffer.should have_tag('label', /I18n title/)
+    end
+  end
 
   it 'should humanize the given attribute for date fields' do
     concat(semantic_form_for(@new_post) do |builder|
