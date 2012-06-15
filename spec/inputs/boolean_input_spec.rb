@@ -150,6 +150,13 @@ describe 'boolean input' do
     output_buffer.should have_tag('form li label input[@type="checkbox"]')
     output_buffer.should have_tag('form li label input[@name="project[allow_comments]"]')
   end
+  
+  it 'should not pass input_html options down to the label html' do
+    concat(semantic_form_for(@new_post) do |builder|
+      builder.input(:title, :as => :boolean, :input_html => { :tabindex => 2 })
+    end)
+    output_buffer.should_not have_tag('label[tabindex]')
+  end
 
   context "when required" do
     

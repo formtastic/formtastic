@@ -50,7 +50,10 @@ module Formtastic
           label_html_options
         )
       end
-
+      
+      # TODO: why are we merging `input_html_options` and then making some of the irrelevant ones `nil`?
+      # Seems like we should be selectively including from input_html_options (a whitelist) instead of 
+      # excluding (blacklist).
       def label_html_options
         prev = super
         prev[:class] = prev[:class] - ['label']
@@ -59,6 +62,7 @@ module Formtastic
           prev.merge(
             :id   => nil,
             :name => nil,
+            :tabindex => nil,
             :for  => input_html_options[:id]
           )
         )
