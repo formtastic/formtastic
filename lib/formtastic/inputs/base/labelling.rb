@@ -10,13 +10,10 @@ module Formtastic
         end
         
         def label_html_options
-          # opts = options_for_label(options) # TODO
-          opts = {}
-          opts[:for] ||= input_html_options[:id]
-          opts[:class] = [opts[:class]]
-          opts[:class] << 'label'
-          
-          opts
+          {
+            :for => input_html_options[:id],
+            :class => ['label'],
+          }
         end
         
         def label_text
