@@ -33,7 +33,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency(%q<rcov>, ["~> 0.9.9"])
   s.add_development_dependency(%q<colored>)
   s.add_development_dependency(%q<tzinfo>)
-  s.add_development_dependency(%q<ammeter>, ["~> 0.2.5"])
+  s.add_development_dependency(%q<ammeter>, ["0.2.5"])
   s.add_development_dependency(%q<appraisal>)
   s.add_development_dependency(%q<rake>)
 end
