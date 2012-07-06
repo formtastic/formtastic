@@ -130,8 +130,10 @@ module Formtastic
         end
         
         def fragment_label(fragment)
-          labels_from_options = options[:labels] || {}
-          if labels_from_options.key?(fragment)
+          labels_from_options = options.key?(:labels) ? options[:labels] : {}
+          if !labels_from_options
+            ''
+          elsif labels_from_options.key?(fragment)
             labels_from_options[fragment]
           else
             ::I18n.t(fragment.to_s, :default => fragment.to_s.humanize, :scope => [:datetime, :prompts])
