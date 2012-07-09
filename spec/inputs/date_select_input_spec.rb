@@ -147,6 +147,14 @@ describe 'date select input' do
       end
       
     end
+
+    it "should not display labels for any fields when :labels is falsy" do
+      output_buffer.replace ''
+      concat(semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:created_at, :as => :date_select, :labels => false))
+      end)
+      output_buffer.should have_tag('form li.date_select fieldset ol li label', :count => 0)
+    end
   end
   
   describe "when required" do

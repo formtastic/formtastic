@@ -192,7 +192,7 @@ describe 'time select input' do
           output_buffer.should have_tag('form li.time_select fieldset ol li label', /#{f}/i) unless field == f
         end
       end
-      
+
       it "should not render unsafe HTML when :labels[:#{field}] is false" do 
         output_buffer.replace ''
         concat(semantic_form_for(@new_post) do |builder|
@@ -201,6 +201,14 @@ describe 'time select input' do
         output_buffer.should_not include("&gt;")
       end
       
+    end
+
+    it "should not render labels when :labels is falsy" do
+      output_buffer.replace ''
+      concat(semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:created_at, :as => :time_select, :include_seconds => true, :labels => false))
+      end)
+      output_buffer.should have_tag('form li.time_select fieldset ol li label', :count => 0)
     end
   end
 
