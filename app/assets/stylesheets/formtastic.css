@@ -194,7 +194,8 @@ This stylesheet forms part of the Formtastic Rails Plugin
   width:72%;
 }
 
-.formtastic .stringish input[size] {
+.formtastic .stringish input[size],
+.formtastic .stringish input[max] {
   width:auto;
   max-width:72%;
 }
