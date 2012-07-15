@@ -5,7 +5,7 @@ module Formtastic
         def input_html_options
           defaults = super
 
-          # override rails default size - not valid on numeric inputs
+          # override rails default size - does not apply to numeric inputs
           #@todo document/spec
           defaults[:size] = nil
           
