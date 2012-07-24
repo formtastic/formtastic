@@ -8,9 +8,10 @@ module Formtastic
     def model_names
       unless @model_names
         model_class   = @object.class
-        base_class    = model_class.respond_to?(:base_class) ? model_class.base_class : Object
-        classes       = (model_class.ancestors - model_class.included_modules)
-        classes       = classes[0...classes.index(base_class)]
+        classes       = (model_class.ancestors - model_class.included_modules)        
+        classes       = model_class.respond_to?(:base_class) ? 
+                        classes[0..classes.index(model_class.base_class)] :
+                        classes[0...classes.index(Object)]
         @model_names  = classes.map { |c| c.name.underscore }
       end
 
