@@ -94,6 +94,17 @@ module FormtasticSpecHelper
     end
   end
 
+  class ::InheritedPost < ::Post
+    extend ActiveModel::Naming if defined?(ActiveModel::Naming)
+    include ActiveModel::Conversion if defined?(ActiveModel::Conversion)
+
+    def id
+    end
+
+    def persisted?
+    end
+  end
+
   module ::Namespaced
     class Post
       extend ActiveModel::Naming if defined?(ActiveModel::Naming)
@@ -182,6 +193,10 @@ module FormtasticSpecHelper
     def posts_path(*args); "/posts"; end
     def new_post_path(*args); "/posts/new"; end
 
+    def inherited_post_path(*args); "/inherited_posts/1"; end
+    def inherited_posts_path(*args); "/inherited_posts"; end
+    def new_inherited_post_path(*args); "/inherited_posts/new"; end
+
     def author_path(*args); "/authors/1"; end
     def authors_path(*args); "/authors"; end
     def new_author_path(*args); "/authors/new"; end
@@ -256,6 +271,22 @@ module FormtasticSpecHelper
     @new_post.stub!(:to_model).and_return(@new_post)
     @new_post.stub!(:persisted?).and_return(nil)
 
+    @inherited_post = mock('inherited_post')
+    @inherited_post.stub!(:class).and_return(::InheritedPost)
+    @inherited_post.stub!(:id).and_return(nil)
+    @inherited_post.stub!(:new_record?).and_return(true)
+    @inherited_post.stub!(:errors).and_return(mock('errors', :[] => nil))
+    @inherited_post.stub!(:author).and_return(nil)
+    @inherited_post.stub!(:author_attributes=).and_return(nil)
+    @inherited_post.stub!(:authors).and_return([@fred])
+    @inherited_post.stub!(:authors_attributes=)
+    @inherited_post.stub!(:reviewer).and_return(nil)
+    @inherited_post.stub!(:main_post).and_return(nil)
+    @inherited_post.stub!(:sub_posts).and_return([]) #TODO should be a mock with methods for adding sub posts
+    @inherited_post.stub!(:to_key).and_return(nil)
+    @inherited_post.stub!(:to_model).and_return(@inherited_post)
+    @inherited_post.stub!(:persisted?).and_return(nil)
+
     @freds_post = mock('post')
     @freds_post.stub!(:to_ary)
     @freds_post.stub!(:class).and_return(::Post)
@@ -273,41 +304,43 @@ module FormtasticSpecHelper
     @fred.stub!(:posts).and_return([@freds_post])
     @fred.stub!(:post_ids).and_return([@freds_post.id])
 
-    ::Post.stub!(:scoped).and_return(::Post)
-    ::Post.stub!(:human_attribute_name).and_return { |column_name| column_name.humanize }
-    ::Post.stub!(:human_name).and_return('Post')
-    ::Post.stub!(:reflect_on_all_validations).and_return([])
-    ::Post.stub!(:reflect_on_validations_for).and_return([])
-    ::Post.stub!(:reflections).and_return({})
-    ::Post.stub!(:reflect_on_association).and_return do |column_name|
-      case column_name
-      when :author, :author_status
-        mock = mock('reflection', :options => {}, :klass => ::Author, :macro => :belongs_to)
-        mock.stub!(:[]).with(:class_name).and_return("Author")
-        mock
-      when :reviewer
-        mock = mock('reflection', :options => {:class_name => 'Author'}, :klass => ::Author, :macro => :belongs_to)
-        mock.stub!(:[]).with(:class_name).and_return("Author")
-        mock
-      when :authors
-        mock('reflection', :options => {}, :klass => ::Author, :macro => :has_and_belongs_to_many)
-      when :sub_posts
-        mock('reflection', :options => {}, :klass => ::Post, :macro => :has_many)
-      when :main_post
-        mock('reflection', :options => {}, :klass => ::Post, :macro => :belongs_to)
-      when :mongoid_reviewer
-        ::MongoidReflectionMock.new('reflection',
-             :options => Proc.new { raise NoMethodError, "Mongoid has no reflection.options" },
-             :klass => ::Author, :macro => :referenced_in, :foreign_key => "reviewer_id") # custom id
+    [::Post, ::InheritedPost].each do |model|
+      model.stub!(:scoped).and_return(model)
+      model.stub!(:human_attribute_name).and_return { |column_name| column_name.humanize }
+      model.stub!(:human_name).and_return('Post')
+      model.stub!(:reflect_on_all_validations).and_return([])
+      model.stub!(:reflect_on_validations_for).and_return([])
+      model.stub!(:reflections).and_return({})
+      model.stub!(:reflect_on_association).and_return do |column_name|
+        case column_name
+        when :author, :author_status
+          mock = mock('reflection', :options => {}, :klass => ::Author, :macro => :belongs_to)
+          mock.stub!(:[]).with(:class_name).and_return("Author")
+          mock
+        when :reviewer
+          mock = mock('reflection', :options => {:class_name => 'Author'}, :klass => ::Author, :macro => :belongs_to)
+          mock.stub!(:[]).with(:class_name).and_return("Author")
+          mock
+        when :authors
+          mock('reflection', :options => {}, :klass => ::Author, :macro => :has_and_belongs_to_many)
+        when :sub_posts
+          mock('reflection', :options => {}, :klass => ::Post, :macro => :has_many)
+        when :main_post
+          mock('reflection', :options => {}, :klass => ::Post, :macro => :belongs_to)
+        when :mongoid_reviewer
+          ::MongoidReflectionMock.new('reflection',
+               :options => Proc.new { raise NoMethodError, "Mongoid has no reflection.options" },
+               :klass => ::Author, :macro => :referenced_in, :foreign_key => "reviewer_id") # custom id
+        end
       end
+      model.stub!(:find).and_return([@freds_post])
+      model.stub!(:all).and_return([@freds_post])
+      model.stub!(:where).and_return([@freds_post])
+      model.stub!(:content_columns).and_return([mock('column', :name => 'title'), mock('column', :name => 'body'), mock('column', :name => 'created_at')])
+      model.stub!(:to_key).and_return(nil)
+      model.stub!(:persisted?).and_return(nil)
+      model.stub!(:to_ary)
     end
-    ::Post.stub!(:find).and_return([@freds_post])
-    ::Post.stub!(:all).and_return([@freds_post])
-    ::Post.stub!(:where).and_return([@freds_post])
-    ::Post.stub!(:content_columns).and_return([mock('column', :name => 'title'), mock('column', :name => 'body'), mock('column', :name => 'created_at')])
-    ::Post.stub!(:to_key).and_return(nil)
-    ::Post.stub!(:persisted?).and_return(nil)
-    ::Post.stub!(:to_ary)
 
     ::MongoPost.stub!(:human_attribute_name).and_return { |column_name| column_name.humanize }
     ::MongoPost.stub!(:human_name).and_return('MongoPost')
@@ -339,56 +372,58 @@ module FormtasticSpecHelper
       @mock_file.stub!(method).and_return(true)
     end
 
-    @new_post.stub!(:title)
-    @new_post.stub!(:email)
-    @new_post.stub!(:url)
-    @new_post.stub!(:phone)
-    @new_post.stub!(:search)
-    @new_post.stub!(:to_ary)
-    @new_post.stub!(:body)
-    @new_post.stub!(:published)
-    @new_post.stub!(:publish_at)
-    @new_post.stub!(:created_at)
-    @new_post.stub!(:secret).and_return(1)
-    @new_post.stub!(:url)
-    @new_post.stub!(:email)
-    @new_post.stub!(:search)
-    @new_post.stub!(:phone)
-    @new_post.stub!(:time_zone)
-    @new_post.stub!(:category_name)
-    @new_post.stub!(:allow_comments).and_return(true)
-    @new_post.stub!(:answer_comments)
-    @new_post.stub!(:country)
-    @new_post.stub!(:country_subdivision)
-    @new_post.stub!(:country_code)
-    @new_post.stub!(:document).and_return(@mock_file)
-    @new_post.stub!(:column_for_attribute).with(:meta_description).and_return(mock('column', :type => :string, :limit => 255))
-    @new_post.stub!(:column_for_attribute).with(:title).and_return(mock('column', :type => :string, :limit => 50))
-    @new_post.stub!(:column_for_attribute).with(:body).and_return(mock('column', :type => :text))
-    @new_post.stub!(:column_for_attribute).with(:published).and_return(mock('column', :type => :boolean))
-    @new_post.stub!(:column_for_attribute).with(:publish_at).and_return(mock('column', :type => :date))
-    @new_post.stub!(:column_for_attribute).with(:time_zone).and_return(mock('column', :type => :string))
-    @new_post.stub!(:column_for_attribute).with(:allow_comments).and_return(mock('column', :type => :boolean))
-    @new_post.stub!(:column_for_attribute).with(:author).and_return(mock('column', :type => :integer))
-    @new_post.stub!(:column_for_attribute).with(:country).and_return(mock('column', :type => :string, :limit => 255))
-    @new_post.stub!(:column_for_attribute).with(:country_subdivision).and_return(mock('column', :type => :string, :limit => 255))
-    @new_post.stub!(:column_for_attribute).with(:country_code).and_return(mock('column', :type => :string, :limit => 255))
-    @new_post.stub!(:column_for_attribute).with(:email).and_return(mock('column', :type => :string, :limit => 255))
-    @new_post.stub!(:column_for_attribute).with(:url).and_return(mock('column', :type => :string, :limit => 255))
-    @new_post.stub!(:column_for_attribute).with(:phone).and_return(mock('column', :type => :string, :limit => 255))
-    @new_post.stub!(:column_for_attribute).with(:search).and_return(mock('column', :type => :string, :limit => 255))
-    @new_post.stub!(:column_for_attribute).with(:document).and_return(nil)
+    [@new_post, @inherited_post].each do |post_var|
+      post_var.stub!(:title)
+      post_var.stub!(:email)
+      post_var.stub!(:url)
+      post_var.stub!(:phone)
+      post_var.stub!(:search)
+      post_var.stub!(:to_ary)
+      post_var.stub!(:body)
+      post_var.stub!(:published)
+      post_var.stub!(:publish_at)
+      post_var.stub!(:created_at)
+      post_var.stub!(:secret).and_return(1)
+      post_var.stub!(:url)
+      post_var.stub!(:email)
+      post_var.stub!(:search)
+      post_var.stub!(:phone)
+      post_var.stub!(:time_zone)
+      post_var.stub!(:category_name)
+      post_var.stub!(:allow_comments).and_return(true)
+      post_var.stub!(:answer_comments)
+      post_var.stub!(:country)
+      post_var.stub!(:country_subdivision)
+      post_var.stub!(:country_code)
+      post_var.stub!(:document).and_return(@mock_file)
+      post_var.stub!(:column_for_attribute).with(:meta_description).and_return(mock('column', :type => :string, :limit => 255))
+      post_var.stub!(:column_for_attribute).with(:title).and_return(mock('column', :type => :string, :limit => 50))
+      post_var.stub!(:column_for_attribute).with(:body).and_return(mock('column', :type => :text))
+      post_var.stub!(:column_for_attribute).with(:published).and_return(mock('column', :type => :boolean))
+      post_var.stub!(:column_for_attribute).with(:publish_at).and_return(mock('column', :type => :date))
+      post_var.stub!(:column_for_attribute).with(:time_zone).and_return(mock('column', :type => :string))
+      post_var.stub!(:column_for_attribute).with(:allow_comments).and_return(mock('column', :type => :boolean))
+      post_var.stub!(:column_for_attribute).with(:author).and_return(mock('column', :type => :integer))
+      post_var.stub!(:column_for_attribute).with(:country).and_return(mock('column', :type => :string, :limit => 255))
+      post_var.stub!(:column_for_attribute).with(:country_subdivision).and_return(mock('column', :type => :string, :limit => 255))
+      post_var.stub!(:column_for_attribute).with(:country_code).and_return(mock('column', :type => :string, :limit => 255))
+      post_var.stub!(:column_for_attribute).with(:email).and_return(mock('column', :type => :string, :limit => 255))
+      post_var.stub!(:column_for_attribute).with(:url).and_return(mock('column', :type => :string, :limit => 255))
+      post_var.stub!(:column_for_attribute).with(:phone).and_return(mock('column', :type => :string, :limit => 255))
+      post_var.stub!(:column_for_attribute).with(:search).and_return(mock('column', :type => :string, :limit => 255))
+      post_var.stub!(:column_for_attribute).with(:document).and_return(nil)
 
-    @new_post.stub!(:author).and_return(@bob)
-    @new_post.stub!(:author_id).and_return(@bob.id)
+      post_var.stub!(:author).and_return(@bob)
+      post_var.stub!(:author_id).and_return(@bob.id)
 
-    @new_post.stub!(:reviewer).and_return(@fred)
-    @new_post.stub!(:reviewer_id).and_return(@fred.id)
+      post_var.stub!(:reviewer).and_return(@fred)
+      post_var.stub!(:reviewer_id).and_return(@fred.id)
 
-    @new_post.should_receive(:publish_at=).any_number_of_times
-    @new_post.should_receive(:title=).any_number_of_times
-    @new_post.stub!(:main_post_id).and_return(nil)
-
+      post_var.should_receive(:publish_at=).any_number_of_times
+      post_var.should_receive(:title=).any_number_of_times
+      post_var.stub!(:main_post_id).and_return(nil)
+    end
+  
   end
 
   def self.included(base)

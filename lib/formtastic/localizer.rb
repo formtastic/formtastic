@@ -68,6 +68,9 @@ module Formtastic
         
         if use_i18n
           model_name, nested_model_name  = normalize_model_name(builder.model_name.underscore)
+          model_names = [model_name] + builder.model_names
+
+          model_names.uniq!
 
           action_name = builder.template.params[:action].to_s rescue ''
           attribute_name = key.to_s
@@ -78,17 +81,22 @@ module Formtastic
             return cache.get(cache_key) if cache.has_key?(cache_key)
           end
 
-          defaults = Formtastic::I18n::SCOPES.reject do |i18n_scope|
+          scopes = Formtastic::I18n::SCOPES.reject do |i18n_scope|
             nested_model_name.nil? && i18n_scope.match(/nested_model/)
-          end.collect do |i18n_scope|
-            i18n_path = i18n_scope.dup
-            i18n_path.gsub!('%{action}', action_name)
-            i18n_path.gsub!('%{model}', model_name)
-            i18n_path.gsub!('%{nested_model}', nested_model_name) unless nested_model_name.nil?
-            i18n_path.gsub!('%{attribute}', attribute_name)
-            i18n_path.gsub!('..', '.')
-            i18n_path.to_sym
           end
+          
+          defaults = model_names.collect do |_model_name|
+            scopes.map do |i18n_scope|
+              i18n_path = i18n_scope.dup
+              i18n_path.gsub!('%{action}', action_name)
+              i18n_path.gsub!('%{model}', _model_name)
+              i18n_path.gsub!('%{nested_model}', nested_model_name) unless nested_model_name.nil?
+              i18n_path.gsub!('%{attribute}', attribute_name)
+              i18n_path.gsub!('..', '.')
+              i18n_path.to_sym
+            end
+          end.flatten
+          defaults << attribute_name.to_sym
           defaults << ''
 
           defaults.uniq!

@@ -12,8 +12,7 @@ module Formtastic
         '%{nested_model}.%{action}.%{attribute}',
         '%{nested_model}.%{attribute}',
         '%{model}.%{action}.%{attribute}',
-        '%{model}.%{attribute}',
-        '%{attribute}'
+        '%{model}.%{attribute}'
       ]
 
     class << self

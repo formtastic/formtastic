@@ -599,6 +599,53 @@ describe 'Formtastic::FormBuilder#input' do
           end
         end
 
+        describe 'when localized label is provided for the parent model' do
+          before do
+            @localized_label_text = 'Localized title'
+            @default_localized_label_text = 'Default localized title'
+            ::I18n.backend.store_translations :en,
+              :formtastic => {
+                  :labels => {
+                    :title => @default_localized_label_text,
+                    :published => @default_localized_label_text,
+                    :post => {
+                      :title => @localized_label_text,
+                      :published => @default_localized_label_text
+                     }
+                   }
+                }
+          end
+          
+          it 'should render a label with localized label (I18n)' do
+            with_config :i18n_lookups_by_default, false do
+              concat(semantic_form_for(@inherited_post) do |builder|
+                concat(builder.input(:title, :label => true))
+                concat(builder.input(:published, :as => :boolean, :label => true))
+              end)
+              output_buffer.should have_tag('form li label', Regexp.new('^' + @localized_label_text))
+            end
+          end
+
+          it 'should render a hint paragraph containing an optional localized label (I18n) if first is not set' do
+            with_config :i18n_lookups_by_default, false do
+              ::I18n.backend.store_translations :en,
+                :formtastic => {
+                    :labels => {
+                      :post => {
+                        :title => nil,
+                        :published => nil
+                       }
+                     }
+                  }
+              concat(semantic_form_for(@inherited_post) do |builder|
+                concat(builder.input(:title, :label => true))
+                concat(builder.input(:published, :as => :boolean, :label => true))
+              end)
+              output_buffer.should have_tag('form li label', Regexp.new('^' + @default_localized_label_text))
+            end
+          end
+        end
+
         describe 'when localized label is provided' do
           before do
             @localized_label_text = 'Localized title'
