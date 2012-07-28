@@ -441,7 +441,21 @@ describe 'check_boxes input' do
 
     it "should not check any items" do
       output_buffer.should have_tag('form li input[@checked]', :count => 0)
-    end    
+    end
+
+    describe "and the attribute has values" do
+      before do
+        @fred.stub(:posts) { [1] }
+
+        concat(semantic_form_for(@fred) do |builder|
+          concat(builder.input(:posts, :as => :check_boxes, :collection => @_collection))
+        end)
+      end
+
+      it "should check the appropriate items" do
+        output_buffer.should have_tag("form li input[@value='1'][@checked]")
+      end
+    end
   end
   
 end
