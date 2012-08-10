@@ -14,7 +14,7 @@ module Formtastic
   #   $ rails generate formtastic:form Post title:string body:text
   # @example Generate a form for a specific controller
   #   $ rails generate formtastic:form Post --controller admin/posts
-  class FormGenerator < Rails::Generators::NamedBase
+  class FormGenerator < ::Rails::Generators::NamedBase
     desc "Generates a Formtastic form partial based on an existing model."
 
     argument :name, :type => :string, :required => true, :banner => 'MODEL_NAME'
