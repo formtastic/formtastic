@@ -57,6 +57,7 @@ describe 'Formtastic::FormBuilder#inputs' do
   
       before do
         @new_post.stub!(:respond_to?).and_return(true, true)
+        @new_post.stub!(:respond_to?).with(:empty?).and_return(false)
         @new_post.stub!(:author).and_return(@bob)
       end
   
