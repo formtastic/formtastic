@@ -3,6 +3,6 @@
 source :rubygems
 
 gem "rails", :git=>"git://github.com/rails/rails.git"
-gem "active_record_deprecated_finders", :git=>"https://github.com/rails/active_record_deprecated_finders.git"
+gem "activerecord-deprecated_finders", :git=>"https://github.com/rails/activerecord-deprecated_finders.git"
 
 gemspec :path=>"../"
