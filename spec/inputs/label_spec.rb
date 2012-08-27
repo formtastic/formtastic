@@ -45,6 +45,7 @@ describe 'Formtastic::FormBuilder#label' do
       concat(semantic_form_for(@new_post) do |builder|
         builder.input("title")
       end)
+      ::I18n.backend.store_translations :en, { :formtastic => { :labels => { :post => { :title => nil } } } }
       output_buffer.should have_tag('label', /I18n title/)
     end
   end
