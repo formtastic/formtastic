@@ -14,5 +14,6 @@ if ENV["RAILS_EDGE"] == "true"
   appraise 'rails-4' do
     gem 'rails', :git => 'git://github.com/rails/rails.git'
     gem 'activerecord-deprecated_finders', :git=>'https://github.com/rails/activerecord-deprecated_finders.git'
+    gem 'journey', :git=>'https://github.com/rails/journey.git'
   end
 end
