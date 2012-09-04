@@ -113,7 +113,7 @@ module Formtastic
         # Avoids an issue where `send_or_call` can be a String and duck can be something simple like
         # `:first`, which obviously String responds to.
         def send_or_call_or_object(duck, object)
-          return object if object.is_a?(String) || object.is_a?(Integer) # TODO what about other classes etc?
+          return object if object.is_a?(String) || object.is_a?(Integer) || object.is_a?(Symbol) # TODO what about other classes etc?
           send_or_call(duck, object)
         end
 
