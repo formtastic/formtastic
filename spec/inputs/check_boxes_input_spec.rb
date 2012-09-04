@@ -373,6 +373,23 @@ describe 'check_boxes input' do
       output_buffer.should have_tag("form li fieldset ol li label input[@value='biography'][@checked='checked']")
     end
   end
+  
+  describe 'when :collection is a set' do
+    before do
+      @output_buffer = ''
+      mock_everything
+      @fred.stub(:roles) { Set.new([:reviewer, :admin]) }
+      
+      concat(semantic_form_for(@fred) do |builder|
+        concat(builder.input(:roles, :as => :check_boxes, :collection => [['User', :user], ['Reviewer', :reviewer], ['Administrator', :admin]]))
+      end)
+    end
+    
+    it 'should check the correct checkboxes' do
+      output_buffer.should have_tag("form li fieldset ol li label input[@value='admin'][@checked='checked']")
+      output_buffer.should have_tag("form li fieldset ol li label input[@value='reviewer'][@checked='checked']")
+    end
+  end
 
   describe "when namespace is provided" do
 
