@@ -177,7 +177,13 @@ module Formtastic
 
       def make_selected_values
         if object.respond_to?(method)
-          selected_items = [object.send(method)].compact.flatten
+          selected_items = object.send(method)
+          
+          if selected_items.respond_to?(:to_a)
+            selected_items = selected_items.to_a
+          end
+          
+          selected_items = [selected_items].compact.flatten
 
           [*selected_items.map { |o| send_or_call_or_object(value_method, o) }].compact
         else
