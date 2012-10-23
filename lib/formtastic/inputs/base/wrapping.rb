@@ -8,7 +8,7 @@ module Formtastic
         # errors before the body of the input).
         def input_wrapping(&block)
           template.content_tag(:li, 
-            [template.capture(&block), error_html, hint_html].join("\n").html_safe, 
+            [template.capture(&block), options[:block_content], error_html, hint_html].join("\n").html_safe, 
             wrapper_html_options
           )
         end

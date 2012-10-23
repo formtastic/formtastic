@@ -236,6 +236,10 @@ module Formtastic
         options = options.dup # Allow options to be shared without being tainted by Formtastic
         options[:as] ||= default_input_type(method, options)
 
+        if block_given?
+          options[:block_content] = template.capture(&block)
+        end
+
         klass = input_class(options[:as])
 
         klass.new(self, template, @object, @object_name, method, options).to_html
