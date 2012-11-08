@@ -135,6 +135,29 @@ describe 'FormHelper' do
       end
     end
 
+    describe ActionView::Base.field_error_proc do
+      it 'is set to no-op wrapper by default' do
+        semantic_form_for(@new_post, :url => '/hello') do |builder|
+          ::ActionView::Base.field_error_proc.call("html").should == "html"
+        end
+      end
+
+      it 'is set to the configured custom field_error_proc' do
+        field_error_proc = mock()
+        Formtastic::Helpers::FormHelper.field_error_proc = field_error_proc
+        semantic_form_for(@new_post, :url => '/hello') do |builder|
+          ::ActionView::Base.field_error_proc.should == field_error_proc
+        end
+      end
+      
+      it 'is restored to its original value after the form is rendered' do
+        lambda do 
+          Formtastic::Helpers::FormHelper.field_error_proc = proc {}
+          semantic_form_for(@new_post, :url => '/hello') { |builder| }
+        end.should_not change(::ActionView::Base, :field_error_proc)
+      end
+    end 
+    
     describe "with :builder option" do
       it "yields an instance of the given builder" do
         class MyAwesomeCustomBuilder < Formtastic::FormBuilder
