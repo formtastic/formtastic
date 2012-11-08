@@ -138,7 +138,7 @@ describe 'FormHelper' do
     describe ActionView::Base.field_error_proc do
       it 'is set to no-op wrapper by default' do
         semantic_form_for(@new_post, :url => '/hello') do |builder|
-          ::ActionView::Base.field_error_proc.call("html").should == "html"
+          ::ActionView::Base.field_error_proc.call("html", nil).should == "html"
         end
       end
 
