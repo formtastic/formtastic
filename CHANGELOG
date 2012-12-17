@@ -1,3 +1,7 @@
+HEAD
+
+* Allow to use a custom ActionView::Base.field_error_proc
+
 2.2.1
 
 * Rails 4 compatibilty updates

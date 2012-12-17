@@ -58,6 +58,12 @@ module Formtastic
       @@default_form_class = 'formtastic'
       mattr_accessor :default_form_class
 
+      # Allows to set a custom field_error_proc wrapper. By default this wrapper
+      # is disabled since `formtastic` already adds an error class to the LI tag
+      # containing the input. Change this from `config/initializers/formtastic.rb`.
+      @@field_error_proc = proc { |html_tag, instance_tag| html_tag }
+      mattr_accessor :field_error_proc
+
       # Wrapper around Rails' own `form_for` helper to set the `:builder` option to
       # `Formtastic::FormBuilder` and to set some class names on the `<form>` tag such as
       # `formtastic` and the downcased and underscored model name (eg `post`).
@@ -178,17 +184,9 @@ module Formtastic
 
       protected
 
-      # Override the default ActiveRecordHelper behaviour of wrapping the input.
-      # This gets taken care of semantically by adding an error class to the LI tag
-      # containing the input.
-      # @private
-      FIELD_ERROR_PROC = proc do |html_tag, instance_tag|
-        html_tag
-      end
-
       def with_custom_field_error_proc(&block)
         default_field_error_proc = ::ActionView::Base.field_error_proc
-        ::ActionView::Base.field_error_proc = FIELD_ERROR_PROC
+        ::ActionView::Base.field_error_proc = @@field_error_proc
         yield
       ensure
         ::ActionView::Base.field_error_proc = default_field_error_proc
