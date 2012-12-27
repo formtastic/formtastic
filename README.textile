@@ -258,7 +258,7 @@ h2. Internationalization (I18n)
 
 h3. Basic Localization
 
-Formtastic got some neat I18n-features. ActiveRecord object names and attributes are, by default, taken from calling @@object.human_name@ and @@object.human_attribute_name(attr)@ respectively. There are a few words specific to Formtastic that can be translated. See @lib/locale/en.yml@ for more information.
+Formtastic got some neat I18n-features. ActiveRecord object names and attributes are, by default, taken from calling @@object.class.human_name@ and @@object.class.human_attribute_name(attr)@ respectively. There are a few words specific to Formtastic that can be translated. See @lib/locale/en.yml@ for more information.
 
 Basic localization (labels only, with ActiveRecord):
 
