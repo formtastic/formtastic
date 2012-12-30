@@ -535,7 +535,7 @@ Values for @labels@/@hints@/@actions@ are can take values: @String@ (explicit va
 
 h2. Semantic errors
 
-You can show errors on base (by default) and any other attribute just passing it name to semantic_errors method:
+You can show errors on base (by default) and any other attribute just by passing its name to the semantic_errors method:
 
 <pre>
   <%= semantic_form_for @post do |f| %>
