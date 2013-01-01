@@ -386,6 +386,7 @@ describe 'check_boxes input' do
     end
     
     it 'should check the correct checkboxes' do
+      output_buffer.should have_tag("form li fieldset ol li label input[@value='user']")
       output_buffer.should have_tag("form li fieldset ol li label input[@value='admin'][@checked='checked']")
       output_buffer.should have_tag("form li fieldset ol li label input[@value='reviewer'][@checked='checked']")
     end
