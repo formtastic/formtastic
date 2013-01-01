@@ -279,4 +279,22 @@ describe 'radio input' do
     end
   end
 
+  describe "when collection contains symbols" do
+    before do
+      @output_buffer = ''
+      mock_everything
+
+      concat(semantic_form_for(:project) do |builder|
+        concat(builder.input(:author_id, :as => :radio, :collection => Set.new([:a, :b, :c])))
+      end)
+    end
+
+    it 'should output the correct labels' do
+      output_buffer.should have_tag("li.choice label", /a/)
+      output_buffer.should have_tag("li.choice label", /b/)
+      output_buffer.should have_tag("li.choice label", /c/)
+    end
+  end
+
+
 end
