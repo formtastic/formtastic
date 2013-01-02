@@ -285,14 +285,14 @@ describe 'radio input' do
       mock_everything
 
       concat(semantic_form_for(:project) do |builder|
-        concat(builder.input(:author_id, :as => :radio, :collection => Set.new([:a, :b, :c])))
+        concat(builder.input(:author_id, :as => :radio, :collection => Set.new([["A", :a], ["B", :b], ["C", :c]])))
       end)
     end
 
     it 'should output the correct labels' do
-      output_buffer.should have_tag("li.choice label", /a/)
-      output_buffer.should have_tag("li.choice label", /b/)
-      output_buffer.should have_tag("li.choice label", /c/)
+      output_buffer.should have_tag("li.choice label", /A/)
+      output_buffer.should have_tag("li.choice label", /B/)
+      output_buffer.should have_tag("li.choice label", /C/)
     end
   end
 
