@@ -30,6 +30,26 @@ describe 'select input' do
         end
       end
     end
+    
+    describe 'using a set of values' do
+      before do
+        @set_with_values = Set.new(["Title A", "Title B", "Title C"])
+        @set_with_keys_and_values = [["Title D", :d], ["Title E", :e], ["Title F", :f]]
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:title, :as => :select, :collection => @set_with_values))
+          concat(builder.input(:title, :as => :select, :collection => @set_with_keys_and_values))
+        end)
+      end
+
+      it 'should have a option for each key and/or value' do
+        @set_with_values.each do |v|
+          output_buffer.should have_tag("form li select option[@value='#{v}']", /^#{v}$/)
+        end
+        @set_with_keys_and_values.each do |v|
+          output_buffer.should have_tag("form li select option[@value='#{v.second}']", /^#{v.first}$/)
+        end
+      end
+    end
 
     describe "using a related model without reflection's options (Mongoid Document)" do
       before do
