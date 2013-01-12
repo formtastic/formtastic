@@ -41,6 +41,22 @@ describe 'boolean input' do
     output_buffer.should have_tag('form li label input[@type="checkbox"][@value="1"]')
   end
 
+  it 'should generate a checked input if :input_html => { :checked => true } is passed' do
+    @output_buffer = ''
+    concat(semantic_form_for(@new_post) do |builder|
+      concat(builder.input(:answer_comments, :as => :boolean, :input_html => {:checked => true}))
+    end)
+    output_buffer.should have_tag('form li label input[@checked="checked"]')
+  end
+
+  it 'should not generate a checked input if :input_html => { :checked => false } is passed' do
+    @output_buffer = ''
+    concat(semantic_form_for(@new_post) do |builder|
+      concat(builder.input(:answer_comments, :as => :boolean, :input_html => {:checked => false}))
+    end)
+    output_buffer.should_not have_tag('form li label input[@checked="checked"]')
+  end
+
   it 'should generate a checked input if object.method returns true' do
     output_buffer.should have_tag('form li label input[@checked="checked"]')
     output_buffer.should have_tag('form li input[@name="post[allow_comments]"]', :count => 2)
