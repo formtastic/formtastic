@@ -152,7 +152,7 @@ describe 'FormHelper' do
       
       it 'is restored to its original value after the form is rendered' do
         lambda do 
-          Formtastic::Helpers::FormHelper.field_error_proc = proc {}
+          Formtastic::Helpers::FormHelper.field_error_proc = proc {""}
           semantic_form_for(@new_post, :url => '/hello') { |builder| }
         end.should_not change(::ActionView::Base, :field_error_proc)
       end

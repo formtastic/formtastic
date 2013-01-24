@@ -188,8 +188,11 @@ module Formtastic
         
         def i18n_date_fragments
           order = ::I18n.t(:order, :scope => [:date])
-          order = nil unless order.is_a?(Array)
-          order
+          if order.is_a?(Array)
+            order.map &:to_sym
+          else
+            nil
+          end
         end
         
         def fragments_wrapping(&block)

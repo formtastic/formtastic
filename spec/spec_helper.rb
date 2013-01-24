@@ -36,7 +36,10 @@ module FormtasticSpecHelper
   include ActionView::Helpers::AssetTagHelper
   include ActiveSupport
   include ActionController::PolymorphicRoutes if defined?(ActionController::PolymorphicRoutes)
-
+  include ActionDispatch::Routing::PolymorphicRoutes 
+  include AbstractController::UrlFor if defined?(AbstractController::UrlFor)
+  include ActionView::RecordIdentifier if defined?(ActionView::RecordIdentifier)
+  
   include Formtastic::Helpers::FormHelper
 
   def default_input_type(column_type, column_name = :generic_column_name)

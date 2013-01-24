@@ -81,6 +81,13 @@ module Formtastic
       fields_for(record_or_name_or_array, *(args << options), &block)
     end
     
+    def initialize(object_name, object, template, options, block=nil)
+      super
+      if respond_to?('multipart=') && options.is_a?(Hash) && options[:html]
+        self.multipart = options[:html][:multipart]
+      end
+    end
+    
   end
 
 end
