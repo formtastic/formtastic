@@ -36,5 +36,4 @@ Gem::Specification.new do |s|
   s.add_development_dependency(%q<ammeter>, ["0.2.5"])
   s.add_development_dependency(%q<appraisal>)
   s.add_development_dependency(%q<rake>)
-  s.add_development_dependency(%q<ruby-debug19>)
 end
