@@ -101,11 +101,7 @@ module Formtastic
       end
 
       def checked?
-        if defined? ActionView::Helpers::InstanceTag
-          object && ActionView::Helpers::InstanceTag.check_box_checked?(object.send(method), checked_value)
-        else
-          object && boolean_checked?(object.send(method), checked_value) 
-        end
+        object && boolean_checked?(object.send(method), checked_value) 
       end
       
       private 
