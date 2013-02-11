@@ -18,6 +18,7 @@ module FormtasticTest
     config.encoding = "utf-8"
     config.active_support.deprecation = :stderr
     config.secret_key_base = "secret"
+    config.eager_load = false
   end
 end
 FormtasticTest::Application.initialize!
