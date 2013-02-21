@@ -324,7 +324,7 @@ module Formtastic
           Rails.application.config.cache_classes ? input_class_with_const_defined(as) : input_class_by_trying(as)
         end
       end
-      
+
       # prevent exceptions in production environment for better performance
       def input_class_with_const_defined(as)
         input_class_name = custom_input_class_name(as)
@@ -332,7 +332,7 @@ module Formtastic
         if ::Object.const_defined?(input_class_name)
           input_class_name.constantize
         elsif input_class_namespace.const_defined?(input_class_name)
-          namespaced_input_class_name(as).constantize
+          input_class_namespace.const_get(input_class_name)
         elsif Formtastic::Inputs.const_defined?(input_class_name)
           standard_input_class_name(as).constantize
         else
@@ -342,8 +342,10 @@ module Formtastic
 
       # use auto-loading in development environment
       def input_class_by_trying(as)
-        input_class   = begin; custom_input_class_name(as).constantize; rescue NameError; end
-        input_class ||= begin; namespaced_input_class_name(as).constantize; rescue NameError; end
+        input_class_name = custom_input_class_name(as)
+
+        input_class   = begin; input_class_name.constantize; rescue NameError; end
+        input_class ||= begin; input_class_namespace.const_get(input_class_name); rescue NameError; end
         input_class ||= begin; standard_input_class_name(as).constantize; rescue NameError; end
 
         input_class or raise Formtastic::UnknownInputError, "Unable to find input class for #{as}"
@@ -357,11 +359,6 @@ module Formtastic
       # :as => :string # => StringInput
       def custom_input_class_name(as)
         input_class_name(as)
-      end
-
-      # :as => :string # => Formtastic::FormBuilder::StringInput
-      def namespaced_input_class_name(as)
-        "#{input_class_namespace}::#{input_class_name(as)}"
       end
 
       # :as => :string # => Formtastic::Inputs::StringInput
