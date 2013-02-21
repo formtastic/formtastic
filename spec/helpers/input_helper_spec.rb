@@ -888,7 +888,7 @@ describe 'Formtastic::FormBuilder#input' do
       let(:output)  { mock('input', :to_html => 'some HTML') }
       let(:helper)  { builder.extend(Formtastic::Helpers::InputHelper) }
 
-      let(:custom_form_builder) { stub_const('CustomFormBuiler', Module.new) }
+      let(:custom_form_builder) { stub_const('CustomFormBuiler', Class.new) }
 
       let(:namespaced_class) { stub_const("#{custom_form_builder}::StringInput", mock('namespaced class')) }
       let(:top_level_class)  { stub_const('StringInput', mock('top level class')) }
@@ -917,6 +917,18 @@ describe 'Formtastic::FormBuilder#input' do
           helper.should_receive(:class) { custom_form_builder }.at_least(:once)
 
           input.should == output.to_html
+        end
+
+        context "and custom form builder is inherited twice" do
+          let(:inherited_custom_form_builder) { stub_const('InhertitedCustomFormBuilder', Class.new(custom_form_builder)) }
+          it 'should instantitate namespaced class' do
+            namespaced_class.should_receive(:new).and_return(output)
+            formtastic_class.should_not_receive(:new)
+
+            helper.should_receive(:class){ inherited_custom_form_builder }.at_least(:once)
+
+            input.should == output.to_html
+          end
         end
       end
 
