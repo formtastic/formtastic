@@ -252,7 +252,14 @@ describe 'Formtastic::FormBuilder#action' do
   end
 
   describe 'instantiating an action class' do
-  
+    it "should delegate to ClassFinder" do
+      concat(semantic_form_for(@new_post) do |builder|
+          Formtastic::ClassFinder.should_receive(:find_class).
+            with(:button, 'Action', builder.send(:action_class_namespaces)).and_call_original
+          builder.action(:submit, :as => :button)
+        end)
+    end
+
     context 'when a class does not exist' do
       it "should raise an error" do
         lambda {
@@ -291,11 +298,9 @@ describe 'Formtastic::FormBuilder#action' do
     end
   
     describe 'when instantiated multiple times with the same action type' do
-  
-      it "should be cached (not calling the internal methods)" do
-        # TODO this is really tied to the underlying implementation
+      it "should be cached" do
         concat(semantic_form_for(@new_post) do |builder|
-          builder.should_receive(:custom_action_class_name).with(:button).once.and_return(::Formtastic::Actions::ButtonAction)
+          Formtastic::ClassFinder.should_receive(:find_class).once.and_call_original
           builder.action(:submit, :as => :button)
           builder.action(:submit, :as => :button)
         end)

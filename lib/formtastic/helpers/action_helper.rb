@@ -97,27 +97,13 @@ module Formtastic
 
       def action_class(as)
         @input_classes_cache ||= {}
-        @input_classes_cache[as] ||= begin
-          begin
-            begin
-              custom_action_class_name(as).constantize
-            rescue NameError
-              standard_action_class_name(as).constantize
-            end
-          rescue NameError
-            raise Formtastic::UnknownActionError
-          end
-        end
+        @input_classes_cache[as] ||= Formtastic::ClassFinder.find_class(as, 'Action', action_class_namespaces)
+      rescue Formtastic::ClassFinder::NotFoundError
+        raise Formtastic::UnknownActionError, "Unable to find action #{$!.message}"
       end
 
-      # :as => :button # => ButtonAction
-      def custom_action_class_name(as)
-        "#{as.to_s.camelize}Action"
-      end
-
-      # :as => :button # => Formtastic::Actions::ButtonAction
-      def standard_action_class_name(as)
-        "Formtastic::Actions::#{as.to_s.camelize}Action"
+      def action_class_namespaces
+        [::Object, self.class, Formtastic::Actions]
       end
 
     end

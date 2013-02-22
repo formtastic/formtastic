@@ -320,54 +320,14 @@ module Formtastic
       #   input_class(:awesome) #=> AwesomeInput      
       def input_class(as)
         @input_classes_cache ||= {}
-        @input_classes_cache[as] ||= begin
-          Rails.application.config.cache_classes ? input_class_with_const_defined(as) : input_class_by_trying(as)
-        end
+        @input_classes_cache[as] ||= Formtastic::ClassFinder.find_class(as, 'Input', input_class_namespaces)
+      rescue Formtastic::ClassFinder::NotFoundError
+        raise Formtastic::UnknownInputError, "Unable to find input #{$!.message}"
       end
 
-      # prevent exceptions in production environment for better performance
-      def input_class_with_const_defined(as)
-        input_class_name = custom_input_class_name(as)
-
-        if ::Object.const_defined?(input_class_name)
-          input_class_name.constantize
-        elsif input_class_namespace.const_defined?(input_class_name)
-          input_class_namespace.const_get(input_class_name)
-        elsif Formtastic::Inputs.const_defined?(input_class_name)
-          standard_input_class_name(as).constantize
-        else
-          raise Formtastic::UnknownInputError, "Unable to find input class #{input_class_name}"
-        end
-      end
-
-      # use auto-loading in development environment
-      def input_class_by_trying(as)
-        input_class_name = custom_input_class_name(as)
-
-        input_class   = begin; input_class_name.constantize; rescue NameError; end
-        input_class ||= begin; input_class_namespace.const_get(input_class_name); rescue NameError; end
-        input_class ||= begin; standard_input_class_name(as).constantize; rescue NameError; end
-
-        input_class or raise Formtastic::UnknownInputError, "Unable to find input class for #{as}"
-      end
-
-      # specifies namespace for namespaced input classes
-      def input_class_namespace
-        self.class
-      end
-
-      # :as => :string # => StringInput
-      def custom_input_class_name(as)
-        input_class_name(as)
-      end
-
-      # :as => :string # => Formtastic::Inputs::StringInput
-      def standard_input_class_name(as)
-        "Formtastic::Inputs::#{input_class_name(as)}"
-      end
-
-      def input_class_name(as)
-        "#{as.to_s.camelize}Input"
+      # specifies namespaces where to search for input classes
+      def input_class_namespaces
+        [::Object, self.class, Formtastic::Inputs]
       end
 
     end
