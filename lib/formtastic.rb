@@ -13,6 +13,7 @@ module Formtastic
   autoload :LocalizedString
   autoload :Localizer
   autoload :Util
+  autoload :ClassFinder
   
   # @private
   class UnknownInputError < NameError
