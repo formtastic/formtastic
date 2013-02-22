@@ -270,6 +270,16 @@ describe 'Formtastic::FormBuilder#action' do
       end
     end
 
+    context 'of unknown action' do
+      it "should try to load class named as the action" do
+        expect {
+          semantic_form_for(@new_post) do |builder|
+            builder.action(:destroy)
+          end
+        }.to raise_error(Formtastic::UnknownActionError, 'Unable to find action class for destroy')
+      end
+    end
+
     describe 'when instantiated multiple times with the same action type' do
       it "should be cached" do
         concat(semantic_form_for(@new_post) do |builder|
