@@ -90,8 +90,9 @@ module Formtastic
       def default_action_type(method, options = {}) #:nodoc:
         case method
           when :submit then :input
-          when :reset then :input
+          when :reset  then :input
           when :cancel then :link
+          else method
         end
       end
 
