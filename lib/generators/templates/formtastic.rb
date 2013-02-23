@@ -74,3 +74,8 @@
 # this to true. Doing so will add a `novalidate` attribute to the `<form>` tag.
 # See http://diveintohtml5.org/forms.html#validation for more info.
 # Formtastic::FormBuilder.perform_browser_validations = true
+
+# You can set attribute names to show at the beginning of error messages by setting
+# this to true. For example, 'must not be blank' would become "Title must not be blank" or 
+# 'Name must not be blank'.
+# Formtastic::Formbuilder.attribute_names_on_errors = false
