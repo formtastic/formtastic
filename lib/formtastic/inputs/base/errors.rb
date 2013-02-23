@@ -9,7 +9,7 @@ module Formtastic
         
         def error_sentence_html
           error_class = options[:error_class] || builder.default_inline_error_class
-          error_options = {show_attribute_name: (builder.attribute_names_on_errors ? :first : :none)}
+          error_options = {:show_attribute_name => (builder.attribute_names_on_errors ? :first : :none)}
           error_string = errors(error_options).to_sentence.html_safe
 
           template.content_tag(:p, Formtastic::Util.html_safe(error_string), :class => error_class)
@@ -17,7 +17,7 @@ module Formtastic
                 
         def error_list_html
           error_class = options[:error_class] || builder.default_error_list_class
-          error_options = {show_attribute_name: (builder.attribute_names_on_errors ? :all : :none)}
+          error_options = {:show_attribute_name => (builder.attribute_names_on_errors ? :all : :none)}
 
           list_elements = []
           errors(error_options).each do |error|
@@ -29,7 +29,7 @@ module Formtastic
         
         def error_first_html
           error_class = options[:error_class] || builder.default_inline_error_class
-          error_options = {show_attribute_name: (builder.attribute_names_on_errors ? :first : :none)}
+          error_options = {:show_attribute_name => (builder.attribute_names_on_errors ? :first : :none)}
 
           error_string = errors(error_options).first.untaint
           template.content_tag(:p, Formtastic::Util.html_safe(errors), :class => error_class)
