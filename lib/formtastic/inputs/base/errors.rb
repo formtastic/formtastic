@@ -29,7 +29,7 @@ module Formtastic
         
         def error_first_html
           error_class = options[:error_class] || builder.default_inline_error_class
-          error_options = {error_options: (builder.attribute_names_on_errors ? :first : :none)}
+          error_options = {show_attribute_name: (builder.attribute_names_on_errors ? :first : :none)}
 
           error_string = errors(error_options).first.untaint
           template.content_tag(:p, Formtastic::Util.html_safe(errors), :class => error_class)
