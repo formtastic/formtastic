@@ -9,18 +9,14 @@ module Formtastic
         
         def error_sentence_html
           error_class = options[:error_class] || builder.default_inline_error_class
-          error_options = {:show_attribute_name => (builder.attribute_names_on_errors ? :first : :none)}
-          error_string = errors(error_options).to_sentence.html_safe
-
-          template.content_tag(:p, Formtastic::Util.html_safe(error_string), :class => error_class)
+          template.content_tag(:p, Formtastic::Util.html_safe(errors.to_sentence.html_safe), :class => error_class)
         end
                 
         def error_list_html
           error_class = options[:error_class] || builder.default_error_list_class
-          error_options = {:show_attribute_name => (builder.attribute_names_on_errors ? :all : :none)}
 
           list_elements = []
-          errors(error_options).each do |error|
+          errors.each do |error|
             list_elements << template.content_tag(:li, Formtastic::Util.html_safe(error.html_safe))
           end
 
@@ -29,10 +25,7 @@ module Formtastic
         
         def error_first_html
           error_class = options[:error_class] || builder.default_inline_error_class
-          error_options = {:show_attribute_name => (builder.attribute_names_on_errors ? :first : :none)}
-
-          error_string = errors(error_options).first.untaint
-          template.content_tag(:p, Formtastic::Util.html_safe(errors), :class => error_class)
+          template.content_tag(:p, Formtastic::Util.html_safe(errors.first.untaint), :class => error_class)
         end
         
         def error_none_html
@@ -43,18 +36,15 @@ module Formtastic
           !errors.blank?
         end
         
-        def errors options={}
+        def errors
           errors = []
           if object && object.respond_to?(:errors)
             error_keys.each do |key| 
               unless object.errors[key].blank?
-                case options[:show_attribute_name]
-                  when :first
-                    errors << object.errors[key].each_with_index.map { |err, idx| (idx==0) ? "#{key.to_s.titleize} #{err}" : err }
-                  when :all
-                    errors << object.errors[key].map { |err| "#{key.to_s.titleize} #{err}" }
-                  else
-                    errors << object.errors[key]
+                if builder.attribute_names_on_errors
+                  errors << object.errors[key].each_with_index.map { |err, idx| (idx==0) ? "#{key.to_s.titleize} #{err}" : err }
+                else
+                  errors << object.errors[key]
                 end
               end
             end
