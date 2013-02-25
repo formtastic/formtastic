@@ -331,32 +331,46 @@ module Formtastic
 
         if ::Object.const_defined?(input_class_name)
           input_class_name.constantize
+        elsif input_class_namespace.const_defined?(input_class_name)
+          namespaced_input_class_name(as).constantize
         elsif Formtastic::Inputs.const_defined?(input_class_name)
-          standard_input_class_name(as).constantize 
+          standard_input_class_name(as).constantize
         else
           raise Formtastic::UnknownInputError, "Unable to find input class #{input_class_name}"
         end
       end
-      
+
       # use auto-loading in development environment
       def input_class_by_trying(as)
-        begin
-          custom_input_class_name(as).constantize
-        rescue NameError
-          standard_input_class_name(as).constantize
-        end
-      rescue NameError
-        raise Formtastic::UnknownInputError, "Unable to find input class for #{as}"
+        input_class   = begin; custom_input_class_name(as).constantize; rescue NameError; end
+        input_class ||= begin; namespaced_input_class_name(as).constantize; rescue NameError; end
+        input_class ||= begin; standard_input_class_name(as).constantize; rescue NameError; end
+
+        input_class or raise Formtastic::UnknownInputError, "Unable to find input class for #{as}"
+      end
+
+      # specifies namespace for namespaced input classes
+      def input_class_namespace
+        self.class
       end
 
       # :as => :string # => StringInput
       def custom_input_class_name(as)
-        "#{as.to_s.camelize}Input"
+        input_class_name(as)
+      end
+
+      # :as => :string # => Formtastic::FormBuilder::StringInput
+      def namespaced_input_class_name(as)
+        "#{input_class_namespace}::#{input_class_name(as)}"
       end
 
       # :as => :string # => Formtastic::Inputs::StringInput
       def standard_input_class_name(as)
-        "Formtastic::Inputs::#{as.to_s.camelize}Input"
+        "Formtastic::Inputs::#{input_class_name(as)}"
+      end
+
+      def input_class_name(as)
+        "#{as.to_s.camelize}Input"
       end
 
     end

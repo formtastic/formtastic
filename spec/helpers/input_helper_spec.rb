@@ -878,58 +878,102 @@ describe 'Formtastic::FormBuilder#input' do
   end
 
   describe 'instantiating an input class' do
-
-    context 'when a class does not exist' do
-      it "should raise an error" do
-        lambda {
-          concat(semantic_form_for(@new_post) do |builder|
-            builder.input(:title, :as => :non_existant)
-          end)
-        }.should raise_error(Formtastic::UnknownInputError)
-      end
-    end
-
-    context 'when a customized top-level class does not exist' do
-
-      it 'should instantiate the Formtastic input' do
-        input = double('input', :to_html => 'some HTML')
-        Formtastic::Inputs::StringInput.should_receive(:new).and_return(input)
-        concat(semantic_form_for(@new_post) do |builder|
-          builder.input(:title, :as => :string)
-        end)
+    shared_examples "input class finder" do
+      before do
+        Rails.application.config.
+          should_receive(:cache_classes).at_least(:once).and_return(cache_classes)
       end
 
-    end
+      let(:builder) { mock('form builder').as_null_object }
+      let(:output)  { mock('input', :to_html => 'some HTML') }
+      let(:helper)  { builder.extend(Formtastic::Helpers::InputHelper) }
 
-    describe 'when a top-level input class exists' do
-      it "should instantiate the top-level input instead of the Formtastic one" do
-        class ::StringInput < Formtastic::Inputs::StringInput
+      let(:custom_form_builder) { stub_const('CustomFormBuiler', Module.new) }
+
+      let(:namespaced_class) { stub_const("#{custom_form_builder}::StringInput", mock('namespaced class')) }
+      let(:top_level_class)  { stub_const('StringInput', mock('top level class')) }
+      let(:formtastic_class) { Formtastic::Inputs::StringInput }
+
+      subject(:input) { helper.input(:title) }
+
+      context 'when a class does not exist' do
+        it 'should raise an error' do
+          expect { helper.input(:title, :as => :non_existant) }.to raise_error(Formtastic::UnknownInputError)
         end
+      end
 
-        input = double('input', :to_html => 'some HTML')
-        Formtastic::Inputs::StringInput.should_not_receive(:new)
-        ::StringInput.should_receive(:new).and_return(input)
+      context 'when a customized top-level class does not exist' do
+        it 'should instantiate the Formtastic input' do
+          formtastic_class.should_receive(:new).and_return(output)
+          input.should == output.to_html
+        end
+      end
 
-        concat(semantic_form_for(@new_post) do |builder|
-          builder.input(:title, :as => :string)
-        end)
+      context 'when a customized namespaced class exists' do
+        it 'should instantiate namespaced class' do
+          namespaced_class.should_receive(:new).and_return(output)
+          formtastic_class.should_not_receive(:new)
+
+          helper.should_receive(:class) { custom_form_builder }.at_least(:once)
+
+          input.should == output.to_html
+        end
+      end
+
+      context 'when a customized top-level class exists' do
+        it 'should instantiate the top-level input instead of the Formstastic one' do
+          top_level_class.should_receive(:new).and_return(output)
+          formtastic_class.should_not_receive(:new)
+
+          input.should == output.to_html
+        end
+      end
+
+      context 'when top-level and namespaced class exists' do
+        it 'should instantiate the top-level input' do
+          top_level_class.should_receive(:new).and_return(output)
+          namespaced_class.should_not_receive(:new)
+          formtastic_class.should_not_receive(:new)
+
+          input.should == output.to_html
+        end
+      end
+
+      describe 'when instantiated multiple times with the same input type' do
+        let(:builder) { Object.new }
+        subject { helper }
+
+        it "should be cached (not calling the internal methods)" do
+          builder.should_receive(:template).twice
+          formtastic_class.should_receive(:new).twice.and_return(output)
+
+          # TODO this is really tied to the underlying implementation
+          helper.should_receive(:custom_input_class_name).with(:string).once.and_call_original
+          helper.input(:title)
+          helper.input(:title)
+        end
+      end
+
+      describe "constant loading" do
+        it "should load constants" do
+          expect { helper.input(:title, :as => :unexpected) }.to raise_error(exception_message)
+        end
       end
     end
 
-    describe 'when instantiated multiple times with the same input type' do
-
-      it "should be cached (not calling the internal methods)" do
-        # TODO this is really tied to the underlying implementation
-        concat(semantic_form_for(@new_post) do |builder|
-          builder.should_receive(:custom_input_class_name).with(:string).once.and_return(::Formtastic::Inputs::StringInput)
-          builder.input(:title, :as => :string)
-          builder.input(:title, :as => :string)
-        end)
+    context 'when Rails cache classes is on' do
+      it_behaves_like "input class finder" do
+        let(:cache_classes) { true }
+        let(:exception_message) { "Unable to find input class UnexpectedInput" }
       end
+    end
 
+    context 'when Rails cache classes is off' do
+      it_behaves_like "input class finder" do
+        let(:cache_classes) { false }
+        let(:exception_message) { "Unable to find input class for unexpected" }
+      end
     end
 
   end
-
 end
-
