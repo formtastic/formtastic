@@ -30,7 +30,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency(%q<hpricot>, ["~> 0.8.3"])
   s.add_development_dependency(%q<BlueCloth>) # for YARD
   s.add_development_dependency(%q<yard>, ["~> 0.6"])
-  s.add_development_dependency(%q<rcov>, ["~> 0.9.9"])
   s.add_development_dependency(%q<colored>)
   s.add_development_dependency(%q<tzinfo>)
   s.add_development_dependency(%q<ammeter>, ["0.2.5"])
