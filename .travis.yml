@@ -1,4 +1,6 @@
-before_install: gem update --system
+before_install: 
+  - gem update --system
+  - gem update bundler
 rvm:
   - 1.8.7
   - ree
@@ -8,22 +10,21 @@ gemfile:
   - gemfiles/rails-3.0.gemfile
   - gemfiles/rails-3.1.gemfile
   - gemfiles/rails-3.2.gemfile
-  - gemfiles/rails-4.gemfile
 env:
   - DEFER_GC=false RAILS_EDGE=true
 script: "rake spec"
 matrix:
-  exclude:
-    - rvm: 1.8.7
+  include:
+    - rvm: 1.9.3
       gemfile: gemfiles/rails-4.gemfile
       env: DEFER_GC=false RAILS_EDGE=true
-    - rvm: ree
-      gemfile: gemfiles/rails-4.gemfile
-      env: DEFER_GC=false RAILS_EDGE=true
-    - rvm: 1.9.2
+    - rvm: 2.0.0
       gemfile: gemfiles/rails-4.gemfile
       env: DEFER_GC=false RAILS_EDGE=true
   allow_failures:
     - rvm: 1.9.3
+      gemfile: gemfiles/rails-4.gemfile
+      env: DEFER_GC=false RAILS_EDGE=true
+    - rvm: 2.0.0
       gemfile: gemfiles/rails-4.gemfile
       env: DEFER_GC=false RAILS_EDGE=true
