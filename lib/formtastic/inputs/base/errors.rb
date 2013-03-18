@@ -14,10 +14,12 @@ module Formtastic
                 
         def error_list_html
           error_class = options[:error_class] || builder.default_error_list_class
+
           list_elements = []
           errors.each do |error|
             list_elements << template.content_tag(:li, Formtastic::Util.html_safe(error.html_safe))
           end
+
           template.content_tag(:ul, Formtastic::Util.html_safe(list_elements.join("\n")), :class => error_class)
         end
         
@@ -38,7 +40,13 @@ module Formtastic
           errors = []
           if object && object.respond_to?(:errors)
             error_keys.each do |key| 
-              errors << object.errors[key] unless object.errors[key].blank?
+              unless object.errors[key].blank?
+                if builder.attribute_names_on_errors
+                  errors << object.errors[key].each_with_index.map { |err, idx| (idx==0) ? "#{key.to_s.titleize} #{err}" : err }
+                else
+                  errors << object.errors[key]
+                end
+              end
             end
           end
           errors.flatten.compact.uniq
@@ -50,7 +58,7 @@ module Formtastic
           keys << association_primary_key if belongs_to? || has_many?
           keys.flatten.compact.uniq
         end
-        
+
       end
     end
   end
