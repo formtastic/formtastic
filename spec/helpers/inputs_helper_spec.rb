@@ -519,7 +519,40 @@ describe 'Formtastic::FormBuilder#inputs' do
         output_buffer.should have_tag('form > fieldset#my-id-2.inputs > legend', /^#{@legend_text_using_arg}$/)
       end
     end
-  
+
+    describe 'when a :except option is provided' do
+      describe 'and an object is given' do
+        it 'should render a form with a fieldset containing only string item' do
+          concat(semantic_form_for(@new_post) do |builder|
+            concat(builder.inputs :except => :body)
+          end)
+
+          output_buffer.should have_tag('form > fieldset.inputs > ol > li', :count => 2)
+          output_buffer.should have_tag('form > fieldset.inputs > ol > li.string')
+          output_buffer.should_not have_tag('form > fieldset.inputs > ol > li.text')
+        end
+
+        it 'should render a form with a fieldset containing only text item' do
+          concat(semantic_form_for(@new_post) do |builder|
+            concat(builder.inputs :except => :title)
+          end)
+
+          output_buffer.should have_tag('form > fieldset.inputs > ol > li', :count => 2)
+          output_buffer.should_not have_tag('form > fieldset.inputs > ol > li.string')
+          output_buffer.should have_tag('form > fieldset.inputs > ol > li.text')
+        end
+      end
+
+      describe 'and no object is given' do
+        it 'should render a form with a fieldset containing two list items' do
+          concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
+            concat(builder.inputs(:title, :body))
+          end)
+
+          output_buffer.should have_tag('form > fieldset.inputs > ol > li.string', :count => 2)
+        end
+      end
+    end
   end
   
   describe 'nesting' do
