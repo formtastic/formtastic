@@ -271,6 +271,7 @@ module Formtastic
             return :url       if method.to_s =~ /^url$|^website$|_url$/
             return :phone     if method.to_s =~ /(phone|fax)/
             return :search    if method.to_s =~ /^search$/
+            return :color     if method.to_s =~ /color/
           when :integer
             return :select    if reflection_for(method)
             return :number
