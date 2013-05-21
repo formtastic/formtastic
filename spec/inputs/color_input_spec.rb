@@ -21,7 +21,7 @@ describe 'color input' do
     it_should_have_input_wrapper_with_class(:input)
     it_should_have_input_wrapper_with_class(:stringish)
     it_should_have_input_wrapper_with_id("post_color_input")
-    it_should_have_label_with_text(/color/)
+    it_should_have_label_with_text(/Color/)
     it_should_have_label_for("post_color")
     it_should_have_input_with_id("post_color")
     it_should_have_input_with_type(:color)
