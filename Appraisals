@@ -12,6 +12,6 @@ end
 
 if ENV["RAILS_EDGE"] == "true"
   appraise 'rails-4' do
-    gem 'rails', '~> 4.0.0.beta1'
+    gem 'rails', '~> 4.0.0.rc1'
   end
 end
