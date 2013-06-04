@@ -89,8 +89,8 @@ module Formtastic
       def value
         return options[:input_html][:value] if options[:input_html] && options[:input_html].key?(:value)
         val = object.send(method)
-        return val.strftime("%Y-%m-%d %H:%M") if val.is_a?(Time)
-        return "#{val.year}-#{val.month}-#{val.day} 00:00" if val.is_a?(Date)
+        return val.strftime("%Y-%m-%dT%H:%M:%S") if val.is_a?(Time)
+        return "#{val.year}-#{val.month}-#{val.day}T00:00:00" if val.is_a?(Date)
         return val if val.nil?
         val.to_s
       end
