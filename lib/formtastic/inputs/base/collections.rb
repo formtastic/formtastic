@@ -80,16 +80,27 @@ module Formtastic
 
             find_options_from_options = options[:find_options] || {}
             conditions_from_options = find_options_from_options[:conditions] || {}
-            conditions_from_reflection = (reflection.respond_to?(:options) && reflection.options[:conditions]) || {}
-            conditions_from_reflection = conditions_from_reflection.call if conditions_from_reflection.is_a?(Proc)
 
-            scope_conditions = conditions_from_reflection.empty? ? nil : {:conditions => conditions_from_reflection}
+            collection = nil
             if conditions_from_options.any?
-              reflection.klass.scoped(scope_conditions).where(conditions_from_options)
+              collection = reflection.klass.where(conditions_from_options)
             else
               find_options_from_options.merge!(:include => group_by) if self.respond_to?(:group_by) && group_by
-              reflection.klass.scoped(scope_conditions).where(find_options_from_options)
+              collection = reflection.klass.where(find_options_from_options)
             end
+
+            # Apply Rails3 style conditions
+            conditions_from_reflection = (reflection.respond_to?(:options) && reflection.options[:conditions]) || {}
+            conditions_from_reflection = conditions_from_reflection.call if conditions_from_reflection.is_a?(Proc)
+            scope_conditions = conditions_from_reflection.empty? ? nil : {:conditions => conditions_from_reflection}
+            
+            collection = collection.scoped(scope_conditions) if scope_conditions.present?
+
+            # Apply Rails4 style conditions (they're now scopes).
+            scope_from_reflection = reflection.respond_to?(:scope) && reflection.scope
+            collection = reflection.klass.instance_exec(&reflection.scope) if scope_from_reflection.present?
+
+            collection
           end
         end
 
