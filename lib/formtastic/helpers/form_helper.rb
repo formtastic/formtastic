@@ -161,7 +161,7 @@ module Formtastic
           when Array then options[:as] || singularizer.call(record_or_name_or_array.last.class)  # [@post, @comment] # => "comment"
           else options[:as] || singularizer.call(record_or_name_or_array.class)                  # @post => "post"
         end
-        options[:html][:class] = class_names.join(" ")
+        options[:html][:class] = class_names.compact.join(" ")
 
         with_custom_field_error_proc do
           self.form_for(record_or_name_or_array, *(args << options), &proc)
