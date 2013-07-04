@@ -61,6 +61,8 @@ module Formtastic
       
       if value.is_a?(::String)
         escape_html_entities(value)
+      elsif value.is_a?(::Proc)# allow a proc to be given as label option
+        value.call(key)
       else
         use_i18n = value.nil? ? i18n_lookups_by_default : (value != false)
         use_cache = i18n_cache_lookups

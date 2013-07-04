@@ -139,6 +139,13 @@ describe 'Formtastic::FormBuilder#label' do
       output_buffer.should have_tag('label b')
     end
 
+    it 'should allow a proc to be given as label option' do
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input(:title, :label => proc{ 'My label' })
+      end)
+      output_buffer.should have_tag('label', /My label/)
+    end
+
   end
 
 end
