@@ -20,6 +20,10 @@ module Formtastic
         text
       end
     end
+    
+    def rails3?
+      ::Rails::VERSION::MAJOR == 3
+    end
 
   end
 end
