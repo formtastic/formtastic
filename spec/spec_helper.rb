@@ -364,6 +364,7 @@ module FormtasticSpecHelper
     @new_post.stub!(:country)
     @new_post.stub!(:country_subdivision)
     @new_post.stub!(:country_code)
+    @new_post.stub!(:money)
     @new_post.stub!(:document).and_return(@mock_file)
     @new_post.stub!(:column_for_attribute).with(:meta_description).and_return(mock('column', :type => :string, :limit => 255))
     @new_post.stub!(:column_for_attribute).with(:title).and_return(mock('column', :type => :string, :limit => 50))
@@ -381,6 +382,7 @@ module FormtasticSpecHelper
     @new_post.stub!(:column_for_attribute).with(:phone).and_return(mock('column', :type => :string, :limit => 255))
     @new_post.stub!(:column_for_attribute).with(:search).and_return(mock('column', :type => :string, :limit => 255))
     @new_post.stub!(:column_for_attribute).with(:document).and_return(nil)
+    @new_post.stub!(:column_for_attribute).with(:money).and_return(mock('column', :type => :string, :limit => 255))
 
     @new_post.stub!(:author).and_return(@bob)
     @new_post.stub!(:author_id).and_return(@bob.id)

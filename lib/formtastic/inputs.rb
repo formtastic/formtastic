@@ -32,6 +32,7 @@ module Formtastic
     autoload :TimeZoneInput
     autoload :Timeish
     autoload :UrlInput
+    autoload :IconishSegmentsInput
   end
 end
 

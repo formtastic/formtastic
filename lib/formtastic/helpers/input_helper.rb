@@ -105,6 +105,7 @@ module Formtastic
       # * `:time_zone`    (see {Inputs::TimeZoneInput})
       # * `:time_select`  (see {Inputs::TimeSelectInput})
       # * `:url`          (see {Inputs::UrlInput})
+      # * `:iconish_segments` (see {Inputs::IconishSegmentsInput})
       #
       # Calling `:as => :string` (for example) will call `#to_html` on a new instance of
       # `Formtastic::Inputs::StringInput`. Before this, Formtastic will try to instantiate a top-level
