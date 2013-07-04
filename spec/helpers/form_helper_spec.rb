@@ -62,6 +62,13 @@ describe 'FormHelper' do
       end)
       output_buffer.should have_tag("form.xyz")
     end
+    
+    it 'omits the leading spaces from the classes in the generated form when the default class is nil' do
+      Formtastic::Helpers::FormHelper.default_form_class = nil
+      concat(semantic_form_for(::Post.new, :as => :post, :url => '/hello') do |builder|
+      end)
+      output_buffer.should have_tag("form[class='post']")
+    end
 
     it 'adds class matching the object name to the generated form when a symbol is provided' do
       concat(semantic_form_for(@new_post, :url => '/hello') do |builder|
