@@ -435,7 +435,7 @@ module FormtasticSpecHelper
     # In edge rails (Rails 4) tags store method_name as a string and index the errors object using a string
     # therefore allow stubs to match on either string or symbol.  The errors object calls to_sym on all index 
     # accesses so @object.errors[:abc] is equivalent to @object.errors["abc"]
-    if Rails::VERSION::MAJOR == 4
+    if ::Rails::VERSION::MAJOR == 4
       ToSMatcher.new(method)
     else
       method
