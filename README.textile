@@ -254,12 +254,7 @@ Alternatively, the current index can be accessed via the `inputs` block's argume
 <pre>
   <%= semantic_form_for @post do |f| %>
     <%= f.inputs :for => :categories do |category, i| %>
-      <% if i <= 2 %>
-        <%= f.inputs :name => "Category ##{i}" %>
-      <% else %>
-        <%= f.inputs :name => "Category ##{i} (optional)" %>
-      <% end %>
-    <% end %>
+      ...
     <%= f.actions %>
   <% end %>
 </pre>
