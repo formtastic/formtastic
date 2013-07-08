@@ -91,12 +91,14 @@ module Formtastic
                 reflection.klass.all(scope_conditions).where(conditions_from_options)
               end
             else
-              find_options_from_options.merge!(:include => group_by) if self.respond_to?(:group_by) && group_by
               
               if Util.rails3?
+                find_options_from_options.merge!(:include => group_by) if self.respond_to?(:group_by) && group_by
                 reflection.klass.scoped(scope_conditions).where(find_options_from_options)
               else
-                reflection.klass.all(scope_conditions).where(find_options_from_options)
+                coll = reflection.klass.all(scope_conditions)
+                coll = coll.includes(group_by) if self.respond_to?(:group_by) && group_by
+                coll.where(find_options_from_options)
               end
             end
           end

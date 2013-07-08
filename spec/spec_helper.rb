@@ -170,7 +170,12 @@ module FormtasticSpecHelper
     end
     
     def where(*args)
-      array
+      # array
+      self
+    end
+    
+    def includes(*args)
+      self
     end
     
     def size

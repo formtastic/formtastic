@@ -317,13 +317,13 @@ describe 'select input' do
       output_buffer.should have_tag("form li select optgroup[@label='99']")
     end
 
-    xit 'should call find with :include for more optimized queries' do
+    it 'should call find with :include for more optimized queries' do
       if Formtastic::Util.rails3?
-        Author.should_receive(:where).with(:include => :continent)
+       Author.should_receive(:where).with(:include => :continent)
       else
-        proxy = stub
-        Author.should_receive(:all).and_return(proxy)
-        proxy.should_receive(:where).with(:include => :continent)
+       proxy = author_array_or_scope(@authors)
+       Author.should_receive(:all).and_return(proxy)
+       proxy.should_receive(:includes).with(:continent).and_return(proxy)
       end
 
       with_deprecation_silenced do 
