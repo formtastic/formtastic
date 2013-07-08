@@ -323,7 +323,7 @@ describe 'select input' do
       else
        proxy = author_array_or_scope(@authors)
        Author.should_receive(:all).and_return(proxy)
-       proxy.should_receive(:includes).with(:continent).and_return(proxy)
+       proxy.should_receive(:includes).with(:continent).and_call_original
       end
 
       with_deprecation_silenced do 
