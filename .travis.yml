@@ -23,8 +23,8 @@ matrix:
       env: DEFER_GC=false RAILS_EDGE=true
   allow_failures:
     - rvm: 1.9.3
-      gemfile: gemfiles/rails-4.gemfile
+      gemfile: gemfiles/rails-edge.gemfile
       env: DEFER_GC=false RAILS_EDGE=true
     - rvm: 2.0.0
-      gemfile: gemfiles/rails-4.gemfile
+      gemfile: gemfiles/rails-edge.gemfile
       env: DEFER_GC=false RAILS_EDGE=true
