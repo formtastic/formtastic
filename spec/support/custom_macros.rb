@@ -258,7 +258,11 @@ module CustomMacros
 
     def it_should_call_find_on_association_class_when_no_collection_is_provided(as)
       it "should call find on the association class when no collection is provided" do
-        ::Author.should_receive(:where)
+        if Formtastic::Util.rails3?
+          ::Author.should_receive(:where)
+        else
+          ::Author.should_receive(:all)
+        end
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:author, :as => as))
         end)
@@ -269,7 +273,7 @@ module CustomMacros
       describe 'when the :collection option is provided' do
 
         before do
-          @authors = ::Author.all * 2
+          @authors = ([::Author.all] * 2).flatten
           output_buffer.replace ''
         end
 
@@ -456,7 +460,7 @@ module CustomMacros
             describe "when the collection objects respond to #{label_method}" do
               before do
                 @fred.stub!(:respond_to?).and_return { |m| m.to_s == label_method || m.to_s == 'id' }
-                ::Author.all.each { |a| a.stub!(label_method).and_return('The Label Text') }
+                [@fred, @bob].each { |a| a.stub!(label_method).and_return('The Label Text') }
 
                 concat(semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:author, :as => as))
