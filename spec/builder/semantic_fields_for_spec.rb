@@ -130,7 +130,7 @@ describe 'Formtastic::FormBuilder#fields_for' do
       end)
     end
   
-    it "should only render one hidden input (my one)", tw: true do
+    it "should only render one hidden input (my one)" do
       output_buffer.should have_tag 'input#author_posts_attributes_0_id', :count => 1
     end
     
