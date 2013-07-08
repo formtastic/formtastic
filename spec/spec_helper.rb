@@ -165,8 +165,8 @@ module FormtasticSpecHelper
       @array = the_array
     end
     
-    def map
-      array.map
+    def map(&block)
+      array.map(&block)
     end
     
     def where(*args)
@@ -186,8 +186,8 @@ module FormtasticSpecHelper
       array
     end
     
-    def each
-      array.each
+    def each(&block)
+      array.each(&block)
     end
     
     def include?(*args)

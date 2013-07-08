@@ -122,7 +122,6 @@ describe 'Formtastic::FormBuilder#fields_for' do
       @fred.posts.size.should == 1
       @fred.posts.first.stub!(:persisted?).and_return(true)
       @fred.stub!(:posts_attributes=)
-
       concat(semantic_form_for(@fred) do |builder|
         concat(builder.semantic_fields_for(:posts) do |nested_builder|
           concat(nested_builder.input(:id, :as => :hidden))
@@ -131,11 +130,11 @@ describe 'Formtastic::FormBuilder#fields_for' do
       end)
     end
   
-    xit "should only render one hidden input (my one)" do
+    it "should only render one hidden input (my one)", tw: true do
       output_buffer.should have_tag 'input#author_posts_attributes_0_id', :count => 1
     end
     
-    xit "should render the hidden input inside an li.hidden" do
+    it "should render the hidden input inside an li.hidden" do
       output_buffer.should have_tag 'li.hidden input#author_posts_attributes_0_id'
     end
   end

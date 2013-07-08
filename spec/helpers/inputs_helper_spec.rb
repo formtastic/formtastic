@@ -273,7 +273,7 @@ describe 'Formtastic::FormBuilder#inputs' do
         end
         
         # TODO: looks like the block isn't being called for the last assertion here
-        xit 'should render a fieldset with a legend inside the form' do
+        it 'should render a fieldset with a legend inside the form' do
           output_buffer.should have_tag("form fieldset legend", /^#{@legend_text}$/)
           output_buffer.should have_tag("form fieldset legend", /^#{@legend_text_using_name}$/)
           output_buffer.should have_tag("form fieldset legend", /^#{@legend_text_using_title}$/)
@@ -310,7 +310,7 @@ describe 'Formtastic::FormBuilder#inputs' do
         end
         
         # TODO: looks like the block isn't being called for the last assertion here
-        xit 'should render a fieldset with a localized legend inside the form' do
+        it 'should render a fieldset with a localized legend inside the form' do
           output_buffer.should have_tag("form fieldset legend", /^#{@localized_legend_text}$/)
           output_buffer.should have_tag("form fieldset legend", /^#{@localized_legend_text_using_name}$/)
           output_buffer.should have_tag("form fieldset legend", /^#{@localized_legend_text_using_title}$/)

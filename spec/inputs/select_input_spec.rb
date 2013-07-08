@@ -478,17 +478,17 @@ describe 'select input' do
       end)
     end
 
-    xit 'should generate label' do
+    it 'should generate label' do
       output_buffer.should have_tag('form li label', /Author/)
       output_buffer.should have_tag("form li label[@for='project_author']")
     end
 
-    xit 'should generate select inputs' do
+    it 'should generate select inputs' do
       output_buffer.should have_tag('form li select#project_author')
       output_buffer.should have_tag('form li select option', :count => ::Author.all.size + 1)
     end
 
-    xit 'should generate an option to each item' do
+    it 'should generate an option to each item' do
       ::Author.all.each do |author|
         output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
       end
@@ -497,7 +497,7 @@ describe 'select input' do
 
   describe 'when no association exists' do
 
-    xit 'should still generate a valid name attribute' do
+    it 'should still generate a valid name attribute' do
       concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
         concat(builder.input(:author_name, :as => :select, :collection => ::Author.all))
       end)
