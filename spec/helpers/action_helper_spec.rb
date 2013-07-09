@@ -281,7 +281,7 @@ describe 'Formtastic::FormBuilder#action' do
         end
   
         action = mock('action', :to_html => 'some HTML')
-        Formtastic::Actions::ButtonAction.should_not_receive(:new).and_return(action)
+        Formtastic::Actions::ButtonAction.should_not_receive(:new)
         ::ButtonAction.should_receive(:new).and_return(action)
   
         concat(semantic_form_for(@new_post) do |builder|
