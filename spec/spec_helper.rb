@@ -151,6 +151,54 @@ module FormtasticSpecHelper
       sym == :options ? false : super
     end
   end
+  
+  # In Rails 3 Model.all returns an array. In Rails 4, it returns an
+  # association proxy, which quacks a lot like an array. We use this in stubs 
+  # or mocks where we need to return the later.
+  # 
+  # TODO try delegate?
+  # delegate :map, :size, :length, :first, :to_ary, :each, :include?, :to => :array
+  class MockScope
+    attr_reader :array
+    
+    def initialize(the_array)
+      @array = the_array
+    end
+    
+    def map(&block)
+      array.map(&block)
+    end
+    
+    def where(*args)
+      # array
+      self
+    end
+    
+    def includes(*args)
+      self
+    end
+    
+    def size
+      array.size
+    end
+    alias_method :length, :size
+    
+    def first
+      array.first
+    end
+    
+    def to_ary
+      array
+    end
+    
+    def each(&block)
+      array.each(&block)
+    end
+    
+    def include?(*args)
+      array.include?(*args)
+    end
+  end
 
   def _routes
     url_helpers = mock('url_helpers')
@@ -188,7 +236,17 @@ module FormtasticSpecHelper
     def author_path(*args); "/authors/1"; end
     def authors_path(*args); "/authors"; end
     def new_author_path(*args); "/authors/new"; end
-
+    
+    # Returns the array for Rails 3 and a thing that looks looks like an 
+    # association proxy for Rails 4+
+    def author_array_or_scope(the_array = [@fred, @bob])
+      if ::Formtastic::Util.rails3?
+        the_array
+      else
+        MockScope.new(the_array)
+      end
+    end
+    
     @fred = ::Author.new
     @fred.stub!(:class).and_return(::Author)
     @fred.stub!(:to_label).and_return('Fred Smith')
@@ -230,9 +288,9 @@ module FormtasticSpecHelper
 
 
     ::Author.stub!(:scoped).and_return(::Author)
-    ::Author.stub!(:find).and_return([@fred, @bob])
-    ::Author.stub!(:all).and_return([@fred, @bob])
-    ::Author.stub!(:where).and_return([@fred, @bob])
+    ::Author.stub!(:find).and_return(author_array_or_scope)
+    ::Author.stub!(:all).and_return(author_array_or_scope)
+    ::Author.stub!(:where).and_return(author_array_or_scope)
     ::Author.stub!(:human_attribute_name).and_return { |column_name| column_name.humanize }
     ::Author.stub!(:human_name).and_return('::Author')
     ::Author.stub!(:reflect_on_association).and_return { |column_name| mock('reflection', :options => {}, :klass => Post, :macro => :has_many) if column_name == :posts }
@@ -250,7 +308,7 @@ module FormtasticSpecHelper
     @new_post.stub!(:errors).and_return(mock('errors', :[] => nil))
     @new_post.stub!(:author).and_return(nil)
     @new_post.stub!(:author_attributes=).and_return(nil)
-    @new_post.stub!(:authors).and_return([@fred])
+    @new_post.stub!(:authors).and_return(author_array_or_scope([@fred]))
     @new_post.stub!(:authors_attributes=)
     @new_post.stub!(:reviewer).and_return(nil)
     @new_post.stub!(:main_post).and_return(nil)
@@ -273,7 +331,7 @@ module FormtasticSpecHelper
     @freds_post.stub!(:errors).and_return(mock('errors', :[] => nil))
     @freds_post.stub!(:to_key).and_return(nil)
     @freds_post.stub!(:persisted?).and_return(nil)
-    @fred.stub!(:posts).and_return([@freds_post])
+    @fred.stub!(:posts).and_return(author_array_or_scope([@freds_post]))
     @fred.stub!(:post_ids).and_return([@freds_post.id])
 
     ::Post.stub!(:scoped).and_return(::Post)
@@ -304,9 +362,9 @@ module FormtasticSpecHelper
              :klass => ::Author, :macro => :referenced_in, :foreign_key => "reviewer_id") # custom id
       end
     end
-    ::Post.stub!(:find).and_return([@freds_post])
-    ::Post.stub!(:all).and_return([@freds_post])
-    ::Post.stub!(:where).and_return([@freds_post])
+    ::Post.stub!(:find).and_return(author_array_or_scope([@freds_post]))
+    ::Post.stub!(:all).and_return(author_array_or_scope([@freds_post]))
+    ::Post.stub!(:where).and_return(author_array_or_scope([@freds_post]))
     ::Post.stub!(:content_columns).and_return([mock('column', :name => 'title'), mock('column', :name => 'body'), mock('column', :name => 'created_at')])
     ::Post.stub!(:to_key).and_return(nil)
     ::Post.stub!(:persisted?).and_return(nil)
@@ -318,9 +376,9 @@ module FormtasticSpecHelper
       :sub_posts => mock('reflection', :options => {:polymorphic => true}, :klass => ::MongoPost, :macro => :has_many),
       :options => []
     })
-    ::MongoPost.stub!(:find).and_return([@freds_post])
-    ::MongoPost.stub!(:all).and_return([@freds_post])
-    ::MongoPost.stub!(:where).and_return([@freds_post])
+    ::MongoPost.stub!(:find).and_return(author_array_or_scope([@freds_post]))
+    ::MongoPost.stub!(:all).and_return(author_array_or_scope([@freds_post]))
+    ::MongoPost.stub!(:where).and_return(author_array_or_scope([@freds_post]))
     ::MongoPost.stub!(:to_key).and_return(nil)
     ::MongoPost.stub!(:persisted?).and_return(nil)
     ::MongoPost.stub!(:to_ary)
