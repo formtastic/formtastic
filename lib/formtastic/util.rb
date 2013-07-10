@@ -24,6 +24,10 @@ module Formtastic
     def rails3?
       ::Rails::VERSION::MAJOR == 3
     end
+    
+    def deprecated_version_of_rails?
+      const_defined?(:Rails) && ::Rails::VERSION::MAJOR == 3 && ::Rails::VERSION::MINOR < 2
+    end
 
   end
 end
