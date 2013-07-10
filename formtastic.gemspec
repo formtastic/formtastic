@@ -26,7 +26,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency(%q<actionpack>, [">= 3.0"])
 
-  s.add_development_dependency(%q<nokogiri>, ["< 1.6.0"]) # 1.6 requires Ruby 1.9.2, drop in v3.0
+  s.add_development_dependency(%q<nokogiri>)
   s.add_development_dependency(%q<rspec-rails>, ["~> 2.12.0"])
   s.add_development_dependency(%q<rspec_tag_matchers>, [">= 1.0.0"])
   s.add_development_dependency(%q<hpricot>, ["~> 0.8.3"])
