@@ -7,8 +7,6 @@ rvm:
   - 1.9.2
   - 1.9.3
 gemfile:
-  - gemfiles/rails_3.0.gemfile
-  - gemfiles/rails_3.1.gemfile
   - gemfiles/rails_3.2.gemfile
 env:
   - DEFER_GC=false RAILS_EDGE=true
