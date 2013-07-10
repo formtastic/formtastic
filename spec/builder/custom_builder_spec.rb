@@ -47,7 +47,7 @@ describe 'Formtastic::Helpers::FormHelper.builder' do
   describe "when using a custom builder" do
 
     before do
-      @new_post.stub!(:title)
+      @new_post.stub(:title)
       Formtastic::Helpers::FormHelper.builder = MyCustomFormBuilder
     end
 
@@ -72,9 +72,9 @@ describe 'Formtastic::Helpers::FormHelper.builder' do
 
       # See: https://github.com/justinfrench/formtastic/issues/657
       it "should not conflict with navigasmic" do
-        stub!(:builder).and_return('navigasmic')
-
-        lambda { semantic_form_for(@new_post) }.should_not raise_error(NoMethodError)
+        self.class.any_instance.stub(:builder).and_return('navigasmic')
+        
+        lambda { semantic_form_for(@new_post) { |f| } }.should_not raise_error
       end
 
     end
@@ -82,8 +82,8 @@ describe 'Formtastic::Helpers::FormHelper.builder' do
     describe "fields_for" do
 
       it "should yield an instance of the parent form builder" do
-        @new_post.stub!(:comment).and_return([@fred])
-        @new_post.stub!(:comment_attributes=)
+        @new_post.stub(:comment).and_return([@fred])
+        @new_post.stub(:comment_attributes=)
         semantic_form_for(@new_post, :builder => MyCustomFormBuilder) do |builder|
           builder.class.should.kind_of?(MyCustomFormBuilder)
           
@@ -102,7 +102,7 @@ describe 'Formtastic::Helpers::FormHelper.builder' do
     describe "fields_for" do
 
       it "should yield an instance of the parent form builder" do
-        @new_post.stub!(:author_attributes=)
+        @new_post.stub(:author_attributes=)
         semantic_form_for(@new_post, :builder => MyCustomFormBuilder) do |builder|
           builder.fields_for(:author) do |nested_builder|
             nested_builder.class.should.kind_of?(MyCustomFormBuilder)

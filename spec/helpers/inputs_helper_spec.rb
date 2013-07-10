@@ -56,13 +56,13 @@ describe 'Formtastic::FormBuilder#inputs' do
     describe 'when a :for option is provided' do
   
       before do
-        @new_post.stub!(:respond_to?).and_return(true, true)
-        @new_post.stub!(:respond_to?).with(:empty?).and_return(false)
-        @new_post.stub!(:author).and_return(@bob)
+        @new_post.stub(:respond_to?).and_return(true, true)
+        @new_post.stub(:respond_to?).with(:empty?).and_return(false)
+        @new_post.stub(:author).and_return(@bob)
       end
   
       it 'should render nested inputs' do
-        @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
+        @bob.stub(:column_for_attribute).and_return(double('column', :type => :string, :limit => 255))
   
         concat(semantic_form_for(@new_post) do |builder|
           inputs = builder.inputs :for => [:author, @bob] do |bob_builder|
@@ -75,7 +75,7 @@ describe 'Formtastic::FormBuilder#inputs' do
       end
   
       it 'should concat rendered nested inputs to the template' do
-        @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
+        @bob.stub(:column_for_attribute).and_return(double('column', :type => :string, :limit => 255))
   
         concat(semantic_form_for(@new_post) do |builder|
           builder.inputs :for => [:author, @bob] do |bob_builder|
@@ -104,8 +104,8 @@ describe 'Formtastic::FormBuilder#inputs' do
   
       describe "as a symbol representing a has_many association name" do
         before do
-          @new_post.stub!(:authors).and_return([@bob, @fred])
-          @new_post.stub!(:authors_attributes=)
+          @new_post.stub(:authors).and_return([@bob, @fred])
+          @new_post.stub(:authors_attributes=)
         end
   
         it 'should nest the inputs with a fieldset, legend and :name input for each item' do
@@ -177,7 +177,7 @@ describe 'Formtastic::FormBuilder#inputs' do
       end
   
       it 'should pass options down to semantic_fields_for' do
-        @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
+        @bob.stub(:column_for_attribute).and_return(double('column', :type => :string, :limit => 255))
   
         concat(semantic_form_for(@new_post) do |builder|
           inputs = builder.inputs :for => [:author, @bob], :for_options => { :index => 10 } do |bob_builder|
@@ -341,17 +341,17 @@ describe 'Formtastic::FormBuilder#inputs' do
   describe 'without a block' do
   
     before do
-      ::Post.stub!(:reflections).and_return({:author => mock('reflection', :options => {}, :macro => :belongs_to),
-                                           :comments => mock('reflection', :options => {}, :macro => :has_many) })
+      ::Post.stub(:reflections).and_return({:author => double('reflection', :options => {}, :macro => :belongs_to),
+                                           :comments => double('reflection', :options => {}, :macro => :has_many) })
   
-      @new_post.stub!(:title)
-      @new_post.stub!(:body)
-      @new_post.stub!(:author_id)
+      @new_post.stub(:title)
+      @new_post.stub(:body)
+      @new_post.stub(:author_id)
   
-      @new_post.stub!(:column_for_attribute).with(:title).and_return(mock('column', :type => :string, :limit => 255))
-      @new_post.stub!(:column_for_attribute).with(:body).and_return(mock('column', :type => :text))
-      @new_post.stub!(:column_for_attribute).with(:created_at).and_return(mock('column', :type => :datetime))
-      @new_post.stub!(:column_for_attribute).with(:author).and_return(nil)
+      @new_post.stub(:column_for_attribute).with(:title).and_return(double('column', :type => :string, :limit => 255))
+      @new_post.stub(:column_for_attribute).with(:body).and_return(double('column', :type => :text))
+      @new_post.stub(:column_for_attribute).with(:created_at).and_return(double('column', :type => :datetime))
+      @new_post.stub(:column_for_attribute).with(:author).and_return(nil)
     end
   
     describe 'with no args (quick forms syntax)' do
@@ -402,12 +402,12 @@ describe 'Formtastic::FormBuilder#inputs' do
       context "with a polymorphic association" do
         
         before do 
-          @new_post.stub!(:commentable)
-          @new_post.class.stub!(:reflections).and_return({ 
-            :commentable => mock('macro_reflection', :options => { :polymorphic => true }, :macro => :belongs_to)
+          @new_post.stub(:commentable)
+          @new_post.class.stub(:reflections).and_return({ 
+            :commentable => double('macro_reflection', :options => { :polymorphic => true }, :macro => :belongs_to)
           })
-          @new_post.stub!(:column_for_attribute).with(:commentable).and_return(
-            mock('column', :type => :integer)
+          @new_post.stub(:column_for_attribute).with(:commentable).and_return(
+            double('column', :type => :integer)
           )
         end
         
@@ -447,15 +447,15 @@ describe 'Formtastic::FormBuilder#inputs' do
       context "with a polymorphic association" do
         
         it 'should raise an error for polymorphic associations (the collection class cannot be guessed)' do
-          @new_post.stub!(:commentable)
-          @new_post.class.stub!(:reflections).and_return({ 
-            :commentable => mock('macro_reflection', :options => { :polymorphic => true }, :macro => :belongs_to)
+          @new_post.stub(:commentable)
+          @new_post.class.stub(:reflections).and_return({ 
+            :commentable => double('macro_reflection', :options => { :polymorphic => true }, :macro => :belongs_to)
           })
-          @new_post.stub!(:column_for_attribute).with(:commentable).and_return(
-            mock('column', :type => :integer)
+          @new_post.stub(:column_for_attribute).with(:commentable).and_return(
+            double('column', :type => :integer)
           )
-          @new_post.class.stub!(:reflect_on_association).with(:commentable).and_return(
-            mock('reflection', :macro => :belongs_to, :options => { :polymorphic => true })
+          @new_post.class.stub(:reflect_on_association).with(:commentable).and_return(
+            double('reflection', :macro => :belongs_to, :options => { :polymorphic => true })
           )
           
           expect { 
@@ -472,7 +472,7 @@ describe 'Formtastic::FormBuilder#inputs' do
     describe 'when a :for option is provided' do
       describe 'and an object is given' do
         it 'should render nested inputs' do
-          @bob.stub!(:column_for_attribute).and_return(mock('column', :type => :string, :limit => 255))
+          @bob.stub(:column_for_attribute).and_return(double('column', :type => :string, :limit => 255))
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.inputs(:login, :for => @bob))
           end)
