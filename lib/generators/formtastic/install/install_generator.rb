@@ -1,8 +1,7 @@
 # encoding: utf-8
 
 module Formtastic
-  # Copies formtastic.css to public/stylesheets/ (Rails 3.0.x only) and a config initializer
-  # to config/initializers/formtastic.rb (all Rails versions).
+  # Copies a config initializer to config/initializers/formtastic.rb
   #
   # @example
   #   $ rails generate formtastic:install
