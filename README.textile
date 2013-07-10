@@ -17,8 +17,8 @@ h2. Documentation & Support
 h2. Compatibility
 
 * Formtastic 4 (master on Github) will require Rails 3.2 minimum
-* Formtastic 2.3 is Rails 3.x and Rails 4.x compatible (Rails < 3.2 is deprecated)
-* Formtastic 2.1 & 2.2 is Rails 3.x and Rails 4.x compatible
+* Formtastic 2.3 is Rails 3 and Rails 4 compatible (Rails < 3.2 is deprecated)
+* Formtastic 2.1 & 2.2 is Rails 3 and Rails 4 compatible
 * Formtastic, much like Rails, is very ActiveRecord-centric. Many are successfully using other ActiveModel-like ORMs and objects (DataMapper, MongoMapper, Mongoid, Authlogic, Devise...) but we're not guaranteeing full compatibility at this stage. Patches are welcome!
  
 
