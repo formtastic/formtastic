@@ -77,12 +77,7 @@ module Formtastic
                 "A collection must be supplied for #{method} input. Collections cannot be guessed for polymorphic associations."
               )
             end
-
-            if Util.rails3?
-              reflection.klass.scoped(conditions_from_scope).all
-            else
-              reflection.klass.where(conditions_from_scope)
-            end
+            reflection.klass.where(conditions_from_scope)
           end
         end
         
