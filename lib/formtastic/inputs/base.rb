@@ -11,8 +11,6 @@ module Formtastic
         @object_name = object_name
         @method = method
         @options = options.dup
-        
-        warn_deprecated_option!(:value, ":input_html => { :value => '...'}")
       end
       
       # Usefull for deprecating options.

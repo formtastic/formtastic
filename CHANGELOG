@@ -4,6 +4,7 @@ master
 * Removed deprecated :group_by and :group_label options
 * Removed deprecated `:error_class` option
 * Removed deprecated `:find_options` option
+* Removed deprecated `:value` option from HiddenInput
 
 2.3.0.rc2
 
