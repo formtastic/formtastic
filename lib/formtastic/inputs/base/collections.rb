@@ -78,26 +78,15 @@ module Formtastic
                     ) if reflection.options[:polymorphic] == true
             end
 
-            find_options_from_options = options[:find_options] || {}
-            conditions_from_options = find_options_from_options[:conditions] || {}
             conditions_from_reflection = (reflection.respond_to?(:options) && reflection.options[:conditions]) || {}
             conditions_from_reflection = conditions_from_reflection.call if conditions_from_reflection.is_a?(Proc)
 
             scope_conditions = conditions_from_reflection.empty? ? nil : {:conditions => conditions_from_reflection}
-            if conditions_from_options.any?
-              if Util.rails3?
-                reflection.klass.scoped(scope_conditions).where(conditions_from_options)
-              else
-                reflection.klass.where(scope_conditions[:conditions]).where(conditions_from_options)
-              end
+
+            if Util.rails3?
+              reflection.klass.scoped(scope_conditions).all
             else
-              
-              if Util.rails3?
-                reflection.klass.scoped(scope_conditions).where(find_options_from_options)
-              else
-                coll = reflection.klass.where(scope_conditions)
-                coll.where(find_options_from_options)
-              end
+              reflection.klass.where(scope_conditions)
             end
           end
         end

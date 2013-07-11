@@ -3,6 +3,7 @@ master
 * Removed deprecated `:hint_class` option
 * Removed deprecated :group_by and :group_label options
 * Removed deprecated `:error_class` option
+* Removed deprecated `:find_options` option
 
 2.3.0.rc2
 
