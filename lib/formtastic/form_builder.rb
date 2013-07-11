@@ -82,7 +82,12 @@ module Formtastic
     end
     
     def initialize(object_name, object, template, options, block=nil)
-      super
+      if Util.rails3? || Util.rails4_0?
+        super
+      else
+        super object_name, object, template, options
+      end
+      
       if respond_to?('multipart=') && options.is_a?(Hash) && options[:html]
         self.multipart = options[:html][:multipart]
       end
