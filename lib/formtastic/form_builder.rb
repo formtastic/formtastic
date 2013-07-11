@@ -82,7 +82,15 @@ module Formtastic
     end
     
     def initialize(object_name, object, template, options, block=nil)
-      super
+      # rails 3 supported passing in the block parameter to FormBuilder
+      # rails 4.0 deprecated the block parameter and does nothing with it
+      # rails 4.1 removes the parameter completely
+      if Util.rails3? || Util.rails4_0?
+        super
+      else
+        super object_name, object, template, options
+      end
+      
       if respond_to?('multipart=') && options.is_a?(Hash) && options[:html]
         self.multipart = options[:html][:multipart]
       end
