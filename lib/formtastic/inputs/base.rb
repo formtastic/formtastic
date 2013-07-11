@@ -13,7 +13,6 @@ module Formtastic
         @options = options.dup
         
         warn_deprecated_option!(:value, ":input_html => { :value => '...'}")
-        warn_deprecated_option!(:error_class, "default_error_class configuration")
         warn_deprecated_option!(:find_options, "YourModel.find(...)")
       end
       
