@@ -85,6 +85,56 @@ describe 'select input' do
 
       it_should_have_select_with_name("post[title]")
     end
+
+    describe 'using collection of model objects and arrays' do
+      before do
+        @separator = ["--- SEPARATOR ---", ""]
+
+        @fred = ::Author.new
+        @fred.stub!(:class).and_return(::Author)
+        @fred.stub!(:to_label).and_return('Fred Smith')
+        @fred.stub!(:to_s).and_return('Fred Smith')
+        @fred.stub!(:id).and_return(37)
+
+        @bob = ::Author.new
+        @bob.stub!(:class).and_return(::Author)
+        @bob.stub!(:to_label).and_return('Bob Rock')
+        @bob.stub!(:to_s).and_return('Bob Rock')
+        @bob.stub!(:id).and_return(42)
+
+        @objects = [@fred, @bob]
+      end
+
+      it 'should have a option for each object and array item (array then objects)' do
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:title, :as => :select, :collection => [@separator] + @objects))
+        end)
+        @objects.each do |v|
+          output_buffer.should have_tag("form li select option[@value='#{v.id}']", /^#{v.to_label}$/)
+        end
+        output_buffer.should have_tag("form li select option[@value='#{@separator.second}']", /^#{@separator.first}$/)
+      end
+
+      it 'should have a option for each object and array item (objects then array)' do
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:title, :as => :select, :collection => @objects + [@separator]))
+        end)
+        @objects.each do |v|
+          output_buffer.should have_tag("form li select option[@value='#{v.id}']", /^#{v.to_label}$/)
+        end
+        output_buffer.should have_tag("form li select option[@value='#{@separator.second}']", /^#{@separator.first}$/)
+      end
+
+      it 'should have a option for each object and array item (objects alone)' do
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:title, :as => :select, :collection => @objects))
+        end)
+        @objects.each do |v|
+          output_buffer.should have_tag("form li select option[@value='#{v.id}']", /^#{v.to_label}$/)
+        end
+      end
+
+    end
   end
 
   describe 'for boolean columns' do
