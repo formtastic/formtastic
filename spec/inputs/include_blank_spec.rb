@@ -9,8 +9,8 @@ describe "*select: options[:include_blank]" do
     @output_buffer = ''
     mock_everything
 
-    @new_post.stub!(:author_id).and_return(nil)
-    @new_post.stub!(:publish_at).and_return(nil)
+    @new_post.stub(:author_id).and_return(nil)
+    @new_post.stub(:publish_at).and_return(nil)
   end
 
   SELECT_INPUT_TYPES = {

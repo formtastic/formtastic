@@ -45,7 +45,7 @@ describe 'AnyCustomInput' do
 
     describe 'with an implementation' do
       it "should raise a NotImplementedError exception" do
-        expect { ::ImplementedInput.new(*input_args).to_html }.to_not raise_error(NotImplementedError)
+        expect { ::ImplementedInput.new(*input_args).to_html }.to_not raise_error
       end
     end
     

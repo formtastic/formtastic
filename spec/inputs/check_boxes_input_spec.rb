@@ -194,7 +194,7 @@ describe 'check_boxes input' do
 
       describe "no disabled items" do
         before do
-          @new_post.stub!(:author_ids).and_return(nil)
+          @new_post.stub(:author_ids).and_return(nil)
 
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:authors, :as => :check_boxes, :disabled => nil))
@@ -208,7 +208,7 @@ describe 'check_boxes input' do
 
       describe "single disabled item" do
         before do
-          @new_post.stub!(:author_ids).and_return(nil)
+          @new_post.stub(:author_ids).and_return(nil)
 
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:authors, :as => :check_boxes, :disabled => @fred.id))
@@ -224,7 +224,7 @@ describe 'check_boxes input' do
 
       describe "multiple disabled items" do
         before do
-          @new_post.stub!(:author_ids).and_return(nil)
+          @new_post.stub(:author_ids).and_return(nil)
 
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:authors, :as => :check_boxes, :disabled => [@bob.id, @fred.id]))
@@ -247,7 +247,7 @@ describe 'check_boxes input' do
       before do
         ::I18n.backend.store_translations :en, :formtastic => { :labels => { :post => { :authors => "Translated!" }}}
         with_config :i18n_lookups_by_default, true do
-          @new_post.stub!(:author_ids).and_return(nil)
+          @new_post.stub(:author_ids).and_return(nil)
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:authors, :as => :check_boxes))
           end)
@@ -266,7 +266,7 @@ describe 'check_boxes input' do
 
     describe "when :label option is set" do
       before do
-        @new_post.stub!(:author_ids).and_return(nil)
+        @new_post.stub(:author_ids).and_return(nil)
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:authors, :as => :check_boxes, :label => 'The authors'))
         end)
@@ -280,7 +280,7 @@ describe 'check_boxes input' do
     describe "when :label option is false" do
       before do
         @output_buffer = ''
-        @new_post.stub!(:author_ids).and_return(nil)
+        @new_post.stub(:author_ids).and_return(nil)
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:authors, :as => :check_boxes, :label => false))
         end)
@@ -298,7 +298,7 @@ describe 'check_boxes input' do
 
     describe "when :required option is true" do
       before do
-        @new_post.stub!(:author_ids).and_return(nil)
+        @new_post.stub(:author_ids).and_return(nil)
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:authors, :as => :check_boxes, :required => true))
         end)
@@ -344,9 +344,9 @@ describe 'check_boxes input' do
       end
 
       it 'to set the right input value' do
-        item = mock('item')
+        item = double('item')
         item.should_not_receive(:id)
-        item.stub!(:custom_value).and_return('custom_value')
+        item.stub(:custom_value).and_return('custom_value')
         item.should_receive(:custom_value).exactly(3).times
         @new_post.author.should_receive(:custom_value).exactly(1).times
         concat(semantic_form_for(@new_post) do |builder|

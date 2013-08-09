@@ -44,11 +44,11 @@ describe 'string input' do
       let(:default_maxlength) { 50 }
 
       before do
-        @new_post.stub!(:class).and_return(::PostModel)
+        @new_post.stub(:class).and_return(::PostModel)
       end
 
       after do
-        @new_post.stub!(:class).and_return(::Post)
+        @new_post.stub(:class).and_return(::Post)
       end
 
       describe 'and validates_length_of was called for the method' do
