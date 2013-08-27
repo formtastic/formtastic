@@ -16,9 +16,9 @@ h2. Documentation & Support
 
 h2. Compatibility
 
-* Formtastic 2.1.x is Rails 3.x compatible
-* Formtastic 2.0.x is Rails 3.0.x and 3.1.x compatible only
-* Formtastic 1.x is compatible with both Rails 2 and 3, and is being maintained for bug fixes in the the "1.2-stable branch":https://github.com/justinfrench/formtastic/tree/1.2-stable. View the README in that branch for installation instructions, etc.
+* Formtastic 4 (master on Github) will require Rails 3.2 minimum
+* Formtastic 2.3 is Rails 3 and Rails 4 compatible (Rails < 3.2 is deprecated)
+* Formtastic 2.1 & 2.2 is Rails 3 and Rails 4 compatible
 * Formtastic, much like Rails, is very ActiveRecord-centric. Many are successfully using other ActiveModel-like ORMs and objects (DataMapper, MongoMapper, Mongoid, Authlogic, Devise...) but we're not guaranteeing full compatibility at this stage. Patches are welcome!
  
 
@@ -65,7 +65,7 @@ h2. It's awesome because...
 
 * It can handle @belongs_to@ associations (like Post belongs_to :author), rendering a select or set of radio inputs with choices from the parent model.
 * It can handle @has_many@ and @has_and_belongs_to_many@ associations (like: Post has_many :tags), rendering a multi-select with choices from the child models.
-* It's Rails 3 compatible (including nested forms).
+* It's Rails 3/4 compatible (including nested forms).
 * It has internationalization (I18n)!
 * It's _really_ quick to get started with a basic form in place (4 lines), then go back to add in more detail if you need it.
 * There's heaps of elements, id and class attributes for you to hook in your CSS and JS.
@@ -254,12 +254,7 @@ Alternatively, the current index can be accessed via the `inputs` block's argume
 <pre>
   <%= semantic_form_for @post do |f| %>
     <%= f.inputs :for => :categories do |category, i| %>
-      <% if i <= 2 %>
-        <%= f.inputs :name => "Category ##{i}" %>
-      <% else %>
-        <%= f.inputs :name => "Category ##{i} (optional)" %>
-      <% end %>
-    <% end %>
+      ...
     <%= f.actions %>
   <% end %>
 </pre>
@@ -535,7 +530,7 @@ Values for @labels@/@hints@/@actions@ are can take values: @String@ (explicit va
 
 h2. Semantic errors
 
-You can show errors on base (by default) and any other attribute just passing it name to semantic_errors method:
+You can show errors on base (by default) and any other attribute just by passing its name to the semantic_errors method:
 
 <pre>
   <%= semantic_form_for @post do |f| %>

@@ -907,7 +907,7 @@ describe 'Formtastic::FormBuilder#input' do
         end
 
         input = mock('input', :to_html => 'some HTML')
-        Formtastic::Inputs::StringInput.should_not_receive(:new).and_return(input)
+        Formtastic::Inputs::StringInput.should_not_receive(:new)
         ::StringInput.should_receive(:new).and_return(input)
 
         concat(semantic_form_for(@new_post) do |builder|

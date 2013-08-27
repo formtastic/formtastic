@@ -65,7 +65,6 @@ module Formtastic
       include Html
       include Options
       include Database
-      include Database
       include Errors
       include Hints
       include Naming

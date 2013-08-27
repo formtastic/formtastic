@@ -62,6 +62,13 @@ describe 'FormHelper' do
       end)
       output_buffer.should have_tag("form.xyz")
     end
+    
+    it 'omits the leading spaces from the classes in the generated form when the default class is nil' do
+      Formtastic::Helpers::FormHelper.default_form_class = nil
+      concat(semantic_form_for(::Post.new, :as => :post, :url => '/hello') do |builder|
+      end)
+      output_buffer.should have_tag("form[class='post']")
+    end
 
     it 'adds class matching the object name to the generated form when a symbol is provided' do
       concat(semantic_form_for(@new_post, :url => '/hello') do |builder|
@@ -135,6 +142,29 @@ describe 'FormHelper' do
       end
     end
 
+    describe ActionView::Base.field_error_proc do
+      it 'is set to no-op wrapper by default' do
+        semantic_form_for(@new_post, :url => '/hello') do |builder|
+          ::ActionView::Base.field_error_proc.call("html", nil).should == "html"
+        end
+      end
+
+      it 'is set to the configured custom field_error_proc' do
+        field_error_proc = mock()
+        Formtastic::Helpers::FormHelper.field_error_proc = field_error_proc
+        semantic_form_for(@new_post, :url => '/hello') do |builder|
+          ::ActionView::Base.field_error_proc.should == field_error_proc
+        end
+      end
+      
+      it 'is restored to its original value after the form is rendered' do
+        lambda do 
+          Formtastic::Helpers::FormHelper.field_error_proc = proc {""}
+          semantic_form_for(@new_post, :url => '/hello') { |builder| }
+        end.should_not change(::ActionView::Base, :field_error_proc)
+      end
+    end 
+    
     describe "with :builder option" do
       it "yields an instance of the given builder" do
         class MyAwesomeCustomBuilder < Formtastic::FormBuilder

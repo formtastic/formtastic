@@ -145,10 +145,10 @@ describe 'datetime_picker input' do
       it "can be set from :input_html options" do
         concat(
           semantic_form_for(@new_post) do |f|
-            concat(f.input(:publish_at, :as => :datetime_picker, :input_html => { :value => "1111-11-11 23:00" }))
+            concat(f.input(:publish_at, :as => :datetime_picker, :input_html => { :value => "1111-11-11T23:00:00" }))
           end
         )
-        output_buffer.should have_tag "input[value='1111-11-11 23:00']"
+        output_buffer.should have_tag "input[value='1111-11-11T23:00:00']"
       end
       
     end
@@ -160,22 +160,22 @@ describe 'datetime_picker input' do
         @new_post.stub!(:publish_at).and_return(@date)
       end
       
-      it "renders the date as YYYY-MM-DD 00:00" do
+      it "renders the date as YYYY-MM-DDT00:00:00" do
         concat(
           semantic_form_for(@new_post) do |f|
             concat(f.input(:publish_at, :as => :datetime_picker ))
           end
         )
-        output_buffer.should have_tag "input[value='#{@date.to_s} 00:00']"
+        output_buffer.should have_tag "input[value='2000-11-11T00:00:00']"
       end
 
       it "can be set from :input_html options" do
         concat(
           semantic_form_for(@new_post) do |f|
-            concat(f.input(:publish_at, :as => :datetime_picker, :input_html => { :value => "1111-11-11 00:00" }))
+            concat(f.input(:publish_at, :as => :datetime_picker, :input_html => { :value => "1111-11-11T00:00:00" }))
           end
         )
-        output_buffer.should have_tag "input[value='1111-11-11 00:00']"
+        output_buffer.should have_tag "input[value='1111-11-11T00:00:00']"
       end
       
     end
@@ -193,16 +193,16 @@ describe 'datetime_picker input' do
             concat(f.input(:publish_at, :as => :datetime_picker ))
           end
         )
-        output_buffer.should have_tag "input[value='2000-11-11 11:11']"
+        output_buffer.should have_tag "input[value='2000-11-11T11:11:11']"
       end
     
       it "can be set from :input_html options" do
         concat(
           semantic_form_for(@new_post) do |f|
-            concat(f.input(:publish_at, :as => :datetime_picker, :input_html => { :value => "1111-11-11 11:11" }))
+            concat(f.input(:publish_at, :as => :datetime_picker, :input_html => { :value => "1111-11-11T11:11:11" }))
           end
         )
-        output_buffer.should have_tag "input[value='1111-11-11 11:11']"
+        output_buffer.should have_tag "input[value='1111-11-11T11:11:11']"
       end
       
     end
@@ -225,10 +225,10 @@ describe 'datetime_picker input' do
       it "can be set from :input_html options" do
         concat(
           semantic_form_for(@new_post) do |f|
-            concat(f.input(:publish_at, :as => :datetime_picker, :input_html => { :value => "1111-11-11 11:11" }))
+            concat(f.input(:publish_at, :as => :datetime_picker, :input_html => { :value => "1111-11-11T11:11:11" }))
           end
         )
-        output_buffer.should have_tag "input[value='1111-11-11 11:11']"
+        output_buffer.should have_tag "input[value='1111-11-11T11:11:11']"
       end
       
     end
@@ -251,10 +251,10 @@ describe 'datetime_picker input' do
       it "can be set from :input_html options" do
         concat(
           semantic_form_for(@new_post) do |f|
-            concat(f.input(:publish_at, :as => :datetime_picker, :input_html => { :value => "1111-11-11 11:11" }))
+            concat(f.input(:publish_at, :as => :datetime_picker, :input_html => { :value => "1111-11-11T11:11:11" }))
           end
         )
-        output_buffer.should have_tag "input[value='1111-11-11 11:11']"
+        output_buffer.should have_tag "input[value='1111-11-11T11:11:11']"
       end
       
     end

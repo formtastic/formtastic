@@ -474,6 +474,22 @@ describe 'check_boxes input' do
         output_buffer.should have_tag("form li input[@value='1'][@checked]")
       end
     end
+
+    describe "and the collection includes html options" do
+      before do
+        @_collection = [["First", 1, {'data-test' => 'test-data'}], ["Second", 2, {'data-test2' => 'test-data2'}]]
+
+        concat(semantic_form_for(@fred) do |builder|
+          concat(builder.input(:posts, :as => :check_boxes, :collection => @_collection))
+        end)
+      end
+
+      it "should have injected the html attributes" do
+        @_collection.each do |v|
+          output_buffer.should have_tag("form li input[@value='#{v[1]}'][@#{v[2].keys[0]}='#{v[2].values[0]}']")
+        end
+      end
+    end
   end
   
 end

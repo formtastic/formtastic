@@ -1,3 +1,18 @@
+2.3.0.rc2
+
+* deprecate support for Rails < 3.2
+
+2.3.0.rc
+
+* Updated to support Rails 4
+* Added custom HTML for the options within a checkboxes input group
+* Changed the format of the `value` attribute on `datetime_picker` input to be compliant with the HTML standards
+* Added `Formtastic::Helpers::FormHelper.field_error_proc=` for setting a custom proc
+* Fixed checked state of checkboxes when the values are integers
+* Fixed CSS to prevent numeric inputs with a `max` from stretching to full width
+* Added support for `:labels => false` on time selects
+* Improved documentation
+
 2.2.1
 
 * Rails 4 compatibilty updates

@@ -72,7 +72,7 @@ module Formtastic
         return duck + 1 if duck.is_a?(Fixnum)
         
         # First try to extract key from duck Hash, then try child
-        i = (duck[key] || duck[child]).to_i + 1
+        (duck[key] || duck[child]).to_i + 1
       end
 
     end

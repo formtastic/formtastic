@@ -245,7 +245,11 @@ describe 'select input' do
     end
 
     it "should call author.find with association conditions" do
-      ::Author.should_receive(:scoped).with(:conditions => {:active => true})
+      if Formtastic::Util.rails3?
+        ::Author.should_receive(:scoped).with(:conditions => {:active => true})
+      else
+        ::Author.should_receive(:where).with(:conditions => {:active => true})
+      end
 
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:author, :as => :select))
@@ -253,8 +257,15 @@ describe 'select input' do
     end
 
     it "should call author.find with association conditions and find_options conditions" do
-      ::Author.should_receive(:scoped).with(:conditions => {:active => true})
-      ::Author.should_receive(:where).with({:publisher => true})
+      if Formtastic::Util.rails3?
+        ::Author.should_receive(:scoped).with(:conditions => {:active => true})
+        ::Author.should_receive(:where).with({:publisher => true})
+      else
+        proxy = stub
+        ::Author.should_receive(:where).with({:active => true}).and_return(proxy)
+        proxy.should_receive(:where).with({:publisher => true})
+      end
+      
 
       with_deprecation_silenced do
         semantic_form_for(@new_post) do |builder|
@@ -327,7 +338,13 @@ describe 'select input' do
     end
 
     it 'should call find with :include for more optimized queries' do
-      Author.should_receive(:where).with(:include => :continent)
+      if Formtastic::Util.rails3?
+       Author.should_receive(:where).with(:include => :continent)
+      else
+       proxy = author_array_or_scope(@authors)
+       Author.should_receive(:where).and_return(proxy)
+       proxy.should_receive(:includes).with(:continent).and_call_original
+      end
 
       with_deprecation_silenced do 
         semantic_form_for(@new_post) do |builder|
