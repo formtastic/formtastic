@@ -501,6 +501,10 @@ module FormtasticSpecHelper
   end
 end
 
+class ::ActionView::Base
+  include Formtastic::Helpers::FormHelper
+end
+
 ::ActiveSupport::Deprecation.silenced = false
 
 RSpec.configure do |config|
