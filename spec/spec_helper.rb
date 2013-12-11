@@ -36,10 +36,10 @@ module FormtasticSpecHelper
   include ActionView::Helpers::AssetTagHelper
   include ActiveSupport
   include ActionController::PolymorphicRoutes if defined?(ActionController::PolymorphicRoutes)
-  include ActionDispatch::Routing::PolymorphicRoutes 
+  include ActionDispatch::Routing::PolymorphicRoutes
   include AbstractController::UrlFor if defined?(AbstractController::UrlFor)
   include ActionView::RecordIdentifier if defined?(ActionView::RecordIdentifier)
-  
+
   include Formtastic::Helpers::FormHelper
 
   def default_input_type(column_type, column_name = :generic_column_name)
@@ -151,50 +151,50 @@ module FormtasticSpecHelper
       sym == :options ? false : super
     end
   end
-  
+
   # In Rails 3 Model.all returns an array. In Rails 4, it returns an
-  # association proxy, which quacks a lot like an array. We use this in stubs 
+  # association proxy, which quacks a lot like an array. We use this in stubs
   # or mocks where we need to return the later.
-  # 
+  #
   # TODO try delegate?
   # delegate :map, :size, :length, :first, :to_ary, :each, :include?, :to => :array
   class MockScope
     attr_reader :array
-    
+
     def initialize(the_array)
       @array = the_array
     end
-    
+
     def map(&block)
       array.map(&block)
     end
-    
+
     def where(*args)
       # array
       self
     end
-    
+
     def includes(*args)
       self
     end
-    
+
     def size
       array.size
     end
     alias_method :length, :size
-    
+
     def first
       array.first
     end
-    
+
     def to_ary
       array
     end
-    
+
     def each(&block)
       array.each(&block)
     end
-    
+
     def include?(*args)
       array.include?(*args)
     end
@@ -236,8 +236,8 @@ module FormtasticSpecHelper
     def author_path(*args); "/authors/1"; end
     def authors_path(*args); "/authors"; end
     def new_author_path(*args); "/authors/new"; end
-    
-    # Returns the array for Rails 3 and a thing that looks looks like an 
+
+    # Returns the array for Rails 3 and a thing that looks looks like an
     # association proxy for Rails 4+
     def author_array_or_scope(the_array = [@fred, @bob])
       if ::Formtastic::Util.rails3?
@@ -246,7 +246,7 @@ module FormtasticSpecHelper
         MockScope.new(the_array)
       end
     end
-    
+
     @fred = ::Author.new
     @fred.stub!(:class).and_return(::Author)
     @fred.stub!(:to_label).and_return('Fred Smith')
@@ -286,8 +286,6 @@ module FormtasticSpecHelper
     @james.stub!(:persisted?).and_return(nil)
     @james.stub!(:name).and_return('James')
 
-
-    ::Author.stub!(:scoped).and_return(::Author)
     ::Author.stub!(:find).and_return(author_array_or_scope)
     ::Author.stub!(:all).and_return(author_array_or_scope)
     ::Author.stub!(:where).and_return(author_array_or_scope)
@@ -334,7 +332,7 @@ module FormtasticSpecHelper
     @fred.stub!(:posts).and_return(author_array_or_scope([@freds_post]))
     @fred.stub!(:post_ids).and_return([@freds_post.id])
 
-    ::Post.stub!(:scoped).and_return(::Post)
+    ::Post.stub!(:all).and_return(::Post)
     ::Post.stub!(:human_attribute_name).and_return { |column_name| column_name.humanize }
     ::Post.stub!(:human_name).and_return('Post')
     ::Post.stub!(:reflect_on_all_validations).and_return([])
@@ -474,24 +472,24 @@ module FormtasticSpecHelper
     yield
     Formtastic::FormBuilder.send(:"#{config_method_name}=", old_value)
   end
-  
+
   class ToSMatcher
     def initialize(str)
       @str=str.to_s
     end
-    
+
     def matches?(value)
       value.to_s==@str
     end
-    
+
     def failure_message_for_should
       "Expected argument that converted to #{@str}"
     end
   end
-  
+
   def errors_matcher(method)
     # In edge rails (Rails 4) tags store method_name as a string and index the errors object using a string
-    # therefore allow stubs to match on either string or symbol.  The errors object calls to_sym on all index 
+    # therefore allow stubs to match on either string or symbol.  The errors object calls to_sym on all index
     # accesses so @object.errors[:abc] is equivalent to @object.errors["abc"]
     if Rails::VERSION::MAJOR == 4
       ToSMatcher.new(method)
@@ -509,13 +507,13 @@ end
 
 RSpec.configure do |config|
   config.before(:each) do
-    Formtastic::Localizer.cache.clear!    
+    Formtastic::Localizer.cache.clear!
   end
-  
+
   config.before(:all) do
     DeferredGarbageCollection.start unless ENV["DEFER_GC"] == "false"
   end
   config.after(:all) do
-    DeferredGarbageCollection.reconsider unless ENV["DEFER_GC"] == "false"    
+    DeferredGarbageCollection.reconsider unless ENV["DEFER_GC"] == "false"
   end
 end
