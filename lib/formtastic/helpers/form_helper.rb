@@ -58,6 +58,11 @@ module Formtastic
       @@default_form_class = 'formtastic'
       mattr_accessor :default_form_class
 
+      # Allows to disable the addition to all `<form>` tags of a class infered from the models the
+      # form is representing. Change this from `config/initializers/formtastic.rb`:w
+      @@disable_models_class = false
+      mattr_accessor :disable_models_class
+
       # Allows to set a custom field_error_proc wrapper. By default this wrapper
       # is disabled since `formtastic` already adds an error class to the LI tag
       # containing the input. Change this from `config/initializers/formtastic.rb`.
@@ -156,10 +161,12 @@ module Formtastic
 
         class_names = options[:html][:class] ? options[:html][:class].split(" ") : []
         class_names << @@default_form_class
-        class_names << case record_or_name_or_array
-          when String, Symbol then record_or_name_or_array.to_s                                  # :post => "post"
-          when Array then options[:as] || singularizer.call(record_or_name_or_array.last.class)  # [@post, @comment] # => "comment"
-          else options[:as] || singularizer.call(record_or_name_or_array.class)                  # @post => "post"
+        unless @@disable_models_class
+          class_names << case record_or_name_or_array
+            when String, Symbol then record_or_name_or_array.to_s                                  # :post => "post"
+            when Array then options[:as] || singularizer.call(record_or_name_or_array.last.class)  # [@post, @comment] # => "comment"
+            else options[:as] || singularizer.call(record_or_name_or_array.class)                  # @post => "post"
+          end
         end
         options[:html][:class] = class_names.compact.join(" ")
 
