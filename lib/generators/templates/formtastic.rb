@@ -66,7 +66,11 @@
 # specifying that class here.  Defaults to Formtastic::FormBuilder.
 # Formtastic::Helpers::FormHelper.builder = MyCustomBuilder
 
-# You can opt-in to Formtastic's use of the HTML5 `required` attribute on `<input>`, `<select>` 
+# If you don't want Formtastic to try to guess a class for the model and add it to the form, you can disable
+# it. Defaults to true.
+# Formtastic::Helpers::FormHelper.add_model_class_name_to_form_classes = false
+
+# You can opt-in to Formtastic's use of the HTML5 `required` attribute on `<input>`, `<select>`
 # and `<textarea>` tags by setting this to true (defaults to false).
 # Formtastic::FormBuilder.use_required_attribute = false
 

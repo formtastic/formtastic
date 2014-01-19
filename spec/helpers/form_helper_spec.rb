@@ -23,7 +23,7 @@ describe 'FormHelper' do
       end)
       output_buffer.should have_tag("form.formtastic")
     end
-    
+
     it 'adds a "novalidate" attribute to the generated form when configured to do so' do
       with_config :perform_browser_validations, true do
         concat(semantic_form_for(@new_post, :url => '/hello') do |builder|
@@ -31,7 +31,7 @@ describe 'FormHelper' do
         output_buffer.should_not have_tag("form[@novalidate]")
       end
     end
-    
+
     it 'omits a "novalidate" attribute to the generated form when configured to do so' do
       with_config :perform_browser_validations, false do
         concat(semantic_form_for(@new_post, :url => '/hello') do |builder|
@@ -62,7 +62,7 @@ describe 'FormHelper' do
       end)
       output_buffer.should have_tag("form.xyz")
     end
-    
+
     it 'omits the leading spaces from the classes in the generated form when the default class is nil' do
       Formtastic::Helpers::FormHelper.default_form_class = nil
       concat(semantic_form_for(::Post.new, :as => :post, :url => '/hello') do |builder|
@@ -100,6 +100,13 @@ describe 'FormHelper' do
       concat(semantic_form_for(::Namespaced::Post.new, :url => '/hello') do |builder|
       end)
       output_buffer.should have_tag("form.namespaced_post")
+    end
+
+    it 'omits the model class from the form classes' do
+      Formtastic::Helpers::FormHelper.add_model_class_name_to_form_classes = false
+      concat(semantic_form_for(@new_post) do |builder|
+      end)
+      output_buffer.should have_tag("form[class='']")
     end
 
     describe 'allows :html options' do
@@ -156,15 +163,15 @@ describe 'FormHelper' do
           ::ActionView::Base.field_error_proc.should == field_error_proc
         end
       end
-      
+
       it 'is restored to its original value after the form is rendered' do
-        lambda do 
+        lambda do
           Formtastic::Helpers::FormHelper.formtastic_field_error_proc = proc {""}
           semantic_form_for(@new_post, :url => '/hello') { |builder| }
         end.should_not change(::ActionView::Base, :field_error_proc)
       end
-    end 
-    
+    end
+
     describe "with :builder option" do
       it "yields an instance of the given builder" do
         class MyAwesomeCustomBuilder < Formtastic::FormBuilder
