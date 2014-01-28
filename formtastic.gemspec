@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.homepage    = %q{http://github.com/justinfrench/formtastic}
   s.summary     = %q{A Rails form builder plugin/gem with semantically rich and accessible markup}
   s.description = %q{A Rails form builder plugin/gem with semantically rich and accessible markup}
+  s.license     = 'MIT'
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
