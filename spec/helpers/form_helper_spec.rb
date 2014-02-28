@@ -205,8 +205,5 @@ describe 'FormHelper' do
         input = builder.input :author
       end
     end
-
   end
-
 end
-
