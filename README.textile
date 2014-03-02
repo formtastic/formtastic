@@ -1,6 +1,6 @@
 h1. Formtastic
 
-!https://travis-ci.org/justinfrench/formtastic.png?branch=master!:https://travis-ci.org/justinfrench/formtastic
+!https://travis-ci.org/justinfrench/formtastic.png?branch=master!:https://travis-ci.org/justinfrench/formtastic !http://inch-pages.github.io/github/justinfrench/formtastic.png!:http://inch-pages.github.io/github/justinfrench/formtastic/
 
 Formtastic is a Rails FormBuilder DSL (with some other goodies) to make it far easier to create beautiful, semantically rich, syntactically awesome, readily stylable and wonderfully accessible HTML forms in your Rails applications.
 
