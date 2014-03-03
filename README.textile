@@ -1,6 +1,9 @@
 h1. Formtastic
 
 !https://travis-ci.org/justinfrench/formtastic.png?branch=master!:https://travis-ci.org/justinfrench/formtastic
+!https://codeclimate.com/github/justinfrench/formtastic.png!:https://codeclimate.com/github/justinfrench/formtastic
+!https://badge.fury.io/rb/formtastic.png!:http://badge.fury.io/rb/formtastic
+!https://gemnasium.com/justinfrench/formtastic.png!:https://gemnasium.com/justinfrench/formtastic
 
 Formtastic is a Rails FormBuilder DSL (with some other goodies) to make it far easier to create beautiful, semantically rich, syntactically awesome, readily stylable and wonderfully accessible HTML forms in your Rails applications.
 
@@ -22,7 +25,7 @@ h2. Compatibility
 * Formtastic 2.3 is Rails 3 and Rails 4 compatible (Rails < 3.2 is deprecated)
 * Formtastic 2.1 & 2.2 is Rails 3 and Rails 4 compatible
 * Formtastic, much like Rails, is very ActiveRecord-centric. Many are successfully using other ActiveModel-like ORMs and objects (DataMapper, MongoMapper, Mongoid, Authlogic, Devise...) but we're not guaranteeing full compatibility at this stage. Patches are welcome!
- 
+
 
 h2. The Story
 
@@ -97,7 +100,7 @@ Simply add Formtastic to your Gemfile and bundle it up:
 Run the installation generator:
 
 <pre>
-  $ rails generate formtastic:install 
+  $ rails generate formtastic:install
 </pre>
 
 
@@ -108,7 +111,7 @@ A proof-of-concept set of stylesheets are provided which you can include in your
 h3. Stylesheet usage in Rails < 3.1:
 
 <pre>
-  $ rails generate formtastic:install 
+  $ rails generate formtastic:install
 </pre>
 
 <pre>
@@ -133,7 +136,7 @@ Conditional stylesheets need to be compiled separately to prevent them being bun
 <pre>
   # app/assets/stylesheets/ie6.css
   *= require formtastic_ie6
-  
+
   # app/assets/stylesheets/ie7.css
   *= require formtastic_ie7
 </pre>
@@ -147,7 +150,7 @@ Conditional stylesheets need to be compiled separately to prevent them being bun
 
 <pre>
   # config/environments/production.rb
-  config.assets.precompile += %w( ie6.css ie7.css )  
+  config.assets.precompile += %w( ie6.css ie7.css )
 </pre>
 
 h2. Usage
@@ -367,7 +370,7 @@ Formtastic decides which label to use in the following order:
   1. :label             # :label => "Choose Title"
   2. Formtastic i18n    # if either :label => true || i18n_lookups_by_default = true (see Internationalization)
   3. Activerecord i18n  # if localization file found for the given attribute
-  4. label_str_method   # if nothing provided this defaults to :humanize but can be set to a custom method 
+  4. label_str_method   # if nothing provided this defaults to :humanize but can be set to a custom method
 </pre>
 
 h2. Internationalization (I18n)
