@@ -4,8 +4,6 @@ before_install:
 rvm:
   - jruby-19mode
 gemfile:
-  - gemfiles/rails_3.0.gemfile
-  - gemfiles/rails_3.1.gemfile
   - gemfiles/rails_3.2.gemfile
 env:
   - DEFER_GC=false RAILS_EDGE=true
@@ -15,19 +13,10 @@ matrix:
     - rvm: 1.9.3
       gemfile: gemfiles/rails_4.gemfile
       env: DEFER_GC=false RAILS_EDGE=true
-    - rvm: 2.0.0
-      gemfile: gemfiles/rails_4.gemfile
-      env: DEFER_GC=false RAILS_EDGE=true
     - rvm: 1.9.3
       gemfile: gemfiles/rails_edge.gemfile
       env: DEFER_GC=false RAILS_EDGE=true
-    - rvm: 2.0.0
-      gemfile: gemfiles/rails_edge.gemfile
-      env: DEFER_GC=false RAILS_EDGE=true    
   allow_failures:
     - rvm: 1.9.3
-      gemfile: gemfiles/rails_edge.gemfile
-      env: DEFER_GC=false RAILS_EDGE=true
-    - rvm: 2.0.0
       gemfile: gemfiles/rails_edge.gemfile
       env: DEFER_GC=false RAILS_EDGE=true
