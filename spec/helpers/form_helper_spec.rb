@@ -192,6 +192,19 @@ describe 'FormHelper' do
       end
     end
   end
+  
+  describe "Threaded Form Building" do
+    it "creates forms and adds an input in a threaded environment" do
+      threads = Array.new(1000).map{ Thread.new{create_form()} }
+      threads.map{ |t| t.join }
+    end
+
+    # Create the semantic form. Create the author input
+    def create_form
+      semantic_form_for(@new_post, :url => '/hello') do |builder|
+        input = builder.input :author
+      end
+    end
+  end
 
 end
-
