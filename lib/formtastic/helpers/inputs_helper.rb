@@ -159,12 +159,13 @@ module Formtastic
       # {#inputs} will always create a new `<fieldset>` wrapping, so only use it when it makes sense
       # in the document structure and semantics (using `semantic_fields_for` otherwise).
       #
-      # All options except `:name`, `:title` and `:for` will be passed down to the fieldset as HTML
-      # attributes (id, class, style, etc).
+      # All options except `:name`, `:title`, `:wrapper_class` and `:for` will be passed down to the fieldset
+      # as HTML attributes (id, class, style, etc).
       #
       # When nesting `inputs()` inside another `inputs()` block, the nested content will 
       # automatically be wrapped in an `<li>` tag to preserve the HTML validity (a `<fieldset>`
-      # cannot be a direct descendant of an `<ol>`.
+      # cannot be a direct descendant of an `<ol>`. You can set a custom class for the `<li>`
+      # wrapper via `:wrapper_class` option.
       #
       #
       # @option *args :for [Symbol, ActiveModel, Array]
@@ -175,6 +176,9 @@ module Formtastic
       #
       # @option *args :title [String]
       #   The optional name passed into the `<legend>` tag within the fieldset (alias of `:name`)
+
+      # @option *args :wrapper_class [String]
+      #   The optional class for the `<li>` tag that wraps the `<fieldset>` if it is already nested in another `<fieldset>`.
       #
       #
       # @example Quick form: Render a scaffold-like set of inputs for automatically guessed attributes and simple associations on the model, with all default arguments and options
@@ -271,6 +275,9 @@ module Formtastic
         html_options[:class] ||= "inputs"
         html_options[:name] = title
 
+        wrapper_class = html_options.delete(:wrapper_class) || ''
+        wrapper_class += " input"
+
         out = begin
           if html_options[:for] # Nested form
             inputs_for_nested_attributes(*(args << html_options), &block)
@@ -285,7 +292,7 @@ module Formtastic
           end
         end
         
-        out = template.content_tag(:li, out, :class => "input") if wrap_it
+        out = template.content_tag(:li, out, :class => wrapper_class) if wrap_it
         @already_in_an_inputs_block = wrap_it
         out
       end

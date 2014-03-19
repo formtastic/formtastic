@@ -542,6 +542,18 @@ describe 'Formtastic::FormBuilder#inputs' do
         output_buffer.should have_tag('form > fieldset.inputs > ol > li > fieldset.inputs > ol')
       end
     end
+
+    context "when nested (with block and :wrapper_class)" do
+      it "should wrap the nested inputs in an li block with a custom class" do
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.inputs do
+            concat(builder.inputs(:wrapper_class => 'custom_class') do |author_builder|
+            end)
+          end)
+        end)
+        output_buffer.should have_tag('form > fieldset.inputs > ol > li.custom_class.input > fieldset.inputs > ol')
+      end
+    end
     
     context "when nested (with block and :for)" do
       it "should wrap the nested inputs in an li block to maintain HTML validity" do
