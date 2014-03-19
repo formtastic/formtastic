@@ -262,20 +262,6 @@ module Formtastic
       #       <%= profile.input :categories ... %>
       #     <% end %>
       #   <% end %>
-      #
-      # @example Nesting {#inputs} blocks requires an extra `<li>` tag for valid markup
-      #   <% semantic_form_for @user do |form| %>
-      #     <%= f.inputs do %>
-      #       <%= f.input :name ... %>
-      #       <%= f.input :email ... %>
-      #       <li>
-      #         <%= f.inputs :for => [:user_profile, @user.profile] do |profile| %>
-      #           <%= profile.input :user ... %>
-      #           <%= profile.input :categories ... %>
-      #         <% end %>
-      #       </li>
-      #     <% end %>
-      #   <% end %>
       def inputs(*args, &block)
         wrap_it = @already_in_an_inputs_block ? true : false
         @already_in_an_inputs_block = true
