@@ -16,6 +16,8 @@ require 'ammeter/init'
 # in ./support/ and its subdirectories in alphabetic order.
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].sort.each {|f| require f}
 
+I18n.enforce_available_locales = false
+
 module FakeHelpersModule
 end
 
