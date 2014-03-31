@@ -12,6 +12,10 @@ module Formtastic
         def reflection
           @reflection ||= reflection_for(method)
         end
+        
+        def reflection_options?
+          reflection.respond_to?(:options)
+        end
 
         def belongs_to?
           association == :belongs_to

@@ -72,38 +72,25 @@ module Formtastic
 
         def collection_from_association
           if reflection
-            if reflection.respond_to?(:options)
+            if reflection_options? && reflection.options[:polymorphic] == true
               raise PolymorphicInputWithoutCollectionError.new(
-                        "A collection must be supplied for #{method} input. Collections cannot be guessed for polymorphic associations."
-                    ) if reflection.options[:polymorphic] == true
+                "A collection must be supplied for #{method} input. Collections cannot be guessed for polymorphic associations."
+              )
             end
-
-            find_options_from_options = options[:find_options] || {}
-            conditions_from_options = find_options_from_options[:conditions] || {}
-            conditions_from_reflection = (reflection.respond_to?(:options) && reflection.options[:conditions]) || {}
-            conditions_from_reflection = conditions_from_reflection.call if conditions_from_reflection.is_a?(Proc)
-
-            scope_conditions = conditions_from_reflection.empty? ? nil : {:conditions => conditions_from_reflection}
-            if conditions_from_options.any?
-              if Util.rails3?
-                reflection.klass.scoped(scope_conditions).where(conditions_from_options)
-              else
-                reflection.klass.where(scope_conditions[:conditions]).where(conditions_from_options)
-              end
-            else
-              
-              if Util.rails3?
-                find_options_from_options.merge!(:include => group_by) if self.respond_to?(:group_by) && group_by
-                reflection.klass.scoped(scope_conditions).where(find_options_from_options)
-              else
-                coll = reflection.klass.where(scope_conditions)
-                coll = coll.includes(group_by) if self.respond_to?(:group_by) && group_by
-                coll.where(find_options_from_options)
-              end
-            end
+            reflection.klass.where(conditions_from_scope)
           end
         end
-
+        
+        def conditions_from_reflection
+          conditions = (reflection_options? && reflection.options[:conditions]) || {}
+          return conditions.call if conditions.is_a?(Proc)
+          return conditions
+        end
+        
+        def conditions_from_scope
+          conditions_from_reflection.empty? ? nil : {:conditions => conditions_from_reflection}
+        end
+        
         def collection_for_boolean
           true_text = options[:true] || Formtastic::I18n.t(:yes)
           false_text = options[:false] || Formtastic::I18n.t(:no)
