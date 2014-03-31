@@ -35,7 +35,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency(%q<colored>)
   s.add_development_dependency(%q<tzinfo>)
   s.add_development_dependency(%q<ammeter>, ["0.2.5"])
-  s.add_development_dependency(%q<appraisal>)
-  s.add_development_dependency(%q<rake>)
+  s.add_development_dependency(%q<appraisal>, ["1.0.0.beta3"])
+  s.add_development_dependency(%q<rake>, ["<= 10.1.1"]) # Anything higher requires Ruby 1.9, drop in v3.0
   s.add_development_dependency(%q<activemodel>)
 end
