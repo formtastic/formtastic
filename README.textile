@@ -597,10 +597,6 @@ To create a custom @DatePickerInput@ from scratch, put the following in @app/inp
 
 You can use your new input with @:as => :date_picker@.
 
-h3. Don't subclass Formtastic::FormBuilder anymore
-
-It was previously recommended in Formtastic 1.x to subclass Formtastic::FormBuilder to add your own inputs. This is no longer recommended in Formtastic 2, and will not work as expected.
-
 
 h2. Security
 
