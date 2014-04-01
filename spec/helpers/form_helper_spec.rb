@@ -142,7 +142,7 @@ describe 'FormHelper' do
       end
     end
 
-    describe ActionView::Base.field_error_proc do
+    describe 'ActionView::Base.field_error_proc' do
       it 'is set to no-op wrapper by default' do
         semantic_form_for(@new_post, :url => '/hello') do |builder|
           ::ActionView::Base.field_error_proc.call("html", nil).should == "html"
@@ -150,7 +150,7 @@ describe 'FormHelper' do
       end
 
       it 'is set to the configured custom field_error_proc' do
-        field_error_proc = mock()
+        field_error_proc = double()
         Formtastic::Helpers::FormHelper.formtastic_field_error_proc = field_error_proc
         semantic_form_for(@new_post, :url => '/hello') do |builder|
           ::ActionView::Base.field_error_proc.should == field_error_proc

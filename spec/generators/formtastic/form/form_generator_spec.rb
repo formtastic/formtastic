@@ -14,11 +14,11 @@ describe Formtastic::FormGenerator do
     @output_buffer = ''
     prepare_destination
     mock_everything
-    ::Post.stub!(:reflect_on_all_associations).with(:belongs_to).and_return([
-      mock('reflection', :name => :author, :options => {}, :klass => ::Author, :macro => :belongs_to),
-      mock('reflection', :name => :reviewer, :options => {:class_name => 'Author'}, :klass => ::Author, :macro => :belongs_to),
-      mock('reflection', :name => :main_post, :options => {}, :klass => ::Post, :macro => :belongs_to),
-      mock('reflection', :name => :attachment, :options => {:polymorphic => true}, :macro => :belongs_to),
+    ::Post.stub(:reflect_on_all_associations).with(:belongs_to).and_return([
+      double('reflection', :name => :author, :options => {}, :klass => ::Author, :macro => :belongs_to),
+      double('reflection', :name => :reviewer, :options => {:class_name => 'Author'}, :klass => ::Author, :macro => :belongs_to),
+      double('reflection', :name => :main_post, :options => {}, :klass => ::Post, :macro => :belongs_to),
+      double('reflection', :name => :attachment, :options => {:polymorphic => true}, :macro => :belongs_to),
     ])
   end
   
@@ -34,7 +34,7 @@ describe Formtastic::FormGenerator do
 
   describe 'with existing model' do
     it 'should not raise an exception' do
-      lambda { run_generator %w(Post) }.should_not raise_error(Thor::RequiredArgumentMissingError)
+      lambda { run_generator %w(Post) }.should_not raise_error
     end
   end
 
