@@ -43,5 +43,8 @@ matrix:
       gemfile: gemfiles/rails_edge.gemfile
       env: DEFER_GC=false RAILS_EDGE=true
     - rvm: 2.1.0
+      gemfile: gemfiles/rails_4.gemfile
+      env: DEFER_GC=false RAILS_EDGE=true
+    - rvm: 2.1.0
       gemfile: gemfiles/rails_edge.gemfile
       env: DEFER_GC=false RAILS_EDGE=true
