@@ -598,18 +598,11 @@ To create a custom @DatePickerInput@ from scratch, put the following in @app/inp
 You can use your new input with @:as => :date_picker@.
 
 
-h2. Security
-
-By default, Formtastic escapes HTML entities in both labels and hints unless a string is marked as html_safe. If you are using an older rails version which doesn't know html_safe, or you want to globally turn this feature off, you can set the following in your initializer:
-
-Formtastic::FormBuilder.escape_html_entities_in_hints_and_labels = false
-
-
 h2. Dependencies
 
 There are none other than Rails itself, but...
 
-* If you want to use the @:country@ input, you'll need to install the "country-select plugin":https://github.com/chrislerum/country_select (or any other country_select plugin with the same API).
+* If you want to use the @:country@ input, you'll need to install the "country-select plugin":https://github.com/stefanpenner/country_select (or any other country_select plugin with the same API).
 * There are a bunch of development dependencies
 
 
