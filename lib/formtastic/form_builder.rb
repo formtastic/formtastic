@@ -87,7 +87,7 @@ module Formtastic
       # rails 4.1 removes the parameter completely
       if Util.rails3? || Util.rails4_0?
         super
-      else
+      else # Must be rails4_1 or greater
         super object_name, object, template, options
       end
       
