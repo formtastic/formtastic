@@ -83,6 +83,8 @@ module Formtastic
     #   <%= f.input :author, :as => :radio, :collection => [["Justin", "justin"], ["Kate", "kate"]] %>
     #   <%= f.input :author, :as => :radio, :collection => [["Justin", "1"], ["Kate", "3"]] %>
     #   <%= f.input :author, :as => :radio, :collection => [["Justin", 1], ["Kate", 3]] %>
+    #   <%= f.input :author, :as => :radio, :collection => [["Justin", :justin], ["Kate", :kate]] %>
+    #   <%= f.input :author, :as => :radio, :collection => [:justin, :kate] %>
     #   <%= f.input :author, :as => :radio, :collection => 1..5 %>
     #
     # @example The `:member_label` can be used to call a different method (or a Proc) on each object in the collection for rendering the label text (it'll try the methods like `to_s` in `collection_label_methods` config by default)
