@@ -8,8 +8,6 @@ h1. Formtastic
 
 Formtastic is a Rails FormBuilder DSL (with some other goodies) to make it far easier to create beautiful, semantically rich, syntactically awesome, readily stylable and wonderfully accessible HTML forms in your Rails applications.
 
-<a href='http://www.pledgie.com/campaigns/2178'><img alt='Click here to lend your support to: formtastic and make a donation at www.pledgie.com !' src='http://pledgie.com/campaigns/2178.png?skin_name=chrome' border='0' /></a>
-
 
 h2. Documentation & Support
 
@@ -404,7 +402,7 @@ Formtastic supports localized *labels*, *hints*, *legends*, *actions* using the 
   Formtastic::FormBuilder.i18n_lookups_by_default = true
 </pre>
 
-*2. Add some cool label-translations/variants (@config/locales/en.yml@):*
+*2. Add some label-translations/variants (@config/locales/en.yml@):*
 
 <pre>
   en:
@@ -599,39 +597,28 @@ To create a custom @DatePickerInput@ from scratch, put the following in @app/inp
 
 You can use your new input with @:as => :date_picker@.
 
-h3. Don't subclass Formtastic::FormBuilder anymore
-
-It was previously recommended in Formtastic 1.x to subclass Formtastic::FormBuilder to add your own inputs. This is no longer recommended in Formtastic 2, and will not work as expected.
-
-
-h2. Security
-
-By default, Formtastic escapes HTML entities in both labels and hints unless a string is marked as html_safe. If you are using an older rails version which doesn't know html_safe, or you want to globally turn this feature off, you can set the following in your initializer:
-
-Formtastic::FormBuilder.escape_html_entities_in_hints_and_labels = false
-
 
 h2. Dependencies
 
 There are none other than Rails itself, but...
 
-* If you want to use the @:country@ input, you'll need to install the "country-select plugin":https://github.com/chrislerum/country_select (or any other country_select plugin with the same API).
-* There are a bunch of development dependencies
+* If you want to use the @:country@ input, you'll need to install the "country-select plugin":https://github.com/stefanpenner/country_select (or any other country_select plugin with the same API).
+* There are a bunch of development dependencies if you plan to contribute to Formtastic
 
 
 h2. How to contribute
 
 * Fork the project on Github
 * Create a topic branch for your changes
-* Ensure that you provide test coverage for your changes
+* Ensure that you provide *documentation* and *test coverage* for your changes (patches won't be accepted without)
 * Ensure that all tests pass (`bundle exec rake`)
-* Create a pull request on Github
+* Create a pull request on Github (these are also a great place to start a conversation around a patch as early as possible)
 
 
 h2. Project Info
 
-Formtastic was created by "Justin French":http://www.justinfrench.com with contributions from around 150 awesome developers. Run @git shortlog -n -s@ to see the awesome.
+Formtastic was created by "Justin French":http://www.justinfrench.com with contributions from around 180 awesome developers. Run @git shortlog -n -s@ to see the awesome.
 
 The project is hosted on Github: "http://github.com/justinfrench/formtastic":http://github.com/justinfrench/formtastic, where your contributions, forkings, comments, issues and feedback are greatly welcomed.
 
-Copyright (c) 2007-2012 Justin French, released under the MIT license.
+Copyright (c) 2007-2014 Justin French, released under the MIT license.
