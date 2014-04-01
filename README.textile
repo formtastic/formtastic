@@ -617,7 +617,7 @@ h2. How to contribute
 
 h2. Project Info
 
-Formtastic was created by "Justin French":http://www.justinfrench.com with contributions from around 150 awesome developers. Run @git shortlog -n -s@ to see the awesome.
+Formtastic was created by "Justin French":http://www.justinfrench.com with contributions from around 180 awesome developers. Run @git shortlog -n -s@ to see the awesome.
 
 The project is hosted on Github: "http://github.com/justinfrench/formtastic":http://github.com/justinfrench/formtastic, where your contributions, forkings, comments, issues and feedback are greatly welcomed.
 
