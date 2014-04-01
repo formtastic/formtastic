@@ -402,7 +402,7 @@ Formtastic supports localized *labels*, *hints*, *legends*, *actions* using the 
   Formtastic::FormBuilder.i18n_lookups_by_default = true
 </pre>
 
-*2. Add some cool label-translations/variants (@config/locales/en.yml@):*
+*2. Add some label-translations/variants (@config/locales/en.yml@):*
 
 <pre>
   en:
