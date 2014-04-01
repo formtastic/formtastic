@@ -603,16 +603,16 @@ h2. Dependencies
 There are none other than Rails itself, but...
 
 * If you want to use the @:country@ input, you'll need to install the "country-select plugin":https://github.com/stefanpenner/country_select (or any other country_select plugin with the same API).
-* There are a bunch of development dependencies
+* There are a bunch of development dependencies if you plan to contribute to Formtastic
 
 
 h2. How to contribute
 
 * Fork the project on Github
 * Create a topic branch for your changes
-* Ensure that you provide test coverage for your changes
+* Ensure that you provide *documentation* and *test coverage* for your changes (patches won't be accepted without)
 * Ensure that all tests pass (`bundle exec rake`)
-* Create a pull request on Github
+* Create a pull request on Github (these are also a great place to start a conversation around a patch as early as possible)
 
 
 h2. Project Info
