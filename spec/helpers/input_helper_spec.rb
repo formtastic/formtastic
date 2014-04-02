@@ -928,7 +928,9 @@ describe 'Formtastic::FormBuilder#input' do
       it "should be cached (not calling the internal methods)" do
         # TODO this is really tied to the underlying implementation
         concat(semantic_form_for(@new_post) do |builder|
-          builder.should_receive(:custom_input_class_name).with(:string).once.and_return(::Formtastic::Inputs::StringInput)
+          Formtastic::ClassFinder.should_receive(:find_class)
+            .with(:string, 'Input', builder.send(:input_class_namespaces)).once
+            .and_return(::Formtastic::Inputs::StringInput)
           builder.input(:title, :as => :string)
           builder.input(:title, :as => :string)
         end)

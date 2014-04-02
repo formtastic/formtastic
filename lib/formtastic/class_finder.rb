@@ -1,9 +1,15 @@
 module Formtastic
   class ClassFinder
 
+
     # @private
     class NotFoundError < NameError
     end
+
+    # possible TODO: this could be initialized together with form builder
+    # and cached as instance (with suffix and namespace)
+    # then it could have public method #find(as)
+    # which would cache the results instead of form builder
 
     def self.find_class(as, suffix, namespaces)
       new(as, suffix, namespaces).constantize
