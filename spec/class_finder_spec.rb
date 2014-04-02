@@ -31,9 +31,9 @@ describe 'Formtastic::ClassFinder#find_class' do
 
       describe 'in first namespace' do
         before do
-          stub_const(top_level_class, mock('first'))
-          stub_const(namespaced_class, mock('second'))
-          stub_const(formtastic_class, mock('third'))
+          stub_const(top_level_class, double('first'))
+          stub_const(namespaced_class, double('second'))
+          stub_const(formtastic_class, double('third'))
         end
 
         it { should be top_level_class.constantize }
@@ -41,8 +41,8 @@ describe 'Formtastic::ClassFinder#find_class' do
 
       describe 'in second namespace' do
         before do
-          stub_const(namespaced_class, mock('second'))
-          stub_const(formtastic_class, mock('third'))
+          stub_const(namespaced_class, double('second'))
+          stub_const(formtastic_class, double('third'))
         end
 
         it { should be namespaced_class.constantize }
@@ -50,7 +50,7 @@ describe 'Formtastic::ClassFinder#find_class' do
 
       describe 'in thid namespace' do
         before do
-          stub_const(formtastic_class, mock('third'))
+          stub_const(formtastic_class, double('third'))
         end
 
         it { should be formtastic_class.constantize }
@@ -59,14 +59,14 @@ describe 'Formtastic::ClassFinder#find_class' do
 
     describe 'class defined in superclass' do
       let(:builder_subclass) { stub_const('CustomFormBuilder', Class.new(Formtastic::FormBuilder)) }
-      let(:builder) { mock('builder', :class => builder_subclass).extend(helper) }
+      let(:builder) { double('builder', :class => builder_subclass).extend(helper) }
       let(:as) { :string }
 
-      let(:custom_class) { mock('inherited') }
+      let(:custom_class) { double('inherited') }
 
       before do
         stub_const("Formtastic::FormBuilder::#{class_name}", custom_class)
-        stub_const(formtastic_class, mock('default class'))
+        stub_const(formtastic_class, double('default class'))
       end
 
       it { should be custom_class }
@@ -79,7 +79,7 @@ describe 'Formtastic::ClassFinder#find_class' do
     it_behaves_like "Class Finder" do
       let(:helper) { "Formtastic::Helpers::#{module_name}Helper".constantize }
       let(:suffix) { module_name }
-      let(:builder) { mock(:class => Formtastic::FormBuilder).extend(helper) }
+      let(:builder) { double(:class => Formtastic::FormBuilder).extend(helper) }
       let(:namespaces) { builder.send("#{module_name.downcase}_class_namespaces") }
     end
   end
