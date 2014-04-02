@@ -896,5 +896,47 @@ describe 'Formtastic::FormBuilder#input' do
       end)
     end
 
+    context 'when a customized top-level class does not exist' do
+
+      it 'should instantiate the Formtastic input' do
+        input = double('input', :to_html => 'some HTML')
+        Formtastic::Inputs::StringInput.should_receive(:new).and_return(input)
+        concat(semantic_form_for(@new_post) do |builder|
+          builder.input(:title, :as => :string)
+        end)
+      end
+
+    end
+
+    describe 'when a top-level input class exists' do
+      it "should instantiate the top-level input instead of the Formtastic one" do
+        class ::StringInput < Formtastic::Inputs::StringInput
+        end
+
+        input = double('input', :to_html => 'some HTML')
+        Formtastic::Inputs::StringInput.should_not_receive(:new)
+        ::StringInput.should_receive(:new).and_return(input)
+
+        concat(semantic_form_for(@new_post) do |builder|
+          builder.input(:title, :as => :string)
+        end)
+      end
+    end
+
+    describe 'when instantiated multiple times with the same input type' do
+
+      it "should be cached (not calling the internal methods)" do
+        # TODO this is really tied to the underlying implementation
+        concat(semantic_form_for(@new_post) do |builder|
+          Formtastic::ClassFinder.should_receive(:find_class)
+            .with(:string, 'Input', builder.send(:input_class_namespaces)).once
+            .and_return(::Formtastic::Inputs::StringInput)
+          builder.input(:title, :as => :string)
+          builder.input(:title, :as => :string)
+        end)
+      end
+
+    end
+
   end
 end
