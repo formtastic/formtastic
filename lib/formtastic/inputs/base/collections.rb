@@ -85,10 +85,21 @@ module Formtastic
 
             scope_conditions = conditions_from_reflection.empty? ? nil : {:conditions => conditions_from_reflection}
             if conditions_from_options.any?
-              reflection.klass.scoped(scope_conditions).where(conditions_from_options)
+              if Util.rails3?
+                reflection.klass.scoped(scope_conditions).where(conditions_from_options)
+              else
+                reflection.klass.where(scope_conditions[:conditions]).where(conditions_from_options)
+              end
             else
-              find_options_from_options.merge!(:include => group_by) if self.respond_to?(:group_by) && group_by
-              reflection.klass.scoped(scope_conditions).where(find_options_from_options)
+              
+              if Util.rails3?
+                find_options_from_options.merge!(:include => group_by) if self.respond_to?(:group_by) && group_by
+                reflection.klass.scoped(scope_conditions).where(find_options_from_options)
+              else
+                coll = reflection.klass.where(scope_conditions)
+                coll = coll.includes(group_by) if self.respond_to?(:group_by) && group_by
+                coll.where(find_options_from_options)
+              end
             end
           end
         end
@@ -113,7 +124,7 @@ module Formtastic
         # Avoids an issue where `send_or_call` can be a String and duck can be something simple like
         # `:first`, which obviously String responds to.
         def send_or_call_or_object(duck, object)
-          return object if object.is_a?(String) || object.is_a?(Integer) # TODO what about other classes etc?
+          return object if object.is_a?(String) || object.is_a?(Integer) || object.is_a?(Symbol) # TODO what about other classes etc?
           send_or_call(duck, object)
         end
 

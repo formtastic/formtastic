@@ -30,10 +30,30 @@ describe 'select input' do
         end
       end
     end
+    
+    describe 'using a set of values' do
+      before do
+        @set_with_values = Set.new(["Title A", "Title B", "Title C"])
+        @set_with_keys_and_values = [["Title D", :d], ["Title E", :e], ["Title F", :f]]
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:title, :as => :select, :collection => @set_with_values))
+          concat(builder.input(:title, :as => :select, :collection => @set_with_keys_and_values))
+        end)
+      end
+
+      it 'should have a option for each key and/or value' do
+        @set_with_values.each do |v|
+          output_buffer.should have_tag("form li select option[@value='#{v}']", /^#{v}$/)
+        end
+        @set_with_keys_and_values.each do |v|
+          output_buffer.should have_tag("form li select option[@value='#{v.second}']", /^#{v.first}$/)
+        end
+      end
+    end
 
     describe "using a related model without reflection's options (Mongoid Document)" do
       before do
-        @new_post.stub!(:mongoid_reviewer)
+        @new_post.stub(:mongoid_reviewer)
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:mongoid_reviewer, :as => :select))
         end)
@@ -188,9 +208,9 @@ describe 'select input' do
     end
 
     it 'should not singularize the association name' do
-      @new_post.stub!(:author_status).and_return(@bob)
-      @new_post.stub!(:author_status_id).and_return(@bob.id)
-      @new_post.stub!(:column_for_attribute).and_return(mock('column', :type => :integer, :limit => 255))
+      @new_post.stub(:author_status).and_return(@bob)
+      @new_post.stub(:author_status_id).and_return(@bob.id)
+      @new_post.stub(:column_for_attribute).and_return(double('column', :type => :integer, :limit => 255))
 
       concat(semantic_form_for(@new_post) do |builder|
         concat(builder.input(:author_status, :as => :select))
@@ -202,9 +222,9 @@ describe 'select input' do
 
   describe "for a belongs_to association with :group_by => :author" do
     it "should call author.posts" do
-      ::Author.stub!(:reflect_on_all_associations).and_return { |macro| macro == :has_many ? [mock('reflection', :klass => Post, :name => :posts)] : []}
+      ::Author.stub(:reflect_on_all_associations).and_return { |macro| macro == :has_many ? [double('reflection', :klass => Post, :name => :posts)] : []}
 
-      [@freds_post].each { |post| post.stub!(:to_label).and_return("Post - #{post.id}") }
+      [@freds_post].each { |post| post.stub(:to_label).and_return("Post - #{post.id}") }
       @fred.should_receive(:posts)
 
       with_deprecation_silenced do
@@ -217,15 +237,19 @@ describe 'select input' do
 
   describe "for a belongs_to association with :conditions" do
     before do
-      ::Post.stub!(:reflect_on_association).with(:author).and_return do
-        mock = mock('reflection', :options => {:conditions => {:active => true}}, :klass => ::Author, :macro => :belongs_to)
-        mock.stub!(:[]).with(:class_name).and_return("Author")
+      ::Post.stub(:reflect_on_association).with(:author).and_return do
+        mock = double('reflection', :options => {:conditions => {:active => true}}, :klass => ::Author, :macro => :belongs_to)
+        mock.stub(:[]).with(:class_name).and_return("Author")
         mock
       end
     end
 
     it "should call author.find with association conditions" do
-      ::Author.should_receive(:scoped).with(:conditions => {:active => true})
+      if Formtastic::Util.rails3?
+        ::Author.should_receive(:scoped).with(:conditions => {:active => true})
+      else
+        ::Author.should_receive(:where).with(:conditions => {:active => true})
+      end
 
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:author, :as => :select))
@@ -233,8 +257,15 @@ describe 'select input' do
     end
 
     it "should call author.find with association conditions and find_options conditions" do
-      ::Author.should_receive(:scoped).with(:conditions => {:active => true})
-      ::Author.should_receive(:where).with({:publisher => true})
+      if Formtastic::Util.rails3?
+        ::Author.should_receive(:scoped).with(:conditions => {:active => true})
+        ::Author.should_receive(:where).with({:publisher => true})
+      else
+        proxy = double
+        ::Author.should_receive(:where).with({:active => true}).and_return(proxy)
+        proxy.should_receive(:where).with({:publisher => true})
+      end
+      
 
       with_deprecation_silenced do
         semantic_form_for(@new_post) do |builder|
@@ -247,19 +278,19 @@ describe 'select input' do
   describe 'for a belongs_to association with :group_by => :continent' do
     before do
       @authors = [@bob, @fred, @fred, @fred]
-      ::Author.stub!(:find).and_return(@authors)
+      ::Author.stub(:find).and_return(@authors)
       @continent_names = %w(Europe Africa)
-      @continents = (0..1).map { |i| c = ::Continent.new; c.stub!(:id).and_return(100 - i);c }
-      @authors[0..1].each_with_index { |author, i| author.stub!(:continent).and_return(@continents[i]) }
+      @continents = (0..1).map { |i| c = ::Continent.new; c.stub(:id).and_return(100 - i);c }
+      @authors[0..1].each_with_index { |author, i| author.stub(:continent).and_return(@continents[i]) }
 
-      ::Continent.stub!(:reflect_on_all_associations).and_return { |macro| macro == :has_many ? [mock('reflection', :klass => Author, :name => :authors)] : [] }
-      ::Continent.stub!(:reflect_on_association).and_return {|column_name| mock('reflection', :klass => Author) if column_name == :authors}
-      ::Author.stub!(:reflect_on_association).and_return { |column_name| mock('reflection', :options => {}, :klass => Continent, :macro => :belongs_to) if column_name == :continent }
+      ::Continent.stub(:reflect_on_all_associations).and_return { |macro| macro == :has_many ? [double('reflection', :klass => Author, :name => :authors)] : [] }
+      ::Continent.stub(:reflect_on_association).and_return {|column_name| double('reflection', :klass => Author) if column_name == :authors}
+      ::Author.stub(:reflect_on_association).and_return { |column_name| double('reflection', :options => {}, :klass => Continent, :macro => :belongs_to) if column_name == :continent }
 
 
       @continents.each_with_index do |continent, i|
-        continent.stub!(:to_label).and_return(@continent_names[i])
-        continent.stub!(:authors).and_return([@authors[i]])
+        continent.stub(:to_label).and_return(@continent_names[i])
+        continent.stub(:authors).and_return([@authors[i]])
       end
 
       with_deprecation_silenced do
@@ -307,7 +338,13 @@ describe 'select input' do
     end
 
     it 'should call find with :include for more optimized queries' do
-      Author.should_receive(:where).with(:include => :continent)
+      if Formtastic::Util.rails3?
+       Author.should_receive(:where).with(:include => :continent)
+      else
+       proxy = author_array_or_scope(@authors)
+       Author.should_receive(:where).and_return(proxy)
+       proxy.should_receive(:includes).with(:continent).and_call_original
+      end
 
       with_deprecation_silenced do 
         semantic_form_for(@new_post) do |builder|
@@ -439,7 +476,7 @@ describe 'select input' do
 
   describe 'when :prompt => "choose something" is set' do
     before do
-      @new_post.stub!(:author_id).and_return(nil)
+      @new_post.stub(:author_id).and_return(nil)
       concat(semantic_form_for(@new_post) do |builder|
         concat(builder.input(:author, :as => :select, :prompt => "choose author"))
       end)
@@ -532,7 +569,7 @@ describe 'select input' do
     before do
       @output_buffer = ''
       @some_meta_descriptions = ["One", "Two", "Three"]
-      @new_post.stub!(:meta_description).any_number_of_times
+      @new_post.stub(:meta_description).at_least(:once)
     end
 
     describe ":as is not set" do

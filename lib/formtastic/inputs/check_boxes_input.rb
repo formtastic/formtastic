@@ -44,7 +44,11 @@ module Formtastic
     #   <%= f.input :categories, :as => :check_boxes, :collection => [["Ruby", "ruby"], ["Rails", "rails"]] %>
     #   <%= f.input :categories, :as => :check_boxes, :collection => [["Ruby", "1"], ["Rails", "2"]] %>
     #   <%= f.input :categories, :as => :check_boxes, :collection => [["Ruby", 1], ["Rails", 2]] %>
+    #   <%= f.input :categories, :as => :check_boxes, :collection => [["Ruby", 1, {'data-attr' => 'attr-value'}]] %>
     #   <%= f.input :categories, :as => :check_boxes, :collection => 1..5 %>
+    #   <%= f.input :categories, :as => :check_boxes, :collection => [:ruby, :rails] %>
+    #   <%= f.input :categories, :as => :check_boxes, :collection => [["Ruby", :ruby], ["Rails", :rails]] %>
+    #   <%= f.input :categories, :as => :check_boxes, :collection => Set.new([:ruby, :rails]) %>
     #
     # @example `:hidden_fields` can be used to skip Rails' rendering of a hidden field before every checkbox
     #   <%= f.input :categories, :as => :check_boxes, :hidden_fields => false %>
@@ -127,7 +131,7 @@ module Formtastic
         value = choice_value(choice)
         builder.check_box(
           association_primary_key || method,
-          input_html_options.merge(:id => choice_input_dom_id(choice), :name => input_name, :disabled => disabled?(value), :required => false),
+          extra_html_options(choice).merge(:id => choice_input_dom_id(choice), :name => input_name, :disabled => disabled?(value), :required => false),
           value,
           unchecked_value
         )
@@ -139,8 +143,12 @@ module Formtastic
           input_name,
           value,
           checked?(value),
-          input_html_options.merge(:id => choice_input_dom_id(choice), :disabled => disabled?(value), :required => false)
+          extra_html_options(choice).merge(:id => choice_input_dom_id(choice), :disabled => disabled?(value), :required => false)
         )
+      end
+
+      def extra_html_options(choice)
+        input_html_options.merge(custom_choice_html_options(choice))
       end
 
       def checked?(value)
@@ -177,7 +185,10 @@ module Formtastic
 
       def make_selected_values
         if object.respond_to?(method)
-          selected_items = [object.send(method)].compact.flatten
+          selected_items = object.send(method)
+
+          # Construct an array from the return value, regardless of the return type
+          selected_items = [*selected_items].compact.flatten
 
           [*selected_items.map { |o| send_or_call_or_object(value_method, o) }].compact
         else

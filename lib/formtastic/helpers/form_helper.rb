@@ -61,8 +61,8 @@ module Formtastic
       # Allows to set a custom field_error_proc wrapper. By default this wrapper
       # is disabled since `formtastic` already adds an error class to the LI tag
       # containing the input. Change this from `config/initializers/formtastic.rb`.
-      @@field_error_proc = proc { |html_tag, instance_tag| html_tag }
-      mattr_accessor :field_error_proc
+      @@formtastic_field_error_proc = proc { |html_tag, instance_tag| html_tag }
+      mattr_accessor :formtastic_field_error_proc
 
       # Wrapper around Rails' own `form_for` helper to set the `:builder` option to
       # `Formtastic::FormBuilder` and to set some class names on the `<form>` tag such as
@@ -161,7 +161,7 @@ module Formtastic
           when Array then options[:as] || singularizer.call(record_or_name_or_array.last.class)  # [@post, @comment] # => "comment"
           else options[:as] || singularizer.call(record_or_name_or_array.class)                  # @post => "post"
         end
-        options[:html][:class] = class_names.join(" ")
+        options[:html][:class] = class_names.compact.join(" ")
 
         with_custom_field_error_proc do
           self.form_for(record_or_name_or_array, *(args << options), &proc)
@@ -186,7 +186,7 @@ module Formtastic
 
       def with_custom_field_error_proc(&block)
         default_field_error_proc = ::ActionView::Base.field_error_proc
-        ::ActionView::Base.field_error_proc = @@field_error_proc
+        ::ActionView::Base.field_error_proc = @@formtastic_field_error_proc
         yield
       ensure
         ::ActionView::Base.field_error_proc = default_field_error_proc

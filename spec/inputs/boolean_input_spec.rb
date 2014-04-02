@@ -98,7 +98,7 @@ describe 'boolean input' do
   end
 
   it 'should generate a checked input if object.method returns checked value' do
-    @new_post.stub!(:allow_comments).and_return('yes')
+    @new_post.stub(:allow_comments).and_return('yes')
 
     concat(semantic_form_for(@new_post) do |builder|
       concat(builder.input(:allow_comments, :as => :boolean, :checked_value => 'yes', :unchecked_value => 'no'))
@@ -108,7 +108,7 @@ describe 'boolean input' do
   end
 
   it 'should not generate a checked input if object.method returns unchecked value' do
-    @new_post.stub!(:allow_comments).and_return('no')
+    @new_post.stub(:allow_comments).and_return('no')
 
     concat(semantic_form_for(@new_post) do |builder|
       concat(builder.input(:allow_comments, :as => :boolean, :checked_value => 'yes', :unchecked_value => 'no'))
@@ -118,7 +118,7 @@ describe 'boolean input' do
   end
 
   it 'should generate a checked input if object.method returns checked value' do
-    @new_post.stub!(:allow_comments).and_return('yes')
+    @new_post.stub(:allow_comments).and_return('yes')
 
     concat(semantic_form_for(@new_post) do |builder|
       concat(builder.input(:allow_comments, :as => :boolean, :checked_value => 'yes', :unchecked_value => 'no'))
@@ -128,7 +128,7 @@ describe 'boolean input' do
   end
 
   it 'should not generate a checked input if object.method returns unchecked value' do
-    @new_post.stub!(:allow_comments).and_return('no')
+    @new_post.stub(:allow_comments).and_return('no')
 
     concat(semantic_form_for(@new_post) do |builder|
       concat(builder.input(:allow_comments, :as => :boolean, :checked_value => 'yes', :unchecked_value => 'no'))

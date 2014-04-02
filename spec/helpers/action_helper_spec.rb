@@ -53,7 +53,7 @@ describe 'Formtastic::FormBuilder#action' do
       it 'should call the corresponding action class with .to_html' do
         [:input, :button, :link].each do |action_style|
           semantic_form_for(:project, :url => "http://test.host") do |builder|
-            action_instance = mock('Action instance')
+            action_instance = double('Action instance')
             action_class = "#{action_style.to_s}_action".classify
             action_constant = "Formtastic::Actions::#{action_class}".constantize
     
@@ -99,7 +99,7 @@ describe 'Formtastic::FormBuilder#action' do
     #          it 'should render a label with localized text and not apply the label_str_method' do
     #            with_config :label_str_method, :reverse do
     #              @localized_label_text = 'Localized title'
-    #              @new_post.stub!(:meta_description)
+    #              @new_post.stub(:meta_description)
     #              ::I18n.backend.store_translations :en,
     #                :formtastic => {
     #                  :labels => {
@@ -132,7 +132,7 @@ describe 'Formtastic::FormBuilder#action' do
     #
     #      describe 'and object is given' do
     #        it 'should delegate the label logic to class human attribute name and pass it down to the label tag' do
-    #          @new_post.stub!(:meta_description) # a two word method name
+    #          @new_post.stub(:meta_description) # a two word method name
     #          @new_post.class.should_receive(:human_attribute_name).with('meta_description').and_return('meta_description'.humanize)
     #
     #          concat(semantic_form_for(@new_post) do |builder|
@@ -145,7 +145,7 @@ describe 'Formtastic::FormBuilder#action' do
     #      describe 'and object is given with label_str_method set to :capitalize' do
     #        it 'should capitalize method name, passing it down to the label tag' do
     #          with_config :label_str_method, :capitalize do
-    #            @new_post.stub!(:meta_description)
+    #            @new_post.stub(:meta_description)
     #
     #            concat(semantic_form_for(@new_post) do |builder|
     #              concat(builder.input(:meta_description))
@@ -280,6 +280,33 @@ describe 'Formtastic::FormBuilder#action' do
       end
     end
 
+    context 'when a customized top-level class does not exist' do
+  
+      it 'should instantiate the Formtastic action' do
+        action = double('action', :to_html => 'some HTML')
+        Formtastic::Actions::ButtonAction.should_receive(:new).and_return(action)
+        concat(semantic_form_for(@new_post) do |builder|
+          builder.action(:commit, :as => :button)
+        end)
+      end
+  
+    end
+  
+    describe 'when a top-level (custom) action class exists' do
+      it "should instantiate the top-level action instead of the Formtastic one" do
+        class ::ButtonAction < Formtastic::Actions::ButtonAction
+        end
+  
+        action = double('action', :to_html => 'some HTML')
+        Formtastic::Actions::ButtonAction.should_not_receive(:new)
+        ::ButtonAction.should_receive(:new).and_return(action)
+  
+        concat(semantic_form_for(@new_post) do |builder|
+          builder.action(:commit, :as => :button)
+        end)
+      end
+    end
+
     describe 'when instantiated multiple times with the same action type' do
       it "should be cached" do
         concat(semantic_form_for(@new_post) do |builder|
@@ -317,31 +344,31 @@ describe 'Formtastic::FormBuilder#action' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.action(:cancel, :as => :link))
           end)
-        }.should_not raise_error(Formtastic::UnsupportedMethodForAction)
+        }.should_not raise_error
         
         lambda {
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.action(:submit, :as => :input))
           end)
-        }.should_not raise_error(Formtastic::UnsupportedMethodForAction)
+        }.should_not raise_error
 
         lambda {
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.action(:submit, :as => :button))
           end)
-        }.should_not raise_error(Formtastic::UnsupportedMethodForAction)
+        }.should_not raise_error
         
         lambda {
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.action(:reset, :as => :input))
           end)
-        }.should_not raise_error(Formtastic::UnsupportedMethodForAction)
+        }.should_not raise_error
         
         lambda {
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.action(:reset, :as => :button))
           end)
-        }.should_not raise_error(Formtastic::UnsupportedMethodForAction)
+        }.should_not raise_error
       end
       
     end
