@@ -153,9 +153,10 @@ describe 'boolean input' do
   
   it 'should not pass input_html options down to the label html' do
     concat(semantic_form_for(@new_post) do |builder|
-      builder.input(:title, :as => :boolean, :input_html => { :tabindex => 2 })
+      builder.input(:title, :as => :boolean, :input_html => { :tabindex => 2, :x => "X" })
     end)
     output_buffer.should_not have_tag('label[tabindex]')
+    output_buffer.should_not have_tag('label[x]')
   end
 
   context "when required" do
