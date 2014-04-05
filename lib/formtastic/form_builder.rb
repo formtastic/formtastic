@@ -15,6 +15,7 @@ module Formtastic
     configure :required_string, proc { Formtastic::Util.html_safe(%{<abbr title="#{Formtastic::I18n.t(:required)}">*</abbr>}) }
     configure :optional_string, ''
     configure :inline_errors, :sentence
+    configure :attribute_names_on_errors, false
     configure :label_str_method, :humanize
     configure :collection_label_methods, %w[to_label display_name full_name name title username login value to_s]
     configure :collection_value_methods, %w[id to_s]
