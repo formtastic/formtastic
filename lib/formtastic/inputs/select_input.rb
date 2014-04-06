@@ -144,9 +144,17 @@ module Formtastic
 
       def to_html
         input_wrapping do
-          hidden_input <<
+          deprecated_hidden_input <<
           label_html <<
           (options[:group_by] ? grouped_select_html : select_html)
+        end
+      end
+
+      def deprecated_hidden_input
+        if multiple? && Util.rails3? && Util.deprecated_version_of_rails?
+          template.hidden_field_tag(input_html_options_name_multiple, '', :id => nil)
+        else
+          "".html_safe
         end
       end
 
@@ -171,14 +179,6 @@ module Formtastic
         options.key?(:include_blank) ? options[:include_blank] : (single? && builder.include_blank_for_select_by_default)
       end
       
-      def hidden_input
-        if multiple?
-          template.hidden_field_tag(input_html_options_name_multiple, '', :id => nil)
-        else
-          "".html_safe
-        end
-      end
-
       def prompt?
         !!options[:prompt]
       end
