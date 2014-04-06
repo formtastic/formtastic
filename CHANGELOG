@@ -1,3 +1,8 @@
+2.3.0.rc2
+
+* deprecate support for Rails < 3.2
+* avoid clobbering `ActionView::Base.field_error_proc=` by using a custom class attribute: `Formtastic::Helpers::FormHelper.formtastic_field_error_proc=`.
+
 2.3.0.rc
 
 * Updated to support Rails 4

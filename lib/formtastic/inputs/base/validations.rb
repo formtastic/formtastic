@@ -35,7 +35,7 @@ module Formtastic
           return true unless validator.options.key?(:if) || validator.options.key?(:unless)
           conditional = validator.options.key?(:if) ? validator.options[:if] : validator.options[:unless]
 
-          result = if conditional.respond_to?(:call)
+          result = if conditional.respond_to?(:call) && conditional.arity > 0
             conditional.call(object)
           elsif conditional.is_a?(::Symbol) && object.respond_to?(conditional)
             object.send(conditional)

@@ -25,5 +25,21 @@ module Formtastic
       ::Rails::VERSION::MAJOR == 3
     end
 
+    def rails4?
+      ::Rails::VERSION::MAJOR == 4
+    end
+    
+    def rails4_0?
+      ::Rails::VERSION::MAJOR == 4 && ::Rails::VERSION::MINOR == 0
+    end
+
+    def rails4_1?
+      ::Rails::VERSION::MAJOR == 4 && ::Rails::VERSION::MINOR == 1
+    end
+    
+    def deprecated_version_of_rails?
+      const_defined?(:Rails) && ::Rails::VERSION::MAJOR == 3 && ::Rails::VERSION::MINOR < 2 && ::Rails::VERSION::PATCH < 13
+    end
+
   end
 end

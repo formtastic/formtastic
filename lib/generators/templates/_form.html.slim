@@ -4,5 +4,5 @@
     = f.input :<%= attribute.name %>
   <%- end -%>
 
-  = f.buttons do
-    = f.commit_button
+  = f.actions do
+    = f.action :submit, as: :input
