@@ -383,7 +383,7 @@ describe 'select input' do
     end
 
     it 'should have a hidden field' do
-      output_buffer.should have_tag('form li input[@type="hidden"][@name="author[post_ids][]"]')
+      output_buffer.should have_tag('form li input[@type="hidden"][@name="author[post_ids][]"]', :count => 1)
     end
 
     it 'should have a select option for each Post' do
