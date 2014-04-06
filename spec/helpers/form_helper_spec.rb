@@ -102,11 +102,15 @@ describe 'FormHelper' do
       output_buffer.should have_tag("form.namespaced_post")
     end
 
-    it 'omits the model class from the form classes' do
-      Formtastic::Helpers::FormHelper.add_model_class_name_to_form_classes = false
-      concat(semantic_form_for(@new_post) do |builder|
+    it 'adds a customized class to the generated form' do
+      Formtastic::Helpers::FormHelper.default_form_model_class_proc = lambda { |model_class_name| "#{model_class_name}_form" }
+      concat(semantic_form_for(@new_post, :url => '/hello') do |builder|
       end)
-      output_buffer.should have_tag("form[class='']")
+      output_buffer.should have_tag("form.post_form")
+
+      concat(semantic_form_for(:project, :url => '/hello') do |builder|
+      end)
+      output_buffer.should have_tag("form.project_form")
     end
 
     describe 'allows :html options' do

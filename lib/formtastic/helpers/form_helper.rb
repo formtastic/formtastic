@@ -58,11 +58,10 @@ module Formtastic
       @@default_form_class = 'formtastic'
       mattr_accessor :default_form_class
 
-      # TODO: Default this to false in 5.0
-      # Allows to disable the addition to all `<form>` tags of a class infered from the models the
-      # form is representing. Change this from `config/initializers/formtastic.rb`:w
-      @@add_model_class_name_to_form_classes = true
-      mattr_accessor :add_model_class_name_to_form_classes
+      # Allows to set a custom proc to handle the class infered from the model's name. By default it
+      # will infer the name from the class name (eg. Post will be "post").
+      @@default_form_model_class_proc = proc { |model_class_name| model_class_name }
+      mattr_accessor :default_form_model_class_proc
 
       # Allows to set a custom field_error_proc wrapper. By default this wrapper
       # is disabled since `formtastic` already adds an error class to the LI tag
@@ -162,13 +161,13 @@ module Formtastic
 
         class_names = options[:html][:class] ? options[:html][:class].split(" ") : []
         class_names << @@default_form_class
-        if @@add_model_class_name_to_form_classes
-          class_names << case record_or_name_or_array
-            when String, Symbol then record_or_name_or_array.to_s                                  # :post => "post"
-            when Array then options[:as] || singularizer.call(record_or_name_or_array.last.class)  # [@post, @comment] # => "comment"
-            else options[:as] || singularizer.call(record_or_name_or_array.class)                  # @post => "post"
-          end
+        model_class_name = case record_or_name_or_array
+          when String, Symbol then record_or_name_or_array.to_s                                  # :post => "post"
+          when Array then options[:as] || singularizer.call(record_or_name_or_array.last.class)  # [@post, @comment] # => "comment"
+          else options[:as] || singularizer.call(record_or_name_or_array.class)                  # @post => "post"
         end
+        class_names << @@default_form_model_class_proc.call(model_class_name)
+
         options[:html][:class] = class_names.compact.join(" ")
 
         with_custom_field_error_proc do
@@ -199,8 +198,6 @@ module Formtastic
       ensure
         ::ActionView::Base.field_error_proc = default_field_error_proc
       end
-
-
     end
   end
 end
