@@ -150,6 +150,7 @@ module Formtastic
         end
       end
 
+      # TODO: remove from Formtastic 3.0
       def deprecated_hidden_input
         if multiple? && Util.rails3? && Util.deprecated_version_of_rails?
           template.hidden_field_tag(input_html_options_name_multiple, '', :id => nil)

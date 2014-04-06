@@ -17,7 +17,7 @@ module Formtastic
   # Deprecate support for Rails < 3.2
   if Util.deprecated_version_of_rails?
     ::ActiveSupport::Deprecation.warn(
-      "Support for Rails 3.0 and 3.1 will be dropped from Formtastic 3.0",
+      "Support for Rails < 3.2.13 will be dropped from Formtastic 3.0",
       caller)
   end
 
