@@ -66,7 +66,21 @@
 # specifying that class here.  Defaults to Formtastic::FormBuilder.
 # Formtastic::Helpers::FormHelper.builder = MyCustomBuilder
 
-# You can opt-in to Formtastic's use of the HTML5 `required` attribute on `<input>`, `<select>` 
+# All formtastic forms have a class that indicates that they are just that. You
+# can change it to any class you want.
+# Formtastic::Helpers::FormHelper.default_form_class = 'formtastic'
+
+# Formtastic will infer a class name from the model, array, string ot symbol you pass to the
+# form builder. You can customize the way that class is presented by overriding
+# this proc.
+# Formtastic::Helpers::FormHelper.default_form_model_class_proc = proc { |model_class_name| model_class_name }
+
+# Allows to set a custom field_error_proc wrapper. By default this wrapper
+# is disabled since `formtastic` already adds an error class to the LI tag
+# containing the input.
+# Formtastic::Helpers::FormHelper.formtastic_field_error_proc = proc { |html_tag, instance_tag| html_tag }
+
+# You can opt-in to Formtastic's use of the HTML5 `required` attribute on `<input>`, `<select>`
 # and `<textarea>` tags by setting this to true (defaults to false).
 # Formtastic::FormBuilder.use_required_attribute = false
 
