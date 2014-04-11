@@ -38,7 +38,11 @@ module Formtastic
     end
     
     def deprecated_version_of_rails?
-      const_defined?(:Rails) && ::Rails::VERSION::MAJOR == 3 && ::Rails::VERSION::MINOR < 2 && ::Rails::VERSION::PATCH < 13
+      const_defined?(:Rails) && rails_version < Gem::Version.new("3.2.13")
+    end
+
+    def rails_version
+      Gem::Version.new(::Rails::VERSION::STRING)
     end
 
   end
