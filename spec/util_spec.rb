@@ -7,50 +7,43 @@ describe 'Formtastic::Util' do
     
     subject { Formtastic::Util.deprecated_version_of_rails? }
     
-    context '3.0.0' do
-      before { allow(Formtastic::Util).to receive(:rails_version) { Gem::Version.new("3.0.0") } }
-      it 'should be true' do
-        expect(subject).to be_true
-      end
-    end
-
-    context '3.1.0' do
-      before { allow(Formtastic::Util).to receive(:rails_version) { Gem::Version.new("3.1.0") } }
-      it 'should be true' do
-        expect(subject).to be_true
-      end
-    end
-
-    context '3.2.12' do
-      before { allow(Formtastic::Util).to receive(:rails_version) { Gem::Version.new("3.2.12") } }
-      it 'should be true' do
-        expect(subject).to be_true
-      end
-    end
-
-    context '3.2.13' do
-      before { allow(Formtastic::Util).to receive(:rails_version) { Gem::Version.new("3.2.13") } }
-      it 'should be true' do
-        expect(subject).to be_false
-      end
-    end
-
-    context '3.2.14' do
-      before { allow(Formtastic::Util).to receive(:rails_version) { Gem::Version.new("3.2.14") } }
-      it 'should be true' do
-        expect(subject).to be_false
-      end
-    end
-
-    context '3.3.0' do
-      before { allow(Formtastic::Util).to receive(:rails_version) { Gem::Version.new("3.3.0") } }
-      it 'should be true' do
-        expect(subject).to be_false
-      end
-    end
-
     context '4.0.0' do
       before { allow(Formtastic::Util).to receive(:rails_version) { Gem::Version.new("4.0.0") } }
+      it 'should be true' do
+        expect(subject).to be_true
+      end
+    end
+
+    context '4.0.3' do
+      before { allow(Formtastic::Util).to receive(:rails_version) { Gem::Version.new("4.0.3") } }
+      it 'should be true' do
+        expect(subject).to be_true
+      end
+    end
+
+    context '4.0.4' do
+      before { allow(Formtastic::Util).to receive(:rails_version) { Gem::Version.new("4.0.4") } }
+      it 'should be false' do
+        expect(subject).to be_false
+      end
+    end
+
+    context '4.0.5' do
+      before { allow(Formtastic::Util).to receive(:rails_version) { Gem::Version.new("4.0.5") } }
+      it 'should be false' do
+        expect(subject).to be_false
+      end
+    end
+
+    context '4.1.1' do
+      before { allow(Formtastic::Util).to receive(:rails_version) { Gem::Version.new("4.1.1") } }
+      it 'should be false' do
+        expect(subject).to be_false
+      end
+    end
+
+    context '5.0.0' do
+      before { allow(Formtastic::Util).to receive(:rails_version) { Gem::Version.new("5.0.0") } }
       it 'should be true' do
         expect(subject).to be_false
       end

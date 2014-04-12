@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.rubygems_version = %q{1.3.6}
 
-  s.add_dependency(%q<actionpack>, [">= 3.0"])
+  s.add_dependency(%q<actionpack>, [">= 3.2.13"])
 
   s.add_development_dependency(%q<nokogiri>, ["< 1.6.0"]) # 1.6 requires Ruby 1.9.2, drop in v3.0
   s.add_development_dependency(%q<rspec-rails>, ["~> 2.14.0"])

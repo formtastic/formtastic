@@ -14,10 +14,9 @@ module Formtastic
   autoload :Localizer
   autoload :Util
   
-  # Deprecate support for Rails < 3.2
   if defined?(::Rails) && Util.deprecated_version_of_rails?
     ::ActiveSupport::Deprecation.warn(
-      "Support for Rails < 3.2.13 will be dropped from Formtastic 3.0",
+      "Support for Rails < 4.0.4 will be dropped from Formtastic 4.0",
       caller)
   end
 
