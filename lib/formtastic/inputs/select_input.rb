@@ -140,13 +140,12 @@ module Formtastic
     class SelectInput
       include Base
       include Base::Collections
-      include Base::GroupedCollections
 
       def to_html
         input_wrapping do
           deprecated_hidden_input <<
           label_html <<
-          (options[:group_by] ? grouped_select_html : select_html)
+          select_html
         end
       end
 
@@ -161,19 +160,6 @@ module Formtastic
 
       def select_html
         builder.select(input_name, collection, input_options, input_html_options)
-      end
-
-      def grouped_select_html
-        builder.grouped_collection_select(
-          input_name,
-          grouped_collection,
-          group_association,
-          group_label_method,
-          value_method,
-          label_method,
-          input_options,
-          input_html_options
-        )
       end
 
       def include_blank

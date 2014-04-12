@@ -82,15 +82,11 @@ module Formtastic
             conditions_from_reflection = conditions_from_reflection.call if conditions_from_reflection.is_a?(Proc)
 
             scope_conditions = conditions_from_reflection.empty? ? nil : {:conditions => conditions_from_reflection}
-            find_options = {}
             
             if Util.rails3?
-              find_options.merge!(:include => group_by) if self.respond_to?(:group_by) && group_by
-              reflection.klass.scoped(scope_conditions).where(find_options)
+              reflection.klass.scoped(scope_conditions).where({}) # where is uneccessary, but keeps the stubbing simpler while we support rails3
             else
-              coll = reflection.klass.where(scope_conditions)
-              coll = coll.includes(group_by) if self.respond_to?(:group_by) && group_by
-              coll.where(find_options)
+              reflection.klass.where(scope_conditions)
             end
           end
         end

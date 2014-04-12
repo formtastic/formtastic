@@ -220,21 +220,6 @@ describe 'select input' do
     end
   end
 
-  describe "for a belongs_to association with :group_by => :author" do
-    it "should call author.posts" do
-      ::Author.stub(:reflect_on_all_associations).and_return { |macro| macro == :has_many ? [double('reflection', :klass => Post, :name => :posts)] : []}
-
-      [@freds_post].each { |post| post.stub(:to_label).and_return("Post - #{post.id}") }
-      @fred.should_receive(:posts)
-
-      with_deprecation_silenced do
-        concat(semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:main_post, :as => :select, :group_by => :author ) )
-        end)
-      end
-    end
-  end
-
   describe "for a belongs_to association with :conditions" do
     before do
       ::Post.stub(:reflect_on_association).with(:author).and_return do
@@ -264,85 +249,6 @@ describe 'select input' do
       end
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:author, :as => :select))
-      end
-    end
-  end
-
-  describe 'for a belongs_to association with :group_by => :continent' do
-    before do
-      @authors = [@bob, @fred, @fred, @fred]
-      ::Author.stub(:find).and_return(@authors)
-      @continent_names = %w(Europe Africa)
-      @continents = (0..1).map { |i| c = ::Continent.new; c.stub(:id).and_return(100 - i);c }
-      @authors[0..1].each_with_index { |author, i| author.stub(:continent).and_return(@continents[i]) }
-
-      ::Continent.stub(:reflect_on_all_associations).and_return { |macro| macro == :has_many ? [double('reflection', :klass => Author, :name => :authors)] : [] }
-      ::Continent.stub(:reflect_on_association).and_return {|column_name| double('reflection', :klass => Author) if column_name == :authors}
-      ::Author.stub(:reflect_on_association).and_return { |column_name| double('reflection', :options => {}, :klass => Continent, :macro => :belongs_to) if column_name == :continent }
-
-
-      @continents.each_with_index do |continent, i|
-        continent.stub(:to_label).and_return(@continent_names[i])
-        continent.stub(:authors).and_return([@authors[i]])
-      end
-
-      with_deprecation_silenced do
-        concat(semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:author, :as => :select, :group_by => :continent ) )
-          concat(builder.input(:author, :as => :select, :group_by => :continent, :group_label => :id ) )
-          concat(builder.input(:author, :as => :select, :group_by => :continent, :member_label => :login ) )
-          concat(builder.input(:author, :as => :select, :group_by => :continent, :member_label => :login, :group_label => :id ) )
-        end)
-      end
-    end
-
-    it_should_have_input_wrapper_with_class("select")
-    it_should_have_input_wrapper_with_id("post_author_input")
-    it_should_have_label_with_text(/Author/)
-    it_should_have_label_for('post_author_id')
-
-    # TODO, need to find a way to repeat some of the specs and logic from the belongs_to specs without grouping
-
-    0.upto(1) do |i|
-      it 'should have all option groups and the right values' do
-        output_buffer.should have_tag("form li select optgroup[@label='#{@continent_names[i]}']", @authors[i].to_label)
-      end
-
-      it 'should have custom group labels' do
-        output_buffer.should have_tag("form li select optgroup[@label='#{@continents[i].id}']", @authors[i].to_label)
-      end
-
-      it 'should have custom author labels' do
-        output_buffer.should have_tag("form li select optgroup[@label='#{@continent_names[i]}']", @authors[i].login)
-      end
-
-      it 'should have custom author and group labels' do
-        output_buffer.should have_tag("form li select optgroup[@label='#{@continents[i].id}']", @authors[i].login)
-      end
-    end
-
-    it 'should have no duplicate groups' do
-      output_buffer.should have_tag('form li select optgroup', :count => 8)
-    end
-
-    it 'should sort the groups on the label method' do
-      output_buffer.should have_tag("form li select optgroup[@label='Africa']")
-      output_buffer.should have_tag("form li select optgroup[@label='99']")
-    end
-
-    it 'should call find with :include for more optimized queries' do
-      if Formtastic::Util.rails3?
-       Author.should_receive(:where).with(:include => :continent)
-      else
-       proxy = author_array_or_scope(@authors)
-       Author.should_receive(:where).and_return(proxy)
-       proxy.should_receive(:includes).with(:continent).and_call_original
-      end
-
-      with_deprecation_silenced do 
-        semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:author, :as => :select, :group_by => :continent ) )
-        end
       end
     end
   end
