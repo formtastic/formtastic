@@ -42,7 +42,7 @@ module Formtastic
     end
     
     def deprecated_version_of_rails?
-      const_defined?(:Rails) && rails_version < Gem::Version.new("3.2.13")
+      rails_version < Gem::Version.new("3.2.13")
     end
 
     def rails_version
