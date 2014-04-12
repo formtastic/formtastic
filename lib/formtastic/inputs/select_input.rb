@@ -144,18 +144,8 @@ module Formtastic
 
       def to_html
         input_wrapping do
-          deprecated_hidden_input <<
           label_html <<
           (options[:group_by] ? grouped_select_html : select_html)
-        end
-      end
-
-      # TODO: remove from Formtastic 3.0
-      def deprecated_hidden_input
-        if multiple? && Util.rails3? && Util.deprecated_version_of_rails?
-          template.hidden_field_tag(input_html_options_name_multiple, '', :id => nil)
-        else
-          "".html_safe
         end
       end
 
