@@ -98,7 +98,7 @@ describe 'boolean input' do
   end
 
   it 'should generate a checked input if object.method returns checked value' do
-    @new_post.stub!(:allow_comments).and_return('yes')
+    @new_post.stub(:allow_comments).and_return('yes')
 
     concat(semantic_form_for(@new_post) do |builder|
       concat(builder.input(:allow_comments, :as => :boolean, :checked_value => 'yes', :unchecked_value => 'no'))
@@ -108,7 +108,7 @@ describe 'boolean input' do
   end
 
   it 'should not generate a checked input if object.method returns unchecked value' do
-    @new_post.stub!(:allow_comments).and_return('no')
+    @new_post.stub(:allow_comments).and_return('no')
 
     concat(semantic_form_for(@new_post) do |builder|
       concat(builder.input(:allow_comments, :as => :boolean, :checked_value => 'yes', :unchecked_value => 'no'))
@@ -118,7 +118,7 @@ describe 'boolean input' do
   end
 
   it 'should generate a checked input if object.method returns checked value' do
-    @new_post.stub!(:allow_comments).and_return('yes')
+    @new_post.stub(:allow_comments).and_return('yes')
 
     concat(semantic_form_for(@new_post) do |builder|
       concat(builder.input(:allow_comments, :as => :boolean, :checked_value => 'yes', :unchecked_value => 'no'))
@@ -128,7 +128,7 @@ describe 'boolean input' do
   end
 
   it 'should not generate a checked input if object.method returns unchecked value' do
-    @new_post.stub!(:allow_comments).and_return('no')
+    @new_post.stub(:allow_comments).and_return('no')
 
     concat(semantic_form_for(@new_post) do |builder|
       concat(builder.input(:allow_comments, :as => :boolean, :checked_value => 'yes', :unchecked_value => 'no'))
@@ -153,9 +153,10 @@ describe 'boolean input' do
   
   it 'should not pass input_html options down to the label html' do
     concat(semantic_form_for(@new_post) do |builder|
-      builder.input(:title, :as => :boolean, :input_html => { :tabindex => 2 })
+      builder.input(:title, :as => :boolean, :input_html => { :tabindex => 2, :x => "X" })
     end)
     output_buffer.should_not have_tag('label[tabindex]')
+    output_buffer.should_not have_tag('label[x]')
   end
 
   context "when required" do

@@ -182,6 +182,10 @@ module Formtastic
       #     <%= f.inputs %>
       #   <% end %>
       #
+      # @example Quick form: Skip one or more fields
+      #   <%= f.inputs, :except => [:featured, :something_for_admin_only] %>
+      #   <%= f.inputs, :except => :featured %>
+      #
       # @example Short hand: Render inputs for a named set of attributes and simple associations on the model, with all default arguments and options
       #   <% semantic_form_for @post do |form| %>
       #     <%= f.inputs, :title, :body, :user, :categories %>
@@ -284,6 +288,7 @@ module Formtastic
         html_options = args.extract_options!
         html_options[:class] ||= "inputs"
         html_options[:name] = title
+        skipped_args = Array.wrap html_options.delete(:except)
 
         out = begin
           if html_options[:for] # Nested form
@@ -292,7 +297,7 @@ module Formtastic
             field_set_and_list_wrapping(*(args << html_options), &block)
           else
             legend = args.shift if args.first.is_a?(::String)
-            args = default_columns_for_object if @object && args.empty?
+            args = default_columns_for_object - skipped_args if @object && args.empty?
             contents = fieldset_contents_from_column_list(args)
             args.unshift(legend) if legend.present?
             field_set_and_list_wrapping(*((args << html_options) << contents))

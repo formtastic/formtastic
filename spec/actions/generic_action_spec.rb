@@ -244,7 +244,7 @@ describe 'InputAction::Base' do
   
     describe 'when used on a new record' do
       before do
-        @new_post.stub!(:new_record?).and_return(true)
+        @new_post.stub(:new_record?).and_return(true)
       end
   
       describe 'when explicit label is provided' do
@@ -344,7 +344,7 @@ describe 'InputAction::Base' do
   
     describe 'when used on an existing record' do
       before do
-        @new_post.stub!(:persisted?).and_return(true)
+        @new_post.stub(:persisted?).and_return(true)
       end
   
       describe 'when explicit label is provided' do
@@ -466,7 +466,7 @@ describe 'InputAction::Base' do
       end
       @new_user_post = ::UserPost.new
     
-      @new_user_post.stub!(:new_record?).and_return(true)
+      @new_user_post.stub(:new_record?).and_return(true)
       concat(semantic_form_for(@new_user_post, :url => '') do |builder|
         concat(builder.action(:submit, :as => :generic))
         concat(builder.action(:reset, :as => :generic))

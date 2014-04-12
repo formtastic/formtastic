@@ -1,6 +1,20 @@
+2.3.0.rc3
+
+* Fixed invalid HTML attributes in BooleanInput with a whitelist
+* Fixed compatibility with Rails 4.0.x, 4.1
+* Fixed compatibility with newer I18n
+* Fixed compatibility with Paperclip
+* Fixed submit button in slim template
+* Fixed class with Rails' field_error_proc
+* Deprecated :error_class option
+* Deprecated support for Rails < 3.2.13
+* Added ability to change the model-derived class we add to the form (eg 'post')
+* Added support for symbols & sets in collections
+
 2.3.0.rc2
 
 * deprecate support for Rails < 3.2
+* avoid clobbering `ActionView::Base.field_error_proc=` by using a custom class attribute: `Formtastic::Helpers::FormHelper.formtastic_field_error_proc=`.
 
 2.3.0.rc
 

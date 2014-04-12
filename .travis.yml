@@ -1,4 +1,4 @@
-before_install: 
+before_install:
   - gem update --system
   - gem update bundler
 rvm:
@@ -6,6 +6,8 @@ rvm:
   - ree
   - 1.9.2
   - 1.9.3
+  - 2.0.0
+  - 2.1.0
 gemfile:
   - gemfiles/rails_3.0.gemfile
   - gemfiles/rails_3.1.gemfile
@@ -21,10 +23,34 @@ matrix:
     - rvm: 2.0.0
       gemfile: gemfiles/rails_4.gemfile
       env: DEFER_GC=false RAILS_EDGE=true
+    - rvm: 2.1.0
+      gemfile: gemfiles/rails_4.gemfile
+      env: DEFER_GC=false RAILS_EDGE=true
+    - rvm: 1.9.3
+      gemfile: gemfiles/rails_4.0.4.gemfile
+      env: DEFER_GC=false RAILS_EDGE=true
+    - rvm: 2.0.0
+      gemfile: gemfiles/rails_4.0.4.gemfile
+      env: DEFER_GC=false RAILS_EDGE=true
+    - rvm: 1.9.3
+      gemfile: gemfiles/rails_edge.gemfile
+      env: DEFER_GC=false RAILS_EDGE=true
+    - rvm: 2.0.0
+      gemfile: gemfiles/rails_edge.gemfile
+      env: DEFER_GC=false RAILS_EDGE=true
+    - rvm: 2.1.0
+      gemfile: gemfiles/rails_edge.gemfile
+      env: DEFER_GC=false RAILS_EDGE=true
   allow_failures:
     - rvm: 1.9.3
       gemfile: gemfiles/rails_edge.gemfile
       env: DEFER_GC=false RAILS_EDGE=true
     - rvm: 2.0.0
+      gemfile: gemfiles/rails_edge.gemfile
+      env: DEFER_GC=false RAILS_EDGE=true
+    - rvm: 2.1.0
+      gemfile: gemfiles/rails_4.gemfile
+      env: DEFER_GC=false RAILS_EDGE=true
+    - rvm: 2.1.0
       gemfile: gemfiles/rails_edge.gemfile
       env: DEFER_GC=false RAILS_EDGE=true

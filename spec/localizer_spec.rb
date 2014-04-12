@@ -53,7 +53,7 @@ describe 'Formtastic::Localizer' do
     end
     
     it "should be defined" do
-      lambda { Formtastic::Localizer }.should_not raise_error(::NameError)
+      lambda { Formtastic::Localizer }.should_not raise_error
     end
     
     it "should have a cache" do

@@ -53,9 +53,9 @@ describe 'hidden input' do
   end
 
   it "should not render inline errors" do
-    @errors = mock('errors')
-    @errors.stub!(:[]).with(errors_matcher(:secret)).and_return(["foo", "bah"])
-    @new_post.stub!(:errors).and_return(@errors)
+    @errors = double('errors')
+    @errors.stub(:[]).with(errors_matcher(:secret)).and_return(["foo", "bah"])
+    @new_post.stub(:errors).and_return(@errors)
 
     concat(semantic_form_for(@new_post) do |builder|
       concat(builder.input(:secret, :as => :hidden))
