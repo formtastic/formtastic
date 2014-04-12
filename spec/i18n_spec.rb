@@ -6,12 +6,12 @@ describe 'Formtastic::I18n' do
   FORMTASTIC_KEYS = [:required, :yes, :no, :create, :update].freeze
 
   it "should be defined" do
-    lambda { Formtastic::I18n }.should_not raise_error(::NameError)
+    lambda { Formtastic::I18n }.should_not raise_error
   end
 
   describe "default translations" do
     it "should be defined" do
-      lambda { Formtastic::I18n::DEFAULT_VALUES }.should_not raise_error(::NameError)
+      lambda { Formtastic::I18n::DEFAULT_VALUES }.should_not raise_error
       Formtastic::I18n::DEFAULT_VALUES.is_a?(::Hash).should == true
     end
 
@@ -98,8 +98,8 @@ describe 'Formtastic::I18n' do
           }
         }}
 
-      @new_post.stub!(:title)
-      @new_post.stub!(:column_for_attribute).with(:title).and_return(mock('column', :type => :string, :limit => 255))
+      @new_post.stub(:title)
+      @new_post.stub(:column_for_attribute).with(:title).and_return(double('column', :type => :string, :limit => 255))
     end
 
     after do
@@ -108,7 +108,7 @@ describe 'Formtastic::I18n' do
 
     it "lookup scopes should be defined" do
       with_config :i18n_lookups_by_default, true do
-        lambda { Formtastic::I18n::SCOPES }.should_not raise_error(::NameError)
+        lambda { Formtastic::I18n::SCOPES }.should_not raise_error
       end
     end
 

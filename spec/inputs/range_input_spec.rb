@@ -73,7 +73,7 @@ describe 'range input' do
 
   describe "when validations require a minimum value (:greater_than)" do
     before do
-      @new_post.class.stub!(:validators_on).with(:title).and_return([
+      @new_post.class.stub(:validators_on).with(:title).and_return([
         active_model_numericality_validator([:title], {:only_integer=>false, :allow_nil=>false, :greater_than=>2})
       ])
     end
@@ -108,7 +108,7 @@ describe 'range input' do
     
     describe "and the column is an integer" do
       before do
-        @new_post.stub!(:column_for_attribute).with(:title).and_return(mock('column', :type => :integer))
+        @new_post.stub(:column_for_attribute).with(:title).and_return(double('column', :type => :integer))
       end
       
       it "should add a min attribute to the input one greater than the validation" do
@@ -121,7 +121,7 @@ describe 'range input' do
     
     describe "and the column is a float" do
       before do
-        @new_post.stub!(:column_for_attribute).with(:title).and_return(mock('column', :type => :float))
+        @new_post.stub(:column_for_attribute).with(:title).and_return(double('column', :type => :float))
       end
       
       it "should raise an error" do
@@ -135,7 +135,7 @@ describe 'range input' do
     
     describe "and the column is a big decimal" do
       before do
-        @new_post.stub!(:column_for_attribute).with(:title).and_return(mock('column', :type => :decimal))
+        @new_post.stub(:column_for_attribute).with(:title).and_return(double('column', :type => :decimal))
       end
       
       it "should raise an error" do
@@ -151,7 +151,7 @@ describe 'range input' do
   
   describe "when validations require a minimum value (:greater_than_or_equal_to)" do
     before do
-      @new_post.class.stub!(:validators_on).with(:title).and_return([
+      @new_post.class.stub(:validators_on).with(:title).and_return([
         active_model_numericality_validator([:title], {:only_integer=>false, :allow_nil=>false, :greater_than_or_equal_to=>2})
       ])
     end
@@ -188,7 +188,7 @@ describe 'range input' do
     [:integer, :decimal, :float].each do |column_type|
       describe "and the column is a #{column_type}" do
         before do
-          @new_post.stub!(:column_for_attribute).with(:title).and_return(mock('column', :type => column_type))
+          @new_post.stub(:column_for_attribute).with(:title).and_return(double('column', :type => column_type))
         end
 
         it "should add a max attribute to the input equal to the validation" do
@@ -202,7 +202,7 @@ describe 'range input' do
 
     describe "and there is no column" do
       before do
-        @new_post.stub!(:column_for_attribute).with(:title).and_return(nil)
+        @new_post.stub(:column_for_attribute).with(:title).and_return(nil)
       end
     
       it "should add a max attribute to the input equal to the validation" do
@@ -227,7 +227,7 @@ describe 'range input' do
 
   describe "when validations require a maximum value (:less_than)" do
    before do
-     @new_post.class.stub!(:validators_on).with(:title).and_return([
+     @new_post.class.stub(:validators_on).with(:title).and_return([
        active_model_numericality_validator([:title], {:only_integer=>false, :allow_nil=>false, :less_than=>20})
      ])
    end
@@ -262,7 +262,7 @@ describe 'range input' do
    
    describe "and the column is an integer" do
      before do
-       @new_post.stub!(:column_for_attribute).with(:title).and_return(mock('column', :type => :integer))
+       @new_post.stub(:column_for_attribute).with(:title).and_return(double('column', :type => :integer))
      end
      
      it "should add a max attribute to the input one greater than the validation" do
@@ -275,7 +275,7 @@ describe 'range input' do
    
    describe "and the column is a float" do
      before do
-       @new_post.stub!(:column_for_attribute).with(:title).and_return(mock('column', :type => :float))
+       @new_post.stub(:column_for_attribute).with(:title).and_return(double('column', :type => :float))
      end
      
      it "should raise an error" do
@@ -289,7 +289,7 @@ describe 'range input' do
    
    describe "and the column is a big decimal" do
      before do
-       @new_post.stub!(:column_for_attribute).with(:title).and_return(mock('column', :type => :decimal))
+       @new_post.stub(:column_for_attribute).with(:title).and_return(double('column', :type => :decimal))
      end
      
      it "should raise an error" do
@@ -305,7 +305,7 @@ describe 'range input' do
   
   describe "when validations require a maximum value (:less_than_or_equal_to)" do
     before do
-      @new_post.class.stub!(:validators_on).with(:title).and_return([
+      @new_post.class.stub(:validators_on).with(:title).and_return([
         active_model_numericality_validator([:title], {:only_integer=>false, :allow_nil=>false, :less_than_or_equal_to=>20})
       ])
     end
@@ -341,7 +341,7 @@ describe 'range input' do
     [:integer, :decimal, :float].each do |column_type|
       describe "and the column is a #{column_type}" do
         before do
-          @new_post.stub!(:column_for_attribute).with(:title).and_return(mock('column', :type => column_type))
+          @new_post.stub(:column_for_attribute).with(:title).and_return(double('column', :type => column_type))
         end
 
         it "should add a max attribute to the input equal to the validation" do
@@ -355,7 +355,7 @@ describe 'range input' do
 
     describe "and there is no column" do
       before do
-        @new_post.stub!(:column_for_attribute).with(:title).and_return(nil)
+        @new_post.stub(:column_for_attribute).with(:title).and_return(nil)
       end
     
       it "should add a max attribute to the input equal to the validation" do
@@ -380,7 +380,7 @@ describe 'range input' do
   
   describe "when validations require conflicting minimum values (:greater_than, :greater_than_or_equal_to)" do
     before do
-      @new_post.class.stub!(:validators_on).with(:title).and_return([
+      @new_post.class.stub(:validators_on).with(:title).and_return([
         active_model_numericality_validator([:title], {:only_integer=>false, :allow_nil=>false, :greater_than => 20, :greater_than_or_equal_to=>2})
       ])
     end
@@ -395,7 +395,7 @@ describe 'range input' do
   
   describe "when validations require conflicting maximum values (:less_than, :less_than_or_equal_to)" do
     before do
-      @new_post.class.stub!(:validators_on).with(:title).and_return([
+      @new_post.class.stub(:validators_on).with(:title).and_return([
         active_model_numericality_validator([:title], {:only_integer=>false, :allow_nil=>false, :less_than => 20, :less_than_or_equal_to=>2})
       ])
     end
@@ -411,7 +411,7 @@ describe 'range input' do
   describe "when validations require only an integer (:only_integer)" do
     
     before do
-      @new_post.class.stub!(:validators_on).with(:title).and_return([
+      @new_post.class.stub(:validators_on).with(:title).and_return([
         active_model_numericality_validator([:title], {:allow_nil=>false, :only_integer=>true})
       ])
     end
@@ -442,7 +442,7 @@ describe 'range input' do
   describe "when validations require a :step (non standard)" do
     
     before do
-      @new_post.class.stub!(:validators_on).with(:title).and_return([
+      @new_post.class.stub(:validators_on).with(:title).and_return([
         active_model_numericality_validator([:title], {:allow_nil=>false, :only_integer=>true, :step=>2})
       ])
     end
@@ -473,7 +473,7 @@ describe 'range input' do
   describe "when validations do not specify :step (non standard) or :only_integer" do
     
     before do
-      @new_post.class.stub!(:validators_on).with(:title).and_return([
+      @new_post.class.stub(:validators_on).with(:title).and_return([
         active_model_numericality_validator([:title], {:allow_nil=>false})
       ])
     end

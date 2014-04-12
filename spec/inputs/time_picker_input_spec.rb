@@ -122,7 +122,7 @@ describe 'time_picker input' do
       
       before do
         @date = Date.new(2000, 11, 11)
-        @new_post.stub!(:publish_at).and_return(@date)
+        @new_post.stub(:publish_at).and_return(@date)
       end
       
       it "renders 00:00" do
@@ -149,7 +149,7 @@ describe 'time_picker input' do
     
       before do
         @time = Time.utc(2000,11,11,11,11,11)
-        @new_post.stub!(:publish_at).and_return(@time)
+        @new_post.stub(:publish_at).and_return(@time)
       end
       
       it "renders the time as a HH:MM" do
@@ -175,7 +175,7 @@ describe 'time_picker input' do
     context "when method returns an empty String" do
       
       before do
-        @new_post.stub!(:publish_at).and_return("")
+        @new_post.stub(:publish_at).and_return("")
       end
       
       it "will be empty" do
@@ -201,7 +201,7 @@ describe 'time_picker input' do
     context "when method returns a String" do
       
       before do
-        @new_post.stub!(:publish_at).and_return("yeah")
+        @new_post.stub(:publish_at).and_return("yeah")
       end
       
       it "will be the string" do
