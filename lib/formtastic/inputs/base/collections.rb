@@ -78,28 +78,19 @@ module Formtastic
                     ) if reflection.options[:polymorphic] == true
             end
 
-            find_options_from_options = options[:find_options] || {}
-            conditions_from_options = find_options_from_options[:conditions] || {}
             conditions_from_reflection = (reflection.respond_to?(:options) && reflection.options[:conditions]) || {}
             conditions_from_reflection = conditions_from_reflection.call if conditions_from_reflection.is_a?(Proc)
 
             scope_conditions = conditions_from_reflection.empty? ? nil : {:conditions => conditions_from_reflection}
-            if conditions_from_options.any?
-              if Util.rails3?
-                reflection.klass.scoped(scope_conditions).where(conditions_from_options)
-              else
-                reflection.klass.where(scope_conditions[:conditions]).where(conditions_from_options)
-              end
+            find_options = {}
+            
+            if Util.rails3?
+              find_options.merge!(:include => group_by) if self.respond_to?(:group_by) && group_by
+              reflection.klass.scoped(scope_conditions).where(find_options)
             else
-              
-              if Util.rails3?
-                find_options_from_options.merge!(:include => group_by) if self.respond_to?(:group_by) && group_by
-                reflection.klass.scoped(scope_conditions).where(find_options_from_options)
-              else
-                coll = reflection.klass.where(scope_conditions)
-                coll = coll.includes(group_by) if self.respond_to?(:group_by) && group_by
-                coll.where(find_options_from_options)
-              end
+              coll = reflection.klass.where(scope_conditions)
+              coll = coll.includes(group_by) if self.respond_to?(:group_by) && group_by
+              coll.where(find_options)
             end
           end
         end

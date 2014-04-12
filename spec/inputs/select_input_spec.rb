@@ -256,21 +256,14 @@ describe 'select input' do
       end
     end
 
-    it "should call author.find with association conditions and find_options conditions" do
+    it "should call author.(scoped|where) with association conditions" do
       if Formtastic::Util.rails3?
         ::Author.should_receive(:scoped).with(:conditions => {:active => true})
-        ::Author.should_receive(:where).with({:publisher => true})
       else
-        proxy = double
-        ::Author.should_receive(:where).with({:active => true}).and_return(proxy)
-        proxy.should_receive(:where).with({:publisher => true})
+        ::Author.should_receive(:where).with({:active => true}).and_return(double)
       end
-      
-
-      with_deprecation_silenced do
-        semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:author, :as => :select, :find_options => {:conditions => {:publisher => true}}))
-        end
+      semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:author, :as => :select))
       end
     end
   end
