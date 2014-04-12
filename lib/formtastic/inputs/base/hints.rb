@@ -8,7 +8,7 @@ module Formtastic
             template.content_tag(
               :p, 
               Formtastic::Util.html_safe(hint_text), 
-              :class => (options[:hint_class] || builder.default_hint_class)
+              :class => builder.default_hint_class
             )
           end
         end
