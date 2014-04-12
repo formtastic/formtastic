@@ -8,12 +8,12 @@ module Formtastic
         end
         
         def error_sentence_html
-          error_class = options[:error_class] || builder.default_inline_error_class
+          error_class = builder.default_inline_error_class
           template.content_tag(:p, Formtastic::Util.html_safe(errors.to_sentence.html_safe), :class => error_class)
         end
                 
         def error_list_html
-          error_class = options[:error_class] || builder.default_error_list_class
+          error_class = builder.default_error_list_class
           list_elements = []
           errors.each do |error|
             list_elements << template.content_tag(:li, Formtastic::Util.html_safe(error.html_safe))
@@ -22,7 +22,7 @@ module Formtastic
         end
         
         def error_first_html
-          error_class = options[:error_class] || builder.default_inline_error_class
+          error_class = builder.default_inline_error_class
           template.content_tag(:p, Formtastic::Util.html_safe(errors.first.untaint), :class => error_class)
         end
         
