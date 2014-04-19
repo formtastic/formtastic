@@ -68,7 +68,10 @@ module Formtastic
     #   <%= f.input :publish_at, :as => :datetime_picker, :placeholder => "YYYY-MM-DD HH:MM" %>
     #   <%= f.input :publish_at, :as => :datetime_picker, :input_html => { :placeholder => "YYYY-MM-DD HH:MM" } %>
     #
-    # @example Using `datetime` (UTC) or `datetime-local` with `:local` (defaults to true, `datetime-local` input)
+    # @example Using `type=datetime-local` with `:local` option (this is the default, and recommended for browser support on iOS7 and Chrome)
+    #   <%= f.input :publish_at, :as => :datetime_picker, :local => true %>
+    #
+    # @example Using `type=datetime` with `:local` option (not recommended)
     #   <%= f.input :publish_at, :as => :datetime_picker, :local => false %>
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
