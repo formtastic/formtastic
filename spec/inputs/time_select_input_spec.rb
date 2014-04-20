@@ -64,33 +64,6 @@ describe 'time select input' do
 
     end
 
-    describe "with :ignore_date => false and no initial Time" do
-      before do
-        @new_post.stub(:publish_at)
-        concat(semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:publish_at, :as => :time_select, :ignore_date => false))
-        end)
-      end
-
-      it 'should have a hidden input for day, month and year' do
-        output_buffer.should have_tag('input#post_publish_at_1i')
-        output_buffer.should have_tag('input#post_publish_at_2i')
-        output_buffer.should have_tag('input#post_publish_at_3i')
-      end
-
-      it 'should not have values in hidden inputs for day, month and year' do
-        output_buffer.should have_tag('input#post_publish_at_1i[@value=""]')
-        output_buffer.should have_tag('input#post_publish_at_2i[@value=""]')
-        output_buffer.should have_tag('input#post_publish_at_3i[@value=""]')
-      end
-
-      it 'should have an select for hour and minute' do
-        output_buffer.should have_tag('select#post_publish_at_4i')
-        output_buffer.should have_tag('select#post_publish_at_5i')
-      end
-
-    end
-
     describe "without seconds" do
       before do
         concat(semantic_form_for(@new_post) do |builder|
