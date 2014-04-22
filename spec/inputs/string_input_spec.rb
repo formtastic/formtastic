@@ -108,6 +108,18 @@ describe 'string input' do
           should_have_maxlength(42, :options => { :maximum => 42, :unless => :specify_maxlength })
         end
       end
+
+      describe 'and validates_presence_of was called for the method' do
+        it 'does not blow up with a proc calling an instance method' do
+          @new_post.class.should_receive(:validators_on).with(:title).at_least(1).and_return([
+            active_model_presence_validator([:title], { :unless => -> { something? } })
+          ])
+
+          concat(semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:title))
+          end)
+        end
+      end
     end
   end
 
