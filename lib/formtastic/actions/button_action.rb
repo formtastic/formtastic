@@ -54,17 +54,10 @@ module Formtastic
       include Base
       include Buttonish
       
-      # TODO absolutely horrible hack to work-around Rails < 3.1 missing button_tag, need
-      # to figure out something more appropriate.
-      #
       # TODO reset_action class?
       def to_html
         wrapper do
-          if template.respond_to?(:button_tag)
-            template.button_tag(text, button_html)
-          else
-            template.content_tag(:button, text, button_html)
-          end
+          template.button_tag(text, button_html)
         end
       end
     end
