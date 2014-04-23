@@ -111,6 +111,7 @@ describe 'string input' do
 
       describe 'and validates_presence_of was called for the method' do
         it 'does not blow up with a proc calling an instance method' do
+          @new_post.stub(:something?).and_return(true)
           @new_post.class.should_receive(:validators_on).with(:title).at_least(1).and_return([
             active_model_presence_validator([:title], { :unless => -> { something? } })
           ])
