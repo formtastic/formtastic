@@ -121,6 +121,8 @@ module Formtastic
       elsif name =~ /(.+)\[(.+)\]/
         # Rails 3 (and 3.1?) nested builder case with :post rather than @post
         [$1, $2]
+      elsif builder.respond_to?(:options) && builder.options.key?(:as)
+        [builder.options[:as].to_s]
       elsif builder.respond_to?(:options) && builder.options.key?(:parent_builder)
         # Rails 3.0 nested builder work-around case, where :parent_builder is provided by f.semantic_form_for
         [builder.options[:parent_builder].object_name.to_s, name]
