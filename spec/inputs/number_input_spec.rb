@@ -705,6 +705,90 @@ describe 'number input' do
      end
    end
   end
+
+  describe "when validations require a maximum value (:less_than) that takes a Symbol" do
+    
+   before do
+     @new_post.class.stub(:validators_on).with(:title).and_return([
+       active_model_numericality_validator([:title], {:only_integer=>false, :allow_nil=>false, :less_than=> :id})
+     ])
+   end
+   
+   it "should allow :input_html to override :max" do
+     concat(semantic_form_for(@new_post) do |builder|
+       builder.input(:title, :as => :number, :input_html => { :max => 102 })
+     end)
+     output_buffer.should have_tag('input[@max="102"]')
+   end
+   
+   it "should allow option to override :max" do
+     concat(semantic_form_for(@new_post) do |builder|
+       builder.input(:title, :as => :number, :max => 102)
+     end)
+     output_buffer.should have_tag('input[@max="102"]')
+   end
+   
+   it "should allow :input_html to override :max with :in" do
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input(:title, :as => :number, :input_html => { :in => 1..102 })
+      end)
+      output_buffer.should have_tag('input[@max="102"]')
+    end
+
+    it "should allow option to override :max with :in" do
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input(:title, :as => :number, :in => 1..102)
+      end)
+      output_buffer.should have_tag('input[@max="102"]')
+    end
+   
+   describe "and the column is an integer" do
+     before do
+       @new_post.stub(:column_for_attribute).with(:title).and_return(double('column', :type => :integer))
+     end
+     
+     it "should add a max attribute to the input one greater than the validation" do
+       @new_post.stub(:id).and_return(20)
+       concat(semantic_form_for(@new_post) do |builder|
+         builder.input(:title, :as => :number)
+       end)
+       output_buffer.should have_tag('input[@max="19"]')
+     end
+   end
+   
+   describe "and the column is a float" do
+     before do
+       @new_post.stub(:column_for_attribute).with(:title).and_return(double('column', :type => :float))
+     end
+     
+     it "should raise an error" do
+       lambda {
+         concat(semantic_form_for(@new_post) do |builder|
+           builder.input(:title, :as => :number)
+         end)
+       }.should raise_error(Formtastic::Inputs::Base::Validations::IndeterminableMaximumAttributeError)
+     end
+   end
+   
+   describe "and the column is a big decimal" do
+     before do
+       @new_post.stub(:column_for_attribute).with(:title).and_return(double('column', :type => :decimal))
+     end
+     
+     it "should raise an error" do
+       lambda {
+         concat(semantic_form_for(@new_post) do |builder|
+           builder.input(:title, :as => :number)
+         end)
+       }.should raise_error(Formtastic::Inputs::Base::Validations::IndeterminableMaximumAttributeError)
+     end
+   end
+   describe "and the validator takes a proc" do
+     before do
+       @new_post.stub(:column_for_attribute).with(:title).and_return(double('column', :type => :decimal))
+     end
+   end
+  end
   
   
   describe "when validations require a maximum value (:less_than_or_equal_to)" do

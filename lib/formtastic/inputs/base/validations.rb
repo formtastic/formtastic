@@ -103,9 +103,15 @@ module Formtastic
             # We can't determine an appropriate value for :greater_than with a float/decimal column
             raise IndeterminableMaximumAttributeError if validation.options[:less_than] && column? && [:float, :decimal].include?(column.type)
 
-            if validation.options[:less_than_or_equal_to]
-              return (validation.options[:less_than_or_equal_to].call(object)) if validation.options[:less_than_or_equal_to].kind_of?(Proc)
-              return (validation.options[:less_than_or_equal_to])
+            if rule = validation.options[:less_than_or_equal_to]
+              case rule
+              when Proc
+                return rule.call(object)
+              when Symbol
+                return object.send(rule)
+              else
+                return rule
+              end
             end
 
             if rule = validation.options[:less_than]
