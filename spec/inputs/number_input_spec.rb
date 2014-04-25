@@ -834,6 +834,72 @@ describe 'number input' do
        end
      end
    end
+
+  describe "when validations require a maximum value (:less_than_or_equal_to) that takes a symbol" do
+     before do
+       @new_post.class.stub(:validators_on).with(:title).and_return([
+         active_model_numericality_validator([:title], {:only_integer=>false, :allow_nil=>false, :less_than_or_equal_to=> :id})
+       ])
+     end
+
+     it "should allow :input_html to override :max" do
+       concat(semantic_form_for(@new_post) do |builder|
+         builder.input(:title, :as => :number, :input_html => { :max => 102 })
+       end)
+       output_buffer.should have_tag('input[@max="102"]')
+     end
+
+     it "should allow options to override :max" do
+       concat(semantic_form_for(@new_post) do |builder|
+         builder.input(:title, :as => :number, :max => 102)
+       end)
+       output_buffer.should have_tag('input[@max="102"]')
+     end
+
+     it "should allow :input_html to override :max with :in" do
+       concat(semantic_form_for(@new_post) do |builder|
+         builder.input(:title, :as => :number, :input_html => { :in => 1..102 })
+       end)
+       output_buffer.should have_tag('input[@max="102"]')
+     end
+
+     it "should allow options to override :max with :in" do
+       concat(semantic_form_for(@new_post) do |builder|
+         builder.input(:title, :as => :number, :in => 1..102)
+       end)
+       output_buffer.should have_tag('input[@max="102"]')
+     end
+
+     [:integer, :decimal, :float].each do |column_type|
+       describe "and the column is a #{column_type}" do
+         before do
+           @new_post.stub(:column_for_attribute).with(:title).and_return(double('column', :type => column_type))
+         end
+
+         it "should add a max attribute to the input equal to the validation" do
+           @new_post.stub(:id).and_return(20)
+           concat(semantic_form_for(@new_post) do |builder|
+             builder.input(:title, :as => :number)
+           end)
+           output_buffer.should have_tag('input[@max="20"]')
+         end
+       end
+     end
+
+     describe "and there is no column" do
+       before do
+         @new_post.stub(:column_for_attribute).with(:title).and_return(nil)
+       end
+
+       it "should add a max attribute to the input equal to the validation" do
+         @new_post.stub(:id).and_return(20)
+         concat(semantic_form_for(@new_post) do |builder|
+           builder.input(:title, :as => :number)
+         end)
+         output_buffer.should have_tag('input[@max="20"]')
+       end
+     end
+   end
   
   describe "when validations require conflicting minimum values (:greater_than, :greater_than_or_equal_to)" do
     before do

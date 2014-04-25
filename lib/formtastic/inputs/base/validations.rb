@@ -108,9 +108,15 @@ module Formtastic
               return (validation.options[:less_than_or_equal_to])
             end
 
-            if validation.options[:less_than]
-              return ((validation.options[:less_than].call(object)) - 1) if validation.options[:less_than].kind_of?(Proc)
-              return (validation.options[:less_than] - 1)
+            if rule = validation.options[:less_than]
+              case rule
+              when Proc
+                return rule.call(object) - 1
+              when Symbol
+                return object.send(rule).try(:-, 1)
+              else
+                return rule - 1
+              end
             end
           end
         end
