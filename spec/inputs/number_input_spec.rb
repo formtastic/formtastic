@@ -262,6 +262,86 @@ describe 'number input' do
     end
     
   end
+
+  describe "when validations require a minimum value (:greater_than) that takes a symbol" do
+    before do
+      @new_post.class.stub(:validators_on).with(:title).and_return([
+        active_model_numericality_validator([:title], {:only_integer=>false, :allow_nil=>false, :greater_than=> :id})
+      ])
+    end
+    
+    it "should allow :input_html to override :min" do
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input(:title, :as => :number, :input_html => { :min => 5 })
+      end)
+      output_buffer.should have_tag('input[@min="5"]')
+    end
+    
+    it "should allow :input_html to override :min through :in" do
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input(:title, :as => :number, :input_html => { :in => 5..102 })
+      end)
+      output_buffer.should have_tag('input[@min="5"]')
+    end
+    
+    it "should allow options to override :min" do
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input(:title, :as => :number, :min => 5)
+      end)
+      output_buffer.should have_tag('input[@min="5"]')
+    end
+    
+    it "should allow options to override :min through :in" do
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input(:title, :as => :number, :in => 5..102)
+      end)
+      output_buffer.should have_tag('input[@min="5"]')
+    end
+    
+    describe "and the column is an integer" do
+      before do
+        @new_post.stub(:column_for_attribute).with(:title).and_return(double('column', :type => :integer))
+      end
+      
+      it "should add a min attribute to the input one greater than the validation" do
+        @new_post.stub(:id).and_return(1)
+
+        concat(semantic_form_for(@new_post) do |builder|
+          builder.input(:title, :as => :number)
+        end)
+        output_buffer.should have_tag('input[@min="2"]')
+      end
+    end
+    
+    describe "and the column is a float" do
+      before do
+        @new_post.stub(:column_for_attribute).with(:title).and_return(double('column', :type => :float))
+      end
+      
+      it "should raise an error" do
+        lambda {
+          concat(semantic_form_for(@new_post) do |builder|
+            builder.input(:title, :as => :number)
+          end)
+        }.should raise_error(Formtastic::Inputs::Base::Validations::IndeterminableMinimumAttributeError)
+      end
+    end
+    
+    describe "and the column is a big decimal" do
+      before do
+        @new_post.stub(:column_for_attribute).with(:title).and_return(double('column', :type => :decimal))
+      end
+      
+      it "should raise an error" do
+        lambda {
+          concat(semantic_form_for(@new_post) do |builder|
+            builder.input(:title, :as => :number)
+          end)
+        }.should raise_error(Formtastic::Inputs::Base::Validations::IndeterminableMinimumAttributeError)
+      end
+    end
+    
+  end
   
   describe "when validations require a minimum value (:greater_than_or_equal_to)" do
     before do

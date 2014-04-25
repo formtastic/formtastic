@@ -75,9 +75,15 @@ module Formtastic
               return (validation.options[:greater_than_or_equal_to])
             end
 
-            if validation.options[:greater_than]
-              return (validation.options[:greater_than].call(object) + 1) if validation.options[:greater_than].kind_of?(Proc)
-              return (validation.options[:greater_than] + 1)
+            if rule = validation.options[:greater_than]
+              case rule
+              when Proc
+                return rule.call(object) + 1
+              when Symbol
+                return object.send(rule).try(:+, 1)
+              else
+                return rule + 1
+              end
             end
           end
         end
