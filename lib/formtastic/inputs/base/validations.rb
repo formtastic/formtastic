@@ -71,25 +71,11 @@ module Formtastic
             raise IndeterminableMinimumAttributeError if validation.options[:greater_than] && column? && [:float, :decimal].include?(column.type)
 
             if rule = validation.options[:greater_than_or_equal_to]
-              case rule
-              when Proc
-                return rule.call(object)
-              when Symbol
-                return object.send(rule)
-              else
-                return rule
-              end
+              return extract_value_from_validation_rule(rule)
             end
 
             if rule = validation.options[:greater_than]
-              case rule
-              when Proc
-                return rule.call(object) + 1
-              when Symbol
-                return object.send(rule).try(:+, 1)
-              else
-                return rule + 1
-              end
+              return extract_value_from_validation_rule(rule).try(:+, 1)
             end
           end
         end
@@ -104,25 +90,11 @@ module Formtastic
             raise IndeterminableMaximumAttributeError if validation.options[:less_than] && column? && [:float, :decimal].include?(column.type)
 
             if rule = validation.options[:less_than_or_equal_to]
-              case rule
-              when Proc
-                return rule.call(object)
-              when Symbol
-                return object.send(rule)
-              else
-                return rule
-              end
+              return extract_value_from_validation_rule(rule)
             end
 
             if rule = validation.options[:less_than]
-              case rule
-              when Proc
-                return rule.call(object) - 1
-              when Symbol
-                return object.send(rule).try(:-, 1)
-              else
-                return rule - 1
-              end
+              return extract_value_from_validation_rule(rule).try(:-, 1)
             end
           end
         end
@@ -212,6 +184,19 @@ module Formtastic
 
         def limit
           validation_limit || column_limit
+        end
+
+        private
+
+        def extract_value_from_validation_rule(rule)
+          case rule
+          when Proc
+            rule.call(object)
+          when Symbol
+            object.send(rule)
+          else
+            rule
+          end
         end
 
       end
