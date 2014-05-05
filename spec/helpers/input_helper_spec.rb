@@ -878,7 +878,6 @@ describe 'Formtastic::FormBuilder#input' do
   end
 
   describe 'instantiating an input class' do
-
     context 'when a class does not exist' do
       it "should raise an error" do
         lambda {
@@ -887,6 +886,14 @@ describe 'Formtastic::FormBuilder#input' do
           end)
         }.should raise_error(Formtastic::UnknownInputError)
       end
+    end
+
+    it "should delegate to ClassFinder" do
+      concat(semantic_form_for(@new_post) do |builder|
+        Formtastic::InputClassFinder.any_instance.should_receive(:[]).
+            with(:string).and_call_original
+        builder.input(:title, :as => :string)
+      end)
     end
 
     context 'when a customized top-level class does not exist' do
@@ -921,7 +928,7 @@ describe 'Formtastic::FormBuilder#input' do
       it "should be cached (not calling the internal methods)" do
         # TODO this is really tied to the underlying implementation
         concat(semantic_form_for(@new_post) do |builder|
-          builder.should_receive(:custom_input_class_name).with(:string).once.and_return(::Formtastic::Inputs::StringInput)
+          Formtastic::InputClassFinder.should_receive(:new).once.and_call_original
           builder.input(:title, :as => :string)
           builder.input(:title, :as => :string)
         end)
@@ -930,6 +937,4 @@ describe 'Formtastic::FormBuilder#input' do
     end
 
   end
-
 end
-

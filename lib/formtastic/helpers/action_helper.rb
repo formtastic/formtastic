@@ -90,36 +90,18 @@ module Formtastic
       def default_action_type(method, options = {}) #:nodoc:
         case method
           when :submit then :input
-          when :reset then :input
+          when :reset  then :input
           when :cancel then :link
+          else method
         end
       end
 
       def action_class(as)
-        @input_classes_cache ||= {}
-        @input_classes_cache[as] ||= begin
-          begin
-            begin
-              custom_action_class_name(as).constantize
-            rescue NameError
-              standard_action_class_name(as).constantize
-            end
-          rescue NameError
-            raise Formtastic::UnknownActionError
-          end
-        end
+        @action_class_finder ||= Formtastic::ActionClassFinder.new(self)
+        @action_class_finder[as]
+      rescue Formtastic::ActionClassFinder::NotFoundError
+        raise Formtastic::UnknownActionError, "Unable to find action #{$!.message}"
       end
-
-      # :as => :button # => ButtonAction
-      def custom_action_class_name(as)
-        "#{as.to_s.camelize}Action"
-      end
-
-      # :as => :button # => Formtastic::Actions::ButtonAction
-      def standard_action_class_name(as)
-        "Formtastic::Actions::#{as.to_s.camelize}Action"
-      end
-
     end
   end
 end
