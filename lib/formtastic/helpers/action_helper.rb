@@ -97,9 +97,9 @@ module Formtastic
       end
 
       def action_class(as)
-        @input_classes_cache ||= {}
-        @input_classes_cache[as] ||= Formtastic::ClassFinder.find_class(as, 'Action', action_class_namespaces)
-      rescue Formtastic::ClassFinder::NotFoundError
+        @action_class_finder ||= Formtastic::ActionClassFinder.new(action_class_namespaces)
+        @action_class_finder[as]
+      rescue Formtastic::ActionClassFinder::NotFoundError
         raise Formtastic::UnknownActionError, "Unable to find action #{$!.message}"
       end
 
