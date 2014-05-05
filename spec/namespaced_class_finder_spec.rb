@@ -5,16 +5,19 @@ require 'formtastic/namespaced_class_finder'
 describe Formtastic::NamespacedClassFinder do
   include FormtasticSpecHelper
 
+  let(:builder) { Formtastic::FormBuilder.allocate }
+  subject(:finder) { Formtastic::NamespacedClassFinder.new(builder) }
+
+
   shared_examples 'Namespaced Class Finder' do
     let(:as) { :custom_class }
     let(:class_name ) { 'CustomClass'}
     let(:fake_class) { double('FakeClass') }
 
-    let(:finder) { Formtastic::NamespacedClassFinder.new(namespaces) }
 
     subject(:found_class) { finder.find(as) }
 
-    let(:namespaces) { [ Object, Formtastic::FormBuilder] }
+    let(:namespaces) { [ Object, ] }
 
     context 'when first namespace is defined' do
       before do
@@ -39,7 +42,7 @@ describe Formtastic::NamespacedClassFinder do
 
 
   context '#finder_method' do
-    subject { Formtastic::NamespacedClassFinder.new.finder_method }
+    subject { finder.finder_method }
 
     before do
       Rails.application.config.stub(:cache_classes).and_return(cache_classes)
