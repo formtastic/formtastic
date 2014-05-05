@@ -103,18 +103,16 @@ module Formtastic
       end
 
       def choice_html(choice)
-        template.content_tag(:label,
-          hidden_fields? ?
-            check_box_with_hidden_input(choice) :
-            check_box_without_hidden_input(choice) <<
-          choice_label(choice),
+        template.content_tag(
+          :label,
+          checkbox_input(choice) + choice_label(choice),
           label_html_options.merge(:for => choice_input_dom_id(choice), :class => nil)
         )
       end
 
       def hidden_field_for_all
         if hidden_fields?
-          ""
+          ''
         else
           options = {}
           options[:class] = [method.to_s.singularize, 'default'].join('_') if value_as_class?
@@ -182,6 +180,14 @@ module Formtastic
       end
 
       protected
+
+      def checkbox_input(choice)
+        if hidden_fields?
+          check_box_with_hidden_input(choice)
+        else
+          check_box_without_hidden_input(choice)
+        end
+      end
 
       def make_selected_values
         if object.respond_to?(method)

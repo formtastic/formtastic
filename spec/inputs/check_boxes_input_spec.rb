@@ -107,6 +107,7 @@ describe 'check_boxes input' do
         ::Post.all.each do |post|
           output_buffer.should have_tag("form li fieldset ol li label input#author_post_ids_#{post.id}")
           output_buffer.should have_tag("form li fieldset ol li label input[@name='author[post_ids][]']", :count => 2)
+          output_buffer.should have_tag('form li fieldset ol li label', /#{post.to_label}/)
         end
 
       end
