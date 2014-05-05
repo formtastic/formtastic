@@ -97,16 +97,11 @@ module Formtastic
       end
 
       def action_class(as)
-        @action_class_finder ||= Formtastic::ActionClassFinder.new(action_class_namespaces)
+        @action_class_finder ||= Formtastic::ActionClassFinder.new(self)
         @action_class_finder[as]
       rescue Formtastic::ActionClassFinder::NotFoundError
         raise Formtastic::UnknownActionError, "Unable to find action #{$!.message}"
       end
-
-      def action_class_namespaces
-        [::Object, self.class, Formtastic::Actions]
-      end
-
     end
   end
 end

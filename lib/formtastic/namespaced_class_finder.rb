@@ -2,12 +2,14 @@ module Formtastic
   class NamespacedClassFinder
     DEFAULT_NAMESPACE = ::Object
 
+    attr_reader :namespaces
+
     # @private
     class NotFoundError < NameError
     end
 
-    def initialize(namespaces = ::Object)
-      @namespaces = Array(namespaces)
+    def initialize(builder)
+      @namespaces = [::Object, builder.class]
       @cache = {}
     end
 
