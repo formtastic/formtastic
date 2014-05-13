@@ -88,6 +88,7 @@ module Formtastic
       #
       # * `:boolean`      (see {Inputs::BooleanInput})
       # * `:check_boxes`  (see {Inputs::CheckBoxesInput})
+      # * `:color`        (see {Inputs::ColorInput})
       # * `:country`      (see {Inputs::CountryInput})
       # * `:datetime_select` (see {Inputs::DatetimeSelectInput})
       # * `:date_select` (see {Inputs::DateSelectInput})
@@ -271,6 +272,7 @@ module Formtastic
             return :url       if method.to_s =~ /^url$|^website$|_url$/
             return :phone     if method.to_s =~ /(phone|fax)/
             return :search    if method.to_s =~ /^search$/
+            return :color     if method.to_s =~ /color/
           when :integer
             return :select    if reflection_for(method)
             return :number
