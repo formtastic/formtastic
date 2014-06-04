@@ -1,7 +1,7 @@
 h1. Formtastic
 
 !https://travis-ci.org/justinfrench/formtastic.png?branch=master!:https://travis-ci.org/justinfrench/formtastic
-!http://inch-pages.github.io/github/justinfrench/formtastic.png!:http://inch-pages.github.io/github/justinfrench/formtastic
+!http://inch-ci.org/github/justinfrench/formtastic.png!:http://inch-ci.org/github/justinfrench/formtastic
 !https://codeclimate.com/github/justinfrench/formtastic.png!:https://codeclimate.com/github/justinfrench/formtastic
 !https://badge.fury.io/rb/formtastic.png!:http://badge.fury.io/rb/formtastic
 !https://gemnasium.com/justinfrench/formtastic.png!:https://gemnasium.com/justinfrench/formtastic
