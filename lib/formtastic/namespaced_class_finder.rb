@@ -13,18 +13,14 @@ module Formtastic
       @cache = {}
     end
 
-    def [](as)
-      @cache[as] ||= find(as)
+    def find(as)
+      @cache[as] ||= resolve(as)
     end
 
-    def find(as)
+    def resolve(as)
       class_name = class_name(as)
 
       finder(class_name) or raise NotFoundError, "class #{class_name}"
-    end
-
-    def class_name(as)
-      as.to_s.camelize
     end
 
     protected
@@ -34,6 +30,10 @@ module Formtastic
     end
 
     private
+
+    def class_name(as)
+      as.to_s.camelize
+    end
 
     if ::Rails.application.config.cache_classes
       def finder(class_name)

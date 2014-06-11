@@ -68,11 +68,11 @@ describe Formtastic::NamespacedClassFinder do
     end
   end
 
-  context '#[]' do
+  context '#find' do
     it 'caches calls' do
-      expect(subject).to receive(:find).once.and_call_original
-      subject[:object]
-      subject[:object]
+      expect(subject).to receive(:resolve).once.and_call_original
+      subject.find(:object)
+      subject.find(:object)
     end
   end
 

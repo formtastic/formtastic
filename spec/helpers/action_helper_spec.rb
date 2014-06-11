@@ -252,11 +252,13 @@ describe 'Formtastic::FormBuilder#action' do
   end
 
   describe 'instantiating an action class' do
-    it "should delegate to ClassFinder" do
+    it "should delegate to ActionClassFinder" do
       concat(semantic_form_for(@new_post) do |builder|
-          Formtastic::ActionClassFinder.any_instance.should_receive(:[]).with(:button).and_call_original
-          builder.action(:submit, :as => :button)
-        end)
+        Formtastic::ActionClassFinder.any_instance.should_receive(:find).
+          with(:button).and_call_original
+
+        builder.action(:submit, :as => :button)
+      end)
     end
 
     context 'when a class does not exist' do

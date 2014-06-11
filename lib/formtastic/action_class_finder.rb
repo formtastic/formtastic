@@ -4,6 +4,8 @@ module Formtastic
       super configured_namespaces(builder, builder.action_namespaces) + [ Formtastic::Actions ]
     end
 
+    private
+
     def class_name(as)
       "#{super}Action"
     end

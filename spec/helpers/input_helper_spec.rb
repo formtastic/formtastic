@@ -888,10 +888,11 @@ describe 'Formtastic::FormBuilder#input' do
       end
     end
 
-    it "should delegate to ClassFinder" do
+    it "should delegate to InputClassFinder" do
       concat(semantic_form_for(@new_post) do |builder|
-        Formtastic::InputClassFinder.any_instance.should_receive(:[]).
-            with(:string).and_call_original
+        Formtastic::InputClassFinder.any_instance.should_receive(:find).
+          with(:string).and_call_original
+
         builder.input(:title, :as => :string)
       end)
     end
