@@ -52,9 +52,7 @@ describe Formtastic::NamespacedClassFinder do
     end
   end
 
-  context '#finder_method' do
-    subject { finder.finder_method }
-
+  context '#finder' do
     before do
       Rails.application.config.stub(:cache_classes).and_return(cache_classes)
     end
@@ -62,15 +60,11 @@ describe Formtastic::NamespacedClassFinder do
     context 'when cache_classes is on' do
       let(:cache_classes) { true }
       it_behaves_like 'Namespaced Class Finder'
-
-      it { should eq(:find_with_const_defined) }
     end
 
     context 'when cache_classes is off' do
       let(:cache_classes) { false }
       it_behaves_like 'Namespaced Class Finder'
-
-      it { should eq(:find_by_trying) }
     end
   end
 
@@ -82,8 +76,4 @@ describe Formtastic::NamespacedClassFinder do
     end
   end
 
-
-  context '#find_with_const_defined' do
-    subject(:finder) { Formtastic::NamespacedClassFinder.new([])}
-  end
 end

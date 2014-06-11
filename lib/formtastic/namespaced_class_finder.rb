@@ -17,14 +17,10 @@ module Formtastic
       @cache[as] ||= find(as)
     end
 
-    def finder_method
-      ::Rails.application.config.cache_classes ? :find_with_const_defined : :find_by_trying
-    end
-
-    def find(as, method = finder_method)
+    def find(as)
       class_name = class_name(as)
 
-      __send__(method, class_name) or raise NotFoundError, "class #{class_name}"
+      finder(class_name) or raise NotFoundError, "class #{class_name}"
     end
 
     def class_name(as)
@@ -38,6 +34,16 @@ module Formtastic
     end
 
     private
+
+    if ::Rails.application.config.cache_classes
+      def finder(class_name)
+        find_with_const_defined(class_name)
+      end
+    else
+      def finder(class_name)
+        find_by_trying(class_name)
+      end
+    end
 
     # prevent exceptions in production environment for better performance
     def find_with_const_defined(class_name)
