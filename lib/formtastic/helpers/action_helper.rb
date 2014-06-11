@@ -96,6 +96,15 @@ module Formtastic
         end
       end
 
+      # Takes the `:as` option and attempts to return the corresponding action
+      # class. In the case of `:as => :awesome` it will first attempt to find a
+      # top level `AwesomeAction` class (to allow the application to subclass
+      # and modify to suit), falling back to `Formtastic::Actions::AwesomeAction`.
+      #
+      # Custom action namespaces to look into can be configured via the
+      # .action_namespaces +FormBuilder+ configuration setting.
+      # See +Formtastic::Helpers::InputHelper#action_class+ for details.
+      #
       def action_class(as)
         @action_class_finder ||= Formtastic::ActionClassFinder.new(self)
         @action_class_finder[as]

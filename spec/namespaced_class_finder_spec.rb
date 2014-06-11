@@ -5,41 +5,52 @@ require 'formtastic/namespaced_class_finder'
 describe Formtastic::NamespacedClassFinder do
   include FormtasticSpecHelper
 
-  let(:builder) { Formtastic::FormBuilder.allocate }
-  subject(:finder) { Formtastic::NamespacedClassFinder.new(builder) }
-
-
-  shared_examples 'Namespaced Class Finder' do
-    let(:as) { :custom_class }
-    let(:class_name ) { 'CustomClass'}
-    let(:fake_class) { double('FakeClass') }
-
-
-    subject(:found_class) { finder.find(as) }
-
-    let(:namespaces) { [ Object, ] }
-
-    context 'when first namespace is defined' do
-      before do
-        stub_const(class_name, fake_class)
-      end
-
-      it do
-        expect(found_class).to be(fake_class)
-      end
-    end
-
-    context 'when second namespace is defined' do
-      before do
-        stub_const('Formtastic::FormBuilder::' + class_name, fake_class)
-      end
-
-      it do
-        expect(found_class).to be(fake_class)
-      end
-    end
+  before do
+    stub_const('SearchPath', Module.new)
   end
 
+  let(:search_path) { [ SearchPath ] }
+  subject(:finder) { Formtastic::NamespacedClassFinder.new(search_path) }
+
+  shared_examples 'Namespaced Class Finder' do
+    subject(:found_class) { finder.find(:custom_class) }
+
+    context 'Input defined in the Object scope' do
+      before do
+        stub_const('CustomClass', Class.new)
+      end
+
+      it { expect(found_class).to be(CustomClass) }
+    end
+
+    context 'Input defined in the search path' do
+      before do
+        stub_const('SearchPath::CustomClass', Class.new)
+      end
+
+      it { expect(found_class).to be(SearchPath::CustomClass) }
+    end
+
+    context 'Input defined both in the Object scope and the search path' do
+      before do
+        stub_const('CustomClass', Class.new)
+        stub_const('SearchPath::CustomClass', Class.new)
+      end
+
+      it { expect(found_class).to be(CustomClass) }
+    end
+
+    context 'Input defined outside the search path' do
+      before do
+        stub_const('Foo', Module.new)
+        stub_const('Foo::CustomClass', Class.new)
+      end
+
+      let(:error) { Formtastic::NamespacedClassFinder::NotFoundError }
+
+      it { expect { found_class }.to raise_error(error) }
+    end
+  end
 
   context '#finder_method' do
     subject { finder.finder_method }

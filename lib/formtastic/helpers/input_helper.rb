@@ -300,12 +300,19 @@ module Formtastic
         @object.column_for_attribute(method) if @object.respond_to?(:column_for_attribute)
       end
 
-      # Takes the `:as` option and attempts to return the corresponding input class. In the case of
-      # `:as => :string` it will first attempt to find a top level `StringInput` class (to allow the
-      # application to subclass and modify to suit), falling back to `Formtastic::Inputs::StringInput`.
+      # Takes the `:as` option and attempts to return the corresponding input
+      # class. In the case of `:as => :awesome` it will first attempt to find a
+      # top level `AwesomeInput` class (to allow the application to subclass
+      # and modify to suit), falling back to `Formtastic::Inputs::AwesomeInput`.
       #
-      # This also means that the application can define it's own custom inputs in the top level
-      # namespace (eg `DatepickerInput`).
+      # Custom input namespaces to look into can be configured via the
+      # .input_namespaces +FormBuilder+ configuration setting.
+      #
+      # The namespaces setting can be set either either as an Array of Modules,
+      # or as a Proc. The proc will be called in the form builder class' context.
+      #
+      # If you configure the FormBuilder with `proc { self }` you can nest
+      # your inputs in Formtastic's FormBuilder or in your custom builder class.
       #
       # @param [Symbol] as A symbol representing the type of input to render
       # @raise [Formtastic::UnknownInputError] An appropriate input class could not be found

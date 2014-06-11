@@ -8,8 +8,8 @@ module Formtastic
     class NotFoundError < NameError
     end
 
-    def initialize(builder)
-      @namespaces = [::Object, builder.class]
+    def initialize(namespaces)
+      @namespaces = [ DEFAULT_NAMESPACE, *namespaces ]
       @cache = {}
     end
 
@@ -30,6 +30,14 @@ module Formtastic
     def class_name(as)
       "#{as.to_s.camelize}"
     end
+
+    protected
+
+    def configured_namespaces(builder, config)
+      Array.wrap(config.respond_to?(:call) ? builder.class.instance_eval(&config) : config)
+    end
+
+    private
 
     # prevent exceptions in production environment for better performance
     def find_with_const_defined(class_name)

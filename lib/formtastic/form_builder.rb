@@ -6,7 +6,6 @@ module Formtastic
       self.send(:"#{name}=", value)
     end
 
-    configure :custom_namespace
     configure :default_text_field_size
     configure :default_text_area_height, 20
     configure :default_text_area_width
@@ -31,6 +30,9 @@ module Formtastic
     configure :default_hint_class, 'inline-hints'
     configure :use_required_attribute, false
     configure :perform_browser_validations, false
+    configure :custom_namespace # Needed?
+    configure :input_namespaces, []
+    configure :action_namespaces, []
 
     attr_reader :template
 

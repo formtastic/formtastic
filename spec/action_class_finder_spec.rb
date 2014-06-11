@@ -5,10 +5,8 @@ require 'formtastic/action_class_finder'
 describe Formtastic::ActionClassFinder do
   include FormtasticSpecHelper
 
-  let(:builder) { Formtastic::FormBuilder.allocate }
-  subject(:finder) { Formtastic::ActionClassFinder.new(builder) }
-
-  it 'has correct namespaces' do
-    expect(finder.namespaces).to eq([Object,Formtastic::FormBuilder, Formtastic::Actions])
+  it_behaves_like 'Specialized Class Finder' do
+    let(:default) { Formtastic::Actions }
+    let(:namespaces_setting) { :action_namespaces }
   end
 end

@@ -1,8 +1,7 @@
 module Formtastic
   class ActionClassFinder < NamespacedClassFinder
-    def initialize(*)
-      super
-      @namespaces << Formtastic::Actions
+    def initialize(builder)
+      super configured_namespaces(builder, builder.action_namespaces) + [ Formtastic::Actions ]
     end
 
     def class_name(as)
