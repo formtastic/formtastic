@@ -45,8 +45,8 @@ module Formtastic
     include Formtastic::Helpers::ActionHelper
     include Formtastic::Helpers::ActionsHelper
     include Formtastic::Helpers::ErrorsHelper
-    
-    # This is a wrapper around Rails' `ActionView::Helpers::FormBuilder#fields_for`, originally 
+
+    # This is a wrapper around Rails' `ActionView::Helpers::FormBuilder#fields_for`, originally
     # provided to ensure that the `:builder` from `semantic_form_for` was passed down into
     # the nested `fields_for`. Rails 3 no longer requires us to do this, so this method is
     # provided purely for backwards compatibility and DSL consistency.
@@ -78,11 +78,11 @@ module Formtastic
       # Add a :parent_builder to the args so that nested translations can be possible in Rails 3
       options = args.extract_options!
       options[:parent_builder] ||= self
-      
+
       # Wrap the Rails helper
       fields_for(record_or_name_or_array, *(args << options), &block)
     end
-    
+
     def initialize(object_name, object, template, options, block=nil)
       # rails 3 supported passing in the block parameter to FormBuilder
       # rails 4.0 deprecated the block parameter and does nothing with it
@@ -92,12 +92,12 @@ module Formtastic
       else # Must be rails4_1 or greater
         super object_name, object, template, options
       end
-      
+
       if respond_to?('multipart=') && options.is_a?(Hash) && options[:html]
         self.multipart = options[:html][:multipart]
       end
     end
-    
+
   end
 
 end

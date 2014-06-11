@@ -873,8 +873,6 @@ describe 'Formtastic::FormBuilder#input' do
       end)
       output_buffer.should have_tag 'li.string', :count => 2
     end
-
-
   end
 
   describe 'instantiating an input class' do

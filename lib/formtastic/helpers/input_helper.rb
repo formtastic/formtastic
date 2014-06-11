@@ -324,7 +324,7 @@ module Formtastic
       #
       # @example When a top-level class is found
       #   input_class(:string) #=> StringInput
-      #   input_class(:awesome) #=> AwesomeInput      
+      #   input_class(:awesome) #=> AwesomeInput
       def input_class(as)
         @input_class_finder ||= Formtastic::InputClassFinder.new(self)
         @input_class_finder.find(as)

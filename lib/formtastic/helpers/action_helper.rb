@@ -2,7 +2,7 @@
 module Formtastic
   module Helpers
     module ActionHelper
-      
+
       # Renders an action for the form (such as a subit/reset button, or a cancel link).
       #
       # Each action is wrapped in an `<li class="action">` tag with other classes added based on the
@@ -23,9 +23,9 @@ module Formtastic
       #         reset: "Reset form"
       #         submit: "Submit"
       #
-      # For forms with an object present, the `update` key will be used if calling `persisted?` on 
-      # the object returns true (saving changes to a record), otherwise the `create` ey will be 
-      # used. The `submit` key is used as a fallback when there is no object or we cannot determine 
+      # For forms with an object present, the `update` key will be used if calling `persisted?` on
+      # the object returns true (saving changes to a record), otherwise the `create` key will be
+      # used. The `submit` key is used as a fallback when there is no object or we cannot determine
       # if `create` or `update` is appropriate.
       #
       # @example Basic usage
