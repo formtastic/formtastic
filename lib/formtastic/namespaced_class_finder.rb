@@ -24,11 +24,11 @@ module Formtastic
     def find(as, method = finder_method)
       class_name = class_name(as)
 
-      __send__(method, class_name) or raise NamespacedClassFinder::NotFoundError, "class #{class_name}"
+      __send__(method, class_name) or raise NotFoundError, "class #{class_name}"
     end
 
     def class_name(as)
-      "#{as.to_s.camelize}"
+      as.to_s.camelize
     end
 
     protected
