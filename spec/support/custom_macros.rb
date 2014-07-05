@@ -74,8 +74,7 @@ module CustomMacros
       end
     end
 
-    # TODO make more generic (tag name)
-    # TODO use for all other macros
+    # TODO use for many of the other macros
     def it_should_have_tag_with(type, attribute_value_hash)
       attribute_value_hash.each do |attribute, value|
         it "should have a #{type} box with #{attribute} '#{value}'" do
