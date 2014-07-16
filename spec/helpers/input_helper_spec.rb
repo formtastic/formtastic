@@ -821,6 +821,15 @@ describe 'Formtastic::FormBuilder#input' do
           output_buffer.should have_tag("form li.my_class")
           output_buffer.should have_tag("form li.another_class")
         end
+
+        describe 'when nil' do
+          it 'should not put an id attribute on the div tag' do
+            concat(semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:title, :wrapper_html => {:id => nil}))
+            end)
+            output_buffer.should have_tag('form li:not([id])')
+          end
+        end
       end
 
       describe 'when not provided' do
