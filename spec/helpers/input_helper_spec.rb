@@ -470,6 +470,12 @@ describe 'Formtastic::FormBuilder#input' do
           default_input_type(:string, :search).should == :search
         end
 
+        it 'should default to :color for :string columns matching color' do
+          default_input_type(:string, :color).should == :color
+          default_input_type(:string, :user_color).should == :color
+          default_input_type(:string, :color_for_image).should == :color
+        end
+
         describe 'defaulting to file column' do
           Formtastic::FormBuilder.file_methods.each do |method|
             it "should default to :file for attributes that respond to ##{method}" do
