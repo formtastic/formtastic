@@ -106,6 +106,7 @@ describe 'Formtastic::Localizer' do
         before do
           ::I18n.backend.store_translations :en, {:formtastic => {
               :labels => {
+                :post => { :name => 'POST.NAME' },
                 :message => { :name => 'MESSAGE.NAME' }
               }
             }
