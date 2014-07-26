@@ -37,6 +37,8 @@ module Formtastic
 
           result = if conditional.respond_to?(:call) && conditional.arity > 0
             conditional.call(object)
+          elsif conditional.respond_to?(:call) && conditional.arity == 0
+            object.instance_exec(&conditional)
           elsif conditional.is_a?(::Symbol) && object.respond_to?(conditional)
             object.send(conditional)
           else
