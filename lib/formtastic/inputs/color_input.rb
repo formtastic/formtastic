@@ -31,34 +31,10 @@ module Formtastic
       include Base::Placeholder
       
       def to_html
+        raise "The :color input requires the color_field form helper, which is only available in Rails 4+" unless builder.respond_to?(:color_field)
         input_wrapping do
           label_html <<
           builder.color_field(method, input_html_options)
-        end
-      end
-    end
-  end
-
-  # Rails 3 doesn't have a color_field form helper, so we patch one in here
-  if Util.rails3?
-    module ::ActionView
-      module Helpers
-        module FormHelper
-          def color_field(object_name, method, options = {})
-            InstanceTag.new(
-              object_name, method, self, options.delete(:object)
-            ).to_input_field_tag("color", options)
-          end
-        end
-
-        class FormBuilder
-          def color_field(method, options = {})
-            @template.send(
-              "color_field",
-              @object_name,
-              method,
-              objectify_options(options))
-          end
         end
       end
     end
