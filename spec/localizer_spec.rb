@@ -101,6 +101,28 @@ describe 'Formtastic::Localizer' do
           end
         end
       end
+
+      describe "with custom resource name" do
+        before do
+          ::I18n.backend.store_translations :en, {:formtastic => {
+              :labels => {
+                :post => { :name => 'POST.NAME' },
+                :message => { :name => 'MESSAGE.NAME' }
+              }
+            }
+          }
+
+          with_config :i18n_lookups_by_default, true do
+            semantic_form_for(@new_post, :as => :message) do |builder|
+              @localizer = Formtastic::Localizer.new(builder)
+            end
+          end
+        end
+
+        it "should translate custom key with i18n" do
+          @localizer.localize(:name, :name, :label).should == 'MESSAGE.NAME'
+        end
+      end 
     end
 
   end

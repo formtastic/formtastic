@@ -164,7 +164,14 @@ describe 'InputAction::Base' do
             ::I18n.backend.store_translations :en, :formtastic => {
               :submit => 'Submit %{model}',
               :reset => 'Reset %{model}',
-              :cancel => 'Cancel %{model}'
+              :cancel => 'Cancel %{model}',
+              :actions => {
+                :message => {
+                  :submit => 'Submit message',
+                  :reset => 'Reset message',
+                  :cancel => 'Cancel message'
+                }
+              }
             }
           end
   
@@ -181,6 +188,17 @@ describe 'InputAction::Base' do
             output_buffer.should have_tag('li.generic_action input[@value="Submit Post"]')
             output_buffer.should have_tag('li.generic_action input[@value="Cancel Post"]')
             output_buffer.should have_tag('li.generic_action input[@value="Reset Post"]')
+          end
+
+          it 'should render an input with custom resource name localized label' do
+            concat(semantic_form_for(:post, :as => :message, :url => 'http://example.com') do |builder|
+              concat(builder.action(:submit, :as => :generic))
+              concat(builder.action(:reset, :as => :generic))
+              concat(builder.action(:cancel, :as => :generic))
+            end)
+            output_buffer.should have_tag('li.generic_action input[@value="Submit message"]')
+            output_buffer.should have_tag('li.generic_action input[@value="Cancel message"]')
+            output_buffer.should have_tag('li.generic_action input[@value="Reset message"]')
           end
         end
   
@@ -366,7 +384,14 @@ describe 'InputAction::Base' do
             ::I18n.backend.store_translations :en, :formtastic => {
               :update => 'Save %{model}',
               :reset => 'Reset %{model}',
-              :cancel => 'Cancel %{model}'
+              :cancel => 'Cancel %{model}',
+              :actions => {
+                :message => {
+                  :submit => 'Submit message',
+                  :reset => 'Reset message',
+                  :cancel => 'Cancel message'
+                }
+              }
             }
           end
   
@@ -383,6 +408,17 @@ describe 'InputAction::Base' do
             output_buffer.should have_tag('li.generic_action input[@value="Save Post"]')
             output_buffer.should have_tag('li.generic_action input[@value="Reset Post"]')
             output_buffer.should have_tag('li.generic_action input[@value="Cancel Post"]')
+          end
+
+          it 'should render an input with custom resource name localized label' do
+            concat(semantic_form_for(:post, :as => :message, :url => 'http://example.com') do |builder|
+              concat(builder.action(:submit, :as => :generic))
+              concat(builder.action(:reset, :as => :generic))
+              concat(builder.action(:cancel, :as => :generic))
+            end)
+            output_buffer.should have_tag('li.generic_action input[@value="Submit message"]')
+            output_buffer.should have_tag('li.generic_action input[@value="Cancel message"]')
+            output_buffer.should have_tag('li.generic_action input[@value="Reset message"]')
           end
         end
   
