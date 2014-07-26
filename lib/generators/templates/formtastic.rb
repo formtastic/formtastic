@@ -88,3 +88,11 @@
 # this to true. Doing so will add a `novalidate` attribute to the `<form>` tag.
 # See http://diveintohtml5.org/forms.html#validation for more info.
 # Formtastic::FormBuilder.perform_browser_validations = true
+
+# Define custom namespaces in which to look up your Input classes. Default is
+# to look up in the global scope and in Formtastic::Inputs.
+# Formtastic::FormBuilder.input_namespaces = [ MyModule, MyOtherModule ]
+
+# Define custom namespaces in which to look up your Action classes. Default is
+# to look up in the global scope and in Formtastic::Actions.
+# Formtastic::FormBuilder.action_namespaces = [ MyModule, MyOtherModule ]

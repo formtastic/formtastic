@@ -13,6 +13,9 @@ module Formtastic
   autoload :LocalizedString
   autoload :Localizer
   autoload :Util
+  autoload :NamespacedClassFinder
+  autoload :InputClassFinder
+  autoload :ActionClassFinder
   
   if defined?(::Rails) && Util.deprecated_version_of_rails?
     ::ActiveSupport::Deprecation.warn(

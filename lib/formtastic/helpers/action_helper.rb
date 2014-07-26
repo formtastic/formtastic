@@ -2,7 +2,7 @@
 module Formtastic
   module Helpers
     module ActionHelper
-      
+
       # Renders an action for the form (such as a subit/reset button, or a cancel link).
       #
       # Each action is wrapped in an `<li class="action">` tag with other classes added based on the
@@ -23,9 +23,9 @@ module Formtastic
       #         reset: "Reset form"
       #         submit: "Submit"
       #
-      # For forms with an object present, the `update` key will be used if calling `persisted?` on 
-      # the object returns true (saving changes to a record), otherwise the `create` ey will be 
-      # used. The `submit` key is used as a fallback when there is no object or we cannot determine 
+      # For forms with an object present, the `update` key will be used if calling `persisted?` on
+      # the object returns true (saving changes to a record), otherwise the `create` key will be
+      # used. The `submit` key is used as a fallback when there is no object or we cannot determine
       # if `create` or `update` is appropriate.
       #
       # @example Basic usage
@@ -90,36 +90,27 @@ module Formtastic
       def default_action_type(method, options = {}) #:nodoc:
         case method
           when :submit then :input
-          when :reset then :input
+          when :reset  then :input
           when :cancel then :link
+          else method
         end
       end
 
+      # Takes the `:as` option and attempts to return the corresponding action
+      # class. In the case of `:as => :awesome` it will first attempt to find a
+      # top level `AwesomeAction` class (to allow the application to subclass
+      # and modify to suit), falling back to `Formtastic::Actions::AwesomeAction`.
+      #
+      # Custom action namespaces to look into can be configured via the
+      # .action_namespaces +FormBuilder+ configuration setting.
+      # See +Formtastic::Helpers::InputHelper#action_class+ for details.
+      #
       def action_class(as)
-        @input_classes_cache ||= {}
-        @input_classes_cache[as] ||= begin
-          begin
-            begin
-              custom_action_class_name(as).constantize
-            rescue NameError
-              standard_action_class_name(as).constantize
-            end
-          rescue NameError
-            raise Formtastic::UnknownActionError
-          end
-        end
+        @action_class_finder ||= Formtastic::ActionClassFinder.new(self)
+        @action_class_finder.find(as)
+      rescue Formtastic::ActionClassFinder::NotFoundError
+        raise Formtastic::UnknownActionError, "Unable to find action #{$!.message}"
       end
-
-      # :as => :button # => ButtonAction
-      def custom_action_class_name(as)
-        "#{as.to_s.camelize}Action"
-      end
-
-      # :as => :button # => Formtastic::Actions::ButtonAction
-      def standard_action_class_name(as)
-        "Formtastic::Actions::#{as.to_s.camelize}Action"
-      end
-
     end
   end
 end
