@@ -1,3 +1,15 @@
+2.3.0.rc4
+
+* Removed deprecated date, time and datetime inputs
+* Fixed comparison checking of boolean checked values
+* Fixed errors raised when handling some validations
+* Fixed that we weren't rendering a label on checkbox inputs when hidden_fields was set to true
+* Fixed eager loading in test environments
+* Fixed documentation to point to the new official country_select gem
+* Fixed that we would previously render a default wrapper id if wrapper_html[:id] was deliberately set to nil
+* Fixed bg with duplicate hidden fields in Rails >= 3.2.13
+* Note: Re-built 2.3-stable branch from 2.3.0.rc3 onwards due to accidental merges of master inside PRs
+
 2.3.0.rc3
 
 * Fixed invalid HTML attributes in BooleanInput with a whitelist
