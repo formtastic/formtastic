@@ -110,23 +110,11 @@ describe 'string input' do
       end
 
       describe 'any conditional validation' do
-        describe 'proc that calls an instance method' do
-          it 'calls the method on the object' do
-            @new_post.should_receive(:something?)
-            @new_post.class.should_receive(:validators_on).with(:title).at_least(1).and_return([
-              active_model_presence_validator([:title], { :unless => lambda { something? } })
-            ])
-            concat(semantic_form_for(@new_post) do |builder|
-              concat(builder.input(:title))
-            end)
-          end
-        end
-
         describe 'proc with arity that calls an instance method' do
           it 'calls the method on the object' do
             @new_post.should_receive(:something?)
             @new_post.class.should_receive(:validators_on).with(:title).at_least(1).and_return([
-              active_model_presence_validator([:title], { :unless => lambda { |user| user.something? } })
+              active_model_presence_validator([:title], { :unless => Proc.new { |user| user.something? } })
             ])
             concat(semantic_form_for(@new_post) do |builder|
               concat(builder.input(:title))
