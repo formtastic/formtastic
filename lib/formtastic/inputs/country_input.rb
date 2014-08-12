@@ -31,11 +31,26 @@ module Formtastic
     #       # ...
     #   </li>
     #
-    # @example `:priority_countries` set on a specific input
+    # @example `:priority_countries` set on a specific input (country_select 1.x)
     #
     #   <%= semantic_form_for @user do |f| %>
     #     <%= f.inputs do %>
     #       <%= f.input :nationality, :as => :country, :priority_countries => ["Australia", "New Zealand"] %>
+    #     <% end %>
+    #   <% end %>
+    #
+    #   <li class='country'>
+    #     <label for="user_nationality">Country</label>
+    #     <select id="user_nationality" name="user[nationality]">
+    #       <option value="...">...</option>
+    #       # ...
+    #   </li>
+    #
+    # @example `:priority_countries` set on a specific input (country_select 2.x)
+    #
+    #   <%= semantic_form_for @user do |f| %>
+    #     <%= f.inputs do %>
+    #       <%= f.input :nationality, :as => :country, :priority_countries => ["AU", "NZ"] %>
     #     <% end %>
     #   <% end %>
     #
