@@ -4,13 +4,15 @@ module Formtastic
     # Rails doesn't come with a `country_select` helper by default any more, so you'll need to do
     # one of the following:
     #
-    # * install the [country-select](https://github.com/jamesds/country-select) gem
-    # * install the no longer maintained [official Rails plugin](http://github.com/rails/iso-3166-country-select)
+    # * install the [country_select](https://github.com/stefanpenner/country_select) gem
     # * install any other country_select plugin that behaves in a similar way
     # * roll your own `country_select` helper with the same args and options as the Rails one
     #
+    # Formtastic supports both 1.x and 2.x of stefanpenner/country_select, but if you're upgrading
+    # from 1.x, they behave quite differently, so please see their [upgrade instructions](https://github.com/stefanpenner/country_select/blob/master/UPGRADING.md).
+    #
     # By default, Formtastic includes a handful of English-speaking countries as "priority
-    # counties", which can be set in the `priority_countries` configuration array in the
+    # countries", which can be set in the `priority_countries` configuration array in the
     # formtastic.rb initializer to suit your market and user base (see README for more info on
     # configuration). Additionally, it is possible to set the :priority_countries on a per-input
     # basis through the `:priority_countries` option. These priority countries will be passed down
@@ -31,11 +33,26 @@ module Formtastic
     #       # ...
     #   </li>
     #
-    # @example `:priority_countries` set on a specific input
+    # @example `:priority_countries` set on a specific input (country_select 1.x)
     #
     #   <%= semantic_form_for @user do |f| %>
     #     <%= f.inputs do %>
     #       <%= f.input :nationality, :as => :country, :priority_countries => ["Australia", "New Zealand"] %>
+    #     <% end %>
+    #   <% end %>
+    #
+    #   <li class='country'>
+    #     <label for="user_nationality">Country</label>
+    #     <select id="user_nationality" name="user[nationality]">
+    #       <option value="...">...</option>
+    #       # ...
+    #   </li>
+    #
+    # @example `:priority_countries` set on a specific input (country_select 2.x)
+    #
+    #   <%= semantic_form_for @user do |f| %>
+    #     <%= f.inputs do %>
+    #       <%= f.input :nationality, :as => :country, :priority_countries => ["AU", "NZ"] %>
     #     <% end %>
     #   <% end %>
     #
