@@ -4,8 +4,7 @@ module Formtastic
     # Rails doesn't come with a `country_select` helper by default any more, so you'll need to do
     # one of the following:
     #
-    # * install the [country-select](https://github.com/jamesds/country-select) gem
-    # * install the no longer maintained [official Rails plugin](http://github.com/rails/iso-3166-country-select)
+    # * install the [country_select](https://github.com/stefanpenner/country_select) gem
     # * install any other country_select plugin that behaves in a similar way
     # * roll your own `country_select` helper with the same args and options as the Rails one
     #
