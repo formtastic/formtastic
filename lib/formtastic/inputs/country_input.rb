@@ -12,7 +12,7 @@ module Formtastic
     # from 1.x, they behave quite differently, so please see their [upgrade instructions](https://github.com/stefanpenner/country_select/blob/master/UPGRADING.md).
     #
     # By default, Formtastic includes a handful of English-speaking countries as "priority
-    # counties", which can be set in the `priority_countries` configuration array in the
+    # countries", which can be set in the `priority_countries` configuration array in the
     # formtastic.rb initializer to suit your market and user base (see README for more info on
     # configuration). Additionally, it is possible to set the :priority_countries on a per-input
     # basis through the `:priority_countries` option. These priority countries will be passed down
