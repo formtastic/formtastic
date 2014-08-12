@@ -8,6 +8,9 @@ module Formtastic
     # * install any other country_select plugin that behaves in a similar way
     # * roll your own `country_select` helper with the same args and options as the Rails one
     #
+    # Formtastic supports both 1.x and 2.x of stefanpenner/country_select, but if you're upgrading
+    # from 1.x, they behave quite differently, so please see their [upgrade instructions](https://github.com/stefanpenner/country_select/blob/master/UPGRADING.md).
+    #
     # By default, Formtastic includes a handful of English-speaking countries as "priority
     # counties", which can be set in the `priority_countries` configuration array in the
     # formtastic.rb initializer to suit your market and user base (see README for more info on
