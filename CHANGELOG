@@ -1,2 +1,18 @@
+3.0.0.rc
+
+* Removed support for Ruby version < 1.9.3
+* Removed support for Rails version < 3.2.13
+* Removed deprecated option :input_html => { :value => '...'} (#1025)
+* Removed deprecated option :hint_class (#1025)
+* Removed deprecated option :error_class (#1025)
+* Removed deprecated option :group_by (#1025)
+* Removed deprecated option :group_label (#1025)
+* Removed deprecated option :find_options (#1025)
+* Deprecated support for Rails < 4.0.4
+* Changed i18n lookups to use the `:as` option from the form builder (#1033)
+* Improved documentation for country_select gem compatibility & support (#1061)
+* Improved documentation for browser support of datetime and datetime-local (#1029)
+* Added support for ColorInput (:as => :color) in Rails 4 (#1039)
+
 See 2.3-stable branch for earlier releases
 https://github.com/justinfrench/formtastic/blob/2.3-stable/CHANGELOG
