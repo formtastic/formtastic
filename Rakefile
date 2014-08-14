@@ -7,11 +7,10 @@ require 'rspec/core/rake_task'
 Bundler::GemHelper.install_tasks
 
 desc 'Default: run unit specs.'
-task :default => :all
-
-desc 'Test formtastic with all supported Rails versions.'
-task :all => ["appraisal:install"] do
-  exec('rake appraisal spec')
+if !ENV["APPRAISAL_INITIALIZED"] && !ENV["TRAVIS"]
+  task :default => :appraisal
+else
+  task :default => :spec
 end
 
 desc 'Generate documentation for the formtastic plugin.'
