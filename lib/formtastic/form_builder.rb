@@ -31,8 +31,8 @@ module Formtastic
     configure :use_required_attribute, false
     configure :perform_browser_validations, false
     configure :custom_namespace # Needed?
-    configure :input_namespaces, []
-    configure :action_namespaces, []
+    configure :input_namespaces, [::Object, ::Formtastic::Inputs]
+    configure :action_namespaces, [::Object, ::Formtastic::Actions]
 
     attr_reader :template
 

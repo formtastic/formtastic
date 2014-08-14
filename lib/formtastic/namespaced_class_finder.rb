@@ -18,7 +18,7 @@ module Formtastic
     end
 
     def initialize(namespaces) #:nodoc:
-      @namespaces = [ DEFAULT_NAMESPACE, *namespaces ]
+      @namespaces = namespaces.flatten
       @cache = {}
     end
 
@@ -37,12 +37,6 @@ module Formtastic
       class_name = class_name(as)
 
       finder(class_name) or raise NotFoundError, "class #{class_name}"
-    end
-
-    protected
-
-    def configured_namespaces(builder, config)
-      Array.wrap(config.respond_to?(:call) ? builder.class.instance_eval(&config) : config)
     end
 
     private

@@ -10,38 +10,17 @@ RSpec.shared_examples 'Specialized Class Finder' do
     end
   end
 
-  context 'with namespace configuration set to `proc { self }`' do
-    before do
-      Formtastic::FormBuilder.configure namespaces_setting, proc { self }
-    end
-
-    it 'includes Object, the FormBuilder and the default namespaces' do
-      expect(finder.namespaces).to eq([Object, Formtastic::FormBuilder, default])
-    end
-
-    context 'within an inherited class' do
-      before do
-        stub_const('CustomBuilder', Class.new(Formtastic::FormBuilder))
-      end
-
-      let(:builder) { CustomBuilder.allocate }
-
-      it 'includes Object, the inherited builder class, and the default namespaces' do
-        expect(finder.namespaces).to eq([Object, CustomBuilder, default])
-      end
-    end
-  end
-
-  context 'with namepsace configuration set to a custom list of modules' do
+  context 'with namespace configuration set to a custom list of modules' do
     before do
       stub_const('CustomModule', Module.new)
       stub_const('AnotherModule', Module.new)
 
-      Formtastic::FormBuilder.configure namespaces_setting, [ CustomModule, AnotherModule ]
+      allow(Formtastic::FormBuilder).to receive(namespaces_setting)
+                                          .and_return([ CustomModule, AnotherModule ])
     end
 
-    it 'includes Object, the custom namespace, and the default' do
-      expect(finder.namespaces).to eq([Object, CustomModule, AnotherModule, default])
+    it 'includes just the custom namespaces' do
+      expect(finder.namespaces).to eq([CustomModule, AnotherModule])
     end
   end
 

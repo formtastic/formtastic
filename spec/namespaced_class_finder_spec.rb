@@ -37,7 +37,7 @@ describe Formtastic::NamespacedClassFinder do
         stub_const('SearchPath::CustomClass', Class.new)
       end
 
-      it { expect(found_class).to be(CustomClass) }
+      it { expect(found_class).to be(SearchPath::CustomClass) }
     end
 
     context 'Input defined outside the search path' do
