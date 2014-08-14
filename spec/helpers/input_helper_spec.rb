@@ -470,6 +470,12 @@ describe 'Formtastic::FormBuilder#input' do
           default_input_type(:string, :search).should == :search
         end
 
+        it 'should default to :color for :string columns matching color' do
+          default_input_type(:string, :color).should == :color
+          default_input_type(:string, :user_color).should == :color
+          default_input_type(:string, :color_for_image).should == :color
+        end
+
         describe 'defaulting to file column' do
           Formtastic::FormBuilder.file_methods.each do |method|
             it "should default to :file for attributes that respond to ##{method}" do
@@ -665,16 +671,6 @@ describe 'Formtastic::FormBuilder#input' do
           output_buffer.should have_tag("form li p.inline-hints", hint_text)
         end
 
-				it 'should have a custom hint class if I ask for one' do
-          with_deprecation_silenced do
-            hint_text = "this is the title of the post"
-            concat(semantic_form_for(@new_post) do |builder|
-              concat(builder.input(:title, :hint => hint_text, :hint_class => 'custom-hint-class'))
-            end)
-            output_buffer.should have_tag("form li p.custom-hint-class", hint_text)
-          end
-        end
-
         it 'should have a custom hint class defaulted for all forms' do
           hint_text = "this is the title of the post"
           Formtastic::FormBuilder.default_hint_class = "custom-hint-class"
@@ -717,25 +713,6 @@ describe 'Formtastic::FormBuilder#input' do
                   concat(builder.input(:title, :hint => true))
                 end)
                 output_buffer.should have_tag('form li p.inline-hints', @localized_hint_text)
-              end
-            end
-
-						it 'should render a hint paragraph containing a localized hint (I18n) with a custom hint class if i ask for one' do
-              with_config :i18n_lookups_by_default, false do
-                ::I18n.backend.store_translations :en,
-                :formtastic => {
-                    :hints => {
-                      :post => {
-                        :title => @localized_hint_text
-                       }
-                     }
-                  }
-                with_deprecation_silenced do
-                  concat(semantic_form_for(@new_post) do |builder|
-                    concat(builder.input(:title, :hint => true, :hint_class => 'custom-hint-class'))
-                  end)
-                end
-                output_buffer.should have_tag('form li p.custom-hint-class', @localized_hint_text)
               end
             end
 
@@ -820,6 +797,15 @@ describe 'Formtastic::FormBuilder#input' do
           output_buffer.should have_tag("form li.string")
           output_buffer.should have_tag("form li.my_class")
           output_buffer.should have_tag("form li.another_class")
+        end
+
+        describe 'when nil' do
+          it 'should not put an id attribute on the div tag' do
+            concat(semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:title, :wrapper_html => {:id => nil}))
+            end)
+            output_buffer.should have_tag('form li:not([id])')
+          end
         end
       end
 

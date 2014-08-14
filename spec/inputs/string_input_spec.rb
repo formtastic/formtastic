@@ -108,6 +108,58 @@ describe 'string input' do
           should_have_maxlength(42, :options => { :maximum => 42, :unless => :specify_maxlength })
         end
       end
+
+      describe 'any conditional validation' do
+        describe 'proc that calls an instance method' do
+          it 'calls the method on the object' do
+            @new_post.should_receive(:something?)
+            @new_post.class.should_receive(:validators_on).with(:title).at_least(1).and_return([
+              active_model_presence_validator([:title], { :unless => -> { something? } })
+            ])
+            concat(semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:title))
+            end)
+          end
+        end
+
+        describe 'proc with arity that calls an instance method' do
+          it 'calls the method on the object' do
+            @new_post.should_receive(:something?)
+            @new_post.class.should_receive(:validators_on).with(:title).at_least(1).and_return([
+              active_model_presence_validator([:title], { :unless => ->(user) { user.something? } })
+            ])
+            concat(semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:title))
+            end)
+          end
+        end
+
+        describe 'symbol method name' do
+          it 'calls the method on the object if the method exists' do
+            @new_post.should_receive(:something?)
+            @new_post.class.should_receive(:validators_on).with(:title).at_least(1).and_return([
+              active_model_presence_validator([:title], { :unless => :something? })
+            ])
+            concat(semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:title))
+            end)
+          end
+        end
+
+        describe 'any other conditional' do
+          it 'does not raise an error' do
+            @conditional = double()
+            @new_post.class.should_receive(:validators_on).with(:title).at_least(1).and_return([
+              active_model_presence_validator([:title], { :unless => @conditional })
+            ])
+            concat(semantic_form_for(@new_post) do |builder|
+              concat(builder.input(:title))
+            end)
+          end
+        end
+
+      end
+
     end
   end
 

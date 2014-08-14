@@ -28,15 +28,15 @@ Gem::Specification.new do |s|
   s.add_dependency(%q<actionpack>, [">= 3.2.13"])
 
   s.add_development_dependency(%q<nokogiri>, ["< 1.6.0"]) # 1.6 requires Ruby 1.9.2, drop in v3.0
-  s.add_development_dependency(%q<rspec-rails>, ["~> 2.14.0"])
-  s.add_development_dependency(%q<rspec_tag_matchers>, [">= 1.0.0"])
+  s.add_development_dependency(%q<rspec-rails>, ["~> 2.14"])
+  s.add_development_dependency(%q<rspec_tag_matchers>, ["~> 1.0"])
   s.add_development_dependency(%q<hpricot>, ["~> 0.8.3"])
-  s.add_development_dependency(%q<BlueCloth>) # for YARD
+  s.add_development_dependency(%q<BlueCloth>, ["~> 1.0"]) # for YARD
   s.add_development_dependency(%q<yard>, ["~> 0.6"])
-  s.add_development_dependency(%q<colored>)
+  s.add_development_dependency(%q<colored>, ["~> 1.2"])
   s.add_development_dependency(%q<tzinfo>)
   s.add_development_dependency(%q<ammeter>, ["0.2.5"])
-  s.add_development_dependency(%q<appraisal>, ["1.0.0.beta3"])
+  s.add_development_dependency(%q<appraisal>, ["~> 1.0"])
   s.add_development_dependency(%q<rake>, ["<= 10.1.1"]) # Anything higher requires Ruby 1.9, drop in v3.0
-  s.add_development_dependency(%q<activemodel>)
+  s.add_development_dependency(%q<activemodel>, [">= 3.2.13"])
 end
