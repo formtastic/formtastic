@@ -28,9 +28,9 @@ module Formtastic
         
         def dom_id
           [
-            builder.custom_namespace, 
-            sanitized_object_name, 
-            dom_index, 
+            builder.dom_id_namespace,
+            sanitized_object_name,
+            dom_index,
             association_primary_key || sanitized_method_name
           ].reject { |x| x.blank? }.join('_')
         end

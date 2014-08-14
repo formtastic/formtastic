@@ -73,7 +73,7 @@ module Formtastic
 
         def choice_input_dom_id(choice)
           [
-            builder.custom_namespace,
+            builder.dom_id_namespace,
             sanitized_object_name,
             builder.options[:index],
             association_primary_key || method,

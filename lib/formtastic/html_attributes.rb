@@ -2,6 +2,18 @@ module Formtastic
   # @private
   module HtmlAttributes
 
+    # Returns a namespace passed by option or inherited from parent builders / class configuration
+    def dom_id_namespace
+      case
+        when namespace = options[:custom_namespace]
+          namespace
+        when parent = options[:parent_builder]
+          parent.dom_id_namespace
+        else
+          custom_namespace
+      end
+    end
+
     protected
 
     def humanized_attribute_name(method)
