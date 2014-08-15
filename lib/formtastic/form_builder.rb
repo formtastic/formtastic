@@ -31,7 +31,6 @@ module Formtastic
     configure :default_hint_class, 'inline-hints'
     configure :use_required_attribute, false
     configure :perform_browser_validations, false
-    configure :custom_namespace
 
     attr_reader :template
 
