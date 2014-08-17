@@ -2,7 +2,7 @@
 
 * Removed support for Ruby version < 1.9.3
 * Removed support for Rails version < 3.2.13
-* Removed deprecated option :input_html => { :value => '...'} (#1025)
+* Removed deprecated option :value (#1025)
 * Removed deprecated option :hint_class (#1025)
 * Removed deprecated option :error_class (#1025)
 * Removed deprecated option :group_by (#1025)
