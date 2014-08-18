@@ -310,11 +310,7 @@ module Formtastic
       # Custom input namespaces to look into can be configured via the
       # .input_namespaces +FormBuilder+ configuration setting.
       #
-      # The namespaces setting can be set either either as an Array of Modules,
-      # or as a Proc. The proc will be called in the form builder class' context.
-      #
-      # If you configure the FormBuilder with `proc { self }` you can nest
-      # your inputs in Formtastic's FormBuilder or in your custom builder class.
+      # The namespaces setting can be set as an Array of Modules.
       #
       # @param [Symbol] as A symbol representing the type of input to render
       # @raise [Formtastic::UnknownInputError] An appropriate input class could not be found

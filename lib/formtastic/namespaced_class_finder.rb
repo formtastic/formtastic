@@ -9,8 +9,6 @@ module Formtastic
   # for details.
   #
   class NamespacedClassFinder
-    DEFAULT_NAMESPACE = ::Object
-
     attr_reader :namespaces #:nodoc:
 
     # @private
