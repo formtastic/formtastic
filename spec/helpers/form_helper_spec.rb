@@ -189,7 +189,17 @@ describe 'FormHelper' do
     describe 'with :namespace option' do
       it "should set the custom_namespace" do
         semantic_form_for(@new_post, :namespace => 'context2') do |builder|
-          builder.custom_namespace == 'context2'
+          expect(builder.dom_id_namespace).to eq('context2')
+        end
+      end
+    end
+
+    describe 'without :namespace option' do
+      it 'defaults to class settings' do
+        expect(Formtastic::FormBuilder).to receive(:custom_namespace).and_return('context2')
+
+        semantic_form_for(@new_post) do |builder|
+          expect(builder.dom_id_namespace).to eq('context2')
         end
       end
     end

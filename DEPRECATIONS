@@ -1,0 +1,43 @@
+This document is for tracking deprecations and removals of 
+Formtastic features and compatibilities.
+
+v4.0
+
+* Remove support for Rails < 4.0.4
+* Remove support for country_select 1.x syntax (they want to remove it in 3.0)
+
+v3.0
+
+* Remove support for Ruby version < 1.9.3
+* Remove support for Rails version < 3.2.13
+* Remove deprecated option :value (#1025)
+* Remove deprecated option :hint_class (#1025)
+* Remove deprecated option :error_class (#1025)
+* Remove deprecated option :group_by (#1025)
+* Remove deprecated option :group_label (#1025)
+* Remove deprecated option :find_options (#1025)
+* Deprecate support for Rails < 4.0.4
+
+v2.3
+
+* Remove deprecated date, time and datetime inputs
+* Deprecate :error_class option
+* Deprecate support for Rails < 3.2.13
+
+v2.2
+
+* Remove deprecated buttons DSL, ButtonHelper and commit_button helper
+* Deprecate :value option
+* Deprecate :hint_class option
+* Deprecate :error_class option
+* Deprecate :group_by and :group_label options
+* Deprecate :find_options option
+
+v2.1
+
+* Remove the previously deprecated :label_method, :value_method & :group_label_method options
+* Remove the previously deprecated :as => :numeric
+* Remove the previously deprecated inline_errors_for and related methods
+* Remove the previously deprecated SemanticFormHelper and SemanticFormBuilder
+* Deprecate the Buttons DSL (f.buttons, f.commit_button) in favor of the new Actions DSL — see above
+
