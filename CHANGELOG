@@ -1,3 +1,7 @@
+3.1 (master)
+
+* Deprecated support for Rails version < 4.1.0
+
 3.0.0.rc
 
 * Removed support for Ruby version < 1.9.3
