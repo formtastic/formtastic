@@ -325,6 +325,7 @@ module FormtasticSpecHelper
     @new_post.stub(:to_key).and_return(nil)
     @new_post.stub(:to_model).and_return(@new_post)
     @new_post.stub(:persisted?).and_return(nil)
+    @new_post.stub(:model_name){ @new_post.class.model_name}
 
     @freds_post = double('post')
     @freds_post.stub(:to_ary)
@@ -340,6 +341,8 @@ module FormtasticSpecHelper
     @freds_post.stub(:errors).and_return(double('errors', :[] => nil))
     @freds_post.stub(:to_key).and_return(nil)
     @freds_post.stub(:persisted?).and_return(nil)
+    @freds_post.stub(:model_name){ @freds_post.class.model_name}
+    @freds_post.stub(:to_model).and_return(@freds_post)
     @fred.stub(:posts).and_return(author_array_or_scope([@freds_post]))
     @fred.stub(:post_ids).and_return([@freds_post.id])
 
@@ -403,6 +406,7 @@ module FormtasticSpecHelper
     @new_mm_post.stub(:to_key).and_return(nil)
     @new_mm_post.stub(:to_model).and_return(@new_mm_post)
     @new_mm_post.stub(:persisted?).and_return(nil)
+    @new_mm_post.stub(:model_name).and_return(::MongoPost.model_name)
 
     @mock_file = double('file')
     Formtastic::FormBuilder.file_methods.each do |method|
