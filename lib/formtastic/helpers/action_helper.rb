@@ -106,7 +106,7 @@ module Formtastic
       # See +Formtastic::Helpers::InputHelper#action_class+ for details.
       #
       def action_class(as)
-        @action_class_finder ||= Formtastic::ActionClassFinder.new(self)
+        @action_class_finder ||= self.class.action_class_finder.new(self)
         @action_class_finder.find(as)
       rescue Formtastic::ActionClassFinder::NotFoundError
         raise Formtastic::UnknownActionError, "Unable to find action #{$!.message}"

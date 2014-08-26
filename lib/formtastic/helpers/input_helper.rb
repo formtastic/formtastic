@@ -324,7 +324,7 @@ module Formtastic
       #   input_class(:string) #=> StringInput
       #   input_class(:awesome) #=> AwesomeInput
       def input_class(as)
-        @input_class_finder ||= Formtastic::InputClassFinder.new(self)
+        @input_class_finder ||= self.class.input_class_finder.new(self)
         @input_class_finder.find(as)
       rescue Formtastic::InputClassFinder::NotFoundError
         raise Formtastic::UnknownInputError, "Unable to find input #{$!.message}"
