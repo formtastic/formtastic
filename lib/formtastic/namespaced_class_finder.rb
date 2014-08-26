@@ -43,7 +43,7 @@ module Formtastic
       as.to_s.camelize
     end
 
-    if ::Rails.application.config.cache_classes
+    if defined?(Rails) && ::Rails.application && ::Rails.application.config.cache_classes
       def finder(class_name) # :nodoc:
         find_with_const_defined(class_name)
       end
