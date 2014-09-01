@@ -131,6 +131,16 @@ describe 'boolean input' do
     output_buffer.should have_tag('form li label input[@type="checkbox"][@value="yes"][@checked="checked"]')
   end
 
+  it 'should generate a checked input for boolean database values compared to string checked values' do
+    @new_post.stub(:foo).and_return(1)
+
+    concat(semantic_form_for(@new_post) do |builder|
+      concat(builder.input(:foo, :as => :boolean))
+    end)
+
+    output_buffer.should have_tag('form li label input[@type="checkbox"][@value="1"][@checked="checked"]')
+  end
+
   it 'should generate a checked input if object.method returns checked value when inverted' do
     @new_post.stub(:allow_comments).and_return(0)
 
