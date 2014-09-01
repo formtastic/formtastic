@@ -102,7 +102,9 @@ module Formtastic
           value
         when NilClass
           false
-        when Integer, String
+        when Integer
+          value == checked_value.to_i
+        when String
           value == checked_value
         when Array
           value.include?(checked_value)
