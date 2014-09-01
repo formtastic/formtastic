@@ -8,18 +8,21 @@ describe 'boolean input' do
   before do
     @output_buffer = ''
     mock_everything
-
-    concat(semantic_form_for(@new_post) do |builder|
-      concat(builder.input(:allow_comments, :as => :boolean))
-    end)
   end
 
-  it_should_have_input_wrapper_with_class("boolean")
-  it_should_have_input_wrapper_with_class(:input)
-  it_should_have_input_wrapper_with_id("post_allow_comments_input")
-  it_should_apply_error_logic_for_input_type(:boolean)
-
-  it 'should generate a label containing the input' do
+  describe 'generic' do
+    before do
+      concat(semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:allow_comments, :as => :boolean))
+      end)
+    end
+    
+    it_should_have_input_wrapper_with_class("boolean")
+    it_should_have_input_wrapper_with_class(:input)
+    it_should_have_input_wrapper_with_id("post_allow_comments_input")
+    it_should_apply_error_logic_for_input_type(:boolean)
+  
+    it 'should generate a label containing the input' do
     output_buffer.should_not have_tag('label.label')
     output_buffer.should have_tag('form li label', :count => 1)
     output_buffer.should have_tag('form li label[@for="post_allow_comments"]')
@@ -27,24 +30,25 @@ describe 'boolean input' do
     output_buffer.should have_tag('form li label input[@type="checkbox"]', :count => 1)
     output_buffer.should have_tag('form li input[@type="hidden"]', :count => 1)
     output_buffer.should_not have_tag('form li label input[@type="hidden"]', :count => 1) # invalid HTML5
-  end
-
-  it 'should not add a "name" attribute to the label' do
-    output_buffer.should_not have_tag('form li label[@name]')
-  end
-
-  it 'should generate a checkbox input' do
-    output_buffer.should have_tag('form li label input')
-    output_buffer.should have_tag('form li label input#post_allow_comments')
-    output_buffer.should have_tag('form li label input[@type="checkbox"]')
-    output_buffer.should have_tag('form li label input[@name="post[allow_comments]"]')
-    output_buffer.should have_tag('form li label input[@type="checkbox"][@value="1"]')
-  end
-
-  it 'should generate a checked input if object.method returns true' do
-    output_buffer.should have_tag('form li label input[@checked="checked"]')
-    output_buffer.should have_tag('form li input[@name="post[allow_comments]"]', :count => 2)
-    output_buffer.should have_tag('form li input#post_allow_comments', :count => 1)
+    end
+  
+    it 'should not add a "name" attribute to the label' do
+      output_buffer.should_not have_tag('form li label[@name]')
+    end
+  
+    it 'should generate a checkbox input' do
+      output_buffer.should have_tag('form li label input')
+      output_buffer.should have_tag('form li label input#post_allow_comments')
+      output_buffer.should have_tag('form li label input[@type="checkbox"]')
+      output_buffer.should have_tag('form li label input[@name="post[allow_comments]"]')
+      output_buffer.should have_tag('form li label input[@type="checkbox"][@value="1"]')
+    end
+  
+    it 'should generate a checked input if object.method returns true' do
+      output_buffer.should have_tag('form li label input[@checked="checked"]')
+      output_buffer.should have_tag('form li input[@name="post[allow_comments]"]', :count => 2)
+      output_buffer.should have_tag('form li input#post_allow_comments', :count => 1)
+    end
   end
 
   it 'should generate a checked input if :input_html is passed :checked => checked' do
