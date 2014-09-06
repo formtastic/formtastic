@@ -16,7 +16,6 @@ gemfile:
   - gemfiles/rails_4.gemfile
   - gemfiles/rails_4.0.4.gemfile
   - gemfiles/rails_4.1.gemfile
-  - gemfiles/rails_4.2.gemfile
   - gemfiles/rails_edge.gemfile
 env:
   - DEFER_GC=false RAILS_EDGE=true
@@ -41,12 +40,6 @@ matrix:
       gemfile: gemfiles/rails_4.1.gemfile
     - rvm: 1.9.2
       gemfile: gemfiles/rails_4.1.gemfile
-    - rvm: 1.8.7
-      gemfile: gemfiles/rails_4.2.gemfile
-    - rvm: ree
-      gemfile: gemfiles/rails_4.2.gemfile
-    - rvm: 1.9.2
-      gemfile: gemfiles/rails_4.2.gemfile
     - rvm: 1.8.7
       gemfile: gemfiles/rails_edge.gemfile
     - rvm: ree
