@@ -20,10 +20,10 @@ h2. Documentation & Support
 
 h2. Compatibility
 
-# Formtastic 4 (master branch) will require Rails 4.1 minimum
-* Formtastic 3 (3.0-stable branch) will require Rails 3.2.13 minimum
-* Formtastic 2.3 is Rails 3 and Rails 4 compatible (Rails < 3.2.13 is deprecated)
-* Formtastic 2.1 & 2.2 is Rails 3 and Rails 4 compatible
+* Formtastic 3.1 (master branch) will require Rails 4.1 minimum
+* Formtastic 3.0 requires Rails 3.2.13 minimum
+* Formtastic 2.3 deprecated Rails < 3.2.13
+* Formtastic 2.1, 2.2 & 2.3 are Rails 3.x–4.1.x compatible
 * Formtastic, much like Rails, is very ActiveRecord-centric. Many are successfully using other ActiveModel-like ORMs and objects (DataMapper, MongoMapper, Mongoid, Authlogic, Devise...) but we're not guaranteeing full compatibility at this stage. Patches are welcome!
 
 
@@ -94,7 +94,7 @@ h2. Installation
 Simply add Formtastic to your Gemfile and bundle it up:
 
 <pre>
-  gem 'formtastic'
+  gem 'formtastic', '~> 3.0'
 </pre>
 
 Run the installation generator:
