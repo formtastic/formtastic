@@ -151,7 +151,7 @@ module FormtasticSpecHelper
 
   ##
   # We can't mock :respond_to?, so we need a concrete class override
-  class ::MongoidReflectionMock < RSpec::Mocks::Mock
+  class ::MongoidReflectionMock < RSpec::Mocks::Double
     def initialize(name=nil, stubs_and_options={})
       super name, stubs_and_options
     end
@@ -300,9 +300,9 @@ module FormtasticSpecHelper
     ::Author.stub(:find).and_return(author_array_or_scope)
     ::Author.stub(:all).and_return(author_array_or_scope)
     ::Author.stub(:where).and_return(author_array_or_scope)
-    ::Author.stub(:human_attribute_name).and_return { |column_name| column_name.humanize }
+    ::Author.stub(:human_attribute_name) { |column_name| column_name.humanize }
     ::Author.stub(:human_name).and_return('::Author')
-    ::Author.stub(:reflect_on_association).and_return { |column_name| double('reflection', :options => {}, :klass => Post, :macro => :has_many) if column_name == :posts }
+    ::Author.stub(:reflect_on_association) { |column_name| double('reflection', :options => {}, :klass => Post, :macro => :has_many) if column_name == :posts }
     ::Author.stub(:content_columns).and_return([double('column', :name => 'login'), double('column', :name => 'created_at')])
     ::Author.stub(:to_key).and_return(nil)
     ::Author.stub(:persisted?).and_return(nil)
@@ -347,12 +347,12 @@ module FormtasticSpecHelper
     @fred.stub(:post_ids).and_return([@freds_post.id])
 
     ::Post.stub(:scoped).and_return(::Post)
-    ::Post.stub(:human_attribute_name).and_return { |column_name| column_name.humanize }
+    ::Post.stub(:human_attribute_name) { |column_name| column_name.humanize }
     ::Post.stub(:human_name).and_return('Post')
     ::Post.stub(:reflect_on_all_validations).and_return([])
     ::Post.stub(:reflect_on_validations_for).and_return([])
     ::Post.stub(:reflections).and_return({})
-    ::Post.stub(:reflect_on_association).and_return do |column_name|
+    ::Post.stub(:reflect_on_association) { |column_name|
       case column_name
       when :author, :author_status
         mock = double('reflection', :options => {}, :klass => ::Author, :macro => :belongs_to)
@@ -373,7 +373,7 @@ module FormtasticSpecHelper
              :options => Proc.new { raise NoMethodError, "Mongoid has no reflection.options" },
              :klass => ::Author, :macro => :referenced_in, :foreign_key => "reviewer_id") # custom id
       end
-    end
+    }
     ::Post.stub(:find).and_return(author_array_or_scope([@freds_post]))
     ::Post.stub(:all).and_return(author_array_or_scope([@freds_post]))
     ::Post.stub(:where).and_return(author_array_or_scope([@freds_post]))
@@ -382,7 +382,7 @@ module FormtasticSpecHelper
     ::Post.stub(:persisted?).and_return(nil)
     ::Post.stub(:to_ary)
 
-    ::MongoPost.stub(:human_attribute_name).and_return { |column_name| column_name.humanize }
+    ::MongoPost.stub(:human_attribute_name) { |column_name| column_name.humanize }
     ::MongoPost.stub(:human_name).and_return('MongoPost')
     ::MongoPost.stub(:associations).and_return({
       :sub_posts => double('reflection', :options => {:polymorphic => true}, :klass => ::MongoPost, :macro => :has_many),
@@ -525,6 +525,8 @@ end
 ::ActiveSupport::Deprecation.silenced = false
 
 RSpec.configure do |config|
+  config.infer_spec_type_from_file_location!
+
   config.before(:each) do
     Formtastic::Localizer.cache.clear!    
   end

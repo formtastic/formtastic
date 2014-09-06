@@ -459,7 +459,7 @@ module CustomMacros
 
             describe "when the collection objects respond to #{label_method}" do
               before do
-                @fred.stub(:respond_to?).and_return { |m| m.to_s == label_method || m.to_s == 'id' }
+                @fred.stub(:respond_to?) { |m| m.to_s == label_method || m.to_s == 'id' }
                 [@fred, @bob].each { |a| a.stub(label_method).and_return('The Label Text') }
 
                 concat(semantic_form_for(@new_post) do |builder|

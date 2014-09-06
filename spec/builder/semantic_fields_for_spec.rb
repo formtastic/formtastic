@@ -29,16 +29,16 @@ describe 'Formtastic::FormBuilder#fields_for' do
     
     it 'should respond to input' do
       semantic_fields_for(@new_post) do |nested_builder|
-        nested_builder.respond_to?(:input).should be_true
+        nested_builder.respond_to?(:input).should be_truthy
       end
       semantic_fields_for(@new_post.author) do |nested_builder|
-        nested_builder.respond_to?(:input).should be_true
+        nested_builder.respond_to?(:input).should be_truthy
       end
       semantic_fields_for(:author, @new_post.author) do |nested_builder|
-        nested_builder.respond_to?(:input).should be_true
+        nested_builder.respond_to?(:input).should be_truthy
       end
       semantic_fields_for(:author, @hash_backed_author) do |nested_builder|
-        nested_builder.respond_to?(:input).should be_true
+        nested_builder.respond_to?(:input).should be_truthy
       end
     end
   end

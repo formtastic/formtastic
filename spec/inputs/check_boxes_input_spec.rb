@@ -113,7 +113,7 @@ describe 'check_boxes input' do
       end
 
       it "should mark input as checked if it's the the existing choice" do
-        ::Post.all.include?(@fred.posts.first).should be_true
+        ::Post.all.include?(@fred.posts.first).should be_truthy
         output_buffer.should have_tag("form li fieldset ol li label input[@checked='checked']")
       end
     end
@@ -179,7 +179,7 @@ describe 'check_boxes input' do
       end
 
       it "should mark input as checked if it's the the existing choice" do
-        ::Post.all.include?(@fred.posts.first).should be_true
+        ::Post.all.include?(@fred.posts.first).should be_truthy
         output_buffer.should have_tag("form li fieldset ol li label input[@checked='checked']")
       end
 
