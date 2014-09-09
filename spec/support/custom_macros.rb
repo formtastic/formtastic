@@ -31,13 +31,13 @@ module CustomMacros
         output_buffer.should have_tag("form li fieldset")
       end
     end
-    
+
     def it_should_have_a_nested_fieldset_with_class(klass)
       it "should have a nested_fieldset with class #{klass}" do
         output_buffer.should have_tag("form li fieldset.#{klass}")
       end
     end
-    
+
     def it_should_have_a_nested_ordered_list_with_class(klass)
       it "should have a nested fieldset with class #{klass}" do
         output_buffer.should have_tag("form li ol.#{klass}")
@@ -55,7 +55,7 @@ module CustomMacros
         output_buffer.should have_tag("form li label.label[@for='#{element_id}']")
       end
     end
-    
+
     def it_should_have_an_inline_label_for(element_id)
       it "should have a label for ##{element_id}" do
         output_buffer.should have_tag("form li label[@for='#{element_id}']")
@@ -71,6 +71,24 @@ module CustomMacros
     def it_should_have_select_with_id(element_id)
       it "should have a select box with id '#{element_id}'" do
         output_buffer.should have_tag("form li select##{element_id}")
+      end
+    end
+
+    # TODO use for many of the other macros
+    def it_should_have_tag_with(type, attribute_value_hash)
+      attribute_value_hash.each do |attribute, value|
+        it "should have a #{type} box with #{attribute} '#{value}'" do
+          output_buffer.should have_tag("form li #{type}[@#{attribute}=\"#{value}\"]")
+        end
+      end
+    end
+    def it_should_have_input_with(attribute_value_hash)
+      it_should_have_tag_with(:input, attribute_value_hash)
+    end
+
+    def it_should_have_many_tags(type, count)
+      it "should have #{count} #{type} tags" do
+        output_buffer.should have_tag("form li #{type}", count: count)
       end
     end
 

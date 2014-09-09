@@ -316,6 +316,7 @@ Many inputs provide a collection of options to choose from (like @:select@, @:ra
   f.input :author,  :as => :radio,       :collection => ["Justin", "Kate", "Amelia", "Gus", "Meg"]
   f.input :admin,   :as => :radio,       :collection => ["Yes!", "No"]
   f.input :book_id, :as => :select,      :collection => Hash[Book.all.map{|b| [b.name,b.id]}]
+  f.input :fav_book,:as => :datalist   , :collection => Book.pluck(:name)
 </pre>
 
 
@@ -343,6 +344,7 @@ The Formtastic input types:
 * @:search@ - a text field (just like string). Default for columns with name matching @"search"@. New in HTML5. Works on Safari.
 * @:hidden@ - a hidden field. Creates a hidden field (added for compatibility).
 * @:range@ - a slider field.
+* @:datalist@ - a text field with a accompanying "datalist tag":https://developer.mozilla.org/en/docs/Web/HTML/Element/datalist which provides options for autocompletion
 
 The comments in the code are pretty good for each of these (what it does, what the output is, what the options are, etc.) so go check it out.
 
