@@ -3,6 +3,7 @@
 * Deprecated support for Rails version < 4.1.0
 * Fixed synchronization issues with custom_namespace configuration
 * Fixed bug where boolean (checkbox) inputs were not being correctly checked (also in 2.3.1)
+* Added new DatalistInput (:as => :datalist) for HTML5 datalists
 
 ---
 
