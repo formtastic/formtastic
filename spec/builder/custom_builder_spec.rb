@@ -39,8 +39,8 @@ describe 'Formtastic::Helpers::FormHelper.builder' do
     with_config(:all_fields_required_by_default, true) do
       MyCustomFormBuilder.all_fields_required_by_default = false
 
-      MyCustomFormBuilder.all_fields_required_by_default.should be_false
-      Formtastic::FormBuilder.all_fields_required_by_default.should be_true
+      MyCustomFormBuilder.all_fields_required_by_default.should be_falsey
+      Formtastic::FormBuilder.all_fields_required_by_default.should be_truthy
     end
   end
 
