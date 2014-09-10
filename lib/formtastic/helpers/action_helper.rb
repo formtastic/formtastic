@@ -103,14 +103,42 @@ module Formtastic
       #
       # Custom action namespaces to look into can be configured via the
       # .action_namespaces +FormBuilder+ configuration setting.
-      # See +Formtastic::Helpers::InputHelper#action_class+ for details.
+      # See +Formtastic::Helpers::InputHelper#namespaced_input_class+ for details.
       #
-      def action_class(as)
-        @action_class_finder ||= self.class.action_class_finder.new(self)
+      def namespaced_action_class(as)
+        @action_class_finder ||= action_class_finder.new(self)
         @action_class_finder.find(as)
-      rescue Formtastic::ActionClassFinder::NotFoundError
-        raise Formtastic::UnknownActionError, "Unable to find action #{$!.message}"
+      rescue Formtastic::ActionClassFinder::NotFoundError => e
+        raise Formtastic::UnknownActionError, "Unable to find action #{e.message}"
       end
+
+      def action_class(as)
+        return namespaced_action_class(as) if action_class_finder
+
+        @input_classes_cache ||= {}
+        @input_classes_cache[as] ||= begin
+          begin
+            begin
+              custom_action_class_name(as).constantize
+            rescue NameError
+              standard_action_class_name(as).constantize
+            end
+          rescue NameError
+            raise Formtastic::UnknownActionError
+          end
+        end
+      end
+
+      # :as => :button # => ButtonAction
+      def custom_action_class_name(as)
+        "#{as.to_s.camelize}Action"
+      end
+
+      # :as => :button # => Formtastic::Actions::ButtonAction
+      def standard_action_class_name(as)
+        "Formtastic::Actions::#{as.to_s.camelize}Action"
+      end
+
     end
   end
 end

@@ -16,7 +16,7 @@ module Formtastic
   autoload :NamespacedClassFinder
   autoload :InputClassFinder
   autoload :ActionClassFinder
-  
+
   if defined?(::Rails) && Util.deprecated_version_of_rails?
     ::ActiveSupport::Deprecation.warn(
       "Support for Rails < 4.0.4 will be dropped from Formtastic 4.0",
@@ -26,15 +26,15 @@ module Formtastic
   # @private
   class UnknownInputError < NameError
   end
-  
+
   # @private
   class UnknownActionError < NameError
   end
-  
+
   # @private
   class PolymorphicInputWithoutCollectionError < ArgumentError
   end
-  
+
   # @private
   class UnsupportedMethodForAction < ArgumentError
   end
