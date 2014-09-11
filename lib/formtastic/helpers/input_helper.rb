@@ -337,7 +337,7 @@ module Formtastic
       def input_class(as)
         return namespaced_input_class(as) if input_class_finder
 
-        input_class_deprecation_warning(:input_class)
+        input_class_deprecation_warning(__method__)
 
         @input_classes_cache ||= {}
         @input_classes_cache[as] ||= begin
@@ -379,7 +379,7 @@ module Formtastic
       # @deprecated Use {InputClassFinder#class_name} instead.
       # :as => :string # => StringInput
       def custom_input_class_name(as)
-        input_class_deprecation_warning(:custom_input_class_name)
+        input_class_deprecation_warning(__method__)
         "#{as.to_s.camelize}Input"
       end
 
@@ -387,7 +387,7 @@ module Formtastic
       # @deprecated Use {InputClassFinder#class_name} instead.
       # :as => :string # => Formtastic::Inputs::StringInput
       def standard_input_class_name(as)
-        input_class_deprecation_warning(:standard_input_class_name)
+        input_class_deprecation_warning(__method__)
         "Formtastic::Inputs::#{as.to_s.camelize}Input"
       end
 

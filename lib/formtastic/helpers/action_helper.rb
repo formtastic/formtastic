@@ -119,7 +119,7 @@ module Formtastic
       def action_class(as)
         return namespaced_action_class(as) if action_class_finder
 
-        action_class_deprecation_warning(:action_class)
+        action_class_deprecation_warning(__method__)
 
         @input_classes_cache ||= {}
         @input_classes_cache[as] ||= begin
@@ -139,7 +139,7 @@ module Formtastic
       # @deprecated Use {Formtastic::ActionClassFinder#class_name} instead.
       # :as => :button # => ButtonAction
       def custom_action_class_name(as)
-        action_class_deprecation_warning(:custom_action_class_name)
+        action_class_deprecation_warning(__method__)
         "#{as.to_s.camelize}Action"
       end
 
@@ -147,7 +147,7 @@ module Formtastic
       # @deprecated Use {Formtastic::ActionClassFinder#class_name} instead.
       # :as => :button # => Formtastic::Actions::ButtonAction
       def standard_action_class_name(as)
-        action_class_deprecation_warning(:standard_action_class_name)
+        action_class_deprecation_warning(__method__)
         "Formtastic::Actions::#{as.to_s.camelize}Action"
       end
 
