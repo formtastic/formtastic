@@ -32,9 +32,11 @@ module Formtastic
     configure :use_required_attribute, false
     configure :perform_browser_validations, false
     configure :input_namespaces, [::Object, ::Formtastic::Inputs]
-    configure :input_class_finder, Formtastic::InputClassFinder
+    # TODO: generate this default in new configurations
+    configure :input_class_finder #, Formtastic::InputClassFinder # TODO: enable as default in 4.0
     configure :action_namespaces, [::Object, ::Formtastic::Actions]
-    configure :action_class_finder, Formtastic::ActionClassFinder
+    # TODO: generate this default in new configurations
+    configure :action_class_finder#, Formtastic::ActionClassFinder # TODO: enable as default in 4.0
 
     attr_reader :template
 

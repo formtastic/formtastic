@@ -2,6 +2,8 @@
 module Formtastic
   module Helpers
     module ActionHelper
+      ACTION_CLASS_DEPRECATION = 'configure Formtastic::FormBuilder.action_class_finder instead'.freeze
+      private_constant(:ACTION_CLASS_DEPRECATION)
 
       # Renders an action for the form (such as a subit/reset button, or a cancel link).
       #
@@ -112,8 +114,12 @@ module Formtastic
         raise Formtastic::UnknownActionError, "Unable to find action #{e.message}"
       end
 
+      # @api private
+      # @deprecated Use {#namespaced_action_class} instead.
       def action_class(as)
         return namespaced_action_class(as) if action_class_finder
+
+        action_class_deprecation_warning(:action_class)
 
         @input_classes_cache ||= {}
         @input_classes_cache[as] ||= begin
@@ -124,21 +130,33 @@ module Formtastic
               standard_action_class_name(as).constantize
             end
           rescue NameError
-            raise Formtastic::UnknownActionError
+            raise Formtastic::UnknownActionError, "Unable to find action #{as}"
           end
         end
       end
 
+      # @api private
+      # @deprecated Use {Formtastic::ActionClassFinder#class_name} instead.
       # :as => :button # => ButtonAction
       def custom_action_class_name(as)
+        action_class_deprecation_warning(:custom_action_class_name)
         "#{as.to_s.camelize}Action"
       end
 
+      # @api private
+      # @deprecated Use {Formtastic::ActionClassFinder#class_name} instead.
       # :as => :button # => Formtastic::Actions::ButtonAction
       def standard_action_class_name(as)
+        action_class_deprecation_warning(:standard_action_class_name)
         "Formtastic::Actions::#{as.to_s.camelize}Action"
       end
 
+      private
+
+      def action_class_deprecation_warning(method)
+        @action_class_deprecation_warned ||=
+            Formtastic.deprecation.deprecation_warning(method, ACTION_CLASS_DEPRECATION, caller(2))
+      end
     end
   end
 end

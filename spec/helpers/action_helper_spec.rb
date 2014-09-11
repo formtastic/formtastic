@@ -302,7 +302,8 @@ describe 'Formtastic::FormBuilder#action' do
           semantic_form_for(@new_post) do |builder|
             builder.action(:destroy)
           end
-        }.to raise_error(Formtastic::UnknownActionError, 'Unable to find action class DestroyAction')
+        # TODO: Change the error message to: 'Unable to find action class DestroyAction'
+        }.to raise_error(Formtastic::UnknownActionError, 'Unable to find action destroy')
       end
     end
 

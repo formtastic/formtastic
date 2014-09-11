@@ -36,6 +36,9 @@ module Formtastic
     # @see Formtastic::Helpers::InputsHelper#inputs
     # @see Formtastic::Helpers::FormHelper#semantic_form_for
     module InputHelper
+      INPUT_CLASS_DEPRECATION = 'configure Formtastic::FormBuilder.input_class_finder instead'.freeze
+      private_constant(:INPUT_CLASS_DEPRECATION)
+
       include Formtastic::Helpers::Reflection
       include Formtastic::Helpers::FileColumnDetection
 
@@ -329,8 +332,12 @@ module Formtastic
         raise Formtastic::UnknownInputError, "Unable to find input #{$!.message}"
       end
 
+      # @api private
+      # @deprecated Use {#namespaced_input_class} instead.
       def input_class(as)
         return namespaced_input_class(as) if input_class_finder
+
+        input_class_deprecation_warning(:input_class)
 
         @input_classes_cache ||= {}
         @input_classes_cache[as] ||= begin
@@ -340,6 +347,8 @@ module Formtastic
         end
       end
 
+      # @api private
+      # @deprecated Use {InputClassFinder#find} instead.
       # prevent exceptions in production environment for better performance
       def input_class_with_const_defined(as)
         input_class_name = custom_input_class_name(as)
@@ -353,6 +362,8 @@ module Formtastic
         end
       end
 
+      # @api private
+      # @deprecated Use {InputClassFinder#find} instead.
       # use auto-loading in development environment
       def input_class_by_trying(as)
         begin
@@ -364,14 +375,27 @@ module Formtastic
         raise Formtastic::UnknownInputError, "Unable to find input class for #{as}"
       end
 
+      # @api private
+      # @deprecated Use {InputClassFinder#class_name} instead.
       # :as => :string # => StringInput
       def custom_input_class_name(as)
+        input_class_deprecation_warning(:custom_input_class_name)
         "#{as.to_s.camelize}Input"
       end
 
+      # @api private
+      # @deprecated Use {InputClassFinder#class_name} instead.
       # :as => :string # => Formtastic::Inputs::StringInput
       def standard_input_class_name(as)
+        input_class_deprecation_warning(:standard_input_class_name)
         "Formtastic::Inputs::#{as.to_s.camelize}Input"
+      end
+
+      private
+
+      def input_class_deprecation_warning(method)
+        @input_class_deprecation_warned ||=
+            Formtastic.deprecation.deprecation_warning(method, INPUT_CLASS_DEPRECATION, caller(2))
       end
 
     end
