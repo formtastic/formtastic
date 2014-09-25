@@ -519,6 +519,8 @@ For more flexible forms; Formtastic finds translations using a bottom-up approac
 
 Values for @labels@/@hints@/@actions@ are can take values: @String@ (explicit value), @Symbol@ (i18n-lookup-key relative to the current "type", e.g. actions:), @true@ (force I18n lookup), @false@ (force no I18n lookup). Titles (legends) can only take: @String@ and @Symbol@ - true/false have no meaning.
 
+*7. Basic Translations*
+If you want some basic translations, take a look on the "formtastic_i18n gem":https://github.com/timoschilling/formtastic_i18n.
 
 h2. Semantic errors
 
