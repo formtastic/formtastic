@@ -16,10 +16,11 @@ module Formtastic
   autoload :NamespacedClassFinder
   autoload :InputClassFinder
   autoload :ActionClassFinder
+  autoload :Deprecation
 
   # @private
   mattr_accessor :deprecation
-  self.deprecation = ActiveSupport::Deprecation.new('4.0', 'Formtastic')
+  self.deprecation = Formtastic::Deprecation.new('4.0', 'Formtastic')
 
   if defined?(::Rails) && Util.deprecated_version_of_rails?
     deprecation.warn("Support for Rails < 4.0.4 will be dropped ")
