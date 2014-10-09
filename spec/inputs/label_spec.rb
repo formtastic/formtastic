@@ -84,6 +84,18 @@ describe 'Formtastic::FormBuilder#label' do
     end
   end
 
+  describe 'when member_sql is given' do
+    it 'should use the member_sql value to pluck the value from the database' do
+      member_sql = "CONCAT(`name`, '-', `lastname`), `id`"
+      Author.all.should_receive(:pluck).with(member_sql).and_return([[[@fred.name, @fred.lastname].join("-"), @fred.id], [[@bob.name, @bob.lastname].join("-"), @bob.id]])
+      concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
+        concat(builder.input(:author_id, :as => :select, :collection => Author.all, :member_sql => member_sql))
+      end)
+      output_buffer.should have_tag('form li select option[value="37"]', "Fred-Smith")
+      output_buffer.should have_tag('form li select option[value="42"]', "Bob-Rock")
+    end
+  end
+
   describe 'when label is given' do
     it 'should allow the text to be given as label option' do
       concat(semantic_form_for(@new_post) do |builder|
