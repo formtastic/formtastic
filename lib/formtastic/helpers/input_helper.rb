@@ -233,7 +233,7 @@ module Formtastic
       # @todo Many many more examples. Some of the detail probably needs to be pushed out to the relevant methods too.
       # @todo More i18n examples.
       def input(method, options = {})
-        method = method.to_sym if method.is_a?(String)
+        method = method.to_sym
         options = options.dup # Allow options to be shared without being tainted by Formtastic
         options[:as] ||= default_input_type(method, options)
 
