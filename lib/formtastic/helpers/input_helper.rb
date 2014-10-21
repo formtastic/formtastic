@@ -299,7 +299,12 @@ module Formtastic
 
       # Get a column object for a specified attribute method - if possible.
       def column_for(method) #:nodoc:
-        @object.column_for_attribute(method) if @object.respond_to?(:column_for_attribute)
+        if @object.respond_to?(:column_for_attribute)
+          # Remove deprecation wrapper & review after Rails 5.0 ships
+          ActiveSupport::Deprecation.silence do
+            @object.column_for_attribute(method)
+          end
+        end
       end
 
       # Takes the `:as` option and attempts to return the corresponding input class. In the case of
