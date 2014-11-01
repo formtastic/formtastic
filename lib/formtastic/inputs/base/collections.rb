@@ -48,7 +48,7 @@ module Formtastic
 
         def collection
           # Return if we have a plain string
-          return raw_collection if raw_collection.instance_of?(String) || raw_collection.instance_of?(ActiveSupport::SafeBuffer)
+          return raw_collection if raw_collection.is_a?(String)
 
           # Return if we have an Array of strings, fixnums or arrays
           return raw_collection if (raw_collection.instance_of?(Array) || raw_collection.instance_of?(Range)) &&

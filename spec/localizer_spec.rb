@@ -16,8 +16,8 @@ describe 'Formtastic::Localizer' do
     end
     
     it "should check if key exists?" do
-      @cache.has_key?(@key).should be_true
-      @cache.has_key?(@undefined_key).should be_false
+      @cache.has_key?(@key).should be_truthy
+      @cache.has_key?(@undefined_key).should be_falsey
     end
     
     it "should set a key" do

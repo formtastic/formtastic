@@ -1,10 +1,14 @@
 This document is for tracking deprecations and removals of 
 Formtastic features and compatibilities.
 
-v4.0
+v4.0 (planned)
 
-* Remove support for Rails < 4.0.4
+* Remove support for Rails < 4.1
 * Remove support for country_select 1.x syntax (they want to remove it in 3.0)
+
+v3.1 (master)
+
+* Deprecate support for Rails < 4.1
 
 v3.0
 

@@ -42,7 +42,7 @@ module Formtastic
     end
     
     def deprecated_version_of_rails?
-      rails_version < Gem::Version.new("4.0.4")
+      rails_version < Gem::Version.new("4.1.0")
     end
 
     def rails_version

@@ -20,9 +20,10 @@ h2. Documentation & Support
 
 h2. Compatibility
 
-* Formtastic 3 (master on Github) will require Rails 3.2.13 minimum
-* Formtastic 2.3 is Rails 3 and Rails 4 compatible (Rails < 3.2.13 is deprecated)
-* Formtastic 2.1 & 2.2 is Rails 3 and Rails 4 compatible
+* Formtastic 3.1 (master branch) will require Rails 4.1 minimum
+* Formtastic 3.0 requires Rails 3.2.13 minimum
+* Formtastic 2.3 deprecated Rails < 3.2.13
+* Formtastic 2.1, 2.2 & 2.3 are Rails 3.x–4.1.x compatible
 * Formtastic, much like Rails, is very ActiveRecord-centric. Many are successfully using other ActiveModel-like ORMs and objects (DataMapper, MongoMapper, Mongoid, Authlogic, Devise...) but we're not guaranteeing full compatibility at this stage. Patches are welcome!
 
 
@@ -93,7 +94,7 @@ h2. Installation
 Simply add Formtastic to your Gemfile and bundle it up:
 
 <pre>
-  gem 'formtastic'
+  gem 'formtastic', '~> 3.0'
 </pre>
 
 Run the installation generator:
@@ -315,6 +316,7 @@ Many inputs provide a collection of options to choose from (like @:select@, @:ra
   f.input :author,  :as => :radio,       :collection => ["Justin", "Kate", "Amelia", "Gus", "Meg"]
   f.input :admin,   :as => :radio,       :collection => ["Yes!", "No"]
   f.input :book_id, :as => :select,      :collection => Hash[Book.all.map{|b| [b.name,b.id]}]
+  f.input :fav_book,:as => :datalist   , :collection => Book.pluck(:name)
 </pre>
 
 
@@ -342,6 +344,7 @@ The Formtastic input types:
 * @:search@ - a text field (just like string). Default for columns with name matching @"search"@. New in HTML5. Works on Safari.
 * @:hidden@ - a hidden field. Creates a hidden field (added for compatibility).
 * @:range@ - a slider field.
+* @:datalist@ - a text field with a accompanying "datalist tag":https://developer.mozilla.org/en/docs/Web/HTML/Element/datalist which provides options for autocompletion
 
 The comments in the code are pretty good for each of these (what it does, what the output is, what the options are, etc.) so go check it out.
 
@@ -516,6 +519,8 @@ For more flexible forms; Formtastic finds translations using a bottom-up approac
 
 Values for @labels@/@hints@/@actions@ are can take values: @String@ (explicit value), @Symbol@ (i18n-lookup-key relative to the current "type", e.g. actions:), @true@ (force I18n lookup), @false@ (force no I18n lookup). Titles (legends) can only take: @String@ and @Symbol@ - true/false have no meaning.
 
+*7. Basic Translations*
+If you want some basic translations, take a look on the "formtastic_i18n gem":https://github.com/timoschilling/formtastic_i18n.
 
 h2. Semantic errors
 

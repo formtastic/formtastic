@@ -20,7 +20,7 @@ module Formtastic
     #   <form...>
     #     <fieldset>
     #       <ol>
-    #         <li class="email">
+    #         <li class="file">
     #           <label for="user_avatar">Avatar</label>
     #           <input type="file" id="user_avatar" name="user[avatar]">
     #         </li>
@@ -29,7 +29,7 @@ module Formtastic
     #   </form>
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
-    class FileInput 
+    class FileInput
       include Base
       def to_html
         input_wrapping do

@@ -89,26 +89,26 @@ module Formtastic
       #
       # Available input styles:
       #
-      # * `:boolean`      (see {Inputs::BooleanInput})
-      # * `:check_boxes`  (see {Inputs::CheckBoxesInput})
-      # * `:color`        (see {Inputs::ColorInput})
-      # * `:country`      (see {Inputs::CountryInput})
-      # * `:datetime_select` (see {Inputs::DatetimeSelectInput})
-      # * `:date_select` (see {Inputs::DateSelectInput})
-      # * `:email`        (see {Inputs::EmailInput})
-      # * `:file`         (see {Inputs::FileInput})
-      # * `:hidden`       (see {Inputs::HiddenInput})
-      # * `:number`       (see {Inputs::NumberInput})
-      # * `:password`     (see {Inputs::PasswordInput})
-      # * `:phone`        (see {Inputs::PhoneInput})
-      # * `:radio`        (see {Inputs::RadioInput})
-      # * `:search`       (see {Inputs::SearchInput})
-      # * `:select`       (see {Inputs::SelectInput})
-      # * `:string`       (see {Inputs::StringInput})
-      # * `:text`         (see {Inputs::TextInput})
-      # * `:time_zone`    (see {Inputs::TimeZoneInput})
-      # * `:time_select`  (see {Inputs::TimeSelectInput})
-      # * `:url`          (see {Inputs::UrlInput})
+      # * `:boolean`          (see {Inputs::BooleanInput})
+      # * `:check_boxes`      (see {Inputs::CheckBoxesInput})
+      # * `:color`            (see {Inputs::ColorInput})
+      # * `:country`          (see {Inputs::CountryInput})
+      # * `:datetime_select`  (see {Inputs::DatetimeSelectInput})
+      # * `:date_select`      (see {Inputs::DateSelectInput})
+      # * `:email`            (see {Inputs::EmailInput})
+      # * `:file`             (see {Inputs::FileInput})
+      # * `:hidden`           (see {Inputs::HiddenInput})
+      # * `:number`           (see {Inputs::NumberInput})
+      # * `:password`         (see {Inputs::PasswordInput})
+      # * `:phone`            (see {Inputs::PhoneInput})
+      # * `:radio`            (see {Inputs::RadioInput})
+      # * `:search`           (see {Inputs::SearchInput})
+      # * `:select`           (see {Inputs::SelectInput})
+      # * `:string`           (see {Inputs::StringInput})
+      # * `:text`             (see {Inputs::TextInput})
+      # * `:time_zone`        (see {Inputs::TimeZoneInput})
+      # * `:time_select`      (see {Inputs::TimeSelectInput})
+      # * `:url`              (see {Inputs::UrlInput})
       #
       # Calling `:as => :string` (for example) will call `#to_html` on a new instance of
       # `Formtastic::Inputs::StringInput`. Before this, Formtastic will try to instantiate a top-level
@@ -236,7 +236,7 @@ module Formtastic
       # @todo Many many more examples. Some of the detail probably needs to be pushed out to the relevant methods too.
       # @todo More i18n examples.
       def input(method, options = {})
-        method = method.to_sym if method.is_a?(String)
+        method = method.to_sym
         options = options.dup # Allow options to be shared without being tainted by Formtastic
         options[:as] ||= default_input_type(method, options)
 
@@ -302,7 +302,12 @@ module Formtastic
 
       # Get a column object for a specified attribute method - if possible.
       def column_for(method) #:nodoc:
-        @object.column_for_attribute(method) if @object.respond_to?(:column_for_attribute)
+        if @object.respond_to?(:column_for_attribute)
+          # Remove deprecation wrapper & review after Rails 5.0 ships
+          ActiveSupport::Deprecation.silence do
+            @object.column_for_attribute(method)
+          end
+        end
       end
 
       # Takes the `:as` option and attempts to return the corresponding input

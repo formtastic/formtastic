@@ -1,18 +1,16 @@
-3.0.0.rc
+3.1 (unreleased)
 
-* Removed support for Ruby version < 1.9.3
-* Removed support for Rails version < 3.2.13
-* Removed deprecated option :value (#1025)
-* Removed deprecated option :hint_class (#1025)
-* Removed deprecated option :error_class (#1025)
-* Removed deprecated option :group_by (#1025)
-* Removed deprecated option :group_label (#1025)
-* Removed deprecated option :find_options (#1025)
-* Deprecated support for Rails < 4.0.4
-* Changed i18n lookups to use the `:as` option from the form builder (#1033)
-* Improved documentation for country_select gem compatibility & support (#1061)
-* Improved documentation for browser support of datetime and datetime-local (#1029)
-* Added support for ColorInput (:as => :color) in Rails 4 (#1039)
+* Deprecated support for Rails version < 4.1.0
+* Fixed synchronization issues with custom_namespace configuration
+* Fixed bug where boolean (checkbox) inputs were not being correctly checked (also in 2.3.1)
+* Fixed (silenced) Rails 5 deprecation on column_for_attribute that we're handling fine
+* Added new DatalistInput (:as => :datalist) for HTML5 datalists
+* Various performance and documentation improvements
 
-See 2.3-stable branch for earlier releases
+---
+
+See 3.0-stable branch for 3.0.x changes
+https://github.com/justinfrench/formtastic/blob/3.0-stable/CHANGELOG
+
+See 2.3-stable branch for 2.3.x and earlier releases
 https://github.com/justinfrench/formtastic/blob/2.3-stable/CHANGELOG

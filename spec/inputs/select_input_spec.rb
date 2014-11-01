@@ -222,7 +222,7 @@ describe 'select input' do
 
   describe "for a belongs_to association with :conditions" do
     before do
-      ::Post.stub(:reflect_on_association).with(:author).and_return do
+      ::Post.stub(:reflect_on_association).with(:author) do
         mock = double('reflection', :options => {:conditions => {:active => true}}, :klass => ::Author, :macro => :belongs_to)
         mock.stub(:[]).with(:class_name).and_return("Author")
         mock
