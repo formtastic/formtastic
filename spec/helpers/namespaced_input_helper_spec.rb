@@ -8,7 +8,7 @@ describe 'with input class finder' do
     allow(Formtastic::FormBuilder)
     .to receive(:input_class_finder).and_return(Formtastic::InputClassFinder)
   }
-  it_behaves_like 'Input Helper'
+  it_behaves_like 'Input Helper' # from spec/support/shared_examples.rb
 
 
   describe 'instantiating an input class' do

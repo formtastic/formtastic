@@ -1,13 +1,26 @@
 module Formtastic
   # This class implements class resolution in a namespace chain. It
-  # is used both by InputHelper and ActionHelper to look up custom
-  # action and input classes.
+  # is used both by Formtastic::Helpers::InputHelper and
+  # Formtastic::Helpers::ActionHelper to look up action and input classes.
   #
-  # See
-  #   +Formtastic::Helpers::InputHelper+
-  #   +Formtastic::Helpers::ActionHelper+
-  # for details.
+  # ==== Example
+  # You can implement own class finder that for example prefixes the class name or uses custom module.
   #
+  #   class MyInputClassFinder < Formtastic::NamespacedClassFinder
+  #     def initialize(builder)
+  #       super [MyNamespace, Object] # first lookup in MyNamespace then the globals
+  #     end
+  #
+  #     private
+  #
+  #     def class_name(as)
+  #       "My#{super}Input" # for example MyStringInput
+  #     end
+  #   end
+  #
+  # And then set Formtastic::FormBuilder.input_class_finder with that class.
+  #
+
   class NamespacedClassFinder
     attr_reader :namespaces #:nodoc:
 
