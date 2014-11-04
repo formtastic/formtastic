@@ -1,10 +1,11 @@
-3.1 (unreleased)
+3.1.0.rc1 (unreleased)
 
 * Deprecated support for Rails version < 4.1.0
 * Fixed synchronization issues with custom_namespace configuration
 * Fixed bug where boolean (checkbox) inputs were not being correctly checked (also in 2.3.1)
 * Fixed (silenced) Rails 5 deprecation on column_for_attribute that we're handling fine
 * Added new DatalistInput (:as => :datalist) for HTML5 datalists
+* Added configurable namespaces for custom inputs
 * Various performance and documentation improvements
 
 ---
