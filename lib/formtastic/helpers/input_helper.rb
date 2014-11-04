@@ -147,6 +147,9 @@ module Formtastic
       # @option options :member_value [Symbol, Proc, Method]
       #   Override the method called on each object in the `:collection` for use as the `value` attribute in the `<input>` (`:check_boxes` & `:radio` inputs) or `<option>` (`:select` inputs)
       #
+      # @option options :member_sql [String, Arel.sql, Array<String, Arel.sql>]
+      #   Passes the option value to `collection#pluck` to get the label and value, without loading the whole record. This option is only supported on Rails 4.x and don't work with :member_label or :member_value
+      #
       # @option options :multiple [Boolean]
       #   Specify if the `:select` input should allow multiple selections or not (defaults to `belongs_to` associations, and `true` for `has_many` and `has_and_belongs_to_many` associations)
       #

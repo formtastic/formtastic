@@ -42,6 +42,10 @@ module Formtastic
           [label, value]
         end
 
+        def member_sql
+          options[:member_sql]
+        end
+
         def raw_collection
           @raw_collection ||= (collection_from_options || collection_from_association || collection_for_boolean)
         end
@@ -54,6 +58,9 @@ module Formtastic
           return raw_collection if (raw_collection.instance_of?(Array) || raw_collection.instance_of?(Range)) &&
                                [Array, Fixnum, String].include?(raw_collection.first.class) &&
                                !(options.include?(:member_label) || options.include?(:member_value))
+
+          # Return if we have a collection that supports `pluck` (ActiveRecord > 4.0) and a the member_sql option is set
+          return raw_collection.pluck(member_sql) if raw_collection.respond_to?(:pluck) && member_sql
 
           raw_collection.map { |o| [send_or_call(label_method, o), send_or_call(value_method, o)] }
         end

@@ -267,6 +267,7 @@ module FormtasticSpecHelper
     @fred.stub(:to_key).and_return(nil)
     @fred.stub(:persisted?).and_return(nil)
     @fred.stub(:name).and_return('Fred')
+    @fred.stub(:lastname).and_return('Smith')
 
     @bob = ::Author.new
     @bob.stub(:to_label).and_return('Bob Rock')
@@ -281,6 +282,7 @@ module FormtasticSpecHelper
     @bob.stub(:to_key).and_return(nil)
     @bob.stub(:persisted?).and_return(nil)
     @bob.stub(:name).and_return('Bob')
+    @bob.stub(:lastname).and_return('Rock')
 
     @james = ::Author.new
     @james.stub(:to_label).and_return('James Shock')
@@ -294,6 +296,7 @@ module FormtasticSpecHelper
     @james.stub(:to_key).and_return(nil)
     @james.stub(:persisted?).and_return(nil)
     @james.stub(:name).and_return('James')
+    @james.stub(:lastname).and_return('Shock')
 
 
     ::Author.stub(:scoped).and_return(::Author)
