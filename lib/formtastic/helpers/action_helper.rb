@@ -2,7 +2,9 @@
 module Formtastic
   module Helpers
     module ActionHelper
-      
+      ACTION_CLASS_DEPRECATION = 'configure Formtastic::FormBuilder.action_class_finder instead'.freeze
+      private_constant(:ACTION_CLASS_DEPRECATION)
+
       # Renders an action for the form (such as a subit/reset button, or a cancel link).
       #
       # Each action is wrapped in an `<li class="action">` tag with other classes added based on the
@@ -23,9 +25,9 @@ module Formtastic
       #         reset: "Reset form"
       #         submit: "Submit"
       #
-      # For forms with an object present, the `update` key will be used if calling `persisted?` on 
-      # the object returns true (saving changes to a record), otherwise the `create` ey will be 
-      # used. The `submit` key is used as a fallback when there is no object or we cannot determine 
+      # For forms with an object present, the `update` key will be used if calling `persisted?` on
+      # the object returns true (saving changes to a record), otherwise the `create` key will be
+      # used. The `submit` key is used as a fallback when there is no object or we cannot determine
       # if `create` or `update` is appropriate.
       #
       # @example Basic usage
@@ -90,12 +92,35 @@ module Formtastic
       def default_action_type(method, options = {}) #:nodoc:
         case method
           when :submit then :input
-          when :reset then :input
+          when :reset  then :input
           when :cancel then :link
+          else method
         end
       end
 
+      # Takes the `:as` option and attempts to return the corresponding action
+      # class. In the case of `:as => :awesome` it will first attempt to find a
+      # top level `AwesomeAction` class (to allow the application to subclass
+      # and modify to suit), falling back to `Formtastic::Actions::AwesomeAction`.
+      #
+      # Custom action namespaces to look into can be configured via the
+      # .action_namespaces +FormBuilder+ configuration setting.
+      # See +Formtastic::Helpers::InputHelper#namespaced_input_class+ for details.
+      #
+      def namespaced_action_class(as)
+        @action_class_finder ||= action_class_finder.new(self)
+        @action_class_finder.find(as)
+      rescue Formtastic::ActionClassFinder::NotFoundError => e
+        raise Formtastic::UnknownActionError, "Unable to find action #{e.message}"
+      end
+
+      # @api private
+      # @deprecated Use {#namespaced_action_class} instead.
       def action_class(as)
+        return namespaced_action_class(as) if action_class_finder
+
+        action_class_deprecation_warning(__method__)
+
         @input_classes_cache ||= {}
         @input_classes_cache[as] ||= begin
           begin
@@ -105,21 +130,33 @@ module Formtastic
               standard_action_class_name(as).constantize
             end
           rescue NameError
-            raise Formtastic::UnknownActionError
+            raise Formtastic::UnknownActionError, "Unable to find action #{as}"
           end
         end
       end
 
+      # @api private
+      # @deprecated Use {Formtastic::ActionClassFinder#class_name} instead.
       # :as => :button # => ButtonAction
       def custom_action_class_name(as)
+        action_class_deprecation_warning(__method__)
         "#{as.to_s.camelize}Action"
       end
 
+      # @api private
+      # @deprecated Use {Formtastic::ActionClassFinder#class_name} instead.
       # :as => :button # => Formtastic::Actions::ButtonAction
       def standard_action_class_name(as)
+        action_class_deprecation_warning(__method__)
         "Formtastic::Actions::#{as.to_s.camelize}Action"
       end
 
+      private
+
+      def action_class_deprecation_warning(method)
+        @action_class_deprecation_warned ||=
+            Formtastic.deprecation.deprecation_warning(method, ACTION_CLASS_DEPRECATION, caller(2))
+      end
     end
   end
 end

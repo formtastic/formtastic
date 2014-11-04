@@ -31,6 +31,12 @@ module Formtastic
     configure :default_hint_class, 'inline-hints'
     configure :use_required_attribute, false
     configure :perform_browser_validations, false
+    configure :input_namespaces, [::Object, ::Formtastic::Inputs]
+    # TODO: enable this as default in 4.0 and remove it from configuration generator template
+    configure :input_class_finder #, Formtastic::InputClassFinder
+    configure :action_namespaces, [::Object, ::Formtastic::Actions]
+    # TODO: enable this as default in 4.0 and remove it from configuration generator template
+    configure :action_class_finder#, Formtastic::ActionClassFinder
 
     attr_reader :template
 

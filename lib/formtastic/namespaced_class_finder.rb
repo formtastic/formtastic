@@ -1,0 +1,89 @@
+module Formtastic
+  # This class implements class resolution in a namespace chain. It
+  # is used both by Formtastic::Helpers::InputHelper and
+  # Formtastic::Helpers::ActionHelper to look up action and input classes.
+  #
+  # ==== Example
+  # You can implement own class finder that for example prefixes the class name or uses custom module.
+  #
+  #   class MyInputClassFinder < Formtastic::NamespacedClassFinder
+  #     def initialize(builder)
+  #       super [MyNamespace, Object] # first lookup in MyNamespace then the globals
+  #     end
+  #
+  #     private
+  #
+  #     def class_name(as)
+  #       "My#{super}Input" # for example MyStringInput
+  #     end
+  #   end
+  #
+  # And then set Formtastic::FormBuilder.input_class_finder with that class.
+  #
+
+  class NamespacedClassFinder
+    attr_reader :namespaces #:nodoc:
+
+    # @private
+    class NotFoundError < NameError
+    end
+
+    def initialize(namespaces) #:nodoc:
+      @namespaces = namespaces.flatten
+      @cache = {}
+    end
+
+    # Looks up the given reference in the configured namespaces.
+    #
+    # Two finder methods are provided, one for development tries to
+    # reference the constant directly, triggering Rails' autoloading
+    # const_missing machinery; the second one instead for production
+    # checks with .const_defined before referencing the constant.
+    #
+    def find(as)
+      @cache[as] ||= resolve(as)
+    end
+
+    def resolve(as)
+      class_name = class_name(as)
+
+      finder(class_name) or raise NotFoundError, "class #{class_name}"
+    end
+
+    private
+
+    def class_name(as)
+      as.to_s.camelize
+    end
+
+    if defined?(Rails) && ::Rails.application && ::Rails.application.config.cache_classes
+      def finder(class_name) # :nodoc:
+        find_with_const_defined(class_name)
+      end
+    else
+      def finder(class_name) # :nodoc:
+        find_by_trying(class_name)
+      end
+    end
+
+    # Looks up the given class name in the configured namespaces in order,
+    # returning the first one that has the class name constant defined.
+    def find_with_const_defined(class_name)
+      @namespaces.find do |namespace|
+        if namespace.const_defined?(class_name)
+          break namespace.const_get(class_name)
+        end
+      end
+    end
+
+    # Use auto-loading in development environment
+    def find_by_trying(class_name)
+      @namespaces.find do |namespace|
+        begin
+          break namespace.const_get(class_name)
+        rescue NameError
+        end
+      end
+    end
+  end
+end

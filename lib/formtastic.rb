@@ -13,25 +13,31 @@ module Formtastic
   autoload :LocalizedString
   autoload :Localizer
   autoload :Util
-  
+  autoload :NamespacedClassFinder
+  autoload :InputClassFinder
+  autoload :ActionClassFinder
+  autoload :Deprecation
+
+  # @private
+  mattr_accessor :deprecation
+  self.deprecation = Formtastic::Deprecation.new('4.0', 'Formtastic')
+
   if defined?(::Rails) && Util.deprecated_version_of_rails?
-    ::ActiveSupport::Deprecation.warn(
-      "Support for Rails < 4.0.4 will be dropped from Formtastic 4.0",
-      caller)
+    deprecation.warn("Support for Rails < 4.0.4 will be dropped ")
   end
 
   # @private
   class UnknownInputError < NameError
   end
-  
+
   # @private
   class UnknownActionError < NameError
   end
-  
+
   # @private
   class PolymorphicInputWithoutCollectionError < ArgumentError
   end
-  
+
   # @private
   class UnsupportedMethodForAction < ArgumentError
   end
