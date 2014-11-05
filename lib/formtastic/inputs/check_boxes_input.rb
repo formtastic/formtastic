@@ -39,6 +39,7 @@ module Formtastic
     #   <%= f.input :categories, :as => :check_boxes, :collection => @categories %>
     #   <%= f.input :categories, :as => :check_boxes, :collection => Category.all %>
     #   <%= f.input :categories, :as => :check_boxes, :collection => Category.some_named_scope %>
+    #   <%= f.input :categories, :as => :check_boxes, :collection => Category.pluck(:label, :id) %>
     #   <%= f.input :categories, :as => :check_boxes, :collection => [Category.find_by_name("Ruby"), Category.find_by_name("Rails")] %>
     #   <%= f.input :categories, :as => :check_boxes, :collection => ["Ruby", "Rails"] %>
     #   <%= f.input :categories, :as => :check_boxes, :collection => [["Ruby", "ruby"], ["Rails", "rails"]] %>

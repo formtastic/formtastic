@@ -78,6 +78,8 @@ module Formtastic
     #   <%= f.input :author, :as => :radio, :collection => @authors %>
     #   <%= f.input :author, :as => :radio, :collection => Author.all %>
     #   <%= f.input :author, :as => :radio, :collection => Author.some_named_scope %>
+    #   <%= f.input :author, :as => :radio, :collection => Author.pluck(:full_name, :id) %>
+    #   <%= f.input :author, :as => :radio, :collection => Author.pluck(Arel.sql("CONCAT(`first_name`, ' ', `last_name`)"), :id)) %>
     #   <%= f.input :author, :as => :radio, :collection => [Author.find_by_login("justin"), Category.find_by_name("kate")] %>
     #   <%= f.input :author, :as => :radio, :collection => ["Justin", "Kate"] %>
     #   <%= f.input :author, :as => :radio, :collection => [["Justin", "justin"], ["Kate", "kate"]] %>

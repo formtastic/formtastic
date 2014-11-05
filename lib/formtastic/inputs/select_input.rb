@@ -94,6 +94,8 @@ module Formtastic
     #   <%= f.input :author, :as => :select, :collection => @authors %>
     #   <%= f.input :author, :as => :select, :collection => Author.all %>
     #   <%= f.input :author, :as => :select, :collection => Author.some_named_scope %>
+    #   <%= f.input :author, :as => :select, :collection => Author.pluck(:full_name, :id) %>
+    #   <%= f.input :author, :as => :select, :collection => Author.pluck(Arel.sql("CONCAT(`first_name`, ' ', `last_name`)"), :id)) %>
     #   <%= f.input :author, :as => :select, :collection => [Author.find_by_login("justin"), Category.find_by_name("kate")] %>
     #   <%= f.input :author, :as => :select, :collection => ["Justin", "Kate"] %>
     #   <%= f.input :author, :as => :select, :collection => [["Justin", "justin"], ["Kate", "kate"]] %>
