@@ -9,6 +9,8 @@ v4.0 (planned)
 v3.1 (master)
 
 * Deprecate support for Rails < 4.1
+* Deprecate :member_value option
+* Deprecate :member_label option
 
 v3.0
 
