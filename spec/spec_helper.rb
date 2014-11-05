@@ -534,7 +534,16 @@ RSpec.configure do |config|
   config.before(:each) do
     Formtastic::Localizer.cache.clear!    
   end
-  
+
+  config.before(:each) do
+    allow(Formtastic.deprecation).to receive(:deprecation_warning).and_call_original
+    # TODO: Remove this in Formtastic 4
+    [ :action_class, :standard_action_class_name, :custom_action_class_name,
+      :input_class, :standard_input_class_name, :custom_input_class_name ].each do |method|
+      allow(Formtastic.deprecation).to receive(:deprecation_warning).with(method, instance_of(String), instance_of(Array))
+    end
+  end
+
   config.before(:all) do
     DeferredGarbageCollection.start unless ENV["DEFER_GC"] == "false"
   end
