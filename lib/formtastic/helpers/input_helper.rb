@@ -141,12 +141,6 @@ module Formtastic
       # @option options :collection [Array<ActiveModel, String, Symbol>, Hash{String => String, Boolean}, OrderedHash{String => String, Boolean}]
       #   Override collection of objects in the association (`:select`, `:radio` & `:check_boxes` inputs only)
       #
-      # @option options :member_label [Symbol, Proc, Method]
-      #   Override the method called on each object in the `:collection` for use as the `<label>` content (`:check_boxes` & `:radio` inputs) or `<option>` content (`:select` inputs)
-      #
-      # @option options :member_value [Symbol, Proc, Method]
-      #   Override the method called on each object in the `:collection` for use as the `value` attribute in the `<input>` (`:check_boxes` & `:radio` inputs) or `<option>` (`:select` inputs)
-      #
       # @option options :multiple [Boolean]
       #   Specify if the `:select` input should allow multiple selections or not (defaults to `belongs_to` associations, and `true` for `has_many` and `has_and_belongs_to_many` associations)
       #

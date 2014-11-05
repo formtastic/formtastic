@@ -191,7 +191,7 @@ If you want to customize the label text, or render some hint text below the fiel
     <%= f.inputs :name => "Advanced Options", :id => "advanced" do %>
       <%= f.input :slug, :label => "URL Title", :hint => "Created automatically if left blank", :required => false %>
       <%= f.input :section, :as => :radio %>
-      <%= f.input :user, :label => "Author", :member_label => :full_name %>
+      <%= f.input :user, :label => "Author" %>
       <%= f.input :categories, :required => false %>
       <%= f.input :created_at, :as => :string, :label => "Publication Date", :required => false %>
     <% end %>

@@ -11,6 +11,11 @@ module Formtastic
         @object_name = object_name
         @method = method
         @options = options.dup
+
+        # Deprecate :member_label and :member_value, remove v4.0
+        member_deprecation_message = "passing an Array of label/value pairs like [['Justin', 2], ['Kate', 3]] into :collection directly (consider building the array in your model using Model.pluck)"
+        warn_deprecated_option!(:member_label, member_deprecation_message)
+        warn_deprecated_option!(:member_value, member_deprecation_message)
       end
 
       # Usefull for deprecating options.
