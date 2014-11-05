@@ -29,7 +29,7 @@ module Formtastic
       # Usefull for deprecating options.
       def warn_deprecated_option!(old_option_name, instructions)
         if options.key?(old_option_name)
-          ::ActiveSupport::Deprecation.warn("The :#{old_option_name} option is deprecated in favour of `#{instructions}` and will be removed in the next version", caller(6))
+          ::ActiveSupport::Deprecation.warn("The :#{old_option_name} option is deprecated in favour of `#{instructions}`. :#{old_option_name} will be removed in the next version", caller(6))
         end
       end
 
