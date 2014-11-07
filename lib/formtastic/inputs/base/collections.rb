@@ -84,11 +84,7 @@ module Formtastic
             scope_conditions = conditions_from_reflection.empty? ? nil : {:conditions => conditions_from_reflection}
             where_conditions = (scope_conditions && scope_conditions[:conditions]) || {}
             
-            if Util.rails3?
-              reflection.klass.scoped(scope_conditions).where({}) # where is uneccessary, but keeps the stubbing simpler while we support rails3
-            else
-              reflection.klass.where(where_conditions)
-            end
+            reflection.klass.where(where_conditions)
           end
         end
 
