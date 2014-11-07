@@ -8,7 +8,7 @@ describe 'Formtastic::Util' do
     subject { Formtastic::Util.deprecated_version_of_rails? }
     
     context '4.1.0' do
-      before { allow(Formtastic::Util).to receive(:rails_version) { Gem::Version.new("4.1.1") } }
+      before { allow(Formtastic::Util).to receive(:rails_version) { Gem::Version.new("4.1.0") } }
       it 'should be false' do
         expect(subject).to be_falsey
       end
@@ -22,7 +22,7 @@ describe 'Formtastic::Util' do
     end
 
     context '4.2.0' do
-      before { allow(Formtastic::Util).to receive(:rails_version) { Gem::Version.new("4.1.1") } }
+      before { allow(Formtastic::Util).to receive(:rails_version) { Gem::Version.new("4.2.0") } }
       it 'should be false' do
         expect(subject).to be_falsey
       end
