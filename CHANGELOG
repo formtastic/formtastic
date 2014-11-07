@@ -1,4 +1,8 @@
-3.1.0.rc1 (unreleased)
+3.1.0.rc2
+
+* Deprecated :member_value and :member_label options
+
+3.1.0.rc1
 
 * Deprecated support for Rails version < 4.1.0
 * Fixed synchronization issues with custom_namespace configuration
