@@ -21,26 +21,6 @@ module Formtastic
       end
     end
     
-    def rails3?
-      rails_version >= Gem::Version.new("3.0.0") && 
-      rails_version < Gem::Version.new("4.0.0")
-    end
-
-    def rails4?
-      rails_version >= Gem::Version.new("4.0.0") && 
-      rails_version < Gem::Version.new("5.0.0")
-    end
-    
-    def rails4_0?
-      rails_version >= Gem::Version.new("4.0.0") && 
-      rails_version < Gem::Version.new("4.1.0")
-    end
-
-    def rails4_1?
-      rails_version >= Gem::Version.new("4.1.0") && 
-      rails_version < Gem::Version.new("4.2.0")
-    end
-    
     def deprecated_version_of_rails?
       rails_version < Gem::Version.new("4.1.0")
     end
