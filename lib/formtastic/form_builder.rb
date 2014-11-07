@@ -12,7 +12,7 @@ module Formtastic
     configure :default_text_area_width
     configure :all_fields_required_by_default, true
     configure :include_blank_for_select_by_default, true
-    configure :required_string, proc { Formtastic::Util.html_safe(%{<abbr title="#{Formtastic::I18n.t(:required)}">*</abbr>}) }
+    configure :required_string, proc { %{<abbr title="#{Formtastic::I18n.t(:required)}">*</abbr>}.html_safe }
     configure :optional_string, ''
     configure :inline_errors, :sentence
     configure :label_str_method, :humanize
