@@ -52,8 +52,8 @@ module Formtastic
 
     # This is a wrapper around Rails' `ActionView::Helpers::FormBuilder#fields_for`, originally
     # provided to ensure that the `:builder` from `semantic_form_for` was passed down into
-    # the nested `fields_for`. Rails 3 no longer requires us to do this, so this method is
-    # provided purely for backwards compatibility and DSL consistency.
+    # the nested `fields_for`. Our supported versions of Rails no longer require us to do this,
+    # so this method is provided purely for backwards compatibility and DSL consistency.
     #
     # When constructing a `fields_for` form fragment *outside* of `semantic_form_for`, please use
     # `Formtastic::Helpers::FormHelper#semantic_fields_for`.

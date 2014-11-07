@@ -70,7 +70,6 @@ h2. It's awesome because...
 
 * It can handle @belongs_to@ associations (like Post belongs_to :author), rendering a select or set of radio inputs with choices from the parent model.
 * It can handle @has_many@ and @has_and_belongs_to_many@ associations (like: Post has_many :tags), rendering a multi-select with choices from the child models.
-* It's Rails 3/4 compatible (including nested forms).
 * It has internationalization (I18n)!
 * It's _really_ quick to get started with a basic form in place (4 lines), then go back to add in more detail if you need it.
 * There's heaps of elements, id and class attributes for you to hook in your CSS and JS.
@@ -108,7 +107,7 @@ h2. Stylesheets
 
 A proof-of-concept set of stylesheets are provided which you can include in your layout. Customization is best achieved by overriding these styles in an additional stylesheet.
 
-Rails 3.1 introduces an asset pipeline that allows plugins like Formtastic to serve their own Stylesheets, Javascripts, etc without having to run generators that copy them across to the host application. Formtastic makes three stylesheets available as an Engine, you just need to require them in your global stylesheets.
+The Rails asset pipeline that allows plugins like Formtastic to serve their own Stylesheets, Javascripts, etc without having to run generators that copy them across to the host application. Formtastic makes three stylesheets available as an Engine, you just need to require them in your global stylesheets.
 
 <pre>
   # app/assets/stylesheets/application.css
