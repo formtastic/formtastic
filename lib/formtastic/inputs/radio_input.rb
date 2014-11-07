@@ -31,10 +31,9 @@ module Formtastic
     # `Section.all` for a `Post` form with an input for a `belongs_to :section` association.
     # You can override or customise this collection through the `:collection` option (see examples).
     #
-    # The way on which Formtastic renders the `value` attribute and label for each choice is
-    # customisable through the `:member_label` and `:member_value` options (see examples below).
-    # When not provided, we fall back to a list of methods to try on each object such as
-    # `:to_label`, `:name` and `:to_s`, which are defined in the configurations
+    # The way on which Formtastic renders the `value` attribute and label for each choice in the `:collection` is
+    # customisable (see examples below). When not provided, we fall back to a list of methods to try on each 
+    # object such as `:to_label`, `:name` and `:to_s`, which are defined in the configurations
     # `collection_label_methods` and `collection_value_methods`.
     #
     # @example Basic `belongs_to` example with full form context
@@ -78,6 +77,8 @@ module Formtastic
     #   <%= f.input :author, :as => :radio, :collection => @authors %>
     #   <%= f.input :author, :as => :radio, :collection => Author.all %>
     #   <%= f.input :author, :as => :radio, :collection => Author.some_named_scope %>
+    #   <%= f.input :author, :as => :radio, :collection => Author.pluck(:full_name, :id) %>
+    #   <%= f.input :author, :as => :radio, :collection => Author.pluck(Arel.sql("CONCAT(`first_name`, ' ', `last_name`)"), :id)) %>
     #   <%= f.input :author, :as => :radio, :collection => [Author.find_by_login("justin"), Category.find_by_name("kate")] %>
     #   <%= f.input :author, :as => :radio, :collection => ["Justin", "Kate"] %>
     #   <%= f.input :author, :as => :radio, :collection => [["Justin", "justin"], ["Kate", "kate"]] %>
@@ -86,23 +87,6 @@ module Formtastic
     #   <%= f.input :author, :as => :radio, :collection => [["Justin", :justin], ["Kate", :kate]] %>
     #   <%= f.input :author, :as => :radio, :collection => [:justin, :kate] %>
     #   <%= f.input :author, :as => :radio, :collection => 1..5 %>
-    #
-    # @example The `:member_label` can be used to call a different method (or a Proc) on each object in the collection for rendering the label text (it'll try the methods like `to_s` in `collection_label_methods` config by default)
-    #   <%= f.input :author, :as => :radio, :member_label => :name %>
-    #   <%= f.input :author, :as => :radio, :member_label => :name_with_post_count
-    #   <%= f.input :author, :as => :radio, :member_label => Proc.new { |a| "#{c.name} (#{pluralize("post", a.posts.count)})" }
-    #
-    # @example `:member_label` can be used with a helper method (both examples have the same result)
-    #   <%= f.input :author, :as => :radio, :member_label => method(:fancy_label)
-    #   <%= f.input :author, :as => :radio, :member_label => Proc.new { |author| fancy_label(author) }
-    #
-    # @example The `:member_value` can be used to call a different method (or a Proc) on each object in the collection for rendering the value for each checkbox (it'll try the methods like `id` in `collection_value_methods` config by default)
-    #   <%= f.input :author, :as => :radio, :member_value => :login %>
-    #   <%= f.input :author, :as => :radio, :member_value => Proc.new { |c| c.full_name.downcase.underscore }
-    #
-    # @example `:member_value` can be used with a helper method (both examples have the same result)
-    #   <%= f.input :author, :as => :radio, :member_value => method(:some_helper)
-    #   <%= f.input :author, :as => :radio, :member_value => Proc.new { |author| some_helper(author) }
     #
     # @example Set HTML attributes on each `<input type="radio">` tag with `:input_html`
     #   <%= f.input :author, :as => :radio, :input_html => { :size => 20, :multiple => true, :class => "special" } %>

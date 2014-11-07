@@ -94,6 +94,8 @@ module Formtastic
     #   <%= f.input :author, :as => :select, :collection => @authors %>
     #   <%= f.input :author, :as => :select, :collection => Author.all %>
     #   <%= f.input :author, :as => :select, :collection => Author.some_named_scope %>
+    #   <%= f.input :author, :as => :select, :collection => Author.pluck(:full_name, :id) %>
+    #   <%= f.input :author, :as => :select, :collection => Author.pluck(Arel.sql("CONCAT(`first_name`, ' ', `last_name`)"), :id)) %>
     #   <%= f.input :author, :as => :select, :collection => [Author.find_by_login("justin"), Category.find_by_name("kate")] %>
     #   <%= f.input :author, :as => :select, :collection => ["Justin", "Kate"] %>
     #   <%= f.input :author, :as => :select, :collection => [["Justin", "justin"], ["Kate", "kate"]] %>
@@ -105,15 +107,6 @@ module Formtastic
     #   <%= f.input :author, :as => :select, :collection => options_from_collection_for_select(...) %>
     #   <%= f.input :author, :as => :select, :collection => grouped_options_for_select(...) %>
     #   <%= f.input :author, :as => :select, :collection => time_zone_options_for_select(...) %>
-    #
-    # @example The `:member_label` can be used to call a different method (or a Proc) on each object in the collection for rendering the label text (it'll try the methods like `to_s` in `collection_label_methods` config by default)
-    #   <%= f.input :author, :as => :select, :member_label => :name %>
-    #   <%= f.input :author, :as => :select, :member_label => :name_with_post_count %>
-    #   <%= f.input :author, :as => :select, :member_label => Proc.new { |a| "#{c.name} (#{pluralize("post", a.posts.count)})" } %>
-    #
-    # @example The `:member_value` can be used to call a different method (or a Proc) on each object in the collection for rendering the value for each checkbox (it'll try the methods like `id` in `collection_value_methods` config by default)
-    #   <%= f.input :author, :as => :select, :member_value => :login %>
-    #   <%= f.input :author, :as => :select, :member_value => Proc.new { |c| c.full_name.downcase.underscore } %>
     #
     # @example Set HTML attributes on the `<select>` tag with `:input_html`
     #   <%= f.input :authors, :as => :select, :input_html => { :size => 20, :multiple => true, :class => "special" } %>

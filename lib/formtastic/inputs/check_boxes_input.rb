@@ -39,6 +39,7 @@ module Formtastic
     #   <%= f.input :categories, :as => :check_boxes, :collection => @categories %>
     #   <%= f.input :categories, :as => :check_boxes, :collection => Category.all %>
     #   <%= f.input :categories, :as => :check_boxes, :collection => Category.some_named_scope %>
+    #   <%= f.input :categories, :as => :check_boxes, :collection => Category.pluck(:label, :id) %>
     #   <%= f.input :categories, :as => :check_boxes, :collection => [Category.find_by_name("Ruby"), Category.find_by_name("Rails")] %>
     #   <%= f.input :categories, :as => :check_boxes, :collection => ["Ruby", "Rails"] %>
     #   <%= f.input :categories, :as => :check_boxes, :collection => [["Ruby", "ruby"], ["Rails", "rails"]] %>
@@ -55,24 +56,6 @@ module Formtastic
     #
     # @example `:disabled` can be used to disable any checkboxes with a value found in the given Array
     #   <%= f.input :categories, :as => :check_boxes, :collection => ["a", "b"], :disabled => ["a"] %>
-    #
-    # @example `:member_label` can be used to call a different method (or a Proc) on each object in the collection for rendering the label text (it'll try the methods like `to_s` in `collection_label_methods` config by default)
-    #   <%= f.input :categories, :as => :check_boxes, :member_label => :name %>
-    #   <%= f.input :categories, :as => :check_boxes, :member_label => :name_with_post_count
-    #   <%= f.input :categories, :as => :check_boxes, :member_label => { |c| "#{c.name} (#{pluralize("post", c.posts.count)})" }
-    #
-    # @example `:member_label` can be used with a helper method (both examples have the same result)
-    #   <%= f.input :categories, :as => :check_boxes, :member_label => method(:fancy_label)
-    #   <%= f.input :categories, :as => :check_boxes, :member_label => Proc.new { |category| fancy_label(category) }
-    #
-    # @example `:member_value` can be used to call a different method (or a Proc) on each object in the collection for rendering the value for each checkbox (it'll try the methods like `id` in `collection_value_methods` config by default)
-    #   <%= f.input :categories, :as => :check_boxes, :member_value => :code %>
-    #   <%= f.input :categories, :as => :check_boxes, :member_value => :isbn
-    #   <%= f.input :categories, :as => :check_boxes, :member_value => Proc.new { |c| c.name.downcase.underscore }
-    #
-    # @example `:member_value` can be used with a helper method (both examples have the same result)
-    #   <%= f.input :categories, :as => :check_boxes, :member_value => method(:some_helper)
-    #   <%= f.input :categories, :as => :check_boxes, :member_value => Proc.new { |category| some_helper(category) }
     #
     # @example `:value_as_class` can be used to add a class to the `<li>` wrapped around each choice using the checkbox value for custom styling of each choice
     #   <%= f.input :categories, :as => :check_boxes, :value_as_class => true %>

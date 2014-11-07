@@ -350,9 +350,12 @@ describe 'check_boxes input' do
         item.stub(:custom_value).and_return('custom_value')
         item.should_receive(:custom_value).exactly(3).times
         @new_post.author.should_receive(:custom_value).exactly(1).times
-        concat(semantic_form_for(@new_post) do |builder|
-          concat(builder.input(:author, :as => :check_boxes, :member_value => :custom_value, :collection => [item, item, item]))
-        end)
+        
+        with_deprecation_silenced do
+          concat(semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:author, :as => :check_boxes, :member_value => :custom_value, :collection => [item, item, item]))
+          end)
+        end
         output_buffer.should have_tag('input[@type=checkbox][@value="custom_value"]', :count => 3)
       end
     end

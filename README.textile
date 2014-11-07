@@ -191,7 +191,7 @@ If you want to customize the label text, or render some hint text below the fiel
     <%= f.inputs :name => "Advanced Options", :id => "advanced" do %>
       <%= f.input :slug, :label => "URL Title", :hint => "Created automatically if left blank", :required => false %>
       <%= f.input :section, :as => :radio %>
-      <%= f.input :user, :label => "Author", :member_label => :full_name %>
+      <%= f.input :user, :label => "Author" %>
       <%= f.input :categories, :required => false %>
       <%= f.input :created_at, :as => :string, :label => "Publication Date", :required => false %>
     <% end %>
@@ -308,6 +308,9 @@ Many inputs provide a collection of options to choose from (like @:select@, @:ra
   f.input :authors, :as => :check_boxes, :collection => [@justin, @kate]
   f.input :authors, :as => :check_boxes, :collection => ["Justin", "Kate", "Amelia", "Gus", "Meg"]
   f.input :author,  :as => :select,      :collection => Author.all
+  f.input :author,  :as => :select,      :collection => Author.pluck(:first_name, :id)
+  f.input :author,  :as => :select,      :collection => Author.pluck(Arel.sql("CONCAT(`first_name`, ' ', `last_name`)"), :id)
+  f.input :author,  :as => :select,      :collection => Author.your_custom_scope_or_class_method
   f.input :author,  :as => :select,      :collection => { @justin.name => @justin.id, @kate.name => @kate.id }
   f.input :author,  :as => :select,      :collection => ["Justin", "Kate", "Amelia", "Gus", "Meg"]
   f.input :author,  :as => :radio,       :collection => User.all

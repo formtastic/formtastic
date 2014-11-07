@@ -428,9 +428,11 @@ module CustomMacros
 
           describe 'as a symbol' do
             before do
-              concat(semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:author, :as => as, :member_label => :login))
-              end)
+              with_deprecation_silenced do
+                concat(semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:author, :as => as, :member_label => :login))
+                end)
+              end
             end
 
             it 'should have options with text content from the specified method' do
@@ -442,9 +444,11 @@ module CustomMacros
 
           describe 'as a proc' do
             before do
-              concat(semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:author, :as => as, :member_label => Proc.new {|a| a.login.reverse }))
-              end)
+              with_deprecation_silenced do
+                concat(semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:author, :as => as, :member_label => Proc.new {|a| a.login.reverse }))
+                end)
+              end
             end
 
             it 'should have options with the proc applied to each' do
@@ -459,9 +463,11 @@ module CustomMacros
               def reverse_login(a)
                 a.login.reverse
               end
-              concat(semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:author, :as => as, :member_label => method(:reverse_login)))
-              end)
+              with_deprecation_silenced do
+                concat(semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:author, :as => as, :member_label => method(:reverse_login)))
+                end)
+              end
             end
 
             it 'should have options with the proc applied to each' do
@@ -480,9 +486,11 @@ module CustomMacros
                 @fred.stub(:respond_to?) { |m| m.to_s == label_method || m.to_s == 'id' }
                 [@fred, @bob].each { |a| a.stub(label_method).and_return('The Label Text') }
 
-                concat(semantic_form_for(@new_post) do |builder|
-                  concat(builder.input(:author, :as => as))
-                end)
+                with_deprecation_silenced do
+                  concat(semantic_form_for(@new_post) do |builder|
+                    concat(builder.input(:author, :as => as))
+                  end)
+                end
               end
 
               it "should render the options with #{label_method} as the label" do
@@ -499,9 +507,11 @@ module CustomMacros
 
           describe 'as a symbol' do
             before do
-              concat(semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:author, :as => as, :member_value => :login))
-              end)
+              with_deprecation_silenced do
+                concat(semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:author, :as => as, :member_value => :login))
+                end)
+              end
             end
 
             it 'should have options with values from specified method' do
@@ -513,9 +523,11 @@ module CustomMacros
 
           describe 'as a proc' do
             before do
-              concat(semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:author, :as => as, :member_value => Proc.new {|a| a.login.reverse }))
-              end)
+              with_deprecation_silenced do
+                concat(semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:author, :as => as, :member_value => Proc.new {|a| a.login.reverse }))
+                end)
+              end
             end
 
             it 'should have options with the proc applied to each value' do
@@ -530,9 +542,11 @@ module CustomMacros
               def reverse_login(a)
                 a.login.reverse
               end
-              concat(semantic_form_for(@new_post) do |builder|
-                concat(builder.input(:author, :as => as, :member_value => method(:reverse_login)))
-              end)
+              with_deprecation_silenced do
+                concat(semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:author, :as => as, :member_value => method(:reverse_login)))
+                end)
+              end
             end
 
             it 'should have options with the proc applied to each value' do
