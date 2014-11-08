@@ -3,6 +3,36 @@ module Formtastic
     module Base
       module Collections
 
+        # Model-like object used for inputs with `enum` attributes, allowing
+        # for the usual `id` and `to_label` to work as expected *and* allowing
+        # equality comparison against the current value of an `enum` attribute, 
+        # which is represented as a name ("active"), instead of an id/integer (1)
+        # as it's stored in the database.
+        #
+        # Example:
+        #   my_model.status # => "active"
+        #   EnumOption.new("active", 0) == my_model.status
+        class EnumOption
+          def initialize(name, database_value)
+            @name = name
+            @database_value = database_value
+          end
+        
+          def id
+            @database_value
+          end
+        
+          def to_label
+            @name.humanize # TODO: I18n goes here
+          end
+        
+          # Columns with `enum` return "active" instead of the integer stored in the database
+          # so we compare it with the name used in the `enum` declaration instead.
+          def==(comparision_string)
+            @name == comparision_string
+          end
+        end
+
         def label_method
           @label_method ||= (label_method_from_options || label_and_value_method.first)
         end
@@ -95,7 +125,7 @@ module Formtastic
         def collection_from_enum
           if object.respond_to?(:defined_enums) && object.defined_enums.has_key?(method.to_s)
             enum_options_hash = object.send(method.to_s.pluralize.to_sym) # status => statuses
-            enum_options_hash.to_a # { "active"=>0, "inactive"=>1 } => [["active", 0], ["inactive", 1]]
+            enum_options_hash.map { |name, value| EnumOption.new(name, value) }
           end
         end
 
