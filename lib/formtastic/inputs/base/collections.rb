@@ -43,7 +43,7 @@ module Formtastic
         end
 
         def raw_collection
-          @raw_collection ||= (collection_from_options || collection_from_association || collection_for_boolean)
+          @raw_collection ||= (collection_from_options || collection_from_enum || collection_from_association || collection_for_boolean)
         end
 
         def collection
@@ -89,6 +89,13 @@ module Formtastic
             else
               reflection.klass.where(where_conditions)
             end
+          end
+        end
+
+        def collection_from_enum
+          if object.respond_to?(:defined_enums) && object.defined_enums.has_key?(method.to_s)
+            enum_options_hash = object.send(method.to_s.pluralize.to_sym) # status => statuses
+            enum_options_hash.to_a # { "active"=>0, "inactive"=>1 } => [["active", 0], ["inactive", 1]]
           end
         end
 
