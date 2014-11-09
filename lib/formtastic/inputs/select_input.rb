@@ -8,6 +8,7 @@ module Formtastic
     # This is the default input choice when:
     #
     # * the database column type is an `:integer` and there is an association (`belongs_to`)
+    # * the database column type is an `:integer` and there is an enum defined (`enum`)
     # * the database column type is a `:string` and the `:collection` option is used
     # * there an object with an association, but no database column on the object (`has_many`, etc)
     # * there is no object and the `:collection` option is used
