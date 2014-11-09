@@ -125,6 +125,21 @@ module Formtastic
     #   <%= f.input :author, :as => :select, :prompt => true %>   =>   <option value="">Please select</option>
     #   <%= f.input :author, :as => :select, :prompt => "Please select an author" %>
     #
+    # @example Using ActiveRecord enum attribute with i18n translation:
+    #   # post.rb
+    #   class Post < ActiveRecord::Base
+    #     enum :status => [ :active, :archived ]
+    #   end
+    #   # en.yml
+    #   en:
+    #     activerecord:
+    #       attributes:
+    #         post:
+    #           statuses:
+    #             active: I am active!
+    #             archived: I am archived!
+    #   # form
+    #   <%= f.input :status, :as => :select %>
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
     # @see Formtastic::Inputs::CheckBoxesInput CheckBoxesInput as an alternative for `has_many` and `has_and_belongs_to_many` associations
