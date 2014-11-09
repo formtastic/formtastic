@@ -8,3 +8,5 @@ require 'helpers'
 class MyInput
   include Formtastic::Inputs::Base
 end
+
+I18n.enforce_available_locales = false if I18n.respond_to?(:enforce_available_locales)

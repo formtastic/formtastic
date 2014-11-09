@@ -92,10 +92,36 @@ module Formtastic
           end
         end
 
+        # Assuming the following model:
+        #
+        # class Post < ActiveRecord::Base
+        #   enum :status => [ :active, :archived ]
+        # end
+        #
+        # We would end up with a collection like this:
+        #
+        # [["Active", "active"], ["Archived", "archived"]
+        #
+        # The first element in each array uses String#humanize, but I18n 
+        # translations are available too. Set them with the following structure.
+        #
+        # en:
+        #   activerecord:
+        #     attributes:
+        #       post:
+        #         statuses:
+        #           active: Custom Active Label Here
+        #           archived: Custom Archived Label Here
         def collection_from_enum
+          pluralized_method = method.to_s.pluralize.to_sym # :status => :statuses
+
           if object.respond_to?(:defined_enums) && object.defined_enums.has_key?(method.to_s)
-            enum_options_hash = object.send(method.to_s.pluralize.to_sym) # status => statuses
-            enum_options_hash.map { |name, value| [name.humanize, name] }
+            enum_options_hash = object.send(pluralized_method) # Post.statuses
+            enum_options_hash.map do |name, value| 
+              key = "activerecord.attributes.#{object_name}.#{pluralized_method}.#{name}"
+              label = ::I18n.translate(key, :default => name.humanize) 
+              [label, name]
+            end
           end
         end
 

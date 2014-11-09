@@ -9,7 +9,7 @@ describe MyInput do
   let(:builder) { double }
   let(:template) { double }
   let(:model) { double }
-  let(:model_name) { double }
+  let(:model_name) { "post" }
   let(:method) { double }
   let(:options) { Hash.new }
   
@@ -29,11 +29,38 @@ describe MyInput do
     let(:method) { :status }
 
     context "when an enum is defined for the method" do
-      it 'returns an Array of EnumOption objects based on the enum options hash' do
+      before do
         statuses = ActiveSupport::HashWithIndifferentAccess.new("active"=>0, "inactive"=>1)
         model.stub(:statuses) { statuses }
         model.stub(:defined_enums) { {"status" => statuses } }
-        instance.collection_from_enum.should eq [["Active", "active"],["Inactive", "inactive"]]
+      end
+
+      context 'no translations available' do
+        it 'returns an Array of EnumOption objects based on the enum options hash' do
+          instance.collection_from_enum.should eq [["Active", "active"],["Inactive", "inactive"]]
+        end
+      end
+
+      context 'with translations' do
+        before do
+          ::I18n.backend.store_translations :en, :activerecord => {
+            :attributes => {
+              :post => {
+                :statuses => {
+                  :active => "I am active",
+                  :inactive => "I am inactive"
+                }
+              }
+            }
+          }
+        end
+        it 'returns an Array of EnumOption objects based on the enum options hash' do
+          instance.collection_from_enum.should eq [["I am active", "active"],["I am inactive", "inactive"]]
+        end
+
+        after do
+          ::I18n.backend.store_translations :en, {}
+        end
       end
     end
 
