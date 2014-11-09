@@ -34,7 +34,7 @@ describe MyInput do
         model.stub(:statuses) { statuses }
         model.stub(:defined_enums) { {"status" => statuses } }
         instance.collection_from_enum.map(&:to_label).should eq ["Active","Inactive"]
-        instance.collection_from_enum.map(&:id).should eq [0,1]
+        instance.collection_from_enum.map(&:id).should eq ["active", "inactive"]
       end
     end
 

@@ -19,7 +19,7 @@ module Formtastic
           end
         
           def id
-            @database_value
+            @name
           end
         
           def to_label
