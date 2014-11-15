@@ -42,4 +42,8 @@ module Formtastic
   class UnsupportedMethodForAction < ArgumentError
   end
 
+  # @private
+  class UnsupportedEnumCollection < NameError
+  end
+
 end

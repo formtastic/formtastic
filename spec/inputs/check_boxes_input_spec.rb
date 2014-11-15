@@ -5,6 +5,11 @@ describe 'check_boxes input' do
 
   include FormtasticSpecHelper
 
+  before do
+    @output_buffer = ''
+    mock_everything
+  end
+
   describe 'for a has_many association' do
     before do
       @output_buffer = ''
@@ -309,7 +314,23 @@ describe 'check_boxes input' do
         output_buffer.should have_tag("legend.label label abbr")
       end
     end
+  end
 
+  describe 'for a enum column' do
+    before do
+      @new_post.stub(:status) { 'inactive' }
+      statuses = ActiveSupport::HashWithIndifferentAccess.new("active"=>0, "inactive"=>1)
+      @new_post.stub(:statuses) { statuses }
+      @new_post.stub(:defined_enums) { { "status" => statuses } }
+    end
+
+    it 'should have a select inside the wrapper' do
+      expect {
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:status, :as => :check_boxes))
+        end)
+      }.to raise_error(Formtastic::UnsupportedEnumCollection)
+    end
   end
 
   describe 'for a has_and_belongs_to_many association' do
