@@ -157,54 +157,58 @@ describe 'select input' do
       statuses = ActiveSupport::HashWithIndifferentAccess.new("active"=>0, "inactive"=>1)
       @new_post.stub(:statuses) { statuses }
       @new_post.stub(:defined_enums) { { "status" => statuses } }
-
-      concat(semantic_form_for(@new_post) do |builder|
-        concat(builder.input(:status, :as => :select))
-      end)
     end
 
-    it_should_have_input_wrapper_with_class("select")
-    it_should_have_input_wrapper_with_class(:input)
-    it_should_have_input_wrapper_with_id("post_status_input")
-    it_should_have_label_with_text(/Status/)
-    it_should_have_label_for('post_status')
-    it_should_apply_error_logic_for_input_type(:select)
-
-    it 'should have a select inside the wrapper' do
-      output_buffer.should have_tag('form li select')
-      output_buffer.should have_tag('form li select#post_status')
-    end
-
-    it 'should have a valid name' do
-      output_buffer.should have_tag("form li select[@name='post[status]']")
-      output_buffer.should_not have_tag("form li select[@name='post[status][]']")
-    end
-
-    it 'should not create a multi-select' do
-      output_buffer.should_not have_tag('form li select[@multiple]')
-    end
-    
-    it 'should not add a hidden input' do
-      output_buffer.should_not have_tag('form li input[@type="hidden"]')
-    end
-
-    it 'should create a select without size' do
-      output_buffer.should_not have_tag('form li select[@size]')
-    end
-
-    it 'should have a blank option' do
-      output_buffer.should have_tag("form li select option[@value='']")
-    end
-
-    it 'should have a select option for each defined enum status' do
-      output_buffer.should have_tag("form li select[@name='post[status]'] option", :count => @new_post.statuses.count + 1)
-      @new_post.statuses.each do |label, value|
-        output_buffer.should have_tag("form li select option[@value='#{label}']", /#{label.humanize}/)
+    context 'single choice' do
+      before do
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:status, :as => :select))
+        end)
       end
-    end
 
-    it 'should have one option with a "selected" attribute (TODO)' do
-      output_buffer.should have_tag("form li select[@name='post[status]'] option[@selected]", :count => 1)
+      it_should_have_input_wrapper_with_class("select")
+      it_should_have_input_wrapper_with_class(:input)
+      it_should_have_input_wrapper_with_id("post_status_input")
+      it_should_have_label_with_text(/Status/)
+      it_should_have_label_for('post_status')
+      it_should_apply_error_logic_for_input_type(:select)
+
+      it 'should have a select inside the wrapper' do
+        output_buffer.should have_tag('form li select')
+        output_buffer.should have_tag('form li select#post_status')
+      end
+
+      it 'should have a valid name' do
+        output_buffer.should have_tag("form li select[@name='post[status]']")
+        output_buffer.should_not have_tag("form li select[@name='post[status][]']")
+      end
+
+      it 'should not create a multi-select' do
+        output_buffer.should_not have_tag('form li select[@multiple]')
+      end
+      
+      it 'should not add a hidden input' do
+        output_buffer.should_not have_tag('form li input[@type="hidden"]')
+      end
+
+      it 'should create a select without size' do
+        output_buffer.should_not have_tag('form li select[@size]')
+      end
+
+      it 'should have a blank option' do
+        output_buffer.should have_tag("form li select option[@value='']")
+      end
+
+      it 'should have a select option for each defined enum status' do
+        output_buffer.should have_tag("form li select[@name='post[status]'] option", :count => @new_post.statuses.count + 1)
+        @new_post.statuses.each do |label, value|
+          output_buffer.should have_tag("form li select option[@value='#{label}']", /#{label.humanize}/)
+        end
+      end
+
+      it 'should have one option with a "selected" attribute (TODO)' do
+        output_buffer.should have_tag("form li select[@name='post[status]'] option[@selected]", :count => 1)
+      end
     end
   end
 
