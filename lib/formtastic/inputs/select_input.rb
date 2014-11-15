@@ -150,6 +150,11 @@ module Formtastic
       include Base
       include Base::Collections
 
+      def initialize(*args)
+        super
+        raise Formtastic::UnsupportedEnumCollection if collection_from_enum? && multiple?
+      end
+
       def to_html
         input_wrapping do
           label_html <<

@@ -210,6 +210,16 @@ describe 'select input' do
         output_buffer.should have_tag("form li select[@name='post[status]'] option[@selected]", :count => 1)
       end
     end
+
+    context 'multiple choice' do
+      it 'raises an error' do
+        expect {
+          concat(semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:status, :as => :select, :multiple => true))
+          end)
+        }.to raise_error Formtastic::UnsupportedEnumCollection
+      end
+    end
   end
 
   describe 'for a belongs_to association' do
