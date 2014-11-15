@@ -115,7 +115,7 @@ module Formtastic
         def collection_from_enum
           pluralized_method = method.to_s.pluralize.to_sym # :status => :statuses
 
-          if object.respond_to?(:defined_enums) && object.defined_enums.has_key?(method.to_s)
+          if collection_from_enum?
             enum_options_hash = object.send(pluralized_method) # Post.statuses
             enum_options_hash.map do |name, value| 
               key = "activerecord.attributes.#{object_name}.#{pluralized_method}.#{name}"
@@ -123,6 +123,10 @@ module Formtastic
               [label, name]
             end
           end
+        end
+
+        def collection_from_enum?
+          object.respond_to?(:defined_enums) && object.defined_enums.has_key?(method.to_s)
         end
 
         def collection_for_boolean
