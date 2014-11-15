@@ -39,6 +39,13 @@ module Formtastic
     # `:to_s`, which are defined in the configurations `collection_label_methods` and
     # `collection_value_methods` (see examples below).
     #
+    # For select inputs that map to ActiveRecord `enum` attributes, Formtastic will automatically
+    # load in your enum options to be used as the select's options. This can be overridden with
+    # the `:collection` option, or augmented with I18n translations. See examples below.
+    # An error is raised if you try to render a multi-select with an enum, as ActiveRecord can
+    # only store one choice in the database.
+    #
+    #
     # @example Basic `belongs_to` example with full form context
     #
     #     <%= semantic_form_for @post do |f| %>
