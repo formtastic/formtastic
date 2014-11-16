@@ -320,7 +320,7 @@ describe 'check_boxes input' do
     before do
       @new_post.stub(:status) { 'inactive' }
       statuses = ActiveSupport::HashWithIndifferentAccess.new("active"=>0, "inactive"=>1)
-      @new_post.stub(:statuses) { statuses }
+      @new_post.class.stub(:statuses) { statuses }
       @new_post.stub(:defined_enums) { { "status" => statuses } }
     end
 

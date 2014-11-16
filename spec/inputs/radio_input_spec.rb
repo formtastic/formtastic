@@ -156,7 +156,7 @@ describe 'radio input' do
     before do
       @new_post.stub(:status) { 'inactive' }
       statuses = ActiveSupport::HashWithIndifferentAccess.new("active"=>0, "inactive"=>1)
-      @new_post.stub(:statuses) { statuses }
+      @new_post.class.stub(:statuses) { statuses }
       @new_post.stub(:defined_enums) { { "status" => statuses } }
     end
 
@@ -167,8 +167,8 @@ describe 'radio input' do
     end
 
     it 'should have a radio input for each defined enum status' do
-      output_buffer.should have_tag("form li input[@name='post[status]'][@type='radio']", :count => @new_post.statuses.count)
-      @new_post.statuses.each do |label, value|
+      output_buffer.should have_tag("form li input[@name='post[status]'][@type='radio']", :count => @new_post.class.statuses.count)
+      @new_post.class.statuses.each do |label, value|
         output_buffer.should have_tag("form li input[@value='#{label}']")
         output_buffer.should have_tag("form li label", /#{label.humanize}/)
       end

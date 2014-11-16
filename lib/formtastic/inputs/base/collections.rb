@@ -116,7 +116,7 @@ module Formtastic
           pluralized_method = method.to_s.pluralize.to_sym # :status => :statuses
 
           if collection_from_enum?
-            enum_options_hash = object.send(pluralized_method) # Post.statuses
+            enum_options_hash = object.class.send(pluralized_method) # Post.statuses
             enum_options_hash.map do |name, value| 
               key = "activerecord.attributes.#{object_name}.#{pluralized_method}.#{name}"
               label = ::I18n.translate(key, :default => name.humanize) 

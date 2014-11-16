@@ -8,7 +8,8 @@ end
 describe MyInput do
   let(:builder) { double }
   let(:template) { double }
-  let(:model) { double }
+  let(:model_class) { double }
+  let(:model) { double(:class => model_class) }
   let(:model_name) { "post" }
   let(:method) { double }
   let(:options) { Hash.new }
@@ -31,7 +32,7 @@ describe MyInput do
     context "when an enum is defined for the method" do
       before do
         statuses = ActiveSupport::HashWithIndifferentAccess.new("active"=>0, "inactive"=>1)
-        model.stub(:statuses) { statuses }
+        model_class.stub(:statuses) { statuses }
         model.stub(:defined_enums) { {"status" => statuses } }
       end
 

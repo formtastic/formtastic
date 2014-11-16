@@ -749,7 +749,7 @@ RSpec.shared_examples 'Input Helper' do
 
         it 'should default to :select for enum' do
           statuses = ActiveSupport::HashWithIndifferentAccess.new("active"=>0, "inactive"=>1)
-          @new_post.stub(:statuses) { statuses }
+          @new_post.class.stub(:statuses) { statuses }
           @new_post.stub(:defined_enums) { {"status" => statuses } }
           
           default_input_type(:integer, :status).should == :select

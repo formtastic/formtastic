@@ -155,7 +155,7 @@ describe 'select input' do
     before do
       @new_post.stub(:status) { 'inactive' }
       statuses = ActiveSupport::HashWithIndifferentAccess.new("active"=>0, "inactive"=>1)
-      @new_post.stub(:statuses) { statuses }
+      @new_post.class.stub(:statuses) { statuses }
       @new_post.stub(:defined_enums) { { "status" => statuses } }
     end
 
@@ -200,8 +200,8 @@ describe 'select input' do
       end
 
       it 'should have a select option for each defined enum status' do
-        output_buffer.should have_tag("form li select[@name='post[status]'] option", :count => @new_post.statuses.count + 1)
-        @new_post.statuses.each do |label, value|
+        output_buffer.should have_tag("form li select[@name='post[status]'] option", :count => @new_post.class.statuses.count + 1)
+        @new_post.class.statuses.each do |label, value|
           output_buffer.should have_tag("form li select option[@value='#{label}']", /#{label.humanize}/)
         end
       end
