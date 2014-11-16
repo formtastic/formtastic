@@ -1,3 +1,7 @@
+3.1.0
+
+* Performance and documentation improvements
+
 3.1.0.rc2
 
 * Deprecated :member_value and :member_label options
