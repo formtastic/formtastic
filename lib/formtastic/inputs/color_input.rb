@@ -31,7 +31,6 @@ module Formtastic
       include Base::Placeholder
       
       def to_html
-        raise "The :color input requires the color_field form helper, which is only available in Rails 4+" unless builder.respond_to?(:color_field)
         input_wrapping do
           label_html <<
           builder.color_field(method, input_html_options)
