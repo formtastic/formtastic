@@ -40,6 +40,7 @@ module Formtastic
       private_constant(:INPUT_CLASS_DEPRECATION)
 
       include Formtastic::Helpers::Reflection
+      include Formtastic::Helpers::Enum
       include Formtastic::Helpers::FileColumnDetection
 
       # Returns a chunk of HTML markup for a given `method` on the form object, wrapped in
@@ -272,6 +273,7 @@ module Formtastic
             return :color     if method.to_s =~ /color/
           when :integer
             return :select    if reflection_for(method)
+            return :select    if enum_for(method)
             return :number
           when :float, :decimal
             return :number

@@ -43,7 +43,7 @@ module Formtastic
         end
 
         def raw_collection
-          @raw_collection ||= (collection_from_options || collection_from_association || collection_for_boolean)
+          @raw_collection ||= (collection_from_options || collection_from_enum || collection_from_association || collection_for_boolean)
         end
 
         def collection
@@ -90,6 +90,43 @@ module Formtastic
               reflection.klass.where(where_conditions)
             end
           end
+        end
+
+        # Assuming the following model:
+        #
+        # class Post < ActiveRecord::Base
+        #   enum :status => [ :active, :archived ]
+        # end
+        #
+        # We would end up with a collection like this:
+        #
+        # [["Active", "active"], ["Archived", "archived"]
+        #
+        # The first element in each array uses String#humanize, but I18n 
+        # translations are available too. Set them with the following structure.
+        #
+        # en:
+        #   activerecord:
+        #     attributes:
+        #       post:
+        #         statuses:
+        #           active: Custom Active Label Here
+        #           archived: Custom Archived Label Here
+        def collection_from_enum
+          pluralized_method = method.to_s.pluralize.to_sym # :status => :statuses
+
+          if collection_from_enum?
+            enum_options_hash = object.class.send(pluralized_method) # Post.statuses
+            enum_options_hash.map do |name, value| 
+              key = "activerecord.attributes.#{object_name}.#{pluralized_method}.#{name}"
+              label = ::I18n.translate(key, :default => name.humanize) 
+              [label, name]
+            end
+          end
+        end
+
+        def collection_from_enum?
+          object.respond_to?(:defined_enums) && object.defined_enums.has_key?(method.to_s)
         end
 
         def collection_for_boolean

@@ -747,6 +747,14 @@ RSpec.shared_examples 'Input Helper' do
           default_input_type(:integer, :section_id).should == :select
         end
 
+        it 'should default to :select for enum' do
+          statuses = ActiveSupport::HashWithIndifferentAccess.new("active"=>0, "inactive"=>1)
+          @new_post.class.stub(:statuses) { statuses }
+          @new_post.stub(:defined_enums) { {"status" => statuses } }
+          
+          default_input_type(:integer, :status).should == :select
+        end
+
         it 'should default to :password for :string column types with "password" in the method name' do
           default_input_type(:string, :password).should == :password
           default_input_type(:string, :hashed_password).should == :password
