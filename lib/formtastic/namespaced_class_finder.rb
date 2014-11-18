@@ -28,6 +28,10 @@ module Formtastic
     class NotFoundError < NameError
     end
 
+    def self.use_const_defined?
+      defined?(Rails) && ::Rails.application && ::Rails.application.config.eager_load
+    end
+
     # @param namespaces [Array<Module>]
     def initialize(namespaces)
       @namespaces = namespaces.flatten
@@ -62,7 +66,7 @@ module Formtastic
 
     private
 
-    if defined?(Rails) && ::Rails.application && ::Rails.application.config.cache_classes
+    if use_const_defined?
       def finder(class_name) # @private
         find_with_const_defined(class_name)
       end
