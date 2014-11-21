@@ -2,7 +2,7 @@
 module Formtastic
   module Helpers
     module ActionHelper
-      ACTION_CLASS_DEPRECATION = 'configure Formtastic::FormBuilder.action_class_finder instead'.freeze
+      ACTION_CLASS_DEPRECATION = 'configure Formtastic::FormBuilder.action_class_finder instead (upgrade guide on wiki: http://bit.ly/1F9QtKc )'.freeze
       private_constant(:ACTION_CLASS_DEPRECATION)
 
       # Renders an action for the form (such as a subit/reset button, or a cancel link).
