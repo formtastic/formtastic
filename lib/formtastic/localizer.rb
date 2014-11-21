@@ -56,7 +56,7 @@ module Formtastic
       self.builder = current_builder 
     end
 
-    def localize(key, value, type, options = {}) #:nodoc:
+    def localize(key, value, type, options = {}) # @private
       key = value if value.is_a?(::Symbol)
       
       if value.is_a?(::String)
@@ -132,7 +132,7 @@ module Formtastic
       end
     end
 
-    def escape_html_entities(string) #:nodoc:
+    def escape_html_entities(string) # @private
       if (builder.escape_html_entities_in_hints_and_labels) ||
          (self.respond_to?(:escape_html_entities_in_hints_and_labels) && escape_html_entities_in_hints_and_labels)
         string = builder.template.escape_once(string) unless string.respond_to?(:html_safe?) && string.html_safe? == true # Accept html_safe flag as indicator to skip escaping

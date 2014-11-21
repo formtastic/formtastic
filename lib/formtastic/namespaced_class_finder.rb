@@ -22,13 +22,13 @@ module Formtastic
   #
 
   class NamespacedClassFinder
-    attr_reader :namespaces #:nodoc:
+    attr_reader :namespaces # @private
 
     # @private
     class NotFoundError < NameError
     end
 
-    def initialize(namespaces) #:nodoc:
+    def initialize(namespaces) # @private
       @namespaces = namespaces.flatten
       @cache = {}
     end
@@ -57,11 +57,11 @@ module Formtastic
     end
 
     if defined?(Rails) && ::Rails.application && ::Rails.application.config.cache_classes
-      def finder(class_name) # :nodoc:
+      def finder(class_name) # @private
         find_with_const_defined(class_name)
       end
     else
-      def finder(class_name) # :nodoc:
+      def finder(class_name) # @private
         find_by_trying(class_name)
       end
     end

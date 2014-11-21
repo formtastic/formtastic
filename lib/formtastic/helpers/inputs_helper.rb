@@ -338,7 +338,7 @@ module Formtastic
       # Collects association columns (relation columns) for the current form object class. Skips
       # polymorphic associations because we can't guess which class to use for an automatically
       # generated input.
-      def association_columns(*by_associations) #:nodoc:
+      def association_columns(*by_associations) # @private
         if @object.present? && @object.class.respond_to?(:reflections)
           @object.class.reflections.collect do |name, association_reflection|
             if by_associations.present?
@@ -355,7 +355,7 @@ module Formtastic
       end
 
       # Collects content columns (non-relation columns) for the current form object class.
-      def content_columns #:nodoc:
+      def content_columns # @private
         # TODO: NameError is raised by Inflector.constantize. Consider checking if it exists instead.
         begin klass = model_name.constantize; rescue NameError; return [] end
         return [] unless klass.respond_to?(:content_columns)
@@ -367,7 +367,7 @@ module Formtastic
       # key.
       #
       # It should raise an error if a block with arity zero is given.
-      def inputs_for_nested_attributes(*args, &block) #:nodoc:
+      def inputs_for_nested_attributes(*args, &block) # @private
         options = args.extract_options!
         args << options.merge!(:parent => { :builder => self, :for => options[:for] })
 
@@ -396,7 +396,7 @@ module Formtastic
         fields_for(*fields_for_args, &fields_for_block)
       end
 
-      def field_set_title_from_args(*args) #:nodoc:
+      def field_set_title_from_args(*args) # @private
         options = args.extract_options!
         options[:name] ||= options.delete(:title)
         title = options[:name]

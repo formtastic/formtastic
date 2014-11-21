@@ -21,7 +21,7 @@ module Formtastic
       #   f.inputs "My little legend", :title, :body, :author   # Explicit legend string => "My little legend"
       #   f.inputs :my_little_legend, :title, :body, :author    # Localized (118n) legend with I18n key => I18n.t(:my_little_legend, ...)
       #   f.inputs :title, :body, :author                       # First argument is a column => (no legend)
-      def field_set_and_list_wrapping(*args, &block) #:nodoc:
+      def field_set_and_list_wrapping(*args, &block) # @private
         contents = args.last.is_a?(::Hash) ? '' : args.pop.flatten
         html_options = args.extract_options!
 
@@ -54,7 +54,7 @@ module Formtastic
 
       # Gets the nested_child_index value from the parent builder. It returns a hash with each
       # association that the parent builds.
-      def parent_child_index(parent) #:nodoc:
+      def parent_child_index(parent) # @private
         # Could be {"post[authors_attributes]"=>0} or { :authors => 0 }
         duck = parent[:builder].instance_variable_get('@nested_child_index')
         

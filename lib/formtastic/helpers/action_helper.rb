@@ -89,7 +89,7 @@ module Formtastic
 
       protected
 
-      def default_action_type(method, options = {}) #:nodoc:
+      def default_action_type(method, options = {}) # @private
         case method
           when :submit then :input
           when :reset  then :input
