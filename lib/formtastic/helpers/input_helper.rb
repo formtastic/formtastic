@@ -36,7 +36,7 @@ module Formtastic
     # @see Formtastic::Helpers::InputsHelper#inputs
     # @see Formtastic::Helpers::FormHelper#semantic_form_for
     module InputHelper
-      INPUT_CLASS_DEPRECATION = 'configure Formtastic::FormBuilder.input_class_finder instead'.freeze
+      INPUT_CLASS_DEPRECATION = 'configure Formtastic::FormBuilder.input_class_finder instead (upgrade guide on wiki: http://bit.ly/1F9QtKc )'.freeze
       private_constant(:INPUT_CLASS_DEPRECATION)
 
       include Formtastic::Helpers::Reflection
