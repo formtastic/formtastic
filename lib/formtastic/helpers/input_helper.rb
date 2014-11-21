@@ -251,7 +251,7 @@ module Formtastic
       #
       # If there is no column for the method (eg "virtual columns" with an attr_accessor), the
       # default is a :string, a similar behaviour to Rails' scaffolding.
-      def default_input_type(method, options = {}) #:nodoc:
+      def default_input_type(method, options = {}) # @private
         if @object
           return :select  if reflection_for(method)
 
@@ -295,7 +295,7 @@ module Formtastic
       end
 
       # Get a column object for a specified attribute method - if possible.
-      def column_for(method) #:nodoc:
+      def column_for(method) # @private
         if @object.respond_to?(:column_for_attribute)
           # Remove deprecation wrapper & review after Rails 5.0 ships
           ActiveSupport::Deprecation.silence do
