@@ -26,7 +26,7 @@ module Formtastic
     deprecation.warn("Support for Rails < 4.0.4 will be dropped ")
   end
 
-  # @private
+  # @public
   class UnknownInputError < NameError
   end
 

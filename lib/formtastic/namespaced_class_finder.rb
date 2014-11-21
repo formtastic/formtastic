@@ -3,12 +3,11 @@ module Formtastic
   # is used both by Formtastic::Helpers::InputHelper and
   # Formtastic::Helpers::ActionHelper to look up action and input classes.
   #
-  # ==== Example
-  # You can implement own class finder that for example prefixes the class name or uses custom module.
-  #
+  # @example Implementing own class finder
+  #   # You can implement own class finder that for example prefixes the class name or uses custom module.
   #   class MyInputClassFinder < Formtastic::NamespacedClassFinder
-  #     def initialize(builder)
-  #       super [MyNamespace, Object] # first lookup in MyNamespace then the globals
+  #     def initialize(namespaces)
+  #       super [MyNamespace] + namespaces # first lookup in MyNamespace then the defaults
   #     end
   #
   #     private
@@ -18,7 +17,8 @@ module Formtastic
   #     end
   #   end
   #
-  # And then set Formtastic::FormBuilder.input_class_finder with that class.
+  #   # in config/initializers/formtastic.rb
+  #   Formtastic::FormBuilder.input_class_finder = MyInputClassFinder
   #
 
   class NamespacedClassFinder
@@ -28,7 +28,8 @@ module Formtastic
     class NotFoundError < NameError
     end
 
-    def initialize(namespaces) # @private
+    # @param namespaces [Array<Module>]
+    def initialize(namespaces)
       @namespaces = namespaces.flatten
       @cache = {}
     end
@@ -50,11 +51,16 @@ module Formtastic
       finder(class_name) or raise NotFoundError, "class #{class_name}"
     end
 
-    private
+    # Converts symbol to class name
+    # Overridden in subclasses to create `StringInput` and `ButtonAction`
+    # @example
+    #   class_name(:string) == "String"
 
     def class_name(as)
       as.to_s.camelize
     end
+
+    private
 
     if defined?(Rails) && ::Rails.application && ::Rails.application.config.cache_classes
       def finder(class_name) # @private
