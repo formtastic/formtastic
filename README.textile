@@ -98,7 +98,7 @@ Simply add Formtastic to your Gemfile and bundle it up:
 
 Run the installation generator:
 
-<pre>
+<pre lang=shell>
   $ rails generate formtastic:install
 </pre>
 
