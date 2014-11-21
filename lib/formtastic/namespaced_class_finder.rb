@@ -3,12 +3,11 @@ module Formtastic
   # is used both by Formtastic::Helpers::InputHelper and
   # Formtastic::Helpers::ActionHelper to look up action and input classes.
   #
-  # ==== Example
-  # You can implement own class finder that for example prefixes the class name or uses custom module.
-  #
+  # @example Implementing own class finder
+  #   # You can implement own class finder that for example prefixes the class name or uses custom module.
   #   class MyInputClassFinder < Formtastic::NamespacedClassFinder
-  #     def initialize(builder)
-  #       super [MyNamespace, Object] # first lookup in MyNamespace then the globals
+  #     def initialize(namespaces)
+  #       super [MyNamespace] + namespaces # first lookup in MyNamespace then the defaults
   #     end
   #
   #     private
@@ -18,17 +17,19 @@ module Formtastic
   #     end
   #   end
   #
-  # And then set Formtastic::FormBuilder.input_class_finder with that class.
+  #   # in config/initializers/formtastic.rb
+  #   Formtastic::FormBuilder.input_class_finder = MyInputClassFinder
   #
 
   class NamespacedClassFinder
-    attr_reader :namespaces #:nodoc:
+    attr_reader :namespaces # @private
 
     # @private
     class NotFoundError < NameError
     end
 
-    def initialize(namespaces) #:nodoc:
+    # @param namespaces [Array<Module>]
+    def initialize(namespaces)
       @namespaces = namespaces.flatten
       @cache = {}
     end
@@ -50,18 +51,23 @@ module Formtastic
       finder(class_name) or raise NotFoundError, "class #{class_name}"
     end
 
-    private
+    # Converts symbol to class name
+    # Overridden in subclasses to create `StringInput` and `ButtonAction`
+    # @example
+    #   class_name(:string) == "String"
 
     def class_name(as)
       as.to_s.camelize
     end
 
+    private
+
     if defined?(Rails) && ::Rails.application && ::Rails.application.config.cache_classes
-      def finder(class_name) # :nodoc:
+      def finder(class_name) # @private
         find_with_const_defined(class_name)
       end
     else
-      def finder(class_name) # :nodoc:
+      def finder(class_name) # @private
         find_by_trying(class_name)
       end
     end

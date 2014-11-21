@@ -4,15 +4,20 @@ module Formtastic
   # files without confirmation.
   #
   # @example
+  # !!!shell
   #   $ rails generate formtastic:form Post
   # @example Copy the partial code to the pasteboard rather than generating a partial
+  # !!!shell
   #   $ rails generate formtastic:form Post --copy
   # @example Return HAML or Slim output instead of default ERB
+  # !!!shell
   #   $ rails generate formtastic:form Post --template-engine haml
   #   $ rails generate formtastic:form Post --template-engine slim
   # @example Generate a form for specific model attributes
+  # !!!shell
   #   $ rails generate formtastic:form Post title:string body:text
   # @example Generate a form for a specific controller
+  # !!!shell
   #   $ rails generate formtastic:form Post --controller admin/posts
   class FormGenerator < Rails::Generators::NamedBase
     desc "Generates a Formtastic form partial based on an existing model."

@@ -1,13 +1,13 @@
 require 'active_support/deprecation'
 
-# TODO: remove this branch and file when support for rails 3.2 is dropped
-
 module Formtastic
   if ActiveSupport::Deprecation.respond_to?(:new)
     Deprecation = ActiveSupport::Deprecation
   else
     require 'forwardable'
 
+    # @private
+    # @todo remove this branch and file when support for rails 3.2 is dropped
     class Deprecation
       mattr_accessor :deprecation
       self.deprecation = ActiveSupport::Deprecation.dup

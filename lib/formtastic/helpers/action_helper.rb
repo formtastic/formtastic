@@ -89,7 +89,7 @@ module Formtastic
 
       protected
 
-      def default_action_type(method, options = {}) #:nodoc:
+      def default_action_type(method, options = {}) # @private
         case method
           when :submit then :input
           when :reset  then :input
@@ -104,9 +104,9 @@ module Formtastic
       # and modify to suit), falling back to `Formtastic::Actions::AwesomeAction`.
       #
       # Custom action namespaces to look into can be configured via the
-      # .action_namespaces +FormBuilder+ configuration setting.
-      # See +Formtastic::Helpers::InputHelper#namespaced_input_class+ for details.
-      #
+      # {Formtastic::FormBuilder.action_namespaces} configuration setting.
+      # @see Helpers::InputHelper#namespaced_input_class
+      # @see Formtastic::ActionClassFinder
       def namespaced_action_class(as)
         @action_class_finder ||= action_class_finder.new(self)
         @action_class_finder.find(as)

@@ -4,6 +4,7 @@ module Formtastic
   # Copies a config initializer to config/initializers/formtastic.rb
   #
   # @example
+  # !!!shell
   #   $ rails generate formtastic:install
   class InstallGenerator < Rails::Generators::Base
     source_root File.expand_path('../../../templates', __FILE__)
