@@ -1,9 +1,18 @@
 module Formtastic
   class FormBuilder < ActionView::Helpers::FormBuilder
 
-    def self.configure(name, value = nil)
+    # Defines a new configurable option
+    # @param [Symbol] name the configuration name
+    # @param [Object] default the configuration default value
+    # @private
+    #
+    # @!macro [new] configure
+    #   @!scope class
+    #   @!attribute [rw] $1
+    #   @api public
+    def self.configure(name, default = nil)
       class_attribute(name)
-      self.send(:"#{name}=", value)
+      self.send(:"#{name}=", default)
     end
 
     configure :custom_namespace
