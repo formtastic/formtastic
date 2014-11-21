@@ -1,15 +1,15 @@
 module Formtastic
 
-  # Uses the Formtastic::NamespacedClassFinder to look up input class names.
+  # Uses the {Formtastic::NamespacedClassFinder} to look up input class names.
   #
-  # See Formtastic::Helpers::InputHelper#namespaced_input_class for details.
+  # See {Formtastic::FormBuilder#namespaced_input_class} for details.
   #
   class InputClassFinder < NamespacedClassFinder
+
+    # @param builder [FormBuilder]
     def initialize(builder)
       super builder.input_namespaces
     end
-
-    private
 
     def class_name(as)
       "#{super}Input"

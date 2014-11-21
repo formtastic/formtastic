@@ -227,6 +227,7 @@ module Formtastic
       #          first_name: "Joe"
       #          last_name: "Smith"
       #
+      # @see #namespaced_input_class
       # @todo Many many more examples. Some of the detail probably needs to be pushed out to the relevant methods too.
       # @todo More i18n examples.
       def input(method, options = {})
@@ -310,7 +311,7 @@ module Formtastic
       # and modify to suit), falling back to `Formtastic::Inputs::AwesomeInput`.
       #
       # Custom input namespaces to look into can be configured via the
-      # .input_namespaces +FormBuilder+ configuration setting.
+      # {Formtastic::FormBuilder.input_namespaces} configuration setting.
       #
       # @param [Symbol] as A symbol representing the type of input to render
       # @raise [Formtastic::UnknownInputError] An appropriate input class could not be found
@@ -323,7 +324,7 @@ module Formtastic
       # @example When a top-level class is found
       #   input_class(:string) #=> StringInput
       #   input_class(:awesome) #=> AwesomeInput
-
+      # @see NamespacedClassFinder#find
       def namespaced_input_class(as)
         @input_class_finder ||= input_class_finder.new(self)
         @input_class_finder.find(as)
@@ -384,7 +385,7 @@ module Formtastic
 
       # @api private
       # @deprecated Use {InputClassFinder#class_name} instead.
-      # :as => :string # => Formtastic::Inputs::StringInput
+      # :as => :string # => {Formtastic::Inputs::StringInput}
       def standard_input_class_name(as)
         input_class_deprecation_warning(__method__)
         "Formtastic::Inputs::#{as.to_s.camelize}Input"
