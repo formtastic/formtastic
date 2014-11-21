@@ -1,3 +1,9 @@
+3.1.1
+
+  * Fixed class custom input & action class loading in test environments
+  * Added documentation of custom input & action class finders
+  * Added a link to documentation & wiki from custom class deprecation warnings
+
 3.1.0
 
   * Performance and documentation improvements
