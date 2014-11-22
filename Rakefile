@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'bundler/setup'
 require 'appraisal'
-require 'rdoc/task'
+require 'yard'
 require 'rspec/core/rake_task'
 
 Bundler::GemHelper.install_tasks
@@ -14,13 +14,10 @@ else
 end
 
 desc 'Generate documentation for the formtastic plugin.'
-Rake::RDocTask.new(:rdoc) do |rdoc|
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title    = 'Formtastic'
-  rdoc.options << '--line-numbers' << '--inline-source'
-  rdoc.rdoc_files.include('README.textile')
-  rdoc.rdoc_files.include('lib/**/*.rb')
+YARD::Rake::YardocTask.new(:yard) do |t|
+
 end
+task doc: :yard
 
 desc 'Test the formtastic plugin.'
 RSpec::Core::RakeTask.new('spec') do |t|

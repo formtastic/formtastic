@@ -25,9 +25,7 @@ module Formtastic
         end
 
         def wrapper_classes_raw
-          classes = wrapper_html_options_raw[:class] || []
-          return classes.dup if classes.is_a?(Array)
-          return [classes]
+          [*wrapper_html_options_raw[:class]]
         end
 
         def wrapper_classes

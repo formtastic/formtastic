@@ -4,20 +4,20 @@ module Formtastic
     module Reflection
       # If an association method is passed in (f.input :author) try to find the
       # reflection object.
-      def reflection_for(method) #:nodoc:
+      def reflection_for(method) # @private
         if @object.class.respond_to?(:reflect_on_association)
-          @object.class.reflect_on_association(method) 
+          @object.class.reflect_on_association(method)
         elsif @object.class.respond_to?(:associations) # MongoMapper uses the 'associations(method)' instead
           @object.class.associations[method]
         end
       end
 
-      def association_macro_for_method(method) #:nodoc:
+      def association_macro_for_method(method) # @private
         reflection = reflection_for(method)
         reflection.macro if reflection
       end
 
-      def association_primary_key_for_method(method) #:nodoc:
+      def association_primary_key_for_method(method) # @private
         reflection = reflection_for(method)
         if reflection
           case association_macro_for_method(method)

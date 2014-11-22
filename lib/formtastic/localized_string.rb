@@ -7,7 +7,7 @@ module Formtastic
 
     protected
 
-    def localized_string(key, value, type, options = {}) #:nodoc:
+    def localized_string(key, value, type, options = {}) # @private
       current_builder = respond_to?(:builder) ? builder : self
       localizer = Formtastic::FormBuilder.i18n_localizer.new(current_builder)
       localizer.localize(key, value, type, options)

@@ -1,9 +1,18 @@
 module Formtastic
   class FormBuilder < ActionView::Helpers::FormBuilder
 
-    def self.configure(name, value = nil)
+    # Defines a new configurable option
+    # @param [Symbol] name the configuration name
+    # @param [Object] default the configuration default value
+    # @private
+    #
+    # @!macro [new] configure
+    #   @!scope class
+    #   @!attribute [rw] $1
+    #   @api public
+    def self.configure(name, default = nil)
       class_attribute(name)
-      self.send(:"#{name}=", value)
+      self.send(:"#{name}=", default)
     end
 
     configure :custom_namespace
@@ -31,11 +40,15 @@ module Formtastic
     configure :default_hint_class, 'inline-hints'
     configure :use_required_attribute, false
     configure :perform_browser_validations, false
+    # Check {Formtastic::InputClassFinder} to see how are inputs resolved.
     configure :input_namespaces, [::Object, ::Formtastic::Inputs]
-    # TODO: enable this as default in 4.0 and remove it from configuration generator template
+    # @todo enable this as default in 4.0 and remove it from configuration generator template
+    # Will be {Formtastic::InputClassFinder} by default in 4.0.
     configure :input_class_finder #, Formtastic::InputClassFinder
+    # Check {Formtastic::ActionClassFinder} to see how are inputs resolved.
     configure :action_namespaces, [::Object, ::Formtastic::Actions]
-    # TODO: enable this as default in 4.0 and remove it from configuration generator template
+    # @todo enable this as default in 4.0 and remove it from configuration generator template
+    # Will be {Formtastic::ActionClassFinder} by default in 4.0.
     configure :action_class_finder#, Formtastic::ActionClassFinder
 
     attr_reader :template

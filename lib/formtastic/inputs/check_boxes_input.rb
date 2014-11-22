@@ -69,6 +69,11 @@ module Formtastic
       include Base::Collections
       include Base::Choices
 
+      def initialize(*args)
+        super
+        raise Formtastic::UnsupportedEnumCollection if collection_from_enum?
+      end
+
       def to_html
         input_wrapping do
           choices_wrapping do
