@@ -5,12 +5,15 @@ v4.0 (planned)
 
 * Remove support for Rails < 4.1
 * Remove support for country_select 1.x syntax (they want to remove it in 3.0)
+* Remove support for input_class, custom_input_class_name, standard_input_class_name, action_class, custom_action_class_name, standard_action_class_name
 
 v3.1 (master)
 
 * Deprecate support for Rails < 4.1
 * Deprecate :member_value option
 * Deprecate :member_label option
+* Deprecate internal custom input class finder methods (input_class, custom_input_class_name, standard_input_class_name)
+* Deprecate internal custom action class finder methods (action_class, custom_action_class_name, standard_action_class_name)
 
 v3.0
 
