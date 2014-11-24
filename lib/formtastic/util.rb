@@ -20,33 +20,33 @@ module Formtastic
         text
       end
     end
-    
+
     def rails3?
-      rails_version >= Gem::Version.new("3.0.0") && 
-      rails_version < Gem::Version.new("4.0.0")
+      match?(rails_version, "~> 3.0")
     end
 
     def rails4?
-      rails_version >= Gem::Version.new("4.0.0") && 
-      rails_version < Gem::Version.new("5.0.0")
+      match?(rails_version, "~> 4.0")
     end
-    
+
     def rails4_0?
-      rails_version >= Gem::Version.new("4.0.0") && 
-      rails_version < Gem::Version.new("4.1.0")
+      match?(rails_version, "~> 4.0.0")
     end
 
     def rails4_1?
-      rails_version >= Gem::Version.new("4.1.0") && 
-      rails_version < Gem::Version.new("4.2.0")
+      match?(rails_version, "~> 4.1.0")
     end
-    
+
     def deprecated_version_of_rails?
-      rails_version < Gem::Version.new("4.1.0")
+      match?(rails_version, "< 4.1.0")
     end
 
     def rails_version
-      Gem::Version.new(::Rails::VERSION::STRING)
+      ::Rails::VERSION::STRING
+    end
+
+    def match?(version, dependency)
+      Gem::Dependency.new("formtastic", dependency).match?("formtastic", version)
     end
 
   end
