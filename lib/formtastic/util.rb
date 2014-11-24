@@ -38,7 +38,11 @@ module Formtastic
     end
 
     def deprecated_version_of_rails?
-      match?(rails_version, "< 4.1.0")
+      match?(rails_version, "< #{minimum_version_of_rails}")
+    end
+
+    def minimum_version_of_rails
+      "4.1.0"
     end
 
     def rails_version
