@@ -113,12 +113,12 @@ module Formtastic
         #           active: Custom Active Label Here
         #           archived: Custom Archived Label Here
         def collection_from_enum
-          pluralized_method = method.to_s.pluralize.to_sym # :status => :statuses
-
           if collection_from_enum?
-            enum_options_hash = object.class.send(pluralized_method) # Post.statuses
+            method_name = method.to_s
+
+            enum_options_hash = object.defined_enums[method_name]
             enum_options_hash.map do |name, value| 
-              key = "activerecord.attributes.#{object_name}.#{pluralized_method}.#{name}"
+              key = "activerecord.attributes.#{object_name}.#{method_name.pluralize}.#{name}"
               label = ::I18n.translate(key, :default => name.humanize) 
               [label, name]
             end
