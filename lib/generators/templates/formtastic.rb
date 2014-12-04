@@ -17,15 +17,15 @@
 # Defaults to true.
 # Formtastic::FormBuilder.include_blank_for_select_by_default = true
 
-# Set the string that will be appended to the labels/fieldsets which are required
+# Set the string that will be appended to the labels/fieldsets which are required.
 # It accepts string or procs and the default is a localized version of
 # '<abbr title="required">*</abbr>'. In other words, if you configure formtastic.required
 # in your locale, it will replace the abbr title properly. But if you don't want to use
-# abbr tag, you can simply give a string as below
+# abbr tag, you can simply give a string as below.
 # Formtastic::FormBuilder.required_string = "(required)"
 
-# Set the string that will be appended to the labels/fieldsets which are optional
-# Defaults to an empty string ("") and also accepts procs (see required_string above)
+# Set the string that will be appended to the labels/fieldsets which are optional.
+# Defaults to an empty string ("") and also accepts procs (see required_string above).
 # Formtastic::FormBuilder.optional_string = "(optional)"
 
 # Set the way inline errors will be displayed.
@@ -33,7 +33,7 @@
 # Formtastic::FormBuilder.inline_errors = :sentence
 # Formtastic uses the following classes as default for hints, inline_errors and error list
 
-# If you override the class here, please ensure to override it in your stylesheets as well
+# If you override the class here, please ensure to override it in your stylesheets as well.
 # Formtastic::FormBuilder.default_hint_class = "inline-hints"
 # Formtastic::FormBuilder.default_inline_error_class = "inline-errors"
 # Formtastic::FormBuilder.default_error_list_class = "errors"
@@ -70,7 +70,7 @@
 # can change it to any class you want.
 # Formtastic::Helpers::FormHelper.default_form_class = 'formtastic'
 
-# Formtastic will infer a class name from the model, array, string ot symbol you pass to the
+# Formtastic will infer a class name from the model, array, string or symbol you pass to the
 # form builder. You can customize the way that class is presented by overriding
 # this proc.
 # Formtastic::Helpers::FormHelper.default_form_model_class_proc = proc { |model_class_name| model_class_name }
