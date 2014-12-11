@@ -47,7 +47,7 @@ module Formtastic
 
       def field_set_legend(html_options)
         legend  = (html_options[:name] || '').to_s
-        legend %= parent_child_index(html_options[:parent]) if html_options[:parent]
+        legend %= parent_child_index(html_options[:parent]) if html_options[:parent] && legend.include?('%i') # only applying if String includes '%i' avoids argument error when $DEBUG is true
         legend  = template.content_tag(:legend, template.content_tag(:span, Formtastic::Util.html_safe(legend))) unless legend.blank?
         legend
       end
