@@ -5,7 +5,10 @@ module Formtastic
         
         def column
           if object.respond_to?(:column_for_attribute)
-            object.column_for_attribute(method)
+            # Remove deprecation wrapper & review after Rails 5.0 ships
+            ActiveSupport::Deprecation.silence do
+              object.column_for_attribute(method)
+            end
           end
         end
         
