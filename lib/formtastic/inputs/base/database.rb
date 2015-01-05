@@ -4,7 +4,9 @@ module Formtastic
       module Database
         
         def column
-          object.column_for_attribute(method) if object.respond_to?(:column_for_attribute)
+          if object.respond_to?(:column_for_attribute)
+            object.column_for_attribute(method)
+          end
         end
         
         def column?
