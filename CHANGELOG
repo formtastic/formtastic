@@ -1,3 +1,7 @@
+3.1.3
+
+  * Fixed (silenced) additional Rails 5 deprecation on column_for_attribute that we missed in 3.1.0
+
 3.1.2
 
   * Fixed that we specified 4.0.4 instead of 4.1 in the Rails version deprecation message
