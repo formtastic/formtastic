@@ -44,11 +44,13 @@ module Formtastic
         end
 
         def choice_label(choice)
-          if choice.is_a?(Array)
+          '<span>'.html_safe +
+          (if choice.is_a?(Array)
             choice.first
           else
             choice
-          end.to_s
+          end.to_s) +
+          '</span>'.html_safe
         end
 
         def choice_value(choice)
