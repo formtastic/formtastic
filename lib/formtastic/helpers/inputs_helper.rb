@@ -47,10 +47,6 @@ module Formtastic
       include Formtastic::Helpers::FieldsetWrapper
       include Formtastic::LocalizedString
 
-      # Which columns to skip when automatically rendering a form without any fields specified.
-      SKIPPED_COLUMNS = [:created_at, :updated_at, :created_on, :updated_on, :lock_version, :version]
-
-
       # {#inputs} creates an input fieldset and ol tag wrapping for use around a set of inputs.  It can be
       # called either with a block (in which you can do the usual Rails form stuff, HTML, ERB, etc),
       # or with a list of fields (accepting all default arguments and options). These two examples
@@ -314,7 +310,7 @@ module Formtastic
       def default_columns_for_object
         cols  = association_columns(:belongs_to)
         cols += content_columns
-        cols -= SKIPPED_COLUMNS
+        cols -= Formtastic::FormBuilder.skipped_columns
         cols.compact
       end
       
