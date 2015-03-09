@@ -179,12 +179,12 @@ module Formtastic
       #   <% end %>
       #
       # @example Quick form: Skip one or more fields
-      #   <%= f.inputs, :except => [:featured, :something_for_admin_only] %>
-      #   <%= f.inputs, :except => :featured %>
+      #   <%= f.inputs :except => [:featured, :something_for_admin_only] %>
+      #   <%= f.inputs :except => :featured %>
       #
       # @example Short hand: Render inputs for a named set of attributes and simple associations on the model, with all default arguments and options
       #   <% semantic_form_for @post do |form| %>
-      #     <%= f.inputs, :title, :body, :user, :categories %>
+      #     <%= f.inputs :title, :body, :user, :categories %>
       #   <% end %>
       #
       # @example Block: Render inputs for attributes and simple associations with full control over arguments and options
