@@ -42,14 +42,10 @@ module Formtastic
     configure :perform_browser_validations, false
     # Check {Formtastic::InputClassFinder} to see how are inputs resolved.
     configure :input_namespaces, [::Object, ::Formtastic::Inputs]
-    # @todo enable this as default in 4.0 and remove it from configuration generator template
-    # Will be {Formtastic::InputClassFinder} by default in 4.0.
-    configure :input_class_finder #, Formtastic::InputClassFinder
+    configure :input_class_finder, Formtastic::InputClassFinder
     # Check {Formtastic::ActionClassFinder} to see how are inputs resolved.
     configure :action_namespaces, [::Object, ::Formtastic::Actions]
-    # @todo enable this as default in 4.0 and remove it from configuration generator template
-    # Will be {Formtastic::ActionClassFinder} by default in 4.0.
-    configure :action_class_finder#, Formtastic::ActionClassFinder
+    configure :action_class_finder, Formtastic::ActionClassFinder
 
     configure :skipped_columns, [:created_at, :updated_at, :created_on, :updated_on, :lock_version, :version]
 
