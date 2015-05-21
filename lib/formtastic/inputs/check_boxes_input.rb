@@ -180,11 +180,19 @@ module Formtastic
       def make_selected_values
         if object.respond_to?(method)
           selected_items = object.send(method)
-
           # Construct an array from the return value, regardless of the return type
           selected_items = [*selected_items].compact.flatten
 
-          [*selected_items.map { |o| send_or_call_or_object(value_method, o) }].compact
+          #[*selected_items.map { |o| send_or_call_or_object(value_method, o) }].compact
+          selected = []
+          selected_items.each do |o|
+            if o.is_a? ActiveRecord::Base
+              selected << o.id
+            else
+              selected << send_or_call_or_object(value_method, 0)
+            end
+          end
+          selected
         else
           []
         end
