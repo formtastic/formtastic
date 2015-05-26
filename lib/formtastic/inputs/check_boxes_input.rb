@@ -184,14 +184,10 @@ module Formtastic
           selected_items = [*selected_items].compact.flatten
 
           selected = []
-          selected_items.each do |o|
-            item = send_or_call_or_object(value_method, o)
-            if item == nil
-              item = o.id if o.respond_to? :id
-            end
-            selected << item
-          end
-          selected
+          selected_items.map do |selected_item|
+            selected_item_id = selected_item.id if selected_item.respond_to? :id
+            item = send_or_call_or_object(value_method, selected_item) || selected_item_id
+          end.compact
         else
           []
         end

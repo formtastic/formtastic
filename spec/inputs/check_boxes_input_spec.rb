@@ -61,15 +61,15 @@ describe 'check_boxes input' do
     end
 
     describe "each choice" do
-      
+
       it 'should not give the choice label the .label class' do
         output_buffer.should_not have_tag('li.choice label.label')
       end
-      
+
       it 'should not be marked as required' do
         output_buffer.should_not have_tag('li.choice input[@required]')
       end
-      
+
       it 'should contain a label for the radio input with a nested input and label text' do
         ::Post.all.each do |post|
           output_buffer.should have_tag('form li fieldset ol li label', /#{post.to_label}/)
@@ -82,7 +82,7 @@ describe 'check_boxes input' do
           output_buffer.should have_tag("form li fieldset ol li.post_#{post.id} label")
         end
       end
-      
+
       it 'should have a checkbox input but no hidden field for each post' do
         ::Post.all.each do |post|
           output_buffer.should have_tag("form li fieldset ol li label input#author_post_ids_#{post.id}")
@@ -295,11 +295,11 @@ describe 'check_boxes input' do
       it "should not output the legend" do
         output_buffer.should_not have_tag("legend.label")
       end
-      
+
       it "should not cause escaped HTML" do
         output_buffer.should_not include("&gt;")
       end
-      
+
     end
 
     describe "when :required option is true" do
@@ -358,6 +358,31 @@ describe 'check_boxes input' do
 
   end
 
+  describe ':collection for a has_and_belongs_to_many association' do
+
+    before do
+      @output_buffer = ''
+      mock_everything
+
+      concat(semantic_form_for(@freds_post) do |builder|
+        concat(builder.input(:authors, as: :check_boxes, collection: Author.all))
+      end)
+    end
+
+    it 'should render checkboxes' do
+      # I'm aware these two lines test the same thing
+      output_buffer.should have_tag('input[type="checkbox"]', :count => 2)
+      output_buffer.should have_tag('input[type="checkbox"]', :count => ::Author.all.size)
+    end
+
+    it 'should only select checkboxes that are present in the association' do
+      # I'm aware these two lines test the same thing
+      output_buffer.should have_tag('input[checked="checked"]', :count => 1)
+      output_buffer.should have_tag('input[checked="checked"]', :count => @freds_post.authors.size)
+    end
+
+  end
+
   describe 'for an association when a :collection is provided' do
     describe 'it should use the specified :member_value option' do
       before do
@@ -371,7 +396,7 @@ describe 'check_boxes input' do
         item.stub(:custom_value).and_return('custom_value')
         item.should_receive(:custom_value).exactly(3).times
         @new_post.author.should_receive(:custom_value).exactly(1).times
-        
+
         with_deprecation_silenced do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:author, :as => :check_boxes, :member_value => :custom_value, :collection => [item, item, item]))
@@ -381,35 +406,35 @@ describe 'check_boxes input' do
       end
     end
   end
-  
+
   describe 'when :collection is provided as an array of arrays' do
     before do
       @output_buffer = ''
       mock_everything
       @fred.stub(:genres) { ['fiction', 'biography'] }
-      
+
       concat(semantic_form_for(@fred) do |builder|
         concat(builder.input(:genres, :as => :check_boxes, :collection => [['Fiction', 'fiction'], ['Non-fiction', 'non_fiction'], ['Biography', 'biography']]))
       end)
     end
-    
+
     it 'should check the correct checkboxes' do
       output_buffer.should have_tag("form li fieldset ol li label input[@value='fiction'][@checked='checked']")
       output_buffer.should have_tag("form li fieldset ol li label input[@value='biography'][@checked='checked']")
     end
   end
-  
+
   describe 'when :collection is a set' do
     before do
       @output_buffer = ''
       mock_everything
       @fred.stub(:roles) { Set.new([:reviewer, :admin]) }
-      
+
       concat(semantic_form_for(@fred) do |builder|
         concat(builder.input(:roles, :as => :check_boxes, :collection => [['User', :user], ['Reviewer', :reviewer], ['Administrator', :admin]]))
       end)
     end
-    
+
     it 'should check the correct checkboxes' do
       output_buffer.should have_tag("form li fieldset ol li label input[@value='user']")
       output_buffer.should have_tag("form li fieldset ol li label input[@value='admin'][@checked='checked']")
@@ -427,7 +452,7 @@ describe 'check_boxes input' do
         concat(builder.input(:posts, :as => :check_boxes))
       end)
     end
-    
+
     it "should have a label for #context2_author_post_ids_19" do
       output_buffer.should have_tag("form li label[@for='context2_author_post_ids_19']")
     end
@@ -435,7 +460,7 @@ describe 'check_boxes input' do
     it_should_have_input_with_id('context2_author_post_ids_19')
     it_should_have_input_wrapper_with_id("context2_author_posts_input")
   end
-  
+
   describe "when index is provided" do
 
     before do
@@ -448,11 +473,11 @@ describe 'check_boxes input' do
         end)
       end)
     end
-    
+
     it 'should index the id of the wrapper' do
       output_buffer.should have_tag("li#author_post_3_authors_input")
     end
-    
+
     it 'should index the id of the input tag' do
       output_buffer.should have_tag("input#author_post_3_author_ids_42")
     end
@@ -460,9 +485,9 @@ describe 'check_boxes input' do
     it 'should index the name of the checkbox input' do
       output_buffer.should have_tag("input[@type='checkbox'][@name='author[post][3][author_ids][]']")
     end
-    
+
   end
-  
+
 
   describe "when collection is an array" do
     before do
@@ -516,6 +541,6 @@ describe 'check_boxes input' do
       end
     end
   end
-  
+
 end
 
