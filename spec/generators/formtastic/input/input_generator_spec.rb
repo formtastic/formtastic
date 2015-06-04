@@ -12,7 +12,7 @@ describe Formtastic::InputGenerator do
   end
 
   after do
-    FileUtils.rm_rf(File.expand_path("../../../../../tmp", __FILE__))
+    # FileUtils.rm_rf(File.expand_path("../../../../../tmp", __FILE__))
   end
 
   describe 'without file name' do
@@ -97,6 +97,28 @@ describe Formtastic::InputGenerator do
       it { should contain "def input_html_options" }
       it { should_not contain "include Formtastic::Inputs::Base" }
       it { should_not contain "def to_html" }
+    end
+  end
+
+  describe "provide a slashed namespace" do
+    before { run_generator %w(stuff/foo)}
+
+    describe 'app/inputs/stuff/foo_input.rb' do
+      subject{ file('app/inputs/stuff/foo_input.rb')}
+      it {should exist}
+      it { should contain "class Stuff::FooInput" }
+      it { should contain "include Formtastic::Inputs::Base" }
+    end
+  end
+
+  describe "provide a camelized namespace" do
+    before { run_generator %w(Stuff::Foo)}
+
+    describe 'app/inputs/stuff/foo_input.rb' do
+      subject{ file('app/inputs/stuff/foo_input.rb')}
+      it {should exist}
+      it { should contain "class Stuff::FooInput" }
+      it { should contain "include Formtastic::Inputs::Base" }
     end
   end
 end
