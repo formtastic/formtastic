@@ -539,7 +539,7 @@ h2. Modified & Custom Inputs
 
 You can modify existing inputs, subclass them, or create your own from scratch. Here's the basic process:
 
-* Run the input generator and provide your custom input name. For example, @rails generate formtastic:input hat_size@. This creates the file @app/inputs/hat_size_input.rb@
+* Run the input generator and provide your custom input name. For example, @rails generate formtastic:input hat_size@. This creates the file @app/inputs/hat_size_input.rb@. You can also provide namespace to input name like @rails generate formtastic:input foo/custom@ or @rails generate formtastic:input Foo::Custom@, this will create the file @app/inputs/foo/custom_input.rb@ in both cases.
 * To use that input, leave off the word "input" in your @as@ statement. For example, @f.input(:size, :as => :hat_size)@
 
 Specific examples follow.

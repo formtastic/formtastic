@@ -12,7 +12,7 @@ describe Formtastic::InputGenerator do
   end
 
   after do
-    # FileUtils.rm_rf(File.expand_path("../../../../../tmp", __FILE__))
+    FileUtils.rm_rf(File.expand_path("../../../../../tmp", __FILE__))
   end
 
   describe 'without file name' do

@@ -11,7 +11,7 @@ module Formtastic
 
   # @example Override an existing input behavior
   # !!!shell
-  #   $ rails generate formtastic:input string --override
+  #   $ rails generate formtastic:input string --extend
 
   # @example Extend an existing input behavior
   # !!!shell
