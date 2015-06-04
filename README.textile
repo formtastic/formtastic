@@ -559,7 +559,7 @@ To modify the behavior of @StringInput@, subclass it in a new file, @app/inputs/
 
 Another way to modify behavior is by using the input generator:
 <pre>
-  rails generate formtastic:input string --override
+  rails generate formtastic:input string --extend
 </pre>
 
 This generates the file @app/inputs/string_input.rb@ with its respective content class.

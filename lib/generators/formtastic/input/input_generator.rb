@@ -22,9 +22,7 @@ module Formtastic
 
     source_root File.expand_path('../../../templates', __FILE__)
 
-    class_option :override
-
-    class_option :extend, :type => :string, :default => false, :group => :formtastic
+    class_option :extend
 
     def create
       normalize_file_name
@@ -41,7 +39,7 @@ module Formtastic
     end
 
     def define_extension_sentence
-      @extension_sentence = "< Formtastic::Inputs::#{name.camelize}Input" if options[:override]
+      @extension_sentence = "< Formtastic::Inputs::#{name.camelize}Input" if options[:extend] == "extend"
       @extension_sentence ||= "< Formtastic::Inputs::#{options[:extend].camelize}Input" if options[:extend]
     end
   end

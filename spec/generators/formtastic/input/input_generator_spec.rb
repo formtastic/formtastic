@@ -74,14 +74,17 @@ describe Formtastic::InputGenerator do
     end
   end
 
-  describe "override an existing input" do
-    before { run_generator %w(string --override)}
+  describe "override an existing input using extend" do
+    before { run_generator %w(string --extend)}
 
     describe 'app/inputs/string_input.rb' do
       subject{ file('app/inputs/string_input.rb')}
+      it { should exist }
       it { should contain "class StringInput < Formtastic::Inputs::StringInput" }
+      it { should contain "def to_html" }
       it { should_not contain "include Formtastic::Inputs::Base" }
       it { should contain "super" }
+      it { should_not contain "def input_html_options" }
     end
   end
 

@@ -1,12 +1,12 @@
 class <%= name.camelize %>Input <%= @extension_sentence %>
-  <%- if !options[:override] && !options[:extend] -%>
+  <%- if !options[:extend] -%>
   include Formtastic::Inputs::Base
   <%- end -%>
 
-  <%- if !options[:extend] -%>
+  <%- if !options[:extend] || (options[:extend] == "extend")  -%>
   def to_html
     # Add your custom input definition here.
-    <%- if options[:override] -%>
+    <%- if options[:extend] == "extend" -%>
     super
     <%- end -%>
   end
