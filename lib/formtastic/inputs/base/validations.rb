@@ -192,6 +192,16 @@ module Formtastic
           validation_limit || column_limit
         end
 
+        def readonly?
+          opt_readonly = options[:input_html] && options[:input_html][:readonly]
+          opt_readonly || readonly_attribute?
+        end
+
+        def readonly_attribute?
+          column.class.respond_to?(:readonly_attributes) &&
+            column.persisted? &&
+            column.class.readonly_attributes.include?(column_name.to_s)
+        end
       end
     end
   end
