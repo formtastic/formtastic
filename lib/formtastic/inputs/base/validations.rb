@@ -193,8 +193,7 @@ module Formtastic
         end
 
         def readonly?
-          opt_readonly = options[:input_html] && options[:input_html][:readonly]
-          opt_readonly || readonly_attribute?
+          readonly_from_options? || readonly_attribute?
         end
 
         def readonly_attribute?
@@ -202,6 +201,10 @@ module Formtastic
           object_class.respond_to?(:readonly_attributes) &&
             self.object.persisted? &&
             object_class.readonly_attributes.include?(column.name.to_s)
+        end
+
+        def readonly_from_options?
+          options[:input_html] && options[:input_html][:readonly]
         end
       end
     end
