@@ -16,7 +16,7 @@ describe 'readonly option' do
 
       describe "for #{type} inputs" do
 
-        describe "when options set readonly" do
+        describe "when readonly is found in input_html" do
           it "sets readonly attribute" do
             concat(semantic_form_for(@new_post) do |builder|
               concat(builder.input(:title, :as => type, input_html: {readonly: true}))
@@ -36,6 +36,8 @@ describe 'readonly option' do
           end
           describe "when column is readonly attribute" do
             it "sets readonly attribute" do
+              input_class = "Formtastic::Inputs::#{type.to_s.camelize}Input".constantize
+              expect_any_instance_of(input_class).to receive(:readonly_attribute?).at_least(1).and_return(true)
               concat(semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title, :as => type))
               end)
