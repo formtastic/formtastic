@@ -198,9 +198,10 @@ module Formtastic
         end
 
         def readonly_attribute?
-          column.class.respond_to?(:readonly_attributes) &&
-            column.persisted? &&
-            column.class.readonly_attributes.include?(column_name.to_s)
+          object_class = self.object.class
+          object_class.respond_to?(:readonly_attributes) &&
+            self.object.persisted? &&
+            object_class.readonly_attributes.include?(column.name.to_s)
         end
       end
     end
