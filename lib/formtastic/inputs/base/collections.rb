@@ -52,7 +52,7 @@ module Formtastic
 
           # Return if we have an Array of strings, fixnums or arrays
           return raw_collection if (raw_collection.instance_of?(Array) || raw_collection.instance_of?(Range)) &&
-                               [Array, Fixnum, String].include?(raw_collection.first.class) &&
+                               [Array, Fixnum, String, Symbol].include?(raw_collection.first.class) &&
                                !(options.include?(:member_label) || options.include?(:member_value))
 
           raw_collection.map { |o| [send_or_call(label_method, o), send_or_call(value_method, o)] }
