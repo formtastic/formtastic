@@ -135,6 +135,7 @@ module Formtastic
       #
       # @option options :input_html [Hash]
       #   Override or add to the HTML attributes to be passed down to the `<input>` tag
+      #   (If you use attr_readonly method in your model, formtastic will automatically set those attributes's input readonly)
       #
       # @option options :wrapper_html [Hash]
       #   Override or add to the HTML attributes to be passed down to the wrapping `<li>` tag
