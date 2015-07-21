@@ -200,6 +200,7 @@ module Formtastic
           object_class = self.object.class
           object_class.respond_to?(:readonly_attributes) &&
             self.object.persisted? &&
+            column.respond_to?(:name) &&
             object_class.readonly_attributes.include?(column.name.to_s)
         end
 

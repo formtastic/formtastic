@@ -11,7 +11,6 @@ describe 'readonly option' do
   end
 
   describe "placeholder text" do
-
     [:email, :number, :password, :phone, :search, :string, :url, :text, :date_picker, :time_picker, :datetime_picker].each do |type|
 
       describe "for #{type} inputs" do
