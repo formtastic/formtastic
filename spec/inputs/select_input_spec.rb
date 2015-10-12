@@ -311,17 +311,6 @@ describe 'select input' do
         concat(builder.input(:author, :as => :select))
       end
     end
-
-    it "should call author.(scoped|where) with association conditions" do
-      if Formtastic::Util.rails3?
-        ::Author.should_receive(:scoped).with(:conditions => {:active => true})
-      else
-        ::Author.should_receive(:where).with({:active => true})
-      end
-      semantic_form_for(@new_post) do |builder|
-        concat(builder.input(:author, :as => :select))
-      end
-    end
   end
 
   describe 'for a has_many association' do
