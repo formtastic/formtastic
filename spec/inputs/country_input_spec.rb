@@ -17,7 +17,7 @@ describe 'country input' do
         semantic_form_for(@new_post) do |builder|
           concat(builder.input(:country, :as => :country))
         end
-      }.should raise_error
+      }.should raise_error(Formtastic::Inputs::CountryInput::CountrySelectPluginMissing)
     end
 
   end
