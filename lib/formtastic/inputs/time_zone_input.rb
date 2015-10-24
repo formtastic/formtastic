@@ -32,9 +32,15 @@ module Formtastic
     # The priority_zones option:
     #   Since this input actually uses Rails' `time_zone_select` helper, the :priority_zones
     #   option needs to be an array of ActiveSupport::TimeZone objects.
+    #
+    #   And you can configure default value using
+    #
+    #   ```
+    #     Formtastic::FormBuilder.priority_time_zones = [timezone1, timezone2]
+    #   ```
+    #
     #   See http://apidock.com/rails/ActionView/Helpers/FormOptionsHelper/time_zone_select for more information.
     #
-    # @todo configurable default :priority_zones?
     class TimeZoneInput
       include Base
 
