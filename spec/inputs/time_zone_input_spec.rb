@@ -130,7 +130,14 @@ describe 'time_zone input' do
     end
 
     context "by configuration" do
-
+      it "passes right time_zones" do
+        expect_any_instance_of(Formtastic::FormBuilder).to receive(:time_zone_select).with(:title, time_zones, {}, input_html_options)
+        with_config :priority_time_zones, time_zones do
+          semantic_form_for(@new_post) do |builder|
+            builder.input(:title, as: :time_zone)
+          end
+        end
+      end
     end
   end
 end
