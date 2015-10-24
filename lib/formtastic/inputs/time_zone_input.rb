@@ -1,3 +1,4 @@
+require "pry"
 module Formtastic
   module Inputs
 
