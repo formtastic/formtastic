@@ -45,7 +45,7 @@ module Formtastic
       end
 
       def priority_zones
-        options[:priority_zones] || [] # TODO config?
+        options[:priority_zones] || Formtastic::FormBuilder.priority_time_zone
       end
     end
   end
