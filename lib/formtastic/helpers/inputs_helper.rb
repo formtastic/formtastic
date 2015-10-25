@@ -132,7 +132,7 @@ module Formtastic
       #       <% end %>
       #     <% end %>
       #
-      # {#inputs} also provides a DSL similar to `fields_for` / `semantic_fields_for` to reduce the 
+      # {#inputs} also provides a DSL similar to `fields_for` / `semantic_fields_for` to reduce the
       # lines of code a little:
       #
       #     <% semantic_form_for @user do |f| %>
@@ -158,7 +158,7 @@ module Formtastic
       # All options except `:name`, `:title` and `:for` will be passed down to the fieldset as HTML
       # attributes (id, class, style, etc).
       #
-      # When nesting `inputs()` inside another `inputs()` block, the nested content will 
+      # When nesting `inputs()` inside another `inputs()` block, the nested content will
       # automatically be wrapped in an `<li>` tag to preserve the HTML validity (a `<fieldset>`
       # cannot be a direct descendant of an `<ol>`.
       #
@@ -279,7 +279,7 @@ module Formtastic
       def inputs(*args, &block)
         wrap_it = @already_in_an_inputs_block ? true : false
         @already_in_an_inputs_block = true
-        
+
         title = field_set_title_from_args(*args)
         html_options = args.extract_options!
         html_options[:class] ||= "inputs"
@@ -299,21 +299,21 @@ module Formtastic
             field_set_and_list_wrapping(*((args << html_options) << contents))
           end
         end
-        
+
         out = template.content_tag(:li, out, :class => "input") if wrap_it
         @already_in_an_inputs_block = wrap_it
         out
       end
 
       protected
-      
+
       def default_columns_for_object
         cols  = association_columns(:belongs_to)
         cols += content_columns
         cols -= Formtastic::FormBuilder.skipped_columns
         cols.compact
       end
-      
+
       def fieldset_contents_from_column_list(columns)
         columns.collect do |method|
           if @object
@@ -324,13 +324,13 @@ module Formtastic
             elsif @object.class.respond_to?(:associations)
               if (@object.class.associations[method.to_sym] && @object.class.associations[method.to_sym].options[:polymorphic] == true)
                 raise PolymorphicInputWithoutCollectionError.new("Please provide a collection for :#{method} input (you'll need to use block form syntax). Inputs for polymorphic associations can only be used when an explicit :collection is provided.")
-              end            
-            end            
+              end
+            end
           end
           input(method.to_sym)
         end
       end
-      
+
       # Collects association columns (relation columns) for the current form object class. Skips
       # polymorphic associations because we can't guess which class to use for an automatically
       # generated input.
@@ -339,7 +339,7 @@ module Formtastic
           @object.class.reflections.collect do |name, association_reflection|
             if by_associations.present?
               if by_associations.include?(association_reflection.macro) && association_reflection.options[:polymorphic] != true
-                name 
+                name
               end
             else
               name
@@ -373,10 +373,10 @@ module Formtastic
           lambda do |f|
             contents = f.inputs(*args) do
               if block.arity == 1  # for backwards compatibility with REE & Ruby 1.8.x
-                block.call(f)
+                yield(f)
               else
                 index = parent_child_index(options[:parent]) if options[:parent]
-                block.call(f, index)
+                yield(f, index)
               end
             end
             template.concat(contents)
