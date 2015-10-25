@@ -22,7 +22,7 @@ module Formtastic
       #   f.inputs :my_little_legend, :title, :body, :author    # Localized (118n) legend with I18n key => I18n.t(:my_little_legend, ...)
       #   f.inputs :title, :body, :author                       # First argument is a column => (no legend)
       def field_set_and_list_wrapping(*args, &block) # @private
-        contents = args.last.is_a?(::Hash) ? '' : args.pop.flatten
+        contents = args[-1].is_a?(::Hash) ? '' : args.pop.flatten
         html_options = args.extract_options!
 
         if block_given?
@@ -57,20 +57,20 @@ module Formtastic
       def parent_child_index(parent) # @private
         # Could be {"post[authors_attributes]"=>0} or { :authors => 0 }
         duck = parent[:builder].instance_variable_get('@nested_child_index')
-        
+
         # Could be symbol for the association, or a model (or an array of either, I think? TODO)
         child = parent[:for]
         # Pull a sybol or model out of Array (TODO: check if there's an Array)
         child = child.first if child.respond_to?(:first)
         # If it's an object, get a symbol from the class name
         child = child.class.name.underscore.to_sym unless child.is_a?(Symbol)
-        
+
         key = "#{parent[:builder].object_name}[#{child}_attributes]"
 
-        # TODO: One of the tests produces a scenario where duck is "0" and the test looks for a "1" 
+        # TODO: One of the tests produces a scenario where duck is "0" and the test looks for a "1"
         # in the legend, so if we have a number, return it with a +1 until we can verify this scenario.
         return duck + 1 if duck.is_a?(Fixnum)
-        
+
         # First try to extract key from duck Hash, then try child
         (duck[key] || duck[child]).to_i + 1
       end
