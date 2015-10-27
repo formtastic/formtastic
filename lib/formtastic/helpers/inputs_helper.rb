@@ -310,6 +310,7 @@ module Formtastic
       def default_columns_for_object
         cols  = association_columns(:belongs_to)
         cols += content_columns
+        cols += form_object_fields
         cols -= Formtastic::FormBuilder.skipped_columns
         cols.compact
       end
@@ -331,6 +332,14 @@ module Formtastic
         end
       end
       
+      # Collects fields from a form object that responds to this method
+      # If you'd like to implement on your form object just need to return a array of symbols
+      # [:field1, :field2]
+      def form_object_fields
+        return [] unless @object.respond_to?(:form_object_fields)
+        @object.form_object_fields
+      end
+
       # Collects association columns (relation columns) for the current form object class. Skips
       # polymorphic associations because we can't guess which class to use for an automatically
       # generated input.
