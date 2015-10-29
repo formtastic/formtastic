@@ -258,7 +258,7 @@ If you have more than one form on the same page, it may lead to HTML invalidatio
   <% end %>
 ```
 
-Customize HTML attributes for any input using the `:input_html` option. Typically this is used to disable the input, change the size of a text field, change the rows in a textarea, or even to add a special class to an input to attach special behavior like "autogrow":http://plugins.jquery.com/project/autogrowtextarea textareas:
+Customize HTML attributes for any input using the `:input_html` option. Typically this is used to disable the input, change the size of a text field, change the rows in a textarea, or even to add a special class to an input to attach special behavior like [autogrow](http://plugins.jquery.com/project/autogrowtextarea) textareas:
 
 ```erb
   <%= semantic_form_for @post do |f| %>
@@ -335,7 +335,7 @@ The Formtastic input types:
 * `:boolean` - a checkbox. Default for column types: `:boolean`.
 * `:string` - a text field. Default for column types: `:string`.
 * `:number` - a text field (just like string). Default for  column types: `:integer`, `:float`, and `:decimal`.
-* `:file` - a file field. Default for file-attachment attributes matching: "paperclip":http://github.com/thoughtbot/paperclip or "attachment_fu":http://github.com/technoweenie/attachment_fu.
+* `:file` - a file field. Default for file-attachment attributes matching: [paperclip](http://github.com/thoughtbot/paperclip) or [attachment_fu](http://github.com/technoweenie/attachment_fu).
 * `:country@ - a select menu of country names. Default for column types: :string with name `"country"` - requires a *country_select* plugin to be installed.
 * `:email` - a text field (just like string). Default for columns with name matching `"email"`. New in HTML5. Works on some mobile browsers already.
 * `:url` - a text field (just like string). Default for columns with name matching `"url"`. New in HTML5. Works on some mobile browsers already.
@@ -343,7 +343,7 @@ The Formtastic input types:
 * `:search` - a text field (just like string). Default for columns with name matching `"search"`. New in HTML5. Works on Safari.
 * `:hidden` - a hidden field. Creates a hidden field (added for compatibility).
 * `:range` - a slider field.
-* `:datalist` - a text field with a accompanying "datalist tag":https://developer.mozilla.org/en/docs/Web/HTML/Element/datalist which provides options for autocompletion
+* `:datalist` - a text field with a accompanying [datalist tag](https://developer.mozilla.org/en/docs/Web/HTML/Element/datalist) which provides options for autocompletion
 
 The comments in the code are pretty good for each of these (what it does, what the output is, what the options are, etc.) so go check it out.
 
@@ -519,7 +519,7 @@ For more flexible forms; Formtastic finds translations using a bottom-up approac
 Values for `labels`/`hints`/`actions` are can take values: `String` (explicit value), `Symbol` (i18n-lookup-key relative to the current "type", e.g. actions:), `true` (force I18n lookup), `false` (force no I18n lookup). Titles (legends) can only take: `String` and `Symbol` - true/false have no meaning.
 
 *7. Basic Translations*
-If you want some basic translations, take a look on the "formtastic_i18n gem":https://github.com/timoschilling/formtastic_i18n.
+If you want some basic translations, take a look on the [formtastic_i18n gem](https://github.com/timoschilling/formtastic_i18n).
 
 ## Semantic errors
 
@@ -605,7 +605,7 @@ You can use your new input with `:as => :date_picker`.
 
 There are none other than Rails itself, but...
 
-* If you want to use the `:country` input, you'll need to install the "country-select plugin":https://github.com/stefanpenner/country_select (or any other country_select plugin with the same API). Both 1.x and 2.x are supported, but they behave differently when storing data, so please see their "upgrade notes":https://github.com/stefanpenner/country_select/blob/master/UPGRADING.md if switching from 1.x.
+* If you want to use the `:country` input, you'll need to install the [country-select plugin](https://github.com/stefanpenner/country_select) (or any other country_select plugin with the same API). Both 1.x and 2.x are supported, but they behave differently when storing data, so please see their [upgrade notes](https://github.com/stefanpenner/country_select/blob/master/UPGRADING.md) if switching from 1.x.
 * There are a bunch of development dependencies if you plan to contribute to Formtastic
 
 
@@ -621,9 +621,9 @@ There are none other than Rails itself, but...
 
 ## Project Info
 
-Formtastic was created by "Justin French":http://www.justinfrench.com with contributions from around 180 awesome developers. Run `git shortlog -n -s` to see the awesome.
+Formtastic was created by [Justin French](http://www.justinfrench.com) with contributions from around 180 awesome developers. Run `git shortlog -n -s` to see the awesome.
 
-The project is hosted on Github: "http://github.com/justinfrench/formtastic":http://github.com/justinfrench/formtastic, where your contributions, forkings, comments, issues and feedback are greatly welcomed.
+The project is hosted on Github: [http://github.com/justinfrench/formtastic](http://github.com/justinfrench/formtastic), where your contributions, forkings, comments, issues and feedback are greatly welcomed.
 
 Copyright (c) 2007-2014 Justin French, released under the MIT license.
 
