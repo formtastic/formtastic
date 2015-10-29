@@ -77,7 +77,7 @@ I also wrote the accompanying HTML output I expected, favoring something very si
 * It has growing HTML5 support (new inputs like email/phone/search, new attributes like required/min/max/step/placeholder)
 
 
-h2. Opinions
+## Opinions
 
 * It should be easier to do things the right way than the wrong way.
 * Sometimes _more mark-up_ is better.
@@ -85,82 +85,82 @@ h2. Opinions
 * Make the common things we do easy, yet ensure uncommon things are still possible.
 
 
-h2. Installation
+## Installation
 
 Simply add Formtastic to your Gemfile and bundle it up:
 
-<pre>
+```ruby
   gem 'formtastic', '~> 3.0'
-</pre>
+```
 
 Run the installation generator:
 
-<pre lang=shell>
-  $ rails generate formtastic:install
-</pre>
+```shell
+$ rails generate formtastic:install
+```
 
 
-h2. Stylesheets
+## Stylesheets
 
 A proof-of-concept set of stylesheets are provided which you can include in your layout. Customization is best achieved by overriding these styles in an additional stylesheet.
 
 Rails 3.1 introduces an asset pipeline that allows plugins like Formtastic to serve their own Stylesheets, Javascripts, etc without having to run generators that copy them across to the host application. Formtastic makes three stylesheets available as an Engine, you just need to require them in your global stylesheets.
 
-<pre>
+```css
   # app/assets/stylesheets/application.css
   *= require formtastic
   *= require my_formtastic_changes
-</pre>
+```
 
 Conditional stylesheets need to be compiled separately to prevent them being bundled and included with other application styles.  Remove `require_tree .` from application.css and specify required stylesheets individually.
 
-<pre>
+```css
   # app/assets/stylesheets/ie6.css
   *= require formtastic_ie6
 
   # app/assets/stylesheets/ie7.css
   *= require formtastic_ie7
-</pre>
+```
 
-<pre>
+```erb
   # app/views/layouts/application.html.erb
   <%= stylesheet_link_tag 'application' %>
   <!--[if IE 6]><%= stylesheet_link_tag 'ie6' %><![endif]-->
   <!--[if IE 7]><%= stylesheet_link_tag 'ie7' %><![endif]-->
-</pre>
+```
 
-<pre>
+```ruby
   # config/environments/production.rb
   config.assets.precompile += %w( ie6.css ie7.css )
-</pre>
+```
 
-h2. Usage
+## Usage
 
 Forms are really boring to code... you want to get onto the good stuff as fast as possible.
 
 This renders a set of inputs (one for _most_ columns in the database table, and one for each ActiveRecord `belongs_to`-association), followed by default action buttons (an input submit button):
 
-<pre>
+```erb
   <%= semantic_form_for @user do |f| %>
     <%= f.inputs %>
     <%= f.actions %>
   <% end %>
-</pre>
+```
 
 This is a great way to get something up fast, but like scaffolding, it's *not recommended for production*. Don't be so lazy!
 
 To specify the order of the fields, skip some of the fields or even add in fields that Formtastic couldn't infer. You can pass in a list of field names to `inputs` and list of action names to `actions`:
 
-<pre>
+```erb
   <%= semantic_form_for @user do |f| %>
     <%= f.inputs :title, :body, :section, :categories, :created_at %>
     <%= f.actions :submit, :cancel %>
   <% end %>
-</pre>
+```
 
 You probably want control over the input type Formtastic uses for each field. You can expand the `inputs` and `actions` to block helper format and use the `:as` option to specify an exact input type:
 
-<pre>
+```erb
   <%= semantic_form_for @post do |f| %>
     <%= f.inputs do %>
       <%= f.input :title %>
@@ -174,11 +174,11 @@ You probably want control over the input type Formtastic uses for each field. Yo
       <%= f.action :cancel, :as => :link %>
     <% end %>
   <% end %>
-</pre>
+```
 
 If you want to customize the label text, or render some hint text below the field, specify which fields are required/optional, or break the form into two fieldsets, the DSL is pretty comprehensive:
 
-<pre>
+```erb
   <%= semantic_form_for @post do |f| %>
     <%= f.inputs "Basic", :id => "basic" do %>
       <%= f.input :title %>
@@ -195,17 +195,17 @@ If you want to customize the label text, or render some hint text below the fiel
       <%= f.action :submit %>
     <% end %>
   <% end %>
-</pre>
+```
 
 You can create forms for nested resources:
 
-<pre>
+```erb
 	<%= semantic_form_for [@author, @post] do |f| %>
-</pre>
+```
 
 Nested forms are also supported (don't forget your models need to be setup correctly with `accepts_nested_attributes_for`). You can do it in the Rails way:
 
-<pre>
+```erb
   <%= semantic_form_for @post do |f| %>
     <%= f.inputs :title, :body, :created_at %>
     <%= f.semantic_fields_for :author do |author| %>
@@ -213,41 +213,41 @@ Nested forms are also supported (don't forget your models need to be setup corre
     <% end %>
     <%= f.actions %>
   <% end %>
-</pre>
+```
 
 Or the Formtastic way with the `:for` option:
 
-<pre>
+```erb
   <%= semantic_form_for @post do |f| %>
     <%= f.inputs :title, :body, :created_at %>
     <%= f.inputs :first_name, :last_name, :for => :author, :name => "Author" %>
     <%= f.actions %>
   <% end %>
-</pre>
+```
 
 When working in has many association, you can even supply `"%i"` in your fieldset name; they will be properly interpolated with the child index. For example:
 
-<pre>
+```erb
   <%= semantic_form_for @post do |f| %>
     <%= f.inputs %>
     <%= f.inputs :name => 'Category #%i', :for => :categories %>
     <%= f.actions %>
   <% end %>
-</pre>
+```
 
 Alternatively, the current index can be accessed via the `inputs` block's arguments for use anywhere:
 
-<pre>
+```erb
   <%= semantic_form_for @post do |f| %>
     <%= f.inputs :for => :categories do |category, i| %>
       ...
     <%= f.actions %>
   <% end %>
-</pre>
+```
 
 If you have more than one form on the same page, it may lead to HTML invalidation because of the way HTML element id attributes are assigned. You can provide a namespace for your form to ensure uniqueness of id attributes on form elements. The namespace attribute will be prefixed with underscore on the generate HTML id. For example:
 
-<pre>
+```erb
   <%= semantic_form_for(@post, :namespace => 'cat_form') do |f| %>
     <%= f.inputs do %>
       <%= f.input :title %>        # id="cat_form_post_title"
@@ -256,11 +256,11 @@ If you have more than one form on the same page, it may lead to HTML invalidatio
     <% end %>
     <%= f.actions %>
   <% end %>
-</pre>
+```
 
 Customize HTML attributes for any input using the `:input_html` option. Typically this is used to disable the input, change the size of a text field, change the rows in a textarea, or even to add a special class to an input to attach special behavior like "autogrow":http://plugins.jquery.com/project/autogrowtextarea textareas:
 
-<pre>
+```erb
   <%= semantic_form_for @post do |f| %>
     <%= f.inputs do %>
       <%= f.input :title,      :input_html => { :size => 10 } %>
@@ -270,22 +270,22 @@ Customize HTML attributes for any input using the `:input_html` option. Typicall
     <% end %>
     <%= f.actions %>
   <% end %>
-</pre>
+```
 
 The same can be done for actions with the `:button_html` option:
 
-<pre>
+```erb
   <%= semantic_form_for @post do |f| %>
     ...
     <%= f.actions do %>
       <%= f.action :submit, :button_html => { :class => "primary", :disable_with => 'Wait...' } %>
     <% end %>
   <% end %>
-</pre>
+```
 
 Customize the HTML attributes for the `<li>` wrapper around every input with the `:wrapper_html` option hash. There's one special key in the hash: (`:class`), which will actually _append_ your string of classes to the existing classes provided by Formtastic (like `"required string error"`).
 
-<pre>
+```erb
   <%= semantic_form_for @post do |f| %>
     <%= f.inputs do %>
       <%= f.input :title, :wrapper_html => { :class => "important" } %>
@@ -294,11 +294,11 @@ Customize the HTML attributes for the `<li>` wrapper around every input with the
     <% end %>
     ...
   <% end %>
-</pre>
+```
 
 Many inputs provide a collection of options to choose from (like `:select`, `:radio`, `:check_boxes`, `:boolean`). In many cases, Formtastic can find choices through the model associations, but if you want to use your own set of choices, the `:collection` option is what you want.  You can pass in an Array of objects, an array of Strings, a Hash... Throw almost anything at it! Examples:
 
-<pre>
+```ruby
   f.input :authors, :as => :check_boxes, :collection => User.order("last_name ASC").all
   f.input :authors, :as => :check_boxes, :collection => current_user.company.users.active
   f.input :authors, :as => :check_boxes, :collection => [@justin, @kate]
@@ -316,10 +316,10 @@ Many inputs provide a collection of options to choose from (like `:select`, `:ra
   f.input :admin,   :as => :radio,       :collection => ["Yes!", "No"]
   f.input :book_id, :as => :select,      :collection => Hash[Book.all.map{|b| [b.name,b.id]}]
   f.input :fav_book,:as => :datalist   , :collection => Book.pluck(:name)
-</pre>
+```
 
 
-h2. The Available Inputs
+## The Available Inputs
 
 The Formtastic input types:
 
@@ -348,26 +348,26 @@ The Formtastic input types:
 The comments in the code are pretty good for each of these (what it does, what the output is, what the options are, etc.) so go check it out.
 
 
-h2. Delegation for label lookups
+## Delegation for label lookups
 
 Formtastic decides which label to use in the following order:
 
-<pre>
+```
   1. :label             # :label => "Choose Title"
   2. Formtastic i18n    # if either :label => true || i18n_lookups_by_default = true (see Internationalization)
   3. Activerecord i18n  # if localization file found for the given attribute
   4. label_str_method   # if nothing provided this defaults to :humanize but can be set to a custom method
-</pre>
+```
 
-h2. Internationalization (I18n)
+## Internationalization (I18n)
 
-h3. Basic Localization
+### Basic Localization
 
 Formtastic has some neat I18n-features. ActiveRecord object names and attributes are, by default, taken from calling `@object.human_name` and `@object.human_attribute_name(attr)` respectively. There are a few words specific to Formtastic that can be translated. See `lib/locale/en.yml` for more information.
 
 Basic localization (labels only, with ActiveRecord):
 
-<pre>
+```erb
   <%= semantic_form_for @post do |f| %>
     <%= f.inputs do %>
       <%= f.input :title %>        # => :label => I18n.t('activerecord.attributes.user.title')    or 'Title'
@@ -375,23 +375,23 @@ Basic localization (labels only, with ActiveRecord):
       <%= f.input :section %>      # => :label => I18n.t('activerecord.attributes.user.section')  or 'Section'
     <% end %>
   <% end %>
-</pre>
+```
 
 *Note:* This is perfectly fine if you just want your labels/attributes and/or models to be translated using *ActiveRecord I18n attribute translations*, and you don't use input hints and legends. But what if you do? And what if you don't want same labels in all forms?
 
-h3. Enhanced Localization (Formtastic I18n API)
+### Enhanced Localization (Formtastic I18n API)
 
 Formtastic supports localized *labels*, *hints*, *legends*, *actions* using the I18n API for more advanced usage. Your forms can now be DRYer and more flexible than ever, and still fully localized. This is how:
 
 *1. Enable I18n lookups by default (`config/initializers/formtastic.rb`):*
 
-<pre>
+```ruby
   Formtastic::FormBuilder.i18n_lookups_by_default = true
-</pre>
+```
 
 *2. Add some label-translations/variants (`config/locales/en.yml`):*
 
-<pre>
+```yml
   en:
     formtastic:
       titles:
@@ -418,11 +418,11 @@ Formtastic supports localized *labels*, *hints*, *legends*, *actions* using the 
         reset: "Reset form"
         cancel: "Cancel and go back"
         dummie: "Launch!"
-</pre>
+```
 
 *3. ...and now you'll get:*
 
-<pre>
+```erb
   <%= semantic_form_for Post.new do |f| %>
     <%= f.inputs do %>
       <%= f.input :title %>      # => :label => "Choose a title...", :hint => "Choose a good title for your post."
@@ -433,24 +433,24 @@ Formtastic supports localized *labels*, *hints*, *legends*, *actions* using the 
       <%= f.action :submit %>   # => "Create my %{model}"
     <% end %>
   <% end %>
-</pre>
+```
 
 *4. Localized titles (a.k.a. legends):*
 
 _Note: Slightly different because Formtastic can't guess how you group fields in a form. Legend text can be set with first (as in the sample below) specified value, or :name/:title options - depending on what flavor is preferred._
 
-<pre>
+```erb
   <%= semantic_form_for @post do |f| %>
     <%= f.inputs :post_details do %>   # => :title => "Post details"
       # ...
     <% end %>
     # ...
 <% end %>
-</pre>
+```
 
 *5. Override I18n settings:*
 
-<pre>
+```erb
   <%= semantic_form_for @post do |f| %>
     <%= f.inputs do %>
       <%= f.input :title %>      # => :label => "Choose a title...", :hint => "Choose a good title for your post."
@@ -461,17 +461,17 @@ _Note: Slightly different because Formtastic can't guess how you group fields in
       <%= f.action :submit, :label => :dummie %>         # => "Launch!"
     <% end %>
   <% end %>
-</pre>
+```
 
 If I18n-lookups is disabled, i.e.:
 
-<pre>
+```ruby
   Formtastic::FormBuilder.i18n_lookups_by_default = false
-</pre>
+```
 
 ...then you can enable I18n within the forms instead:
 
-<pre>
+```erb
   <%= semantic_form_for @post do |f| %>
     <%= f.inputs do %>
       <%= f.input :title, :label => true %>      # => :label => "Choose a title..."
@@ -482,7 +482,7 @@ If I18n-lookups is disabled, i.e.:
       <%= f.action :submit, :label => true %>    # => "Update %{model}" (if we are in edit that is...)
     <% end %>
   <% end %>
-</pre>
+```
 
 *6. Advanced I18n lookups*
 
@@ -500,7 +500,7 @@ For more flexible forms; Formtastic finds translations using a bottom-up approac
 
 ...which means that you can define translations like this:
 
-<pre>
+```yml
   en:
     formtastic:
       labels:
@@ -514,25 +514,25 @@ For more flexible forms; Formtastic finds translations using a bottom-up approac
           edit:
             title: "Edit title"
             body: "Edit body"
-</pre>
+```
 
 Values for `labels`/`hints`/`actions` are can take values: `String` (explicit value), `Symbol` (i18n-lookup-key relative to the current "type", e.g. actions:), `true` (force I18n lookup), `false` (force no I18n lookup). Titles (legends) can only take: `String` and `Symbol` - true/false have no meaning.
 
 *7. Basic Translations*
 If you want some basic translations, take a look on the "formtastic_i18n gem":https://github.com/timoschilling/formtastic_i18n.
 
-h2. Semantic errors
+## Semantic errors
 
 You can show errors on base (by default) and any other attribute just by passing its name to the semantic_errors method:
 
-<pre>
+```erb
   <%= semantic_form_for @post do |f| %>
     <%= f.semantic_errors :state %>
   <% end %>
-</pre>
+```
 
 
-h2. Modified & Custom Inputs
+## Modified & Custom Inputs
 
 You can modify existing inputs, subclass them, or create your own from scratch. Here's the basic process:
 
@@ -541,67 +541,67 @@ You can modify existing inputs, subclass them, or create your own from scratch. 
 
 Specific examples follow.
 
-h3. Changing Existing Input Behavior
+### Changing Existing Input Behavior
 
 To modify the behavior of `StringInput`, subclass it in a new file, `app/inputs/string_input.rb`:
 
-<pre>
+```ruby
   class StringInput < Formtastic::Inputs::StringInput
     def to_html
       puts "this is my modified version of StringInput"
       super
     end
   end
-</pre>
+```
 
 Another way to modify behavior is by using the input generator:
-<pre>
-  rails generate formtastic:input string --extend
-</pre>
+```shell
+$ rails generate formtastic:input string --extend
+```
 
 This generates the file `app/inputs/string_input.rb` with its respective content class.
 
 You can use your modified version with `:as => :string`.
 
-h3. Creating New Inputs Based on Existing Ones
+### Creating New Inputs Based on Existing Ones
 
 To create your own new types of inputs based on existing inputs, the process is similar. For example, to create `FlexibleTextInput` based on `StringInput`, put the following in `app/inputs/flexible_text_input.rb`:
 
-<pre>
+```ruby
   class FlexibleTextInput < Formtastic::Inputs::StringInput
     def input_html_options
       super.merge(:class => "flexible-text-area")
     end
   end
-</pre>
+```
 
 You can also extend existing input behavior by using the input generator:
 
-<pre>
-  rails generate formtastic:input FlexibleText --extend string
-</pre>
+```shell
+$ rails generate formtastic:input FlexibleText --extend string
+```
 
 This generates the file `app/inputs/flexible_text_input.rb` with its respective content class.
 
 You can use your new input with `:as => :flexible_text`.
 
-h3. Creating New Inputs From Scratch
+### Creating New Inputs From Scratch
 
 To create a custom `DatePickerInput` from scratch, put the following in `app/inputs/date_picker_input.rb`:
 
-<pre>
+```ruby
   class DatePickerInput
     include Formtastic::Inputs::Base
     def to_html
       # ...
     end
   end
-</pre>
+```
 
 You can use your new input with `:as => :date_picker`.
 
 
-h2. Dependencies
+## Dependencies
 
 There are none other than Rails itself, but...
 
@@ -609,7 +609,7 @@ There are none other than Rails itself, but...
 * There are a bunch of development dependencies if you plan to contribute to Formtastic
 
 
-h2. How to contribute
+## How to contribute
 
 * Fork the project on Github
 * Install development dependencies (`bundle install` and `appraisal install`)
@@ -619,7 +619,7 @@ h2. How to contribute
 * Create a pull request on Github (these are also a great place to start a conversation around a patch as early as possible)
 
 
-h2. Project Info
+## Project Info
 
 Formtastic was created by "Justin French":http://www.justinfrench.com with contributions from around 180 awesome developers. Run `git shortlog -n -s` to see the awesome.
 
