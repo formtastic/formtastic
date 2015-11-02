@@ -1,4 +1,4 @@
-# Formatstic
+# Formtastic
 
 [![Build Status](https://travis-ci.org/justinfrench/formtastic.svg?branch=master)](https://travis-ci.org/justinfrench/formtastic)
 [![Inline docs](http://inch-ci.org/github/justinfrench/formtastic.svg?branch=master)](http://inch-ci.org/github/justinfrench/formtastic)
