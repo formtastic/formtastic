@@ -163,7 +163,7 @@ module Formtastic
         class_names << @@default_form_class
         model_class_name = case record_or_name_or_array
           when String, Symbol then record_or_name_or_array.to_s                                  # :post => "post"
-          when Array then options[:as] || singularizer.call(record_or_name_or_array.last.class)  # [@post, @comment] # => "comment"
+          when Array then options[:as] || singularizer.call(record_or_name_or_array[-1].class)  # [@post, @comment] # => "comment"
           else options[:as] || singularizer.call(record_or_name_or_array.class)                  # @post => "post"
         end
         class_names << @@default_form_model_class_proc.call(model_class_name)
