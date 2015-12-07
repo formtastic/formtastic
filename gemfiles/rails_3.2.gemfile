@@ -4,4 +4,6 @@ source "https://rubygems.org"
 
 gem "rails", "~> 3.2.0"
 
+gem "test-unit-minitest", :platform => :ruby_22
+
 gemspec :path => "../"
