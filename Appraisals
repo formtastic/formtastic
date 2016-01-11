@@ -1,5 +1,6 @@
 appraise 'rails-3.2' do
   gem 'rails', '~> 3.2.0'
+  gem 'test-unit-minitest', :platform => [:ruby_22, :ruby_23]
 end
 
 appraise 'rails-4' do
