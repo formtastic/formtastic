@@ -261,7 +261,8 @@ module Formtastic
           return :file    if is_file?(method, options)
         end
 
-        if column = column_for(method)
+        column = column_for(method)
+        if column && column.type
           # Special cases where the column type doesn't map to an input method.
           case column.type
           when :string
