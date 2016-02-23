@@ -138,7 +138,8 @@ module Formtastic
           if validations?
             validations.select { |validator|
               if validator.options.key?(:on)
-                return false if (validator.options[:on] != :save) && ((object.new_record? && validator.options[:on] != :create) || (!object.new_record? && validator.options[:on] != :update))
+                validator_on = Array(validator.options[:on])
+                return false if (validator_on.exclude?(:save)) && ((object.new_record? && validator_on.exclude?(:create)) || (!object.new_record? && validator_on.exclude?(:update)))
               end
               case validator.kind
               when :presence
