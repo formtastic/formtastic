@@ -625,5 +625,5 @@ Formtastic was created by [Justin French](http://www.justinfrench.com) with cont
 
 The project is hosted on Github: [http://github.com/justinfrench/formtastic](http://github.com/justinfrench/formtastic), where your contributions, forkings, comments, issues and feedback are greatly welcomed.
 
-Copyright (c) 2007-2014 Justin French, released under the MIT license.
+Copyright (c) 2007-2016 Justin French, released under the MIT license.
 
