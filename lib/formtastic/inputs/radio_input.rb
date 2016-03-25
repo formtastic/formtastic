@@ -31,6 +31,10 @@ module Formtastic
     # `Section.all` for a `Post` form with an input for a `belongs_to :section` association.
     # You can override or customise this collection through the `:collection` option (see examples).
     #
+    # For radio inputs that map to ActiveRecord `enum` attributes, Formtastic will automatically
+    # load in your enum options to be used as the radio button choices. This can be overridden with
+    # the `:collection` option, or augmented with I18n translations. See examples below.
+    #
     # The way on which Formtastic renders the `value` attribute and label for each choice in the `:collection` is
     # customisable (see examples below). When not provided, we fall back to a list of methods to try on each 
     # object such as `:to_label`, `:name` and `:to_s`, which are defined in the configurations
@@ -99,6 +103,22 @@ module Formtastic
     #
     # @example Set HTML options on a specific radio input option with a 3rd element in the array for a collection member
     #   <%= f.input :author, :as => :radio, :collection => [["Test", 'test'], ["Try", "try", {:disabled => true}]]
+    #
+    # @example Using ActiveRecord enum attribute with i18n translation:
+    #   # post.rb
+    #   class Post < ActiveRecord::Base
+    #     enum :status => [ :active, :archived ]
+    #   end
+    #   # en.yml
+    #   en:
+    #     activerecord:
+    #       attributes:
+    #         post:
+    #           statuses:
+    #             active: I am active!
+    #             archived: I am archived!
+    #   # form
+    #   <%= f.input :status, :as => :radio %>
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
     # @see Formtastic::Inputs::RadioInput as an alternative for `belongs_to` associations

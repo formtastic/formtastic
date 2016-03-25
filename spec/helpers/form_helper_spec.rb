@@ -24,7 +24,7 @@ describe 'FormHelper' do
       output_buffer.should have_tag("form.formtastic")
     end
 
-    it 'adds a "novalidate" attribute to the generated form when configured to do so' do
+    it 'does not add "novalidate" attribute to the generated form when configured to do so' do
       with_config :perform_browser_validations, true do
         concat(semantic_form_for(@new_post, :url => '/hello') do |builder|
         end)
@@ -32,7 +32,7 @@ describe 'FormHelper' do
       end
     end
 
-    it 'omits a "novalidate" attribute to the generated form when configured to do so' do
+    it 'adds "novalidate" attribute to the generated form when configured to do so' do
       with_config :perform_browser_validations, false do
         concat(semantic_form_for(@new_post, :url => '/hello') do |builder|
         end)
@@ -40,7 +40,7 @@ describe 'FormHelper' do
       end
     end
 
-    it 'allows form HTML to override "novalidate" attribute when configure to not show' do
+    it 'allows form HTML to override "novalidate" attribute when configured to validate' do
       with_config :perform_browser_validations, false do
         concat(semantic_form_for(@new_post, :url => '/hello', :html => { :novalidate => true }) do |builder|
         end)
@@ -48,7 +48,7 @@ describe 'FormHelper' do
       end
     end
 
-    it 'allows form HTML to override "novalidate" attribute when configure to show' do
+    it 'allows form HTML to override "novalidate" attribute when configured to not validate' do
       with_config :perform_browser_validations, true do
         concat(semantic_form_for(@new_post, :url => '/hello', :html => { :novalidate => false }) do |builder|
         end)

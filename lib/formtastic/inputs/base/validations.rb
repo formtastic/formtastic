@@ -138,7 +138,8 @@ module Formtastic
           if validations?
             validations.select { |validator|
               if validator.options.key?(:on)
-                return false if (validator.options[:on] != :save) && ((object.new_record? && validator.options[:on] != :create) || (!object.new_record? && validator.options[:on] != :update))
+                validator_on = Array(validator.options[:on])
+                return false if (validator_on.exclude?(:save)) && ((object.new_record? && validator_on.exclude?(:create)) || (!object.new_record? && validator_on.exclude?(:update)))
               end
               case validator.kind
               when :presence
@@ -192,6 +193,21 @@ module Formtastic
           validation_limit || column_limit
         end
 
+        def readonly?
+          readonly_from_options? || readonly_attribute?
+        end
+
+        def readonly_attribute?
+          object_class = self.object.class
+          object_class.respond_to?(:readonly_attributes) &&
+            self.object.persisted? &&
+            column.respond_to?(:name) &&
+            object_class.readonly_attributes.include?(column.name.to_s)
+        end
+
+        def readonly_from_options?
+          options[:input_html] && options[:input_html][:readonly]
+        end
       end
     end
   end

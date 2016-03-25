@@ -490,10 +490,36 @@ RSpec.shared_examples 'Input Helper' do
               end
             end
 
+            it 'should be required when there is :create option in validation contexts array on create' do
+              with_config :required_string, " required yo!" do
+                @new_post.class.should_receive(:validators_on).with(:title).at_least(:once).and_return([
+                                                                                                         active_model_presence_validator([:title], {:on => [:create]})
+                                                                                                       ])
+                concat(semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:title))
+                end)
+                output_buffer.should have_tag('form li.required')
+                output_buffer.should_not have_tag('form li.optional')
+              end
+            end
+
             it 'should be required when there is :on => :save option on create' do
               with_config :required_string, " required yo!" do
                 @new_post.class.should_receive(:validators_on).with(:title).at_least(:once).and_return([
                                                                                                            active_model_presence_validator([:title], {:on => :save})
+                                                                                                       ])
+                concat(semantic_form_for(@new_post) do |builder|
+                  concat(builder.input(:title))
+                end)
+                output_buffer.should have_tag('form li.required')
+                output_buffer.should_not have_tag('form li.optional')
+              end
+            end
+
+            it 'should be required when there is :save option in validation contexts array on create' do
+              with_config :required_string, " required yo!" do
+                @new_post.class.should_receive(:validators_on).with(:title).at_least(:once).and_return([
+                                                                                                         active_model_presence_validator([:title], {:on => [:save]})
                                                                                                        ])
                 concat(semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:title))
@@ -516,6 +542,19 @@ RSpec.shared_examples 'Input Helper' do
               end
             end
 
+            it 'should be required when there is :save option in validation contexts array on update' do
+              with_config :required_string, " required yo!" do
+                @fred.class.should_receive(:validators_on).with(:login).at_least(:once).and_return([
+                                                                                                     active_model_presence_validator([:login], {:on => [:save]})
+                                                                                                   ])
+                concat(semantic_form_for(@fred) do |builder|
+                  concat(builder.input(:login))
+                end)
+                output_buffer.should have_tag('form li.required')
+                output_buffer.should_not have_tag('form li.optional')
+              end
+            end
+
             it 'should not be required when there is :on => :create option on update' do
               @fred.class.should_receive(:validators_on).with(:login).at_least(:once).and_return([
                                                                                                      active_model_presence_validator([:login], {:on => :create})
@@ -527,9 +566,31 @@ RSpec.shared_examples 'Input Helper' do
               output_buffer.should have_tag('form li.optional')
             end
 
+            it 'should not be required when there is :create option in validation contexts array on update' do
+              @fred.class.should_receive(:validators_on).with(:login).at_least(:once).and_return([
+                                                                                                   active_model_presence_validator([:login], {:on => [:create]})
+                                                                                                 ])
+              concat(semantic_form_for(@fred) do |builder|
+                concat(builder.input(:login))
+              end)
+              output_buffer.should_not have_tag('form li.required')
+              output_buffer.should have_tag('form li.optional')
+            end
+
             it 'should not be required when there is :on => :update option on create' do
               @new_post.class.should_receive(:validators_on).with(:title).at_least(:once).and_return([
                                                                                                          active_model_presence_validator([:title], {:on => :update})
+                                                                                                     ])
+              concat(semantic_form_for(@new_post) do |builder|
+                concat(builder.input(:title))
+              end)
+              output_buffer.should_not have_tag('form li.required')
+              output_buffer.should have_tag('form li.optional')
+            end
+
+            it 'should not be required when there is :update option in validation contexts array on create' do
+              @new_post.class.should_receive(:validators_on).with(:title).at_least(:once).and_return([
+                                                                                                       active_model_presence_validator([:title], {:on => [:update]})
                                                                                                      ])
               concat(semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title))
@@ -745,6 +806,14 @@ RSpec.shared_examples 'Input Helper' do
           @new_post.class.stub(:reflect_on_association).with(:section_id).and_return(double('ActiveRecord::Reflection::AssociationReflection'))
           default_input_type(:integer, :user_id).should == :select
           default_input_type(:integer, :section_id).should == :select
+        end
+
+        it 'should default to :select for enum' do
+          statuses = ActiveSupport::HashWithIndifferentAccess.new("active"=>0, "inactive"=>1)
+          @new_post.class.stub(:statuses) { statuses }
+          @new_post.stub(:defined_enums) { {"status" => statuses } }
+          
+          default_input_type(:integer, :status).should == :select
         end
 
         it 'should default to :password for :string column types with "password" in the method name' do

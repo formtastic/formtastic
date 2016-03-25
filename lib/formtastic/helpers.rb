@@ -9,8 +9,8 @@ module Formtastic
     autoload :FormHelper, 'formtastic/helpers/form_helper'
     autoload :InputHelper, 'formtastic/helpers/input_helper'
     autoload :InputsHelper, 'formtastic/helpers/inputs_helper'
-    autoload :LabelHelper, 'formtastic/helpers/label_helper'
     autoload :Reflection, 'formtastic/helpers/reflection'
+    autoload :Enum, 'formtastic/helpers/enum'
   end
 end
 

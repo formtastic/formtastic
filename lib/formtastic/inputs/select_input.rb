@@ -8,6 +8,7 @@ module Formtastic
     # This is the default input choice when:
     #
     # * the database column type is an `:integer` and there is an association (`belongs_to`)
+    # * the database column type is an `:integer` and there is an enum defined (`enum`)
     # * the database column type is a `:string` and the `:collection` option is used
     # * there an object with an association, but no database column on the object (`has_many`, etc)
     # * there is no object and the `:collection` option is used
@@ -37,6 +38,13 @@ module Formtastic
     # we fall back to a list of methods to try on each object such as `:to_label`, `:name` and
     # `:to_s`, which are defined in the configurations `collection_label_methods` and
     # `collection_value_methods` (see examples below).
+    #
+    # For select inputs that map to ActiveRecord `enum` attributes, Formtastic will automatically
+    # load in your enum options to be used as the select's options. This can be overridden with
+    # the `:collection` option, or augmented with I18n translations. See examples below.
+    # An error is raised if you try to render a multi-select with an enum, as ActiveRecord can
+    # only store one choice in the database.
+    #
     #
     # @example Basic `belongs_to` example with full form context
     #
@@ -124,6 +132,21 @@ module Formtastic
     #   <%= f.input :author, :as => :select, :prompt => true %>   =>   <option value="">Please select</option>
     #   <%= f.input :author, :as => :select, :prompt => "Please select an author" %>
     #
+    # @example Using ActiveRecord enum attribute with i18n translation:
+    #   # post.rb
+    #   class Post < ActiveRecord::Base
+    #     enum :status => [ :active, :archived ]
+    #   end
+    #   # en.yml
+    #   en:
+    #     activerecord:
+    #       attributes:
+    #         post:
+    #           statuses:
+    #             active: I am active!
+    #             archived: I am archived!
+    #   # form
+    #   <%= f.input :status, :as => :select %>
     #
     # @see Formtastic::Helpers::InputsHelper#input InputsHelper#input for full documentation of all possible options.
     # @see Formtastic::Inputs::CheckBoxesInput CheckBoxesInput as an alternative for `has_many` and `has_and_belongs_to_many` associations
@@ -133,6 +156,11 @@ module Formtastic
     class SelectInput
       include Base
       include Base::Collections
+
+      def initialize(*args)
+        super
+        raise Formtastic::UnsupportedEnumCollection if collection_from_enum? && multiple?
+      end
 
       def to_html
         input_wrapping do

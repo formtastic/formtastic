@@ -40,6 +40,7 @@ module Formtastic
       private_constant(:INPUT_CLASS_DEPRECATION)
 
       include Formtastic::Helpers::Reflection
+      include Formtastic::Helpers::Enum
       include Formtastic::Helpers::FileColumnDetection
 
       # Returns a chunk of HTML markup for a given `method` on the form object, wrapped in
@@ -134,6 +135,7 @@ module Formtastic
       #
       # @option options :input_html [Hash]
       #   Override or add to the HTML attributes to be passed down to the `<input>` tag
+      #   (If you use attr_readonly method in your model, formtastic will automatically set those attributes's input readonly)
       #
       # @option options :wrapper_html [Hash]
       #   Override or add to the HTML attributes to be passed down to the wrapping `<li>` tag
@@ -259,7 +261,8 @@ module Formtastic
           return :file    if is_file?(method, options)
         end
 
-        if column = column_for(method)
+        column = column_for(method)
+        if column && column.type
           # Special cases where the column type doesn't map to an input method.
           case column.type
           when :string
@@ -273,6 +276,7 @@ module Formtastic
             return :color     if method.to_s =~ /color/
           when :integer
             return :select    if reflection_for(method)
+            return :select    if enum_for(method)
             return :number
           when :float, :decimal
             return :number
