@@ -136,10 +136,10 @@ module Formtastic
           return true if options[:required] == true
           return false if not_required_through_negated_validation?
           if validations?
-            validations.select { |validator|
+            validations.any? { |validator|
               if validator.options.key?(:on)
                 validator_on = Array(validator.options[:on])
-                return false if (validator_on.exclude?(:save)) && ((object.new_record? && validator_on.exclude?(:create)) || (!object.new_record? && validator_on.exclude?(:update)))
+                next false if (validator_on.exclude?(:save)) && ((object.new_record? && validator_on.exclude?(:create)) || (!object.new_record? && validator_on.exclude?(:update)))
               end
               case validator.kind
               when :presence
@@ -153,7 +153,7 @@ module Formtastic
               else
                 false
               end
-            }.any?
+            }
           else
             return responds_to_global_required? && !!builder.all_fields_required_by_default
           end
