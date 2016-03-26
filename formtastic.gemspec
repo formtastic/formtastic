@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.rdoc_options = ["--charset=UTF-8"]
-  s.extra_rdoc_files = ["README.textile"]
+  s.extra_rdoc_files = ["README.md"]
 
   s.required_ruby_version = '>= 1.9.3'
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
