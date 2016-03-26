@@ -56,8 +56,8 @@ describe 'check_boxes input' do
       output_buffer.should_not have_tag("form li fieldset ol li input[@type='hidden']")
     end
 
-    it 'should render one hidden input for each choice outside the ol' do
-      output_buffer.should have_tag("form li fieldset > input[@type='hidden']", :count => 1)
+    it 'should not render hidden input for each choice outside the ol' do
+      output_buffer.should_not have_tag("form li fieldset > input[@type='hidden']")
     end
 
     describe "each choice" do
@@ -90,12 +90,12 @@ describe 'check_boxes input' do
         end
       end
 
-      it 'should have a hidden field with an empty array value for the collection to allow clearing of all checkboxes' do
-        output_buffer.should have_tag("form li fieldset > input[@type=hidden][@name='author[post_ids][]'][@value='']", :count => 1)
+      it 'should not have a hidden field with an empty array value for the collection to allow clearing of all checkboxes' do
+        output_buffer.should_not have_tag("form li fieldset > input[@type=hidden][@name='author[post_ids][]'][@value='']")
       end
 
-      it 'the hidden field with an empty array value should be followed by the ol' do
-        output_buffer.should have_tag("form li fieldset > input[@type=hidden][@name='author[post_ids][]'][@value=''] + ol", :count => 1)
+      it 'should not have a hidden field with an empty array value followed by the ol' do
+        output_buffer.should_not have_tag("form li fieldset > input[@type=hidden][@name='author[post_ids][]'][@value=''] + ol")
       end
 
       it 'should not have a hidden field with an empty string value for the collection' do
