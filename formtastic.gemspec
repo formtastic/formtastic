@@ -28,14 +28,14 @@ Gem::Specification.new do |s|
   s.add_dependency(%q<actionpack>, [">= 4.1.0"])
 
   s.add_development_dependency(%q<nokogiri>)
-  s.add_development_dependency(%q<rspec-rails>, ["~> 2.14"])
+  s.add_development_dependency(%q<rspec-rails>, ["~> 3.3.2"])
   s.add_development_dependency(%q<rspec_tag_matchers>, ["~> 1.0"])
   s.add_development_dependency(%q<hpricot>, ["~> 0.8.3"])
   s.add_development_dependency(%q<RedCloth>, ["~> 4.2"]) # for YARD Textile formatting
   s.add_development_dependency(%q<yard>, ["~> 0.8"])
   s.add_development_dependency(%q<colored>, ["~> 1.2"])
   s.add_development_dependency(%q<tzinfo>)
-  s.add_development_dependency(%q<ammeter>, ["1.1.1"])
+  s.add_development_dependency(%q<ammeter>, ["~> 1.1.3"])
   s.add_development_dependency(%q<appraisal>, ["~> 1.0"])
   s.add_development_dependency(%q<rake>)
   s.add_development_dependency(%q<activemodel>, [">= 3.2.13"])

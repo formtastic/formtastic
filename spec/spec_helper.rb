@@ -485,22 +485,8 @@ module FormtasticSpecHelper
     Formtastic::FormBuilder.send(:"#{config_method_name}=", old_value)
   end
   
-  class ToSMatcher
-    def initialize(str)
-      @str=str.to_s
-    end
-    
-    def matches?(value)
-      value.to_s==@str
-    end
-    
-    def failure_message_for_should
-      "Expected argument that converted to #{@str}"
-    end
-  end
-  
-  def errors_matcher(method)
-    ToSMatcher.new(method)
+  RSpec::Matchers.define :errors_matcher do |expected|
+    match { |actual| actual.to_s == expected.to_s }
   end
 end
 
@@ -528,12 +514,5 @@ RSpec.configure do |config|
       :input_class, :standard_input_class_name, :custom_input_class_name ].each do |method|
       allow(Formtastic.deprecation).to receive(:deprecation_warning).with(method, instance_of(String), instance_of(Array))
     end
-  end
-
-  config.before(:all) do
-    DeferredGarbageCollection.start unless ENV["DEFER_GC"] == "false"
-  end
-  config.after(:all) do
-    DeferredGarbageCollection.reconsider unless ENV["DEFER_GC"] == "false"    
   end
 end

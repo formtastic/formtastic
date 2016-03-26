@@ -180,11 +180,14 @@ module Formtastic
       def make_selected_values
         if object.respond_to?(method)
           selected_items = object.send(method)
-
           # Construct an array from the return value, regardless of the return type
           selected_items = [*selected_items].compact.flatten
 
-          [*selected_items.map { |o| send_or_call_or_object(value_method, o) }].compact
+          selected = []
+          selected_items.map do |selected_item|
+            selected_item_id = selected_item.id if selected_item.respond_to? :id
+            item = send_or_call_or_object(value_method, selected_item) || selected_item_id
+          end.compact
         else
           []
         end

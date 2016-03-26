@@ -51,6 +51,9 @@ module Formtastic
     # Will be {Formtastic::ActionClassFinder} by default in 4.0.
     configure :action_class_finder#, Formtastic::ActionClassFinder
 
+    configure :skipped_columns, [:created_at, :updated_at, :created_on, :updated_on, :lock_version, :version]
+    configure :priority_time_zones, []
+
     attr_reader :template
 
     attr_reader :auto_index

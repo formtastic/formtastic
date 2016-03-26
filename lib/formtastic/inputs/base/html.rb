@@ -2,7 +2,7 @@ module Formtastic
   module Inputs
     module Base
       module Html
-        
+
         # Defines how the instance of an input should be rendered to a HTML string.
         #
         # @abstract Implement this method in your input class to describe how the input should render itself.
@@ -17,15 +17,16 @@ module Formtastic
         def to_html
           raise NotImplementedError
         end
-        
+
         def input_html_options
-          { 
+          {
             :id => dom_id,
             :required => required_attribute?,
-            :autofocus => autofocus?
+            :autofocus => autofocus?,
+            :readonly => readonly?
           }.merge(options[:input_html] || {})
         end
-        
+
         def dom_id
           [
             builder.dom_id_namespace,
@@ -34,7 +35,7 @@ module Formtastic
             association_primary_key || sanitized_method_name
           ].reject { |x| x.blank? }.join('_')
         end
-        
+
         def dom_index
           if builder.options.has_key?(:index)
             builder.options[:index]

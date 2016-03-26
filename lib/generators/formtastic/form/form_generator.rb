@@ -75,7 +75,7 @@ module Formtastic
     # Skips Active Record Timestamps.
     def content_columns
       model.content_columns.select do |column|
-        !Formtastic::Helpers::InputsHelper::SKIPPED_COLUMNS.include? column.name.to_sym
+        !Formtastic::FormBuilder.skipped_columns.include? column.name.to_sym
       end
     end
 
