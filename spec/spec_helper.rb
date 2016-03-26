@@ -161,9 +161,8 @@ module FormtasticSpecHelper
     end
   end
   
-  # In Rails 3 Model.all returns an array. In Rails 4, it returns an
-  # association proxy, which quacks a lot like an array. We use this in stubs 
-  # or mocks where we need to return the later.
+  # Model.all returns an association proxy, which quacks a lot like an array.
+  # We use this in stubs or mocks where we need to return the later.
   # 
   # TODO try delegate?
   # delegate :map, :size, :length, :first, :to_ary, :each, :include?, :to => :array
@@ -246,14 +245,8 @@ module FormtasticSpecHelper
     def authors_path(*args); "/authors"; end
     def new_author_path(*args); "/authors/new"; end
     
-    # Returns the array for Rails 3 and a thing that looks looks like an 
-    # association proxy for Rails 4+
     def author_array_or_scope(the_array = [@fred, @bob])
-      if ::Formtastic::Util.rails3?
-        the_array
-      else
-        MockScope.new(the_array)
-      end
+      MockScope.new(the_array)
     end
     
     @fred = ::Author.new
@@ -507,14 +500,7 @@ module FormtasticSpecHelper
   end
   
   def errors_matcher(method)
-    # In edge rails (Rails 4) tags store method_name as a string and index the errors object using a string
-    # therefore allow stubs to match on either string or symbol.  The errors object calls to_sym on all index 
-    # accesses so @object.errors[:abc] is equivalent to @object.errors["abc"]
-    if Rails::VERSION::MAJOR == 4
-      ToSMatcher.new(method)
-    else
-      method
-    end
+    ToSMatcher.new(method)
   end
 end
 
