@@ -28,3 +28,4 @@ matrix:
       gemfile: gemfiles/rails_edge.gemfile
   allow_failures:
     - gemfile: gemfiles/rails_edge.gemfile
+    - rvm: 1.9.3
