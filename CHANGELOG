@@ -7,6 +7,7 @@
   * Added support for customizeable skipped columns (#1133)
   * Added automatic input readonly attribute for attr_readonly attributes (#1158)
   * Added support for multiple validation contexts (#1179)
+  * Rails 5 Beta support (#1183)
   * Fixed typos and improved documentation
 
 3.1.3
