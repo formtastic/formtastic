@@ -64,7 +64,7 @@ module Formtastic
         end
 
         def custom_choice_html_options(choice)
-          (choice.is_a?(Array) && choice.size > 2) ? choice.last : {}
+          (choice.is_a?(Array) && choice.size > 2) ? choice[-1] : {}
         end
 
         def choice_html_safe_value(choice)

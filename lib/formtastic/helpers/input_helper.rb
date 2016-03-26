@@ -132,6 +132,7 @@ module Formtastic
       #
       # @option options :input_html [Hash]
       #   Override or add to the HTML attributes to be passed down to the `<input>` tag
+      #   (If you use attr_readonly method in your model, formtastic will automatically set those attributes's input readonly)
       #
       # @option options :wrapper_html [Hash]
       #   Override or add to the HTML attributes to be passed down to the wrapping `<li>` tag
@@ -257,7 +258,8 @@ module Formtastic
           return :file    if is_file?(method, options)
         end
 
-        if column = column_for(method)
+        column = column_for(method)
+        if column && column.type
           # Special cases where the column type doesn't map to an input method.
           case column.type
           when :string

@@ -12,7 +12,7 @@ module Formtastic
         end
 
         def value_method
-          @value_method ||= (value_method_from_options || label_and_value_method.last)
+          @value_method ||= (value_method_from_options || label_and_value_method[-1])
         end
 
         def value_method_from_options
@@ -24,7 +24,7 @@ module Formtastic
         end
 
         def label_and_value_method_from_collection(_collection)
-          sample = _collection.first || _collection.last
+          sample = _collection.first || _collection[-1]
 
           case sample
           when Array
@@ -84,11 +84,7 @@ module Formtastic
             scope_conditions = conditions_from_reflection.empty? ? nil : {:conditions => conditions_from_reflection}
             where_conditions = (scope_conditions && scope_conditions[:conditions]) || {}
             
-            if Util.rails3?
-              reflection.klass.scoped(scope_conditions).where({}) # where is uneccessary, but keeps the stubbing simpler while we support rails3
-            else
-              reflection.klass.where(where_conditions)
-            end
+            reflection.klass.where(where_conditions)
           end
         end
 
@@ -102,7 +98,7 @@ module Formtastic
         #
         # [["Active", "active"], ["Archived", "archived"]
         #
-        # The first element in each array uses String#humanize, but I18n 
+        # The first element in each array uses String#humanize, but I18n
         # translations are available too. Set them with the following structure.
         #
         # en:
@@ -113,13 +109,13 @@ module Formtastic
         #           active: Custom Active Label Here
         #           archived: Custom Archived Label Here
         def collection_from_enum
-          pluralized_method = method.to_s.pluralize.to_sym # :status => :statuses
-
           if collection_from_enum?
-            enum_options_hash = object.class.send(pluralized_method) # Post.statuses
-            enum_options_hash.map do |name, value| 
-              key = "activerecord.attributes.#{object_name}.#{pluralized_method}.#{name}"
-              label = ::I18n.translate(key, :default => name.humanize) 
+            method_name = method.to_s
+
+            enum_options_hash = object.defined_enums[method_name]
+            enum_options_hash.map do |name, value|
+              key = "activerecord.attributes.#{object_name}.#{method_name.pluralize}.#{name}"
+              label = ::I18n.translate(key, :default => name.humanize)
               [label, name]
             end
           end

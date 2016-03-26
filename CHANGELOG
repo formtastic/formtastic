@@ -1,3 +1,7 @@
+3.1.2
+
+  * Fixed that we specified 4.0.4 instead of 4.1 in the Rails version deprecation message
+
 3.1.1
 
   * Fixed class custom input & action class loading in test environments
