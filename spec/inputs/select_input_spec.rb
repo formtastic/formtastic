@@ -151,6 +151,77 @@ describe 'select input' do
     end
   end
 
+  describe 'for a enum column' do
+    before do
+      @new_post.stub(:status) { 'inactive' }
+      statuses = ActiveSupport::HashWithIndifferentAccess.new("active"=>0, "inactive"=>1)
+      @new_post.class.stub(:statuses) { statuses }
+      @new_post.stub(:defined_enums) { { "status" => statuses } }
+    end
+
+    context 'single choice' do
+      before do
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:status, :as => :select))
+        end)
+      end
+
+      it_should_have_input_wrapper_with_class("select")
+      it_should_have_input_wrapper_with_class(:input)
+      it_should_have_input_wrapper_with_id("post_status_input")
+      it_should_have_label_with_text(/Status/)
+      it_should_have_label_for('post_status')
+      it_should_apply_error_logic_for_input_type(:select)
+
+      it 'should have a select inside the wrapper' do
+        output_buffer.should have_tag('form li select')
+        output_buffer.should have_tag('form li select#post_status')
+      end
+
+      it 'should have a valid name' do
+        output_buffer.should have_tag("form li select[@name='post[status]']")
+        output_buffer.should_not have_tag("form li select[@name='post[status][]']")
+      end
+
+      it 'should not create a multi-select' do
+        output_buffer.should_not have_tag('form li select[@multiple]')
+      end
+      
+      it 'should not add a hidden input' do
+        output_buffer.should_not have_tag('form li input[@type="hidden"]')
+      end
+
+      it 'should create a select without size' do
+        output_buffer.should_not have_tag('form li select[@size]')
+      end
+
+      it 'should have a blank option' do
+        output_buffer.should have_tag("form li select option[@value='']")
+      end
+
+      it 'should have a select option for each defined enum status' do
+        output_buffer.should have_tag("form li select[@name='post[status]'] option", :count => @new_post.class.statuses.count + 1)
+        @new_post.class.statuses.each do |label, value|
+          output_buffer.should have_tag("form li select option[@value='#{label}']", /#{label.humanize}/)
+        end
+      end
+
+      it 'should have one option with a "selected" attribute (TODO)' do
+        output_buffer.should have_tag("form li select[@name='post[status]'] option[@selected]", :count => 1)
+      end
+    end
+
+    context 'multiple choice' do
+      it 'raises an error' do
+        expect {
+          concat(semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:status, :as => :select, :multiple => true))
+          end)
+        }.to raise_error Formtastic::UnsupportedEnumCollection
+      end
+    end
+  end
+
   describe 'for a belongs_to association' do
     before do
       concat(semantic_form_for(@new_post) do |builder|
@@ -236,17 +307,6 @@ describe 'select input' do
         ::Author.should_receive(:where).with({:active => true})
       end
 
-      semantic_form_for(@new_post) do |builder|
-        concat(builder.input(:author, :as => :select))
-      end
-    end
-
-    it "should call author.(scoped|where) with association conditions" do
-      if Formtastic::Util.rails3?
-        ::Author.should_receive(:scoped).with(:conditions => {:active => true})
-      else
-        ::Author.should_receive(:where).with({:active => true})
-      end
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:author, :as => :select))
       end

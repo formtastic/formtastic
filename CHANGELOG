@@ -1,3 +1,15 @@
+3.1.4
+  * Performance improvements (#1174)
+  * Added priority time zones configuration (#1172)
+  * Added input generators (#1150)
+  * Added support for `enum` (#1098)
+  * Added support for Reform gem by relying only on `defined_enums` Hash for enum collections (#1113)
+  * Added support for customizeable skipped columns (#1133)
+  * Added automatic input readonly attribute for attr_readonly attributes (#1158)
+  * Added support for multiple validation contexts (#1179)
+  * Rails 5 Beta support (#1183)
+  * Fixed typos and improved documentation
+
 3.1.3
 
   * Fixed (silenced) additional Rails 5 deprecation on column_for_attribute that we missed in 3.1.0

@@ -152,6 +152,34 @@ describe 'radio input' do
     end
   end
 
+  describe 'for a enum column' do
+    before do
+      @new_post.stub(:status) { 'inactive' }
+      statuses = ActiveSupport::HashWithIndifferentAccess.new("active"=>0, "inactive"=>1)
+      @new_post.class.stub(:statuses) { statuses }
+      @new_post.stub(:defined_enums) { { "status" => statuses } }
+    end
+
+    before do
+      concat(semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:status, :as => :radio))
+      end)
+    end
+
+    it 'should have a radio input for each defined enum status' do
+      output_buffer.should have_tag("form li input[@name='post[status]'][@type='radio']", :count => @new_post.class.statuses.count)
+      @new_post.class.statuses.each do |label, value|
+        output_buffer.should have_tag("form li input[@value='#{label}']")
+        output_buffer.should have_tag("form li label", /#{label.humanize}/)
+      end
+    end
+
+    it 'should have one radio input with a "checked" attribute' do
+      output_buffer.should have_tag("form li input[@name='post[status]'][@checked]", :count => 1)
+    end
+  end
+
+
   describe "with i18n of the legend label" do
 
     before do

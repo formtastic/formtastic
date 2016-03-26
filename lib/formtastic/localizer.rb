@@ -1,5 +1,5 @@
 module Formtastic
-  # Implementation for looking up localized values within Formtastic using I18n, if no 
+  # Implementation for looking up localized values within Formtastic using I18n, if no
   # explicit value (like the `:label` option) is set and I18n-lookups are enabled in the
   # configuration.
   #
@@ -28,50 +28,50 @@ module Formtastic
       def get(key)
         cache[key]
       end
-    
+
       def has_key?(key)
         cache.has_key?(key)
       end
-    
+
       def set(key, result)
         cache[key] = result
       end
-    
+
       def cache
         @cache ||= {}
       end
-    
+
       def clear!
         cache.clear
       end
     end
-        
+
     attr_accessor :builder
-    
+
     def self.cache
       @cache ||= Cache.new
     end
-    
+
     def initialize(current_builder)
-      self.builder = current_builder 
+      self.builder = current_builder
     end
 
     def localize(key, value, type, options = {}) # @private
       key = value if value.is_a?(::Symbol)
-      
+
       if value.is_a?(::String)
         escape_html_entities(value)
       else
         use_i18n = value.nil? ? i18n_lookups_by_default : (value != false)
         use_cache = i18n_cache_lookups
         cache = self.class.cache
-        
+
         if use_i18n
           model_name, nested_model_name  = normalize_model_name(builder.model_name.underscore)
 
           action_name = builder.template.params[:action].to_s rescue ''
           attribute_name = key.to_s
-          
+
           # look in the cache first
           if use_cache
             cache_key = [::I18n.locale, action_name, model_name, nested_model_name, attribute_name, key, value, type, options]
@@ -86,7 +86,7 @@ module Formtastic
             i18n_path.gsub!('%{model}', model_name)
             i18n_path.gsub!('%{nested_model}', nested_model_name) unless nested_model_name.nil?
             i18n_path.gsub!('%{attribute}', attribute_name)
-            i18n_path.gsub!('..', '.')
+            i18n_path.tr!('..', '.')
             i18n_path.to_sym
           end
           defaults << ''
@@ -103,7 +103,7 @@ module Formtastic
             options[:default] = defaults
             i18n_value = ::I18n.t(default_key, options)
           end
-          
+
           # save the result to the cache
           result = (i18n_value.is_a?(::String) && i18n_value.present?) ? escape_html_entities(i18n_value) : nil
           cache.set(cache_key, result) if use_cache
@@ -143,7 +143,7 @@ module Formtastic
     def i18n_lookups_by_default
       builder.i18n_lookups_by_default
     end
-    
+
     def i18n_cache_lookups
       builder.i18n_cache_lookups
     end

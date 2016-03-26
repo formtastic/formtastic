@@ -54,7 +54,7 @@ describe 'time_zone input' do
     it_should_have_label_for("context2_post_time_zone")
 
   end
-  
+
   describe "when index is provided" do
 
     before do
@@ -67,21 +67,21 @@ describe 'time_zone input' do
         end)
       end)
     end
-    
+
     it 'should index the id of the wrapper' do
       output_buffer.should have_tag("li#post_author_attributes_3_name_input")
     end
-    
+
     it 'should index the id of the select tag' do
       output_buffer.should have_tag("select#post_author_attributes_3_name")
     end
-    
+
     it 'should index the name of the select tag' do
       output_buffer.should have_tag("select[@name='post[author_attributes][3][name]']")
     end
-    
+
   end
-  
+
 
   describe 'when no object is given' do
     before(:each) do
@@ -102,10 +102,10 @@ describe 'time_zone input' do
       output_buffer.should have_tag("form li select[@name=\"project[time_zone]\"]")
     end
   end
-  
+
   context "when required" do
     it "should add the required attribute to the input's html options" do
-      with_config :use_required_attribute, true do 
+      with_config :use_required_attribute, true do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:title, :as => :time_zone, :required => true))
         end)
@@ -113,5 +113,31 @@ describe 'time_zone input' do
       end
     end
   end
-  
+
+  describe "when priority time zone is provided" do
+    let(:time_zones) { [ActiveSupport::TimeZone['Alaska'], ActiveSupport::TimeZone['Hawaii']] }
+    let(:input_html_options) do
+      { id: "post_title", required: false, autofocus: false, readonly: false }
+    end
+
+    context "by priority_zone option" do
+      it "passes right time_zones" do
+        expect_any_instance_of(Formtastic::FormBuilder).to receive(:time_zone_select).with(:title, time_zones, {}, input_html_options)
+        semantic_form_for(@new_post) do |builder|
+          builder.input(:title, as: :time_zone, priority_zones: time_zones)
+        end
+      end
+    end
+
+    context "by configuration" do
+      it "passes right time_zones" do
+        expect_any_instance_of(Formtastic::FormBuilder).to receive(:time_zone_select).with(:title, time_zones, {}, input_html_options)
+        with_config :priority_time_zones, time_zones do
+          semantic_form_for(@new_post) do |builder|
+            builder.input(:title, as: :time_zone)
+          end
+        end
+      end
+    end
+  end
 end

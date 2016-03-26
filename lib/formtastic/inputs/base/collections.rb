@@ -12,7 +12,7 @@ module Formtastic
         end
 
         def value_method
-          @value_method ||= (value_method_from_options || label_and_value_method.last)
+          @value_method ||= (value_method_from_options || label_and_value_method[-1])
         end
 
         def value_method_from_options
@@ -24,7 +24,7 @@ module Formtastic
         end
 
         def label_and_value_method_from_collection(_collection)
-          sample = _collection.first || _collection.last
+          sample = _collection.first || _collection[-1]
 
           case sample
           when Array
@@ -43,7 +43,7 @@ module Formtastic
         end
 
         def raw_collection
-          @raw_collection ||= (collection_from_options || collection_from_association || collection_for_boolean)
+          @raw_collection ||= (collection_from_options || collection_from_enum || collection_from_association || collection_for_boolean)
         end
 
         def collection
@@ -83,13 +83,50 @@ module Formtastic
 
             scope_conditions = conditions_from_reflection.empty? ? nil : {:conditions => conditions_from_reflection}
             where_conditions = (scope_conditions && scope_conditions[:conditions]) || {}
-            
+
             if Util.rails3?
               reflection.klass.scoped(scope_conditions).where({}) # where is uneccessary, but keeps the stubbing simpler while we support rails3
             else
               reflection.klass.where(where_conditions)
             end
           end
+        end
+
+        # Assuming the following model:
+        #
+        # class Post < ActiveRecord::Base
+        #   enum :status => [ :active, :archived ]
+        # end
+        #
+        # We would end up with a collection like this:
+        #
+        # [["Active", "active"], ["Archived", "archived"]
+        #
+        # The first element in each array uses String#humanize, but I18n
+        # translations are available too. Set them with the following structure.
+        #
+        # en:
+        #   activerecord:
+        #     attributes:
+        #       post:
+        #         statuses:
+        #           active: Custom Active Label Here
+        #           archived: Custom Archived Label Here
+        def collection_from_enum
+          if collection_from_enum?
+            method_name = method.to_s
+
+            enum_options_hash = object.defined_enums[method_name]
+            enum_options_hash.map do |name, value|
+              key = "activerecord.attributes.#{object_name}.#{method_name.pluralize}.#{name}"
+              label = ::I18n.translate(key, :default => name.humanize)
+              [label, name]
+            end
+          end
+        end
+
+        def collection_from_enum?
+          object.respond_to?(:defined_enums) && object.defined_enums.has_key?(method.to_s)
         end
 
         def collection_for_boolean

@@ -29,7 +29,7 @@ module Formtastic
     end
 
     def self.use_const_defined?
-      defined?(Rails) && ::Rails.application && ::Rails.application.config.eager_load
+      defined?(Rails) && ::Rails.application && ::Rails.application.config.respond_to?(:eager_load) && ::Rails.application.config.eager_load
     end
 
     # @param namespaces [Array<Module>]
