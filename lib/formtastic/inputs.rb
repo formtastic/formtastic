@@ -28,6 +28,7 @@ module Formtastic
     autoload :SelectInput
     autoload :StringInput
     autoload :TextInput
+    autoload :HstoreInput
     autoload :TimeInput
     autoload :TimePickerInput
     autoload :TimeSelectInput
