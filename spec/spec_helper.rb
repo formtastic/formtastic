@@ -522,11 +522,4 @@ RSpec.configure do |config|
       allow(Formtastic.deprecation).to receive(:deprecation_warning).with(method, instance_of(String), instance_of(Array))
     end
   end
-
-  config.before(:all) do
-    DeferredGarbageCollection.start unless ENV["DEFER_GC"] == "false"
-  end
-  config.after(:all) do
-    DeferredGarbageCollection.reconsider unless ENV["DEFER_GC"] == "false"    
-  end
 end
