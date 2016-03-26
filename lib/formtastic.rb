@@ -4,19 +4,22 @@ require 'formtastic/engine' if defined?(::Rails)
 module Formtastic
   extend ActiveSupport::Autoload
 
-  autoload :FormBuilder
   autoload :Helpers
   autoload :HtmlAttributes
-  autoload :I18n
-  autoload :Inputs
-  autoload :Actions
   autoload :LocalizedString
   autoload :Localizer
-  autoload :Util
   autoload :NamespacedClassFinder
   autoload :InputClassFinder
   autoload :ActionClassFinder
   autoload :Deprecation
+
+  eager_autoload do
+    autoload :I18n
+    autoload :FormBuilder
+    autoload :Inputs
+    autoload :Actions
+    autoload :Util
+  end
 
   # @private
   mattr_accessor :deprecation
