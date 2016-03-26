@@ -15,7 +15,6 @@ gemfile:
   - gemfiles/rails_4.2.gemfile
   - gemfiles/rails_edge.gemfile
 env:
-  - RAILS_EDGE=true
 before_install:
   - gem install bundler --version 1.11.2
 script: "bundle exec rake spec"
@@ -23,25 +22,18 @@ matrix:
   exclude:
     - rvm: 1.9.3
       gemfile: gemfiles/rails_edge.gemfile
-      env: RAILS_EDGE=true
     - rvm: 2.0.0
       gemfile: gemfiles/rails_edge.gemfile
-      env: RAILS_EDGE=true
     - rvm: 2.1
       gemfile: gemfiles/rails_edge.gemfile
   allow_failures:
     - rvm: 1.9.3
       gemfile: gemfiles/rails_edge.gemfile
-      env: RAILS_EDGE=true
     - rvm: 2.0.0
       gemfile: gemfiles/rails_edge.gemfile
-      env: RAILS_EDGE=true
     - rvm: 2.1
       gemfile: gemfiles/rails_edge.gemfile
-      env: RAILS_EDGE=true
     - rvm: 2.2
       gemfile: gemfiles/rails_edge.gemfile
-      env: RAILS_EDGE=true
     - rvm: 2.3.0
       gemfile: gemfiles/rails_edge.gemfile
-      env: RAILS_EDGE=true
