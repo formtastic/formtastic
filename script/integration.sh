@@ -3,10 +3,15 @@
 set -e
 set -o verbose
 
-rm -rf dummy
+test_app=dummy
 
-bundle exec rails new dummy --template=$(dirname "$0")/integration-template.rb --skip-spring --skip-turbolinks
+rm -rf ${test_app}
 
-cd dummy && export BUNDLE_GEMFILE=Gemfile
+bundle exec rails new ${test_app} \
+  --template=$(dirname "$0")/integration-template.rb \
+  --skip-spring \
+  --skip-turbolinks
+
+cd ${test_app} && export BUNDLE_GEMFILE=Gemfile
 
 bundle exec rake test
