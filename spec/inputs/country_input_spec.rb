@@ -41,7 +41,7 @@ RSpec.describe 'country input' do
     it 'should generate a label for the input' do
       expect(output_buffer).to have_tag('form li label')
       expect(output_buffer).to have_tag('form li label[@for="post_country"]')
-      expect(output_buffer).to have_tag('form li label', /Country/)
+      expect(output_buffer).to have_tag('form li label', :text => /Country/)
     end
 
     it "should generate a select" do

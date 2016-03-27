@@ -117,7 +117,7 @@ RSpec.describe 'Formtastic::I18n' do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:title))
         end)
-        expect(output_buffer).to have_tag("form label", /Hello post!/)
+        expect(output_buffer).to have_tag("form label", :text => /Hello post!/)
       end
     end
 
@@ -126,7 +126,7 @@ RSpec.describe 'Formtastic::I18n' do
         concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
           concat(builder.input(:title))
         end)
-        expect(output_buffer).to have_tag("form label", /Hello project!/)
+        expect(output_buffer).to have_tag("form label", :text => /Hello project!/)
       end
     end
 
@@ -135,7 +135,7 @@ RSpec.describe 'Formtastic::I18n' do
         concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
           concat(builder.input(:author))
         end)
-        expect(output_buffer).to have_tag("form label", /Author/)
+        expect(output_buffer).to have_tag("form label", :text => /Author/)
       end
     end
 
@@ -146,7 +146,7 @@ RSpec.describe 'Formtastic::I18n' do
             concat(f.input(:name))
           end)
         end)
-        expect(output_buffer).to have_tag("form label", /Hello author name!/)
+        expect(output_buffer).to have_tag("form label", :text => /Hello author name!/)
       end
     end
 
@@ -157,7 +157,7 @@ RSpec.describe 'Formtastic::I18n' do
             concat(f.input(:name))
           end
         end)
-        expect(output_buffer).to have_tag("form label", /Hello author name!/)
+        expect(output_buffer).to have_tag("form label", :text => /Hello author name!/)
       end
     end
 
@@ -168,7 +168,7 @@ RSpec.describe 'Formtastic::I18n' do
             concat(f.input(:title))
           end
         end)
-        expect(output_buffer).to have_tag("form label", /Hello project!/)
+        expect(output_buffer).to have_tag("form label", :text => /Hello project!/)
       end
     end
     
@@ -179,7 +179,7 @@ RSpec.describe 'Formtastic::I18n' do
             concat(f.input(:name))
           end
         end)
-        expect(output_buffer).to have_tag("form label", /Hello author name!/)
+        expect(output_buffer).to have_tag("form label", :text => /Hello author name!/)
       end
     end
 
@@ -188,7 +188,7 @@ RSpec.describe 'Formtastic::I18n' do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:body))
         end)
-        expect(output_buffer).to have_tag("form label", /Elaborate/)
+        expect(output_buffer).to have_tag("form label", :text => /Elaborate/)
       end
     end
     
@@ -199,7 +199,7 @@ RSpec.describe 'Formtastic::I18n' do
             concat(f.input(:login))
           end)
         end)
-        expect(output_buffer).to have_tag("form label", /Hello login/)
+        expect(output_buffer).to have_tag("form label", :text => /Hello login/)
       end
     end
 

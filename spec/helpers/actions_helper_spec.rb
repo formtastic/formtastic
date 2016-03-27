@@ -29,7 +29,7 @@ RSpec.describe 'Formtastic::FormBuilder#actions' do
       end
 
       it 'should render the contents of the block inside the ol' do
-        expect(output_buffer).to have_tag("form fieldset.actions ol", /hello/)
+        expect(output_buffer).to have_tag("form fieldset.actions ol", :text => /hello/)
       end
 
       it 'should not render a legend inside the fieldset' do
@@ -47,7 +47,7 @@ RSpec.describe 'Formtastic::FormBuilder#actions' do
         end)
       end
       it 'should render a fieldset inside the form' do
-        expect(output_buffer).to have_tag("form fieldset.actions legend", /#{@legend_text}/)
+        expect(output_buffer).to have_tag("form fieldset.actions legend", :text => /#{@legend_text}/)
       end
     end
     
@@ -132,7 +132,7 @@ RSpec.describe 'Formtastic::FormBuilder#actions' do
      end
     
      it 'should use the special :name option as a text for the legend tag' do
-       expect(output_buffer).to have_tag('form > fieldset#my-id.actions > legend', /Now click a button/)
+       expect(output_buffer).to have_tag('form > fieldset#my-id.actions > legend', :text => /Now click a button/)
      end
     
     end

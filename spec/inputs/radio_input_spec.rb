@@ -28,7 +28,7 @@ RSpec.describe 'radio input' do
 
     it 'should generate a legend containing a label with text for the input' do
       expect(output_buffer).to have_tag('form li fieldset legend.label label')
-      expect(output_buffer).to have_tag('form li fieldset legend.label label', /Author/)
+      expect(output_buffer).to have_tag('form li fieldset legend.label label', :text => /Author/)
     end
 
     it 'should not link the label within the legend to any input' do
@@ -118,7 +118,7 @@ RSpec.describe 'radio input' do
       end
 
       it 'should generate a fieldset with legend' do
-        expect(output_buffer).to have_tag('form li fieldset legend', /Author/)
+        expect(output_buffer).to have_tag('form li fieldset legend', :text => /Author/)
       end
 
       it 'should generate an li tag for each item in the collection' do
@@ -127,7 +127,7 @@ RSpec.describe 'radio input' do
 
       it 'should generate labels for each item' do
         ::Author.all.each do |author|
-          expect(output_buffer).to have_tag('form li fieldset ol li label', /#{author.to_label}/)
+          expect(output_buffer).to have_tag('form li fieldset ol li label', :text => /#{author.to_label}/)
           expect(output_buffer).to have_tag("form li fieldset ol li label[@for='project_author_id_#{author.id}']")
         end
       end
@@ -170,7 +170,7 @@ RSpec.describe 'radio input' do
       expect(output_buffer).to have_tag("form li input[@name='post[status]'][@type='radio']", :count => @new_post.class.statuses.count)
       @new_post.class.statuses.each do |label, value|
         expect(output_buffer).to have_tag("form li input[@value='#{label}']")
-        expect(output_buffer).to have_tag("form li label", /#{label.humanize}/)
+        expect(output_buffer).to have_tag("form li label", :text => /#{label.humanize}/)
       end
     end
 
@@ -198,7 +198,7 @@ RSpec.describe 'radio input' do
     end
 
     it "should do foo" do
-      expect(output_buffer).to have_tag("legend.label label", /Translated/)
+      expect(output_buffer).to have_tag("legend.label label", :text => /Translated/)
     end
 
   end
@@ -212,7 +212,7 @@ RSpec.describe 'radio input' do
     end
 
     it "should output the correct label title" do
-      expect(output_buffer).to have_tag("legend.label label", /The authors/)
+      expect(output_buffer).to have_tag("legend.label label", :text => /The authors/)
     end
   end
 
@@ -301,9 +301,9 @@ RSpec.describe 'radio input' do
     end
 
     it 'should output the correct labels' do
-      expect(output_buffer).to have_tag("li.choice label", /1/)
-      expect(output_buffer).to have_tag("li.choice label", /2/)
-      expect(output_buffer).to have_tag("li.choice label", /3/)
+      expect(output_buffer).to have_tag("li.choice label", :text => /1/)
+      expect(output_buffer).to have_tag("li.choice label", :text => /2/)
+      expect(output_buffer).to have_tag("li.choice label", :text => /3/)
     end
   end
 
@@ -318,9 +318,9 @@ RSpec.describe 'radio input' do
     end
 
     it 'should output the correct labels' do
-      expect(output_buffer).to have_tag("li.choice label", /A/)
-      expect(output_buffer).to have_tag("li.choice label", /B/)
-      expect(output_buffer).to have_tag("li.choice label", /C/)
+      expect(output_buffer).to have_tag("li.choice label", :text => /A/)
+      expect(output_buffer).to have_tag("li.choice label", :text => /B/)
+      expect(output_buffer).to have_tag("li.choice label", :text => /C/)
     end
   end
 

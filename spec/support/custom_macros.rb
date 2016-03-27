@@ -46,7 +46,7 @@ module CustomMacros
 
     def it_should_have_label_with_text(string_or_regex)
       it "should have a label with text '#{string_or_regex}'" do
-        expect(output_buffer).to have_tag("form li label", string_or_regex)
+        expect(output_buffer).to have_tag("form li label", :text => string_or_regex)
       end
     end
 
@@ -310,7 +310,7 @@ module CustomMacros
             end)
 
             @categories.each do |value|
-              expect(output_buffer).to have_tag("form li.#{as}", /#{value}/)
+              expect(output_buffer).to have_tag("form li.#{as}", :text => /#{value}/)
               expect(output_buffer).to have_tag("form li.#{as} #{countable}[@value='#{value}']")
             end
           end
@@ -343,7 +343,7 @@ module CustomMacros
             end)
 
             @categories.each do |label, value|
-              expect(output_buffer).to have_tag("form li.#{as}", /#{label}/)
+              expect(output_buffer).to have_tag("form li.#{as}", :text => /#{label}/)
               expect(output_buffer).to have_tag("form li.#{as} #{countable}[@value='#{value}']")
             end
           end
@@ -361,7 +361,7 @@ module CustomMacros
 
             @categories.each do |text, value|
               label = as == :select ? :option : :label
-              expect(output_buffer).to have_tag("form li.#{as} #{label}", /#{text}/i)
+              expect(output_buffer).to have_tag("form li.#{as} #{label}", :text => /#{text}/i)
               expect(output_buffer).to have_tag("form li.#{as} #{countable}[@value='#{value.to_s}']")
               expect(output_buffer).to have_tag("form li.#{as} #{countable}#post_category_name_#{value.to_s}") if as == :radio
             end
@@ -397,7 +397,7 @@ module CustomMacros
 
             @categories.each do |value|
               label = as == :select ? :option : :label
-              expect(output_buffer).to have_tag("form li.#{as} #{label}", /#{value}/i)
+              expect(output_buffer).to have_tag("form li.#{as} #{label}", :text => /#{value}/i)
               expect(output_buffer).to have_tag("form li.#{as} #{countable}[@value='#{value.to_s}']")
             end
           end
@@ -414,7 +414,7 @@ module CustomMacros
             end)
 
             @categories.each do |label, value|
-              expect(output_buffer).to have_tag("form li.#{as}", /#{label}/)
+              expect(output_buffer).to have_tag("form li.#{as}", :text => /#{label}/)
               expect(output_buffer).to have_tag("form li.#{as} #{countable}[@value='#{value}']")
             end
           end
@@ -434,7 +434,7 @@ module CustomMacros
 
             it 'should have options with text content from the specified method' do
               ::Author.all.each do |author|
-                expect(output_buffer).to have_tag("form li.#{as}", /#{author.login}/)
+                expect(output_buffer).to have_tag("form li.#{as}", :text => /#{author.login}/)
               end
             end
           end
@@ -450,7 +450,7 @@ module CustomMacros
 
             it 'should have options with the proc applied to each' do
               ::Author.all.each do |author|
-                expect(output_buffer).to have_tag("form li.#{as}", /#{author.login.reverse}/)
+                expect(output_buffer).to have_tag("form li.#{as}", :text => /#{author.login.reverse}/)
               end
             end
           end
@@ -469,7 +469,7 @@ module CustomMacros
 
             it 'should have options with the proc applied to each' do
               ::Author.all.each do |author|
-                expect(output_buffer).to have_tag("form li.#{as}", /#{author.login.reverse}/)
+                expect(output_buffer).to have_tag("form li.#{as}", :text => /#{author.login.reverse}/)
               end
             end
           end
@@ -492,7 +492,7 @@ module CustomMacros
 
               it "should render the options with #{label_method} as the label" do
                 ::Author.all.each do |author|
-                  expect(output_buffer).to have_tag("form li.#{as}", /The Label Text/)
+                  expect(output_buffer).to have_tag("form li.#{as}", :text => /The Label Text/)
                 end
               end
             end

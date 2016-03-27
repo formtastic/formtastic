@@ -22,7 +22,7 @@ RSpec.describe 'time_zone input' do
   it 'should generate a label for the input' do
     expect(output_buffer).to have_tag('form li label')
     expect(output_buffer).to have_tag('form li label[@for="post_time_zone"]')
-    expect(output_buffer).to have_tag('form li label', /Time zone/)
+    expect(output_buffer).to have_tag('form li label', :text => /Time zone/)
   end
 
   it "should generate a select" do
@@ -93,7 +93,7 @@ RSpec.describe 'time_zone input' do
     it 'should generate labels' do
       expect(output_buffer).to have_tag('form li label')
       expect(output_buffer).to have_tag('form li label[@for="project_time_zone"]')
-      expect(output_buffer).to have_tag('form li label', /Time zone/)
+      expect(output_buffer).to have_tag('form li label', :text => /Time zone/)
     end
 
     it 'should generate select inputs' do

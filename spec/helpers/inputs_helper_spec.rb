@@ -36,7 +36,7 @@ RSpec.describe 'Formtastic::FormBuilder#inputs' do
       end
   
       it 'should render the contents of the block inside the ol' do
-        expect(output_buffer).to have_tag("form fieldset.inputs ol", /hello/)
+        expect(output_buffer).to have_tag("form fieldset.inputs ol", :text => /hello/)
       end
   
       it 'should not render a legend inside the fieldset' do
@@ -49,7 +49,7 @@ RSpec.describe 'Formtastic::FormBuilder#inputs' do
             concat('bye')
           end
         end)
-        expect(output_buffer).to have_tag("form fieldset.inputs ol", /bye/)
+        expect(output_buffer).to have_tag("form fieldset.inputs ol", :text => /bye/)
       end
     end
   
@@ -117,8 +117,8 @@ RSpec.describe 'Formtastic::FormBuilder#inputs' do
           
           expect(output_buffer).to have_tag("form fieldset.inputs", :count => 2)
           expect(output_buffer).to have_tag("form fieldset.inputs legend", :count => 2)
-          expect(output_buffer).to have_tag("form fieldset.inputs legend", "1", :count => 1)
-          expect(output_buffer).to have_tag("form fieldset.inputs legend", "2")
+          expect(output_buffer).to have_tag("form fieldset.inputs legend", :text => "1", :count => 1)
+          expect(output_buffer).to have_tag("form fieldset.inputs legend", :text => "2")
           expect(output_buffer).to have_tag("form input[@name='post[authors_attributes][0][login]']")
           expect(output_buffer).to have_tag("form input[@name='post[authors_attributes][1][login]']")
           expect(output_buffer).not_to have_tag('form fieldset[@name]')
@@ -131,8 +131,8 @@ RSpec.describe 'Formtastic::FormBuilder#inputs' do
             end
           end)
           
-          expect(output_buffer).to have_tag("form fieldset.inputs label", "1", :count => 1)
-          expect(output_buffer).to have_tag("form fieldset.inputs label", "2", :count => 1)
+          expect(output_buffer).to have_tag("form fieldset.inputs label", :text => "1", :count => 1)
+          expect(output_buffer).to have_tag("form fieldset.inputs label", :text => "2", :count => 1)
           expect(output_buffer).not_to have_tag('form fieldset legend')
         end
       end
@@ -209,7 +209,7 @@ RSpec.describe 'Formtastic::FormBuilder#inputs' do
           concat(inputs)
         end)
   
-        expect(output_buffer).to have_tag('fieldset legend', 'Author #1')
+        expect(output_buffer).to have_tag('fieldset legend', :text => 'Author #1')
       end
   
       it 'should also provide child index interpolation for legends when nested child index is a hash' do
@@ -221,7 +221,7 @@ RSpec.describe 'Formtastic::FormBuilder#inputs' do
           concat(inputs)
         end)
   
-        expect(output_buffer).to have_tag('fieldset legend', 'Author #11')
+        expect(output_buffer).to have_tag('fieldset legend', :text => 'Author #11')
       end
       
       it 'should send parent_builder as an option to allow child index interpolation for labels' do
@@ -233,7 +233,7 @@ RSpec.describe 'Formtastic::FormBuilder#inputs' do
           concat(inputs)
         end)
         
-        expect(output_buffer).to have_tag('fieldset label', 'Author #1')
+        expect(output_buffer).to have_tag('fieldset label', :text => 'Author #1')
       end
       
       it 'should also provide child index interpolation for labels when nested child index is a hash' do
@@ -245,7 +245,7 @@ RSpec.describe 'Formtastic::FormBuilder#inputs' do
           concat(inputs)
         end)
         
-        expect(output_buffer).to have_tag('fieldset label', 'Author #11')
+        expect(output_buffer).to have_tag('fieldset label', :text => 'Author #11')
       end
     end
   
@@ -274,10 +274,10 @@ RSpec.describe 'Formtastic::FormBuilder#inputs' do
         
         # TODO: looks like the block isn't being called for the last assertion here
         it 'should render a fieldset with a legend inside the form' do
-          expect(output_buffer).to have_tag("form fieldset legend", /^#{@legend_text}$/)
-          expect(output_buffer).to have_tag("form fieldset legend", /^#{@legend_text_using_name}$/)
-          expect(output_buffer).to have_tag("form fieldset legend", /^#{@legend_text_using_title}$/)
-          expect(output_buffer).to have_tag("form fieldset legend", /^#{@nested_forms_legend_text}$/)
+          expect(output_buffer).to have_tag("form fieldset legend", :text => /^#{@legend_text}$/)
+          expect(output_buffer).to have_tag("form fieldset legend", :text => /^#{@legend_text_using_name}$/)
+          expect(output_buffer).to have_tag("form fieldset legend", :text => /^#{@legend_text_using_title}$/)
+          expect(output_buffer).to have_tag("form fieldset legend", :text => /^#{@nested_forms_legend_text}$/)
         end
       end
   
@@ -311,10 +311,10 @@ RSpec.describe 'Formtastic::FormBuilder#inputs' do
         
         # TODO: looks like the block isn't being called for the last assertion here
         it 'should render a fieldset with a localized legend inside the form' do
-          expect(output_buffer).to have_tag("form fieldset legend", /^#{@localized_legend_text}$/)
-          expect(output_buffer).to have_tag("form fieldset legend", /^#{@localized_legend_text_using_name}$/)
-          expect(output_buffer).to have_tag("form fieldset legend", /^#{@localized_legend_text_using_title}$/)
-          expect(output_buffer).to have_tag("form fieldset legend", /^#{@localized_nested_forms_legend_text}$/)
+          expect(output_buffer).to have_tag("form fieldset legend", :text => /^#{@localized_legend_text}$/)
+          expect(output_buffer).to have_tag("form fieldset legend", :text => /^#{@localized_legend_text_using_name}$/)
+          expect(output_buffer).to have_tag("form fieldset legend", :text => /^#{@localized_legend_text_using_title}$/)
+          expect(output_buffer).to have_tag("form fieldset legend", :text => /^#{@localized_nested_forms_legend_text}$/)
         end
       end
     end
@@ -512,8 +512,8 @@ RSpec.describe 'Formtastic::FormBuilder#inputs' do
       end
   
       it 'should use the special :name option as a text for the legend tag' do
-        expect(output_buffer).to have_tag('form > fieldset#my-id.inputs > legend', /^#{@legend_text_using_option}$/)
-        expect(output_buffer).to have_tag('form > fieldset#my-id-2.inputs > legend', /^#{@legend_text_using_arg}$/)
+        expect(output_buffer).to have_tag('form > fieldset#my-id.inputs > legend', :text => /^#{@legend_text_using_option}$/)
+        expect(output_buffer).to have_tag('form > fieldset#my-id-2.inputs > legend', :text => /^#{@legend_text_using_arg}$/)
       end
     end
 

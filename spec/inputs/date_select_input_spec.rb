@@ -28,7 +28,7 @@ RSpec.describe 'date select input' do
     it_should_apply_error_logic_for_input_type(:date_select)
 
     it 'should have a legend and label with the label text inside the fieldset' do
-      expect(output_buffer).to have_tag('form li.date_select fieldset legend.label label', /Publish at/)
+      expect(output_buffer).to have_tag('form li.date_select fieldset legend.label label', :text => /Publish at/)
     end
 
     it 'should associate the legend label with the first select' do
@@ -45,9 +45,9 @@ RSpec.describe 'date select input' do
 
     it 'should have three labels for year, month and day' do
       expect(output_buffer).to have_tag('form li.date_select fieldset ol li label', :count => 3)
-      expect(output_buffer).to have_tag('form li.date_select fieldset ol li label', /year/i)
-      expect(output_buffer).to have_tag('form li.date_select fieldset ol li label', /month/i)
-      expect(output_buffer).to have_tag('form li.date_select fieldset ol li label', /day/i)
+      expect(output_buffer).to have_tag('form li.date_select fieldset ol li label', :text => /year/i)
+      expect(output_buffer).to have_tag('form li.date_select fieldset ol li label', :text => /month/i)
+      expect(output_buffer).to have_tag('form li.date_select fieldset ol li label', :text => /day/i)
     end
 
     it 'should have three selects for year, month and day' do
@@ -112,7 +112,7 @@ RSpec.describe 'date select input' do
         end)
         expect(output_buffer).to have_tag('form li.date_select fieldset ol li label', :count => fields.length)
         fields.each do |f|
-          expect(output_buffer).to have_tag('form li.date_select fieldset ol li label', f == field ? /another #{f} label/i : /#{f}/i)
+          expect(output_buffer).to have_tag('form li.date_select fieldset ol li label', :text => f == field ? /another #{f} label/i : /#{f}/i)
         end
       end
 
@@ -123,7 +123,7 @@ RSpec.describe 'date select input' do
         end)
         expect(output_buffer).to have_tag('form li.date_select fieldset ol li label', :count => fields.length-1)
         fields.each do |f|
-          expect(output_buffer).to have_tag('form li.date_select fieldset ol li label', /#{f}/i) unless field == f
+          expect(output_buffer).to have_tag('form li.date_select fieldset ol li label', :text => /#{f}/i) unless field == f
         end
       end
       
