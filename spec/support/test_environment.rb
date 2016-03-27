@@ -44,8 +44,3 @@ end
 FormtasticTest::Application.initialize!
 
 require 'rspec/rails'
-
-# Quick hack to avoid the 'Spec' deprecation warnings from rspec_tag_matchers
-module Spec
-  include RSpec
-end
