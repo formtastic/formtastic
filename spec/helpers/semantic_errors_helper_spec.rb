@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'Formtastic::FormBuilder#semantic_errors' do
+RSpec.describe 'Formtastic::FormBuilder#semantic_errors' do
 
   include FormtasticSpecHelper
 

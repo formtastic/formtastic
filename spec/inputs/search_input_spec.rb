@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'search input' do
+RSpec.describe 'search input' do
 
   include FormtasticSpecHelper
 

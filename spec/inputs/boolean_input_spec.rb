@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'boolean input' do
+RSpec.describe 'boolean input' do
 
   include FormtasticSpecHelper
 

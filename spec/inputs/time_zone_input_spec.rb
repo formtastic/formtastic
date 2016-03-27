@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'time_zone input' do
+RSpec.describe 'time_zone input' do
 
   include FormtasticSpecHelper
 
@@ -84,7 +84,7 @@ describe 'time_zone input' do
 
 
   describe 'when no object is given' do
-    before(:each) do
+    before(:example) do
       concat(semantic_form_for(:project, :url => 'http://test.host/') do |builder|
         concat(builder.input(:time_zone, :as => :time_zone))
       end)

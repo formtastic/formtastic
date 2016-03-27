@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'Formtastic::Util' do
+RSpec.describe 'Formtastic::Util' do
 
   describe '.deprecated_version_of_rails?' do
 

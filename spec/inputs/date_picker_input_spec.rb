@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'date_picker input' do
+RSpec.describe 'date_picker input' do
 
   include FormtasticSpecHelper
 

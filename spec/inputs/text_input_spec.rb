@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'text input' do
+RSpec.describe 'text input' do
 
   include FormtasticSpecHelper
 
@@ -120,7 +120,7 @@ describe 'text input' do
   end
 
   context "when :autofocus is provided in :input_html" do
-    before(:each) do
+    before(:example) do
       concat(semantic_form_for(@new_post) do |builder|
         concat(builder.input(:title, :input_html => {:autofocus => true}))
       end)

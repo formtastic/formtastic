@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'with action class finder' do
+RSpec.describe 'with action class finder' do
   include_context 'form builder'
 
   describe 'arguments and options' do

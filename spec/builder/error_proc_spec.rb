@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'Rails field_error_proc' do
+RSpec.describe 'Rails field_error_proc' do
 
   include FormtasticSpecHelper
 

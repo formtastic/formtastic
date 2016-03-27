@@ -2,7 +2,7 @@ require 'spec_helper'
 
 require 'generators/formtastic/input/input_generator'
 
-describe Formtastic::InputGenerator do
+RSpec.describe Formtastic::InputGenerator do
   include FormtasticSpecHelper
 
   destination File.expand_path("../../../../../tmp", __FILE__)

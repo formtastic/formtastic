@@ -31,7 +31,7 @@ module TestInputs
   
 end
 
-describe 'AnyCustomInput' do
+RSpec.describe 'AnyCustomInput' do
   
   include TestInputs
   

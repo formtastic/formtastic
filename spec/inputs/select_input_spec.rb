@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'select input' do
+RSpec.describe 'select input' do
 
   include FormtasticSpecHelper
 
@@ -447,7 +447,7 @@ describe 'select input' do
   end
 
   describe 'when no object is given' do
-    before(:each) do
+    before(:example) do
       concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
         concat(builder.input(:author, :as => :select, :collection => ::Author.all))
       end)
@@ -500,7 +500,7 @@ describe 'select input' do
   end
 
   describe 'when a grouped collection collection is given' do
-    before(:each) do
+    before(:example) do
       concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
         @grouped_opts = [['one',   ['pencil', 'crayon', 'pen']],
                          ['two',   ['eyes', 'hands', 'feet']],

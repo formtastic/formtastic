@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'Formtastic::I18n' do
+RSpec.describe 'Formtastic::I18n' do
 
   FORMTASTIC_KEYS = [:required, :yes, :no, :create, :update].freeze
 

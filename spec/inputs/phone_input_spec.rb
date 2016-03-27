@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'phone input' do
+RSpec.describe 'phone input' do
 
   include FormtasticSpecHelper
 

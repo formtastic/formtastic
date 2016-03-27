@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'number input' do
+RSpec.describe 'number input' do
 
   include FormtasticSpecHelper
 

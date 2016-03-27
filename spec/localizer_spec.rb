@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'Formtastic::Localizer' do
+RSpec.describe 'Formtastic::Localizer' do
   describe "Cache" do
     before do
       @cache = Formtastic::Localizer::Cache.new

@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'Formtastic::FormBuilder#inputs' do
+RSpec.describe 'Formtastic::FormBuilder#inputs' do
 
   include FormtasticSpecHelper
 

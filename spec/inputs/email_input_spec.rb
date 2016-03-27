@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'email input' do
+RSpec.describe 'email input' do
 
   include FormtasticSpecHelper
 

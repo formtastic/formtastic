@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'color input' do
+RSpec.describe 'color input' do
 
   include FormtasticSpecHelper
 

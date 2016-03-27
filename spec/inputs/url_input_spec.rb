@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'url input' do
+RSpec.describe 'url input' do
 
   include FormtasticSpecHelper
 

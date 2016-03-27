@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'ButtonAction', 'when submitting' do
+RSpec.describe 'ButtonAction', 'when submitting' do
 
   include FormtasticSpecHelper
 
@@ -20,7 +20,7 @@ describe 'ButtonAction', 'when submitting' do
 
 end
 
-describe 'ButtonAction', 'when resetting' do
+RSpec.describe 'ButtonAction', 'when resetting' do
 
   include FormtasticSpecHelper
   
@@ -43,7 +43,7 @@ describe 'ButtonAction', 'when resetting' do
   
 end
 
-describe 'InputAction', 'when cancelling' do
+RSpec.describe 'InputAction', 'when cancelling' do
 
   include FormtasticSpecHelper
   

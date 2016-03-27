@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'Formtastic::FormBuilder#label' do
+RSpec.describe 'Formtastic::FormBuilder#label' do
 
   include FormtasticSpecHelper
 

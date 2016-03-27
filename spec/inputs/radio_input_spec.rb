@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'radio input' do
+RSpec.describe 'radio input' do
 
   include FormtasticSpecHelper
 
@@ -110,7 +110,7 @@ describe 'radio input' do
     end
 
     describe 'and no object is given' do
-      before(:each) do
+      before(:example) do
         output_buffer.replace ''
         concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
           concat(builder.input(:author_id, :as => :radio, :collection => ::Author.all))

@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'LinkAction', 'when cancelling' do
+RSpec.describe 'LinkAction', 'when cancelling' do
 
   include FormtasticSpecHelper
 
@@ -53,7 +53,7 @@ describe 'LinkAction', 'when cancelling' do
 
 end
 
-describe 'LinkAction', 'when submitting' do
+RSpec.describe 'LinkAction', 'when submitting' do
 
   include FormtasticSpecHelper
   
@@ -72,7 +72,7 @@ describe 'LinkAction', 'when submitting' do
   
 end
 
-describe 'LinkAction', 'when submitting' do
+RSpec.describe 'LinkAction', 'when submitting' do
 
   include FormtasticSpecHelper
   

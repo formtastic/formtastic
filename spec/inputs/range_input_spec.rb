@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'range input' do
+RSpec.describe 'range input' do
 
   include FormtasticSpecHelper
 

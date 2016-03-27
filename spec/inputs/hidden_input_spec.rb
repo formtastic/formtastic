@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'hidden input' do
+RSpec.describe 'hidden input' do
 
   include FormtasticSpecHelper
 

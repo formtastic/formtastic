@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'with input class finder' do
+RSpec.describe 'with input class finder' do
   include_context 'form builder'
 
   before do

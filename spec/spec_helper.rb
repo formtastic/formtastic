@@ -503,11 +503,11 @@ RSpec.configure do |config|
   config.filter_run_excluding skip: true
   config.run_all_when_everything_filtered = true
 
-  config.before(:each) do
+  config.before(:example) do
     Formtastic::Localizer.cache.clear!    
   end
 
-  config.before(:each) do
+  config.before(:example) do
     allow(Formtastic.deprecation).to receive(:deprecation_warning).and_call_original
     # TODO: Remove this in Formtastic 4
     [ :action_class, :standard_action_class_name, :custom_action_class_name,

@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'FormHelper' do
+RSpec.describe 'FormHelper' do
 
   include FormtasticSpecHelper
 
@@ -114,7 +114,7 @@ describe 'FormHelper' do
     end
 
     describe 'allows :html options' do
-      before(:each) do
+      before(:example) do
         concat(semantic_form_for(@new_post, :url => '/hello', :html => { :id => "something-special", :class => "something-extra", :multipart => true }) do |builder|
         end)
       end

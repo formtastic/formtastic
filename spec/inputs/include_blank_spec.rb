@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe "*select: options[:include_blank]" do
+RSpec.describe "*select: options[:include_blank]" do
 
   include FormtasticSpecHelper
 

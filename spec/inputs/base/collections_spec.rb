@@ -5,7 +5,7 @@ class MyInput
   include Formtastic::Inputs::Base::Collections
 end
 
-describe MyInput do
+RSpec.describe MyInput do
   let(:builder) { double }
   let(:template) { double }
   let(:model_class) { double }

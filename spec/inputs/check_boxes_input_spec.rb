@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'check_boxes input' do
+RSpec.describe 'check_boxes input' do
 
   include FormtasticSpecHelper
 
@@ -124,7 +124,7 @@ describe 'check_boxes input' do
     end
 
     describe 'and no object is given' do
-      before(:each) do
+      before(:example) do
         output_buffer.replace ''
         concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
           concat(builder.input(:author_id, :as => :check_boxes, :collection => ::Author.all))

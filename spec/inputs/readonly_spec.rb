@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'readonly option' do
+RSpec.describe 'readonly option' do
 
   include FormtasticSpecHelper
 

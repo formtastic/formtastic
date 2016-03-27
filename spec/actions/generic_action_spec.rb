@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'InputAction::Base' do
+RSpec.describe 'InputAction::Base' do
   
   # Most basic Action class to test Base
   class ::GenericAction

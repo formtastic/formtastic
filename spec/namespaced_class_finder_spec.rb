@@ -2,7 +2,7 @@
 require 'spec_helper'
 require 'formtastic/namespaced_class_finder'
 
-describe Formtastic::NamespacedClassFinder do
+RSpec.describe Formtastic::NamespacedClassFinder do
   include FormtasticSpecHelper
 
   before do

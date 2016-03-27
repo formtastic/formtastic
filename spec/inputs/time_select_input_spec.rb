@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'time select input' do
+RSpec.describe 'time select input' do
 
   include FormtasticSpecHelper
 

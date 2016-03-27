@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'password input' do
+RSpec.describe 'password input' do
 
   include FormtasticSpecHelper
 

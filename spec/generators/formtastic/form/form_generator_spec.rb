@@ -3,7 +3,7 @@ require 'spec_helper'
 # Generators are not automatically loaded by Rails
 require 'generators/formtastic/form/form_generator'
 
-describe Formtastic::FormGenerator do
+RSpec.describe Formtastic::FormGenerator do
 
   include FormtasticSpecHelper
 
