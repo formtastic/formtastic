@@ -14,7 +14,9 @@ gemfile:
 env:
 before_install:
   - gem install bundler --version 1.11.2
-script: "bundle exec rake spec"
+script:
+ - bundle exec rake spec
+ - script/integration.sh
 matrix:
   exclude:
     - rvm: 1.9.3
