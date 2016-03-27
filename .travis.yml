@@ -1,5 +1,8 @@
 sudo: false
-cache: bundler
+cache:
+  - bundler
+  - directories:
+    - vendor/bundle
 language: ruby
 rvm:
   - 1.9.3
