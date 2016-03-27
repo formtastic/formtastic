@@ -180,13 +180,14 @@ module CustomMacros
     def it_should_use_column_size_for_columns_shorter_than_default_text_field_size(as)
       it 'should use the column size for columns shorter than default_text_field_size' do
         column_limit_shorted_than_default = 1
-        @new_post.stub(:column_for_attribute).and_return(double('column', :type => as, :limit => column_limit_shorted_than_default))
+        allow(@new_post).to receive(:column_for_attribute)
+                                .and_return(double('column', :type => as, :limit => column_limit_shorted_than_default))
 
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:title, :as => as))
         end)
 
-        output_buffer.should have_tag("form li input[@size='#{column_limit_shorted_than_default}']")
+        expect(output_buffer).to have_tag("form li input[@size='#{column_limit_shorted_than_default}']")
       end
     end
 
