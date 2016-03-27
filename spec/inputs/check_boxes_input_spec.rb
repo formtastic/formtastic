@@ -160,8 +160,9 @@ RSpec.describe 'check_boxes input' do
           concat(builder.input(:author_id, :as => :check_boxes, :collection => [["<b>Item 1</b>", 1], ["<b>Item 2</b>", 2]]))
         end)
 
-        expect(output_buffer).to have_tag('form li fieldset ol li label') do |label|
-          expect(label.body).to match /&lt;b&gt;Item [12]&lt;\/b&gt;$/
+        expect(output_buffer).to have_tag('form li fieldset ol li label', text: %r{<b>Item [12]</b>}, count: 2) do |label|
+          expect(label).to have_text('<b>Item 1</b>', count: 1)
+          expect(label).to have_text('<b>Item 2</b>', count: 1)
         end
       end
     end

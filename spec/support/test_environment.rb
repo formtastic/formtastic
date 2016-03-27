@@ -1,10 +1,11 @@
 # encoding: utf-8
 require 'rspec/core'
-require 'rspec_tag_matchers'
+
+require 'rspec-dom-testing'
 
 RSpec.configure do |config|
-  config.include RspecTagMatchers
   config.include CustomMacros
+  config.include RSpec::Dom::Testing::Matchers
   config.mock_with :rspec
 
   # rspec-rails 3 will no longer automatically infer an example group's spec type

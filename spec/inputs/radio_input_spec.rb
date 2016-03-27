@@ -136,9 +136,7 @@ RSpec.describe 'radio input' do
         concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
           concat(builder.input(:author_id, :as => :radio, :collection => [["<b>Item 1</b>", 1], ["<b>Item 2</b>", 2]]))
         end)
-        expect(output_buffer).to have_tag('form li fieldset ol li label') do |label|
-          expect(label.body).to match /&lt;b&gt;Item [12]&lt;\/b&gt;$/
-        end
+        expect(output_buffer).to have_tag('form li fieldset ol li label', text: %r{<b>Item [12]</b>}, count: 2)
       end
 
       it 'should generate inputs for each item' do
