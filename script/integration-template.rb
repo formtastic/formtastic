@@ -2,6 +2,17 @@ gem 'formtastic', path: '..'
 gem 'bcrypt', '~> 3.1.7'
 gem 'rails-dom-testing', group: :test
 
+# to speed up travis install, reuse the bundle path
+def bundle_path
+  File.expand_path ENV.fetch('BUNDLE_PATH', 'vendor/bundle'), ENV['TRAVIS_BUILD_DIR']
+end
+
+if File.directory?(bundle_path) && bundle_install?
+  def run_bundle
+    bundle_command("install --jobs=3 --retry=3 --path=#{bundle_path}")
+  end
+end
+
 in_root do
   ENV['BUNDLE_GEMFILE'] = File.expand_path('Gemfile')
 end
