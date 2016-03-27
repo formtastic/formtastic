@@ -17,6 +17,8 @@ gemfile:
 before_install:
   - gem install bundler --version 1.11.2
   - export BUNDLE_PATH="${TRAVIS_BUILD_DIR}/vendor/bundle"
+before_cache:
+  - rm -f ${BUNDLE_PATH}/**/extensions/**/{gem_make.out,mkmf.log}
 script:
  - bundle exec rake spec
  - script/integration.sh
