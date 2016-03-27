@@ -6,18 +6,18 @@ describe 'with input class finder' do
 
   before do
     @errors = double('errors')
-    @errors.stub(:[]).and_return([])
-    @new_post.stub(:errors).and_return(@errors)
+    allow(@errors).to receive(:[]).and_return([])
+    allow(@new_post).to receive(:errors).and_return(@errors)
   end
 
   describe 'arguments and options' do
 
     it 'should require the first argument (the method on form\'s object)' do
-      lambda {
+      expect {
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input()) # no args passed in at all
         end)
-      }.should raise_error(ArgumentError)
+      }.to raise_error(ArgumentError)
     end
 
     describe ':required option' do
@@ -29,8 +29,8 @@ describe 'with input class finder' do
             concat(semantic_form_for(@new_post) do |builder|
               concat(builder.input(:title, :required => true))
             end)
-            output_buffer.should_not have_tag('form li.optional')
-            output_buffer.should have_tag('form li.required')
+            expect(output_buffer).not_to have_tag('form li.optional')
+            expect(output_buffer).to have_tag('form li.required')
           end
         end
 
@@ -39,7 +39,7 @@ describe 'with input class finder' do
             concat(semantic_form_for(@new_post) do |builder|
               concat(builder.input(:title, :required => true))
             end)
-            output_buffer.should have_tag('form li.required label', /required yo/)
+            expect(output_buffer).to have_tag('form li.required label', /required yo/)
           end
         end
       end
@@ -48,7 +48,7 @@ describe 'with input class finder' do
 
         before do
           @string = Formtastic::FormBuilder.optional_string = " optional yo!" # ensure there's something in the string
-          @new_post.class.should_not_receive(:reflect_on_all_validations)
+          expect(@new_post.class).not_to receive(:reflect_on_all_validations)
         end
 
         after do
@@ -59,26 +59,26 @@ describe 'with input class finder' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :required => false))
           end)
-          output_buffer.should_not have_tag('form li.required')
-          output_buffer.should have_tag('form li.optional')
+          expect(output_buffer).not_to have_tag('form li.required')
+          expect(output_buffer).to have_tag('form li.optional')
         end
 
         it 'should set and "optional" class also when there is presence validator' do
-          @new_post.class.should_receive(:validators_on).with(:title).at_least(:once).and_return([
+          expect(@new_post.class).to receive(:validators_on).with(:title).at_least(:once).and_return([
                                                                                                      active_model_presence_validator([:title])
                                                                                                  ])
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :required => false))
           end)
-          output_buffer.should_not have_tag('form li.required')
-          output_buffer.should have_tag('form li.optional')
+          expect(output_buffer).not_to have_tag('form li.required')
+          expect(output_buffer).to have_tag('form li.optional')
         end
 
         it 'should append the "optional" string to the label' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :required => false))
           end)
-          output_buffer.should have_tag('form li.optional label', /#{@string}$/)
+          expect(output_buffer).to have_tag('form li.optional label', /#{@string}$/)
         end
 
       end
@@ -88,14 +88,14 @@ describe 'with input class finder' do
         describe 'and an object was not given' do
 
           it 'should use the default value' do
-            Formtastic::FormBuilder.all_fields_required_by_default.should == true
+            expect(Formtastic::FormBuilder.all_fields_required_by_default).to eq(true)
             Formtastic::FormBuilder.all_fields_required_by_default = false
 
             concat(semantic_form_for(:project, :url => 'http://test.host/') do |builder|
               concat(builder.input(:title))
             end)
-            output_buffer.should_not have_tag('form li.required')
-            output_buffer.should have_tag('form li.optional')
+            expect(output_buffer).not_to have_tag('form li.required')
+            expect(output_buffer).to have_tag('form li.optional')
 
             Formtastic::FormBuilder.all_fields_required_by_default = true
           end
@@ -104,20 +104,20 @@ describe 'with input class finder' do
 
         describe 'and an object with :validators_on was given (ActiveModel, Active Resource)' do
           before do
-            @new_post.stub(:class).and_return(::PostModel)
+            allow(@new_post).to receive(:class).and_return(::PostModel)
           end
 
           after do
-            @new_post.stub(:class).and_return(::Post)
+            allow(@new_post).to receive(:class).and_return(::Post)
           end
           describe 'and validates_presence_of was called for the method' do
             it 'should be required' do
 
-              @new_post.class.should_receive(:validators_on).with(:title).at_least(:once).and_return([
+              expect(@new_post.class).to receive(:validators_on).with(:title).at_least(:once).and_return([
                                                                                                          active_model_presence_validator([:title])
                                                                                                      ])
 
-              @new_post.class.should_receive(:validators_on).with(:body).at_least(:once).and_return([
+              expect(@new_post.class).to receive(:validators_on).with(:body).at_least(:once).and_return([
                                                                                                         active_model_presence_validator([:body], {:if => true})
                                                                                                     ])
 
@@ -125,130 +125,130 @@ describe 'with input class finder' do
                 concat(builder.input(:title))
                 concat(builder.input(:body))
               end)
-              output_buffer.should have_tag('form li.required')
-              output_buffer.should_not have_tag('form li.optional')
+              expect(output_buffer).to have_tag('form li.required')
+              expect(output_buffer).not_to have_tag('form li.optional')
             end
 
             it 'should be required when there is :on => :create option on create' do
               with_config :required_string, " required yo!" do
-                @new_post.class.should_receive(:validators_on).with(:title).at_least(:once).and_return([
+                expect(@new_post.class).to receive(:validators_on).with(:title).at_least(:once).and_return([
                                                                                                            active_model_presence_validator([:title], {:on => :create})
                                                                                                        ])
                 concat(semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:title))
                 end)
-                output_buffer.should have_tag('form li.required')
-                output_buffer.should_not have_tag('form li.optional')
+                expect(output_buffer).to have_tag('form li.required')
+                expect(output_buffer).not_to have_tag('form li.optional')
               end
             end
 
             it 'should be required when there is :create option in validation contexts array on create' do
               with_config :required_string, " required yo!" do
-                @new_post.class.should_receive(:validators_on).with(:title).at_least(:once).and_return([
+                expect(@new_post.class).to receive(:validators_on).with(:title).at_least(:once).and_return([
                                                                                                            active_model_presence_validator([:title], {:on => [:create]})
                                                                                                        ])
                 concat(semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:title))
                 end)
-                output_buffer.should have_tag('form li.required')
-                output_buffer.should_not have_tag('form li.optional')
+                expect(output_buffer).to have_tag('form li.required')
+                expect(output_buffer).not_to have_tag('form li.optional')
               end
             end
 
             it 'should be required when there is :on => :save option on create' do
               with_config :required_string, " required yo!" do
-                @new_post.class.should_receive(:validators_on).with(:title).at_least(:once).and_return([
+                expect(@new_post.class).to receive(:validators_on).with(:title).at_least(:once).and_return([
                                                                                                            active_model_presence_validator([:title], {:on => :save})
                                                                                                        ])
                 concat(semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:title))
                 end)
-                output_buffer.should have_tag('form li.required')
-                output_buffer.should_not have_tag('form li.optional')
+                expect(output_buffer).to have_tag('form li.required')
+                expect(output_buffer).not_to have_tag('form li.optional')
               end
             end
 
             it 'should be required when there is :save option in validation contexts array on create' do
               with_config :required_string, " required yo!" do
-                @new_post.class.should_receive(:validators_on).with(:title).at_least(:once).and_return([
+                expect(@new_post.class).to receive(:validators_on).with(:title).at_least(:once).and_return([
                                                                                                            active_model_presence_validator([:title], {:on => [:save]})
                                                                                                        ])
                 concat(semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:title))
                 end)
-                output_buffer.should have_tag('form li.required')
-                output_buffer.should_not have_tag('form li.optional')
+                expect(output_buffer).to have_tag('form li.required')
+                expect(output_buffer).not_to have_tag('form li.optional')
               end
             end
 
             it 'should be required when there is :on => :save option on update' do
               with_config :required_string, " required yo!" do
-                @fred.class.should_receive(:validators_on).with(:login).at_least(:once).and_return([
+                expect(@fred.class).to receive(:validators_on).with(:login).at_least(:once).and_return([
                                                                                                        active_model_presence_validator([:login], {:on => :save})
                                                                                                    ])
                 concat(semantic_form_for(@fred) do |builder|
                   concat(builder.input(:login))
                 end)
-                output_buffer.should have_tag('form li.required')
-                output_buffer.should_not have_tag('form li.optional')
+                expect(output_buffer).to have_tag('form li.required')
+                expect(output_buffer).not_to have_tag('form li.optional')
               end
             end
 
             it 'should be required when there is :save option in validation contexts array on update' do
               with_config :required_string, " required yo!" do
-                @fred.class.should_receive(:validators_on).with(:login).at_least(:once).and_return([
+                expect(@fred.class).to receive(:validators_on).with(:login).at_least(:once).and_return([
                                                                                                        active_model_presence_validator([:login], {:on => [:save]})
                                                                                                    ])
                 concat(semantic_form_for(@fred) do |builder|
                   concat(builder.input(:login))
                 end)
-                output_buffer.should have_tag('form li.required')
-                output_buffer.should_not have_tag('form li.optional')
+                expect(output_buffer).to have_tag('form li.required')
+                expect(output_buffer).not_to have_tag('form li.optional')
               end
             end
 
             it 'should not be required when there is :on => :create option on update' do
-              @fred.class.should_receive(:validators_on).with(:login).at_least(:once).and_return([
+              expect(@fred.class).to receive(:validators_on).with(:login).at_least(:once).and_return([
                                                                                                      active_model_presence_validator([:login], {:on => :create})
                                                                                                  ])
               concat(semantic_form_for(@fred) do |builder|
                 concat(builder.input(:login))
               end)
-              output_buffer.should_not have_tag('form li.required')
-              output_buffer.should have_tag('form li.optional')
+              expect(output_buffer).not_to have_tag('form li.required')
+              expect(output_buffer).to have_tag('form li.optional')
             end
 
             it 'should not be required when there is :create option in validation contexts array on update' do
-              @fred.class.should_receive(:validators_on).with(:login).at_least(:once).and_return([
+              expect(@fred.class).to receive(:validators_on).with(:login).at_least(:once).and_return([
                                                                                                      active_model_presence_validator([:login], {:on => [:create]})
                                                                                                  ])
               concat(semantic_form_for(@fred) do |builder|
                 concat(builder.input(:login))
               end)
-              output_buffer.should_not have_tag('form li.required')
-              output_buffer.should have_tag('form li.optional')
+              expect(output_buffer).not_to have_tag('form li.required')
+              expect(output_buffer).to have_tag('form li.optional')
             end
 
             it 'should not be required when there is :on => :update option on create' do
-              @new_post.class.should_receive(:validators_on).with(:title).at_least(:once).and_return([
+              expect(@new_post.class).to receive(:validators_on).with(:title).at_least(:once).and_return([
                                                                                                          active_model_presence_validator([:title], {:on => :update})
                                                                                                      ])
               concat(semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title))
               end)
-              output_buffer.should_not have_tag('form li.required')
-              output_buffer.should have_tag('form li.optional')
+              expect(output_buffer).not_to have_tag('form li.required')
+              expect(output_buffer).to have_tag('form li.optional')
             end
 
             it 'should not be required when there is :update option in validation contexts array on create' do
-              @new_post.class.should_receive(:validators_on).with(:title).at_least(:once).and_return([
+              expect(@new_post.class).to receive(:validators_on).with(:title).at_least(:once).and_return([
                                                                                                          active_model_presence_validator([:title], {:on => [:update]})
                                                                                                      ])
               concat(semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title))
               end)
-              output_buffer.should_not have_tag('form li.required')
-              output_buffer.should have_tag('form li.optional')
+              expect(output_buffer).not_to have_tag('form li.required')
+              expect(output_buffer).to have_tag('form li.optional')
             end
 
             it 'should be not be required if the optional :if condition is not satisifed' do
@@ -272,36 +272,36 @@ describe 'with input class finder' do
             end
 
             it 'should be required if the optional :if with a method string evaluates to true' do
-              @new_post.should_receive(:required_condition).and_return(true)
+              expect(@new_post).to receive(:required_condition).and_return(true)
               presence_should_be_required(:required => true, :tag => :body, :options => { :if => :required_condition })
             end
 
             it 'should be required if the optional :if with a method string evaluates to false' do
-              @new_post.should_receive(:required_condition).and_return(false)
+              expect(@new_post).to receive(:required_condition).and_return(false)
               presence_should_be_required(:required => false, :tag => :body, :options => { :if => :required_condition })
             end
 
             it 'should be required if the optional :unless with a method string evaluates to false' do
-              @new_post.should_receive(:required_condition).and_return(false)
+              expect(@new_post).to receive(:required_condition).and_return(false)
               presence_should_be_required(:required => true, :tag => :body, :options => { :unless => :required_condition })
             end
 
             it 'should not be required if the optional :unless with a method string evaluates to true' do
-              @new_post.should_receive(:required_condition).and_return(true)
+              expect(@new_post).to receive(:required_condition).and_return(true)
               presence_should_be_required(:required => false, :tag => :body, :options => { :unless => :required_condition })
             end
           end
 
           describe 'and validates_inclusion_of was called for the method' do
             it 'should be required' do
-              @new_post.class.should_receive(:validators_on).with(:published).at_least(:once).and_return([
+              expect(@new_post.class).to receive(:validators_on).with(:published).at_least(:once).and_return([
                                                                                                              active_model_inclusion_validator([:published], {:in => [false, true]})
                                                                                                          ])
               should_be_required(:tag => :published, :required => true)
             end
 
             it 'should not be required if allow_blank is true' do
-              @new_post.class.should_receive(:validators_on).with(:published).at_least(:once).and_return([
+              expect(@new_post.class).to receive(:validators_on).with(:published).at_least(:once).and_return([
                                                                                                              active_model_inclusion_validator([:published], {:in => [false, true], :allow_blank => true})
                                                                                                          ])
               should_be_required(:tag => :published, :required => false)
@@ -335,13 +335,13 @@ describe 'with input class finder' do
           end
 
           def add_presence_validator(options)
-            @new_post.class.stub(:validators_on).with(options[:tag]).and_return([
+            allow(@new_post.class).to receive(:validators_on).with(options[:tag]).and_return([
                                                                                     active_model_presence_validator([options[:tag]], options[:options])
                                                                                 ])
           end
 
           def add_length_validator(options)
-            @new_post.class.should_receive(:validators_on).with(options[:tag]).at_least(:once) {[
+            expect(@new_post.class).to receive(:validators_on).with(options[:tag]).at_least(:once) {[
                 active_model_length_validator([options[:tag]], options[:options])
             ]}
           end
@@ -353,11 +353,11 @@ describe 'with input class finder' do
             end)
 
             if options[:required]
-              output_buffer.should_not have_tag('form li.optional')
-              output_buffer.should have_tag('form li.required')
+              expect(output_buffer).not_to have_tag('form li.optional')
+              expect(output_buffer).to have_tag('form li.required')
             else
-              output_buffer.should have_tag('form li.optional')
-              output_buffer.should_not have_tag('form li.required')
+              expect(output_buffer).to have_tag('form li.optional')
+              expect(output_buffer).not_to have_tag('form li.required')
             end
           end
 
@@ -374,15 +374,15 @@ describe 'with input class finder' do
           # TODO JF reversed this during refactor, need to make sure
           describe 'and there are no requirement validations on the method' do
             before do
-              @new_post.class.should_receive(:validators_on).with(:title).and_return([])
+              expect(@new_post.class).to receive(:validators_on).with(:title).and_return([])
             end
 
             it 'should not be required' do
               concat(semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title))
               end)
-              output_buffer.should_not have_tag('form li.required')
-              output_buffer.should have_tag('form li.optional')
+              expect(output_buffer).not_to have_tag('form li.required')
+              expect(output_buffer).to have_tag('form li.optional')
             end
           end
 
@@ -391,14 +391,14 @@ describe 'with input class finder' do
         describe 'and an object without :validators_on' do
 
           it 'should use the default value' do
-            Formtastic::FormBuilder.all_fields_required_by_default.should == true
+            expect(Formtastic::FormBuilder.all_fields_required_by_default).to eq(true)
             Formtastic::FormBuilder.all_fields_required_by_default = false
 
             concat(semantic_form_for(@new_post) do |builder|
               concat(builder.input(:title))
             end)
-            output_buffer.should_not have_tag('form li.required')
-            output_buffer.should have_tag('form li.optional')
+            expect(output_buffer).not_to have_tag('form li.required')
+            expect(output_buffer).to have_tag('form li.optional')
 
             Formtastic::FormBuilder.all_fields_required_by_default = true
           end
@@ -417,7 +417,7 @@ describe 'with input class finder' do
           concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
             concat(builder.input(:anything))
           end)
-          output_buffer.should have_tag('form li.string')
+          expect(output_buffer).to have_tag('form li.string')
         end
 
         it 'should default to password for forms without objects if column is password' do
@@ -426,115 +426,115 @@ describe 'with input class finder' do
             concat(builder.input(:password_confirmation))
             concat(builder.input(:confirm_password))
           end)
-          output_buffer.should have_tag('form li.password', :count => 3)
+          expect(output_buffer).to have_tag('form li.password', :count => 3)
         end
 
         it 'should default to a string for methods on objects that don\'t respond to "column_for_attribute"' do
-          @new_post.stub(:method_without_a_database_column)
-          @new_post.stub(:column_for_attribute).and_return(nil)
-          default_input_type(nil, :method_without_a_database_column).should == :string
+          allow(@new_post).to receive(:method_without_a_database_column)
+          allow(@new_post).to receive(:column_for_attribute).and_return(nil)
+          expect(default_input_type(nil, :method_without_a_database_column)).to eq(:string)
         end
 
         it 'should default to :password for methods that don\'t have a column in the database but "password" is in the method name' do
-          @new_post.stub(:password_method_without_a_database_column)
-          @new_post.stub(:column_for_attribute).and_return(nil)
-          default_input_type(nil, :password_method_without_a_database_column).should == :password
+          allow(@new_post).to receive(:password_method_without_a_database_column)
+          allow(@new_post).to receive(:column_for_attribute).and_return(nil)
+          expect(default_input_type(nil, :password_method_without_a_database_column)).to eq(:password)
         end
 
         it 'should default to :password for methods on objects that don\'t respond to "column_for_attribute" but "password" is in the method name' do
-          @new_post.stub(:password_method_without_a_database_column)
-          @new_post.stub(:column_for_attribute).and_return(nil)
-          default_input_type(nil, :password_method_without_a_database_column).should == :password
+          allow(@new_post).to receive(:password_method_without_a_database_column)
+          allow(@new_post).to receive(:column_for_attribute).and_return(nil)
+          expect(default_input_type(nil, :password_method_without_a_database_column)).to eq(:password)
         end
 
         it 'should default to :number for "integer" column with name ending in "_id"' do
-          @new_post.stub(:aws_instance_id)
-          @new_post.stub(:column_for_attribute).with(:aws_instance_id).and_return(double('column', :type => :integer))
-          default_input_type(:integer, :aws_instance_id).should == :number
+          allow(@new_post).to receive(:aws_instance_id)
+          allow(@new_post).to receive(:column_for_attribute).with(:aws_instance_id).and_return(double('column', :type => :integer))
+          expect(default_input_type(:integer, :aws_instance_id)).to eq(:number)
         end
 
         it 'should default to :select for associations' do
-          @new_post.class.stub(:reflect_on_association).with(:user_id).and_return(double('ActiveRecord::Reflection::AssociationReflection'))
-          @new_post.class.stub(:reflect_on_association).with(:section_id).and_return(double('ActiveRecord::Reflection::AssociationReflection'))
-          default_input_type(:integer, :user_id).should == :select
-          default_input_type(:integer, :section_id).should == :select
+          allow(@new_post.class).to receive(:reflect_on_association).with(:user_id).and_return(double('ActiveRecord::Reflection::AssociationReflection'))
+          allow(@new_post.class).to receive(:reflect_on_association).with(:section_id).and_return(double('ActiveRecord::Reflection::AssociationReflection'))
+          expect(default_input_type(:integer, :user_id)).to eq(:select)
+          expect(default_input_type(:integer, :section_id)).to eq(:select)
         end
 
         it 'should default to :select for enum' do
           statuses = ActiveSupport::HashWithIndifferentAccess.new("active"=>0, "inactive"=>1)
-          @new_post.class.stub(:statuses) { statuses }
-          @new_post.stub(:defined_enums) { {"status" => statuses } }
+          allow(@new_post.class).to receive(:statuses) { statuses }
+          allow(@new_post).to receive(:defined_enums) { {"status" => statuses } }
 
-          default_input_type(:integer, :status).should == :select
+          expect(default_input_type(:integer, :status)).to eq(:select)
         end
 
         it 'should default to :password for :string column types with "password" in the method name' do
-          default_input_type(:string, :password).should == :password
-          default_input_type(:string, :hashed_password).should == :password
-          default_input_type(:string, :password_hash).should == :password
+          expect(default_input_type(:string, :password)).to eq(:password)
+          expect(default_input_type(:string, :hashed_password)).to eq(:password)
+          expect(default_input_type(:string, :password_hash)).to eq(:password)
         end
 
         it 'should default to :text for :text column types' do
-          default_input_type(:text).should == :text
+          expect(default_input_type(:text)).to eq(:text)
         end
 
         it 'should default to :date_select for :date column types' do
-          default_input_type(:date).should == :date_select
+          expect(default_input_type(:date)).to eq(:date_select)
         end
 
         it 'should default to :datetime_select for :datetime and :timestamp column types' do
-          default_input_type(:datetime).should == :datetime_select
-          default_input_type(:timestamp).should == :datetime_select
+          expect(default_input_type(:datetime)).to eq(:datetime_select)
+          expect(default_input_type(:timestamp)).to eq(:datetime_select)
         end
 
         it 'should default to :time_select for :time column types' do
-          default_input_type(:time).should == :time_select
+          expect(default_input_type(:time)).to eq(:time_select)
         end
 
         it 'should default to :boolean for :boolean column types' do
-          default_input_type(:boolean).should == :boolean
+          expect(default_input_type(:boolean)).to eq(:boolean)
         end
 
         it 'should default to :string for :string column types' do
-          default_input_type(:string).should == :string
+          expect(default_input_type(:string)).to eq(:string)
         end
 
         it 'should default to :number for :integer, :float and :decimal column types' do
-          default_input_type(:integer).should == :number
-          default_input_type(:float).should == :number
-          default_input_type(:decimal).should == :number
+          expect(default_input_type(:integer)).to eq(:number)
+          expect(default_input_type(:float)).to eq(:number)
+          expect(default_input_type(:decimal)).to eq(:number)
         end
 
         it 'should default to :country for :string columns named country' do
-          default_input_type(:string, :country).should == :country
+          expect(default_input_type(:string, :country)).to eq(:country)
         end
 
         it 'should default to :email for :string columns matching email' do
-          default_input_type(:string, :email).should == :email
-          default_input_type(:string, :customer_email).should == :email
-          default_input_type(:string, :email_work).should == :email
+          expect(default_input_type(:string, :email)).to eq(:email)
+          expect(default_input_type(:string, :customer_email)).to eq(:email)
+          expect(default_input_type(:string, :email_work)).to eq(:email)
         end
 
         it 'should default to :url for :string columns named url or website' do
-          default_input_type(:string, :url).should == :url
-          default_input_type(:string, :website).should == :url
-          default_input_type(:string, :my_url).should == :url
-          default_input_type(:string, :hurl).should_not == :url
+          expect(default_input_type(:string, :url)).to eq(:url)
+          expect(default_input_type(:string, :website)).to eq(:url)
+          expect(default_input_type(:string, :my_url)).to eq(:url)
+          expect(default_input_type(:string, :hurl)).not_to eq(:url)
         end
 
         it 'should default to :phone for :string columns named phone or fax' do
-          default_input_type(:string, :phone).should == :phone
-          default_input_type(:string, :fax).should == :phone
+          expect(default_input_type(:string, :phone)).to eq(:phone)
+          expect(default_input_type(:string, :fax)).to eq(:phone)
         end
 
         it 'should default to :search for :string columns named search' do
-          default_input_type(:string, :search).should == :search
+          expect(default_input_type(:string, :search)).to eq(:search)
         end
 
         it 'should default to :color for :string columns matching color' do
-          default_input_type(:string, :color).should == :color
-          default_input_type(:string, :user_color).should == :color
-          default_input_type(:string, :color_for_image).should == :color
+          expect(default_input_type(:string, :color)).to eq(:color)
+          expect(default_input_type(:string, :user_color)).to eq(:color)
+          expect(default_input_type(:string, :color_for_image)).to eq(:color)
         end
 
         describe 'defaulting to file column' do
@@ -544,13 +544,13 @@ describe 'with input class finder' do
 
               Formtastic::FormBuilder.file_methods.each do |test|
                 ### TODO: Check if this is ok
-                column.stub(method).with(test).and_return(method == test)
+                allow(column).to receive(method).with(test).and_return(method == test)
               end
 
-              @new_post.should_receive(method).and_return(column)
+              expect(@new_post).to receive(method).and_return(column)
 
               semantic_form_for(@new_post) do |builder|
-                builder.send(:default_input_type, method).should == :file
+                expect(builder.send(:default_input_type, method)).to eq(:file)
               end
             end
           end
@@ -560,15 +560,15 @@ describe 'with input class finder' do
 
       it 'should call the corresponding input class with .to_html' do
         [:select, :time_zone, :radio, :date_select, :datetime_select, :time_select, :boolean, :check_boxes, :hidden, :string, :password, :number, :text, :file].each do |input_style|
-          @new_post.stub(:generic_column_name)
-          @new_post.stub(:column_for_attribute).and_return(double('column', :type => :string, :limit => 255))
+          allow(@new_post).to receive(:generic_column_name)
+          allow(@new_post).to receive(:column_for_attribute).and_return(double('column', :type => :string, :limit => 255))
           semantic_form_for(@new_post) do |builder|
             input_instance = double('Input instance')
             input_class = "#{input_style.to_s}_input".classify
             input_constant = "Formtastic::Inputs::#{input_class}".constantize
 
-            input_constant.should_receive(:new).and_return(input_instance)
-            input_instance.should_receive(:to_html).and_return("some HTML")
+            expect(input_constant).to receive(:new).and_return(input_instance)
+            expect(input_instance).to receive(:to_html).and_return("some HTML")
 
             concat(builder.input(:generic_column_name, :as => input_style))
           end
@@ -584,21 +584,21 @@ describe 'with input class finder' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :label => "Kustom"))
           end)
-          output_buffer.should have_tag("form li label", /Kustom/)
+          expect(output_buffer).to have_tag("form li label", /Kustom/)
         end
 
         it 'should not generate a label if false' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :label => false))
           end)
-          output_buffer.should_not have_tag("form li label")
+          expect(output_buffer).not_to have_tag("form li label")
         end
 
         it 'should be dupped if frozen' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :label => "Kustom".freeze))
           end)
-          output_buffer.should have_tag("form li label", /Kustom/)
+          expect(output_buffer).to have_tag("form li label", /Kustom/)
         end
       end
 
@@ -609,7 +609,7 @@ describe 'with input class finder' do
               it 'should render a label with localized text and not apply the label_str_method' do
                 with_config :label_str_method, :reverse do
                   @localized_label_text = 'Localized title'
-                  @new_post.stub(:meta_description)
+                  allow(@new_post).to receive(:meta_description)
                   ::I18n.backend.store_translations :en,
                                                     :formtastic => {
                                                         :labels => {
@@ -620,7 +620,7 @@ describe 'with input class finder' do
                   concat(semantic_form_for(@new_post) do |builder|
                     concat(builder.input(:meta_description))
                   end)
-                  output_buffer.should have_tag('form li label', /Localized title/)
+                  expect(output_buffer).to have_tag('form li label', /Localized title/)
                 end
               end
             end
@@ -635,32 +635,32 @@ describe 'with input class finder' do
                 concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
                   concat(builder.input(:meta_description))
                 end)
-                output_buffer.should have_tag("form li label", /#{'meta_description'.humanize}/)
+                expect(output_buffer).to have_tag("form li label", /#{'meta_description'.humanize}/)
               end
             end
           end
 
           describe 'and object is given' do
             it 'should delegate the label logic to class human attribute name and pass it down to the label tag' do
-              @new_post.stub(:meta_description) # a two word method name
-              @new_post.class.should_receive(:human_attribute_name).with('meta_description').and_return('meta_description'.humanize)
+              allow(@new_post).to receive(:meta_description) # a two word method name
+              expect(@new_post.class).to receive(:human_attribute_name).with('meta_description').and_return('meta_description'.humanize)
 
               concat(semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:meta_description))
               end)
-              output_buffer.should have_tag("form li label", /#{'meta_description'.humanize}/)
+              expect(output_buffer).to have_tag("form li label", /#{'meta_description'.humanize}/)
             end
           end
 
           describe 'and object is given with label_str_method set to :capitalize' do
             it 'should capitalize method name, passing it down to the label tag' do
               with_config :label_str_method, :capitalize do
-                @new_post.stub(:meta_description)
+                allow(@new_post).to receive(:meta_description)
 
                 concat(semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:meta_description))
                 end)
-                output_buffer.should have_tag("form li label", /#{'meta_description'.capitalize}/)
+                expect(output_buffer).to have_tag("form li label", /#{'meta_description'.capitalize}/)
               end
             end
           end
@@ -689,7 +689,7 @@ describe 'with input class finder' do
                 concat(builder.input(:title, :label => true))
                 concat(builder.input(:published, :as => :boolean, :label => true))
               end)
-              output_buffer.should have_tag('form li label', Regexp.new('^' + @localized_label_text))
+              expect(output_buffer).to have_tag('form li label', Regexp.new('^' + @localized_label_text))
             end
           end
 
@@ -708,7 +708,7 @@ describe 'with input class finder' do
                 concat(builder.input(:title, :label => true))
                 concat(builder.input(:published, :as => :boolean, :label => true))
               end)
-              output_buffer.should have_tag('form li label', Regexp.new('^' + @default_localized_label_text))
+              expect(output_buffer).to have_tag('form li label', Regexp.new('^' + @default_localized_label_text))
             end
           end
         end
@@ -729,7 +729,7 @@ describe 'with input class finder' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :hint => hint_text))
           end)
-          output_buffer.should have_tag("form li p.inline-hints", hint_text)
+          expect(output_buffer).to have_tag("form li p.inline-hints", hint_text)
         end
 
         it 'should have a custom hint class defaulted for all forms' do
@@ -738,7 +738,7 @@ describe 'with input class finder' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :hint => hint_text))
           end)
-          output_buffer.should have_tag("form li p.custom-hint-class", hint_text)
+          expect(output_buffer).to have_tag("form li p.custom-hint-class", hint_text)
         end
       end
 
@@ -773,7 +773,7 @@ describe 'with input class finder' do
                 concat(semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:title, :hint => true))
                 end)
-                output_buffer.should have_tag('form li p.inline-hints', @localized_hint_text)
+                expect(output_buffer).to have_tag('form li p.inline-hints', @localized_hint_text)
               end
             end
 
@@ -782,7 +782,7 @@ describe 'with input class finder' do
                 concat(semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:title, :hint => true))
                 end)
-                output_buffer.should have_tag('form li p.inline-hints', @default_localized_hint_text)
+                expect(output_buffer).to have_tag('form li p.inline-hints', @default_localized_hint_text)
               end
             end
           end
@@ -793,7 +793,7 @@ describe 'with input class finder' do
                 concat(semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:title, :hint => false))
                 end)
-                output_buffer.should_not have_tag('form li p.inline-hints', @localized_hint_text)
+                expect(output_buffer).not_to have_tag('form li p.inline-hints', @localized_hint_text)
               end
             end
           end
@@ -813,7 +813,7 @@ describe 'with input class finder' do
               semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title, :hint => true))
               end
-              output_buffer.should_not have_tag('form li p.inline-hints', @localized_hint_text)
+              expect(output_buffer).not_to have_tag('form li p.inline-hints', @localized_hint_text)
             end
           end
         end
@@ -824,7 +824,7 @@ describe 'with input class finder' do
               concat(semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title))
               end)
-              output_buffer.should_not have_tag('form li p.inline-hints')
+              expect(output_buffer).not_to have_tag('form li p.inline-hints')
             end
           end
         end
@@ -839,25 +839,25 @@ describe 'with input class finder' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :wrapper_html => {:id => :another_id}))
           end)
-          output_buffer.should have_tag("form li#another_id")
+          expect(output_buffer).to have_tag("form li#another_id")
         end
 
         it 'should append given classes to li default classes' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :wrapper_html => {:class => :another_class}, :required => true))
           end)
-          output_buffer.should have_tag("form li.string")
-          output_buffer.should have_tag("form li.required")
-          output_buffer.should have_tag("form li.another_class")
+          expect(output_buffer).to have_tag("form li.string")
+          expect(output_buffer).to have_tag("form li.required")
+          expect(output_buffer).to have_tag("form li.another_class")
         end
 
         it 'should allow classes to be an array' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :wrapper_html => {:class => [ :my_class, :another_class ]}))
           end)
-          output_buffer.should have_tag("form li.string")
-          output_buffer.should have_tag("form li.my_class")
-          output_buffer.should have_tag("form li.another_class")
+          expect(output_buffer).to have_tag("form li.string")
+          expect(output_buffer).to have_tag("form li.my_class")
+          expect(output_buffer).to have_tag("form li.another_class")
         end
 
         describe 'when nil' do
@@ -865,7 +865,7 @@ describe 'with input class finder' do
             concat(semantic_form_for(@new_post) do |builder|
               concat(builder.input(:title, :wrapper_html => {:id => nil}))
             end)
-            output_buffer.should have_tag('form li:not([id])')
+            expect(output_buffer).to have_tag('form li:not([id])')
           end
         end
       end
@@ -875,8 +875,8 @@ describe 'with input class finder' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title))
           end)
-          output_buffer.should have_tag("form li#post_title_input")
-          output_buffer.should have_tag("form li.string")
+          expect(output_buffer).to have_tag("form li#post_title_input")
+          expect(output_buffer).to have_tag("form li.string")
         end
       end
 
@@ -885,14 +885,14 @@ describe 'with input class finder' do
     describe ':collection option' do
 
       it "should be required on polymorphic associations" do
-        @new_post.stub(:commentable)
-        @new_post.class.stub(:reflections).and_return({
+        allow(@new_post).to receive(:commentable)
+        allow(@new_post.class).to receive(:reflections).and_return({
                                                           :commentable => double('macro_reflection', :options => { :polymorphic => true }, :macro => :belongs_to)
                                                       })
-        @new_post.stub(:column_for_attribute).with(:commentable).and_return(
+        allow(@new_post).to receive(:column_for_attribute).with(:commentable).and_return(
             double('column', :type => :integer)
         )
-        @new_post.class.stub(:reflect_on_association).with(:commentable).and_return(
+        allow(@new_post.class).to receive(:reflect_on_association).with(:commentable).and_return(
             double('reflection', :macro => :belongs_to, :options => { :polymorphic => true })
         )
         expect {
@@ -918,18 +918,18 @@ describe 'with input class finder' do
         concat(builder.input(:title, my_options))
         concat(builder.input(:publish_at, my_options))
       end)
-      output_buffer.should have_tag 'li.string', :count => 2
+      expect(output_buffer).to have_tag 'li.string', :count => 2
     end
   end
 
   describe 'instantiating an input class' do
     context 'when a class does not exist' do
       it "should raise an error" do
-        lambda {
+        expect {
           concat(semantic_form_for(@new_post) do |builder|
             builder.input(:title, :as => :non_existant)
           end)
-        }.should raise_error(Formtastic::UnknownInputError)
+        }.to raise_error(Formtastic::UnknownInputError)
       end
     end
 
@@ -937,7 +937,7 @@ describe 'with input class finder' do
 
       it 'should instantiate the Formtastic input' do
         input = double('input', :to_html => 'some HTML')
-        Formtastic::Inputs::StringInput.should_receive(:new).and_return(input)
+        expect(Formtastic::Inputs::StringInput).to receive(:new).and_return(input)
         concat(semantic_form_for(@new_post) do |builder|
           builder.input(:title, :as => :string)
         end)
@@ -951,8 +951,8 @@ describe 'with input class finder' do
         end
 
         input = double('input', :to_html => 'some HTML')
-        Formtastic::Inputs::StringInput.should_not_receive(:new)
-        ::StringInput.should_receive(:new).and_return(input)
+        expect(Formtastic::Inputs::StringInput).not_to receive(:new)
+        expect(::StringInput).to receive(:new).and_return(input)
 
         concat(semantic_form_for(@new_post) do |builder|
           builder.input(:title, :as => :string)

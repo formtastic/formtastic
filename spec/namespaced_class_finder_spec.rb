@@ -54,7 +54,7 @@ describe Formtastic::NamespacedClassFinder do
 
   context '#finder' do
     before do
-      Rails.application.config.stub(:cache_classes).and_return(cache_classes)
+      allow(Rails.application.config).to receive(:cache_classes).and_return(cache_classes)
     end
 
     context 'when cache_classes is on' do

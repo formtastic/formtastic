@@ -11,27 +11,27 @@ describe 'Formtastic::Localizer' do
     end
     
     it "should get value" do
-      @cache.get(@key).should == 'value'
-      @cache.get(@undefined_key).should be_nil
+      expect(@cache.get(@key)).to eq('value')
+      expect(@cache.get(@undefined_key)).to be_nil
     end
     
     it "should check if key exists?" do
-      @cache.has_key?(@key).should be_truthy
-      @cache.has_key?(@undefined_key).should be_falsey
+      expect(@cache.has_key?(@key)).to be_truthy
+      expect(@cache.has_key?(@undefined_key)).to be_falsey
     end
     
     it "should set a key" do
       @cache.set(['model', 'name2'], 'value2')
-      @cache.get(['model', 'name2']).should == 'value2'
+      expect(@cache.get(['model', 'name2'])).to eq('value2')
     end
     
     it "should return hash" do
-      @cache.cache.should be_an_instance_of(Hash)
+      expect(@cache.cache).to be_an_instance_of(Hash)
     end
     
     it "should clear the cache" do
       @cache.clear!
-      @cache.get(@key).should be_nil
+      expect(@cache.get(@key)).to be_nil
     end
   end
   
@@ -53,11 +53,11 @@ describe 'Formtastic::Localizer' do
     end
     
     it "should be defined" do
-      lambda { Formtastic::Localizer }.should_not raise_error
+      expect { Formtastic::Localizer }.not_to raise_error
     end
     
     it "should have a cache" do
-      Formtastic::Localizer.cache.should be_an_instance_of(Formtastic::Localizer::Cache)
+      expect(Formtastic::Localizer.cache).to be_an_instance_of(Formtastic::Localizer::Cache)
     end
     
     describe "localize" do
@@ -75,19 +75,19 @@ describe 'Formtastic::Localizer' do
       end
 
       it "should translate key with i18n" do
-        @localizer.localize(:name, :name, :label).should == 'POST.NAME'
+        expect(@localizer.localize(:name, :name, :label)).to eq('POST.NAME')
       end
       
       describe "with caching" do
         it "should not update translation when stored translations change" do
           with_config :i18n_cache_lookups, true do
-            @localizer.localize(:name, :name, :label).should == 'POST.NAME'
+            expect(@localizer.localize(:name, :name, :label)).to eq('POST.NAME')
             store_post_translations('POST.NEW_NAME')
             
-            @localizer.localize(:name, :name, :label).should == 'POST.NAME'       
+            expect(@localizer.localize(:name, :name, :label)).to eq('POST.NAME')       
             
             Formtastic::Localizer.cache.clear!
-            @localizer.localize(:name, :name, :label).should == 'POST.NEW_NAME'                  
+            expect(@localizer.localize(:name, :name, :label)).to eq('POST.NEW_NAME')                  
           end
         end        
       end
@@ -95,9 +95,9 @@ describe 'Formtastic::Localizer' do
       describe "without caching" do
         it "should update translation when stored translations change" do
           with_config :i18n_cache_lookups, false do
-            @localizer.localize(:name, :name, :label).should == 'POST.NAME'
+            expect(@localizer.localize(:name, :name, :label)).to eq('POST.NAME')
             store_post_translations('POST.NEW_NAME')
-            @localizer.localize(:name, :name, :label).should == 'POST.NEW_NAME'            
+            expect(@localizer.localize(:name, :name, :label)).to eq('POST.NEW_NAME')            
           end
         end
       end
@@ -120,7 +120,7 @@ describe 'Formtastic::Localizer' do
         end
 
         it "should translate custom key with i18n" do
-          @localizer.localize(:name, :name, :label).should == 'MESSAGE.NAME'
+          expect(@localizer.localize(:name, :name, :label)).to eq('MESSAGE.NAME')
         end
       end 
     end

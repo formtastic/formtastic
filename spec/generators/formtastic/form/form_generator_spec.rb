@@ -14,7 +14,7 @@ describe Formtastic::FormGenerator do
     @output_buffer = ''
     prepare_destination
     mock_everything
-    ::Post.stub(:reflect_on_all_associations).with(:belongs_to).and_return([
+    allow(::Post).to receive(:reflect_on_all_associations).with(:belongs_to).and_return([
       double('reflection', :name => :author, :options => {}, :klass => ::Author, :macro => :belongs_to),
       double('reflection', :name => :reviewer, :options => {:class_name => 'Author'}, :klass => ::Author, :macro => :belongs_to),
       double('reflection', :name => :main_post, :options => {}, :klass => ::Post, :macro => :belongs_to),
@@ -28,13 +28,13 @@ describe Formtastic::FormGenerator do
 
   describe 'without model' do
     it 'should raise Thor::RequiredArgumentMissingError' do
-      lambda { run_generator }.should raise_error(Thor::RequiredArgumentMissingError)
+      expect { run_generator }.to raise_error(Thor::RequiredArgumentMissingError)
     end
   end
 
   describe 'with existing model' do
     it 'should not raise an exception' do
-      lambda { run_generator %w(Post) }.should_not raise_error
+      expect { run_generator %w(Post) }.not_to raise_error
     end
   end
 
@@ -43,10 +43,10 @@ describe Formtastic::FormGenerator do
 
     describe 'render only the specified attributes' do
       subject { file('app/views/posts/_form.html.erb') }
-      it { should exist }
-      it { should contain "<%= f.input :title %>" }
-      it { should contain "<%= f.input :author %>" }
-      it { should_not contain "<%= f.input :main_post %>" }
+      it { is_expected.to exist }
+      it { is_expected.to contain "<%= f.input :title %>" }
+      it { is_expected.to contain "<%= f.input :author %>" }
+      it { is_expected.not_to contain "<%= f.input :main_post %>" }
     end
   end
 
@@ -56,17 +56,17 @@ describe Formtastic::FormGenerator do
     subject { file('app/views/posts/_form.html.erb') }
 
     describe 'content_columns' do
-      it { should contain "<%= f.input :title %>" }
-      it { should contain "<%= f.input :body %>" }
-      it { should_not contain "<%= f.input :created_at %>" }
-      it { should_not contain "<%= f.input :updated_at %>" }
+      it { is_expected.to contain "<%= f.input :title %>" }
+      it { is_expected.to contain "<%= f.input :body %>" }
+      it { is_expected.not_to contain "<%= f.input :created_at %>" }
+      it { is_expected.not_to contain "<%= f.input :updated_at %>" }
     end
 
     describe 'reflection_on_association' do
-      it { should contain "<%= f.input :author %>" }
-      it { should contain "<%= f.input :reviewer %>" }
-      it { should contain "<%= f.input :main_post %>" }
-      it { should_not contain "<%= f.input :attachment %>" }
+      it { is_expected.to contain "<%= f.input :author %>" }
+      it { is_expected.to contain "<%= f.input :reviewer %>" }
+      it { is_expected.to contain "<%= f.input :main_post %>" }
+      it { is_expected.not_to contain "<%= f.input :attachment %>" }
     end
   end
 
@@ -76,8 +76,8 @@ describe Formtastic::FormGenerator do
 
       describe 'app/views/posts/_form.html.erb' do
         subject { file('app/views/posts/_form.html.erb') }
-        it { should exist }
-        it { should contain "<%= semantic_form_for @post do |f| %>" }
+        it { is_expected.to exist }
+        it { is_expected.to contain "<%= semantic_form_for @post do |f| %>" }
       end
     end
 
@@ -86,15 +86,15 @@ describe Formtastic::FormGenerator do
       describe 'app/views/posts/_form.html.haml' do
         before { run_generator %w(Post --template-engine haml) }
         subject { file('app/views/posts/_form.html.haml') }
-        it { should exist }
-        it { should contain "= semantic_form_for @post do |f|" }
+        it { is_expected.to exist }
+        it { is_expected.to contain "= semantic_form_for @post do |f|" }
       end
       
       context 'with copy option' do
         describe 'app/views/posts/_form.html.haml' do
           before { run_generator %w(Post --copy --template-engine haml) }
           subject { file('app/views/posts/_form.html.haml') }
-          it { should_not exist }
+          it { is_expected.not_to exist }
         end
       end
       
@@ -105,8 +105,8 @@ describe Formtastic::FormGenerator do
 
       describe 'app/views/posts/_form.html.slim' do
         subject { file('app/views/posts/_form.html.slim') }
-        it { should exist }
-        it { should contain "= semantic_form_for @post do |f|" }
+        it { is_expected.to exist }
+        it { is_expected.to contain "= semantic_form_for @post do |f|" }
       end
     end
   end
@@ -116,7 +116,7 @@ describe Formtastic::FormGenerator do
   
     describe 'app/views/posts/_form.html.erb' do
       subject { file('app/views/posts/_form.html.erb') }
-      it { should_not exist }
+      it { is_expected.not_to exist }
     end
   end
 
@@ -125,7 +125,7 @@ describe Formtastic::FormGenerator do
 
     describe 'app/views/admin/posts/_form.html.erb' do
       subject { file('app/views/admin/posts/_form.html.erb') }
-      it { should exist }
+      it { is_expected.to exist }
     end
   end
 end

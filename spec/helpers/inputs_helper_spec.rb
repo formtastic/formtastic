@@ -23,24 +23,24 @@ describe 'Formtastic::FormBuilder#inputs' do
       end
   
       it 'should output just the content wrapped in inputs, not the whole template' do
-        output_buffer.should      =~ /before_builder/
-        @inputs_output.should_not =~ /before_builder/
+        expect(output_buffer).to      match(/before_builder/)
+        expect(@inputs_output).not_to match(/before_builder/)
       end
   
       it 'should render a fieldset inside the form, with a class of "inputs"' do
-        output_buffer.should have_tag("form fieldset.inputs")
+        expect(output_buffer).to have_tag("form fieldset.inputs")
       end
   
       it 'should render an ol inside the fieldset' do
-        output_buffer.should have_tag("form fieldset.inputs ol")
+        expect(output_buffer).to have_tag("form fieldset.inputs ol")
       end
   
       it 'should render the contents of the block inside the ol' do
-        output_buffer.should have_tag("form fieldset.inputs ol", /hello/)
+        expect(output_buffer).to have_tag("form fieldset.inputs ol", /hello/)
       end
   
       it 'should not render a legend inside the fieldset' do
-        output_buffer.should_not have_tag("form fieldset.inputs legend")
+        expect(output_buffer).not_to have_tag("form fieldset.inputs legend")
       end
   
       it 'should render a fieldset even if no object is given' do
@@ -49,20 +49,20 @@ describe 'Formtastic::FormBuilder#inputs' do
             concat('bye')
           end
         end)
-        output_buffer.should have_tag("form fieldset.inputs ol", /bye/)
+        expect(output_buffer).to have_tag("form fieldset.inputs ol", /bye/)
       end
     end
   
     describe 'when a :for option is provided' do
   
       before do
-        @new_post.stub(:respond_to?).and_return(true, true)
-        @new_post.stub(:respond_to?).with(:empty?).and_return(false)
-        @new_post.stub(:author).and_return(@bob)
+        allow(@new_post).to receive(:respond_to?).and_return(true, true)
+        allow(@new_post).to receive(:respond_to?).with(:empty?).and_return(false)
+        allow(@new_post).to receive(:author).and_return(@bob)
       end
   
       it 'should render nested inputs' do
-        @bob.stub(:column_for_attribute).and_return(double('column', :type => :string, :limit => 255))
+        allow(@bob).to receive(:column_for_attribute).and_return(double('column', :type => :string, :limit => 255))
   
         concat(semantic_form_for(@new_post) do |builder|
           inputs = builder.inputs :for => [:author, @bob] do |bob_builder|
@@ -70,12 +70,12 @@ describe 'Formtastic::FormBuilder#inputs' do
           end
           concat(inputs)
         end)
-        output_buffer.should have_tag("form fieldset.inputs #post_author_attributes_login")
-        output_buffer.should_not have_tag("form fieldset.inputs #author_login")
+        expect(output_buffer).to have_tag("form fieldset.inputs #post_author_attributes_login")
+        expect(output_buffer).not_to have_tag("form fieldset.inputs #author_login")
       end
   
       it 'should concat rendered nested inputs to the template' do
-        @bob.stub(:column_for_attribute).and_return(double('column', :type => :string, :limit => 255))
+        allow(@bob).to receive(:column_for_attribute).and_return(double('column', :type => :string, :limit => 255))
   
         concat(semantic_form_for(@new_post) do |builder|
           builder.inputs :for => [:author, @bob] do |bob_builder|
@@ -83,8 +83,8 @@ describe 'Formtastic::FormBuilder#inputs' do
           end
         end)
   
-        output_buffer.should have_tag("form fieldset.inputs #post_author_attributes_login")
-        output_buffer.should_not have_tag("form fieldset.inputs #author_login")
+        expect(output_buffer).to have_tag("form fieldset.inputs #post_author_attributes_login")
+        expect(output_buffer).not_to have_tag("form fieldset.inputs #author_login")
   
       end
   
@@ -97,15 +97,15 @@ describe 'Formtastic::FormBuilder#inputs' do
             end
             concat(inputs)
           end)
-          output_buffer.should have_tag("form input[@name='post[author_attributes][login]']")
+          expect(output_buffer).to have_tag("form input[@name='post[author_attributes][login]']")
         end
   
       end
   
       describe "as a symbol representing a has_many association name" do
         before do
-          @new_post.stub(:authors).and_return([@bob, @fred])
-          @new_post.stub(:authors_attributes=)
+          allow(@new_post).to receive(:authors).and_return([@bob, @fred])
+          allow(@new_post).to receive(:authors_attributes=)
         end
   
         it 'should nest the inputs with a fieldset, legend and :name input for each item' do
@@ -115,13 +115,13 @@ describe 'Formtastic::FormBuilder#inputs' do
             end
           end)
           
-          output_buffer.should have_tag("form fieldset.inputs", :count => 2)
-          output_buffer.should have_tag("form fieldset.inputs legend", :count => 2)
-          output_buffer.should have_tag("form fieldset.inputs legend", "1", :count => 1)
-          output_buffer.should have_tag("form fieldset.inputs legend", "2")
-          output_buffer.should have_tag("form input[@name='post[authors_attributes][0][login]']")
-          output_buffer.should have_tag("form input[@name='post[authors_attributes][1][login]']")
-          output_buffer.should_not have_tag('form fieldset[@name]')
+          expect(output_buffer).to have_tag("form fieldset.inputs", :count => 2)
+          expect(output_buffer).to have_tag("form fieldset.inputs legend", :count => 2)
+          expect(output_buffer).to have_tag("form fieldset.inputs legend", "1", :count => 1)
+          expect(output_buffer).to have_tag("form fieldset.inputs legend", "2")
+          expect(output_buffer).to have_tag("form input[@name='post[authors_attributes][0][login]']")
+          expect(output_buffer).to have_tag("form input[@name='post[authors_attributes][1][login]']")
+          expect(output_buffer).not_to have_tag('form fieldset[@name]')
         end
         
         it 'should include an indexed :label input for each item' do
@@ -131,9 +131,9 @@ describe 'Formtastic::FormBuilder#inputs' do
             end
           end)
           
-          output_buffer.should have_tag("form fieldset.inputs label", "1", :count => 1)
-          output_buffer.should have_tag("form fieldset.inputs label", "2", :count => 1)
-          output_buffer.should_not have_tag('form fieldset legend')
+          expect(output_buffer).to have_tag("form fieldset.inputs label", "1", :count => 1)
+          expect(output_buffer).to have_tag("form fieldset.inputs label", "2", :count => 1)
+          expect(output_buffer).not_to have_tag('form fieldset legend')
         end
       end
   
@@ -146,7 +146,7 @@ describe 'Formtastic::FormBuilder#inputs' do
             end
             concat(inputs)
           end)
-          output_buffer.should have_tag("form input[@name='post[author_attributes][login]']")
+          expect(output_buffer).to have_tag("form input[@name='post[author_attributes][login]']")
         end
   
       end
@@ -160,24 +160,24 @@ describe 'Formtastic::FormBuilder#inputs' do
             end
             concat(inputs)
           end)
-          output_buffer.should have_tag("form input[@name='post[author][login]']")
+          expect(output_buffer).to have_tag("form input[@name='post[author][login]']")
         end
   
       end
   
       it 'should raise an error if :for and block with no argument is given' do
         semantic_form_for(@new_post) do |builder|
-          proc {
+          expect {
             builder.inputs(:for => [:author, @bob]) do
               #
             end
-          }.should raise_error(ArgumentError, 'You gave :for option with a block to inputs method, ' <<
+          }.to raise_error(ArgumentError, 'You gave :for option with a block to inputs method, ' <<
                                               'but the block does not accept any argument.')
         end
       end
   
       it 'should pass options down to semantic_fields_for' do
-        @bob.stub(:column_for_attribute).and_return(double('column', :type => :string, :limit => 255))
+        allow(@bob).to receive(:column_for_attribute).and_return(double('column', :type => :string, :limit => 255))
   
         concat(semantic_form_for(@new_post) do |builder|
           inputs = builder.inputs :for => [:author, @bob], :for_options => { :index => 10 } do |bob_builder|
@@ -186,7 +186,7 @@ describe 'Formtastic::FormBuilder#inputs' do
           concat(inputs)
         end)
   
-        output_buffer.should have_tag('form fieldset ol li #post_author_attributes_10_login')
+        expect(output_buffer).to have_tag('form fieldset ol li #post_author_attributes_10_login')
       end
   
       it 'should not add builder as a fieldset attribute tag' do
@@ -197,7 +197,7 @@ describe 'Formtastic::FormBuilder#inputs' do
           concat(inputs)
         end)
   
-        output_buffer.should_not have_tag('fieldset[@builder="Formtastic::Helpers::FormHelper"]')
+        expect(output_buffer).not_to have_tag('fieldset[@builder="Formtastic::Helpers::FormHelper"]')
       end
   
       it 'should send parent_builder as an option to allow child index interpolation for legends' do
@@ -209,7 +209,7 @@ describe 'Formtastic::FormBuilder#inputs' do
           concat(inputs)
         end)
   
-        output_buffer.should have_tag('fieldset legend', 'Author #1')
+        expect(output_buffer).to have_tag('fieldset legend', 'Author #1')
       end
   
       it 'should also provide child index interpolation for legends when nested child index is a hash' do
@@ -221,7 +221,7 @@ describe 'Formtastic::FormBuilder#inputs' do
           concat(inputs)
         end)
   
-        output_buffer.should have_tag('fieldset legend', 'Author #11')
+        expect(output_buffer).to have_tag('fieldset legend', 'Author #11')
       end
       
       it 'should send parent_builder as an option to allow child index interpolation for labels' do
@@ -233,7 +233,7 @@ describe 'Formtastic::FormBuilder#inputs' do
           concat(inputs)
         end)
         
-        output_buffer.should have_tag('fieldset label', 'Author #1')
+        expect(output_buffer).to have_tag('fieldset label', 'Author #1')
       end
       
       it 'should also provide child index interpolation for labels when nested child index is a hash' do
@@ -245,7 +245,7 @@ describe 'Formtastic::FormBuilder#inputs' do
           concat(inputs)
         end)
         
-        output_buffer.should have_tag('fieldset label', 'Author #11')
+        expect(output_buffer).to have_tag('fieldset label', 'Author #11')
       end
     end
   
@@ -274,10 +274,10 @@ describe 'Formtastic::FormBuilder#inputs' do
         
         # TODO: looks like the block isn't being called for the last assertion here
         it 'should render a fieldset with a legend inside the form' do
-          output_buffer.should have_tag("form fieldset legend", /^#{@legend_text}$/)
-          output_buffer.should have_tag("form fieldset legend", /^#{@legend_text_using_name}$/)
-          output_buffer.should have_tag("form fieldset legend", /^#{@legend_text_using_title}$/)
-          output_buffer.should have_tag("form fieldset legend", /^#{@nested_forms_legend_text}$/)
+          expect(output_buffer).to have_tag("form fieldset legend", /^#{@legend_text}$/)
+          expect(output_buffer).to have_tag("form fieldset legend", /^#{@legend_text_using_name}$/)
+          expect(output_buffer).to have_tag("form fieldset legend", /^#{@legend_text_using_title}$/)
+          expect(output_buffer).to have_tag("form fieldset legend", /^#{@nested_forms_legend_text}$/)
         end
       end
   
@@ -311,10 +311,10 @@ describe 'Formtastic::FormBuilder#inputs' do
         
         # TODO: looks like the block isn't being called for the last assertion here
         it 'should render a fieldset with a localized legend inside the form' do
-          output_buffer.should have_tag("form fieldset legend", /^#{@localized_legend_text}$/)
-          output_buffer.should have_tag("form fieldset legend", /^#{@localized_legend_text_using_name}$/)
-          output_buffer.should have_tag("form fieldset legend", /^#{@localized_legend_text_using_title}$/)
-          output_buffer.should have_tag("form fieldset legend", /^#{@localized_nested_forms_legend_text}$/)
+          expect(output_buffer).to have_tag("form fieldset legend", /^#{@localized_legend_text}$/)
+          expect(output_buffer).to have_tag("form fieldset legend", /^#{@localized_legend_text_using_name}$/)
+          expect(output_buffer).to have_tag("form fieldset legend", /^#{@localized_legend_text_using_title}$/)
+          expect(output_buffer).to have_tag("form fieldset legend", /^#{@localized_nested_forms_legend_text}$/)
         end
       end
     end
@@ -331,8 +331,8 @@ describe 'Formtastic::FormBuilder#inputs' do
       end
   
       it 'should pass the options into the fieldset tag as attributes' do
-        output_buffer.should have_tag("form fieldset##{@id_option}")
-        output_buffer.should have_tag("form fieldset.#{@class_option}")
+        expect(output_buffer).to have_tag("form fieldset##{@id_option}")
+        expect(output_buffer).to have_tag("form fieldset.#{@class_option}")
       end
     end
   
@@ -341,17 +341,17 @@ describe 'Formtastic::FormBuilder#inputs' do
   describe 'without a block' do
   
     before do
-      ::Post.stub(:reflections).and_return({:author => double('reflection', :options => {}, :macro => :belongs_to),
+      allow(::Post).to receive(:reflections).and_return({:author => double('reflection', :options => {}, :macro => :belongs_to),
                                            :comments => double('reflection', :options => {}, :macro => :has_many) })
   
-      @new_post.stub(:title)
-      @new_post.stub(:body)
-      @new_post.stub(:author_id)
+      allow(@new_post).to receive(:title)
+      allow(@new_post).to receive(:body)
+      allow(@new_post).to receive(:author_id)
   
-      @new_post.stub(:column_for_attribute).with(:title).and_return(double('column', :type => :string, :limit => 255))
-      @new_post.stub(:column_for_attribute).with(:body).and_return(double('column', :type => :text))
-      @new_post.stub(:column_for_attribute).with(:created_at).and_return(double('column', :type => :datetime))
-      @new_post.stub(:column_for_attribute).with(:author).and_return(nil)
+      allow(@new_post).to receive(:column_for_attribute).with(:title).and_return(double('column', :type => :string, :limit => 255))
+      allow(@new_post).to receive(:column_for_attribute).with(:body).and_return(double('column', :type => :text))
+      allow(@new_post).to receive(:column_for_attribute).with(:created_at).and_return(double('column', :type => :datetime))
+      allow(@new_post).to receive(:column_for_attribute).with(:author).and_return(nil)
     end
   
     describe 'with no args (quick forms syntax)' do
@@ -362,51 +362,51 @@ describe 'Formtastic::FormBuilder#inputs' do
       end
   
       it 'should render a form' do
-        output_buffer.should have_tag('form')
+        expect(output_buffer).to have_tag('form')
       end
   
       it 'should render a fieldset inside the form' do
-        output_buffer.should have_tag('form > fieldset.inputs')
+        expect(output_buffer).to have_tag('form > fieldset.inputs')
       end
   
       it 'should not render a legend in the fieldset' do
-        output_buffer.should_not have_tag('form > fieldset.inputs > legend')
+        expect(output_buffer).not_to have_tag('form > fieldset.inputs > legend')
       end
   
       it 'should render an ol in the fieldset' do
-        output_buffer.should have_tag('form > fieldset.inputs > ol')
+        expect(output_buffer).to have_tag('form > fieldset.inputs > ol')
       end
   
       it 'should render a list item in the ol for each column and reflection' do
         # Remove the :has_many macro and :created_at column
         count = ::Post.content_columns.size + ::Post.reflections.size - 2
-        output_buffer.should have_tag('form > fieldset.inputs > ol > li', :count => count)
+        expect(output_buffer).to have_tag('form > fieldset.inputs > ol > li', :count => count)
       end
   
       it 'should render a string list item for title' do
-        output_buffer.should have_tag('form > fieldset.inputs > ol > li.string')
+        expect(output_buffer).to have_tag('form > fieldset.inputs > ol > li.string')
       end
   
       it 'should render a text list item for body' do
-        output_buffer.should have_tag('form > fieldset.inputs > ol > li.text')
+        expect(output_buffer).to have_tag('form > fieldset.inputs > ol > li.text')
       end
   
       it 'should render a select list item for author_id' do
-        output_buffer.should have_tag('form > fieldset.inputs > ol > li.select', :count => 1)
+        expect(output_buffer).to have_tag('form > fieldset.inputs > ol > li.select', :count => 1)
       end
   
       it 'should not render timestamps inputs by default' do
-        output_buffer.should_not have_tag('form > fieldset.inputs > ol > li.datetime')
+        expect(output_buffer).not_to have_tag('form > fieldset.inputs > ol > li.datetime')
       end
     
       context "with a polymorphic association" do
         
         before do 
-          @new_post.stub(:commentable)
-          @new_post.class.stub(:reflections).and_return({ 
+          allow(@new_post).to receive(:commentable)
+          allow(@new_post.class).to receive(:reflections).and_return({ 
             :commentable => double('macro_reflection', :options => { :polymorphic => true }, :macro => :belongs_to)
           })
-          @new_post.stub(:column_for_attribute).with(:commentable).and_return(
+          allow(@new_post).to receive(:column_for_attribute).with(:commentable).and_return(
             double('column', :type => :integer)
           )
         end
@@ -415,7 +415,7 @@ describe 'Formtastic::FormBuilder#inputs' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.inputs)
           end)
-          output_buffer.should_not have_tag('li#post_commentable_input')
+          expect(output_buffer).not_to have_tag('li#post_commentable_input')
         end
         
       end
@@ -428,9 +428,9 @@ describe 'Formtastic::FormBuilder#inputs' do
             concat(builder.inputs(:title, :body))
           end)
   
-          output_buffer.should have_tag('form > fieldset.inputs > ol > li', :count => 2)
-          output_buffer.should have_tag('form > fieldset.inputs > ol > li.string')
-          output_buffer.should have_tag('form > fieldset.inputs > ol > li.text')
+          expect(output_buffer).to have_tag('form > fieldset.inputs > ol > li', :count => 2)
+          expect(output_buffer).to have_tag('form > fieldset.inputs > ol > li.string')
+          expect(output_buffer).to have_tag('form > fieldset.inputs > ol > li.text')
         end
       end
   
@@ -440,21 +440,21 @@ describe 'Formtastic::FormBuilder#inputs' do
             concat(builder.inputs(:title, :body))
           end)
   
-          output_buffer.should have_tag('form > fieldset.inputs > ol > li.string', :count => 2)
+          expect(output_buffer).to have_tag('form > fieldset.inputs > ol > li.string', :count => 2)
         end
       end
       
       context "with a polymorphic association" do
         
         it 'should raise an error for polymorphic associations (the collection class cannot be guessed)' do
-          @new_post.stub(:commentable)
-          @new_post.class.stub(:reflections).and_return({ 
+          allow(@new_post).to receive(:commentable)
+          allow(@new_post.class).to receive(:reflections).and_return({ 
             :commentable => double('macro_reflection', :options => { :polymorphic => true }, :macro => :belongs_to)
           })
-          @new_post.stub(:column_for_attribute).with(:commentable).and_return(
+          allow(@new_post).to receive(:column_for_attribute).with(:commentable).and_return(
             double('column', :type => :integer)
           )
-          @new_post.class.stub(:reflect_on_association).with(:commentable).and_return(
+          allow(@new_post.class).to receive(:reflect_on_association).with(:commentable).and_return(
             double('reflection', :macro => :belongs_to, :options => { :polymorphic => true })
           )
           
@@ -472,13 +472,13 @@ describe 'Formtastic::FormBuilder#inputs' do
     describe 'when a :for option is provided' do
       describe 'and an object is given' do
         it 'should render nested inputs' do
-          @bob.stub(:column_for_attribute).and_return(double('column', :type => :string, :limit => 255))
+          allow(@bob).to receive(:column_for_attribute).and_return(double('column', :type => :string, :limit => 255))
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.inputs(:login, :for => @bob))
           end)
   
-          output_buffer.should have_tag("form fieldset.inputs #post_author_login")
-          output_buffer.should_not have_tag("form fieldset.inputs #author_login")
+          expect(output_buffer).to have_tag("form fieldset.inputs #post_author_login")
+          expect(output_buffer).not_to have_tag("form fieldset.inputs #author_login")
         end
       end
   
@@ -487,8 +487,8 @@ describe 'Formtastic::FormBuilder#inputs' do
           concat(semantic_form_for(:project, :url => 'http://test.host/') do |builder|
             concat(builder.inputs(:login, :for => @bob))
           end)
-          output_buffer.should have_tag("form fieldset.inputs #project_author_login")
-          output_buffer.should_not have_tag("form fieldset.inputs #project_login")
+          expect(output_buffer).to have_tag("form fieldset.inputs #project_author_login")
+          expect(output_buffer).not_to have_tag("form fieldset.inputs #project_login")
         end
       end
     end
@@ -504,16 +504,16 @@ describe 'Formtastic::FormBuilder#inputs' do
       end
   
       it 'should render a form with a fieldset containing two list items' do
-        output_buffer.should have_tag('form > fieldset.inputs > ol > li', :count => 4)
+        expect(output_buffer).to have_tag('form > fieldset.inputs > ol > li', :count => 4)
       end
   
       it 'should pass the options down to the fieldset' do
-        output_buffer.should have_tag('form > fieldset#my-id.inputs')
+        expect(output_buffer).to have_tag('form > fieldset#my-id.inputs')
       end
   
       it 'should use the special :name option as a text for the legend tag' do
-        output_buffer.should have_tag('form > fieldset#my-id.inputs > legend', /^#{@legend_text_using_option}$/)
-        output_buffer.should have_tag('form > fieldset#my-id-2.inputs > legend', /^#{@legend_text_using_arg}$/)
+        expect(output_buffer).to have_tag('form > fieldset#my-id.inputs > legend', /^#{@legend_text_using_option}$/)
+        expect(output_buffer).to have_tag('form > fieldset#my-id-2.inputs > legend', /^#{@legend_text_using_arg}$/)
       end
     end
 
@@ -524,9 +524,9 @@ describe 'Formtastic::FormBuilder#inputs' do
             concat(builder.inputs :except => :body)
           end)
 
-          output_buffer.should have_tag('form > fieldset.inputs > ol > li', :count => 2)
-          output_buffer.should have_tag('form > fieldset.inputs > ol > li.string')
-          output_buffer.should_not have_tag('form > fieldset.inputs > ol > li.text')
+          expect(output_buffer).to have_tag('form > fieldset.inputs > ol > li', :count => 2)
+          expect(output_buffer).to have_tag('form > fieldset.inputs > ol > li.string')
+          expect(output_buffer).not_to have_tag('form > fieldset.inputs > ol > li.text')
         end
 
         it 'should render a form with a fieldset containing only text item' do
@@ -534,9 +534,9 @@ describe 'Formtastic::FormBuilder#inputs' do
             concat(builder.inputs :except => :title)
           end)
 
-          output_buffer.should have_tag('form > fieldset.inputs > ol > li', :count => 2)
-          output_buffer.should_not have_tag('form > fieldset.inputs > ol > li.string')
-          output_buffer.should have_tag('form > fieldset.inputs > ol > li.text')
+          expect(output_buffer).to have_tag('form > fieldset.inputs > ol > li', :count => 2)
+          expect(output_buffer).not_to have_tag('form > fieldset.inputs > ol > li.string')
+          expect(output_buffer).to have_tag('form > fieldset.inputs > ol > li.text')
         end
       end
 
@@ -546,7 +546,7 @@ describe 'Formtastic::FormBuilder#inputs' do
             concat(builder.inputs(:title, :body))
           end)
 
-          output_buffer.should have_tag('form > fieldset.inputs > ol > li.string', :count => 2)
+          expect(output_buffer).to have_tag('form > fieldset.inputs > ol > li.string', :count => 2)
         end
       end
     end
@@ -560,7 +560,7 @@ describe 'Formtastic::FormBuilder#inputs' do
           concat(builder.inputs do
           end)
         end)
-        output_buffer.should_not have_tag('form > li')
+        expect(output_buffer).not_to have_tag('form > li')
       end
     end
     
@@ -572,7 +572,7 @@ describe 'Formtastic::FormBuilder#inputs' do
             end)
           end)
         end)
-        output_buffer.should have_tag('form > fieldset.inputs > ol > li > fieldset.inputs > ol')
+        expect(output_buffer).to have_tag('form > fieldset.inputs > ol > li > fieldset.inputs > ol')
       end
     end
     
@@ -584,7 +584,7 @@ describe 'Formtastic::FormBuilder#inputs' do
             end)
           end)
         end)
-        output_buffer.should have_tag('form > fieldset.inputs > ol > li > fieldset.inputs > ol')
+        expect(output_buffer).to have_tag('form > fieldset.inputs > ol > li > fieldset.inputs > ol')
       end
     end
     
@@ -595,7 +595,7 @@ describe 'Formtastic::FormBuilder#inputs' do
             concat(builder.inputs(:title))
           end)
         end)
-        output_buffer.should have_tag('form > fieldset.inputs > ol > li > fieldset.inputs > ol')
+        expect(output_buffer).to have_tag('form > fieldset.inputs > ol > li > fieldset.inputs > ol')
       end
     end
   
@@ -606,7 +606,7 @@ describe 'Formtastic::FormBuilder#inputs' do
             concat(builder.inputs(:name, :for => :author))
           end)
         end)
-        output_buffer.should have_tag('form > fieldset.inputs > ol > li > fieldset.inputs > ol')
+        expect(output_buffer).to have_tag('form > fieldset.inputs > ol > li > fieldset.inputs > ol')
       end
     end
   
@@ -620,7 +620,7 @@ describe 'Formtastic::FormBuilder#inputs' do
             end)
           end)
         end)
-        output_buffer.should have_tag('form > fieldset.inputs > ol > li > fieldset.inputs > ol > li > fieldset.inputs > ol')
+        expect(output_buffer).to have_tag('form > fieldset.inputs > ol > li > fieldset.inputs > ol > li > fieldset.inputs > ol')
       end
     end
 
@@ -634,7 +634,7 @@ describe 'Formtastic::FormBuilder#inputs' do
             end)
           end)
         end)
-        output_buffer.should have_tag('form > fieldset.inputs > ol > li > fieldset.inputs > ol', :count => 2)
+        expect(output_buffer).to have_tag('form > fieldset.inputs > ol > li > fieldset.inputs > ol', :count => 2)
       end
     end
     
@@ -647,7 +647,7 @@ describe 'Formtastic::FormBuilder#inputs' do
       end
     end
     it "should throw PolymorphicInputWithoutCollectionError on sub_posts" do
-      ::MongoPost.should_receive(:associations).at_least(3).times
+      expect(::MongoPost).to receive(:associations).at_least(3).times
       expect { generate_form }.to raise_error(Formtastic::PolymorphicInputWithoutCollectionError)
     end
   end

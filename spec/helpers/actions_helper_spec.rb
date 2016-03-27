@@ -21,19 +21,19 @@ describe 'Formtastic::FormBuilder#actions' do
       end
 
       it 'should render a fieldset inside the form, with a class of "actions"' do
-        output_buffer.should have_tag("form fieldset.actions")
+        expect(output_buffer).to have_tag("form fieldset.actions")
       end
 
       it 'should render an ol inside the fieldset' do
-        output_buffer.should have_tag("form fieldset.actions ol")
+        expect(output_buffer).to have_tag("form fieldset.actions ol")
       end
 
       it 'should render the contents of the block inside the ol' do
-        output_buffer.should have_tag("form fieldset.actions ol", /hello/)
+        expect(output_buffer).to have_tag("form fieldset.actions ol", /hello/)
       end
 
       it 'should not render a legend inside the fieldset' do
-        output_buffer.should_not have_tag("form fieldset.actions legend")
+        expect(output_buffer).not_to have_tag("form fieldset.actions legend")
       end
     end
 
@@ -47,7 +47,7 @@ describe 'Formtastic::FormBuilder#actions' do
         end)
       end
       it 'should render a fieldset inside the form' do
-        output_buffer.should have_tag("form fieldset.actions legend", /#{@legend_text}/)
+        expect(output_buffer).to have_tag("form fieldset.actions legend", /#{@legend_text}/)
       end
     end
     
@@ -62,8 +62,8 @@ describe 'Formtastic::FormBuilder#actions' do
         end)
       end
       it 'should pass the options into the fieldset tag as attributes' do
-        output_buffer.should have_tag("form fieldset##{@id_option}")
-        output_buffer.should have_tag("form fieldset.#{@class_option}")
+        expect(output_buffer).to have_tag("form fieldset##{@id_option}")
+        expect(output_buffer).to have_tag("form fieldset.#{@class_option}")
       end
     end
     
@@ -80,23 +80,23 @@ describe 'Formtastic::FormBuilder#actions' do
       end
   
       it 'should render a form' do
-        output_buffer.should have_tag('form')
+        expect(output_buffer).to have_tag('form')
       end
   
       it 'should render an actions fieldset inside the form' do
-        output_buffer.should have_tag('form fieldset.actions')
+        expect(output_buffer).to have_tag('form fieldset.actions')
       end
   
       it 'should not render a legend in the fieldset' do
-        output_buffer.should_not have_tag('form fieldset.actions legend')
+        expect(output_buffer).not_to have_tag('form fieldset.actions legend')
       end
   
       it 'should render an ol in the fieldset' do
-        output_buffer.should have_tag('form fieldset.actions ol')
+        expect(output_buffer).to have_tag('form fieldset.actions ol')
       end
   
       it 'should render a list item in the ol for each default action' do
-        output_buffer.should have_tag('form fieldset.actions ol li.action.input_action', :count => 1)
+        expect(output_buffer).to have_tag('form fieldset.actions ol li.action.input_action', :count => 1)
       end
   
     end
@@ -110,7 +110,7 @@ describe 'Formtastic::FormBuilder#actions' do
       end
     
       it 'should render a form with a fieldset containing a list item for each button arg' do
-        output_buffer.should have_tag('form > fieldset.actions > ol > li.action', :count => 3)
+        expect(output_buffer).to have_tag('form > fieldset.actions > ol > li.action', :count => 3)
       end
     
     end
@@ -124,15 +124,15 @@ describe 'Formtastic::FormBuilder#actions' do
      end
     
      it 'should render a form with a fieldset containing a list item for each button arg' do
-       output_buffer.should have_tag('form > fieldset.actions > ol > li.action', :count => 3)
+       expect(output_buffer).to have_tag('form > fieldset.actions > ol > li.action', :count => 3)
      end
     
      it 'should pass the options down to the fieldset' do
-       output_buffer.should have_tag('form > fieldset#my-id.actions')
+       expect(output_buffer).to have_tag('form > fieldset#my-id.actions')
      end
     
      it 'should use the special :name option as a text for the legend tag' do
-       output_buffer.should have_tag('form > fieldset#my-id.actions > legend', /Now click a button/)
+       expect(output_buffer).to have_tag('form > fieldset#my-id.actions > legend', /Now click a button/)
      end
     
     end

@@ -20,7 +20,7 @@ describe 'readonly option' do
             concat(semantic_form_for(@new_post) do |builder|
               concat(builder.input(:title, :as => type, input_html: {readonly: true}))
             end)
-              output_buffer.should have_tag((type == :text ? 'textarea' : 'input') + '[@readonly]')
+              expect(output_buffer).to have_tag((type == :text ? 'textarea' : 'input') + '[@readonly]')
           end
         end
 
@@ -30,7 +30,7 @@ describe 'readonly option' do
               concat(semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title, :as => type))
               end)
-                output_buffer.should_not have_tag((type == :text ? 'textarea' : 'input') + '[@readonly]')
+                expect(output_buffer).not_to have_tag((type == :text ? 'textarea' : 'input') + '[@readonly]')
             end
           end
           describe "when column is readonly attribute" do
@@ -40,7 +40,7 @@ describe 'readonly option' do
               concat(semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title, :as => type))
               end)
-                output_buffer.should have_tag((type == :text ? 'textarea' : 'input') + '[@readonly]')
+                expect(output_buffer).to have_tag((type == :text ? 'textarea' : 'input') + '[@readonly]')
             end
           end
         end

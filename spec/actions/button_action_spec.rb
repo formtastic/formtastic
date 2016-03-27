@@ -15,7 +15,7 @@ describe 'ButtonAction', 'when submitting' do
   end
   
   it 'should render a submit type of button' do
-    output_buffer.should have_tag('li.action.button_action button[@type="submit"]')
+    expect(output_buffer).to have_tag('li.action.button_action button[@type="submit"]')
   end
 
 end
@@ -34,11 +34,11 @@ describe 'ButtonAction', 'when resetting' do
   end
   
   it 'should render a reset type of button' do
-    output_buffer.should have_tag('li.action.button_action button[@type="reset"]', :text => "Reset Post")
+    expect(output_buffer).to have_tag('li.action.button_action button[@type="reset"]', :text => "Reset Post")
   end
 
   it 'should not render a value attribute' do
-    output_buffer.should_not have_tag('li.action.button_action button[@value]')
+    expect(output_buffer).not_to have_tag('li.action.button_action button[@value]')
   end
   
 end
@@ -53,11 +53,11 @@ describe 'InputAction', 'when cancelling' do
   end
   
   it 'should raise an error' do
-    lambda { 
+    expect { 
       concat(semantic_form_for(@new_post) do |builder|
         concat(builder.action(:cancel, :as => :button))
       end)
-    }.should raise_error(Formtastic::UnsupportedMethodForAction)
+    }.to raise_error(Formtastic::UnsupportedMethodForAction)
   end
   
 end

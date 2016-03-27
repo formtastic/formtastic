@@ -14,13 +14,13 @@ describe 'Rails field_error_proc' do
     current_field_error_proc = ::ActionView::Base.field_error_proc
 
     semantic_form_for(@new_post) do |builder|
-      ::ActionView::Base.field_error_proc.should_not == current_field_error_proc
+      expect(::ActionView::Base.field_error_proc).not_to eq(current_field_error_proc)
     end
 
-    ::ActionView::Base.field_error_proc.should == current_field_error_proc
+    expect(::ActionView::Base.field_error_proc).to eq(current_field_error_proc)
 
     form_for(@new_post) do |builder|
-      ::ActionView::Base.field_error_proc.should == current_field_error_proc
+      expect(::ActionView::Base.field_error_proc).to eq(current_field_error_proc)
     end
   end
 

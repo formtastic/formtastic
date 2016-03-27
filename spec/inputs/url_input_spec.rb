@@ -56,15 +56,15 @@ describe 'url input' do
     end
     
     it 'should index the id of the wrapper' do
-      output_buffer.should have_tag("li#post_author_attributes_3_name_input")
+      expect(output_buffer).to have_tag("li#post_author_attributes_3_name_input")
     end
     
     it 'should index the id of the select tag' do
-      output_buffer.should have_tag("input#post_author_attributes_3_name")
+      expect(output_buffer).to have_tag("input#post_author_attributes_3_name")
     end
     
     it 'should index the name of the select tag' do
-      output_buffer.should have_tag("input[@name='post[author_attributes][3][name]']")
+      expect(output_buffer).to have_tag("input[@name='post[author_attributes][3][name]']")
     end
     
   end
@@ -76,7 +76,7 @@ describe 'url input' do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:title, :as => :url, :required => true))
         end)
-        output_buffer.should have_tag("input[@required]")
+        expect(output_buffer).to have_tag("input[@required]")
       end
     end
   end

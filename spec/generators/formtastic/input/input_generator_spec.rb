@@ -17,7 +17,7 @@ describe Formtastic::InputGenerator do
 
   describe 'without file name' do
     it 'should raise Thor::RequiredArgumentMissingError' do
-      lambda { run_generator }.should raise_error(Thor::RequiredArgumentMissingError)
+      expect { run_generator }.to raise_error(Thor::RequiredArgumentMissingError)
     end
   end
 
@@ -26,11 +26,11 @@ describe Formtastic::InputGenerator do
 
     describe 'generate an input in its respective folder' do
       subject{ file('app/inputs/hat_size_input.rb')}
-      it { should exist}
-      it { should contain "class HatSizeInput"}
-      it { should contain "def to_html"}
-      it { should contain "include Formtastic::Inputs::Base"}
-      it { should_not contain "super"}
+      it { is_expected.to exist}
+      it { is_expected.to contain "class HatSizeInput"}
+      it { is_expected.to contain "def to_html"}
+      it { is_expected.to contain "include Formtastic::Inputs::Base"}
+      it { is_expected.not_to contain "super"}
     end
   end
 
@@ -39,8 +39,8 @@ describe Formtastic::InputGenerator do
 
     describe 'generate an input in its respective folder' do
       subject{ file('app/inputs/hat_size_input.rb')}
-      it { should exist}
-      it { should contain "class HatSizeInput"}
+      it { is_expected.to exist}
+      it { is_expected.to contain "class HatSizeInput"}
     end
   end
 
@@ -49,8 +49,8 @@ describe Formtastic::InputGenerator do
 
     describe 'generate an input in its respective folder' do
       subject{ file('app/inputs/hat_size_input.rb')}
-      it { should exist}
-      it { should contain "class HatSizeInput"}
+      it { is_expected.to exist}
+      it { is_expected.to contain "class HatSizeInput"}
     end
   end
 
@@ -59,8 +59,8 @@ describe Formtastic::InputGenerator do
 
     describe 'generate an input in its respective folder' do
       subject{ file('app/inputs/hat_size_input.rb')}
-      it { should exist}
-      it { should contain "class HatSizeInput"}
+      it { is_expected.to exist}
+      it { is_expected.to contain "class HatSizeInput"}
     end
   end
 
@@ -69,8 +69,8 @@ describe Formtastic::InputGenerator do
 
     describe 'generate an input in its respective folder' do
       subject{ file('app/inputs/hat_size_input.rb')}
-      it { should exist}
-      it { should contain "class HatSizeInput"}
+      it { is_expected.to exist}
+      it { is_expected.to contain "class HatSizeInput"}
     end
   end
 
@@ -79,12 +79,12 @@ describe Formtastic::InputGenerator do
 
     describe 'app/inputs/string_input.rb' do
       subject{ file('app/inputs/string_input.rb')}
-      it { should exist }
-      it { should contain "class StringInput < Formtastic::Inputs::StringInput" }
-      it { should contain "def to_html" }
-      it { should_not contain "include Formtastic::Inputs::Base" }
-      it { should contain "super" }
-      it { should_not contain "def input_html_options" }
+      it { is_expected.to exist }
+      it { is_expected.to contain "class StringInput < Formtastic::Inputs::StringInput" }
+      it { is_expected.to contain "def to_html" }
+      it { is_expected.not_to contain "include Formtastic::Inputs::Base" }
+      it { is_expected.to contain "super" }
+      it { is_expected.not_to contain "def input_html_options" }
     end
   end
 
@@ -93,10 +93,10 @@ describe Formtastic::InputGenerator do
 
     describe 'app/inputs/flexible_text_input.rb' do
       subject{ file('app/inputs/flexible_text_input.rb')}
-      it { should contain "class FlexibleTextInput < Formtastic::Inputs::StringInput" }
-      it { should contain "def input_html_options" }
-      it { should_not contain "include Formtastic::Inputs::Base" }
-      it { should_not contain "def to_html" }
+      it { is_expected.to contain "class FlexibleTextInput < Formtastic::Inputs::StringInput" }
+      it { is_expected.to contain "def input_html_options" }
+      it { is_expected.not_to contain "include Formtastic::Inputs::Base" }
+      it { is_expected.not_to contain "def to_html" }
     end
   end
 
@@ -105,9 +105,9 @@ describe Formtastic::InputGenerator do
 
     describe 'app/inputs/stuff/foo_input.rb' do
       subject{ file('app/inputs/stuff/foo_input.rb')}
-      it {should exist}
-      it { should contain "class Stuff::FooInput" }
-      it { should contain "include Formtastic::Inputs::Base" }
+      it {is_expected.to exist}
+      it { is_expected.to contain "class Stuff::FooInput" }
+      it { is_expected.to contain "include Formtastic::Inputs::Base" }
     end
   end
 
@@ -116,9 +116,9 @@ describe Formtastic::InputGenerator do
 
     describe 'app/inputs/stuff/foo_input.rb' do
       subject{ file('app/inputs/stuff/foo_input.rb')}
-      it {should exist}
-      it { should contain "class Stuff::FooInput" }
-      it { should contain "include Formtastic::Inputs::Base" }
+      it {is_expected.to exist}
+      it { is_expected.to contain "class Stuff::FooInput" }
+      it { is_expected.to contain "include Formtastic::Inputs::Base" }
     end
   end
 end

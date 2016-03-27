@@ -22,34 +22,34 @@ describe 'hidden input' do
   it_should_not_have_a_label
 
   it "should generate a input field" do
-    output_buffer.should have_tag("form li input#post_secret")
-    output_buffer.should have_tag("form li input#post_secret[@type=\"hidden\"]")
-    output_buffer.should have_tag("form li input#post_secret[@name=\"post[secret]\"]")
+    expect(output_buffer).to have_tag("form li input#post_secret")
+    expect(output_buffer).to have_tag("form li input#post_secret[@type=\"hidden\"]")
+    expect(output_buffer).to have_tag("form li input#post_secret[@name=\"post[secret]\"]")
   end
 
   it "should get value from the object" do
-    output_buffer.should have_tag("form li input#post_secret[@type=\"hidden\"][@value=\"1\"]")
+    expect(output_buffer).to have_tag("form li input#post_secret[@type=\"hidden\"][@value=\"1\"]")
   end
   
   it "should pass any explicitly specified value - using :input_html options" do
-    output_buffer.should have_tag("form li input#post_published[@type=\"hidden\"][@value=\"true\"]")
+    expect(output_buffer).to have_tag("form li input#post_published[@type=\"hidden\"][@value=\"true\"]")
   end
 
   it "should pass any option specified using :input_html" do
-    output_buffer.should have_tag("form li input#new_post_reviewer[@type=\"hidden\"][@class=\"new_post_reviewer\"]")
+    expect(output_buffer).to have_tag("form li input#new_post_reviewer[@type=\"hidden\"][@class=\"new_post_reviewer\"]")
   end
 
   it "should not render inline errors" do
     @errors = double('errors')
-    @errors.stub(:[]).with(errors_matcher(:secret)).and_return(["foo", "bah"])
-    @new_post.stub(:errors).and_return(@errors)
+    allow(@errors).to receive(:[]).with(errors_matcher(:secret)).and_return(["foo", "bah"])
+    allow(@new_post).to receive(:errors).and_return(@errors)
 
     concat(semantic_form_for(@new_post) do |builder|
       concat(builder.input(:secret, :as => :hidden))
     end)
 
-    output_buffer.should_not have_tag("form li p.inline-errors")
-    output_buffer.should_not have_tag("form li ul.errors")
+    expect(output_buffer).not_to have_tag("form li p.inline-errors")
+    expect(output_buffer).not_to have_tag("form li ul.errors")
   end
 
   it "should not render inline hints" do
@@ -57,8 +57,8 @@ describe 'hidden input' do
       concat(builder.input(:secret, :as => :hidden, :hint => "all your base are belong to use"))
     end)
 
-    output_buffer.should_not have_tag("form li p.inline-hints")
-    output_buffer.should_not have_tag("form li ul.hints")
+    expect(output_buffer).not_to have_tag("form li p.inline-hints")
+    expect(output_buffer).not_to have_tag("form li ul.hints")
   end
 
   describe "when namespace is provided" do
@@ -99,15 +99,15 @@ describe 'hidden input' do
     end
     
     it 'should index the id of the wrapper' do
-      output_buffer.should have_tag("li#post_author_attributes_3_name_input")
+      expect(output_buffer).to have_tag("li#post_author_attributes_3_name_input")
     end
     
     it 'should index the id of the select tag' do
-      output_buffer.should have_tag("input#post_author_attributes_3_name")
+      expect(output_buffer).to have_tag("input#post_author_attributes_3_name")
     end
     
     it 'should index the name of the select tag' do
-      output_buffer.should have_tag("input[@name='post[author_attributes][3][name]']")
+      expect(output_buffer).to have_tag("input[@name='post[author_attributes][3][name]']")
     end
     
   end
@@ -118,7 +118,7 @@ describe 'hidden input' do
       concat(semantic_form_for(@new_post) do |builder|
         concat(builder.input(:title, :as => :hidden, :required => true))
       end)
-      output_buffer.should_not have_tag("input[@required]")
+      expect(output_buffer).not_to have_tag("input[@required]")
     end
   end
 
@@ -127,7 +127,7 @@ describe 'hidden input' do
       concat(semantic_form_for(@new_post) do |builder|
         concat(builder.input(:title, :as => :hidden, :input_html => {:autofocus => true}))
       end)
-      output_buffer.should_not have_tag("input[@autofocus]")
+      expect(output_buffer).not_to have_tag("input[@autofocus]")
     end
   end
 

@@ -6,11 +6,11 @@ describe 'with action class finder' do
   describe 'arguments and options' do
 
     it 'should require the first argument (the action method)' do
-      lambda {
+      expect {
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.action()) # no args passed in at all
         end)
-      }.should raise_error(ArgumentError)
+      }.to raise_error(ArgumentError)
     end
 
     describe ':as option' do
@@ -21,21 +21,21 @@ describe 'with action class finder' do
           concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
             concat(builder.action(:submit))
           end)
-          output_buffer.should have_tag('form li.action.input_action', :count => 1)
+          expect(output_buffer).to have_tag('form li.action.input_action', :count => 1)
         end
 
         it 'should default to a button for reset' do
           concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
             concat(builder.action(:reset))
           end)
-          output_buffer.should have_tag('form li.action.input_action', :count => 1)
+          expect(output_buffer).to have_tag('form li.action.input_action', :count => 1)
         end
 
         it 'should default to a link for cancel' do
           concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
             concat(builder.action(:cancel))
           end)
-          output_buffer.should have_tag('form li.action.link_action', :count => 1)
+          expect(output_buffer).to have_tag('form li.action.link_action', :count => 1)
         end
       end
 
@@ -46,8 +46,8 @@ describe 'with action class finder' do
             action_class = "#{action_style.to_s}_action".classify
             action_constant = "Formtastic::Actions::#{action_class}".constantize
 
-            action_constant.should_receive(:new).and_return(action_instance)
-            action_instance.should_receive(:to_html).and_return("some HTML")
+            expect(action_constant).to receive(:new).and_return(action_instance)
+            expect(action_instance).to receive(:to_html).and_return("some HTML")
 
             concat(builder.action(:submit, :as => action_style))
           end
@@ -202,26 +202,26 @@ describe 'with action class finder' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.action(:submit, :wrapper_html => {:id => :another_id}))
           end)
-          output_buffer.should have_tag("form li#another_id")
+          expect(output_buffer).to have_tag("form li#another_id")
         end
 
         it 'should append given classes to li default classes' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.action(:submit, :wrapper_html => {:class => :another_class}))
           end)
-          output_buffer.should have_tag("form li.action")
-          output_buffer.should have_tag("form li.input_action")
-          output_buffer.should have_tag("form li.another_class")
+          expect(output_buffer).to have_tag("form li.action")
+          expect(output_buffer).to have_tag("form li.input_action")
+          expect(output_buffer).to have_tag("form li.another_class")
         end
 
         it 'should allow classes to be an array' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.action(:submit, :wrapper_html => {:class => [ :my_class, :another_class ]}))
           end)
-          output_buffer.should have_tag("form li.action")
-          output_buffer.should have_tag("form li.input_action")
-          output_buffer.should have_tag("form li.my_class")
-          output_buffer.should have_tag("form li.another_class")
+          expect(output_buffer).to have_tag("form li.action")
+          expect(output_buffer).to have_tag("form li.input_action")
+          expect(output_buffer).to have_tag("form li.my_class")
+          expect(output_buffer).to have_tag("form li.another_class")
         end
       end
 
@@ -230,9 +230,9 @@ describe 'with action class finder' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.action(:submit))
           end)
-          output_buffer.should have_tag("form li#post_submit_action")
-          output_buffer.should have_tag("form li.action")
-          output_buffer.should have_tag("form li.input_action")
+          expect(output_buffer).to have_tag("form li#post_submit_action")
+          expect(output_buffer).to have_tag("form li.action")
+          expect(output_buffer).to have_tag("form li.input_action")
         end
       end
 
@@ -243,18 +243,18 @@ describe 'with action class finder' do
   describe 'instantiating an action class' do
     context 'when a class does not exist' do
       it "should raise an error" do
-        lambda {
+        expect {
           concat(semantic_form_for(@new_post) do |builder|
             builder.action(:submit, :as => :non_existant)
           end)
-        }.should raise_error(Formtastic::UnknownActionError)
+        }.to raise_error(Formtastic::UnknownActionError)
       end
     end
 
     context 'when a customized top-level class does not exist' do
       it 'should instantiate the Formtastic action' do
         action = double('action', :to_html => 'some HTML')
-        Formtastic::Actions::ButtonAction.should_receive(:new).and_return(action)
+        expect(Formtastic::Actions::ButtonAction).to receive(:new).and_return(action)
         concat(semantic_form_for(@new_post) do |builder|
           builder.action(:commit, :as => :button)
         end)
@@ -267,8 +267,8 @@ describe 'with action class finder' do
         end
 
         action = double('action', :to_html => 'some HTML')
-        Formtastic::Actions::ButtonAction.should_not_receive(:new)
-        ::ButtonAction.should_receive(:new).and_return(action)
+        expect(Formtastic::Actions::ButtonAction).not_to receive(:new)
+        expect(::ButtonAction).to receive(:new).and_return(action)
 
         concat(semantic_form_for(@new_post) do |builder|
           builder.action(:commit, :as => :button)
@@ -279,55 +279,55 @@ describe 'with action class finder' do
     describe 'support for :as on each action' do
 
       it "should raise an error when the action does not support the :as" do
-        lambda {
+        expect {
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.action(:submit, :as => :link))
           end)
-        }.should raise_error(Formtastic::UnsupportedMethodForAction)
+        }.to raise_error(Formtastic::UnsupportedMethodForAction)
 
-        lambda {
+        expect {
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.action(:cancel, :as => :input))
           end)
-        }.should raise_error(Formtastic::UnsupportedMethodForAction)
+        }.to raise_error(Formtastic::UnsupportedMethodForAction)
 
-        lambda {
+        expect {
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.action(:cancel, :as => :button))
           end)
-        }.should raise_error(Formtastic::UnsupportedMethodForAction)
+        }.to raise_error(Formtastic::UnsupportedMethodForAction)
       end
 
       it "should not raise an error when the action does not support the :as" do
-        lambda {
+        expect {
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.action(:cancel, :as => :link))
           end)
-        }.should_not raise_error
+        }.not_to raise_error
 
-        lambda {
+        expect {
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.action(:submit, :as => :input))
           end)
-        }.should_not raise_error
+        }.not_to raise_error
 
-        lambda {
+        expect {
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.action(:submit, :as => :button))
           end)
-        }.should_not raise_error
+        }.not_to raise_error
 
-        lambda {
+        expect {
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.action(:reset, :as => :input))
           end)
-        }.should_not raise_error
+        }.not_to raise_error
 
-        lambda {
+        expect {
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.action(:reset, :as => :button))
           end)
-        }.should_not raise_error
+        }.not_to raise_error
       end
 
     end

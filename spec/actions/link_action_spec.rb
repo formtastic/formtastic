@@ -18,7 +18,7 @@ describe 'LinkAction', 'when cancelling' do
     end
     
     it 'should render a submit type of input' do
-      output_buffer.should have_tag('li.action.link_action a[@href="javascript:history.back()"]')
+      expect(output_buffer).to have_tag('li.action.link_action a[@href="javascript:history.back()"]')
     end
     
   end
@@ -32,7 +32,7 @@ describe 'LinkAction', 'when cancelling' do
     end
     
     it 'should render a submit type of input' do
-      output_buffer.should have_tag('li.action.link_action a[@href="http://foo.bah/baz"]')
+      expect(output_buffer).to have_tag('li.action.link_action a[@href="http://foo.bah/baz"]')
     end
     
   end
@@ -46,7 +46,7 @@ describe 'LinkAction', 'when cancelling' do
     end
     
     it 'should render a submit type of input' do
-      output_buffer.should have_tag('li.action.link_action a[@href="/mock/path"]')
+      expect(output_buffer).to have_tag('li.action.link_action a[@href="/mock/path"]')
     end
     
   end
@@ -63,11 +63,11 @@ describe 'LinkAction', 'when submitting' do
   end
   
   it 'should raise an error' do
-    lambda { 
+    expect { 
       concat(semantic_form_for(@new_post) do |builder|
         concat(builder.action(:submit, :as => :link))
       end)
-    }.should raise_error(Formtastic::UnsupportedMethodForAction)
+    }.to raise_error(Formtastic::UnsupportedMethodForAction)
   end
   
 end
@@ -82,11 +82,11 @@ describe 'LinkAction', 'when submitting' do
   end
   
   it 'should raise an error' do
-    lambda { 
+    expect { 
       concat(semantic_form_for(@new_post) do |builder|
         concat(builder.action(:reset, :as => :link))
       end)
-    }.should raise_error(Formtastic::UnsupportedMethodForAction)
+    }.to raise_error(Formtastic::UnsupportedMethodForAction)
   end
   
 end

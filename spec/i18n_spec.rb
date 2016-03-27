@@ -6,17 +6,17 @@ describe 'Formtastic::I18n' do
   FORMTASTIC_KEYS = [:required, :yes, :no, :create, :update].freeze
 
   it "should be defined" do
-    lambda { Formtastic::I18n }.should_not raise_error
+    expect { Formtastic::I18n }.not_to raise_error
   end
 
   describe "default translations" do
     it "should be defined" do
-      lambda { Formtastic::I18n::DEFAULT_VALUES }.should_not raise_error
-      Formtastic::I18n::DEFAULT_VALUES.is_a?(::Hash).should == true
+      expect { Formtastic::I18n::DEFAULT_VALUES }.not_to raise_error
+      expect(Formtastic::I18n::DEFAULT_VALUES.is_a?(::Hash)).to eq(true)
     end
 
     it "should exists for the core I18n lookup keys" do
-      (Formtastic::I18n::DEFAULT_VALUES.keys & FORMTASTIC_KEYS).size.should == FORMTASTIC_KEYS.size
+      expect((Formtastic::I18n::DEFAULT_VALUES.keys & FORMTASTIC_KEYS).size).to eq(FORMTASTIC_KEYS.size)
     end
   end
 
@@ -42,23 +42,23 @@ describe 'Formtastic::I18n' do
 
     it "should translate core strings correctly" do
       ::I18n.backend.store_translations :en, {:formtastic => {:required => 'Default Required'}}
-      Formtastic::I18n.t(:required).should  == "Default Required"
-      Formtastic::I18n.t(:yes).should       == "Default Yes"
-      Formtastic::I18n.t(:no).should        == "Default No"
-      Formtastic::I18n.t(:create, :model => 'Post').should == "Default Create Post"
-      Formtastic::I18n.t(:update, :model => 'Post').should == "Default Update Post"
+      expect(Formtastic::I18n.t(:required)).to  eq("Default Required")
+      expect(Formtastic::I18n.t(:yes)).to       eq("Default Yes")
+      expect(Formtastic::I18n.t(:no)).to        eq("Default No")
+      expect(Formtastic::I18n.t(:create, :model => 'Post')).to eq("Default Create Post")
+      expect(Formtastic::I18n.t(:update, :model => 'Post')).to eq("Default Update Post")
     end
 
     it "should all belong to scope 'formtastic'" do
-      Formtastic::I18n.t(:duck, :scope => [:custom_scope]).should == 'Duck'
+      expect(Formtastic::I18n.t(:duck, :scope => [:custom_scope])).to eq('Duck')
     end
 
     it "should override default I18n lookup args if these are specified" do
-      Formtastic::I18n.t(:duck_pond, :scope => [:custom_scope], :ducks => 15).should == '15 ducks in a pond'
+      expect(Formtastic::I18n.t(:duck_pond, :scope => [:custom_scope], :ducks => 15)).to eq('15 ducks in a pond')
     end
 
     it "should be possible to override default values" do
-      Formtastic::I18n.t(:required, :default => 'Nothing found!').should == 'Nothing found!'
+      expect(Formtastic::I18n.t(:required, :default => 'Nothing found!')).to eq('Nothing found!')
     end
 
   end
@@ -71,7 +71,7 @@ describe 'Formtastic::I18n' do
 
     it "should use default strings" do
       (Formtastic::I18n::DEFAULT_VALUES.keys).each do |key|
-        Formtastic::I18n.t(key, :model => '%{model}').should == Formtastic::I18n::DEFAULT_VALUES[key]
+        expect(Formtastic::I18n.t(key, :model => '%{model}')).to eq(Formtastic::I18n::DEFAULT_VALUES[key])
       end
     end
 
@@ -98,8 +98,8 @@ describe 'Formtastic::I18n' do
           }
         }}
 
-      @new_post.stub(:title)
-      @new_post.stub(:column_for_attribute).with(:title).and_return(double('column', :type => :string, :limit => 255))
+      allow(@new_post).to receive(:title)
+      allow(@new_post).to receive(:column_for_attribute).with(:title).and_return(double('column', :type => :string, :limit => 255))
     end
 
     after do
@@ -108,7 +108,7 @@ describe 'Formtastic::I18n' do
 
     it "lookup scopes should be defined" do
       with_config :i18n_lookups_by_default, true do
-        lambda { Formtastic::I18n::SCOPES }.should_not raise_error
+        expect { Formtastic::I18n::SCOPES }.not_to raise_error
       end
     end
 
@@ -117,7 +117,7 @@ describe 'Formtastic::I18n' do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:title))
         end)
-        output_buffer.should have_tag("form label", /Hello post!/)
+        expect(output_buffer).to have_tag("form label", /Hello post!/)
       end
     end
 
@@ -126,7 +126,7 @@ describe 'Formtastic::I18n' do
         concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
           concat(builder.input(:title))
         end)
-        output_buffer.should have_tag("form label", /Hello project!/)
+        expect(output_buffer).to have_tag("form label", /Hello project!/)
       end
     end
 
@@ -135,7 +135,7 @@ describe 'Formtastic::I18n' do
         concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
           concat(builder.input(:author))
         end)
-        output_buffer.should have_tag("form label", /Author/)
+        expect(output_buffer).to have_tag("form label", /Author/)
       end
     end
 
@@ -146,7 +146,7 @@ describe 'Formtastic::I18n' do
             concat(f.input(:name))
           end)
         end)
-        output_buffer.should have_tag("form label", /Hello author name!/)
+        expect(output_buffer).to have_tag("form label", /Hello author name!/)
       end
     end
 
@@ -157,7 +157,7 @@ describe 'Formtastic::I18n' do
             concat(f.input(:name))
           end
         end)
-        output_buffer.should have_tag("form label", /Hello author name!/)
+        expect(output_buffer).to have_tag("form label", /Hello author name!/)
       end
     end
 
@@ -168,7 +168,7 @@ describe 'Formtastic::I18n' do
             concat(f.input(:title))
           end
         end)
-        output_buffer.should have_tag("form label", /Hello project!/)
+        expect(output_buffer).to have_tag("form label", /Hello project!/)
       end
     end
     
@@ -179,7 +179,7 @@ describe 'Formtastic::I18n' do
             concat(f.input(:name))
           end
         end)
-        output_buffer.should have_tag("form label", /Hello author name!/)
+        expect(output_buffer).to have_tag("form label", /Hello author name!/)
       end
     end
 
@@ -188,7 +188,7 @@ describe 'Formtastic::I18n' do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:body))
         end)
-        output_buffer.should have_tag("form label", /Elaborate/)
+        expect(output_buffer).to have_tag("form label", /Elaborate/)
       end
     end
     
@@ -199,7 +199,7 @@ describe 'Formtastic::I18n' do
             concat(f.input(:login))
           end)
         end)
-        output_buffer.should have_tag("form label", /Hello login/)
+        expect(output_buffer).to have_tag("form label", /Hello login/)
       end
     end
 

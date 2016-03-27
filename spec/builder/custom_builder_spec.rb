@@ -22,32 +22,32 @@ describe 'Formtastic::Helpers::FormHelper.builder' do
   end
 
   it 'is the Formtastic::FormBuilder by default' do
-    Formtastic::Helpers::FormHelper.builder.should == Formtastic::FormBuilder
+    expect(Formtastic::Helpers::FormHelper.builder).to eq(Formtastic::FormBuilder)
   end
 
   it 'can be configured to use your own custom form builder' do
     # Set it to a custom builder class
     Formtastic::Helpers::FormHelper.builder = MyCustomFormBuilder
-    Formtastic::Helpers::FormHelper.builder.should == MyCustomFormBuilder
+    expect(Formtastic::Helpers::FormHelper.builder).to eq(MyCustomFormBuilder)
 
     # Reset it to the default
     Formtastic::Helpers::FormHelper.builder = Formtastic::FormBuilder
-    Formtastic::Helpers::FormHelper.builder.should == Formtastic::FormBuilder
+    expect(Formtastic::Helpers::FormHelper.builder).to eq(Formtastic::FormBuilder)
   end
 
   it 'should allow custom settings per form builder subclass' do
     with_config(:all_fields_required_by_default, true) do
       MyCustomFormBuilder.all_fields_required_by_default = false
 
-      MyCustomFormBuilder.all_fields_required_by_default.should be_falsey
-      Formtastic::FormBuilder.all_fields_required_by_default.should be_truthy
+      expect(MyCustomFormBuilder.all_fields_required_by_default).to be_falsey
+      expect(Formtastic::FormBuilder.all_fields_required_by_default).to be_truthy
     end
   end
 
   describe "when using a custom builder" do
 
     before do
-      @new_post.stub(:title)
+      allow(@new_post).to receive(:title)
       Formtastic::Helpers::FormHelper.builder = MyCustomFormBuilder
     end
 
@@ -59,7 +59,7 @@ describe 'Formtastic::Helpers::FormHelper.builder' do
 
       it "should yield an instance of the custom builder" do
         semantic_form_for(@new_post) do |builder|
-          builder.class.should.kind_of?(MyCustomFormBuilder)
+          expect(builder.class).to be(MyCustomFormBuilder)
         end
       end
       
@@ -72,9 +72,9 @@ describe 'Formtastic::Helpers::FormHelper.builder' do
 
       # See: https://github.com/justinfrench/formtastic/issues/657
       it "should not conflict with navigasmic" do
-        self.class.any_instance.stub(:builder).and_return('navigasmic')
+        allow_any_instance_of(self.class).to receive(:builder).and_return('navigasmic')
         
-        lambda { semantic_form_for(@new_post) { |f| } }.should_not raise_error
+        expect { semantic_form_for(@new_post) { |f| } }.not_to raise_error
       end
 
     end
@@ -82,13 +82,13 @@ describe 'Formtastic::Helpers::FormHelper.builder' do
     describe "fields_for" do
 
       it "should yield an instance of the parent form builder" do
-        @new_post.stub(:comment).and_return([@fred])
-        @new_post.stub(:comment_attributes=)
+        allow(@new_post).to receive(:comment).and_return([@fred])
+        allow(@new_post).to receive(:comment_attributes=)
         semantic_form_for(@new_post, :builder => MyCustomFormBuilder) do |builder|
-          builder.class.should.kind_of?(MyCustomFormBuilder)
+          expect(builder.class).to be(MyCustomFormBuilder)
           
           builder.fields_for(:comment) do |nested_builder|
-            nested_builder.class.should.kind_of?(MyCustomFormBuilder)
+            expect(nested_builder.class).to be(MyCustomFormBuilder)
           end
         end
       end
@@ -102,10 +102,10 @@ describe 'Formtastic::Helpers::FormHelper.builder' do
     describe "fields_for" do
 
       it "should yield an instance of the parent form builder" do
-        @new_post.stub(:author_attributes=)
+        allow(@new_post).to receive(:author_attributes=)
         semantic_form_for(@new_post, :builder => MyCustomFormBuilder) do |builder|
           builder.fields_for(:author) do |nested_builder|
-            nested_builder.class.should.kind_of?(MyCustomFormBuilder)
+            expect(nested_builder.class).to be(MyCustomFormBuilder)
           end
         end
       end

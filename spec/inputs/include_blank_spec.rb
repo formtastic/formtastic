@@ -9,8 +9,8 @@ describe "*select: options[:include_blank]" do
     @output_buffer = ''
     mock_everything
 
-    @new_post.stub(:author_id).and_return(nil)
-    @new_post.stub(:publish_at).and_return(nil)
+    allow(@new_post).to receive(:author_id).and_return(nil)
+    allow(@new_post).to receive(:publish_at).and_return(nil)
   end
 
   SELECT_INPUT_TYPES = {
@@ -29,7 +29,7 @@ describe "*select: options[:include_blank]" do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(attribute, :as => as))
           end)
-          output_buffer.should have_tag("form li select option[@value='']", "")
+          expect(output_buffer).to have_tag("form li select option[@value='']", "")
         end
 
         it 'blank value should not be included if the default value specified in config is false' do
@@ -37,7 +37,7 @@ describe "*select: options[:include_blank]" do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(attribute, :as => as))
           end)
-          output_buffer.should_not have_tag("form li select option[@value='']", "")
+          expect(output_buffer).not_to have_tag("form li select option[@value='']", "")
         end
 
         after do
@@ -50,7 +50,7 @@ describe "*select: options[:include_blank]" do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(attribute, :as => as, :include_blank => false))
           end)
-          output_buffer.should_not have_tag("form li select option[@value='']", "")
+          expect(output_buffer).not_to have_tag("form li select option[@value='']", "")
         end
       end
 
@@ -59,7 +59,7 @@ describe "*select: options[:include_blank]" do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(attribute, :as => as, :include_blank => true))
           end)
-          output_buffer.should have_tag("form li select option[@value='']", "")
+          expect(output_buffer).to have_tag("form li select option[@value='']", "")
         end
       end
 
@@ -69,7 +69,7 @@ describe "*select: options[:include_blank]" do
             concat(semantic_form_for(@new_post) do |builder|
               concat(builder.input(attribute, :as => as, :include_blank => 'string'))
             end)
-            output_buffer.should have_tag("form li select option[@value='']", "string")
+            expect(output_buffer).to have_tag("form li select option[@value='']", "string")
           end
         end
       end
