@@ -4,8 +4,11 @@ module Formtastic
 
     autoload :Base
     autoload :Buttonish
-    autoload :InputAction
-    autoload :LinkAction
-    autoload :ButtonAction
+
+    eager_autoload do
+      autoload :InputAction
+      autoload :LinkAction
+      autoload :ButtonAction
+    end
   end
 end

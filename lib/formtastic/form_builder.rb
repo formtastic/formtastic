@@ -21,7 +21,7 @@ module Formtastic
     configure :default_text_area_width
     configure :all_fields_required_by_default, true
     configure :include_blank_for_select_by_default, true
-    configure :required_string, proc { Formtastic::Util.html_safe(%{<abbr title="#{Formtastic::I18n.t(:required)}">*</abbr>}) }
+    configure :required_string, proc { %{<abbr title="#{Formtastic::I18n.t(:required)}">*</abbr>}.html_safe }
     configure :optional_string, ''
     configure :inline_errors, :sentence
     configure :label_str_method, :humanize
@@ -42,14 +42,10 @@ module Formtastic
     configure :perform_browser_validations, false
     # Check {Formtastic::InputClassFinder} to see how are inputs resolved.
     configure :input_namespaces, [::Object, ::Formtastic::Inputs]
-    # @todo enable this as default in 4.0 and remove it from configuration generator template
-    # Will be {Formtastic::InputClassFinder} by default in 4.0.
-    configure :input_class_finder #, Formtastic::InputClassFinder
+    configure :input_class_finder, Formtastic::InputClassFinder
     # Check {Formtastic::ActionClassFinder} to see how are inputs resolved.
     configure :action_namespaces, [::Object, ::Formtastic::Actions]
-    # @todo enable this as default in 4.0 and remove it from configuration generator template
-    # Will be {Formtastic::ActionClassFinder} by default in 4.0.
-    configure :action_class_finder#, Formtastic::ActionClassFinder
+    configure :action_class_finder, Formtastic::ActionClassFinder
 
     configure :skipped_columns, [:created_at, :updated_at, :created_on, :updated_on, :lock_version, :version]
     configure :priority_time_zones, []
@@ -68,8 +64,8 @@ module Formtastic
 
     # This is a wrapper around Rails' `ActionView::Helpers::FormBuilder#fields_for`, originally
     # provided to ensure that the `:builder` from `semantic_form_for` was passed down into
-    # the nested `fields_for`. Rails 3 no longer requires us to do this, so this method is
-    # provided purely for backwards compatibility and DSL consistency.
+    # the nested `fields_for`. Our supported versions of Rails no longer require us to do this,
+    # so this method is provided purely for backwards compatibility and DSL consistency.
     #
     # When constructing a `fields_for` form fragment *outside* of `semantic_form_for`, please use
     # `Formtastic::Helpers::FormHelper#semantic_fields_for`.
@@ -95,23 +91,11 @@ module Formtastic
     #
     # @todo is there a way to test the params structure of the Rails helper we wrap to ensure forward compatibility?
     def semantic_fields_for(record_or_name_or_array, *args, &block)
-      # Add a :parent_builder to the args so that nested translations can be possible in Rails 3
-      options = args.extract_options!
-      options[:parent_builder] ||= self
-
-      # Wrap the Rails helper
-      fields_for(record_or_name_or_array, *(args << options), &block)
+      fields_for(record_or_name_or_array, *args, &block)
     end
 
-    def initialize(object_name, object, template, options, block=nil)
-      # rails 3 supported passing in the block parameter to FormBuilder
-      # rails 4.0 deprecated the block parameter and does nothing with it
-      # rails 4.1 removes the parameter completely
-      if Util.rails3? || Util.rails4_0?
-        super
-      else # Must be rails4_1 or greater
-        super object_name, object, template, options
-      end
+    def initialize(object_name, object, template, options)
+      super
 
       if respond_to?('multipart=') && options.is_a?(Hash) && options[:html]
         self.multipart = options[:html][:multipart]

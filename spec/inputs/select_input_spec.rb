@@ -301,11 +301,7 @@ describe 'select input' do
     end
 
     it "should call author.(scoped|where) with association conditions" do
-      if Formtastic::Util.rails3?
-        ::Author.should_receive(:scoped).with(:conditions => {:active => true})
-      else
-        ::Author.should_receive(:where).with({:active => true})
-      end
+      ::Author.should_receive(:where).with({:active => true})
 
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:author, :as => :select))

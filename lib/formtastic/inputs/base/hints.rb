@@ -7,7 +7,7 @@ module Formtastic
           if hint?
             template.content_tag(
               :p, 
-              Formtastic::Util.html_safe(hint_text), 
+              hint_text.html_safe, 
               :class => builder.default_hint_class
             )
           end
