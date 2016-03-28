@@ -49,6 +49,22 @@ formtastic = -> do
     end
     RUBY
   end
+
+  script_template = File.expand_path(File.join('integration', 'rails%s.rb'), __dir__)
+
+  scripts = [
+      script_template % "-#{Rails::VERSION::MAJOR}-#{Rails::VERSION::MINOR}",
+      script_template % "-#{Rails::VERSION::MAJOR}",
+      script_template % ''
+  ]
+
+  scripts.each do |script|
+    if File.exist?(script)
+      apply script
+    else
+      say_status :apply, script, :yellow
+    end
+  end
 end
 
 if respond_to?(:after_bundle) # Rails >= 4.2
