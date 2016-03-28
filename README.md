@@ -1,6 +1,7 @@
 # Formtastic
 
 [![Build Status](https://travis-ci.org/justinfrench/formtastic.svg?branch=master)](https://travis-ci.org/justinfrench/formtastic)
+[![Coverage](https://coveralls.io/repos/justinfrench/formtastic/badge.svg?branch=master)](https://coveralls.io/r/justinfrench/formtastic?branch=master)
 [![Inline docs](http://inch-ci.org/github/justinfrench/formtastic.svg?branch=master)](http://inch-ci.org/github/justinfrench/formtastic)
 [![Code Climate](https://codeclimate.com/github/justinfrench/formtastic/badges/gpa.svg)](https://codeclimate.com/github/justinfrench/formtastic)
 [![Gem Version](https://badge.fury.io/rb/formtastic.svg)](https://badge.fury.io/rb/formtastic)
@@ -626,4 +627,3 @@ Formtastic was created by [Justin French](http://www.justinfrench.com) with cont
 The project is hosted on Github: [http://github.com/justinfrench/formtastic](http://github.com/justinfrench/formtastic), where your contributions, forkings, comments, issues and feedback are greatly welcomed.
 
 Copyright (c) 2007-2016 Justin French, released under the MIT license.
-

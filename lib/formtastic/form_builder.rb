@@ -101,8 +101,5 @@ module Formtastic
         self.multipart = options[:html][:multipart]
       end
     end
-
   end
-
 end
-
