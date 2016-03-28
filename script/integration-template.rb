@@ -18,21 +18,21 @@ in_root do
 end
 
 formtastic = -> do
-  generate(:scaffold, 'user name:string password_digest:string')
+  generate(:scaffold, 'user name:string password:digest')
   generate('formtastic:install')
   generate('formtastic:form', 'user name password:password --force')
 
   rake('db:migrate')
 
   in_root do
-    inject_into_file 'app/models/user.rb', "  has_secure_password\n", after: "< ActiveRecord::Base\n"
+    inject_into_class 'app/models/user.rb', 'User', "  has_secure_password\n"
     inject_into_file 'app/assets/stylesheets/application.css', " *= require formtastic\n", before: ' *= require_self'
-    inject_into_file 'test/controllers/users_controller_test.rb', <<-RUBY, before: '  test "should get edit" do'
+    inject_into_class 'test/controllers/users_controller_test.rb', 'UsersControllerTest', <<-RUBY
 
     test "should show form" do
       get :edit, id: @user
 
-      assert_select "form" do
+      assert_select 'form' do
         assert_select 'li.input.string' do
           assert_select 'input#user_name[type=text]'
         end
@@ -46,7 +46,7 @@ formtastic = -> do
           end
         end
       end
-    end
+    end # test "should show form"
     RUBY
   end
 

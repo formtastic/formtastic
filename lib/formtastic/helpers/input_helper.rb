@@ -299,6 +299,8 @@ module Formtastic
       end
 
       # Get a column object for a specified attribute method - if possible.
+      # @return [ActiveModel::Type::Value, #type] in case of rails 5 attributes api
+      # @return [ActiveRecord::ConnectionAdapters::Column] in case of rails 4
       def column_for(method) # @private
         case
           when @object.class.respond_to?(:type_for_attribute)
