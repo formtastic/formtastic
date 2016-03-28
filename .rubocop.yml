@@ -2,6 +2,7 @@ inherit_from: ./.rubocop_todo.yml
 
 AllCops:
   Exclude:
+    - 'gemfiles/vendor/**/*'
     - 'vendor/**/*'
     - 'spec/fixtures/**/*'
     - 'tmp/**/*'
