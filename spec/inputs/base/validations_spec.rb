@@ -5,7 +5,7 @@ class MyInput
   include Formtastic::Inputs::Base::Validations
 end
 
-describe MyInput do
+RSpec.describe MyInput do
   let(:builder) { double }
   let(:template) { double }
   let(:model_class) { double }
@@ -18,7 +18,7 @@ describe MyInput do
 
   describe '#required?' do
     context 'with a single validator' do
-      before :each do
+      before :example do
         allow(instance).to receive(:validations?).and_return(:true)
         allow(instance).to receive(:validations).and_return([validator])
       end
@@ -296,7 +296,7 @@ describe MyInput do
         let (:validator1) { double(options: {on: :create}, kind: :presence) }
         let (:validator2) { double(options: {}, kind: :presence) }
 
-        before :each do
+        before :example do
           allow(model).to receive(:new_record?).and_return(false)
           allow(instance).to receive(:validations?).and_return(:true)
           allow(instance).to receive(:validations).and_return([validator1, validator2])
@@ -311,7 +311,7 @@ describe MyInput do
         let (:validator1) { double(options: {on: :create}, kind: :presence) }
         let (:validator2) { double(options: {}, kind: :presence) }
 
-        before :each do
+        before :example do
           allow(model).to receive(:new_record?).and_return(false)
           allow(instance).to receive(:validations?).and_return(:true)
           allow(instance).to receive(:validations).and_return([validator1, validator2])
@@ -326,7 +326,7 @@ describe MyInput do
         let (:validator1) { double(options: {on: :create}, kind: :presence) }
         let (:validator2) { double(options: {allow_blank: true}, kind: :inclusion) }
 
-        before :each do
+        before :example do
           allow(model).to receive(:new_record?).and_return(false)
           allow(instance).to receive(:validations?).and_return(:true)
           allow(instance).to receive(:validations).and_return([validator1, validator2])

@@ -2,7 +2,7 @@
 require 'spec_helper'
 require 'formtastic/action_class_finder'
 
-describe Formtastic::ActionClassFinder do
+RSpec.describe Formtastic::ActionClassFinder do
   include FormtasticSpecHelper
 
   it_behaves_like 'Specialized Class Finder' do

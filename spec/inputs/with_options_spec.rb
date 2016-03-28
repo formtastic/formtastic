@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'string input' do
+RSpec.describe 'string input' do
 
   include FormtasticSpecHelper
 
@@ -21,23 +21,23 @@ describe 'string input' do
     end
 
     it "should have extra class on title" do
-      output_buffer.should have_tag("form li#post_title_input.extra")
+      expect(output_buffer).to have_tag("form li#post_title_input.extra")
     end
     it "should have title as string" do
-      output_buffer.should have_tag("form li#post_title_input.string")
+      expect(output_buffer).to have_tag("form li#post_title_input.string")
     end
     it "should not have title as radio" do
-      output_buffer.should_not have_tag("form li#post_title_input.radio")
+      expect(output_buffer).not_to have_tag("form li#post_title_input.radio")
     end
 
     it "should have extra class on author" do
-      output_buffer.should have_tag("form li#post_author_input.extra")
+      expect(output_buffer).to have_tag("form li#post_author_input.extra")
     end
     it "should not have author as string" do
-      output_buffer.should_not have_tag("form li#post_author_input.string")
+      expect(output_buffer).not_to have_tag("form li#post_author_input.string")
     end
     it "should have author as radio" do
-      output_buffer.should have_tag("form li#post_author_input.radio")
+      expect(output_buffer).to have_tag("form li#post_author_input.radio")
     end
   end
 end

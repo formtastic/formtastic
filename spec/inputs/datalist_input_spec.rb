@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe "datalist inputs" do
+RSpec.describe "datalist inputs" do
   include FormtasticSpecHelper
 
   before do

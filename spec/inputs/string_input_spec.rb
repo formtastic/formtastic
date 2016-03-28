@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'string input' do
+RSpec.describe 'string input' do
 
   include FormtasticSpecHelper
 
@@ -37,23 +37,23 @@ describe 'string input' do
       concat(semantic_form_for(@new_post) do |builder|
         concat(builder.input(method))
       end)
-      output_buffer.should have_tag("form li input[@maxlength='#{maxlength}']")
+      expect(output_buffer).to have_tag("form li input[@maxlength='#{maxlength}']")
     end
 
     describe 'and its a ActiveModel' do
       let(:default_maxlength) { 50 }
 
       before do
-        @new_post.stub(:class).and_return(::PostModel)
+        allow(@new_post).to receive(:class).and_return(::PostModel)
       end
 
       after do
-        @new_post.stub(:class).and_return(::Post)
+        allow(@new_post).to receive(:class).and_return(::Post)
       end
 
       describe 'and validates_length_of was called for the method' do
         def should_have_maxlength(maxlength, options)
-          @new_post.class.should_receive(:validators_on).with(:title).at_least(1).and_return([
+          expect(@new_post.class).to receive(:validators_on).with(:title).at_least(1).and_return([
             active_model_length_validator([:title], options[:options])
           ])
 
@@ -61,7 +61,7 @@ describe 'string input' do
             concat(builder.input(:title))
           end)
 
-          output_buffer.should have_tag("form li input##{@new_post.class.name.underscore}_title[@maxlength='#{maxlength}']")
+          expect(output_buffer).to have_tag("form li input##{@new_post.class.name.underscore}_title[@maxlength='#{maxlength}']")
         end
 
         it 'should have maxlength if the optional :if or :unless options are not supplied' do
@@ -81,12 +81,12 @@ describe 'string input' do
         end
         
         it 'should have default maxlength if the optional :if with a method name evaluates to false' do
-          @new_post.should_receive(:specify_maxlength).at_least(1).and_return(false)
+          expect(@new_post).to receive(:specify_maxlength).at_least(1).and_return(false)
           should_have_maxlength(default_maxlength, :options => { :maximum => 42, :if => :specify_maxlength })
         end
         
         it 'should have maxlength if the optional :if with a method name evaluates to true' do
-          @new_post.should_receive(:specify_maxlength).at_least(1).and_return(true)
+          expect(@new_post).to receive(:specify_maxlength).at_least(1).and_return(true)
           should_have_maxlength(42, :options => { :maximum => 42, :if => :specify_maxlength })
         end
 
@@ -99,12 +99,12 @@ describe 'string input' do
         end
         
         it 'should have default maxlength if the optional :unless with a method name evaluates to true' do
-          @new_post.should_receive(:specify_maxlength).at_least(1).and_return(true)
+          expect(@new_post).to receive(:specify_maxlength).at_least(1).and_return(true)
           should_have_maxlength(default_maxlength, :options => { :maximum => 42, :unless => :specify_maxlength })
         end
         
         it 'should have maxlength if the optional :unless with a method name evaluates to false' do
-          @new_post.should_receive(:specify_maxlength).at_least(1).and_return(false)
+          expect(@new_post).to receive(:specify_maxlength).at_least(1).and_return(false)
           should_have_maxlength(42, :options => { :maximum => 42, :unless => :specify_maxlength })
         end
       end
@@ -112,8 +112,8 @@ describe 'string input' do
       describe 'any conditional validation' do
         describe 'proc that calls an instance method' do
           it 'calls the method on the object' do
-            @new_post.should_receive(:something?)
-            @new_post.class.should_receive(:validators_on).with(:title).at_least(1).and_return([
+            expect(@new_post).to receive(:something?)
+            expect(@new_post.class).to receive(:validators_on).with(:title).at_least(1).and_return([
               active_model_presence_validator([:title], { :unless => -> { something? } })
             ])
             concat(semantic_form_for(@new_post) do |builder|
@@ -124,8 +124,8 @@ describe 'string input' do
 
         describe 'proc with arity that calls an instance method' do
           it 'calls the method on the object' do
-            @new_post.should_receive(:something?)
-            @new_post.class.should_receive(:validators_on).with(:title).at_least(1).and_return([
+            expect(@new_post).to receive(:something?)
+            expect(@new_post.class).to receive(:validators_on).with(:title).at_least(1).and_return([
               active_model_presence_validator([:title], { :unless => ->(user) { user.something? } })
             ])
             concat(semantic_form_for(@new_post) do |builder|
@@ -136,8 +136,8 @@ describe 'string input' do
 
         describe 'symbol method name' do
           it 'calls the method on the object if the method exists' do
-            @new_post.should_receive(:something?)
-            @new_post.class.should_receive(:validators_on).with(:title).at_least(1).and_return([
+            expect(@new_post).to receive(:something?)
+            expect(@new_post.class).to receive(:validators_on).with(:title).at_least(1).and_return([
               active_model_presence_validator([:title], { :unless => :something? })
             ])
             concat(semantic_form_for(@new_post) do |builder|
@@ -149,7 +149,7 @@ describe 'string input' do
         describe 'any other conditional' do
           it 'does not raise an error' do
             @conditional = double()
-            @new_post.class.should_receive(:validators_on).with(:title).at_least(1).and_return([
+            expect(@new_post.class).to receive(:validators_on).with(:title).at_least(1).and_return([
               active_model_presence_validator([:title], { :unless => @conditional })
             ])
             concat(semantic_form_for(@new_post) do |builder|
@@ -190,15 +190,15 @@ describe 'string input' do
     end
     
     it 'should index the id of the wrapper' do
-      output_buffer.should have_tag("li#post_author_attributes_3_name_input")
+      expect(output_buffer).to have_tag("li#post_author_attributes_3_name_input")
     end
     
     it 'should index the id of the select tag' do
-      output_buffer.should have_tag("input#post_author_attributes_3_name")
+      expect(output_buffer).to have_tag("input#post_author_attributes_3_name")
     end
     
     it 'should index the name of the select tag' do
-      output_buffer.should have_tag("input[@name='post[author_attributes][3][name]']")
+      expect(output_buffer).to have_tag("input[@name='post[author_attributes][3][name]']")
     end
     
   end
@@ -226,7 +226,7 @@ describe 'string input' do
     end
   
     it "should have no size attribute" do
-      output_buffer.should_not have_tag("input[@size]")
+      expect(output_buffer).not_to have_tag("input[@size]")
     end
   end
   
@@ -238,7 +238,7 @@ describe 'string input' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :as => :string, :required => true))
           end)
-          output_buffer.should have_tag("input[@required]")
+          expect(output_buffer).to have_tag("input[@required]")
         end
       end
     end
@@ -249,7 +249,7 @@ describe 'string input' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :as => :string, :required => true))
           end)
-          output_buffer.should_not have_tag("input[@required]")
+          expect(output_buffer).not_to have_tag("input[@required]")
         end
       end
     end

@@ -3,7 +3,7 @@ require 'spec_helper'
 # Generators are not automatically loaded by Rails
 require 'generators/formtastic/install/install_generator'
 
-describe Formtastic::InstallGenerator do
+RSpec.describe Formtastic::InstallGenerator do
   # Tell the generator where to put its output (what it thinks of as Rails.root)
   destination File.expand_path("../../../../../tmp", __FILE__)
 
@@ -14,14 +14,14 @@ describe Formtastic::InstallGenerator do
 
     describe 'config/initializers/formtastic.rb' do
       subject { file('config/initializers/formtastic.rb') }
-      it { should exist }
-      it { should contain "#" }
+      it { is_expected.to exist }
+      it { is_expected.to contain "#" }
     end
 
     describe 'lib/templates/erb/scaffold/_form.html.erb' do
       subject { file('lib/templates/erb/scaffold/_form.html.erb') }
-      it { should exist }
-      it { should contain "<%%= semantic_form_for @<%= singular_name %> do |f| %>" }
+      it { is_expected.to exist }
+      it { is_expected.to contain "<%%= semantic_form_for @<%= singular_name %> do |f| %>" }
     end
   end
 
@@ -30,8 +30,8 @@ describe Formtastic::InstallGenerator do
 
     describe 'lib/templates/erb/scaffold/_form.html.haml' do
       subject { file('lib/templates/haml/scaffold/_form.html.haml') }
-      it { should exist }
-      it { should contain "= semantic_form_for @<%= singular_name %> do |f|" }
+      it { is_expected.to exist }
+      it { is_expected.to contain "= semantic_form_for @<%= singular_name %> do |f|" }
     end
   end
 
@@ -40,8 +40,8 @@ describe Formtastic::InstallGenerator do
 
     describe 'lib/templates/erb/scaffold/_form.html.slim' do
       subject { file('lib/templates/slim/scaffold/_form.html.slim') }
-      it { should exist }
-      it { should contain "= semantic_form_for @<%= singular_name %> do |f|" }
+      it { is_expected.to exist }
+      it { is_expected.to contain "= semantic_form_for @<%= singular_name %> do |f|" }
     end
   end
 end

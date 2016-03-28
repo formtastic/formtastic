@@ -5,7 +5,7 @@ class MyInput
   include Formtastic::Inputs::Base::Collections
 end
 
-describe MyInput do
+RSpec.describe MyInput do
   let(:builder) { double }
   let(:template) { double }
   let(:model_class) { double }
@@ -32,13 +32,13 @@ describe MyInput do
     context "when an enum is defined for the method" do
       before do
         statuses = ActiveSupport::HashWithIndifferentAccess.new("active"=>0, "inactive"=>1)
-        model_class.stub(:statuses) { statuses }
-        model.stub(:defined_enums) { {"status" => statuses } }
+        allow(model_class).to receive(:statuses) { statuses }
+        allow(model).to receive(:defined_enums) { {"status" => statuses } }
       end
 
       context 'no translations available' do
         it 'returns an Array of EnumOption objects based on the enum options hash' do
-          instance.collection_from_enum.should eq [["Active", "active"],["Inactive", "inactive"]]
+          expect(instance.collection_from_enum).to eq [["Active", "active"],["Inactive", "inactive"]]
         end
       end
 
@@ -56,7 +56,7 @@ describe MyInput do
           }
         end
         it 'returns an Array of EnumOption objects based on the enum options hash' do
-          instance.collection_from_enum.should eq [["I am active", "active"],["I am inactive", "inactive"]]
+          expect(instance.collection_from_enum).to eq [["I am active", "active"],["I am inactive", "inactive"]]
         end
 
         after do
@@ -67,7 +67,7 @@ describe MyInput do
 
     context "when an enum is not defined" do
       it 'returns nil' do
-        instance.collection_from_enum.should eq nil
+        expect(instance.collection_from_enum).to eq nil
       end
     end
   end

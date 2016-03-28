@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'select input' do
+RSpec.describe 'select input' do
 
   include FormtasticSpecHelper
 
@@ -23,10 +23,10 @@ describe 'select input' do
 
       it 'should have a option for each key and/or value' do
         @array_with_values.each do |v|
-          output_buffer.should have_tag("form li select option[@value='#{v}']", /^#{v}$/)
+          expect(output_buffer).to have_tag("form li select option[@value='#{v}']", /^#{v}$/)
         end
         @array_with_keys_and_values.each do |v|
-          output_buffer.should have_tag("form li select option[@value='#{v.second}']", /^#{v.first}$/)
+          expect(output_buffer).to have_tag("form li select option[@value='#{v.second}']", /^#{v.first}$/)
         end
       end
     end
@@ -43,26 +43,26 @@ describe 'select input' do
 
       it 'should have a option for each key and/or value' do
         @set_with_values.each do |v|
-          output_buffer.should have_tag("form li select option[@value='#{v}']", /^#{v}$/)
+          expect(output_buffer).to have_tag("form li select option[@value='#{v}']", /^#{v}$/)
         end
         @set_with_keys_and_values.each do |v|
-          output_buffer.should have_tag("form li select option[@value='#{v.second}']", /^#{v.first}$/)
+          expect(output_buffer).to have_tag("form li select option[@value='#{v.second}']", /^#{v.first}$/)
         end
       end
     end
 
     describe "using a related model without reflection's options (Mongoid Document)" do
       before do
-        @new_post.stub(:mongoid_reviewer)
+        allow(@new_post).to receive(:mongoid_reviewer)
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:mongoid_reviewer, :as => :select))
         end)
       end
 
       it 'should draw select options' do
-        output_buffer.should have_tag('form li select')
-        output_buffer.should have_tag('form li select#post_reviewer_id')
-        output_buffer.should_not have_tag('form li select#post_mongoid_reviewer_id')
+        expect(output_buffer).to have_tag('form li select')
+        expect(output_buffer).to have_tag('form li select#post_reviewer_id')
+        expect(output_buffer).not_to have_tag('form li select#post_mongoid_reviewer_id')
       end
     end
 
@@ -76,7 +76,7 @@ describe 'select input' do
 
       it 'should have an option for each value' do
         @range_with_values.each do |v|
-          output_buffer.should have_tag("form li select option[@value='#{v}']", /^#{v}$/)
+          expect(output_buffer).to have_tag("form li select option[@value='#{v}']", /^#{v}$/)
         end
       end
     end
@@ -91,7 +91,7 @@ describe 'select input' do
 
       it 'should render select options using provided HTML string' do
         2.times do |v|
-          output_buffer.should have_tag("form li select option[@value='#{v}']", /^#{v}$/)
+          expect(output_buffer).to have_tag("form li select option[@value='#{v}']", /^#{v}$/)
         end
       end
     end
@@ -125,8 +125,8 @@ describe 'select input' do
       end
 
       it 'should render a select with at least options: true/false' do
-        output_buffer.should have_tag("form li select option[@value='true']", /^Yes$/)
-        output_buffer.should have_tag("form li select option[@value='false']", /^No$/)
+        expect(output_buffer).to have_tag("form li select option[@value='true']", /^Yes$/)
+        expect(output_buffer).to have_tag("form li select option[@value='false']", /^No$/)
       end
     end
 
@@ -145,18 +145,18 @@ describe 'select input' do
       end
 
       it 'should render a select with at least options: true/false' do
-        output_buffer.should have_tag("form li select option[@value='true']", /#{@boolean_select_labels[:yes]}/)
-        output_buffer.should have_tag("form li select option[@value='false']", /#{@boolean_select_labels[:no]}/)
+        expect(output_buffer).to have_tag("form li select option[@value='true']", /#{@boolean_select_labels[:yes]}/)
+        expect(output_buffer).to have_tag("form li select option[@value='false']", /#{@boolean_select_labels[:no]}/)
       end
     end
   end
 
   describe 'for a enum column' do
     before do
-      @new_post.stub(:status) { 'inactive' }
+      allow(@new_post).to receive(:status) { 'inactive' }
       statuses = ActiveSupport::HashWithIndifferentAccess.new("active"=>0, "inactive"=>1)
-      @new_post.class.stub(:statuses) { statuses }
-      @new_post.stub(:defined_enums) { { "status" => statuses } }
+      allow(@new_post.class).to receive(:statuses) { statuses }
+      allow(@new_post).to receive(:defined_enums) { { "status" => statuses } }
     end
 
     context 'single choice' do
@@ -174,40 +174,40 @@ describe 'select input' do
       it_should_apply_error_logic_for_input_type(:select)
 
       it 'should have a select inside the wrapper' do
-        output_buffer.should have_tag('form li select')
-        output_buffer.should have_tag('form li select#post_status')
+        expect(output_buffer).to have_tag('form li select')
+        expect(output_buffer).to have_tag('form li select#post_status')
       end
 
       it 'should have a valid name' do
-        output_buffer.should have_tag("form li select[@name='post[status]']")
-        output_buffer.should_not have_tag("form li select[@name='post[status][]']")
+        expect(output_buffer).to have_tag("form li select[@name='post[status]']")
+        expect(output_buffer).not_to have_tag("form li select[@name='post[status][]']")
       end
 
       it 'should not create a multi-select' do
-        output_buffer.should_not have_tag('form li select[@multiple]')
+        expect(output_buffer).not_to have_tag('form li select[@multiple]')
       end
       
       it 'should not add a hidden input' do
-        output_buffer.should_not have_tag('form li input[@type="hidden"]')
+        expect(output_buffer).not_to have_tag('form li input[@type="hidden"]')
       end
 
       it 'should create a select without size' do
-        output_buffer.should_not have_tag('form li select[@size]')
+        expect(output_buffer).not_to have_tag('form li select[@size]')
       end
 
       it 'should have a blank option' do
-        output_buffer.should have_tag("form li select option[@value='']")
+        expect(output_buffer).to have_tag("form li select option[@value='']")
       end
 
       it 'should have a select option for each defined enum status' do
-        output_buffer.should have_tag("form li select[@name='post[status]'] option", :count => @new_post.class.statuses.count + 1)
+        expect(output_buffer).to have_tag("form li select[@name='post[status]'] option", :count => @new_post.class.statuses.count + 1)
         @new_post.class.statuses.each do |label, value|
-          output_buffer.should have_tag("form li select option[@value='#{label}']", /#{label.humanize}/)
+          expect(output_buffer).to have_tag("form li select option[@value='#{label}']", /#{label.humanize}/)
         end
       end
 
       it 'should have one option with a "selected" attribute (TODO)' do
-        output_buffer.should have_tag("form li select[@name='post[status]'] option[@selected]", :count => 1)
+        expect(output_buffer).to have_tag("form li select[@name='post[status]'] option[@selected]", :count => 1)
       end
     end
 
@@ -240,68 +240,68 @@ describe 'select input' do
     it_should_use_the_collection_when_provided(:select, 'option')
 
     it 'should have a select inside the wrapper' do
-      output_buffer.should have_tag('form li select')
-      output_buffer.should have_tag('form li select#post_author_id')
-      output_buffer.should have_tag('form li select#post_reviewer_id')
+      expect(output_buffer).to have_tag('form li select')
+      expect(output_buffer).to have_tag('form li select#post_author_id')
+      expect(output_buffer).to have_tag('form li select#post_reviewer_id')
     end
 
     it 'should have a valid name' do
-      output_buffer.should have_tag("form li select[@name='post[author_id]']")
-      output_buffer.should_not have_tag("form li select[@name='post[author_id][]']")
-      output_buffer.should_not have_tag("form li select[@name='post[reviewer_id][]']")
+      expect(output_buffer).to have_tag("form li select[@name='post[author_id]']")
+      expect(output_buffer).not_to have_tag("form li select[@name='post[author_id][]']")
+      expect(output_buffer).not_to have_tag("form li select[@name='post[reviewer_id][]']")
     end
 
     it 'should not create a multi-select' do
-      output_buffer.should_not have_tag('form li select[@multiple]')
+      expect(output_buffer).not_to have_tag('form li select[@multiple]')
     end
     
     it 'should not add a hidden input' do
-      output_buffer.should_not have_tag('form li input[@type="hidden"]')
+      expect(output_buffer).not_to have_tag('form li input[@type="hidden"]')
     end
 
     it 'should create a select without size' do
-      output_buffer.should_not have_tag('form li select[@size]')
+      expect(output_buffer).not_to have_tag('form li select[@size]')
     end
 
     it 'should have a blank option' do
-      output_buffer.should have_tag("form li select option[@value='']")
+      expect(output_buffer).to have_tag("form li select option[@value='']")
     end
 
     it 'should have a select option for each Author' do
-      output_buffer.should have_tag("form li select[@name='post[author_id]'] option", :count => ::Author.all.size + 1)
+      expect(output_buffer).to have_tag("form li select[@name='post[author_id]'] option", :count => ::Author.all.size + 1)
       ::Author.all.each do |author|
-        output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
+        expect(output_buffer).to have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
       end
     end
 
     it 'should have one option with a "selected" attribute (bob)' do
-      output_buffer.should have_tag("form li select[@name='post[author_id]'] option[@selected]", :count => 1)
+      expect(output_buffer).to have_tag("form li select[@name='post[author_id]'] option[@selected]", :count => 1)
     end
 
     it 'should not singularize the association name' do
-      @new_post.stub(:author_status).and_return(@bob)
-      @new_post.stub(:author_status_id).and_return(@bob.id)
-      @new_post.stub(:column_for_attribute).and_return(double('column', :type => :integer, :limit => 255))
+      allow(@new_post).to receive(:author_status).and_return(@bob)
+      allow(@new_post).to receive(:author_status_id).and_return(@bob.id)
+      allow(@new_post).to receive(:column_for_attribute).and_return(double('column', :type => :integer, :limit => 255))
 
       concat(semantic_form_for(@new_post) do |builder|
         concat(builder.input(:author_status, :as => :select))
       end)
 
-      output_buffer.should have_tag('form li select#post_author_status_id')
+      expect(output_buffer).to have_tag('form li select#post_author_status_id')
     end
   end
 
   describe "for a belongs_to association with :conditions" do
     before do
-      ::Post.stub(:reflect_on_association).with(:author) do
+      allow(::Post).to receive(:reflect_on_association).with(:author) do
         mock = double('reflection', :options => {:conditions => {:active => true}}, :klass => ::Author, :macro => :belongs_to)
-        mock.stub(:[]).with(:class_name).and_return("Author")
+        allow(mock).to receive(:[]).with(:class_name).and_return("Author")
         mock
       end
     end
 
     it "should call author.(scoped|where) with association conditions" do
-      ::Author.should_receive(:where).with({:active => true})
+      expect(::Author).to receive(:where).with({:active => true})
 
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:author, :as => :select))
@@ -325,31 +325,31 @@ describe 'select input' do
     it_should_use_the_collection_when_provided(:select, 'option')
 
     it 'should have a select inside the wrapper' do
-      output_buffer.should have_tag('form li select')
-      output_buffer.should have_tag('form li select#author_post_ids')
+      expect(output_buffer).to have_tag('form li select')
+      expect(output_buffer).to have_tag('form li select#author_post_ids')
     end
 
     it 'should have a multi-select select' do
-      output_buffer.should have_tag('form li select[@multiple="multiple"]')
+      expect(output_buffer).to have_tag('form li select[@multiple="multiple"]')
     end
     
     it 'should append [] to the name attribute for multiple select' do
-      output_buffer.should have_tag('form li select[@multiple="multiple"][@name="author[post_ids][]"]')
+      expect(output_buffer).to have_tag('form li select[@multiple="multiple"][@name="author[post_ids][]"]')
     end
 
     it 'should have a hidden field' do
-      output_buffer.should have_tag('form li input[@type="hidden"][@name="author[post_ids][]"]', :count => 1)
+      expect(output_buffer).to have_tag('form li input[@type="hidden"][@name="author[post_ids][]"]', :count => 1)
     end
 
     it 'should have a select option for each Post' do
-      output_buffer.should have_tag('form li select option', :count => ::Post.all.size)
+      expect(output_buffer).to have_tag('form li select option', :count => ::Post.all.size)
       ::Post.all.each do |post|
-        output_buffer.should have_tag("form li select option[@value='#{post.id}']", /#{post.to_label}/)
+        expect(output_buffer).to have_tag("form li select option[@value='#{post.id}']", /#{post.to_label}/)
       end
     end
 
     it 'should not have a blank option by default' do
-      output_buffer.should_not have_tag("form li select option[@value='']")
+      expect(output_buffer).not_to have_tag("form li select option[@value='']")
     end
 
     it 'should respect the :include_blank option for single selects' do
@@ -357,7 +357,7 @@ describe 'select input' do
         concat(builder.input(:posts, :as => :select, :multiple => false, :include_blank => true))
       end)
 
-      output_buffer.should have_tag("form li select option[@value='']")
+      expect(output_buffer).to have_tag("form li select option[@value='']")
     end
 
     it 'should respect the :include_blank option for multiple selects' do
@@ -365,11 +365,11 @@ describe 'select input' do
         concat(builder.input(:posts, :as => :select, :multiple => true, :include_blank => true))
       end)
 
-      output_buffer.should have_tag("form li select option[@value='']")
+      expect(output_buffer).to have_tag("form li select option[@value='']")
     end
 
     it 'should have one option with a "selected" attribute' do
-      output_buffer.should have_tag('form li select option[@selected]', :count => 1)
+      expect(output_buffer).to have_tag('form li select option[@selected]', :count => 1)
     end
   end
 
@@ -389,23 +389,23 @@ describe 'select input' do
     it_should_use_the_collection_when_provided(:select, 'option')
 
     it 'should have a select inside the wrapper' do
-      output_buffer.should have_tag('form li select')
-      output_buffer.should have_tag('form li select#post_author_ids')
+      expect(output_buffer).to have_tag('form li select')
+      expect(output_buffer).to have_tag('form li select#post_author_ids')
     end
 
     it 'should have a multi-select select' do
-      output_buffer.should have_tag('form li select[@multiple="multiple"]')
+      expect(output_buffer).to have_tag('form li select[@multiple="multiple"]')
     end
 
     it 'should have a select option for each Author' do
-      output_buffer.should have_tag('form li select option', :count => ::Author.all.size)
+      expect(output_buffer).to have_tag('form li select option', :count => ::Author.all.size)
       ::Author.all.each do |author|
-        output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
+        expect(output_buffer).to have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
       end
     end
 
     it 'should not have a blank option by default' do
-      output_buffer.should_not have_tag("form li select option[@value='']")
+      expect(output_buffer).not_to have_tag("form li select option[@value='']")
     end
 
     it 'should respect the :include_blank option for single selects' do
@@ -413,7 +413,7 @@ describe 'select input' do
         concat(builder.input(:authors, :as => :select, :multiple => false, :include_blank => true))
       end)
 
-      output_buffer.should have_tag("form li select option[@value='']")
+      expect(output_buffer).to have_tag("form li select option[@value='']")
     end
 
     it 'should respect the :include_blank option for multiple selects' do
@@ -421,51 +421,51 @@ describe 'select input' do
         concat(builder.input(:authors, :as => :select, :multiple => true, :include_blank => true))
       end)
 
-      output_buffer.should have_tag("form li select option[@value='']")
+      expect(output_buffer).to have_tag("form li select option[@value='']")
     end
 
     it 'should have one option with a "selected" attribute' do
-      output_buffer.should have_tag('form li select option[@selected]', :count => 1)
+      expect(output_buffer).to have_tag('form li select option[@selected]', :count => 1)
     end
   end
 
   describe 'when :prompt => "choose something" is set' do
     before do
-      @new_post.stub(:author_id).and_return(nil)
+      allow(@new_post).to receive(:author_id).and_return(nil)
       concat(semantic_form_for(@new_post) do |builder|
         concat(builder.input(:author, :as => :select, :prompt => "choose author"))
       end)
     end
 
     it 'should have a select with prompt' do
-      output_buffer.should have_tag("form li select option[@value='']", /choose author/, :count => 1)
+      expect(output_buffer).to have_tag("form li select option[@value='']", /choose author/, :count => 1)
     end
 
     it 'should not have a second blank select option' do
-      output_buffer.should have_tag("form li select option[@value='']", :count => 1)
+      expect(output_buffer).to have_tag("form li select option[@value='']", :count => 1)
     end
   end
 
   describe 'when no object is given' do
-    before(:each) do
+    before(:example) do
       concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
         concat(builder.input(:author, :as => :select, :collection => ::Author.all))
       end)
     end
 
     it 'should generate label' do
-      output_buffer.should have_tag('form li label', /Author/)
-      output_buffer.should have_tag("form li label[@for='project_author']")
+      expect(output_buffer).to have_tag('form li label', /Author/)
+      expect(output_buffer).to have_tag("form li label[@for='project_author']")
     end
 
     it 'should generate select inputs' do
-      output_buffer.should have_tag('form li select#project_author')
-      output_buffer.should have_tag('form li select option', :count => ::Author.all.size + 1)
+      expect(output_buffer).to have_tag('form li select#project_author')
+      expect(output_buffer).to have_tag('form li select option', :count => ::Author.all.size + 1)
     end
 
     it 'should generate an option to each item' do
       ::Author.all.each do |author|
-        output_buffer.should have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
+        expect(output_buffer).to have_tag("form li select option[@value='#{author.id}']", /#{author.to_label}/)
       end
     end
   end
@@ -476,7 +476,7 @@ describe 'select input' do
       concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
         concat(builder.input(:author_name, :as => :select, :collection => ::Author.all))
       end)
-      output_buffer.should have_tag("form li select[@name='project[author_name]']")
+      expect(output_buffer).to have_tag("form li select[@name='project[author_name]']")
     end
 
     describe 'and :multiple is set to true through :input_html' do
@@ -484,7 +484,7 @@ describe 'select input' do
         concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
           concat(builder.input(:author_name, :as => :select, :input_html => {:multiple => true} ))
         end)
-        output_buffer.should have_tag("form li select[@multiple]")
+        expect(output_buffer).to have_tag("form li select[@multiple]")
       end
     end
 
@@ -493,14 +493,14 @@ describe 'select input' do
         concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
           concat(builder.input(:author_name, :as => :select, :multiple => true, :collection => ["Fred", "Bob"]))
         end)
-        output_buffer.should have_tag("form li select[@multiple]")
+        expect(output_buffer).to have_tag("form li select[@multiple]")
       end
     end
 
   end
 
   describe 'when a grouped collection collection is given' do
-    before(:each) do
+    before(:example) do
       concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
         @grouped_opts = [['one',   ['pencil', 'crayon', 'pen']],
                          ['two',   ['eyes', 'hands', 'feet']],
@@ -511,12 +511,12 @@ describe 'select input' do
 
     it 'should generate an option to each item' do
       @grouped_opts.each do |opt_pair|
-        output_buffer.should have_tag("form li select optgroup[@label='#{opt_pair[0]}']")
+        expect(output_buffer).to have_tag("form li select optgroup[@label='#{opt_pair[0]}']")
         opt_pair[1].each do |v|
-          output_buffer.should have_tag("form li select optgroup[@label='#{opt_pair[0]}'] option[@value='#{v}']")
+          expect(output_buffer).to have_tag("form li select optgroup[@label='#{opt_pair[0]}'] option[@value='#{v}']")
         end
       end
-      output_buffer.should have_tag("form li select optgroup option[@selected]","hands")
+      expect(output_buffer).to have_tag("form li select optgroup option[@selected]","hands")
     end
   end
 
@@ -524,7 +524,7 @@ describe 'select input' do
     before do
       @output_buffer = ''
       @some_meta_descriptions = ["One", "Two", "Three"]
-      @new_post.stub(:meta_description).at_least(:once)
+      allow(@new_post).to receive(:meta_description).at_least(:once)
     end
 
     describe ":as is not set" do
@@ -538,7 +538,7 @@ describe 'select input' do
       end
 
       it "should render a select field" do
-        output_buffer.should have_tag("form li select", :count => 2)
+        expect(output_buffer).to have_tag("form li select", :count => 2)
       end
     end
 
@@ -554,7 +554,7 @@ describe 'select input' do
       end
 
       it "should render a text field" do
-        output_buffer.should have_tag("form li input[@type='text']", :count => 2)
+        expect(output_buffer).to have_tag("form li input[@type='text']", :count => 2)
       end
     end
   end
@@ -584,15 +584,15 @@ describe 'select input' do
     end
     
     it 'should index the id of the wrapper' do
-      output_buffer.should have_tag("li#post_author_attributes_3_name_input")
+      expect(output_buffer).to have_tag("li#post_author_attributes_3_name_input")
     end
     
     it 'should index the id of the select tag' do
-      output_buffer.should have_tag("select#post_author_attributes_3_name")
+      expect(output_buffer).to have_tag("select#post_author_attributes_3_name")
     end
     
     it 'should index the name of the select' do
-      output_buffer.should have_tag("select[@name='post[author_attributes][3][name]']")
+      expect(output_buffer).to have_tag("select[@name='post[author_attributes][3][name]']")
     end
     
   end
@@ -603,7 +603,7 @@ describe 'select input' do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:author, :as => :select, :required => true))
         end)
-        output_buffer.should have_tag("select[@required]")
+        expect(output_buffer).to have_tag("select[@required]")
       end
     end
   end
