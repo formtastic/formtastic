@@ -39,7 +39,4 @@ Gem::Specification.new do |s|
   s.add_development_dependency(%q<appraisal>, ["~> 1.0"])
   s.add_development_dependency(%q<rake>)
   s.add_development_dependency(%q<activemodel>, [">= 3.2.13"])
-  s.add_development_dependency(%q<simplecov>)
-  s.add_development_dependency(%q<rubocop>, [">= 0.37.2"])
-  s.add_development_dependency(%q<coveralls>)
 end

@@ -263,12 +263,11 @@ RSpec.describe 'with action class finder' do
 
     describe 'when a top-level (custom) action class exists' do
       it "should instantiate the top-level action instead of the Formtastic one" do
-        class ::ButtonAction < Formtastic::Actions::ButtonAction
-        end
+        class ButtonAction < Formtastic::Actions::ButtonAction; end
 
         action = double('action', :to_html => 'some HTML')
         expect(Formtastic::Actions::ButtonAction).not_to receive(:new)
-        expect(::ButtonAction).to receive(:new).and_return(action)
+        expect(ButtonAction).to receive(:new).and_return(action)
 
         concat(semantic_form_for(@new_post) do |builder|
           builder.action(:commit, :as => :button)

@@ -80,11 +80,9 @@ RSpec.describe 'with input class finder' do
           end)
           expect(output_buffer).to have_tag('form li.optional label', /#{@string}$/)
         end
-
       end
 
       describe 'when not provided' do
-
         describe 'and an object was not given' do
 
           it 'should use the default value' do
@@ -99,7 +97,6 @@ RSpec.describe 'with input class finder' do
 
             Formtastic::FormBuilder.all_fields_required_by_default = true
           end
-
         end
 
         describe 'and an object with :validators_on was given (ActiveModel, Active Resource)' do
@@ -909,7 +906,6 @@ RSpec.describe 'with input class finder' do
   end
 
   describe 'options re-use' do
-
     it 'should retain :as option when re-using the same options hash' do
       my_options = { :as => :string }
       output = ''
@@ -934,7 +930,6 @@ RSpec.describe 'with input class finder' do
     end
 
     context 'when a customized top-level class does not exist' do
-
       it 'should instantiate the Formtastic input' do
         input = double('input', :to_html => 'some HTML')
         expect(Formtastic::Inputs::StringInput).to receive(:new).and_return(input)
@@ -942,24 +937,20 @@ RSpec.describe 'with input class finder' do
           builder.input(:title, :as => :string)
         end)
       end
-
     end
 
     describe 'when a top-level input class exists' do
       it "should instantiate the top-level input instead of the Formtastic one" do
-        class ::StringInput < Formtastic::Inputs::StringInput
-        end
+        class StringInput < Formtastic::Inputs::StringInput; end
 
         input = double('input', :to_html => 'some HTML')
         expect(Formtastic::Inputs::StringInput).not_to receive(:new)
-        expect(::StringInput).to receive(:new).and_return(input)
+        expect(StringInput).to receive(:new).and_return(input)
 
         concat(semantic_form_for(@new_post) do |builder|
           builder.input(:title, :as => :string)
         end)
       end
     end
-
-
   end
 end
