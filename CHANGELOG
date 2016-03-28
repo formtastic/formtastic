@@ -1,3 +1,11 @@
+master
+
+  * Fixed missing constants in production (#911)
+  * Removed support for Rails 3 and 4.0 (#1108)
+  * Removed deprecated input/action finder methods (#1139)
+  * Changed boolean label padding to margin (#1202)
+
+
 3.1.2
 
   * Fixed that we specified 4.0.4 instead of 4.1 in the Rails version deprecation message

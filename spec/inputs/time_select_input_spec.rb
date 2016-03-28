@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'time select input' do
+RSpec.describe 'time select input' do
 
   include FormtasticSpecHelper
 
@@ -24,42 +24,42 @@ describe 'time select input' do
       end
 
       it 'should not have hidden inputs for day, month and year' do
-        output_buffer.should_not have_tag('input#post_publish_at_1i')
-        output_buffer.should_not have_tag('input#post_publish_at_2i')
-        output_buffer.should_not have_tag('input#post_publish_at_3i')
+        expect(output_buffer).not_to have_tag('input#post_publish_at_1i')
+        expect(output_buffer).not_to have_tag('input#post_publish_at_2i')
+        expect(output_buffer).not_to have_tag('input#post_publish_at_3i')
       end
 
       it 'should have an input for hour and minute' do
-        output_buffer.should have_tag('select#post_publish_at_4i')
-        output_buffer.should have_tag('select#post_publish_at_5i')
+        expect(output_buffer).to have_tag('select#post_publish_at_4i')
+        expect(output_buffer).to have_tag('select#post_publish_at_5i')
       end
 
     end
     
     describe "with :ignore_date => false" do
       before do
-        @new_post.stub(:publish_at).and_return(Time.parse('2010-11-07'))
+        allow(@new_post).to receive(:publish_at).and_return(Time.parse('2010-11-07'))
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:publish_at, :as => :time_select, :ignore_date => false))
         end)
       end
 
       it 'should have a hidden input for day, month and year' do
-        output_buffer.should have_tag('input#post_publish_at_1i')
-        output_buffer.should have_tag('input#post_publish_at_2i')
-        output_buffer.should have_tag('input#post_publish_at_3i')
-        output_buffer.should have_tag('input#post_publish_at_1i[@value="2010"]')
-        output_buffer.should have_tag('input#post_publish_at_2i[@value="11"]')
-        output_buffer.should have_tag('input#post_publish_at_3i[@value="7"]')
+        expect(output_buffer).to have_tag('input#post_publish_at_1i')
+        expect(output_buffer).to have_tag('input#post_publish_at_2i')
+        expect(output_buffer).to have_tag('input#post_publish_at_3i')
+        expect(output_buffer).to have_tag('input#post_publish_at_1i[@value="2010"]')
+        expect(output_buffer).to have_tag('input#post_publish_at_2i[@value="11"]')
+        expect(output_buffer).to have_tag('input#post_publish_at_3i[@value="7"]')
       end
 
       it 'should have an select for hour and minute' do
-        output_buffer.should have_tag('select#post_publish_at_4i')
-        output_buffer.should have_tag('select#post_publish_at_5i')
+        expect(output_buffer).to have_tag('select#post_publish_at_4i')
+        expect(output_buffer).to have_tag('select#post_publish_at_5i')
       end
 
       it 'should associate the legend label with the hour select' do
-        output_buffer.should have_tag('form li.time_select fieldset legend.label label[@for="post_publish_at_4i"]')
+        expect(output_buffer).to have_tag('form li.time_select fieldset legend.label label[@for="post_publish_at_4i"]')
       end
 
     end
@@ -80,26 +80,26 @@ describe 'time select input' do
       it_should_apply_error_logic_for_input_type(:time_select)
 
       it 'should have a legend and label with the label text inside the fieldset' do
-        output_buffer.should have_tag('form li.time_select fieldset legend.label label', /Publish at/)
+        expect(output_buffer).to have_tag('form li.time_select fieldset legend.label label', /Publish at/)
       end
 
       it 'should associate the legend label with the first select' do
-        output_buffer.should have_tag('form li.time_select fieldset legend.label label[@for="post_publish_at_4i"]')
+        expect(output_buffer).to have_tag('form li.time_select fieldset legend.label label[@for="post_publish_at_4i"]')
       end
 
       it 'should have an ordered list of two items inside the fieldset' do
-        output_buffer.should have_tag('form li.time_select fieldset ol.fragments-group')
-        output_buffer.should have_tag('form li.time_select fieldset ol li.fragment', :count => 2)
+        expect(output_buffer).to have_tag('form li.time_select fieldset ol.fragments-group')
+        expect(output_buffer).to have_tag('form li.time_select fieldset ol li.fragment', :count => 2)
       end
 
       it 'should have five labels for hour and minute' do
-        output_buffer.should have_tag('form li.time_select fieldset ol li label', :count => 2)
-        output_buffer.should have_tag('form li.time_select fieldset ol li label', /hour/i)
-        output_buffer.should have_tag('form li.time_select fieldset ol li label', /minute/i)
+        expect(output_buffer).to have_tag('form li.time_select fieldset ol li label', :count => 2)
+        expect(output_buffer).to have_tag('form li.time_select fieldset ol li label', /hour/i)
+        expect(output_buffer).to have_tag('form li.time_select fieldset ol li label', /minute/i)
       end
 
       it 'should have two selects for hour and minute' do
-        output_buffer.should have_tag('form li.time_select fieldset ol li', :count => 2)
+        expect(output_buffer).to have_tag('form li.time_select fieldset ol li', :count => 2)
       end
     end
 
@@ -111,20 +111,20 @@ describe 'time select input' do
       end
 
       it 'should have five labels for hour and minute' do
-        output_buffer.should have_tag('form li.time_select fieldset ol li label', :count => 3)
-        output_buffer.should have_tag('form li.time_select fieldset ol li label', /hour/i)
-        output_buffer.should have_tag('form li.time_select fieldset ol li label', /minute/i)
-        output_buffer.should have_tag('form li.time_select fieldset ol li label', /second/i)
+        expect(output_buffer).to have_tag('form li.time_select fieldset ol li label', :count => 3)
+        expect(output_buffer).to have_tag('form li.time_select fieldset ol li label', /hour/i)
+        expect(output_buffer).to have_tag('form li.time_select fieldset ol li label', /minute/i)
+        expect(output_buffer).to have_tag('form li.time_select fieldset ol li label', /second/i)
       end
 
       it 'should have three selects for hour, minute and seconds' do
-        output_buffer.should have_tag('form li.time_select fieldset ol li', :count => 3)
+        expect(output_buffer).to have_tag('form li.time_select fieldset ol li', :count => 3)
       end
 
       it 'should generate a sanitized label and matching ids for attribute' do
         4.upto(6) do |i|
-          output_buffer.should have_tag("form li fieldset ol li label[@for='post_publish_at_#{i}i']")
-          output_buffer.should have_tag("form li fieldset ol li #post_publish_at_#{i}i")
+          expect(output_buffer).to have_tag("form li fieldset ol li label[@for='post_publish_at_#{i}i']")
+          expect(output_buffer).to have_tag("form li fieldset ol li #post_publish_at_#{i}i")
         end
       end
     end
@@ -138,9 +138,9 @@ describe 'time select input' do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:created_at, :as => :time_select, :include_seconds => true, :labels => { field => "another #{field} label" }))
         end)
-        output_buffer.should have_tag('form li.time_select fieldset ol li label', :count => fields.length)
+        expect(output_buffer).to have_tag('form li.time_select fieldset ol li label', :count => fields.length)
         fields.each do |f|
-          output_buffer.should have_tag('form li.time_select fieldset ol li label', f == field ? /another #{f} label/i : /#{f}/i)
+          expect(output_buffer).to have_tag('form li.time_select fieldset ol li label', f == field ? /another #{f} label/i : /#{f}/i)
         end
       end
 
@@ -149,9 +149,9 @@ describe 'time select input' do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:created_at, :as => :time_select, :include_seconds => true, :labels => { field => "" }))
         end)
-        output_buffer.should have_tag('form li.time_select fieldset ol li label', :count => fields.length-1)
+        expect(output_buffer).to have_tag('form li.time_select fieldset ol li label', :count => fields.length-1)
         fields.each do |f|
-          output_buffer.should have_tag('form li.time_select fieldset ol li label', /#{f}/i) unless field == f
+          expect(output_buffer).to have_tag('form li.time_select fieldset ol li label', /#{f}/i) unless field == f
         end
       end
       
@@ -160,9 +160,9 @@ describe 'time select input' do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:created_at, :as => :time_select, :include_seconds => true, :labels => { field => false }))
         end)
-        output_buffer.should have_tag('form li.time_select fieldset ol li label', :count => fields.length-1)
+        expect(output_buffer).to have_tag('form li.time_select fieldset ol li label', :count => fields.length-1)
         fields.each do |f|
-          output_buffer.should have_tag('form li.time_select fieldset ol li label', /#{f}/i) unless field == f
+          expect(output_buffer).to have_tag('form li.time_select fieldset ol li label', /#{f}/i) unless field == f
         end
       end
 
@@ -171,7 +171,7 @@ describe 'time select input' do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:created_at, :as => :time_select, :include_seconds => true, :labels => { field => false }))
         end)
-        output_buffer.should_not include("&gt;")
+        expect(output_buffer).not_to include("&gt;")
       end
       
     end
@@ -181,7 +181,7 @@ describe 'time select input' do
       concat(semantic_form_for(@new_post) do |builder|
         concat(builder.input(:created_at, :as => :time_select, :include_seconds => true, :labels => false))
       end)
-      output_buffer.should have_tag('form li.time_select fieldset ol li label', :count => 0)
+      expect(output_buffer).to have_tag('form li.time_select fieldset ol li label', :count => 0)
     end
   end
 
@@ -193,9 +193,9 @@ describe 'time select input' do
     end
 
     it 'should have a tag matching the namespace' do
-      output_buffer.should have_tag('#form2_post_publish_at_input')
-      output_buffer.should have_tag('#form2_post_publish_at_4i')
-      output_buffer.should have_tag('#form2_post_publish_at_5i')
+      expect(output_buffer).to have_tag('#form2_post_publish_at_input')
+      expect(output_buffer).to have_tag('#form2_post_publish_at_4i')
+      expect(output_buffer).to have_tag('#form2_post_publish_at_5i')
     end
   end
   
@@ -205,7 +205,7 @@ describe 'time select input' do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:title, :as => :time_select, :required => true))
         end)
-        output_buffer.should have_tag("select[@required]", :count => 2)
+        expect(output_buffer).to have_tag("select[@required]", :count => 2)
       end
     end
   end
@@ -221,23 +221,23 @@ describe 'time select input' do
     end
 
     it 'should index the id of the wrapper' do
-      output_buffer.should have_tag("li#post_author_attributes_3_created_at_input")
+      expect(output_buffer).to have_tag("li#post_author_attributes_3_created_at_input")
     end
 
     it 'should index the id of the select tag' do
-      output_buffer.should have_tag("input#post_author_attributes_3_created_at_1i")
-      output_buffer.should have_tag("input#post_author_attributes_3_created_at_2i")
-      output_buffer.should have_tag("input#post_author_attributes_3_created_at_3i")
-      output_buffer.should have_tag("select#post_author_attributes_3_created_at_4i")
-      output_buffer.should have_tag("select#post_author_attributes_3_created_at_5i")
+      expect(output_buffer).to have_tag("input#post_author_attributes_3_created_at_1i")
+      expect(output_buffer).to have_tag("input#post_author_attributes_3_created_at_2i")
+      expect(output_buffer).to have_tag("input#post_author_attributes_3_created_at_3i")
+      expect(output_buffer).to have_tag("select#post_author_attributes_3_created_at_4i")
+      expect(output_buffer).to have_tag("select#post_author_attributes_3_created_at_5i")
     end
 
     it 'should index the name of the select tag' do
-      output_buffer.should have_tag("input[@name='post[author_attributes][3][created_at(1i)]']")
-      output_buffer.should have_tag("input[@name='post[author_attributes][3][created_at(2i)]']")
-      output_buffer.should have_tag("input[@name='post[author_attributes][3][created_at(3i)]']")
-      output_buffer.should have_tag("select[@name='post[author_attributes][3][created_at(4i)]']")
-      output_buffer.should have_tag("select[@name='post[author_attributes][3][created_at(5i)]']")
+      expect(output_buffer).to have_tag("input[@name='post[author_attributes][3][created_at(1i)]']")
+      expect(output_buffer).to have_tag("input[@name='post[author_attributes][3][created_at(2i)]']")
+      expect(output_buffer).to have_tag("input[@name='post[author_attributes][3][created_at(3i)]']")
+      expect(output_buffer).to have_tag("select[@name='post[author_attributes][3][created_at(4i)]']")
+      expect(output_buffer).to have_tag("select[@name='post[author_attributes][3][created_at(5i)]']")
     end
 
   end

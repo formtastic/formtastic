@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'date select input' do
+RSpec.describe 'date select input' do
 
   include FormtasticSpecHelper
 
@@ -28,30 +28,30 @@ describe 'date select input' do
     it_should_apply_error_logic_for_input_type(:date_select)
 
     it 'should have a legend and label with the label text inside the fieldset' do
-      output_buffer.should have_tag('form li.date_select fieldset legend.label label', /Publish at/)
+      expect(output_buffer).to have_tag('form li.date_select fieldset legend.label label', /Publish at/)
     end
 
     it 'should associate the legend label with the first select' do
-      output_buffer.should have_tag('form li.date_select fieldset legend.label')
-      output_buffer.should have_tag('form li.date_select fieldset legend.label label')
-      output_buffer.should have_tag('form li.date_select fieldset legend.label label[@for]')
-      output_buffer.should have_tag('form li.date_select fieldset legend.label label[@for="post_publish_at_1i"]')
+      expect(output_buffer).to have_tag('form li.date_select fieldset legend.label')
+      expect(output_buffer).to have_tag('form li.date_select fieldset legend.label label')
+      expect(output_buffer).to have_tag('form li.date_select fieldset legend.label label[@for]')
+      expect(output_buffer).to have_tag('form li.date_select fieldset legend.label label[@for="post_publish_at_1i"]')
     end
 
     it 'should have an ordered list of three items inside the fieldset' do
-      output_buffer.should have_tag('form li.date_select fieldset ol.fragments-group')
-      output_buffer.should have_tag('form li.date_select fieldset ol li.fragment', :count => 3)
+      expect(output_buffer).to have_tag('form li.date_select fieldset ol.fragments-group')
+      expect(output_buffer).to have_tag('form li.date_select fieldset ol li.fragment', :count => 3)
     end
 
     it 'should have three labels for year, month and day' do
-      output_buffer.should have_tag('form li.date_select fieldset ol li label', :count => 3)
-      output_buffer.should have_tag('form li.date_select fieldset ol li label', /year/i)
-      output_buffer.should have_tag('form li.date_select fieldset ol li label', /month/i)
-      output_buffer.should have_tag('form li.date_select fieldset ol li label', /day/i)
+      expect(output_buffer).to have_tag('form li.date_select fieldset ol li label', :count => 3)
+      expect(output_buffer).to have_tag('form li.date_select fieldset ol li label', /year/i)
+      expect(output_buffer).to have_tag('form li.date_select fieldset ol li label', /month/i)
+      expect(output_buffer).to have_tag('form li.date_select fieldset ol li label', /day/i)
     end
 
     it 'should have three selects for year, month and day' do
-      output_buffer.should have_tag('form li.date_select fieldset ol li select', :count => 3)
+      expect(output_buffer).to have_tag('form li.date_select fieldset ol li select', :count => 3)
     end
   end
 
@@ -85,19 +85,19 @@ describe 'date select input' do
     end
     
     it 'should index the id of the wrapper' do
-      output_buffer.should have_tag("li#post_author_attributes_3_created_at_input")
+      expect(output_buffer).to have_tag("li#post_author_attributes_3_created_at_input")
     end
     
     it 'should index the id of the select tag' do
-      output_buffer.should have_tag("select#post_author_attributes_3_created_at_1i")
-      output_buffer.should have_tag("select#post_author_attributes_3_created_at_2i")
-      output_buffer.should have_tag("select#post_author_attributes_3_created_at_3i")
+      expect(output_buffer).to have_tag("select#post_author_attributes_3_created_at_1i")
+      expect(output_buffer).to have_tag("select#post_author_attributes_3_created_at_2i")
+      expect(output_buffer).to have_tag("select#post_author_attributes_3_created_at_3i")
     end
     
     it 'should index the name of the select tag' do
-      output_buffer.should have_tag("select[@name='post[author_attributes][3][created_at(1i)]']")
-      output_buffer.should have_tag("select[@name='post[author_attributes][3][created_at(2i)]']")
-      output_buffer.should have_tag("select[@name='post[author_attributes][3][created_at(3i)]']")
+      expect(output_buffer).to have_tag("select[@name='post[author_attributes][3][created_at(1i)]']")
+      expect(output_buffer).to have_tag("select[@name='post[author_attributes][3][created_at(2i)]']")
+      expect(output_buffer).to have_tag("select[@name='post[author_attributes][3][created_at(3i)]']")
     end
     
   end
@@ -110,9 +110,9 @@ describe 'date select input' do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:created_at, :as => :date_select, :labels => { field => "another #{field} label" }))
         end)
-        output_buffer.should have_tag('form li.date_select fieldset ol li label', :count => fields.length)
+        expect(output_buffer).to have_tag('form li.date_select fieldset ol li label', :count => fields.length)
         fields.each do |f|
-          output_buffer.should have_tag('form li.date_select fieldset ol li label', f == field ? /another #{f} label/i : /#{f}/i)
+          expect(output_buffer).to have_tag('form li.date_select fieldset ol li label', f == field ? /another #{f} label/i : /#{f}/i)
         end
       end
 
@@ -121,9 +121,9 @@ describe 'date select input' do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:created_at, :as => :date_select, :labels => { field => "" }))
         end)
-        output_buffer.should have_tag('form li.date_select fieldset ol li label', :count => fields.length-1)
+        expect(output_buffer).to have_tag('form li.date_select fieldset ol li label', :count => fields.length-1)
         fields.each do |f|
-          output_buffer.should have_tag('form li.date_select fieldset ol li label', /#{f}/i) unless field == f
+          expect(output_buffer).to have_tag('form li.date_select fieldset ol li label', /#{f}/i) unless field == f
         end
       end
       
@@ -132,9 +132,9 @@ describe 'date select input' do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:created_at, :as => :date_select, :labels => { field => false }))
         end)
-        output_buffer.should have_tag('form li.date_select fieldset ol li label', :count => fields.length-1)
+        expect(output_buffer).to have_tag('form li.date_select fieldset ol li label', :count => fields.length-1)
         fields.each do |f|
-          output_buffer.should have_tag('form li.date_select fieldset ol li label', /#{f}/i) unless field == f
+          expect(output_buffer).to have_tag('form li.date_select fieldset ol li label', /#{f}/i) unless field == f
         end
       end
       
@@ -143,7 +143,7 @@ describe 'date select input' do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:created_at, :as => :date_select, :include_seconds => true, :labels => { field => false }))
         end)
-        output_buffer.should_not include("&gt;")
+        expect(output_buffer).not_to include("&gt;")
       end
       
     end
@@ -153,7 +153,7 @@ describe 'date select input' do
       concat(semantic_form_for(@new_post) do |builder|
         concat(builder.input(:created_at, :as => :date_select, :labels => false))
       end)
-      output_buffer.should have_tag('form li.date_select fieldset ol li label', :count => 0)
+      expect(output_buffer).to have_tag('form li.date_select fieldset ol li label', :count => 0)
     end
   end
   
@@ -163,7 +163,7 @@ describe 'date select input' do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:title, :as => :date_select, :required => true))
         end)
-        output_buffer.should have_tag("select[@required]", :count => 3)
+        expect(output_buffer).to have_tag("select[@required]", :count => 3)
       end
     end
   end
@@ -177,11 +177,11 @@ describe 'date select input' do
     end
 
     it "should include a hidden input for day" do
-      output_buffer.should have_tag('input[@type="hidden"][@name="post[publish_at(3i)]"][@value="1"]')
+      expect(output_buffer).to have_tag('input[@type="hidden"][@name="post[publish_at(3i)]"][@value="1"]')
     end
 
     it "should not include a select for day" do
-      output_buffer.should_not have_tag('select[@name="post[publish_at(3i)]"]')
+      expect(output_buffer).not_to have_tag('select[@name="post[publish_at(3i)]"]')
     end
   end
 
@@ -194,11 +194,11 @@ describe 'date select input' do
     end
 
     it "should include a hidden input for month" do
-      output_buffer.should have_tag('input[@type="hidden"][@name="post[publish_at(2i)]"][@value="1"]')
+      expect(output_buffer).to have_tag('input[@type="hidden"][@name="post[publish_at(2i)]"][@value="1"]')
     end
 
     it "should not include a select for month" do
-      output_buffer.should_not have_tag('select[@name="post[publish_at(2i)]"]')
+      expect(output_buffer).not_to have_tag('select[@name="post[publish_at(2i)]"]')
     end
   end
 
@@ -211,11 +211,11 @@ describe 'date select input' do
     end
 
     it "should include a hidden input for month" do
-      output_buffer.should have_tag("input[@type=\"hidden\"][@name=\"post[publish_at(1i)]\"][@value=\"#{Time.now.year}\"]")
+      expect(output_buffer).to have_tag("input[@type=\"hidden\"][@name=\"post[publish_at(1i)]\"][@value=\"#{Time.now.year}\"]")
     end
 
     it "should not include a select for month" do
-      output_buffer.should_not have_tag('select[@name="post[publish_at(1i)]"]')
+      expect(output_buffer).not_to have_tag('select[@name="post[publish_at(1i)]"]')
     end
   end
 
@@ -228,7 +228,7 @@ describe 'date select input' do
     end
 
     it 'should associate the legend label with the new first select' do
-      output_buffer.should have_tag('form li.date_select fieldset legend.label label[@for="post_publish_at_3i"]')
+      expect(output_buffer).to have_tag('form li.date_select fieldset legend.label label[@for="post_publish_at_3i"]')
     end
   end
 

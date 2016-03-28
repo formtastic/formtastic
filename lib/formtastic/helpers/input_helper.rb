@@ -36,9 +36,6 @@ module Formtastic
     # @see Formtastic::Helpers::InputsHelper#inputs
     # @see Formtastic::Helpers::FormHelper#semantic_form_for
     module InputHelper
-      INPUT_CLASS_DEPRECATION = 'configure Formtastic::FormBuilder.input_class_finder instead (upgrade guide on wiki: http://bit.ly/1F9QtKc )'.freeze
-      private_constant(:INPUT_CLASS_DEPRECATION)
-
       include Formtastic::Helpers::Reflection
       include Formtastic::Helpers::Enum
       include Formtastic::Helpers::FileColumnDetection
@@ -237,7 +234,7 @@ module Formtastic
         options = options.dup # Allow options to be shared without being tainted by Formtastic
         options[:as] ||= default_input_type(method, options)
 
-        klass = input_class(options[:as])
+        klass = namespaced_input_class(options[:as])
 
         klass.new(self, template, @object, @object_name, method, options).to_html
       end
@@ -337,73 +334,6 @@ module Formtastic
       rescue Formtastic::InputClassFinder::NotFoundError
         raise Formtastic::UnknownInputError, "Unable to find input #{$!.message}"
       end
-
-      # @api private
-      # @deprecated Use {#namespaced_input_class} instead.
-      def input_class(as)
-        return namespaced_input_class(as) if input_class_finder
-
-        input_class_deprecation_warning(__method__)
-
-        @input_classes_cache ||= {}
-        @input_classes_cache[as] ||= begin
-          config = Rails.application.config
-          use_const_defined = config.respond_to?(:eager_load) ? config.eager_load : config.cache_classes
-          use_const_defined ? input_class_with_const_defined(as) : input_class_by_trying(as)
-        end
-      end
-
-      # @api private
-      # @deprecated Use {InputClassFinder#find} instead.
-      # prevent exceptions in production environment for better performance
-      def input_class_with_const_defined(as)
-        input_class_name = custom_input_class_name(as)
-
-        if ::Object.const_defined?(input_class_name)
-          input_class_name.constantize
-        elsif Formtastic::Inputs.const_defined?(input_class_name)
-          standard_input_class_name(as).constantize
-        else
-          raise Formtastic::UnknownInputError, "Unable to find input class #{input_class_name}"
-        end
-      end
-
-      # @api private
-      # @deprecated Use {InputClassFinder#find} instead.
-      # use auto-loading in development environment
-      def input_class_by_trying(as)
-        begin
-          custom_input_class_name(as).constantize
-        rescue NameError
-          standard_input_class_name(as).constantize
-        end
-      rescue NameError
-        raise Formtastic::UnknownInputError, "Unable to find input class for #{as}"
-      end
-
-      # @api private
-      # @deprecated Use {InputClassFinder#class_name} instead.
-      # :as => :string # => StringInput
-      def custom_input_class_name(as)
-        input_class_deprecation_warning(__method__)
-        "#{as.to_s.camelize}Input"
-      end
-
-      # @api private
-      # @deprecated Use {InputClassFinder#class_name} instead.
-      # :as => :string # => {Formtastic::Inputs::StringInput}
-      def standard_input_class_name(as)
-        input_class_deprecation_warning(__method__)
-        "Formtastic::Inputs::#{as.to_s.camelize}Input"
-      end
-
-      private
-
-      def input_class_deprecation_warning(method)
-        @input_class_deprecation_warned ||=
-            Formtastic.deprecation.deprecation_warning(method, INPUT_CLASS_DEPRECATION, caller(2))
-      end
-
     end
   end
 end

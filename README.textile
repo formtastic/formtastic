@@ -1,1 +1,0 @@
-This readme is deprecated, "here is the new one":README.md

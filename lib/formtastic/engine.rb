@@ -7,5 +7,7 @@ module Formtastic
         include Formtastic::Helpers::FormHelper
       end
     end
+
+    config.eager_load_namespaces << Formtastic
   end
 end

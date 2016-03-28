@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'file input' do
+RSpec.describe 'file input' do
 
   include FormtasticSpecHelper
 
@@ -27,7 +27,7 @@ describe 'file input' do
     concat(semantic_form_for(@new_post) do |builder|
       concat(builder.input(:title, :as => :file, :input_html => { :class => 'myclass' }))
     end)
-    output_buffer.should have_tag("form li input.myclass")
+    expect(output_buffer).to have_tag("form li input.myclass")
   end
 
   describe "when namespace is provided" do
@@ -60,15 +60,15 @@ describe 'file input' do
     end
     
     it 'should index the id of the wrapper' do
-      output_buffer.should have_tag("li#post_author_attributes_3_name_input")
+      expect(output_buffer).to have_tag("li#post_author_attributes_3_name_input")
     end
     
     it 'should index the id of the select tag' do
-      output_buffer.should have_tag("input#post_author_attributes_3_name")
+      expect(output_buffer).to have_tag("input#post_author_attributes_3_name")
     end
     
     it 'should index the name of the select tag' do
-      output_buffer.should have_tag("input[@name='post[author_attributes][3][name]']")
+      expect(output_buffer).to have_tag("input[@name='post[author_attributes][3][name]']")
     end
     
   end
@@ -80,7 +80,7 @@ describe 'file input' do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:title, :as => :file, :required => true))
         end)
-        output_buffer.should have_tag("input[@required]")
+        expect(output_buffer).to have_tag("input[@required]")
       end
     end
   end

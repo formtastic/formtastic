@@ -33,12 +33,15 @@ module Formtastic
           end
         end
 
+        # Work-around for empty contents block
+        contents ||= ""
+
         # Ruby 1.9: String#to_s behavior changed, need to make an explicit join.
         contents = contents.join if contents.respond_to?(:join)
 
         legend = field_set_legend(html_options)
         fieldset = template.content_tag(:fieldset,
-          Formtastic::Util.html_safe(legend) << template.content_tag(:ol, Formtastic::Util.html_safe(contents)),
+          legend.html_safe << template.content_tag(:ol, contents.html_safe),
           html_options.except(:builder, :parent, :name)
         )
 
@@ -47,8 +50,9 @@ module Formtastic
 
       def field_set_legend(html_options)
         legend  = (html_options[:name] || '').to_s
-        legend %= parent_child_index(html_options[:parent]) if html_options[:parent] && legend.include?('%i') # only applying if String includes '%i' avoids argument error when $DEBUG is true
-        legend  = template.content_tag(:legend, template.content_tag(:span, Formtastic::Util.html_safe(legend))) unless legend.blank?
+       	# only applying if String includes '%i' avoids argument error when $DEBUG is true
+        legend %= parent_child_index(html_options[:parent]) if html_options[:parent] && legend.include?('%i')
+        legend  = template.content_tag(:legend, template.content_tag(:span, legend.html_safe)) unless legend.blank?
         legend
       end
 

@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe 'string input' do
+RSpec.describe 'string input' do
 
   include FormtasticSpecHelper
 
@@ -27,7 +27,7 @@ describe 'string input' do
               concat(semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title, :as => type))
               end)
-              output_buffer.should have_tag((type == :text ? 'textarea' : 'input') + '[@placeholder="War and Peace"]')
+              expect(output_buffer).to have_tag((type == :text ? 'textarea' : 'input') + '[@placeholder="War and Peace"]')
             end
           end
         end
@@ -37,7 +37,7 @@ describe 'string input' do
             concat(semantic_form_for(@new_post) do |builder|
               concat(builder.input(:title, :as => type))
             end)
-            output_buffer.should_not have_tag((type == :text ? 'textarea' : 'input') + '[@placeholder]')
+            expect(output_buffer).not_to have_tag((type == :text ? 'textarea' : 'input') + '[@placeholder]')
           end
         end
         
@@ -48,7 +48,7 @@ describe 'string input' do
               concat(semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title, :as => type, :input_html => { :placeholder => "Foo" }))
               end)
-              output_buffer.should have_tag((type == :text ? 'textarea' : 'input') + '[@placeholder="Foo"]')
+              expect(output_buffer).to have_tag((type == :text ? 'textarea' : 'input') + '[@placeholder="Foo"]')
             end
           end
         end
@@ -58,7 +58,7 @@ describe 'string input' do
             concat(semantic_form_for(@new_post) do |builder|
               concat(builder.input(:title, :as => type, :input_html => { :placeholder => "Untitled" }))
             end)
-            output_buffer.should have_tag((type == :text ? 'textarea' : 'input') + '[@placeholder="Untitled"]')
+            expect(output_buffer).to have_tag((type == :text ? 'textarea' : 'input') + '[@placeholder="Untitled"]')
           end
         end
         
