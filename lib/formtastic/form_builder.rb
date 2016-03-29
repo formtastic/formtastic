@@ -47,6 +47,155 @@ module Formtastic
     configure :action_namespaces, [::Object, ::Formtastic::Actions]
     configure :action_class_finder, Formtastic::ActionClassFinder
 
+    class InputMapping
+
+      class Input
+        attr_reader :name
+
+        def initialize(name)
+          @name = name
+          @matchers = Hash.new { |h,k| h[k] = [] }
+        end
+
+        def match_column(name)
+          @matchers[:column] << name
+        end
+
+        def match_type(type)
+          @matchers[:type] << type
+        end
+
+        def match_form(matcher = nil, &block)
+          @matchers[:form] << (matcher || block)
+        end
+
+        def matches_type?(type)
+          match?(:type, type)
+        end
+
+        def matches_column?(name)
+          match?(:column, name)
+        end
+
+        def matches_form?(*args)
+          match?(:form, args)
+        end
+
+        protected
+
+        def match?(name, match)
+          matchers = @matchers[name]
+          matchers if matchers.none? || matchers.any? { |matcher| matcher === match }
+        end
+      end
+
+      def initialize(mappings = [])
+        @mappings = mappings
+      end
+
+      def add_input(name)
+        @mappings << input = Input.new(name)
+        input
+      end
+
+      def to_a
+        @mappings.to_a
+      end
+
+      def input_name
+        input = @mappings.first
+        input && input.name
+      end
+
+      def select_type(column)
+        type = column && column.type
+
+        InputMapping.new @mappings.select { |m| m.matches_type?(type) }
+      end
+
+      def select_form(form, method, options)
+        InputMapping.new @mappings.select { |m| m.matches_form?(form, method, options) }
+      end
+
+      def select_method(name)
+        return self unless name
+
+        InputMapping.new @mappings.select { |m| m.matches_column?(name) }
+      end
+
+      def find_form(form, method, options)
+        InputMapping.new @mappings.select { |m| (match = m.matches_form?(form, method, options)) && match.any? }
+      end
+    end
+
+    configure :input_mapping, input_mapping = InputMapping.new
+
+    select = input_mapping.add_input(:select)
+    select.match_form { |form, method| form.object && form.reflection_for(method) }
+
+    file = input_mapping.add_input(:file)
+    file.match_form { |form, method, options| form.object && form.is_file?(method, options) }
+
+    password = input_mapping.add_input(:password)
+    password.match_column(/password/)
+    password.match_type(:string)
+    password.match_type(nil)
+
+    phone = input_mapping.add_input(:phone)
+    phone.match_column(/phone|fax/)
+    phone.match_type(:string)
+
+    search = input_mapping.add_input(:search)
+    search.match_column(/search/)
+    search.match_type(:string)
+
+    color = input_mapping.add_input(:color)
+    color.match_column(/color/)
+    color.match_type(:string)
+
+    country = input_mapping.add_input(:country)
+    country.match_column(/country/)
+    country.match_type(:string)
+
+    email = input_mapping.add_input(:email)
+    email.match_column(/email/)
+    email.match_type(:string)
+
+    url = input_mapping.add_input(:url)
+    url.match_column(/^url$|^website$|_url$/)
+    url.match_type(:string)
+
+    time_select = input_mapping.add_input(:time_select)
+    time_select.match_type(:time)
+
+    date_select = input_mapping.add_input(:date_select)
+    date_select.match_type(:date)
+
+    datetime_select = input_mapping.add_input(:datetime_select)
+    datetime_select.match_type(:datetime)
+    datetime_select.match_type(:timestamp)
+
+    select = input_mapping.add_input(:select)
+    select.match_type(:integer)
+    select.match_form { |form, method| form.reflection_for(method) }
+    select.match_form { |form, method| form.enum_for(method) }
+
+    text = input_mapping.add_input(:text)
+    text.match_type(:hstore)
+    text.match_type(:text)
+
+    boolean = input_mapping.add_input(:boolean)
+    boolean.match_type(:boolean)
+
+    number = input_mapping.add_input(:number)
+    number.match_type(:integer)
+    number.match_type(:float)
+    number.match_type(:decimal)
+
+    string = input_mapping.add_input(:string)
+    string.match_type(:string)
+    string.match_type(nil)
+
     configure :skipped_columns, [:created_at, :updated_at, :created_on, :updated_on, :lock_version, :version]
     configure :priority_time_zones, []
 

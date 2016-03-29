@@ -252,50 +252,17 @@ module Formtastic
       # If there is no column for the method (eg "virtual columns" with an attr_accessor), the
       # default is a :string, a similar behaviour to Rails' scaffolding.
       def default_input_type(method, options = {}) # @private
-        if @object
-          return :select  if reflection_for(method)
-
-          return :file    if is_file?(method, options)
+        if (input_name = input_mapping.find_form(self, method, options).input_name)
+          return input_name
         end
 
         column = column_for(method)
-        if column && column.type
-          # Special cases where the column type doesn't map to an input method.
-          case column.type
-          when :string
-            return :password  if method.to_s =~ /password/
-            return :country   if method.to_s =~ /country$/
-            return :time_zone if method.to_s =~ /time_zone/
-            return :email     if method.to_s =~ /email/
-            return :url       if method.to_s =~ /^url$|^website$|_url$/
-            return :phone     if method.to_s =~ /(phone|fax)/
-            return :search    if method.to_s =~ /^search$/
-            return :color     if method.to_s =~ /color/
-          when :integer
-            return :select    if reflection_for(method)
-            return :select    if enum_for(method)
-            return :number
-          when :float, :decimal
-            return :number
-          when :datetime, :timestamp
-            return :datetime_select
-          when :time
-            return :time_select
-          when :date
-            return :date_select
-          when :hstore
-            return :text
-          end
 
-          # Try look for hints in options hash. Quite common senario: Enum keys stored as string in the database.
-          return :select    if column.type == :string && options.key?(:collection)
-          # Try 3: Assume the input name will be the same as the column type (e.g. string_input).
-          return column.type
-        else
-          return :select    if options.key?(:collection)
-          return :password  if method.to_s =~ /password/
-          return :string
-        end
+        mapping = input_mapping
+            .select_type(column)
+            .select_method(method)
+            .select_form(self, method, options)
+            .input_name
       end
 
       # Get a column object for a specified attribute method - if possible.
