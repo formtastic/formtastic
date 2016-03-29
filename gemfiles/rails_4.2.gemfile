@@ -4,4 +4,10 @@ source "https://rubygems.org"
 
 gem "rails", "~>4.2.0.beta4"
 
+group :development, :test do
+  gem 'simplecov', require: false
+  gem 'rubocop', '~> 0.37.2', require: false unless RUBY_VERSION =~ /^1.8/
+  gem 'coveralls'
+end
+
 gemspec :path => "../"

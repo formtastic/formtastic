@@ -12,4 +12,10 @@ gem "rspec-support", :github => "rspec/rspec-support"
 gem "rspec-core", :github => "rspec/rspec-core"
 gem "rspec-expectations", :github => "rspec/rspec-expectations"
 
+group :development, :test do
+  gem 'simplecov', require: false
+  gem 'rubocop', '~> 0.37.2', require: false unless RUBY_VERSION =~ /^1.8/
+  gem 'coveralls'
+end
+
 gemspec :path => "../"
