@@ -283,6 +283,8 @@ module Formtastic
             return :time_select
           when :date
             return :date_select
+          when :hstore
+            return :text
           end
 
           # Try look for hints in options hash. Quite common senario: Enum keys stored as string in the database.
@@ -297,12 +299,19 @@ module Formtastic
       end
 
       # Get a column object for a specified attribute method - if possible.
+      # @return [ActiveModel::Type::Value, #type] in case of rails 5 attributes api
+      # @return [ActiveRecord::ConnectionAdapters::Column] in case of rails 4
       def column_for(method) # @private
-        if @object.respond_to?(:column_for_attribute)
-          # Remove deprecation wrapper & review after Rails 5.0 ships
-          ActiveSupport::Deprecation.silence do
-            @object.column_for_attribute(method)
-          end
+        case
+          when @object.class.respond_to?(:type_for_attribute)
+            @object.class.type_for_attribute(method.to_s)
+          when @object.class.respond_to?(:column_for_attribute)
+            @object.class.column_for_attribute(method)
+          when @object.respond_to?(:column_for_attribute)
+            # Remove deprecation wrapper & review after Rails 5.0 ships
+            ActiveSupport::Deprecation.silence do
+              @object.column_for_attribute(method)
+            end
         end
       end
 
