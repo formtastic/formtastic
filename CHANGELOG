@@ -5,6 +5,8 @@ master
   * Removed deprecated input/action finder methods (#1139)
   * Changed boolean label padding to margin (#1202)
   * Added mapping hstore column to text input (#1203)
+  * Added support for Rails 5 Attributes API (#1188)
+
 
 3.1.2
 
