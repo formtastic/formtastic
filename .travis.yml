@@ -5,7 +5,6 @@ cache:
     - vendor/bundle
 language: ruby
 rvm:
-  - 1.9.3
   - 2.0.0
   - 2.1.8
   - 2.2.4
@@ -24,11 +23,8 @@ script:
  - script/integration.sh
 matrix:
   exclude:
-    - rvm: 1.9.3
-      gemfile: gemfiles/rails_edge.gemfile
     - rvm: 2.0.0
       gemfile: gemfiles/rails_edge.gemfile
     - rvm: 2.1.8
       gemfile: gemfiles/rails_edge.gemfile
   allow_failures:
-    - rvm: 1.9.3
