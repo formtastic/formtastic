@@ -138,11 +138,11 @@ module Formtastic
       end
 
       def checked?(value)
-        selected_values.include?(value)
+        selected_values.include?(value) || selected_values.include?(value.to_s)
       end
 
       def disabled?(value)
-        disabled_values.include?(value)
+        disabled_values.include?(value) || disabled_values.include?(value.to_s)
       end
 
       def selected_values
