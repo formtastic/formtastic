@@ -57,7 +57,7 @@ RSpec.describe 'check_boxes input' do
     end
 
     it 'should render one hidden input for each choice outside the ol' do
-      output_buffer.to have_tag("form li fieldset > input[@type='hidden']", :count => 1)
+      expect(output_buffer).to have_tag("form li fieldset > input[@type='hidden']", :count => 1)
     end
 
     describe "each choice" do
@@ -91,11 +91,11 @@ RSpec.describe 'check_boxes input' do
       end
 
       it 'should have a hidden field with an empty array value for the collection to allow clearing of all checkboxes' do
-        output_buffer.to have_tag("form li fieldset > input[@type=hidden][@name='author[post_ids][]'][@value='']", :count => 1)
+        expect(output_buffer).to have_tag("form li fieldset > input[@type=hidden][@name='author[post_ids][]'][@value='']", :count => 1)
       end
 
       it 'the hidden field with an empty array value should be followed by the ol' do
-        output_buffer.to have_tag("form li fieldset > input[@type=hidden][@name='author[post_ids][]'][@value=''] + ol", :count => 1)
+        expect(output_buffer).to have_tag("form li fieldset > input[@type=hidden][@name='author[post_ids][]'][@value=''] + ol", :count => 1)
       end
 
       it 'should not have a hidden field with an empty string value for the collection' do
