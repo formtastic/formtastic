@@ -100,12 +100,12 @@ module Formtastic
 
       def hidden_field_for_all
         if hidden_fields?
+          ''
+        else
           options = {}
           options[:class] = [method.to_s.singularize, 'default'].join('_') if value_as_class?
           options[:id] = [object_name, method, 'none'].join('_')
           template.hidden_field_tag(input_name, '', options)
-        else
-          ''
         end
       end
 
