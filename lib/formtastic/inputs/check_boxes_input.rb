@@ -99,7 +99,7 @@ module Formtastic
       end
 
       def hidden_field_for_all
-        if hidden_fields?
+        if hidden_fields_for_every?
           ''
         else
           options = {}
@@ -109,7 +109,7 @@ module Formtastic
         end
       end
 
-      def hidden_fields?
+      def hidden_fields_for_every?
         options[:hidden_fields]
       end
 
@@ -170,7 +170,7 @@ module Formtastic
       protected
 
       def checkbox_input(choice)
-        if hidden_fields?
+        if hidden_fields_for_every?
           check_box_with_hidden_input(choice)
         else
           check_box_without_hidden_input(choice)
