@@ -336,7 +336,7 @@ The Formtastic input types:
 * `:string` - a text field. Default for column types: `:string`.
 * `:number` - a text field (just like string). Default for  column types: `:integer`, `:float`, and `:decimal`.
 * `:file` - a file field. Default for file-attachment attributes matching: [paperclip](http://github.com/thoughtbot/paperclip) or [attachment_fu](http://github.com/technoweenie/attachment_fu).
-* `:country@ - a select menu of country names. Default for column types: :string with name `"country"` - requires a *country_select* plugin to be installed.
+* `:country` - a select menu of country names. Default for column types: `:string` with name `"country"` - requires a *country_select* plugin to be installed.
 * `:email` - a text field (just like string). Default for columns with name matching `"email"`. New in HTML5. Works on some mobile browsers already.
 * `:url` - a text field (just like string). Default for columns with name matching `"url"`. New in HTML5. Works on some mobile browsers already.
 * `:phone` - a text field (just like string). Default for columns with name matching `"phone"` or `"fax"`. New in HTML5.
