@@ -110,12 +110,28 @@ module Formtastic
         #           archived: Custom Archived Label Here
         def collection_from_enum
           if collection_from_enum?
-            method_name = method.to_s
+            method_name       = method.to_s
+            object_class      = object.class
+            lookup_ancestors  = object_class.lookup_ancestors
+            attributes_scope  = "#{object_class.i18n_scope}.attributes"
+
+            # apply i18n discovery algorithm close enough to algorithm from
+            # ActiveModel::Translation.human_attribute_name
+            # activemodel-5.0.0.1:lib/active_model/translation.rb:43
 
             enum_options_hash = object.defined_enums[method_name]
-            enum_options_hash.map do |name, value|
-              key = "activerecord.attributes.#{object_name}.#{method_name.pluralize}.#{name}"
-              label = ::I18n.translate(key, :default => name.humanize)
+            enum_options_hash.map do |name, _value|
+              attribute = "#{method_name.pluralize}.#{name}"
+
+              defaults = lookup_ancestors.map do |klass|
+                :"#{attributes_scope}.#{klass.model_name.i18n_key}.#{attribute}"
+              end
+
+              defaults << :"attributes.#{attribute}"
+              defaults << name.humanize
+
+              options = { defaults: defaults }
+              label = ::I18n.translate(defaults.shift, options)
               [label, name]
             end
           end
