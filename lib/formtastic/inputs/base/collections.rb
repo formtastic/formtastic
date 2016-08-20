@@ -83,7 +83,7 @@ module Formtastic
 
             scope_conditions = conditions_from_reflection.empty? ? nil : {:conditions => conditions_from_reflection}
             where_conditions = (scope_conditions && scope_conditions[:conditions]) || {}
-            
+
             reflection.klass.where(where_conditions)
           end
         end
@@ -130,7 +130,7 @@ module Formtastic
               defaults << :"attributes.#{attribute}"
               defaults << name.humanize
 
-              options = { defaults: defaults }
+              options = { default: defaults }
               label = ::I18n.translate(defaults.shift, options)
               [label, name]
             end
