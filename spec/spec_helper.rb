@@ -45,10 +45,10 @@ module FormtasticSpecHelper
   include ActionView::Helpers::AssetTagHelper
   include ActiveSupport
   include ActionController::PolymorphicRoutes if defined?(ActionController::PolymorphicRoutes)
-  include ActionDispatch::Routing::PolymorphicRoutes 
+  include ActionDispatch::Routing::PolymorphicRoutes
   include AbstractController::UrlFor if defined?(AbstractController::UrlFor)
   include ActionView::RecordIdentifier if defined?(ActionView::RecordIdentifier)
-  
+
   include Formtastic::Helpers::FormHelper
 
   def default_input_type(column_type, column_name = :generic_column_name)
@@ -160,49 +160,49 @@ module FormtasticSpecHelper
       sym == :options ? false : super
     end
   end
-  
+
   # Model.all returns an association proxy, which quacks a lot like an array.
   # We use this in stubs or mocks where we need to return the later.
-  # 
+  #
   # TODO try delegate?
   # delegate :map, :size, :length, :first, :to_ary, :each, :include?, :to => :array
   class MockScope
     attr_reader :array
-    
+
     def initialize(the_array)
       @array = the_array
     end
-    
+
     def map(&block)
       array.map(&block)
     end
-    
+
     def where(*args)
       # array
       self
     end
-    
+
     def includes(*args)
       self
     end
-    
+
     def size
       array.size
     end
     alias_method :length, :size
-    
+
     def first
       array.first
     end
-    
+
     def to_ary
       array
     end
-    
+
     def each(&block)
       array.each(&block)
     end
-    
+
     def include?(*args)
       array.include?(*args)
     end
@@ -244,11 +244,11 @@ module FormtasticSpecHelper
     def author_path(*args); "/authors/1"; end
     def authors_path(*args); "/authors"; end
     def new_author_path(*args); "/authors/new"; end
-    
+
     def author_array_or_scope(the_array = [@fred, @bob])
       MockScope.new(the_array)
     end
-    
+
     @fred = ::Author.new
     allow(@fred).to receive(:class).and_return(::Author)
     allow(@fred).to receive(:to_label).and_return('Fred Smith')
@@ -339,6 +339,8 @@ module FormtasticSpecHelper
     allow(@fred).to receive(:posts).and_return(author_array_or_scope([@freds_post]))
     allow(@fred).to receive(:post_ids).and_return([@freds_post.id])
 
+    model_name = double(:model_name_mock, :singular => "post", :plural => "posts", :param_key => "post", :route_key => "posts", :i18n_key => "post", :singular_route_key => "post")
+
     allow(::Post).to receive(:scoped).and_return(::Post)
     allow(::Post).to receive(:human_attribute_name) { |column_name| column_name.humanize }
     allow(::Post).to receive(:human_name).and_return('Post')
@@ -374,6 +376,9 @@ module FormtasticSpecHelper
     allow(::Post).to receive(:to_key).and_return(nil)
     allow(::Post).to receive(:persisted?).and_return(nil)
     allow(::Post).to receive(:to_ary)
+    allow(::Post).to receive(:lookup_ancestors).and_return([::Post])
+    allow(::Post).to receive(:i18n_scope).and_return('activerecord')
+    allow(::Post).to receive(:model_name).and_return(model_name)
 
     allow(::MongoPost).to receive(:human_attribute_name) { |column_name| column_name.humanize }
     allow(::MongoPost).to receive(:human_name).and_return('MongoPost')
@@ -387,7 +392,9 @@ module FormtasticSpecHelper
     allow(::MongoPost).to receive(:to_key).and_return(nil)
     allow(::MongoPost).to receive(:persisted?).and_return(nil)
     allow(::MongoPost).to receive(:to_ary)
-    allow(::MongoPost).to receive(:model_name).and_return( double(:model_name_mock, :singular => "post", :plural => "posts", :param_key => "post", :route_key => "posts") )
+    allow(::MongoPost).to receive(:lookup_ancestors).and_return([::MongoPost])
+    allow(::MongoPost).to receive(:i18n_scope).and_return('mongoid')
+    allow(::MongoPost).to receive(:model_name).and_return(model_name)
 
     @new_mm_post = double('mm_post')
     allow(@new_mm_post).to receive(:class).and_return(::MongoPost)
@@ -484,7 +491,7 @@ module FormtasticSpecHelper
     yield
     Formtastic::FormBuilder.send(:"#{config_method_name}=", old_value)
   end
-  
+
   RSpec::Matchers.define :errors_matcher do |expected|
     match { |actual| actual.to_s == expected.to_s }
   end
@@ -504,7 +511,7 @@ RSpec.configure do |config|
   config.run_all_when_everything_filtered = true
 
   config.before(:example) do
-    Formtastic::Localizer.cache.clear!    
+    Formtastic::Localizer.cache.clear!
   end
 
   config.before(:example) do
