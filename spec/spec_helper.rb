@@ -378,7 +378,6 @@ module FormtasticSpecHelper
     allow(::Post).to receive(:to_ary)
     allow(::Post).to receive(:lookup_ancestors).and_return([::Post])
     allow(::Post).to receive(:i18n_scope).and_return('activerecord')
-    allow(::Post).to receive(:model_name).and_return(model_name)
 
     allow(::MongoPost).to receive(:human_attribute_name) { |column_name| column_name.humanize }
     allow(::MongoPost).to receive(:human_name).and_return('MongoPost')
@@ -392,9 +391,7 @@ module FormtasticSpecHelper
     allow(::MongoPost).to receive(:to_key).and_return(nil)
     allow(::MongoPost).to receive(:persisted?).and_return(nil)
     allow(::MongoPost).to receive(:to_ary)
-    allow(::MongoPost).to receive(:lookup_ancestors).and_return([::MongoPost])
-    allow(::MongoPost).to receive(:i18n_scope).and_return('mongoid')
-    allow(::MongoPost).to receive(:model_name).and_return(model_name)
+    allow(::MongoPost).to receive(:model_name).and_return( double(:model_name_mock, :singular => "post", :plural => "posts", :param_key => "post", :route_key => "posts") )
 
     @new_mm_post = double('mm_post')
     allow(@new_mm_post).to receive(:class).and_return(::MongoPost)
