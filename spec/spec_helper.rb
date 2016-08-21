@@ -339,8 +339,6 @@ module FormtasticSpecHelper
     allow(@fred).to receive(:posts).and_return(author_array_or_scope([@freds_post]))
     allow(@fred).to receive(:post_ids).and_return([@freds_post.id])
 
-    model_name = double(:model_name_mock, :singular => "post", :plural => "posts", :param_key => "post", :route_key => "posts", :i18n_key => "post", :singular_route_key => "post")
-
     allow(::Post).to receive(:scoped).and_return(::Post)
     allow(::Post).to receive(:human_attribute_name) { |column_name| column_name.humanize }
     allow(::Post).to receive(:human_name).and_return('Post')
