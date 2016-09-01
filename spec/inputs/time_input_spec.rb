@@ -35,7 +35,26 @@ describe 'time input' do
         output_buffer.should have_tag('#post_publish_at_4i')
         output_buffer.should have_tag('#post_publish_at_5i')
       end
+    end
 
+    describe "with :discard_hour" do
+      before do
+        @form = semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:publish_at, :as => :time, :discard_hour => true))
+        end
+      end
+
+      it 'should not have an input for hour' do
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.should have_tag('#post_publish_at_4i')
+        output_buffer.should_not have_tag('form li.time fieldset ol li label', /hour/i)
+      end
+
+      it 'should have an input for minute' do
+        output_buffer.concat(@form) if Formtastic::Util.rails3?
+        output_buffer.should have_tag('#post_publish_at_5i')
+        output_buffer.should have_tag('form li.time fieldset ol li label', /minute/i)
+      end
     end
 
     describe "without seconds" do
@@ -152,5 +171,4 @@ describe 'time input' do
       output_buffer.should have_tag('#form2_post_publish_at_5i')
     end
   end
-
 end
