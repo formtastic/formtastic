@@ -482,8 +482,10 @@ RSpec.describe 'with input class finder' do
           expect(default_input_type(:date)).to eq(:date_select)
         end
 
-        it 'should default to :text for :hstore column types' do
+        it 'should default to :text for :hstore, :json and :jsonb column types' do
           expect(default_input_type(:hstore)).to eq(:text)
+          expect(default_input_type(:json)).to eq(:text)
+          expect(default_input_type(:jsonb)).to eq(:text)
         end
 
         it 'should default to :datetime_select for :datetime and :timestamp column types' do
@@ -501,6 +503,10 @@ RSpec.describe 'with input class finder' do
 
         it 'should default to :string for :string column types' do
           expect(default_input_type(:string)).to eq(:string)
+        end
+
+        it 'should default to :string for :citext column types' do
+          expect(default_input_type(:citext)).to eq(:string)
         end
 
         it 'should default to :number for :integer, :float and :decimal column types' do
