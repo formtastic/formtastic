@@ -7,6 +7,7 @@
   * Added mapping hstore column to text input (#1203)
   * Added support for Rails 5 Attributes API (#1188)
   * Changed required Ruby version to >= 2.0 (#1210)
+  * Default to input types text for json & jsonb, string for citext columns (#1229)
 
 ## 3.1.2
 

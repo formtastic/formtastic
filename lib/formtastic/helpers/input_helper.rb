@@ -283,8 +283,10 @@ module Formtastic
             return :time_select
           when :date
             return :date_select
-          when :hstore
+          when :hstore, :json, :jsonb
             return :text
+          when :citext
+            return :string
           end
 
           # Try look for hints in options hash. Quite common senario: Enum keys stored as string in the database.
