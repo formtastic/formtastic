@@ -50,9 +50,9 @@ module Formtastic
           # Return if we have a plain string
           return raw_collection if raw_collection.is_a?(String)
 
-          # Return if we have an Array of strings, fixnums or arrays
+          # Return if we have an Array of strings, integers or arrays
           return raw_collection if (raw_collection.instance_of?(Array) || raw_collection.instance_of?(Range)) &&
-                               [Array, Fixnum, String].include?(raw_collection.first.class) &&
+                               ([Array, String].include?(raw_collection.first.class) || raw_collection.first.is_a?(Integer)) &&
                                !(options.include?(:member_label) || options.include?(:member_value))
 
           raw_collection.map { |o| [send_or_call(label_method, o), send_or_call(value_method, o)] }
@@ -83,7 +83,7 @@ module Formtastic
 
             scope_conditions = conditions_from_reflection.empty? ? nil : {:conditions => conditions_from_reflection}
             where_conditions = (scope_conditions && scope_conditions[:conditions]) || {}
-            
+
             reflection.klass.where(where_conditions)
           end
         end
