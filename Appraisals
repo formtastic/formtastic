@@ -1,14 +1,16 @@
 appraise 'rails-4.1' do
   gem 'rails', '~>4.1.0'
+  gem 'nokogiri', '~>1.6.8', platform: :mri_20
 end
 
 appraise 'rails-4.2' do
-  gem 'rails', '~>4.2.0.beta4'
+  gem 'rails', '~>4.2.0'
+  gem 'nokogiri', '~>1.6.8', platform: :mri_20
 end
 
 appraise 'rails-5.0' do
-  gem 'rails', '> 5.0.0.rc', '< 5.1'
-  gem 'rspec-rails', '> 3.5.0.beta', '< 3.6'
+  gem 'rails', '~> 5.0.1'
+  gem 'rspec-rails', '~> 3.5'
 end
 
 appraise 'rails-edge' do
