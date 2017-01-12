@@ -69,7 +69,7 @@ module Formtastic
 
         # TODO: One of the tests produces a scenario where duck is "0" and the test looks for a "1"
         # in the legend, so if we have a number, return it with a +1 until we can verify this scenario.
-        return duck + 1 if duck.is_a?(Fixnum)
+        return duck + 1 if duck.is_a?(Integer)
 
         # First try to extract key from duck Hash, then try child
         (duck[key] || duck[child]).to_i + 1
