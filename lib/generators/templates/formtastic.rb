@@ -109,3 +109,7 @@
 
 # Which columns to skip when automatically rendering a form without any fields specified.
 # Formtastic::FormBuilder.skipped_columns = [:created_at, :updated_at, :created_on, :updated_on, :lock_version, :version]
+
+# Pass a module here if you need to override collections retrieval methods from formtastic
+# For instance you can pass scopes to collections retrieved from associations.
+# Formtastic::FormBuilder.base_input_collections_module_override = CustomBaseForFormtastic

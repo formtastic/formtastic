@@ -72,5 +72,31 @@ RSpec.describe MyInput do
     end
   end
 
+  describe "#included" do
+    module CustomBaseCollections
+      def collection_from_association
+        'foo'
+      end
+    end
+
+    let(:instance) { AnotherInput.new(builder, template, model, model_name, method, options) }
+
+    before(:context) do
+      Formtastic::FormBuilder.base_input_collections_module_override = CustomBaseCollections
+      class AnotherInput
+        include Formtastic::Inputs::Base
+        include Formtastic::Inputs::Base::Collections
+      end
+    end
+
+    after(:context) do
+      Formtastic::FormBuilder.base_input_collections_module_override = nil
+    end
+
+    it 'overrides the collection_from_association method' do
+      expect(instance.collection_from_association).to eq('foo')
+    end
+  end
+
 end
 

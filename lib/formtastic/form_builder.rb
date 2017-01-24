@@ -50,6 +50,8 @@ module Formtastic
     configure :skipped_columns, [:created_at, :updated_at, :created_on, :updated_on, :lock_version, :version]
     configure :priority_time_zones, []
 
+    configure :base_input_collections_module_override, nil
+
     attr_reader :template
 
     attr_reader :auto_index

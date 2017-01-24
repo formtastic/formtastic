@@ -3,6 +3,12 @@ module Formtastic
     module Base
       module Collections
 
+        def self.included(base)
+          if to_include_module = Formtastic::FormBuilder.base_input_collections_module_override
+            base.include to_include_module
+          end
+        end
+
         def label_method
           @label_method ||= (label_method_from_options || label_and_value_method.first)
         end
