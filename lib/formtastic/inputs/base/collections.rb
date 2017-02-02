@@ -55,6 +55,9 @@ module Formtastic
                                [Array, Fixnum, String].include?(raw_collection.first.class) &&
                                !(options.include?(:member_label) || options.include?(:member_value))
 
+          # Return array for lambda
+          return raw_collection.call if raw_collection.lambda?
+
           raw_collection.map { |o| [send_or_call(label_method, o), send_or_call(value_method, o)] }
         end
 
