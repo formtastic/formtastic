@@ -56,7 +56,7 @@ module Formtastic
                                !(options.include?(:member_label) || options.include?(:member_value))
 
           # Return array for lambda
-          return raw_collection.call if raw_collection.lambda?
+          return raw_collection.call if raw_collection.instance_of?(Proc)
 
           raw_collection.map { |o| [send_or_call(label_method, o), send_or_call(value_method, o)] }
         end
