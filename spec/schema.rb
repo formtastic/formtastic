@@ -13,4 +13,9 @@ ActiveRecord::Schema.define(version: 20170208011723) do
     t.datetime "updated_at"
   end
 
+  #non-rails foreign id convention
+  create_table "legacy_posts", force: :cascade do |t|
+    t.integer "post_author",  limit: 4,     null: false
+  end
+
 end
