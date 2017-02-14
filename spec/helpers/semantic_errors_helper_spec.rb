@@ -22,7 +22,7 @@ RSpec.describe 'Formtastic::FormBuilder#semantic_errors' do
 
     it 'should render an unordered list' do
       semantic_form_for(@new_post) do |builder|
-        expect(builder.semantic_errors).to have_tag('ul.errors li', @base_error)
+        expect(builder.semantic_errors).to have_tag('ul.errors li', :text => @base_error)
       end
     end
   end
@@ -36,7 +36,7 @@ RSpec.describe 'Formtastic::FormBuilder#semantic_errors' do
       semantic_form_for(@new_post) do |builder|
         expect(builder.semantic_errors).to have_tag('ul.errors')
         @base_errors.each do |error|
-          expect(builder.semantic_errors).to have_tag('ul.errors li', error)
+          expect(builder.semantic_errors).to have_tag('ul.errors li', :text => error)
         end
       end
     end
@@ -51,7 +51,7 @@ RSpec.describe 'Formtastic::FormBuilder#semantic_errors' do
     it 'should render an unordered list' do
       semantic_form_for(@new_post) do |builder|
         title_name = builder.send(:localized_string, :title, :title, :label) || builder.send(:humanized_attribute_name, :title)
-        expect(builder.semantic_errors(:title)).to have_tag('ul.errors li', title_name << " " << @title_errors.to_sentence)
+        expect(builder.semantic_errors(:title)).to have_tag('ul.errors li', :text => title_name << " " << @title_errors.to_sentence)
       end
     end
   end
@@ -65,8 +65,8 @@ RSpec.describe 'Formtastic::FormBuilder#semantic_errors' do
     it 'should render an unordered list' do
       semantic_form_for(@new_post) do |builder|
         title_name = builder.send(:localized_string, :title, :title, :label) || builder.send(:humanized_attribute_name, :title)
-        expect(builder.semantic_errors(:title)).to have_tag('ul.errors li', title_name << " " << @title_errors.to_sentence)
-        expect(builder.semantic_errors(:title)).to have_tag('ul.errors li', @base_error)
+        expect(builder.semantic_errors(:title)).to have_tag('ul.errors li', :text => title_name << " " << @title_errors.to_sentence)
+        expect(builder.semantic_errors(:title)).to have_tag('ul.errors li', :text => @base_error)
       end
     end
   end
@@ -91,7 +91,7 @@ RSpec.describe 'Formtastic::FormBuilder#semantic_errors' do
 
     it 'should render an unordered list with given class' do
       semantic_form_for(@new_post) do |builder|
-        expect(builder.semantic_errors(:class => "awesome")).to have_tag('ul.awesome li', @base_error)
+        expect(builder.semantic_errors(:class => "awesome")).to have_tag('ul.awesome li', :text => @base_error)
       end
     end
   end
@@ -104,7 +104,7 @@ RSpec.describe 'Formtastic::FormBuilder#semantic_errors' do
     it 'should ignore :base and only render base errors once' do
       semantic_form_for(@new_post) do |builder|
         expect(builder.semantic_errors(:base)).to have_tag('ul li', :count => 1)
-        expect(builder.semantic_errors(:base)).not_to have_tag('ul li', "Base #{@base_error}")
+        expect(builder.semantic_errors(:base)).not_to have_tag('ul li', :text => "Base #{@base_error}")
       end
     end
   end

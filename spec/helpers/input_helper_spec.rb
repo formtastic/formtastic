@@ -39,7 +39,7 @@ RSpec.describe 'with input class finder' do
             concat(semantic_form_for(@new_post) do |builder|
               concat(builder.input(:title, :required => true))
             end)
-            expect(output_buffer).to have_tag('form li.required label', /required yo/)
+            expect(output_buffer).to have_tag('form li.required label', :text => /required yo/)
           end
         end
       end
@@ -78,7 +78,7 @@ RSpec.describe 'with input class finder' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :required => false))
           end)
-          expect(output_buffer).to have_tag('form li.optional label', /#{@string}$/)
+          expect(output_buffer).to have_tag('form li.optional label', :text => /#{@string}$/)
         end
 
       end
@@ -594,7 +594,7 @@ RSpec.describe 'with input class finder' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :label => "Kustom"))
           end)
-          expect(output_buffer).to have_tag("form li label", /Kustom/)
+          expect(output_buffer).to have_tag("form li label", :text => /Kustom/)
         end
 
         it 'should not generate a label if false' do
@@ -608,7 +608,7 @@ RSpec.describe 'with input class finder' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :label => "Kustom".freeze))
           end)
-          expect(output_buffer).to have_tag("form li label", /Kustom/)
+          expect(output_buffer).to have_tag("form li label", :text => /Kustom/)
         end
       end
 
@@ -630,7 +630,7 @@ RSpec.describe 'with input class finder' do
                   concat(semantic_form_for(@new_post) do |builder|
                     concat(builder.input(:meta_description))
                   end)
-                  expect(output_buffer).to have_tag('form li label', /Localized title/)
+                  expect(output_buffer).to have_tag('form li label', :text => /Localized title/)
                 end
               end
             end
@@ -645,7 +645,7 @@ RSpec.describe 'with input class finder' do
                 concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
                   concat(builder.input(:meta_description))
                 end)
-                expect(output_buffer).to have_tag("form li label", /#{'meta_description'.humanize}/)
+                expect(output_buffer).to have_tag("form li label", :text => /#{'meta_description'.humanize}/)
               end
             end
           end
@@ -658,7 +658,7 @@ RSpec.describe 'with input class finder' do
               concat(semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:meta_description))
               end)
-              expect(output_buffer).to have_tag("form li label", /#{'meta_description'.humanize}/)
+              expect(output_buffer).to have_tag("form li label", :text => /#{'meta_description'.humanize}/)
             end
           end
 
@@ -670,7 +670,7 @@ RSpec.describe 'with input class finder' do
                 concat(semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:meta_description))
                 end)
-                expect(output_buffer).to have_tag("form li label", /#{'meta_description'.capitalize}/)
+                expect(output_buffer).to have_tag("form li label", :text => /#{'meta_description'.capitalize}/)
               end
             end
           end
@@ -699,7 +699,7 @@ RSpec.describe 'with input class finder' do
                 concat(builder.input(:title, :label => true))
                 concat(builder.input(:published, :as => :boolean, :label => true))
               end)
-              expect(output_buffer).to have_tag('form li label', Regexp.new('^' + @localized_label_text))
+              expect(output_buffer).to have_tag('form li label', :text => Regexp.new('^' + @localized_label_text))
             end
           end
 
@@ -718,7 +718,7 @@ RSpec.describe 'with input class finder' do
                 concat(builder.input(:title, :label => true))
                 concat(builder.input(:published, :as => :boolean, :label => true))
               end)
-              expect(output_buffer).to have_tag('form li label', Regexp.new('^' + @default_localized_label_text))
+              expect(output_buffer).to have_tag('form li label', :text => Regexp.new('^' + @default_localized_label_text))
             end
           end
         end
@@ -739,7 +739,7 @@ RSpec.describe 'with input class finder' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :hint => hint_text))
           end)
-          expect(output_buffer).to have_tag("form li p.inline-hints", hint_text)
+          expect(output_buffer).to have_tag("form li p.inline-hints", :text => hint_text)
         end
 
         it 'should have a custom hint class defaulted for all forms' do
@@ -748,7 +748,7 @@ RSpec.describe 'with input class finder' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :hint => hint_text))
           end)
-          expect(output_buffer).to have_tag("form li p.custom-hint-class", hint_text)
+          expect(output_buffer).to have_tag("form li p.custom-hint-class", :text => hint_text)
         end
       end
 
@@ -783,7 +783,7 @@ RSpec.describe 'with input class finder' do
                 concat(semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:title, :hint => true))
                 end)
-                expect(output_buffer).to have_tag('form li p.inline-hints', @localized_hint_text)
+                expect(output_buffer).to have_tag('form li p.inline-hints', :text => @localized_hint_text)
               end
             end
 
@@ -792,7 +792,7 @@ RSpec.describe 'with input class finder' do
                 concat(semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:title, :hint => true))
                 end)
-                expect(output_buffer).to have_tag('form li p.inline-hints', @default_localized_hint_text)
+                expect(output_buffer).to have_tag('form li p.inline-hints', :text => @default_localized_hint_text)
               end
             end
           end
@@ -803,7 +803,7 @@ RSpec.describe 'with input class finder' do
                 concat(semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:title, :hint => false))
                 end)
-                expect(output_buffer).not_to have_tag('form li p.inline-hints', @localized_hint_text)
+                expect(output_buffer).not_to have_tag('form li p.inline-hints', :text => @localized_hint_text)
               end
             end
           end
@@ -823,7 +823,7 @@ RSpec.describe 'with input class finder' do
               semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title, :hint => true))
               end
-              expect(output_buffer).not_to have_tag('form li p.inline-hints', @localized_hint_text)
+              expect(output_buffer).not_to have_tag('form li p.inline-hints', :text => @localized_hint_text)
             end
           end
         end

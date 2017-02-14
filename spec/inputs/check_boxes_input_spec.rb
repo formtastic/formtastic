@@ -32,7 +32,7 @@ RSpec.describe 'check_boxes input' do
 
     it 'should generate a legend containing a label with text for the input' do
       expect(output_buffer).to have_tag('form li fieldset legend.label label')
-      expect(output_buffer).to have_tag('form li fieldset legend.label label', /Posts/)
+      expect(output_buffer).to have_tag('form li fieldset legend.label label', :text => /Posts/)
     end
 
     it 'should not link the label within the legend to any input' do
@@ -72,7 +72,7 @@ RSpec.describe 'check_boxes input' do
 
       it 'should contain a label for the radio input with a nested input and label text' do
         ::Post.all.each do |post|
-          expect(output_buffer).to have_tag('form li fieldset ol li label', /#{post.to_label}/)
+          expect(output_buffer).to have_tag('form li fieldset ol li label', :text => /#{post.to_label}/)
           expect(output_buffer).to have_tag("form li fieldset ol li label[@for='author_post_ids_#{post.id}']")
         end
       end
@@ -112,7 +112,7 @@ RSpec.describe 'check_boxes input' do
         ::Post.all.each do |post|
           expect(output_buffer).to have_tag("form li fieldset ol li label input#author_post_ids_#{post.id}")
           expect(output_buffer).to have_tag("form li fieldset ol li label input[@name='author[post_ids][]']", :count => 2)
-          expect(output_buffer).to have_tag('form li fieldset ol li label', /#{post.to_label}/)
+          expect(output_buffer).to have_tag('form li fieldset ol li label', :text => /#{post.to_label}/)
         end
 
       end
@@ -132,7 +132,7 @@ RSpec.describe 'check_boxes input' do
       end
 
       it 'should generate a fieldset with legend' do
-        expect(output_buffer).to have_tag('form li fieldset legend', /Author/)
+        expect(output_buffer).to have_tag('form li fieldset legend', :text => /Author/)
       end
 
       it 'shold generate an li tag for each item in the collection' do
@@ -141,7 +141,7 @@ RSpec.describe 'check_boxes input' do
 
       it 'should generate labels for each item' do
         ::Author.all.each do |author|
-          expect(output_buffer).to have_tag('form li fieldset ol li label', /#{author.to_label}/)
+          expect(output_buffer).to have_tag('form li fieldset ol li label', :text => /#{author.to_label}/)
           expect(output_buffer).to have_tag("form li fieldset ol li label[@for='project_author_id_#{author.id}']")
         end
       end
@@ -160,8 +160,9 @@ RSpec.describe 'check_boxes input' do
           concat(builder.input(:author_id, :as => :check_boxes, :collection => [["<b>Item 1</b>", 1], ["<b>Item 2</b>", 2]]))
         end)
 
-        expect(output_buffer).to have_tag('form li fieldset ol li label') do |label|
-          expect(label.body).to match /&lt;b&gt;Item [12]&lt;\/b&gt;$/
+        expect(output_buffer).to have_tag('form li fieldset ol li label', text: %r{<b>Item [12]</b>}, count: 2) do |label|
+          expect(label).to have_text('<b>Item 1</b>', count: 1)
+          expect(label).to have_text('<b>Item 2</b>', count: 1)
         end
       end
     end
@@ -223,7 +224,7 @@ RSpec.describe 'check_boxes input' do
 
         it "should have one item disabled; the specified one" do
           expect(output_buffer).to have_tag("form li fieldset ol li label input[@disabled='disabled']", :count => 1)
-          expect(output_buffer).to have_tag("form li fieldset ol li label[@for='post_author_ids_#{@fred.id}']", /fred/i)
+          expect(output_buffer).to have_tag("form li fieldset ol li label[@for='post_author_ids_#{@fred.id}']", :text => /fred/i)
           expect(output_buffer).to have_tag("form li fieldset ol li label input[@disabled='disabled'][@value='#{@fred.id}']")
         end
       end
@@ -239,9 +240,9 @@ RSpec.describe 'check_boxes input' do
 
         it "should have multiple items disabled; the specified ones" do
           expect(output_buffer).to have_tag("form li fieldset ol li label input[@disabled='disabled']", :count => 2)
-          expect(output_buffer).to have_tag("form li fieldset ol li label[@for='post_author_ids_#{@bob.id}']", /bob/i)
+          expect(output_buffer).to have_tag("form li fieldset ol li label[@for='post_author_ids_#{@bob.id}']", :text => /bob/i)
           expect(output_buffer).to have_tag("form li fieldset ol li label input[@disabled='disabled'][@value='#{@bob.id}']")
-          expect(output_buffer).to have_tag("form li fieldset ol li label[@for='post_author_ids_#{@fred.id}']", /fred/i)
+          expect(output_buffer).to have_tag("form li fieldset ol li label[@for='post_author_ids_#{@fred.id}']", :text => /fred/i)
           expect(output_buffer).to have_tag("form li fieldset ol li label input[@disabled='disabled'][@value='#{@fred.id}']")
         end
       end
@@ -265,7 +266,7 @@ RSpec.describe 'check_boxes input' do
       end
 
       it "should do foo" do
-        expect(output_buffer).to have_tag("legend.label label", /Translated/)
+        expect(output_buffer).to have_tag("legend.label label", :text => /Translated/)
       end
 
     end
@@ -279,7 +280,7 @@ RSpec.describe 'check_boxes input' do
       end
 
       it "should output the correct label title" do
-        expect(output_buffer).to have_tag("legend.label label", /The authors/)
+        expect(output_buffer).to have_tag("legend.label label", :text => /The authors/)
       end
     end
 
@@ -502,7 +503,7 @@ RSpec.describe 'check_boxes input' do
 
     it "should use array items for labels and values" do
       @_collection.each do |post|
-        expect(output_buffer).to have_tag('form li fieldset ol li label', /#{post.first}/)
+        expect(output_buffer).to have_tag('form li fieldset ol li label', :text => /#{post.first}/)
         expect(output_buffer).to have_tag("form li fieldset ol li label[@for='author_post_ids_#{post.last}']")
       end
     end

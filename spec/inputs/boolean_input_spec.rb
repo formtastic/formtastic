@@ -26,7 +26,7 @@ RSpec.describe 'boolean input' do
     expect(output_buffer).not_to have_tag('label.label')
     expect(output_buffer).to have_tag('form li label', :count => 1)
     expect(output_buffer).to have_tag('form li label[@for="post_allow_comments"]')
-    expect(output_buffer).to have_tag('form li label', /Allow comments/)
+    expect(output_buffer).to have_tag('form li label', :text => /Allow comments/)
     expect(output_buffer).to have_tag('form li label input[@type="checkbox"]', :count => 1)
     expect(output_buffer).to have_tag('form li input[@type="hidden"]', :count => 1)
     expect(output_buffer).not_to have_tag('form li label input[@type="hidden"]', :count => 1) # invalid HTML5
@@ -167,7 +167,7 @@ RSpec.describe 'boolean input' do
     end)
 
     expect(output_buffer).to have_tag('form li label[@for="project_allow_comments"]')
-    expect(output_buffer).to have_tag('form li label', /Allow comments/)
+    expect(output_buffer).to have_tag('form li label', :text => /Allow comments/)
     expect(output_buffer).to have_tag('form li label input[@type="checkbox"]')
 
     expect(output_buffer).to have_tag('form li label input#project_allow_comments')

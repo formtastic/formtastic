@@ -36,7 +36,7 @@ RSpec.describe 'Formtastic::FormBuilder#label' do
     concat(semantic_form_for(@new_post) do |builder|
       builder.input(:title)
     end)
-    expect(output_buffer).to have_tag('label', /Title/)
+    expect(output_buffer).to have_tag('label', :text => /Title/)
   end
   
   it 'should use i18n instead of the method name when method given as a String' do
@@ -46,7 +46,7 @@ RSpec.describe 'Formtastic::FormBuilder#label' do
         builder.input("title")
       end)
       ::I18n.backend.store_translations :en, { :formtastic => { :labels => { :post => { :title => nil } } } }
-      expect(output_buffer).to have_tag('label', /I18n title/)
+      expect(output_buffer).to have_tag('label', :text => /I18n title/)
     end
   end
 
@@ -54,7 +54,7 @@ RSpec.describe 'Formtastic::FormBuilder#label' do
     concat(semantic_form_for(@new_post) do |builder|
       builder.input(:publish_at)
     end)
-    expect(output_buffer).to have_tag('label', /Publish at/)
+    expect(output_buffer).to have_tag('label', :text => /Publish at/)
   end
 
   describe 'when required is given' do
@@ -73,7 +73,7 @@ RSpec.describe 'Formtastic::FormBuilder#label' do
           concat(builder.input(:author_id, :as => :check_boxes, :collection => [:a, :b, :c], :member_value => :to_s, :member_label => proc {|f| ('Label_%s' % [f])}))
         end)
       end
-      expect(output_buffer).to have_tag('form li fieldset ol li label', /Label_[abc]/, :count => 3)
+      expect(output_buffer).to have_tag('form li fieldset ol li label', :text => /Label_[abc]/, :count => 3)
     end
 
     it 'should use a supplied value_method for simple collections' do
@@ -93,14 +93,14 @@ RSpec.describe 'Formtastic::FormBuilder#label' do
       concat(semantic_form_for(@new_post) do |builder|
         builder.input(:title, :label => 'My label')
       end)
-      expect(output_buffer).to have_tag('label', /My label/)
+      expect(output_buffer).to have_tag('label', :text => /My label/)
     end
     
     it 'should allow the text to be given as label option for date fields' do
       concat(semantic_form_for(@new_post) do |builder|
         builder.input(:publish_at, :label => 'My other label')
       end)
-      expect(output_buffer).to have_tag('label', /My other label/)
+      expect(output_buffer).to have_tag('label', :text => /My other label/)
     end
 
     it 'should return nil if label is false' do
@@ -132,7 +132,7 @@ RSpec.describe 'Formtastic::FormBuilder#label' do
       concat(semantic_form_for(@new_post) do |builder|
         builder.input(:title, :label => '<b>My label</b>')
       end)
-      expect(output_buffer).to have_tag("label b", "My label")
+      expect(output_buffer).to have_tag("label b", :text => "My label")
     end
 
     it 'should not html escape the label string for html_safe strings' do
