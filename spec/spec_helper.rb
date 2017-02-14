@@ -6,6 +6,10 @@ require 'action_pack'
 require 'action_view'
 require 'action_controller'
 require 'action_dispatch'
+require 'active_record'
+
+ActiveRecord::Base.establish_connection('url' => 'sqlite3::memory:', 'pool' => 1)
+load 'spec/schema.rb'
 
 require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic/util'))
 require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic'))
@@ -107,26 +111,17 @@ module FormtasticSpecHelper
   end
 
   module ::Namespaced
-    class Post
-      extend ActiveModel::Naming if defined?(ActiveModel::Naming)
-      include ActiveModel::Conversion if defined?(ActiveModel::Conversion)
-
-      def id
-      end
-
-      def persisted?
-      end
+    class Post < ActiveRecord::Base
     end
   end
 
-  class ::Author
-    extend ActiveModel::Naming if defined?(ActiveModel::Naming)
-    include ActiveModel::Conversion if defined?(ActiveModel::Conversion)
-
-    def to_label
+  class ::Author < ActiveRecord::Base
+    def new_record?
+      !id
     end
 
-    def persisted?
+    def to_label
+      [name, surname].compact.join(' ')
     end
   end
 
@@ -248,46 +243,10 @@ module FormtasticSpecHelper
     def author_array_or_scope(the_array = [@fred, @bob])
       MockScope.new(the_array)
     end
-    
-    @fred = ::Author.new
-    allow(@fred).to receive(:class).and_return(::Author)
-    allow(@fred).to receive(:to_label).and_return('Fred Smith')
-    allow(@fred).to receive(:login).and_return('fred_smith')
-    allow(@fred).to receive(:age).and_return(27)
-    allow(@fred).to receive(:id).and_return(37)
-    allow(@fred).to receive(:new_record?).and_return(false)
-    allow(@fred).to receive(:errors).and_return(double('errors', :[] => nil))
-    allow(@fred).to receive(:to_key).and_return(nil)
-    allow(@fred).to receive(:persisted?).and_return(nil)
-    allow(@fred).to receive(:name).and_return('Fred')
 
-    @bob = ::Author.new
-    allow(@bob).to receive(:to_label).and_return('Bob Rock')
-    allow(@bob).to receive(:login).and_return('bob')
-    allow(@bob).to receive(:age).and_return(43)
-    allow(@bob).to receive(:created_at)
-    allow(@bob).to receive(:id).and_return(42)
-    allow(@bob).to receive(:posts).and_return([])
-    allow(@bob).to receive(:post_ids).and_return([])
-    allow(@bob).to receive(:new_record?).and_return(false)
-    allow(@bob).to receive(:errors).and_return(double('errors', :[] => nil))
-    allow(@bob).to receive(:to_key).and_return(nil)
-    allow(@bob).to receive(:persisted?).and_return(nil)
-    allow(@bob).to receive(:name).and_return('Bob')
-
-    @james = ::Author.new
-    allow(@james).to receive(:to_label).and_return('James Shock')
-    allow(@james).to receive(:login).and_return('james')
-    allow(@james).to receive(:age).and_return(38)
-    allow(@james).to receive(:id).and_return(75)
-    allow(@james).to receive(:posts).and_return([])
-    allow(@james).to receive(:post_ids).and_return([])
-    allow(@james).to receive(:new_record?).and_return(false)
-    allow(@james).to receive(:errors).and_return(double('errors', :[] => nil))
-    allow(@james).to receive(:to_key).and_return(nil)
-    allow(@james).to receive(:persisted?).and_return(nil)
-    allow(@james).to receive(:name).and_return('James')
-
+    @fred = ::Author.new(login: 'fred_smith', age: 27, name: 'Fred', id: 37)
+    @bob = ::Author.new(login: 'bob', age: 43, name: 'Bob', id: 42)
+    @james = ::Author.new(age: 38, id: 75)
 
     allow(::Author).to receive(:scoped).and_return(::Author)
     allow(::Author).to receive(:find).and_return(author_array_or_scope)
