@@ -350,12 +350,21 @@ module Formtastic
         end
       end
 
+      # Collects all foreign key columns
+      def foreign_key_columns # @private
+        if @object.present? && @object.class.respond_to?(:reflect_on_all_associations)
+          @object.class.reflect_on_all_associations(:belongs_to).map(&:foreign_key)
+        else
+          []
+        end
+      end
+
       # Collects content columns (non-relation columns) for the current form object class.
       def content_columns # @private
         # TODO: NameError is raised by Inflector.constantize. Consider checking if it exists instead.
         begin klass = model_name.constantize; rescue NameError; return [] end
         return [] unless klass.respond_to?(:content_columns)
-        klass.content_columns.collect { |c| c.name.to_sym }.compact
+        klass.content_columns.collect { |c| c.name.to_sym }.compact - foreign_key_columns
       end
 
       # Deals with :for option when it's supplied to inputs methods. Additional

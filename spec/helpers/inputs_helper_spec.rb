@@ -398,7 +398,22 @@ RSpec.describe 'Formtastic::FormBuilder#inputs' do
       it 'should not render timestamps inputs by default' do
         expect(output_buffer).not_to have_tag('form > fieldset.inputs > ol > li.datetime')
       end
-    
+
+      context "with non-standard foregin keys" do
+        before do
+          @output_buffer = ''
+        end
+
+        it 'should respect foreign key while rendering select' do
+          concat(semantic_form_for(LegacyPost.new, {:url => '/'}) do |builder|
+            concat(builder.inputs)
+          end)
+          expect(output_buffer).to have_tag('form > fieldset.inputs > ol > li.select select#legacy_post_post_author', :count => 1)
+          expect(output_buffer).not_to have_tag('input#legacy_post_post_author')
+        end
+        
+      end
+
       context "with a polymorphic association" do
         
         before do 

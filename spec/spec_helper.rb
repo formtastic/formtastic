@@ -134,6 +134,10 @@ module FormtasticSpecHelper
     end
   end
 
+  class ::LegacyPost < ActiveRecord::Base
+     belongs_to :author, foreign_key: :post_author
+  end
+
   class ::Continent
     extend ActiveModel::Naming if defined?(ActiveModel::Naming)
     include ActiveModel::Conversion if defined?(ActiveModel::Conversion)
