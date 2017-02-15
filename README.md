@@ -10,7 +10,7 @@ Formtastic is a Rails FormBuilder DSL (with some other goodies) to make it far e
 
 ## Documentation & Support
 
-* [Documentation is available on rdoc.info](http://rdoc.info/projects/justinfrench/formtastic)
+* [Documentation is available on rdoc.info](http://rdoc.info/github/justinfrench/formtastic)
 * [We track issues & bugs on GitHub](http://github.com/justinfrench/formtastic/issues)
 * [We have a wiki on GitHub](http://github.com/justinfrench/formtastic/wiki)
 * [StackOverflow can help](http://stackoverflow.com/questions/tagged/formtastic)
