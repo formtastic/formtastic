@@ -37,6 +37,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency(%q<tzinfo>)
   s.add_development_dependency(%q<ammeter>, ["~> 1.1.3"])
   s.add_development_dependency(%q<appraisal>, ["~> 2.1"])
-  s.add_development_dependency(%q<rake>)
+  s.add_development_dependency(%q<rake>, ["< 12"])
   s.add_development_dependency(%q<activemodel>, [">= 3.2.13"])
 end
