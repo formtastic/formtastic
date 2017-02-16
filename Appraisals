@@ -1,15 +1,18 @@
 appraise 'rails-3.2' do
   gem 'rails', '~> 3.2.0'
   gem 'test-unit-minitest', :platform => [:ruby_22, :ruby_23]
+  gem 'nokogiri', '~>1.6.8', platform: :mri_20
 end
 
 appraise 'rails-4' do
   gem 'rails', '~> 4.0.0'
+  gem 'nokogiri', '~>1.6.8', platform: :mri_20
 end
 
 # Special case for a change in I18n
 appraise 'rails-4.0.4' do
   gem 'rails', '4.0.4'
+  gem 'nokogiri', '~>1.6.8', platform: :mri_20
 end
 
 appraise 'rails-4.1' do

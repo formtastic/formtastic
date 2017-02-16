@@ -14,10 +14,10 @@ gemfile:
   - gemfiles/rails_4.0.4.gemfile
   - gemfiles/rails_4.1.gemfile
   - gemfiles/rails_4.2.gemfile
+  - gemfiles/rails_5.0.gemfile
   - gemfiles/rails_edge.gemfile
 env:
-before_install:
-  - gem install bundler --version 1.11.2
+before_install: "gem install bundler --version 1.14.4"
 script: "bundle exec rake spec"
 matrix:
   exclude:
@@ -35,6 +35,12 @@ matrix:
       gemfile: gemfiles/rails_4.1.gemfile
     - rvm: 2.4.0
       gemfile: gemfiles/rails_4.2.gemfile
+    - rvm: 2.4.0
+      gemfile: gemfiles/rails_3.2.gemfile
+    - rvm: 2.4.0
+      gemfile: gemfiles/rails_4.0.4.gemfile
+    - rvm: 2.4.0
+      gemfile: gemfiles/rails_4.gemfile
   allow_failures:
     - gemfile: gemfiles/rails_edge.gemfile
     - rvm: 1.9.3

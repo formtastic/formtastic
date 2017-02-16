@@ -4,5 +4,6 @@ source "https://rubygems.org"
 
 gem "rails", "~> 3.2.0"
 gem "test-unit-minitest", :platform => [:ruby_22, :ruby_23]
+gem "nokogiri", "~>1.6.8", :platform => :mri_20
 
 gemspec :path => "../"
