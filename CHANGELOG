@@ -1,3 +1,6 @@
+3.1.5
+  * Backport use Integer instead of Fixnum for Ruby 2.4 support (#1235, #1243)
+
 3.1.4
   * Performance improvements (#1174)
   * Added priority time zones configuration (#1172)
