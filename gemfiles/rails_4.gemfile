@@ -3,5 +3,6 @@
 source "https://rubygems.org"
 
 gem "rails", "~> 4.0.0"
+gem "nokogiri", "~>1.6.8", :platform => :mri_20
 
 gemspec :path => "../"
