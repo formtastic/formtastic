@@ -1,0 +1,10 @@
+nl:
+  formtastic:
+    :yes: 'Ja'
+    :no: 'Nee'
+    :create: 'Creëer %{model}'
+    :update: 'Wijzig %{model}'
+    :submit: 'Verzend %{model}'
+    :cancel: 'Annuleer %{model}'
+    :reset: 'Herstel %{model}'
+    :required: 'verplicht'
