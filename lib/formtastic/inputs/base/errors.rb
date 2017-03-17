@@ -38,6 +38,11 @@ module Formtastic
           errors = []
           if object && object.respond_to?(:errors)
             error_keys.each do |key| 
+              # --- Joel was here! ---
+              unless object.errors[key].blank?
+                object.errors[key].delete_if {|str| str.empty?}
+              end
+              # --------------------
               errors << object.errors[key] unless object.errors[key].blank?
             end
           end
