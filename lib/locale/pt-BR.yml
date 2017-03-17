@@ -1,0 +1,10 @@
+pt-BR:
+  formtastic:
+    :yes: 'Sim'
+    :no: 'Não'
+    :create: 'Criar %{model}'
+    :update: 'Atualizar %{model}'
+    :submit: 'Salvar %{model}'
+    :cancel: 'Cancelar %{model}'
+    :reset: 'Resetar %{model}'
+    :required: 'obrigatório'
