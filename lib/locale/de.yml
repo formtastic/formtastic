@@ -1,0 +1,10 @@
+en:
+  formtastic:
+    :yes: 'Ja'
+    :no: 'Nein'
+    :create: '%{model} erstellen'
+    :update: '%{model} aktualisieren'
+    :submit: '%{model} abschicken'
+    :cancel: '%{model} abbrechen'
+    :reset: '%{model} zurücksetzen'
+    :required: 'erforderlich'
