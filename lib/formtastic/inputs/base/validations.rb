@@ -23,9 +23,10 @@ module Formtastic
 
         def validations
           @validations ||= if object && object.class.respond_to?(:validators_on)
-            object.class.validators_on(attributized_method_name).select do |validator|
-              validator_relevant?(validator)
-            end
+            object.class.ancestors.
+              select { |ancestor| ancestor.respond_to?(:validators_on) }.
+              inject([]) { |validators, ancestor| validators + ancestor.validators_on(attributized_method_name) }.
+              select { |validator| validator_relevant?(validator) }
           else
             nil
           end
