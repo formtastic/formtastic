@@ -19,18 +19,31 @@ module Formtastic
 
       def association_primary_key_for_method(method) # @private
         reflection = reflection_for(method)
+        
         if reflection
           case association_macro_for_method(method)
           when :has_and_belongs_to_many, :has_many, :references_and_referenced_in_many, :references_many
             :"#{method.to_s.singularize}_ids"
           else
-            return reflection.foreign_key.to_sym if reflection.respond_to?(:foreign_key)
-            return reflection.options[:foreign_key].to_sym unless reflection.options[:foreign_key].blank?
+            # handle case where foreign key is a composite (Array) fx using 'composite_primary_keys' gem
+            foreign_key = foreign_key_for reflection
+            return method.to_sym if !foreign_key || foreign_key.kind_of?(Array)
+
+            return foreign_key.to_sym unless foreign_key.blank? || foreign_key.kind_of?(Array)
             :"#{method}_id"
           end
         else
           method.to_sym
         end
+      end
+      
+      protected
+      
+      def foreign_key_for reflection
+        return nil if !reflection
+        return reflection.foreign_key if reflection.respond_to?(:foreign_key)
+        return reflection.options[:foreign_key] if reflection.respond_to?(:options)
+        nil
       end
     end
   end
