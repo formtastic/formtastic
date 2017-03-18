@@ -141,6 +141,10 @@ This stylesheet forms part of the Formtastic Rails Plugin
   position:absolute;
 }
 
+.formtastic .choice .label {
+  position:relative;
+}
+
 /* NESTED FIELDSETS AND LEGENDS (radio, check boxes and date/time inputs use nested fieldsets)
 --------------------------------------------------------------------------------------------------*/
 .formtastic .choices {
