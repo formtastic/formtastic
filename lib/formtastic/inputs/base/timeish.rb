@@ -162,7 +162,7 @@ module Formtastic
         
         def fragment_input_html(fragment)
           opts = input_options.merge(:prefix => fragment_prefix, :field_name => fragment_name(fragment), :default => value, :include_blank => include_blank?)
-          template.send(:"select_#{fragment}", value, opts, input_html_options.merge(:id => fragment_id(fragment)))
+          template.send(:"select_#{fragment}", value, opts, input_html_options.merge(:id => fragment_id(fragment), :class => "input_#{fragment_name(fragment).downcase}" ))
         end
         
         def fragment_prefix
