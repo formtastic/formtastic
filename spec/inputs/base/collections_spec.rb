@@ -13,7 +13,7 @@ RSpec.describe MyInput do
   let(:model_name) { "post" }
   let(:method) { double }
   let(:options) { Hash.new }
-  
+
   let(:instance) { MyInput.new(builder, template, model, model_name, method, options) }
 
   # class Whatever < ActiveRecord::Base
@@ -26,12 +26,14 @@ RSpec.describe MyInput do
   #
   # f.input :status
   describe "#collection_from_enum" do
-    
+
     let(:method) { :status }
+    let(:model_naming) { double(:i18n_key => model_name) }
 
     context "when an enum is defined for the method" do
       before do
         statuses = ActiveSupport::HashWithIndifferentAccess.new("active"=>0, "inactive"=>1)
+        allow(model_class).to receive(:model_name) { model_naming }
         allow(model_class).to receive(:statuses) { statuses }
         allow(model).to receive(:defined_enums) { {"status" => statuses } }
       end
@@ -73,4 +75,3 @@ RSpec.describe MyInput do
   end
 
 end
-
