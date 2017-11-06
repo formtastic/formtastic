@@ -338,5 +338,145 @@ RSpec.describe MyInput do
       end
     end
   end
+
+  describe '#validation_min' do
+    before :example do
+      allow(instance).to receive(:validations?).and_return(:true)
+      allow(instance).to receive(:validations).and_return([validator])
+    end
+
+    context 'with a greater_than numericality validator' do
+      let(:validator) { double(options: { greater_than: option_value }, kind: :numericality) }
+
+      context 'with a symbol' do
+        let(:option_value) { :a_symbol }
+
+        it 'returns one greater' do
+          allow(model).to receive(:send).with(option_value).and_return(14)
+          expect(instance.validation_min).to eq 15
+        end
+      end
+
+      context 'with a proc' do
+        let(:option_value) { Proc.new { 10 } }
+
+        it 'returns one greater' do
+          expect(instance.validation_min).to eq 11
+        end
+      end
+
+      context 'with a number' do
+        let(:option_value) { 8 }
+
+        it 'returns one greater' do
+          expect(instance.validation_min).to eq 9
+        end
+      end
+    end
+
+    context 'with a greater_than_or_equal_to numericality validator' do
+      let(:validator) do
+        double(
+          options: { greater_than_or_equal_to: option_value },
+          kind: :numericality
+        )
+      end
+
+      context 'with a symbol' do
+        let(:option_value) { :a_symbol }
+
+        it 'returns the instance method amount' do
+          allow(model).to receive(:send).with(option_value).and_return(14)
+          expect(instance.validation_min).to eq 14
+        end
+      end
+
+      context 'with a proc' do
+        let(:option_value) { Proc.new { 10 } }
+
+        it 'returns the proc amount' do
+          expect(instance.validation_min).to eq 10
+        end
+      end
+
+      context 'with a number' do
+        let(:option_value) { 8 }
+
+        it 'returns the number' do
+          expect(instance.validation_min).to eq 8
+        end
+      end
+    end
+  end
+
+  describe '#validation_max' do
+    before :example do
+      allow(instance).to receive(:validations?).and_return(:true)
+      allow(instance).to receive(:validations).and_return([validator])
+    end
+
+    context 'with a less_than numericality validator' do
+      let(:validator) { double(options: { less_than: option_value }, kind: :numericality) }
+
+      context 'with a symbol' do
+        let(:option_value) { :a_symbol }
+
+        it 'returns one less' do
+          allow(model).to receive(:send).with(option_value).and_return(14)
+          expect(instance.validation_max).to eq 13
+        end
+      end
+
+      context 'with a proc' do
+        let(:option_value) { proc { 10 } }
+
+        it 'returns one less' do
+          expect(instance.validation_max).to eq 9
+        end
+      end
+
+      context 'with a number' do
+        let(:option_value) { 8 }
+
+        it 'returns one less' do
+          expect(instance.validation_max).to eq 7
+        end
+      end
+    end
+
+    context 'with a less_than_or_equal_to numericality validator' do
+      let(:validator) do
+        double(
+          options: { less_than_or_equal_to: option_value },
+          kind: :numericality
+        )
+      end
+
+      context 'with a symbol' do
+        let(:option_value) { :a_symbol }
+
+        it 'returns the instance method amount' do
+          allow(model).to receive(:send).with(option_value).and_return(14)
+          expect(instance.validation_max).to eq 14
+        end
+      end
+
+      context 'with a proc' do
+        let(:option_value) { proc { 10 } }
+
+        it 'returns the proc amount' do
+          expect(instance.validation_max).to eq 10
+        end
+      end
+
+      context 'with a number' do
+        let(:option_value) { 8 }
+
+        it 'returns the number' do
+          expect(instance.validation_max).to eq 8
+        end
+      end
+    end
+  end
 end
 

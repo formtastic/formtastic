@@ -73,13 +73,11 @@ module Formtastic
             raise IndeterminableMinimumAttributeError if validation.options[:greater_than] && column? && [:float, :decimal].include?(column.type)
 
             if validation.options[:greater_than_or_equal_to]
-              return (validation.options[:greater_than_or_equal_to].call(object)) if validation.options[:greater_than_or_equal_to].kind_of?(Proc)
-              return (validation.options[:greater_than_or_equal_to])
+              return option_value(validation.options[:greater_than_or_equal_to], object)
             end
 
             if validation.options[:greater_than]
-              return (validation.options[:greater_than].call(object) + 1) if validation.options[:greater_than].kind_of?(Proc)
-              return (validation.options[:greater_than] + 1)
+              return option_value(validation.options[:greater_than], object) + 1
             end
           end
         end
@@ -94,13 +92,11 @@ module Formtastic
             raise IndeterminableMaximumAttributeError if validation.options[:less_than] && column? && [:float, :decimal].include?(column.type)
 
             if validation.options[:less_than_or_equal_to]
-              return (validation.options[:less_than_or_equal_to].call(object)) if validation.options[:less_than_or_equal_to].kind_of?(Proc)
-              return (validation.options[:less_than_or_equal_to])
+              return option_value(validation.options[:less_than_or_equal_to], object)
             end
 
             if validation.options[:less_than]
-              return ((validation.options[:less_than].call(object)) - 1) if validation.options[:less_than].kind_of?(Proc)
-              return (validation.options[:less_than] - 1)
+              return option_value(validation.options[:less_than], object) - 1
             end
           end
         end
@@ -207,6 +203,19 @@ module Formtastic
 
         def readonly_from_options?
           options[:input_html] && options[:input_html][:readonly]
+        end
+
+        private
+
+        def option_value(option, object)
+          case option
+          when Symbol
+            object.send(option)
+          when Proc
+            option.call(object)
+          else
+            option
+          end
         end
       end
     end
