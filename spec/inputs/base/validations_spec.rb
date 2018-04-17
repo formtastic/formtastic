@@ -1,8 +1,14 @@
 require 'fast_spec_helper'
+require 'active_model'
 require 'inputs/base/validations'
 
 class MyInput
+  attr_accessor :validations
   include Formtastic::Inputs::Base::Validations
+
+  def validations?
+    true
+  end
 end
 
 RSpec.describe MyInput do
@@ -14,14 +20,15 @@ RSpec.describe MyInput do
   let(:method) { double }
   let(:options) { Hash.new }
   let(:validator) { double }
-  let(:instance) { MyInput.new(builder, template, model, model_name, method, options) }
+  let(:instance) do
+    MyInput.new(builder, template, model, model_name, method, options).tap do |my_input|
+      my_input.validations = validations
+    end
+  end
 
   describe '#required?' do
     context 'with a single validator' do
-      before :example do
-        allow(instance).to receive(:validations?).and_return(:true)
-        allow(instance).to receive(:validations).and_return([validator])
-      end
+      let(:validations) { [validator] }
 
       context 'with options[:required] being true' do
         let(:options) { {required: true} }
@@ -292,14 +299,14 @@ RSpec.describe MyInput do
     end
 
     context 'with multiple validators' do
+      let(:validations) { [validator1, validator2] }
+
       context 'with a on create presence validator and a on update presence validator' do
-        let (:validator1) { double(options: {on: :create}, kind: :presence) }
-        let (:validator2) { double(options: {}, kind: :presence) }
+        let(:validator1) { double(options: {on: :create}, kind: :presence) }
+        let(:validator2) { double(options: {}, kind: :presence) }
 
         before :example do
           allow(model).to receive(:new_record?).and_return(false)
-          allow(instance).to receive(:validations?).and_return(:true)
-          allow(instance).to receive(:validations).and_return([validator1, validator2])
         end
 
         it 'is required' do
@@ -313,8 +320,6 @@ RSpec.describe MyInput do
 
         before :example do
           allow(model).to receive(:new_record?).and_return(false)
-          allow(instance).to receive(:validations?).and_return(:true)
-          allow(instance).to receive(:validations).and_return([validator1, validator2])
         end
 
         it 'is required' do
@@ -323,13 +328,11 @@ RSpec.describe MyInput do
       end
 
       context 'with a on create presence validator and a allow blank inclusion validator' do
-        let (:validator1) { double(options: {on: :create}, kind: :presence) }
-        let (:validator2) { double(options: {allow_blank: true}, kind: :inclusion) }
+        let(:validator1) { double(options: {on: :create}, kind: :presence) }
+        let(:validator2) { double(options: {allow_blank: true}, kind: :inclusion) }
 
         before :example do
           allow(model).to receive(:new_record?).and_return(false)
-          allow(instance).to receive(:validations?).and_return(:true)
-          allow(instance).to receive(:validations).and_return([validator1, validator2])
         end
 
         it 'is required' do
@@ -340,10 +343,7 @@ RSpec.describe MyInput do
   end
 
   describe '#validation_min' do
-    before :example do
-      allow(instance).to receive(:validations?).and_return(:true)
-      allow(instance).to receive(:validations).and_return([validator])
-    end
+    let(:validations) { [validator] }
 
     context 'with a greater_than numericality validator' do
       let(:validator) { double(options: { greater_than: option_value }, kind: :numericality) }
@@ -410,13 +410,16 @@ RSpec.describe MyInput do
   end
 
   describe '#validation_max' do
-    before :example do
-      allow(instance).to receive(:validations?).and_return(:true)
-      allow(instance).to receive(:validations).and_return([validator])
+    let(:validations) do
+      [
+        ActiveModel::Validations::NumericalityValidator.new(
+          validator_options.merge(attributes: :an_attribute)
+        )
+      ]
     end
 
     context 'with a less_than numericality validator' do
-      let(:validator) { double(options: { less_than: option_value }, kind: :numericality) }
+      let(:validator_options) { { less_than: option_value } }
 
       context 'with a symbol' do
         let(:option_value) { :a_symbol }
@@ -445,12 +448,7 @@ RSpec.describe MyInput do
     end
 
     context 'with a less_than_or_equal_to numericality validator' do
-      let(:validator) do
-        double(
-          options: { less_than_or_equal_to: option_value },
-          kind: :numericality
-        )
-      end
+      let(:validator_options) { { less_than_or_equal_to: option_value } }
 
       context 'with a symbol' do
         let(:option_value) { :a_symbol }
