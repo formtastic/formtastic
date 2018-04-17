@@ -207,6 +207,8 @@ module Formtastic
 
         private
 
+        # Loosely based on
+        # https://github.com/rails/rails/blob/5-2-stable/activemodel/lib/active_model/validations/numericality.rb#L54-L59
         def option_value(option, object)
           case option
           when Symbol
