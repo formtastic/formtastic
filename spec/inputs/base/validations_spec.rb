@@ -1,8 +1,14 @@
 require 'fast_spec_helper'
+require 'active_model'
 require 'inputs/base/validations'
 
 class MyInput
+  attr_accessor :validations
   include Formtastic::Inputs::Base::Validations
+
+  def validations?
+    true
+  end
 end
 
 RSpec.describe MyInput do
@@ -14,14 +20,15 @@ RSpec.describe MyInput do
   let(:method) { double }
   let(:options) { Hash.new }
   let(:validator) { double }
-  let(:instance) { MyInput.new(builder, template, model, model_name, method, options) }
+  let(:instance) do
+    MyInput.new(builder, template, model, model_name, method, options).tap do |my_input|
+      my_input.validations = validations
+    end
+  end
 
   describe '#required?' do
     context 'with a single validator' do
-      before :example do
-        allow(instance).to receive(:validations?).and_return(:true)
-        allow(instance).to receive(:validations).and_return([validator])
-      end
+      let(:validations) { [validator] }
 
       context 'with options[:required] being true' do
         let(:options) { {required: true} }
@@ -292,14 +299,14 @@ RSpec.describe MyInput do
     end
 
     context 'with multiple validators' do
+      let(:validations) { [validator1, validator2] }
+
       context 'with a on create presence validator and a on update presence validator' do
-        let (:validator1) { double(options: {on: :create}, kind: :presence) }
-        let (:validator2) { double(options: {}, kind: :presence) }
+        let(:validator1) { double(options: {on: :create}, kind: :presence) }
+        let(:validator2) { double(options: {}, kind: :presence) }
 
         before :example do
           allow(model).to receive(:new_record?).and_return(false)
-          allow(instance).to receive(:validations?).and_return(:true)
-          allow(instance).to receive(:validations).and_return([validator1, validator2])
         end
 
         it 'is required' do
@@ -313,8 +320,6 @@ RSpec.describe MyInput do
 
         before :example do
           allow(model).to receive(:new_record?).and_return(false)
-          allow(instance).to receive(:validations?).and_return(:true)
-          allow(instance).to receive(:validations).and_return([validator1, validator2])
         end
 
         it 'is required' do
@@ -323,17 +328,150 @@ RSpec.describe MyInput do
       end
 
       context 'with a on create presence validator and a allow blank inclusion validator' do
-        let (:validator1) { double(options: {on: :create}, kind: :presence) }
-        let (:validator2) { double(options: {allow_blank: true}, kind: :inclusion) }
+        let(:validator1) { double(options: {on: :create}, kind: :presence) }
+        let(:validator2) { double(options: {allow_blank: true}, kind: :inclusion) }
 
         before :example do
           allow(model).to receive(:new_record?).and_return(false)
-          allow(instance).to receive(:validations?).and_return(:true)
-          allow(instance).to receive(:validations).and_return([validator1, validator2])
         end
 
         it 'is required' do
           expect(instance.required?).to be_falsey
+        end
+      end
+    end
+  end
+
+  describe '#validation_min' do
+    let(:validations) { [validator] }
+
+    context 'with a greater_than numericality validator' do
+      let(:validator) { double(options: { greater_than: option_value }, kind: :numericality) }
+
+      context 'with a symbol' do
+        let(:option_value) { :a_symbol }
+
+        it 'returns one greater' do
+          allow(model).to receive(:send).with(option_value).and_return(14)
+          expect(instance.validation_min).to eq 15
+        end
+      end
+
+      context 'with a proc' do
+        let(:option_value) { Proc.new { 10 } }
+
+        it 'returns one greater' do
+          expect(instance.validation_min).to eq 11
+        end
+      end
+
+      context 'with a number' do
+        let(:option_value) { 8 }
+
+        it 'returns one greater' do
+          expect(instance.validation_min).to eq 9
+        end
+      end
+    end
+
+    context 'with a greater_than_or_equal_to numericality validator' do
+      let(:validator) do
+        double(
+          options: { greater_than_or_equal_to: option_value },
+          kind: :numericality
+        )
+      end
+
+      context 'with a symbol' do
+        let(:option_value) { :a_symbol }
+
+        it 'returns the instance method amount' do
+          allow(model).to receive(:send).with(option_value).and_return(14)
+          expect(instance.validation_min).to eq 14
+        end
+      end
+
+      context 'with a proc' do
+        let(:option_value) { Proc.new { 10 } }
+
+        it 'returns the proc amount' do
+          expect(instance.validation_min).to eq 10
+        end
+      end
+
+      context 'with a number' do
+        let(:option_value) { 8 }
+
+        it 'returns the number' do
+          expect(instance.validation_min).to eq 8
+        end
+      end
+    end
+  end
+
+  describe '#validation_max' do
+    let(:validations) do
+      [
+        ActiveModel::Validations::NumericalityValidator.new(
+          validator_options.merge(attributes: :an_attribute)
+        )
+      ]
+    end
+
+    context 'with a less_than numericality validator' do
+      let(:validator_options) { { less_than: option_value } }
+
+      context 'with a symbol' do
+        let(:option_value) { :a_symbol }
+
+        it 'returns one less' do
+          allow(model).to receive(:send).with(option_value).and_return(14)
+          expect(instance.validation_max).to eq 13
+        end
+      end
+
+      context 'with a proc' do
+        let(:option_value) { proc { 10 } }
+
+        it 'returns one less' do
+          expect(instance.validation_max).to eq 9
+        end
+      end
+
+      context 'with a number' do
+        let(:option_value) { 8 }
+
+        it 'returns one less' do
+          expect(instance.validation_max).to eq 7
+        end
+      end
+    end
+
+    context 'with a less_than_or_equal_to numericality validator' do
+      let(:validator_options) { { less_than_or_equal_to: option_value } }
+
+      context 'with a symbol' do
+        let(:option_value) { :a_symbol }
+
+        it 'returns the instance method amount' do
+          allow(model).to receive(:send).with(option_value).and_return(14)
+          expect(instance.validation_max).to eq 14
+        end
+      end
+
+      context 'with a proc' do
+        let(:option_value) { proc { 10 } }
+
+        it 'returns the proc amount' do
+          expect(instance.validation_max).to eq 10
+        end
+      end
+
+      context 'with a number' do
+        let(:option_value) { 8 }
+
+        it 'returns the number' do
+          expect(instance.validation_max).to eq 8
         end
       end
     end
