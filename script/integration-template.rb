@@ -30,7 +30,11 @@ formtastic = -> do
     inject_into_class 'test/controllers/users_controller_test.rb', 'UsersControllerTest', <<-RUBY
 
     test "should show form" do
-      get :edit, id: @user
+      if ::Rails.version < "5.0"
+        get :edit, id: @user
+      else
+        get edit_user_path(@user)
+      end
 
       assert_select 'form' do
         assert_select 'li.input.string' do
