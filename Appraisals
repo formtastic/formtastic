@@ -13,6 +13,16 @@ appraise 'rails-5.0' do
   gem 'rspec-rails', '~> 3.5'
 end
 
+appraise 'rails-5.1' do
+  gem 'rails', '~> 5.1.0'
+  gem 'rspec-rails', '~> 3.5'
+end
+
+appraise 'rails-5.2' do
+  gem 'rails', '~> 5.2.0'
+  gem 'rspec-rails', '~> 3.5'
+end
+
 appraise 'rails-edge' do
   gem 'rails', github: 'rails/rails'
   gem 'rack', github: 'rack/rack'

@@ -216,7 +216,8 @@ module FormtasticSpecHelper
 
     double('_routes',
       :url_helpers => url_helpers,
-      :url_for => "/mock/path"
+      :url_for => "/mock/path",
+      :polymorphic_mappings => {}
     )
   end
 
@@ -350,7 +351,7 @@ module FormtasticSpecHelper
     allow(::MongoPost).to receive(:to_key).and_return(nil)
     allow(::MongoPost).to receive(:persisted?).and_return(nil)
     allow(::MongoPost).to receive(:to_ary)
-    allow(::MongoPost).to receive(:model_name).and_return( double(:model_name_mock, :singular => "post", :plural => "posts", :param_key => "post", :route_key => "posts") )
+    allow(::MongoPost).to receive(:model_name).and_return( double(:model_name_mock, :singular => "post", :plural => "posts", :param_key => "post", :route_key => "posts", :name => "post") )
 
     @new_mm_post = double('mm_post')
     allow(@new_mm_post).to receive(:class).and_return(::MongoPost)
