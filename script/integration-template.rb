@@ -7,6 +7,10 @@ def bundle_path
   File.expand_path ENV.fetch('BUNDLE_PATH', 'vendor/bundle'), ENV['TRAVIS_BUILD_DIR']
 end
 
+if Rails.version >= '6'
+    gsub_file 'Gemfile', /gem 'rails'.*/, "gem 'rails', '~> #{Rails.version}', github: 'rails/rails'"
+end
+
 if File.directory?(bundle_path) && bundle_install?
   def run_bundle
     bundle_command("install --jobs=3 --retry=3 --path=#{bundle_path}")
