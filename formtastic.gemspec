@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.rdoc_options = ["--charset=UTF-8"]
-  s.extra_rdoc_files = ["README.textile"]
+  s.extra_rdoc_files = ["README.md"]
 
   s.required_ruby_version = '>= 2.1.0'
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
@@ -28,7 +28,7 @@ Gem::Specification.new do |s|
   s.add_dependency(%q<actionpack>, [">= 4.1.0"])
 
   s.add_development_dependency(%q<nokogiri>)
-  s.add_development_dependency(%q<rspec-rails>, ["~> 3.4.2"])
+  s.add_development_dependency(%q<rspec-rails>, ["~> 3.4"])
   s.add_development_dependency(%q<rspec-dom-testing>, [">= 0.1.0"])
   s.add_development_dependency(%q<hpricot>, ["~> 0.8.3"])
   s.add_development_dependency(%q<RedCloth>, ["~> 4.2"]) # for YARD Textile formatting
