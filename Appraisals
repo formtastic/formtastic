@@ -24,6 +24,8 @@ appraise 'rails-5.2' do
 end
 
 appraise 'rails-edge' do
+  git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+
   gem 'rails', github: 'rails/rails'
   gem 'rack', github: 'rack/rack'
   gem 'i18n', github: 'svenfuchs/i18n'
