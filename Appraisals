@@ -10,20 +10,19 @@ end
 
 appraise 'rails-5.0' do
   gem 'rails', '~> 5.0.1'
-  gem 'rspec-rails', '~> 3.5'
 end
 
 appraise 'rails-5.1' do
   gem 'rails', '~> 5.1.0'
-  gem 'rspec-rails', '~> 3.5'
 end
 
 appraise 'rails-5.2' do
   gem 'rails', '~> 5.2.0'
-  gem 'rspec-rails', '~> 3.5'
 end
 
 appraise 'rails-edge' do
+  git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+
   gem 'rails', github: 'rails/rails'
   gem 'rack', github: 'rack/rack'
   gem 'i18n', github: 'svenfuchs/i18n'
