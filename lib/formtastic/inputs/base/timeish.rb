@@ -85,6 +85,9 @@ module Formtastic
       #   <%= f.input :publish_at, :as => :time_select, :include_blank => true %>
       #   <%= f.input :publish_at, :as => :time_select, :include_blank => false %>
       #
+      # @example Provide a value for the field via selected
+      #   <%= f.input :publish_at, :as => :datetime_select, :selected => DateTime.new(2018, 10, 4, 12, 00)
+      #
       # @todo Document i18n
       # @todo Check what other Rails options are supported (`start_year`, `end_year`, `use_month_numbers`, `use_short_month`, `add_month_numbers`, `prompt`), write tests for them, and otherwise support them
       # @todo Could we take the rendering from Rails' helpers and inject better HTML in and around it rather than re-inventing the whee?
@@ -157,7 +160,7 @@ module Formtastic
         end
         
         def value
-          object.send(method) if object && object.respond_to?(method)
+          input_options[:selected] || object.send(method) if object && object.respond_to?(method)
         end
         
         def fragment_input_html(fragment)
