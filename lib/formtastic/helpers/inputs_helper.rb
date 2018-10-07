@@ -310,7 +310,7 @@ module Formtastic
       def default_columns_for_object
         cols  = association_columns(:belongs_to)
         cols += content_columns
-        cols -= Formtastic::FormBuilder.skipped_columns
+        cols -= skipped_columns
         cols.compact
       end
 
