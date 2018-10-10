@@ -160,7 +160,8 @@ module Formtastic
         end
         
         def value
-          input_options[:selected] || object.send(method) if object && object.respond_to?(method)
+          return input_options[:selected] if options.key?(:selected)
+          object.send(method) if object && object.respond_to?(method)
         end
         
         def fragment_input_html(fragment)
