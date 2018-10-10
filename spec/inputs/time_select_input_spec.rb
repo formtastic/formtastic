@@ -185,6 +185,19 @@ RSpec.describe 'time select input' do
     end
   end
 
+  describe ":selected option for setting a value" do
+    it "should set the selected value for the form" do
+      concat(
+        semantic_form_for(@new_post) do |f|
+          concat(f.input(:created_at, :as => :datetime_select, :selected => DateTime.new(2018, 10, 4, 12, 00)))
+        end
+      )
+
+      expect(output_buffer).to have_tag "option[value='12'][selected='selected']"
+      expect(output_buffer).to have_tag "option[value='00'][selected='selected']"
+    end
+  end
+
   describe ':namespace option' do
     before do
       concat(semantic_form_for(@new_post, :namespace => 'form2') do |builder|

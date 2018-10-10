@@ -156,7 +156,21 @@ RSpec.describe 'date select input' do
       expect(output_buffer).to have_tag('form li.date_select fieldset ol li label', :count => 0)
     end
   end
-  
+
+  describe ":selected option for setting a value" do
+    it "should set the selected value for the form" do
+      concat(
+        semantic_form_for(@new_post) do |f|
+          concat(f.input(:created_at, :as => :datetime_select, :selected => Date.new(2018, 10, 4)))
+        end
+      )
+
+      expect(output_buffer).to have_tag "option[value='2018'][selected='selected']"
+      expect(output_buffer).to have_tag "option[value='10'][selected='selected']"
+      expect(output_buffer).to have_tag "option[value='4'][selected='selected']"
+    end
+  end
+
   describe "when required" do
     it "should add the required attribute to the input's html options" do
       with_config :use_required_attribute, true do 
