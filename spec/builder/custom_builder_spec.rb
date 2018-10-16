@@ -78,9 +78,12 @@ RSpec.describe 'Formtastic::Helpers::FormHelper.builder' do
       end
 
       it "should use the custom builder's skipped_columns config for inputs" do
-        MyCustomFormBuilder.skipped_columns = [:title, :created_at]
+        class AnotherCustomFormBuilder < Formtastic::FormBuilder
+          configure :skipped_columns, [:title, :created_at]
+        end
+        #AnotherCustomFormBuilder.skipped_columns = [:title, :created_at]
 
-        concat(semantic_form_for(@new_post) do |builder|
+        concat(semantic_form_for(@new_post, builder: AnotherCustomFormBuilder) do |builder|
           concat(builder.inputs)
         end)
 
