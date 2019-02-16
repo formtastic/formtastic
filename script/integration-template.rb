@@ -11,6 +11,9 @@ if Rails.version >= '6'
     gsub_file 'Gemfile', /gem 'rails'.*/, "gem 'rails', '~> #{Rails.version}', github: 'rails/rails'"
 end
 
+sqlite3_version = '~> 1.3.13'
+gsub_file 'Gemfile', /gem 'sqlite3'.*/, "gem 'sqlite3', '#{sqlite3_version}'"
+
 if File.directory?(bundle_path) && bundle_install?
   def run_bundle
     bundle_command("install --jobs=3 --retry=3 --path=#{bundle_path}")
