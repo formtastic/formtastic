@@ -22,6 +22,8 @@ before_install:
 before_cache:
   - rm -f ${BUNDLE_PATH}/**/extensions/**/{gem_make.out,mkmf.log}
 script:
+ - rm -f ${TRAVIS_BUILD_DIR}/Gemfile.lock     #ensure each build generates its own Gemfile.lock.
+ - rm -f ${TRAVIS_BUILD_DIR}/gemfiles/*.lock
  - bundle exec rake spec
  - script/integration.sh
 matrix:
