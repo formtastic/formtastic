@@ -16,7 +16,7 @@ gsub_file 'Gemfile', /gem 'sqlite3'.*/, "gem 'sqlite3', '#{sqlite3_version}'"
 
 ### Ensure Dummy App's Ruby version matches the current environments Ruby Version
 ruby_version = "ruby '#{RUBY_VERSION}'"
-gsub_file 'Gemfile', /ruby '\d.\d.\d'/, ruby_version
+gsub_file 'Gemfile', /ruby '\d+.\d+.\d+'/, ruby_version
 
 if File.directory?(bundle_path) && bundle_install?
   def run_bundle
