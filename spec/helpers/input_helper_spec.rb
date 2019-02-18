@@ -509,6 +509,10 @@ RSpec.describe 'with input class finder' do
           expect(default_input_type(:citext)).to eq(:string)
         end
 
+        it 'should default to :string for :inet column types' do
+          expect(default_input_type(:inet)).to eq(:string)
+        end
+
         it 'should default to :number for :integer, :float and :decimal column types' do
           expect(default_input_type(:integer)).to eq(:number)
           expect(default_input_type(:float)).to eq(:number)

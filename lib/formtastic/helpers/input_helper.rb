@@ -285,7 +285,7 @@ module Formtastic
             return :date_select
           when :hstore, :json, :jsonb
             return :text
-          when :citext
+          when :citext, :inet
             return :string
           end
 
