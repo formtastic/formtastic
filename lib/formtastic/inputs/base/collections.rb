@@ -114,8 +114,11 @@ module Formtastic
 
             enum_options_hash = object.defined_enums[method_name]
             enum_options_hash.map do |name, value|
-              key = "activerecord.attributes.#{object_name}.#{method_name.pluralize}.#{name}"
-              label = ::I18n.translate(key, :default => name.humanize)
+              scopes = [
+                "activerecord.attributes.#{object_name}/#{method_name.pluralize}"
+                "activerecord.attributes.#{object_name}.#{method_name.pluralize}",
+              ]
+              label = ::I18n.translate(name, scope: scopes, :default => name.humanize)
               [label, name]
             end
           end
