@@ -11,9 +11,7 @@ log/*
 .ruby-version
 \.ruby-gemset
 .bundle
-Gemfile.lock
 .yardoc
 doc/
 tmp
-gemfiles/*.lock
 /dummy/
