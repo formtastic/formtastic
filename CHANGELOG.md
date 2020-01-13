@@ -9,6 +9,7 @@
   * Changed required Ruby version to >= 2.0 (#1210)
   * Default to input types text for json & jsonb, string for citext columns (#1229)
   * Allow symbols for numericality options (#1258)
+  * Support for rubies under 2.4.0 has been dropped (#1292)
 
 ## 3.1.2
 
