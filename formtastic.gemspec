@@ -26,11 +26,4 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.6}
 
   s.add_dependency(%q<actionpack>, [">= 5.2.0"])
-
-  s.add_development_dependency(%q<rspec-rails>, ["~> 3.4"])
-  s.add_development_dependency(%q<rspec-dom-testing>, [">= 0.1.0"])
-  s.add_development_dependency(%q<yard>, ["~> 0.8"])
-  s.add_development_dependency(%q<ammeter>, ["~> 1.1.3"])
-  s.add_development_dependency(%q<rake>)
-  s.add_development_dependency(%q<sqlite3>, ["~> 1.4"])
 end
