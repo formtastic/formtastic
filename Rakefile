@@ -1,17 +1,12 @@
 # encoding: utf-8
 require 'bundler/setup'
-require 'appraisal'
 require 'yard'
 require 'rspec/core/rake_task'
 
 Bundler::GemHelper.install_tasks
 
 desc 'Default: run unit specs.'
-if !ENV["APPRAISAL_INITIALIZED"] && !ENV["TRAVIS"]
-  task :default => :appraisal
-else
-  task :default => :spec
-end
+task :default => :spec
 
 desc 'Generate documentation for the formtastic plugin.'
 YARD::Rake::YardocTask.new(:yard) do |t|

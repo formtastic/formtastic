@@ -31,7 +31,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency(%q<rspec-dom-testing>, [">= 0.1.0"])
   s.add_development_dependency(%q<yard>, ["~> 0.8"])
   s.add_development_dependency(%q<ammeter>, ["~> 1.1.3"])
-  s.add_development_dependency(%q<appraisal>, ["~> 2.1"])
   s.add_development_dependency(%q<rake>)
   s.add_development_dependency(%q<sqlite3>, ["~> 1.4"])
 end
