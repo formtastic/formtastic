@@ -5,8 +5,8 @@ cache:
     - vendor/bundle
 language: ruby
 rvm:
-  - 2.4.3
-  - 2.5.0
+  - 2.4.9
+  - 2.5.7
 gemfile:
   - gemfiles/rails_5.2.gemfile
   - gemfiles/rails_edge.gemfile
