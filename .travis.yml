@@ -16,8 +16,8 @@ gemfile:
   - gemfiles/rails_edge.gemfile
 before_install:
   - gem install bundler
-  - export BUNDLE_FROZEN=true BUNDLE_PATH=vendor/bundle
 install:
+  - export BUNDLE_FROZEN=true BUNDLE_PATH=vendor/bundle
   - bundle install --jobs=3 --retry=3
 script:
   - bundle exec rake spec
