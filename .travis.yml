@@ -20,8 +20,8 @@ before_install:
 install:
   - bundle install --jobs=3 --retry=3
 script:
- - bundle exec rake spec
- - script/integration.sh
+  - bundle exec rake spec
+  - script/integration.sh
 matrix:
   exclude:
     - rvm: 2.4.9
