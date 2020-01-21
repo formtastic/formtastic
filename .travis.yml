@@ -19,8 +19,8 @@ before_install:
 before_cache:
   - rm -f ${BUNDLE_PATH}/**/extensions/**/{gem_make.out,mkmf.log}
 script:
- - bundle exec rake spec
- - script/integration.sh
+  - bundle exec rake spec
+  - script/integration.sh
 matrix:
   allow_failures:
     - gemfile: gemfiles/rails_edge.gemfile
