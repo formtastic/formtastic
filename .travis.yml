@@ -2,6 +2,7 @@ cache:
   - bundler
   - directories:
     - vendor/bundle
+dist: bionic
 language: ruby
 rvm:
   - 2.4.9
