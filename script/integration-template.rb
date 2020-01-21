@@ -39,7 +39,7 @@ formtastic = -> do
   generate('formtastic:install')
   generate('formtastic:form', 'user name password:password --force')
 
-  rake('db:migrate')
+  rails_command('db:migrate')
 
   in_root do
     inject_into_class 'app/models/user.rb', 'User', "  has_secure_password\n"
