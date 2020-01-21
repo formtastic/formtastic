@@ -4,6 +4,7 @@ cache:
     - vendor/bundle
 dist: bionic
 language: ruby
+node_js: 11
 rvm:
   - 2.4.9
   - 2.5.7
