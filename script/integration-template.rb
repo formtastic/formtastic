@@ -20,7 +20,12 @@ gsub_file 'Gemfile', /ruby '\d+.\d+.\d+'/, ruby_version
 
 if File.directory?(bundle_path) && bundle_install?
   def run_bundle
-    bundle_command("install --jobs=3 --retry=3 --path=#{bundle_path}")
+    previous_bundle_path = bundle_path
+
+    require "bundler"
+    Bundler.with_clean_env do
+      system("bundle install --jobs=3 --retry=3 --path=#{previous_bundle_path}")
+    end
   end
 end
 
