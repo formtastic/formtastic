@@ -215,7 +215,7 @@ module Formtastic
       #       <%= f.input :title ... %>
       #       <%= f.input :body ... %>
       #     <% end %>
-      #     <%= f.inputs do :name => 'Advanced options:' do %>
+      #     <%= f.inputs :name => 'Advanced options:' do %>
       #       <%= f.input :user ... %>
       #       <%= f.input :categories ... %>
       #     <% end %>
