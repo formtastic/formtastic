@@ -3,7 +3,7 @@ Formtastic features and compatibilities.
 
 v4.0 (planned)
 
-* Remove support for Rails < 4.2
+* Remove support for Rails < 5.0
 * Remove support for country_select 1.x syntax (they want to remove it in 3.0)
 * Remove support for input_class, custom_input_class_name, standard_input_class_name, action_class, custom_action_class_name, standard_action_class_name
 

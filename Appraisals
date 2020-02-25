@@ -1,8 +1,3 @@
-appraise 'rails-4.2' do
-  gem 'rails', '~>4.2.0'
-  gem 'nokogiri', '~>1.6.8', platform: :mri_20
-end
-
 appraise 'rails-5.0' do
   gem 'rails', '~> 5.0.1'
 end
