@@ -91,9 +91,4 @@ formtastic = -> do
   end
 end
 
-if respond_to?(:after_bundle) # Rails >= 4.2
-  after_bundle(&formtastic)
-else # Rails 4.1
-  run_bundle
-  formtastic.call
-end
+after_bundle(&formtastic)
