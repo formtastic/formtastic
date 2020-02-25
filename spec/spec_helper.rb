@@ -11,7 +11,6 @@ require 'active_record'
 ActiveRecord::Base.establish_connection('url' => 'sqlite3::memory:', 'pool' => 1)
 load 'spec/schema.rb'
 
-require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic/util'))
 require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic'))
 
 #rspec-rails 2-14 assumes a full rails install
