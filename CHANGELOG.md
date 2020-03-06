@@ -10,6 +10,7 @@
   * Default to input types text for json & jsonb, string for citext columns (#1229)
   * Allow symbols for numericality options (#1258)
   * Support for rubies under 2.4.0 has been dropped (#1292)
+  * Support for Rails under 5.2.0 has been dropped (#1293)
 
 ## 3.1.2
 

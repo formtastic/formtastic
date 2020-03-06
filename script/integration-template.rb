@@ -50,11 +50,7 @@ formtastic = -> do
     inject_into_class 'test/controllers/users_controller_test.rb', 'UsersControllerTest', <<-RUBY
 
     test "should show form" do
-      if ::Rails.version < "5.0"
-        get :edit, id: @user
-      else
-        get edit_user_path(@user)
-      end
+      get edit_user_path(@user)
 
       assert_select 'form' do
         assert_select 'li.input.string' do
@@ -73,27 +69,6 @@ formtastic = -> do
     end # test "should show form"
     RUBY
   end
-
-  script_template = File.expand_path(File.join('integration', 'rails%s.rb'), __dir__)
-
-  scripts = [
-      script_template % "-#{Rails::VERSION::MAJOR}-#{Rails::VERSION::MINOR}",
-      script_template % "-#{Rails::VERSION::MAJOR}",
-      script_template % ''
-  ]
-
-  scripts.each do |script|
-    if File.exist?(script)
-      apply script
-    else
-      say_status :apply, script, :yellow
-    end
-  end
 end
 
-if respond_to?(:after_bundle) # Rails >= 4.2
-  after_bundle(&formtastic)
-else # Rails 4.1
-  run_bundle
-  formtastic.call
-end
+after_bundle(&formtastic)
