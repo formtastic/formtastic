@@ -1,9 +1,10 @@
-sudo: false
 cache:
   - bundler
   - directories:
     - vendor/bundle
+dist: bionic
 language: ruby
+node_js: 11
 rvm:
   - 2.4.9
   - 2.5.7
@@ -13,14 +14,13 @@ gemfile:
   - gemfiles/rails_5.2.gemfile
   - gemfiles/rails_edge.gemfile
 before_install:
-  - gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true
-  - gem install bundler -v '< 2'
+  - gem install bundler
   - export BUNDLE_PATH="${TRAVIS_BUILD_DIR}/vendor/bundle"
 before_cache:
   - rm -f ${BUNDLE_PATH}/**/extensions/**/{gem_make.out,mkmf.log}
 script:
- - bundle exec rake spec
- - script/integration.sh
+  - bundle exec rake spec
+  - script/integration.sh
 matrix:
   allow_failures:
     - gemfile: gemfiles/rails_edge.gemfile
