@@ -9,9 +9,7 @@ end
 
 if Rails.version >= '6'
     gsub_file 'Gemfile', /gem 'rails'.*/, "gem 'rails', '~> #{Rails.version}', github: 'rails/rails'"
-end
-
-if Rails.version >= '5.2'
+elsif Rails.version >= '5.2'
     gsub_file 'Gemfile', /gem 'rails'.*/, "gem 'rails', '~> #{Rails.version}', github: 'rails/rails', branch: '5-2-stable'"
 end
 
