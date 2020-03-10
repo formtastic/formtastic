@@ -12,6 +12,7 @@ rvm:
   - 2.7.0
 gemfile:
   - gemfiles/rails_5.2.gemfile
+  - gemfiles/rails_6.0.gemfile
   - gemfiles/rails_edge.gemfile
 before_install:
   - gem install bundler
@@ -23,6 +24,8 @@ script:
   - script/integration.sh
 matrix:
   exclude:
+    - rvm: 2.4.9
+      gemfile: gemfiles/rails_6.0.gemfile
     - rvm: 2.4.9
       gemfile: gemfiles/rails_edge.gemfile
   allow_failures:
