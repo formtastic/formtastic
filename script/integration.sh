@@ -9,6 +9,7 @@ rm -rf ${test_app}
 
 bundle exec rails new ${test_app} \
   --template=$(dirname "$0")/integration-template.rb \
+  --skip-bootsnap \
   --skip-spring \
   --skip-turbolinks
 
