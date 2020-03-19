@@ -9,14 +9,9 @@ end
 
 if Rails.version >= '6'
     gsub_file 'Gemfile', /gem 'rails'.*/, "gem 'rails', '~> #{Rails.version}', github: 'rails/rails'"
-end
-
-if Rails.version >= '5.2'
+elsif Rails.version >= '5.2'
     gsub_file 'Gemfile', /gem 'rails'.*/, "gem 'rails', '~> #{Rails.version}', github: 'rails/rails', branch: '5-2-stable'"
 end
-
-sqlite3_version = '~> 1.3.13'
-gsub_file 'Gemfile', /gem 'sqlite3'.*/, "gem 'sqlite3', '#{sqlite3_version}'"
 
 ### Ensure Dummy App's Ruby version matches the current environments Ruby Version
 ruby_version = "ruby '#{RUBY_VERSION}'"

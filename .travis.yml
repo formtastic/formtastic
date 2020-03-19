@@ -22,5 +22,8 @@ script:
   - bundle exec rake spec
   - script/integration.sh
 matrix:
+  exclude:
+    - rvm: 2.4.9
+      gemfile: gemfiles/rails_edge.gemfile
   allow_failures:
     - gemfile: gemfiles/rails_edge.gemfile
