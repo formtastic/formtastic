@@ -58,7 +58,7 @@ One day, I finally had enough, so I opened up my text editor, and wrote a DSL fo
   <% end %>
 ```
 
-I also wrote the accompanying HTML output I expected, favoring something very similar to the fieldsets, lists and other semantic elements Aaron Gustafson presented in [Learning to Love Forms](http://www.slideshare.net/AaronGustafson/learning-to-love-forms-web-directions-south-07), hacking together enough Ruby to prove it could be done.
+I also wrote the accompanying HTML output I expected, favoring something very similar to the fieldsets, lists and other semantic elements Aaron Gustafson presented in [Learning to Love Forms](http://www.slideshare.net/AaronGustafson/learning-to-love-forms-webvisions-07), hacking together enough Ruby to prove it could be done.
 
 
 ## It's awesome because...
