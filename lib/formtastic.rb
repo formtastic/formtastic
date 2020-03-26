@@ -18,7 +18,6 @@ module Formtastic
     autoload :FormBuilder
     autoload :Inputs
     autoload :Actions
-    autoload :Util
   end
 
   # @public
