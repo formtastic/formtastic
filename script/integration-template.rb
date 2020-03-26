@@ -7,8 +7,10 @@ def bundle_path
   File.expand_path ENV.fetch('BUNDLE_PATH', 'vendor/bundle'), ENV['TRAVIS_BUILD_DIR']
 end
 
-if Rails.version >= '6'
+if Rails.version >= '6.1'
     gsub_file 'Gemfile', /gem 'rails'.*/, "gem 'rails', '~> #{Rails.version}', github: 'rails/rails'"
+elsif Rails.version >= '6.0'
+    gsub_file 'Gemfile', /gem 'rails'.*/, "gem 'rails', '~> #{Rails.version}', github: 'rails/rails', branch: '6-0-stable'"
 elsif Rails.version >= '5.2'
     gsub_file 'Gemfile', /gem 'rails'.*/, "gem 'rails', '~> #{Rails.version}', github: 'rails/rails', branch: '5-2-stable'"
 end
