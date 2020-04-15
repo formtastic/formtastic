@@ -1,6 +1,5 @@
 # encoding: utf-8
 require 'bundler/setup'
-require 'appraisal'
 require 'yard'
 require 'rspec/core/rake_task'
 
@@ -11,6 +10,26 @@ if !ENV["APPRAISAL_INITIALIZED"] && !ENV["TRAVIS"]
   task :default => :appraisal
 else
   task :default => :spec
+end
+
+desc 'Run the default task over all gemfiles.'
+task :appraisal do
+  for_all_gemfiles("exec", "rake")
+end
+
+namespace :appraisal do
+  desc 'Run `bundle install` over all gemfiles.'
+  task :install do
+    for_all_gemfiles("install")
+  end
+end
+
+def for_all_gemfiles(*args)
+  Dir.glob("gemfiles/*.gemfile").sort.each do |gemfile|
+    Bundler.with_original_env do
+      sh({ "APPRAISAL_INITIALIZED" => "true", "BUNDLE_GEMFILE" => gemfile }, "bundle", *args)
+    end
+  end
 end
 
 desc 'Generate documentation for the formtastic plugin.'
