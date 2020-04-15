@@ -1,24 +1,23 @@
 # Formtastic
 
 [![Build Status](https://travis-ci.org/justinfrench/formtastic.svg?branch=master)](https://travis-ci.org/justinfrench/formtastic)
-[![Inline docs](http://inch-ci.org/github/justinfrench/formtastic.svg?branch=master)](http://inch-ci.org/github/justinfrench/formtastic)
+[![Inline docs](https://inch-ci.org/github/justinfrench/formtastic.svg?branch=master)](https://inch-ci.org/github/justinfrench/formtastic)
 [![Code Climate](https://codeclimate.com/github/justinfrench/formtastic/badges/gpa.svg)](https://codeclimate.com/github/justinfrench/formtastic)
 [![Gem Version](https://badge.fury.io/rb/formtastic.svg)](https://badge.fury.io/rb/formtastic)
-[![Dependency](https://gemnasium.com/justinfrench/formtastic.png)](https://gemnasium.com/justinfrench/formtastic)
 
 Formtastic is a Rails FormBuilder DSL (with some other goodies) to make it far easier to create beautiful, semantically rich, syntactically awesome, readily stylable and wonderfully accessible HTML forms in your Rails applications.
 
 ## Documentation & Support
 
-* [Documentation is available on rdoc.info](http://rdoc.info/projects/justinfrench/formtastic)
-* [We track issues & bugs on GitHub](http://github.com/justinfrench/formtastic/issues)
-* [We have a wiki on GitHub](http://github.com/justinfrench/formtastic/wiki)
-* [StackOverflow can help](http://stackoverflow.com/questions/tagged/formtastic)
-* [Follow @formtastic on Twitter for news & updates](http://twitter.com/formtastic)
+* [Documentation is available on rdoc.info](https://rdoc.info/projects/justinfrench/formtastic)
+* [We track issues & bugs on GitHub](https://github.com/justinfrench/formtastic/issues)
+* [We have a wiki on GitHub](https://github.com/justinfrench/formtastic/wiki)
+* [StackOverflow can help](https://stackoverflow.com/questions/tagged/formtastic)
+* [Follow @formtastic on Twitter for news & updates](https://twitter.com/formtastic)
 
 ## Compatibility
 
-* Formtastic 4 will require Rails 4.1 and Ruby 2.0 minimum
+* Formtastic 4 will require Rails 5.2 and Ruby 2.4 minimum
 * Formtastic 3 requires Rails 3.2.13 minimum
 * Formtastic 2 requires Rails 3
 * Formtastic, much like Rails, is very ActiveRecord-centric. Many are successfully using other ActiveModel-like ORMs and objects (DataMapper, MongoMapper, Mongoid, Authlogic, Devise...) but we're not guaranteeing full compatibility at this stage. Patches are welcome!
@@ -59,7 +58,7 @@ One day, I finally had enough, so I opened up my text editor, and wrote a DSL fo
   <% end %>
 ```
 
-I also wrote the accompanying HTML output I expected, favoring something very similar to the fieldsets, lists and other semantic elements Aaron Gustafson presented in [Learning to Love Forms](http://www.slideshare.net/AaronGustafson/learning-to-love-forms-web-directions-south-07), hacking together enough Ruby to prove it could be done.
+I also wrote the accompanying HTML output I expected, favoring something very similar to the fieldsets, lists and other semantic elements Aaron Gustafson presented in [Learning to Love Forms](https://www.slideshare.net/AaronGustafson/learning-to-love-forms-webvisions-07), hacking together enough Ruby to prove it could be done.
 
 
 ## It's awesome because...
@@ -258,7 +257,7 @@ If you have more than one form on the same page, it may lead to HTML invalidatio
   <% end %>
 ```
 
-Customize HTML attributes for any input using the `:input_html` option. Typically this is used to disable the input, change the size of a text field, change the rows in a textarea, or even to add a special class to an input to attach special behavior like [autogrow](http://plugins.jquery.com/project/autogrowtextarea) textareas:
+Customize HTML attributes for any input using the `:input_html` option. Typically this is used to disable the input, change the size of a text field, change the rows in a textarea, or even to add a special class to an input to attach special behavior like [autogrow](https://plugins.jquery.com/project/autogrowtextarea) textareas:
 
 ```erb
   <%= semantic_form_for @post do |f| %>
@@ -335,7 +334,7 @@ The Formtastic input types:
 * `:boolean` - a checkbox. Default for column types: `:boolean`.
 * `:string` - a text field. Default for column types: `:string`.
 * `:number` - a text field (just like string). Default for  column types: `:integer`, `:float`, and `:decimal`.
-* `:file` - a file field. Default for file-attachment attributes matching: [paperclip](http://github.com/thoughtbot/paperclip) or [attachment_fu](http://github.com/technoweenie/attachment_fu).
+* `:file` - a file field. Default for file-attachment attributes matching: [paperclip](https://github.com/thoughtbot/paperclip) or [attachment_fu](https://github.com/technoweenie/attachment_fu).
 * `:country` - a select menu of country names. Default for column types: `:string` with name `"country"` - requires a *country_select* plugin to be installed.
 * `:email` - a text field (just like string). Default for columns with name matching `"email"`. New in HTML5. Works on some mobile browsers already.
 * `:url` - a text field (just like string). Default for columns with name matching `"url"`. New in HTML5. Works on some mobile browsers already.
@@ -621,9 +620,9 @@ There are none other than Rails itself, but...
 
 ## Project Info
 
-Formtastic was created by [Justin French](http://www.justinfrench.com) with contributions from around 180 awesome developers. Run `git shortlog -n -s` to see the awesome.
+Formtastic was created by [Justin French](https://www.justinfrench.com) with contributions from around 180 awesome developers. Run `git shortlog -n -s` to see the awesome.
 
-The project is hosted on Github: [http://github.com/justinfrench/formtastic](http://github.com/justinfrench/formtastic), where your contributions, forkings, comments, issues and feedback are greatly welcomed.
+The project is hosted on Github: [https://github.com/justinfrench/formtastic](https://github.com/justinfrench/formtastic), where your contributions, forkings, comments, issues and feedback are greatly welcomed.
 
 Copyright (c) 2007-2016 Justin French, released under the MIT license.
 
