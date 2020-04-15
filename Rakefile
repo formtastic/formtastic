@@ -25,7 +25,7 @@ namespace :appraisal do
 end
 
 def for_all_gemfiles(*args)
-  Dir.glob("gemfiles/*.gemfile").sort.each do |gemfile|
+  Dir.glob("gemfiles/*/Gemfile").sort.each do |gemfile|
     Bundler.with_original_env do
       sh({ "APPRAISAL_INITIALIZED" => "true", "BUNDLE_GEMFILE" => gemfile }, "bundle", *args)
     end
