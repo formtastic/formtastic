@@ -611,7 +611,7 @@ There are none other than Rails itself, but...
 ## How to contribute
 
 * Fork the project on Github
-* Install development dependencies (`bundle install` and `appraisal install`)
+* Install development dependencies (`bundle install` and `bin/appraisal install`)
 * Create a topic branch for your changes
 * Ensure that you provide *documentation* and *test coverage* for your changes (patches won't be accepted without)
 * Ensure that all tests pass (`bundle exec rake`)

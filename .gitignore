@@ -14,5 +14,5 @@ log/*
 .yardoc
 doc/
 tmp
-gemfiles/*.lock
+gemfiles/*/Gemfile.lock
 /dummy/
