@@ -13,13 +13,6 @@ load 'spec/schema.rb'
 
 require File.expand_path(File.join(File.dirname(__FILE__), '../lib/formtastic'))
 
-#rspec-rails 2-14 assumes a full rails install
-module Rails
-  module VERSION
-    include ActionPack::VERSION
-  end
-end
-
 require 'ammeter/init'
 
 # Requires supporting files with custom matchers and macros, etc,
