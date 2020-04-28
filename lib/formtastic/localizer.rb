@@ -101,7 +101,7 @@ module Formtastic
             # This is effectively what Rails label helper does for i18n lookup
             options[:scope] = [:helpers, type]
             options[:default] = defaults
-            i18n_value = ::I18n.t(default_key, options)
+            i18n_value = ::I18n.t(default_key, **options)
           end
 
           # save the result to the cache
