@@ -23,7 +23,7 @@ module Formtastic
         options = args.extract_options!
         options.reverse_merge!(:default => DEFAULT_VALUES[key])
         options[:scope] = [DEFAULT_SCOPE, options[:scope]].flatten.compact
-        ::I18n.translate(key, *(args << options))
+        ::I18n.translate(key, *args, **options)
       end
       alias :t :translate
 
