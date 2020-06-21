@@ -91,7 +91,7 @@
 
 # By creating custom input class finder, you can change how input classes  are looked up.
 # For example you can make it to search for TextInputFilter instead of TextInput.
-# See https://github.com/justinfrench/formtastic/wiki/Custom-Class-Finders
+# See https://github.com/formtastic/formtastic/wiki/Custom-Class-Finders
 # Formtastic::FormBuilder.input_class_finder = Formtastic::InputClassFinder
 
 # Define custom namespaces in which to look up your Input classes. Default is
@@ -100,7 +100,7 @@
 
 # By creating custom action class finder, you can change how action classes are looked up.
 # For example you can make it to search for MyButtonAction instead of ButtonAction.
-# See https://github.com/justinfrench/formtastic/wiki/Custom-Class-Finders
+# See https://github.com/formtastic/formtastic/wiki/Custom-Class-Finders
 # Formtastic::FormBuilder.action_class_finder = Formtastic::ActionClassFinder
 
 # Define custom namespaces in which to look up your Action classes. Default is

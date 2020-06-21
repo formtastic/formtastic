@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = [%q{Justin French}]
   s.email       = [%q{justin@indent.com.au}]
-  s.homepage    = %q{http://github.com/justinfrench/formtastic}
+  s.homepage    = %q{http://github.com/formtastic/formtastic}
   s.summary     = %q{A Rails form builder plugin/gem with semantically rich and accessible markup}
   s.description = %q{A Rails form builder plugin/gem with semantically rich and accessible markup}
   s.license     = 'MIT'

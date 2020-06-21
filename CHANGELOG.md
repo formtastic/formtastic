@@ -1,4 +1,4 @@
-## master
+## master / 4.0.0.rc1
   * Fixed default_columns_for_object when object has non-standard foreign keys (#1241)
   * Fixed missing constants in production (#911)
   * Removed support for Rails 3 and 4.0 (#1108)
@@ -43,7 +43,7 @@
 ---
 
 See 3.0-stable branch for 3.0.x changes
-https://github.com/justinfrench/formtastic/blob/3.0-stable/CHANGELOG
+https://github.com/formtastic/formtastic/blob/3.0-stable/CHANGELOG
 
 See 2.3-stable branch for 2.3.x and earlier releases
-https://github.com/justinfrench/formtastic/blob/2.3-stable/CHANGELOG
+https://github.com/formtastic/formtastic/blob/2.3-stable/CHANGELOG

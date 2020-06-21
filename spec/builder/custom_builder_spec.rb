@@ -70,7 +70,7 @@ RSpec.describe 'Formtastic::Helpers::FormHelper.builder' do
         end
       end
 
-      # See: https://github.com/justinfrench/formtastic/issues/657
+      # See: https://github.com/formtastic/formtastic/issues/657
       it "should not conflict with navigasmic" do
         allow_any_instance_of(self.class).to receive(:builder).and_return('navigasmic')
 
