@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/justinfrench/formtastic.svg?branch=master)](https://travis-ci.org/justinfrench/formtastic)
 [![Inline docs](https://inch-ci.org/github/justinfrench/formtastic.svg?branch=master)](https://inch-ci.org/github/justinfrench/formtastic)
-[![Code Climate](https://codeclimate.com/github/justinfrench/formtastic/badges/gpa.svg)](https://codeclimate.com/github/justinfrench/formtastic)
+[![Code Climate](https://codeclimate.com/github/formtastic/formtastic/badges/gpa.svg)](https://codeclimate.com/github/formtastic/formtastic)
 [![Gem Version](https://badge.fury.io/rb/formtastic.svg)](https://badge.fury.io/rb/formtastic)
 
 Formtastic is a Rails FormBuilder DSL (with some other goodies) to make it far easier to create beautiful, semantically rich, syntactically awesome, readily stylable and wonderfully accessible HTML forms in your Rails applications.
