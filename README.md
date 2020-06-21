@@ -13,7 +13,6 @@ Formtastic is a Rails FormBuilder DSL (with some other goodies) to make it far e
 * [We track issues & bugs on GitHub](https://github.com/formtastic/formtastic/issues)
 * [We have a wiki on GitHub](https://github.com/formtastic/formtastic/wiki)
 * [StackOverflow can help](https://stackoverflow.com/questions/tagged/formtastic)
-* [Follow @formtastic on Twitter for news & updates](https://twitter.com/formtastic)
 
 ## Compatibility
 
