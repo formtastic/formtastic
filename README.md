@@ -10,8 +10,8 @@ Formtastic is a Rails FormBuilder DSL (with some other goodies) to make it far e
 ## Documentation & Support
 
 * [Documentation is available on rdoc.info](https://rdoc.info/projects/justinfrench/formtastic)
-* [We track issues & bugs on GitHub](https://github.com/justinfrench/formtastic/issues)
-* [We have a wiki on GitHub](https://github.com/justinfrench/formtastic/wiki)
+* [We track issues & bugs on GitHub](https://github.com/formtastic/formtastic/issues)
+* [We have a wiki on GitHub](https://github.com/formtastic/formtastic/wiki)
 * [StackOverflow can help](https://stackoverflow.com/questions/tagged/formtastic)
 * [Follow @formtastic on Twitter for news & updates](https://twitter.com/formtastic)
 
@@ -622,7 +622,7 @@ There are none other than Rails itself, but...
 
 Formtastic was created by [Justin French](https://www.justinfrench.com) with contributions from around 180 awesome developers. Run `git shortlog -n -s` to see the awesome.
 
-The project is hosted on Github: [https://github.com/justinfrench/formtastic](https://github.com/justinfrench/formtastic), where your contributions, forkings, comments, issues and feedback are greatly welcomed.
+The project is hosted on Github: [https://github.com/formtastic/formtastic](https://github.com/formtastic/formtastic), where your contributions, forkings, comments, issues and feedback are greatly welcomed.
 
 Copyright (c) 2007-2016 Justin French, released under the MIT license.
 

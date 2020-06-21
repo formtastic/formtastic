@@ -43,7 +43,7 @@
 ---
 
 See 3.0-stable branch for 3.0.x changes
-https://github.com/justinfrench/formtastic/blob/3.0-stable/CHANGELOG
+https://github.com/formtastic/formtastic/blob/3.0-stable/CHANGELOG
 
 See 2.3-stable branch for 2.3.x and earlier releases
-https://github.com/justinfrench/formtastic/blob/2.3-stable/CHANGELOG
+https://github.com/formtastic/formtastic/blob/2.3-stable/CHANGELOG
