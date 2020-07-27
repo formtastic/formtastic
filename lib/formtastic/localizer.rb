@@ -115,10 +115,12 @@ module Formtastic
     protected
 
     def normalize_model_name(name)
-      if name =~ /(.+)\[(.+)\]/
+      result = /(.+)\[(.+)\]/.match(name.is_a?(String) ? name : '')
+
+      if result
         # Nested builder case with :post rather than @post
         # TODO: check if this is no longer required with a minimum of Rails 4.1
-        [$1, $2]
+        [result[1], result[2]]
       elsif builder.respond_to?(:options) && builder.options.key?(:as)
         [builder.options[:as].to_s]
       elsif builder.respond_to?(:options) && builder.options.key?(:parent_builder)
