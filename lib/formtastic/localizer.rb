@@ -115,7 +115,7 @@ module Formtastic
     protected
 
     def normalize_model_name(name)
-      if name =~ /(.+)\[(.+)\]/
+      if /(.+)\[(.+)\]/.match(name)
         # Nested builder case with :post rather than @post
         # TODO: check if this is no longer required with a minimum of Rails 4.1
         [$1, $2]
