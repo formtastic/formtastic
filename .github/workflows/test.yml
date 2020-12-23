@@ -2,6 +2,8 @@ name: test
 
 on:
   push:
+    - github_actions
+
   pull_request:
 
 jobs:
