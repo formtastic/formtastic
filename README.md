@@ -1,6 +1,6 @@
 # Formtastic
 
-[![Build Status](https://travis-ci.org/formtastic/formtastic.svg?branch=master)](https://travis-ci.org/formtastic/formtastic)
+[![Build Status](https://github.com/formtastic/formtastic/workflows/test/badge.svg)](https://github.com/formtastic/formtastic/actions)
 [![Inline docs](https://inch-ci.org/github/justinfrench/formtastic.svg?branch=master)](https://inch-ci.org/github/justinfrench/formtastic)
 [![Code Climate](https://codeclimate.com/github/formtastic/formtastic/badges/gpa.svg)](https://codeclimate.com/github/formtastic/formtastic)
 [![Gem Version](https://badge.fury.io/rb/formtastic.svg)](https://badge.fury.io/rb/formtastic)
