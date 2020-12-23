@@ -353,7 +353,7 @@ module Formtastic
       # Collects all foreign key columns
       def foreign_key_columns # @private
         if @object.present? && @object.class.respond_to?(:reflect_on_all_associations)
-          @object.class.reflect_on_all_associations(:belongs_to).map(&:foreign_key)
+          @object.class.reflect_on_all_associations(:belongs_to).map{ |reflection| reflection.foreign_key.to_sym }
         else
           []
         end
