@@ -8,10 +8,10 @@ dist: bionic
 language: ruby
 node_js: 11
 rvm:
-  - 2.4.9
-  - 2.5.7
-  - 2.6.5
-  - 2.7.0
+  - 2.4.10
+  - 2.5.8
+  - 2.6.6
+  - 2.7.2
 gemfile:
   - gemfiles/rails_5.2/Gemfile
   - gemfiles/rails_6.0/Gemfile
@@ -26,9 +26,9 @@ script:
   - script/integration.sh
 matrix:
   exclude:
-    - rvm: 2.4.9
+    - rvm: 2.4.10
       gemfile: gemfiles/rails_6.0/Gemfile
-    - rvm: 2.4.9
+    - rvm: 2.4.10
       gemfile: gemfiles/rails_edge/Gemfile
   allow_failures:
     - gemfile: gemfiles/rails_edge/Gemfile
