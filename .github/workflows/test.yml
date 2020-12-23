@@ -1,0 +1,52 @@
+name: test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        gemfile:
+          - gemfiles/rails_5.2/Gemfile
+          - gemfiles/rails_6.0/Gemfile
+          - gemfiles/rails_edge/Gemfile
+
+        ruby:
+          - 2.4.9
+          - 2.5.7
+          - 2.6.5
+          - 2.7.2
+
+        exclude:
+          - ruby: 2.4.9
+            gemfile: gemfiles/rails_6.0/Gemfile
+
+          - ruby: 2.4.9
+            gemfile: gemfiles/rails_edge/Gemfile
+
+    env:
+      BUNDLE_GEMFILE: ${{ matrix.gemfile }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 11
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+
+      - name: Run tests
+        run: |
+          bundle exec rake spec
+          script/integration.sh
+        continue-on-error: ${{ matrix.gemfile == 'gemfiles/rails_edge/Gemfile' }}
