@@ -15,6 +15,7 @@ jobs:
         gemfile:
           - gemfiles/rails_5.2/Gemfile
           - gemfiles/rails_6.0/Gemfile
+          - gemfiles/rails_6.1/Gemfile
           - gemfiles/rails_edge/Gemfile
 
         ruby:
@@ -26,6 +27,9 @@ jobs:
         exclude:
           - ruby: 2.4.10
             gemfile: gemfiles/rails_6.0/Gemfile
+
+          - ruby: 2.4.10
+            gemfile: gemfiles/rails_6.1/Gemfile
 
           - ruby: 2.4.10
             gemfile: gemfiles/rails_edge/Gemfile
