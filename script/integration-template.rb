@@ -19,7 +19,7 @@ end
 ruby_version = "ruby '#{RUBY_VERSION}'"
 gsub_file 'Gemfile', /ruby '\d+.\d+.\d+'/, ruby_version
 
-if File.directory?(bundle_path) && bundle_install?
+if bundle_install?
   def run_bundle
     previous_bundle_path = bundle_path
 
