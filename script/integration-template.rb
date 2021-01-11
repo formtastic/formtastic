@@ -1,6 +1,7 @@
 gem 'formtastic', path: '..'
 gem 'bcrypt', '~> 3.1.7'
 gem 'rails-dom-testing', group: :test
+gem 'rexml', '~> 3.2' # to compensate for missing dependency in selenium-webdriver
 
 # to speed up bundle install, reuse the bundle path
 def bundle_path
