@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    formtastic (3.2.0.pre)
+    formtastic (4.0.0.rc1)
       actionpack (>= 5.2.0)
 
 GEM
