@@ -570,6 +570,10 @@ To create your own new types of inputs based on existing inputs, the process is 
     def input_html_options
       super.merge(:class => "flexible-text-area")
     end
+
+    def options
+      super.merge(hint: 'This is a flexible text area')
+    end
   end
 ```
 
