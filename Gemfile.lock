@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    formtastic (3.2.0.pre)
+    formtastic (4.0.0.rc1)
       actionpack (>= 5.2.0)
 
 GEM
@@ -42,7 +42,7 @@ GEM
       nokogiri (>= 1.5.9)
     method_source (1.0.0)
     mini_portile2 (2.4.0)
-    minitest (5.14.1)
+    minitest (5.14.3)
     nokogiri (1.10.9)
       mini_portile2 (~> 2.4.0)
     rack (2.2.3)
