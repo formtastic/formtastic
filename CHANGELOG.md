@@ -8,7 +8,7 @@
 
   * Fixed default_columns_for_object when object has non-standard foreign keys (#1241)
   * Fixed missing constants in production (#911)
-  * Removed support for Rails 3 and 4.0 (#1108)
+  * Removed support for Rails 3, Rails 4, Rails 5.0, and Rails 5.1 (#1108, #1293)
   * Removed deprecated input/action finder methods (#1139)
   * Changed boolean label padding to margin (#1202)
   * Added mapping hstore column to text input (#1203)
@@ -17,7 +17,6 @@
   * Default to input types text for json & jsonb, string for citext columns (#1229)
   * Allow symbols for numericality options (#1258)
   * Support for rubies under 2.4.0 has been dropped (#1292)
-  * Support for Rails under 5.2.0 has been dropped (#1293)
 
 ## 3.1.2
 
