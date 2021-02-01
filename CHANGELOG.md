@@ -1,4 +1,4 @@
-## master / 4.0.0.rc1
+## master / 4.0.0
   * Fixed default_columns_for_object when object has non-standard foreign keys (#1241)
   * Fixed missing constants in production (#911)
   * Removed support for Rails 3 and 4.0 (#1108)
@@ -11,6 +11,9 @@
   * Allow symbols for numericality options (#1258)
   * Support for rubies under 2.4.0 has been dropped (#1292)
   * Support for Rails under 5.2.0 has been dropped (#1293)
+  * Support for Rails 6.0 has been added (#1300)
+  * Support for Rails 6.1 has been added (#1324)
+  * Support for Ruby 3 has been added (#1323)
 
 ## 3.1.2
 
