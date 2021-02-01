@@ -16,7 +16,7 @@ Formtastic is a Rails FormBuilder DSL (with some other goodies) to make it far e
 
 ## Compatibility
 
-* Formtastic 4 will require Rails 5.2 and Ruby 2.4 minimum
+* Formtastic 4 requires Rails 5.2 and Ruby 2.5 minimum
 * Formtastic 3 requires Rails 3.2.13 minimum
 * Formtastic 2 requires Rails 3
 * Formtastic, much like Rails, is very ActiveRecord-centric. Many are successfully using other ActiveModel-like ORMs and objects (DataMapper, MongoMapper, Mongoid, Authlogic, Devise...) but we're not guaranteeing full compatibility at this stage. Patches are welcome!
@@ -88,7 +88,7 @@ I also wrote the accompanying HTML output I expected, favoring something very si
 Simply add Formtastic to your Gemfile and bundle it up:
 
 ```ruby
-  gem 'formtastic', '~> 3.0'
+  gem 'formtastic', '~> 4.0'
 ```
 
 Run the installation generator:
