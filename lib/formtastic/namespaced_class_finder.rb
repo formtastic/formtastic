@@ -32,6 +32,10 @@ module Formtastic
       defined?(Rails) && ::Rails.application && ::Rails.application.config.respond_to?(:eager_load) && ::Rails.application.config.eager_load
     end
 
+    def self.finder_method
+      @finder_method ||= use_const_defined? ? :find_with_const_defined : :find_by_trying
+    end
+
     # @param namespaces [Array<Module>]
     def initialize(namespaces)
       @namespaces = namespaces.flatten
@@ -68,10 +72,6 @@ module Formtastic
 
     def finder(class_name) # @private
       send(self.class.finder_method, class_name)
-    end
-
-    def self.finder_method
-      @finder_method ||= use_const_defined? ? :find_with_const_defined : :find_by_trying
     end
 
     # Looks up the given class name in the configured namespaces in order,

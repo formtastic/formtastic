@@ -59,11 +59,22 @@ RSpec.describe Formtastic::NamespacedClassFinder do
 
     context 'when eager_load is on' do
       let(:eager_load) { true }
+
+      it "finder_method is :find_with_const_defined" do
+        expect(described_class.finder_method).to eq(:find_with_const_defined)
+      end
+
       it_behaves_like 'Namespaced Class Finder'
     end
 
     context 'when eager_load is off' do
       let(:eager_load) { false }
+
+      it "finder_method is :find_by_trying" do
+        described_class.instance_variable_set(:@finder_method, nil) # clear cache
+        expect(described_class.finder_method).to eq(:find_by_trying)
+      end
+
       it_behaves_like 'Namespaced Class Finder'
     end
   end
