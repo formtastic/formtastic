@@ -66,14 +66,12 @@ module Formtastic
 
     private
 
-    if use_const_defined?
-      def finder(class_name) # @private
-        find_with_const_defined(class_name)
-      end
-    else
-      def finder(class_name) # @private
-        find_by_trying(class_name)
-      end
+    def finder(class_name) # @private
+      send(self.class.finder_method, class_name)
+    end
+
+    def self.finder_method
+      @finder_method ||= use_const_defined? ? :find_with_const_defined : :find_by_trying
     end
 
     # Looks up the given class name in the configured namespaces in order,
