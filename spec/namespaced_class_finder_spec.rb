@@ -54,16 +54,16 @@ RSpec.describe Formtastic::NamespacedClassFinder do
 
   context '#finder' do
     before do
-      allow(Rails.application.config).to receive(:cache_classes).and_return(cache_classes)
+      allow(Rails.application.config).to receive(:eager_load).and_return(eager_load)
     end
 
-    context 'when cache_classes is on' do
-      let(:cache_classes) { true }
+    context 'when eager_load is on' do
+      let(:eager_load) { true }
       it_behaves_like 'Namespaced Class Finder'
     end
 
-    context 'when cache_classes is off' do
-      let(:cache_classes) { false }
+    context 'when eager_load is off' do
+      let(:eager_load) { false }
       it_behaves_like 'Namespaced Class Finder'
     end
   end
