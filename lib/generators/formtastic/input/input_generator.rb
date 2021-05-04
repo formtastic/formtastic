@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Formtastic
 
   # Modify existing inputs, subclass them, or create your own from scratch.

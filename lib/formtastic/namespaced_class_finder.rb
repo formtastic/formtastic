@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Formtastic
   # This class implements class resolution in a namespace chain. It
   # is used both by Formtastic::Helpers::InputHelper and

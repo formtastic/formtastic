@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Formtastic
   module Inputs
     # Boolean inputs are used to render an input for a single checkbox, typically for attributes

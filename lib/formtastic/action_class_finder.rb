@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Formtastic
 
   # Uses the {NamespacedClassFinder} to look up action class names.
