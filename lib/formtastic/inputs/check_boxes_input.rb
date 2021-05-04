@@ -78,9 +78,7 @@ module Formtastic
       def to_html
         input_wrapping do
           choices_wrapping do
-            legend_html <<
-            hidden_field_for_all <<
-            choices_group_wrapping do
+            legend_html + hidden_field_for_all + choices_group_wrapping do
               collection.map { |choice|
                 choice_wrapping(choice_wrapping_html_options(choice)) do
                   choice_html(choice)

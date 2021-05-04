@@ -42,7 +42,7 @@ module Formtastic
 
         legend = field_set_legend(html_options)
         fieldset = template.content_tag(:fieldset,
-          legend.html_safe << template.content_tag(:ol, contents.html_safe),
+          legend.html_safe + template.content_tag(:ol, contents.html_safe),
           html_options.except(:builder, :parent, :name)
         )
 

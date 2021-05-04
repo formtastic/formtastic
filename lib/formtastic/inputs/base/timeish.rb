@@ -97,13 +97,10 @@ module Formtastic
         def to_html
           input_wrapping do
             fragments_wrapping do
-              hidden_fragments <<
-              fragments_label <<
-              template.content_tag(:ol,
+              hidden_fragments + fragments_label + template.content_tag(:ol,
                 fragments.map do |fragment|
                   fragment_wrapping do
-                    fragment_label_html(fragment) <<
-                    fragment_input_html(fragment)
+                    fragment_label_html(fragment) + fragment_input_html(fragment)
                   end
                 end.join.html_safe, # TODO is this safe?
                 { :class => 'fragments-group' } # TODO refactor to fragments_group_wrapping

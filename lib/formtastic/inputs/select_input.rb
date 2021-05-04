@@ -165,7 +165,7 @@ module Formtastic
 
       def to_html
         input_wrapping do
-          label_html <<
+          label_html +
           select_html
         end
       end
