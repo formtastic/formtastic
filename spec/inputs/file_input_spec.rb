@@ -6,7 +6,7 @@ RSpec.describe 'file input' do
   include FormtasticSpecHelper
 
   before do
-    @output_buffer = ''
+    @output_buffer = ActiveSupport::SafeBuffer.new ''
     mock_everything
 
     concat(semantic_form_for(@new_post) do |builder|
@@ -33,7 +33,7 @@ RSpec.describe 'file input' do
   describe "when namespace is provided" do
 
     before do
-      @output_buffer = ''
+      @output_buffer = ActiveSupport::SafeBuffer.new ''
       mock_everything
 
       concat(semantic_form_for(@new_post, :namespace => 'context2') do |builder|
@@ -49,7 +49,7 @@ RSpec.describe 'file input' do
   describe "when index is provided" do
 
     before do
-      @output_buffer = ''
+      @output_buffer = ActiveSupport::SafeBuffer.new ''
       mock_everything
 
       concat(semantic_form_for(@new_post) do |builder|

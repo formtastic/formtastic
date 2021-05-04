@@ -6,7 +6,7 @@ RSpec.describe 'select input' do
   include FormtasticSpecHelper
 
   before do
-    @output_buffer = ''
+    @output_buffer = ActiveSupport::SafeBuffer.new ''
     mock_everything
   end
 
@@ -522,7 +522,7 @@ RSpec.describe 'select input' do
 
   describe "enum" do
     before do
-      @output_buffer = ''
+      @output_buffer = ActiveSupport::SafeBuffer.new ''
       @some_meta_descriptions = ["One", "Two", "Three"]
       allow(@new_post).to receive(:meta_description).at_least(:once)
     end
@@ -573,7 +573,7 @@ RSpec.describe 'select input' do
   describe "when index is provided" do
   
     before do
-      @output_buffer = ''
+      @output_buffer = ActiveSupport::SafeBuffer.new ''
       mock_everything
   
       concat(semantic_form_for(@new_post) do |builder|

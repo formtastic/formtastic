@@ -6,7 +6,7 @@ RSpec.describe 'radio input' do
   include FormtasticSpecHelper
 
   before do
-    @output_buffer = ''
+    @output_buffer = ActiveSupport::SafeBuffer.new ''
     mock_everything
   end
 
@@ -216,7 +216,7 @@ RSpec.describe 'radio input' do
 
   describe "when :label option is false" do
     before do
-      @output_buffer = ''
+      @output_buffer = ActiveSupport::SafeBuffer.new ''
       allow(@new_post).to receive(:author_ids).and_return(nil)
       concat(semantic_form_for(@new_post) do |builder|
         concat(builder.input(:authors, :as => :radio, :label => false))
@@ -248,7 +248,7 @@ RSpec.describe 'radio input' do
 
   describe "when :namespace is given on form" do
     before do
-      @output_buffer = ''
+      @output_buffer = ActiveSupport::SafeBuffer.new ''
       allow(@new_post).to receive(:author_ids).and_return(nil)
       concat(semantic_form_for(@new_post, :namespace => "custom_prefix") do |builder|
         concat(builder.input(:authors, :as => :radio, :label => ''))
@@ -263,7 +263,7 @@ RSpec.describe 'radio input' do
   describe "when index is provided" do
 
     before do
-      @output_buffer = ''
+      @output_buffer = ActiveSupport::SafeBuffer.new ''
       mock_everything
 
       concat(semantic_form_for(@new_post) do |builder|
@@ -290,7 +290,7 @@ RSpec.describe 'radio input' do
 
   describe "when collection contains integers" do
     before do
-      @output_buffer = ''
+      @output_buffer = ActiveSupport::SafeBuffer.new ''
       mock_everything
 
       concat(semantic_form_for(:project) do |builder|
@@ -307,7 +307,7 @@ RSpec.describe 'radio input' do
 
   describe "when collection contains symbols" do
     before do
-      @output_buffer = ''
+      @output_buffer = ActiveSupport::SafeBuffer.new ''
       mock_everything
 
       concat(semantic_form_for(:project) do |builder|

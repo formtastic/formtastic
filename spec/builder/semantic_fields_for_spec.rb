@@ -6,7 +6,7 @@ RSpec.describe 'Formtastic::FormBuilder#fields_for' do
   include FormtasticSpecHelper
 
   before do
-    @output_buffer = ''
+    @output_buffer = ActiveSupport::SafeBuffer.new ''
     mock_everything
     allow(@new_post).to receive(:author).and_return(::Author.new)
   end

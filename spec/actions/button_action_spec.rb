@@ -6,7 +6,7 @@ RSpec.describe 'ButtonAction', 'when submitting' do
   include FormtasticSpecHelper
 
   before do
-    @output_buffer = ''
+    @output_buffer = ActiveSupport::SafeBuffer.new ''
     mock_everything
     
     concat(semantic_form_for(@new_post) do |builder|
@@ -25,7 +25,7 @@ RSpec.describe 'ButtonAction', 'when resetting' do
   include FormtasticSpecHelper
   
   before do
-    @output_buffer = ''
+    @output_buffer = ActiveSupport::SafeBuffer.new ''
     mock_everything
     
     concat(semantic_form_for(@new_post) do |builder|
@@ -48,7 +48,7 @@ RSpec.describe 'InputAction', 'when cancelling' do
   include FormtasticSpecHelper
   
   before do
-    @output_buffer = ''
+    @output_buffer = ActiveSupport::SafeBuffer.new ''
     mock_everything
   end
   
