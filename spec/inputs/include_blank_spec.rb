@@ -6,7 +6,7 @@ RSpec.describe "*select: options[:include_blank]" do
   include FormtasticSpecHelper
 
   before do
-    @output_buffer = ''
+    @output_buffer = ActiveSupport::SafeBuffer.new ''
     mock_everything
 
     allow(@new_post).to receive(:author_id).and_return(nil)

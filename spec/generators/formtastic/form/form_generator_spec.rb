@@ -11,7 +11,7 @@ RSpec.describe Formtastic::FormGenerator do
   destination File.expand_path("../../../../../tmp", __FILE__)
 
   before do
-    @output_buffer = ''
+    @output_buffer = ActiveSupport::SafeBuffer.new ''
     prepare_destination
     mock_everything
     allow(::Post).to receive(:reflect_on_all_associations).with(:belongs_to).and_return([

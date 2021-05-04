@@ -6,7 +6,7 @@ RSpec.describe 'Formtastic::FormBuilder#inputs' do
   include FormtasticSpecHelper
 
   before do
-    @output_buffer = ''
+    @output_buffer = ActiveSupport::SafeBuffer.new ''
     mock_everything
   end
 
@@ -171,8 +171,7 @@ RSpec.describe 'Formtastic::FormBuilder#inputs' do
             builder.inputs(:for => [:author, @bob]) do
               #
             end
-          }.to raise_error(ArgumentError, 'You gave :for option with a block to inputs method, ' <<
-                                              'but the block does not accept any argument.')
+          }.to raise_error(ArgumentError, 'You gave :for option with a block to inputs method, but the block does not accept any argument.')
         end
       end
   
@@ -401,7 +400,7 @@ RSpec.describe 'Formtastic::FormBuilder#inputs' do
 
       context "with non-standard foregin keys" do
         before do
-          @output_buffer = ''
+          @output_buffer = ActiveSupport::SafeBuffer.new ''
         end
 
         it 'should respect foreign key while rendering select' do

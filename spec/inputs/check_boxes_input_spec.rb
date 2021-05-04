@@ -6,13 +6,13 @@ RSpec.describe 'check_boxes input' do
   include FormtasticSpecHelper
 
   before do
-    @output_buffer = ''
+    @output_buffer = ActiveSupport::SafeBuffer.new ''
     mock_everything
   end
 
   describe 'for a has_many association' do
     before do
-      @output_buffer = ''
+      @output_buffer = ActiveSupport::SafeBuffer.new ''
       mock_everything
 
       concat(semantic_form_for(@fred) do |builder|
@@ -169,7 +169,7 @@ RSpec.describe 'check_boxes input' do
 
     describe 'when :hidden_fields is set to false' do
       before do
-        @output_buffer = ''
+        @output_buffer = ActiveSupport::SafeBuffer.new ''
         mock_everything
 
         concat(semantic_form_for(@fred) do |builder|
@@ -196,7 +196,7 @@ RSpec.describe 'check_boxes input' do
 
     describe 'when :disabled is set' do
       before do
-        @output_buffer = ''
+        @output_buffer = ActiveSupport::SafeBuffer.new ''
       end
 
       describe "no disabled items" do
@@ -286,7 +286,7 @@ RSpec.describe 'check_boxes input' do
 
     describe "when :label option is false" do
       before do
-        @output_buffer = ''
+        @output_buffer = ActiveSupport::SafeBuffer.new ''
         allow(@new_post).to receive(:author_ids).and_return(nil)
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:authors, :as => :check_boxes, :label => false))
@@ -337,7 +337,7 @@ RSpec.describe 'check_boxes input' do
   describe 'for a has_and_belongs_to_many association' do
 
     before do
-      @output_buffer = ''
+      @output_buffer = ActiveSupport::SafeBuffer.new ''
       mock_everything
 
       concat(semantic_form_for(@freds_post) do |builder|
@@ -362,7 +362,7 @@ RSpec.describe 'check_boxes input' do
   describe ':collection for a has_and_belongs_to_many association' do
 
     before do
-      @output_buffer = ''
+      @output_buffer = ActiveSupport::SafeBuffer.new ''
       mock_everything
 
       concat(semantic_form_for(@freds_post) do |builder|
@@ -387,7 +387,7 @@ RSpec.describe 'check_boxes input' do
   describe 'for an association when a :collection is provided' do
     describe 'it should use the specified :member_value option' do
       before do
-        @output_buffer = ''
+        @output_buffer = ActiveSupport::SafeBuffer.new ''
         mock_everything
       end
 
@@ -410,7 +410,7 @@ RSpec.describe 'check_boxes input' do
 
   describe 'when :collection is provided as an array of arrays' do
     before do
-      @output_buffer = ''
+      @output_buffer = ActiveSupport::SafeBuffer.new ''
       mock_everything
       allow(@fred).to receive(:genres) { ['fiction', 'biography'] }
 
@@ -427,7 +427,7 @@ RSpec.describe 'check_boxes input' do
 
   describe 'when :collection is a set' do
     before do
-      @output_buffer = ''
+      @output_buffer = ActiveSupport::SafeBuffer.new ''
       mock_everything
       allow(@fred).to receive(:roles) { Set.new([:reviewer, :admin]) }
 
@@ -446,7 +446,7 @@ RSpec.describe 'check_boxes input' do
   describe "when namespace is provided" do
 
     before do
-      @output_buffer = ''
+      @output_buffer = ActiveSupport::SafeBuffer.new ''
       mock_everything
 
       concat(semantic_form_for(@fred, :namespace => "context2") do |builder|
@@ -465,7 +465,7 @@ RSpec.describe 'check_boxes input' do
   describe "when index is provided" do
 
     before do
-      @output_buffer = ''
+      @output_buffer = ActiveSupport::SafeBuffer.new ''
       mock_everything
 
       concat(semantic_form_for(@fred) do |builder|
@@ -492,7 +492,7 @@ RSpec.describe 'check_boxes input' do
 
   describe "when collection is an array" do
     before do
-      @output_buffer = ''
+      @output_buffer = ActiveSupport::SafeBuffer.new ''
       @_collection = [["First", 1], ["Second", 2]]
       mock_everything
 
