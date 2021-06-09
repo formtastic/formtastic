@@ -35,6 +35,12 @@ jobs:
           - ruby: 2.4.10
             gemfile: gemfiles/rails_edge/Gemfile
 
+          - ruby: 2.5.8
+            gemfile: gemfiles/rails_edge/Gemfile
+
+          - ruby: 2.6.6
+            gemfile: gemfiles/rails_edge/Gemfile
+
           - ruby: 3.0.0
             gemfile: gemfiles/rails_5.2/Gemfile
 
