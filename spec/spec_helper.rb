@@ -251,7 +251,7 @@ module FormtasticSpecHelper
     allow(::Author).to receive(:where).and_return(author_array_or_scope)
     allow(::Author).to receive(:human_attribute_name) { |column_name| column_name.humanize }
     allow(::Author).to receive(:human_name).and_return('::Author')
-    allow(::Author).to receive(:reflect_on_association) { |column_name| double('reflection', :options => {}, :klass => Post, :macro => :has_many) if column_name == :posts }
+    allow(::Author).to receive(:reflect_on_association) { |column_name| double('reflection', :scope => nil, :options => {}, :klass => Post, :macro => :has_many) if column_name == :posts }
     allow(::Author).to receive(:content_columns).and_return([double('column', :name => 'login'), double('column', :name => 'created_at')])
     allow(::Author).to receive(:to_key).and_return(nil)
     allow(::Author).to receive(:persisted?).and_return(nil)
@@ -304,21 +304,22 @@ module FormtasticSpecHelper
     allow(::Post).to receive(:reflect_on_association) { |column_name|
       case column_name
       when :author, :author_status
-        mock = double('reflection', :options => {}, :klass => ::Author, :macro => :belongs_to)
+        mock = double('reflection', :scope => nil, :options => {}, :klass => ::Author, :macro => :belongs_to)
         allow(mock).to receive(:[]).with(:class_name).and_return("Author")
         mock
       when :reviewer
-        mock = double('reflection', :options => {:class_name => 'Author'}, :klass => ::Author, :macro => :belongs_to)
+        mock = double('reflection', :scope => nil, :options => {:class_name => 'Author'}, :klass => ::Author, :macro => :belongs_to)
         allow(mock).to receive(:[]).with(:class_name).and_return("Author")
         mock
       when :authors
-        double('reflection', :options => {}, :klass => ::Author, :macro => :has_and_belongs_to_many)
+        double('reflection', :scope => nil, :options => {}, :klass => ::Author, :macro => :has_and_belongs_to_many)
       when :sub_posts
-        double('reflection', :options => {}, :klass => ::Post, :macro => :has_many)
+        double('reflection', :scope => nil, :options => {}, :klass => ::Post, :macro => :has_many)
       when :main_post
-        double('reflection', :options => {}, :klass => ::Post, :macro => :belongs_to)
+        double('reflection', :scope => nil, :options => {}, :klass => ::Post, :macro => :belongs_to)
       when :mongoid_reviewer
         ::MongoidReflectionMock.new('reflection',
+             :scope => nil,
              :options => Proc.new { raise NoMethodError, "Mongoid has no reflection.options" },
              :klass => ::Author, :macro => :referenced_in, :foreign_key => "reviewer_id") # custom id
       end

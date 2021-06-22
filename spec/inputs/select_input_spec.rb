@@ -294,14 +294,33 @@ RSpec.describe 'select input' do
   describe "for a belongs_to association with :conditions" do
     before do
       allow(::Post).to receive(:reflect_on_association).with(:author) do
-        mock = double('reflection', :options => {:conditions => {:active => true}}, :klass => ::Author, :macro => :belongs_to)
+        mock = double('reflection', :scope => nil, :options => {:conditions => {:active => true}}, :klass => ::Author, :macro => :belongs_to)
         allow(mock).to receive(:[]).with(:class_name).and_return("Author")
         mock
       end
     end
 
-    it "should call author.(scoped|where) with association conditions" do
+    it "should call author.where with association conditions" do
       expect(::Author).to receive(:where).with({:active => true})
+
+      semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:author, :as => :select))
+      end
+    end
+  end
+
+  describe "for a belongs_to association with scope" do
+    before do
+      @active_scope = -> { active }
+      allow(::Post).to receive(:reflect_on_association).with(:author) do
+        mock = double('reflection', :scope => @active_scope, options: {}, :klass => ::Author, :macro => :belongs_to)
+        allow(mock).to receive(:[]).with(:class_name).and_return("Author")
+        mock
+      end
+    end
+
+    it "should call author.merge with association scope" do
+      expect(::Author).to receive(:merge).with(@active_scope)
 
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:author, :as => :select))
