@@ -75,7 +75,7 @@ module Formtastic
       
       def to_html
         input_wrapping do
-          label_html +
+          label_html <<
           builder.number_field(method, input_html_options)
         end
       end

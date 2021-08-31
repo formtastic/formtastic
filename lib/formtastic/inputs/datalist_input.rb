@@ -19,9 +19,9 @@ module Formtastic
       def to_html
         @name = input_html_options[:id].gsub(/_id$/, "")
         input_wrapping do
-          # standard input
-          # append new datalist element
-          label_html + builder.text_field(method, input_html_options) + data_list_html
+          label_html <<
+          builder.text_field(method, input_html_options) << # standard input
+          data_list_html # append new datalist element
         end
       end
 

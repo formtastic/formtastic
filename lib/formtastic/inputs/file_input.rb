@@ -34,7 +34,7 @@ module Formtastic
       include Base
       def to_html
         input_wrapping do
-          label_html +
+          label_html <<
           builder.file_field(method, input_html_options)
         end
       end

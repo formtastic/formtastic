@@ -133,7 +133,7 @@ module Formtastic
       def to_html
         input_wrapping do
           choices_wrapping do
-            legend_html +
+            legend_html <<
             choices_group_wrapping do
               collection.map { |choice| 
                 choice_wrapping(choice_wrapping_html_options(choice)) do
@@ -147,7 +147,7 @@ module Formtastic
 
       def choice_html(choice)        
         template.content_tag(:label,
-          builder.radio_button(input_name, choice_value(choice), input_html_options.merge(choice_html_options(choice)).merge(:required => false)) +
+          builder.radio_button(input_name, choice_value(choice), input_html_options.merge(choice_html_options(choice)).merge(:required => false)) << 
           choice_label(choice),
           label_html_options.merge(:for => choice_input_dom_id(choice), :class => nil)
         )
