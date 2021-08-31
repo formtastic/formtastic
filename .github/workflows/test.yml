@@ -5,6 +5,11 @@ on:
   pull_request:
 
 jobs:
+  ci:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v2
   test:
     runs-on: ubuntu-20.04
 
