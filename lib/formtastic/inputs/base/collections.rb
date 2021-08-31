@@ -114,7 +114,7 @@ module Formtastic
 
             enum_options_hash = object.defined_enums[method_name]
             enum_options_hash.map do |name, value|
-              key = "activerecord.attributes.#{object_name}.#{method_name.pluralize}.#{name}"
+              key = "activerecord.attributes.#{object.model_name.i18n_key}.#{method_name.pluralize}.#{name}"
               label = ::I18n.translate(key, :default => name.humanize)
               [label, name]
             end

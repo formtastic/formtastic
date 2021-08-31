@@ -159,6 +159,37 @@ RSpec.describe 'select input' do
       allow(@new_post).to receive(:defined_enums) { { "status" => statuses } }
     end
 
+    context 'with translations in a nested association input' do
+      before do
+        ::I18n.backend.store_translations :en, activerecord: {
+          attributes: {
+            post: {
+              statuses: {
+                active: 'I am active',
+                inactive: 'I am inactive'
+              }
+            }
+          }
+        }
+
+        allow(@fred).to receive(:posts).and_return([@new_post])
+        concat(semantic_form_for(@fred) do |builder|
+          concat(builder.inputs(for: @fred.posts.first) do |nested_builder|
+            nested_builder.input(:status, as: :select)
+          end)
+        end)
+      end
+
+      after do
+        ::I18n.backend.reload!
+      end
+
+      it 'should use localized enum values' do
+        expect(output_buffer).to have_tag("form li select option[@value='active']", text: 'I am active')
+        expect(output_buffer).to have_tag("form li select option[@value='inactive']", text: 'I am inactive')
+      end
+    end
+
     context 'single choice' do
       before do
         concat(semantic_form_for(@new_post) do |builder|
