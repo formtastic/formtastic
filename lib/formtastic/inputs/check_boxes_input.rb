@@ -101,7 +101,7 @@ module Formtastic
 
       def hidden_field_for_all
         if hidden_fields_for_every?
-          ''
+          +''
         else
           options = {}
           options[:class] = [method.to_s.singularize, 'default'].join('_') if value_as_class?
