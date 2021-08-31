@@ -34,6 +34,7 @@ RSpec.describe MyInput do
         statuses = ActiveSupport::HashWithIndifferentAccess.new("active"=>0, "inactive"=>1)
         allow(model_class).to receive(:statuses) { statuses }
         allow(model).to receive(:defined_enums) { {"status" => statuses } }
+        allow(model).to receive(:model_name).and_return(double(i18n_key: model_name))
       end
 
       context 'no translations available' do
