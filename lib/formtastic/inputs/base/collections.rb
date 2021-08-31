@@ -78,6 +78,8 @@ module Formtastic
                     ) if reflection.options[:polymorphic] == true
             end
 
+            return reflection.klass.merge(reflection.scope) if reflection.scope
+
             conditions_from_reflection = (reflection.respond_to?(:options) && reflection.options[:conditions]) || {}
             conditions_from_reflection = conditions_from_reflection.call if conditions_from_reflection.is_a?(Proc)
 
