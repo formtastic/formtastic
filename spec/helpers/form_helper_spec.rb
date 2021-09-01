@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 require 'spec_helper'
 
 RSpec.describe 'FormHelper' do
@@ -6,7 +7,7 @@ RSpec.describe 'FormHelper' do
   include FormtasticSpecHelper
 
   before do
-    @output_buffer = ''
+    @output_buffer = ActiveSupport::SafeBuffer.new ''
     mock_everything
   end
 
@@ -154,6 +155,12 @@ RSpec.describe 'FormHelper' do
     end
 
     describe 'ActionView::Base.field_error_proc' do
+      around do |ex|
+        error_proc = Formtastic::Helpers::FormHelper.formtastic_field_error_proc
+        ex.run
+        Formtastic::Helpers::FormHelper.formtastic_field_error_proc = error_proc
+      end
+
       it 'is set to no-op wrapper by default' do
         semantic_form_for(@new_post, :url => '/hello') do |builder|
           expect(::ActionView::Base.field_error_proc.call("html", nil)).to eq("html")

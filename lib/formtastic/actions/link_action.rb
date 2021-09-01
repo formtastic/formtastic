@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Formtastic
   module Actions
   # Outputs a link wrapped in the standard `<li>` wrapper. This the default for `:cancel` actions.

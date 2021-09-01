@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Formtastic
   module Inputs
     module Base
@@ -92,7 +93,7 @@ module Formtastic
               label_html_options.merge(:class => "label")
             )
           else
-            "".html_safe
+            +"".html_safe
           end
         end
 

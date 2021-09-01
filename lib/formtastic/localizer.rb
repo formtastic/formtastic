@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Formtastic
   # Implementation for looking up localized values within Formtastic using I18n, if no
   # explicit value (like the `:label` option) is set and I18n-lookups are enabled in the

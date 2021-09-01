@@ -1,10 +1,11 @@
+# frozen_string_literal: true
 module Formtastic
   module Inputs
     module Base
       module Errors
         
         def error_html
-          errors? ? send(:"error_#{builder.inline_errors}_html") : ""
+          errors? ? send(:"error_#{builder.inline_errors}_html") : +""
         end
         
         def error_sentence_html
@@ -27,7 +28,7 @@ module Formtastic
         end
         
         def error_none_html
-          ""
+          +""
         end
         
         def errors?

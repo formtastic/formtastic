@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 require 'spec_helper'
 
 RSpec.describe 'InputAction::Base' do
@@ -21,7 +22,7 @@ RSpec.describe 'InputAction::Base' do
   include FormtasticSpecHelper
 
   before do
-    @output_buffer = ''
+    @output_buffer = ActiveSupport::SafeBuffer.new ''
     mock_everything
   end
   
@@ -484,7 +485,7 @@ RSpec.describe 'InputAction::Base' do
   describe 'when the model is two words' do
 
     before do
-      output_buffer = ''
+      output_buffer = ActiveSupport::SafeBuffer.new ''
       class ::UserPost
         extend ActiveModel::Naming if defined?(ActiveModel::Naming)
         include ActiveModel::Conversion if defined?(ActiveModel::Conversion)

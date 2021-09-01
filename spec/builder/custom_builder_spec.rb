@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 require 'spec_helper'
 
 RSpec.describe 'Formtastic::Helpers::FormHelper.builder' do
@@ -17,7 +18,7 @@ RSpec.describe 'Formtastic::Helpers::FormHelper.builder' do
   end
 
   before do
-    @output_buffer = ''
+    @output_buffer = ActiveSupport::SafeBuffer.new ''
     mock_everything
   end
 

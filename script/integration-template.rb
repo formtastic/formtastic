@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 gem 'formtastic', path: '..'
 gem 'bcrypt', '~> 3.1.7'
 gem 'rails-dom-testing', group: :test

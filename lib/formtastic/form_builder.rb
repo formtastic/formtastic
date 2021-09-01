@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Formtastic
   class FormBuilder < ActionView::Helpers::FormBuilder
 
