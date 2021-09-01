@@ -2,6 +2,7 @@
  * Support for scopes in relations ([#1343](https://github.com/formtastic/formtastic/pull/1343))
  * Fix I18n lookup for enum values in nested select fields ([#1342](https://github.com/formtastic/formtastic/pull/1342))
  * Fixed faster input class lookup ([#1336](https://github.com/formtastic/formtastic/pull/1336))
+ * Use frozen_string_literal internally ([#1339](https://github.com/formtastic/formtastic/pull/1339))
 
  ## 4.0.0
   * Fixed default_columns_for_object when object has non-standard foreign keys (#1241)
