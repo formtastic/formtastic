@@ -33,7 +33,7 @@ module Formtastic
     class_option :copy, :type => :boolean, :default => false, :group => :formtastic,
     :desc => 'Copy the generated code the clipboard instead of generating a partial file."'
 
-    class_option :controller, :type => :string, :default => false, :group => :formtastic,
+    class_option :controller, :type => :string, :group => :formtastic,
     :desc => 'Generate for custom controller/view path - in case model and controller namespace is different, i.e. "admin/posts"'
 
     def create_or_show
