@@ -24,22 +24,12 @@ jobs:
           - gemfiles/rails_edge/Gemfile
 
         ruby:
-          - 2.4.10
           - 2.5.8
           - 2.6.6
           - 2.7.2
           - 3.0.0
 
         exclude:
-          - ruby: 2.4.10
-            gemfile: gemfiles/rails_6.0/Gemfile
-
-          - ruby: 2.4.10
-            gemfile: gemfiles/rails_6.1/Gemfile
-
-          - ruby: 2.4.10
-            gemfile: gemfiles/rails_edge/Gemfile
-
           - ruby: 2.5.8
             gemfile: gemfiles/rails_edge/Gemfile
 
