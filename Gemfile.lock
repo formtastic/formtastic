@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     formtastic (4.0.0)
-      actionpack (>= 5.2.0)
+      actionpack (>= 6.0.0)
 
 GEM
   remote: https://rubygems.org/
