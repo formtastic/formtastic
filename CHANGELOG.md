@@ -1,4 +1,5 @@
 ## master
+ * Support for rubies under 2.5.0 has been dropped ([#1332](https://github.com/formtastic/formtastic/pull/1332))
  * Support for scopes in relations ([#1343](https://github.com/formtastic/formtastic/pull/1343))
  * Fix I18n lookup for enum values in nested select fields ([#1342](https://github.com/formtastic/formtastic/pull/1342))
  * Fixed faster input class lookup ([#1336](https://github.com/formtastic/formtastic/pull/1336))
