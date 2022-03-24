@@ -18,7 +18,6 @@ jobs:
 
       matrix:
         gemfile:
-          - gemfiles/rails_5.2/Gemfile
           - gemfiles/rails_6.0/Gemfile
           - gemfiles/rails_6.1/Gemfile
           - gemfiles/rails_edge/Gemfile
@@ -35,9 +34,6 @@ jobs:
 
           - ruby: 2.6.6
             gemfile: gemfiles/rails_edge/Gemfile
-
-          - ruby: 3.0.0
-            gemfile: gemfiles/rails_5.2/Gemfile
 
     env:
       BUNDLE_GEMFILE: ${{ matrix.gemfile }}

@@ -16,7 +16,7 @@ Formtastic is a Rails FormBuilder DSL (with some other goodies) to make it far e
 
 ## Compatibility
 
-* Formtastic master requires Rails 5.2 and Ruby 2.5 minimum
+* Formtastic master requires Rails 6.0 and Ruby 2.5 minimum
 * Formtastic 4 requires Rails 5.2 and Ruby 2.4 minimum
 * Formtastic 3 requires Rails 3.2.13 minimum
 * Formtastic 2 requires Rails 3
