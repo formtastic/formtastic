@@ -47,7 +47,7 @@ GEM
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
     racc (1.6.0)
-    rack (2.2.3.1)
+    rack (2.2.4)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rails-dom-testing (2.0.3)
@@ -102,4 +102,4 @@ DEPENDENCIES
   yard (~> 0.9.20)
 
 BUNDLED WITH
-   2.3.9
+   2.3.18
