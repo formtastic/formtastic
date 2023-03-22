@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Formtastic
   module Inputs
     module Base
@@ -43,7 +44,7 @@ module Formtastic
             # TODO there's no coverage for this case, not sure how to create a scenario for it
             builder.auto_index
           else
-            ""
+            +""
           end
         end
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Formtastic
   module Inputs
     module Base
@@ -156,7 +157,7 @@ module Formtastic
         
         def fragment_label_html(fragment)
           text = fragment_label(fragment)
-          text.blank? ? "".html_safe : template.content_tag(:label, text, :for => fragment_id(fragment))
+          text.blank? ? +"".html_safe : template.content_tag(:label, text, :for => fragment_id(fragment))
         end
         
         def value
@@ -217,7 +218,7 @@ module Formtastic
               :class => "label"
             )
           else
-            "".html_safe
+            +"".html_safe
           end
         end
         
@@ -228,7 +229,7 @@ module Formtastic
         end
         
         def hidden_fragments
-          "".html_safe
+          +"".html_safe
         end
         
         def hidden_field_name(fragment)

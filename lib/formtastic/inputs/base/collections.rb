@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Formtastic
   module Inputs
     module Base
@@ -78,6 +79,8 @@ module Formtastic
                     ) if reflection.options[:polymorphic] == true
             end
 
+            return reflection.klass.merge(reflection.scope) if reflection.scope
+
             conditions_from_reflection = (reflection.respond_to?(:options) && reflection.options[:conditions]) || {}
             conditions_from_reflection = conditions_from_reflection.call if conditions_from_reflection.is_a?(Proc)
 
@@ -114,7 +117,7 @@ module Formtastic
 
             enum_options_hash = object.defined_enums[method_name]
             enum_options_hash.map do |name, value|
-              key = "activerecord.attributes.#{object_name}.#{method_name.pluralize}.#{name}"
+              key = "activerecord.attributes.#{object.model_name.i18n_key}.#{method_name.pluralize}.#{name}"
               label = ::I18n.translate(key, :default => name.humanize)
               [label, name]
             end

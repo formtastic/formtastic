@@ -1,6 +1,8 @@
+# frozen_string_literal: true
 gem 'formtastic', path: '..'
 gem 'bcrypt', '~> 3.1.7'
 gem 'rails-dom-testing', group: :test
+gem 'rexml', '~> 3.2' # to compensate for missing dependency in selenium-webdriver
 
 # to speed up bundle install, reuse the bundle path
 def bundle_path
@@ -13,8 +15,6 @@ elsif Rails.version >= '6.1'
     gsub_file 'Gemfile', /gem 'rails'.*/, "gem 'rails', '~> #{Rails.version}', github: 'rails/rails', branch: '6-1-stable'"
 elsif Rails.version >= '6.0'
     gsub_file 'Gemfile', /gem 'rails'.*/, "gem 'rails', '~> #{Rails.version}', github: 'rails/rails', branch: '6-0-stable'"
-elsif Rails.version >= '5.2'
-    gsub_file 'Gemfile', /gem 'rails'.*/, "gem 'rails', '~> #{Rails.version}', github: 'rails/rails', branch: '5-2-stable'"
 end
 
 ### Ensure Dummy App's Ruby version matches the current environments Ruby Version

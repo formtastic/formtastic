@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Formtastic
   module Helpers
     # ActionsHelper encapsulates the responsibilties of the {#actions} DSL for acting on 

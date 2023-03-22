@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Formtastic
   # Required for formtastic.css to be discoverable in the asset pipeline
   # @private

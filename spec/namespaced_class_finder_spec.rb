@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 require 'spec_helper'
 require 'formtastic/namespaced_class_finder'
 
@@ -54,16 +55,27 @@ RSpec.describe Formtastic::NamespacedClassFinder do
 
   context '#finder' do
     before do
-      allow(Rails.application.config).to receive(:cache_classes).and_return(cache_classes)
+      allow(Rails.application.config).to receive(:eager_load).and_return(eager_load)
     end
 
-    context 'when cache_classes is on' do
-      let(:cache_classes) { true }
+    context 'when eager_load is on' do
+      let(:eager_load) { true }
+
+      it "finder_method is :find_with_const_defined" do
+        expect(described_class.finder_method).to eq(:find_with_const_defined)
+      end
+
       it_behaves_like 'Namespaced Class Finder'
     end
 
-    context 'when cache_classes is off' do
-      let(:cache_classes) { false }
+    context 'when eager_load is off' do
+      let(:eager_load) { false }
+
+      it "finder_method is :find_by_trying" do
+        described_class.instance_variable_set(:@finder_method, nil) # clear cache
+        expect(described_class.finder_method).to eq(:find_by_trying)
+      end
+
       it_behaves_like 'Namespaced Class Finder'
     end
   end

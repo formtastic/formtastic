@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Formtastic
   module Helpers
 
@@ -377,7 +378,7 @@ module Formtastic
         args << options.merge!(:parent => { :builder => self, :for => options[:for] })
 
         fields_for_block = if block_given?
-          raise ArgumentError, 'You gave :for option with a block to inputs method, ' <<
+          raise ArgumentError, 'You gave :for option with a block to inputs method, ' +
                                'but the block does not accept any argument.' if block.arity <= 0
           lambda do |f|
             contents = f.inputs(*args) do

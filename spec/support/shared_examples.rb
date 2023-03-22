@@ -1,8 +1,9 @@
+# frozen_string_literal: true
 RSpec.shared_context 'form builder' do
   include FormtasticSpecHelper
 
   before do
-    @output_buffer = ''
+    @output_buffer = ActiveSupport::SafeBuffer.new ''
     mock_everything
   end
 

@@ -1,11 +1,12 @@
 # encoding: utf-8
+# frozen_string_literal: true
 require 'spec_helper'
 
 RSpec.describe "datalist inputs" do
   include FormtasticSpecHelper
 
   before do
-    @output_buffer = ''
+    @output_buffer = ActiveSupport::SafeBuffer.new ''
     mock_everything
   end
 

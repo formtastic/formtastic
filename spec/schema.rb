@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 ActiveRecord::Schema.define(version: 20170208011723) do
 
   create_table "posts", force: :cascade do |t|

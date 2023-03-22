@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Formtastic
   module Inputs
 
@@ -42,7 +43,7 @@ module Formtastic
       end
       
       def error_html
-        ""
+        +""
       end
       
       def errors?
@@ -50,7 +51,7 @@ module Formtastic
       end
       
       def hint_html
-        ""
+        +""
       end
       
       def hint?

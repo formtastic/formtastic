@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'spec_helper'
 
 # Generators are not automatically loaded by Rails

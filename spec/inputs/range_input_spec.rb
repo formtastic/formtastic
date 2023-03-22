@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 require 'spec_helper'
 
 RSpec.describe 'range input' do
@@ -6,7 +7,7 @@ RSpec.describe 'range input' do
   include FormtasticSpecHelper
 
   before do
-    @output_buffer = ''
+    @output_buffer = ActiveSupport::SafeBuffer.new ''
     mock_everything
   end
 
@@ -46,7 +47,7 @@ RSpec.describe 'range input' do
   describe "when index is provided" do
 
     before do
-      @output_buffer = ''
+      @output_buffer = ActiveSupport::SafeBuffer.new ''
       mock_everything
 
       concat(semantic_form_for(@new_post) do |builder|

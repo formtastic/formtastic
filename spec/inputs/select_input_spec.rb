@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 require 'spec_helper'
 
 RSpec.describe 'select input' do
@@ -6,7 +7,7 @@ RSpec.describe 'select input' do
   include FormtasticSpecHelper
 
   before do
-    @output_buffer = ''
+    @output_buffer = ActiveSupport::SafeBuffer.new ''
     mock_everything
   end
 
@@ -159,6 +160,37 @@ RSpec.describe 'select input' do
       allow(@new_post).to receive(:defined_enums) { { "status" => statuses } }
     end
 
+    context 'with translations in a nested association input' do
+      before do
+        ::I18n.backend.store_translations :en, activerecord: {
+          attributes: {
+            post: {
+              statuses: {
+                active: 'I am active',
+                inactive: 'I am inactive'
+              }
+            }
+          }
+        }
+
+        allow(@fred).to receive(:posts).and_return([@new_post])
+        concat(semantic_form_for(@fred) do |builder|
+          concat(builder.inputs(for: @fred.posts.first) do |nested_builder|
+            nested_builder.input(:status, as: :select)
+          end)
+        end)
+      end
+
+      after do
+        ::I18n.backend.reload!
+      end
+
+      it 'should use localized enum values' do
+        expect(output_buffer).to have_tag("form li select option[@value='active']", text: 'I am active')
+        expect(output_buffer).to have_tag("form li select option[@value='inactive']", text: 'I am inactive')
+      end
+    end
+
     context 'single choice' do
       before do
         concat(semantic_form_for(@new_post) do |builder|
@@ -294,14 +326,33 @@ RSpec.describe 'select input' do
   describe "for a belongs_to association with :conditions" do
     before do
       allow(::Post).to receive(:reflect_on_association).with(:author) do
-        mock = double('reflection', :options => {:conditions => {:active => true}}, :klass => ::Author, :macro => :belongs_to)
+        mock = double('reflection', :scope => nil, :options => {:conditions => {:active => true}}, :klass => ::Author, :macro => :belongs_to)
         allow(mock).to receive(:[]).with(:class_name).and_return("Author")
         mock
       end
     end
 
-    it "should call author.(scoped|where) with association conditions" do
+    it "should call author.where with association conditions" do
       expect(::Author).to receive(:where).with({:active => true})
+
+      semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:author, :as => :select))
+      end
+    end
+  end
+
+  describe "for a belongs_to association with scope" do
+    before do
+      @active_scope = -> { active }
+      allow(::Post).to receive(:reflect_on_association).with(:author) do
+        mock = double('reflection', :scope => @active_scope, options: {}, :klass => ::Author, :macro => :belongs_to)
+        allow(mock).to receive(:[]).with(:class_name).and_return("Author")
+        mock
+      end
+    end
+
+    it "should call author.merge with association scope" do
+      expect(::Author).to receive(:merge).with(@active_scope)
 
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:author, :as => :select))
@@ -522,7 +573,7 @@ RSpec.describe 'select input' do
 
   describe "enum" do
     before do
-      @output_buffer = ''
+      @output_buffer = ActiveSupport::SafeBuffer.new ''
       @some_meta_descriptions = ["One", "Two", "Three"]
       allow(@new_post).to receive(:meta_description).at_least(:once)
     end
@@ -573,7 +624,7 @@ RSpec.describe 'select input' do
   describe "when index is provided" do
   
     before do
-      @output_buffer = ''
+      @output_buffer = ActiveSupport::SafeBuffer.new ''
       mock_everything
   
       concat(semantic_form_for(@new_post) do |builder|

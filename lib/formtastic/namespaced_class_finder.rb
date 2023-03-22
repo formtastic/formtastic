@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Formtastic
   # This class implements class resolution in a namespace chain. It
   # is used both by Formtastic::Helpers::InputHelper and
@@ -30,6 +31,10 @@ module Formtastic
 
     def self.use_const_defined?
       defined?(Rails) && ::Rails.application && ::Rails.application.config.respond_to?(:eager_load) && ::Rails.application.config.eager_load
+    end
+
+    def self.finder_method
+      @finder_method ||= use_const_defined? ? :find_with_const_defined : :find_by_trying
     end
 
     # @param namespaces [Array<Module>]
@@ -66,14 +71,8 @@ module Formtastic
 
     private
 
-    if use_const_defined?
-      def finder(class_name) # @private
-        find_with_const_defined(class_name)
-      end
-    else
-      def finder(class_name) # @private
-        find_by_trying(class_name)
-      end
+    def finder(class_name) # @private
+      send(self.class.finder_method, class_name)
     end
 
     # Looks up the given class name in the configured namespaces in order,

@@ -5,6 +5,11 @@ on:
   pull_request:
 
 jobs:
+  ci:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v2
   test:
     runs-on: ubuntu-20.04
 
@@ -13,25 +18,17 @@ jobs:
 
       matrix:
         gemfile:
-          - gemfiles/rails_5.2/Gemfile
           - gemfiles/rails_6.0/Gemfile
           - gemfiles/rails_6.1/Gemfile
           - gemfiles/rails_edge/Gemfile
 
         ruby:
-          - 2.4.10
-          - 2.5.8
           - 2.6.6
           - 2.7.2
+          - 3.0.0
 
         exclude:
-          - ruby: 2.4.10
-            gemfile: gemfiles/rails_6.0/Gemfile
-
-          - ruby: 2.4.10
-            gemfile: gemfiles/rails_6.1/Gemfile
-
-          - ruby: 2.4.10
+          - ruby: 2.6.6
             gemfile: gemfiles/rails_edge/Gemfile
 
     env:

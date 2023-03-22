@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'fast_spec_helper'
 require 'active_model'
 require 'inputs/base/validations'

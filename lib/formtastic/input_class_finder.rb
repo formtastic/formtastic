@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Formtastic
 
   # Uses the {Formtastic::NamespacedClassFinder} to look up input class names.
