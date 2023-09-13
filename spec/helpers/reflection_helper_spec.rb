@@ -7,7 +7,7 @@ RSpec.describe 'Formtastic::Helpers::Reflection' do
   include FormtasticSpecHelper
 
   before do
-    @output_buffer = ActiveSupport::SafeBuffer.new ''
+    @output_buffer = ActionView::OutputBuffer.new ''
     mock_everything
   end
 
@@ -28,6 +28,6 @@ RSpec.describe 'Formtastic::Helpers::Reflection' do
       expect(@reflection_tester.reflection_for(:sub_posts)).not_to be_nil
     end
   end
-  
-  
+
+
 end

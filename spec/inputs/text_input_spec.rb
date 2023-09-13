@@ -7,7 +7,7 @@ RSpec.describe 'text input' do
   include FormtasticSpecHelper
 
   before do
-    @output_buffer = ActiveSupport::SafeBuffer.new ''
+    @output_buffer = ActionView::OutputBuffer.new ''
     mock_everything
 
     concat(semantic_form_for(@new_post) do |builder|
@@ -25,50 +25,50 @@ RSpec.describe 'text input' do
   it_should_apply_error_logic_for_input_type(:number)
 
   it 'should use input_html to style inputs' do
-    output_buffer.replace ''
+    @output_buffer = ActionView::OutputBuffer.new ''
     concat(semantic_form_for(@new_post) do |builder|
       concat(builder.input(:title, :as => :text, :input_html => { :class => 'myclass' }))
     end)
-    expect(output_buffer).to have_tag("form li textarea.myclass")
+    expect(output_buffer.to_str).to have_tag("form li textarea.myclass")
   end
 
   it "should have a cols attribute when :cols is a number in :input_html" do
-    output_buffer.replace ''
+    @output_buffer = ActionView::OutputBuffer.new ''
     concat(semantic_form_for(@new_post) do |builder|
       concat(builder.input(:title, :as => :text, :input_html => { :cols => 42 }))
     end)
-    expect(output_buffer).to have_tag("form li textarea[@cols='42']")
+    expect(output_buffer.to_str).to have_tag("form li textarea[@cols='42']")
   end
 
   it "should not have a cols attribute when :cols is nil in :input_html" do
-    output_buffer.replace ''
+    @output_buffer = ActionView::OutputBuffer.new ''
     concat(semantic_form_for(@new_post) do |builder|
       concat(builder.input(:title, :as => :text, :input_html => { :cols => nil }))
     end)
-    expect(output_buffer).not_to have_tag("form li textarea[@cols]")
+    expect(output_buffer.to_str).not_to have_tag("form li textarea[@cols]")
   end
 
   it "should have a rows attribute when :rows is a number in :input_html" do
-    output_buffer.replace ''
+    @output_buffer = ActionView::OutputBuffer.new ''
     concat(semantic_form_for(@new_post) do |builder|
       concat(builder.input(:title, :as => :text, :input_html => { :rows => 42 }))
     end)
-    expect(output_buffer).to have_tag("form li textarea[@rows='42']")
+    expect(output_buffer.to_str).to have_tag("form li textarea[@rows='42']")
 
   end
 
   it "should not have a rows attribute when :rows is nil in :input_html" do
-    output_buffer.replace ''
+    @output_buffer = ActionView::OutputBuffer.new ''
     concat(semantic_form_for(@new_post) do |builder|
       concat(builder.input(:title, :as => :text, :input_html => { :rows => nil }))
     end)
-    expect(output_buffer).not_to have_tag("form li textarea[@rows]")
+    expect(output_buffer.to_str).not_to have_tag("form li textarea[@rows]")
   end
 
   describe "when namespace is provided" do
 
     before do
-      @output_buffer = ActiveSupport::SafeBuffer.new ''
+      @output_buffer = ActionView::OutputBuffer.new ''
       mock_everything
 
       concat(semantic_form_for(@new_post, :namespace => 'context2') do |builder|
@@ -81,11 +81,11 @@ RSpec.describe 'text input' do
     it_should_have_label_for("context2_post_body")
 
   end
-  
+
   describe "when index is provided" do
 
     before do
-      @output_buffer = ActiveSupport::SafeBuffer.new ''
+      @output_buffer = ActionView::OutputBuffer.new ''
       mock_everything
 
       concat(semantic_form_for(@new_post) do |builder|
@@ -94,28 +94,28 @@ RSpec.describe 'text input' do
         end)
       end)
     end
-    
+
     it 'should index the id of the wrapper' do
-      expect(output_buffer).to have_tag("li#post_author_attributes_3_name_input")
+      expect(output_buffer.to_str).to have_tag("li#post_author_attributes_3_name_input")
     end
-    
+
     it 'should index the id of the select tag' do
-      expect(output_buffer).to have_tag("textarea#post_author_attributes_3_name")
+      expect(output_buffer.to_str).to have_tag("textarea#post_author_attributes_3_name")
     end
-    
+
     it 'should index the name of the select tag' do
-      expect(output_buffer).to have_tag("textarea[@name='post[author_attributes][3][name]']")
+      expect(output_buffer.to_str).to have_tag("textarea[@name='post[author_attributes][3][name]']")
     end
-    
+
   end
-  
+
   context "when required" do
     it "should add the required attribute to the input's html options" do
-      with_config :use_required_attribute, true do 
+      with_config :use_required_attribute, true do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:title, :as => :text, :required => true))
         end)
-        expect(output_buffer).to have_tag("textarea[@required]")
+        expect(output_buffer.to_str).to have_tag("textarea[@required]")
       end
     end
   end
@@ -130,13 +130,13 @@ RSpec.describe 'text input' do
     it_should_have_input_wrapper_with_class("autofocus")
 
     it "should add the autofocus attribute to the input's html options" do
-      expect(output_buffer).to have_tag("input[@autofocus]")
+      expect(output_buffer.to_str).to have_tag("input[@autofocus]")
     end
   end
 
   context "when :rows is missing in :input_html" do
     before do
-      output_buffer.replace ''
+      @output_buffer = ActionView::OutputBuffer.new ''
     end
 
     it "should have a rows attribute matching default_text_area_height if numeric" do
@@ -144,7 +144,7 @@ RSpec.describe 'text input' do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:title, :as => :text))
         end)
-        expect(output_buffer).to have_tag("form li textarea[@rows='12']")
+        expect(output_buffer.to_str).to have_tag("form li textarea[@rows='12']")
       end
     end
 
@@ -153,7 +153,7 @@ RSpec.describe 'text input' do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:title, :as => :text))
         end)
-        expect(output_buffer).not_to have_tag("form li textarea[@rows]")
+        expect(output_buffer.to_str).not_to have_tag("form li textarea[@rows]")
       end
 
     end
@@ -161,7 +161,7 @@ RSpec.describe 'text input' do
 
   context "when :cols is missing in :input_html" do
     before do
-      output_buffer.replace ''
+      @output_buffer = ActionView::OutputBuffer.new ''
     end
 
     it "should have a cols attribute matching default_text_area_width if numeric" do
@@ -169,7 +169,7 @@ RSpec.describe 'text input' do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:title, :as => :text))
         end)
-        expect(output_buffer).to have_tag("form li textarea[@cols='10']")
+        expect(output_buffer.to_str).to have_tag("form li textarea[@cols='10']")
       end
     end
 
@@ -178,7 +178,7 @@ RSpec.describe 'text input' do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:title, :as => :text))
         end)
-        expect(output_buffer).not_to have_tag("form li textarea[@cols]")
+        expect(output_buffer.to_str).not_to have_tag("form li textarea[@cols]")
       end
 
     end
