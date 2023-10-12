@@ -9,43 +9,45 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
   test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
 
       matrix:
         gemfile:
-          - gemfiles/rails_6.0/Gemfile
           - gemfiles/rails_6.1/Gemfile
           - gemfiles/rails_7.0/Gemfile
           - gemfiles/rails_7.1/Gemfile
           - gemfiles/rails_edge/Gemfile
 
         ruby:
-          - 2.6.6
-          - 2.7.2
-          - 3.0.0
+          - 2.7
+          - 3.0
+          - 3.1
+          - 3.2
+
+        include:
+          - ruby: 2.6
+            gemfile: gemfiles/rails_6.0/Gemfile
+          - ruby: 2.7
+            gemfile: gemfiles/rails_6.0/Gemfile
 
         exclude:
-          - ruby: 2.6.6
-            gemfile: gemfiles/rails_7.0/Gemfile
-          - ruby: 2.6.6
-            gemfile: gemfiles/rails_7.1/Gemfile
-          - ruby: 2.6.6
+          - ruby: 2.6
             gemfile: gemfiles/rails_edge/Gemfile
 
     env:
       BUNDLE_GEMFILE: ${{ matrix.gemfile }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
-          node-version: 11
+          node-version: 18
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
