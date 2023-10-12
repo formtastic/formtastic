@@ -34,5 +34,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency(%q<yard>, ["~> 0.9.20"])
   s.add_development_dependency(%q<ammeter>, ["~> 1.1.3"])
   s.add_development_dependency(%q<rake>)
-  s.add_development_dependency(%q<sqlite3>, ["~> 1.4"])
+  s.add_development_dependency(%q<sqlite3>)
 end

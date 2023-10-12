@@ -2,50 +2,80 @@ name: test
 
 on:
   push:
+    branches:
+      - main
+      - master
+
   pull_request:
+    # Trigger on multiple events.
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   ci:
     runs-on: ubuntu-latest
     needs: test
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
   test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
 
       matrix:
-        gemfile:
-          - gemfiles/rails_6.0/Gemfile
-          - gemfiles/rails_6.1/Gemfile
-          - gemfiles/rails_7.0/Gemfile
-          - gemfiles/rails_7.1/Gemfile
-          - gemfiles/rails_edge/Gemfile
+        rails:
+          - "6.0"
+          - "6.1"
+          - "7.0"
+          - "7.1"
+          - "7.2"
+          - "8.0"
+          - "edge"
 
         ruby:
-          - 2.6.6
-          - 2.7.2
-          - 3.0.0
+          - "3.0"
+          - "3.1"
+          - "3.2"
+          - "3.3"
+
+        include:
+          - ruby: "2.6"
+            rails: "6.0"
+          - ruby: "2.7"
+            rails: "6.0"
 
         exclude:
-          - ruby: 2.6.6
-            gemfile: gemfiles/rails_7.0/Gemfile
-          - ruby: 2.6.6
-            gemfile: gemfiles/rails_7.1/Gemfile
-          - ruby: 2.6.6
-            gemfile: gemfiles/rails_edge/Gemfile
-
-    env:
-      BUNDLE_GEMFILE: ${{ matrix.gemfile }}
+          - ruby: "2.7"
+            rails: "7.2"
+          - ruby: "3.0"
+            rails: "7.2"
+          - ruby: "2.7"
+            rails: "8.0"
+          - ruby: "3.0"
+            rails: "8.0"
+          - ruby: "3.1"
+            rails: "8.0"
+          - ruby: "2.7"
+            rails: "edge"
+          - ruby: "3.0"
+            rails: "edge"
+          - ruby: "3.1"
+            rails: "edge"
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v4
         with:
-          node-version: 11
+          node-version: 20
+
+      - run: |
+          cp gemfiles/rails_${{matrix.rails}}/Gemfile Gemfile
+          echo "gemspec" >> Gemfile
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -53,9 +83,13 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
           bundler: latest
+          rubygems: latest
+        continue-on-error: ${{ matrix.rails == 'edge' }}
 
       - name: Run tests
+        env:
+          RAILS_VERSION: ${{ matrix.rails }}
         run: |
           bundle exec rake spec
           script/integration.sh
-        continue-on-error: ${{ matrix.gemfile == 'gemfiles/rails_edge/Gemfile' }}
+        continue-on-error: ${{ matrix.rails == 'edge' }}

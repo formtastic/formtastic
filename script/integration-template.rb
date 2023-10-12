@@ -1,36 +1,8 @@
 # frozen_string_literal: true
-gem 'formtastic', path: '..'
+gem 'formtastic', path: '../..'
 gem 'bcrypt', '~> 3.1.7'
 gem 'rails-dom-testing', group: :test
 gem 'rexml', '~> 3.2' # to compensate for missing dependency in selenium-webdriver
-
-# to speed up bundle install, reuse the bundle path
-def bundle_path
-  File.expand_path ENV.fetch('BUNDLE_PATH', 'vendor/bundle')
-end
-
-if Rails.version >= '6.2'
-    gsub_file 'Gemfile', /gem 'rails'.*/, "gem 'rails', '~> #{Rails.version}', github: 'rails/rails'"
-elsif Rails.version >= '6.1'
-    gsub_file 'Gemfile', /gem 'rails'.*/, "gem 'rails', '~> #{Rails.version}', github: 'rails/rails', branch: '6-1-stable'"
-elsif Rails.version >= '6.0'
-    gsub_file 'Gemfile', /gem 'rails'.*/, "gem 'rails', '~> #{Rails.version}', github: 'rails/rails', branch: '6-0-stable'"
-end
-
-### Ensure Dummy App's Ruby version matches the current environments Ruby Version
-ruby_version = "ruby '#{RUBY_VERSION}'"
-gsub_file 'Gemfile', /ruby '\d+.\d+.\d+'/, ruby_version
-
-if bundle_install?
-  def run_bundle
-    previous_bundle_path = bundle_path
-
-    require "bundler"
-    Bundler.with_clean_env do
-      system("bundle install --jobs=3 --retry=3 --path=#{previous_bundle_path}")
-    end
-  end
-end
 
 in_root do
   ENV['BUNDLE_GEMFILE'] = File.expand_path('Gemfile')

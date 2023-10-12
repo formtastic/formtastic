@@ -9,5 +9,4 @@ gem "rspec-mocks", git: "https://github.com/rspec/rspec-mocks.git"
 gem "rspec-support", git: "https://github.com/rspec/rspec-support.git"
 gem "rspec-core", git: "https://github.com/rspec/rspec-core.git"
 gem "rspec-expectations", git: "https://github.com/rspec/rspec-expectations.git"
-
-gemspec path: "../.."
+gem "sqlite3"
