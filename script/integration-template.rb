@@ -39,7 +39,7 @@ end
 formtastic = -> do
   generate(:scaffold, 'user name:string password:digest')
   generate('formtastic:install')
-  generate('formtastic:form', 'user name password:password --force')
+  generate('formtastic:form', 'user name password --force')
 
   rails_command('db:migrate')
 
