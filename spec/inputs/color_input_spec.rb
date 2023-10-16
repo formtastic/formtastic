@@ -7,7 +7,7 @@ RSpec.describe 'color input' do
   include FormtasticSpecHelper
 
   before do
-    @output_buffer = ActiveSupport::SafeBuffer.new ''
+    @output_buffer = ActionView::OutputBuffer.new ''
     mock_everything
   end
 
@@ -46,7 +46,7 @@ RSpec.describe 'color input' do
   describe "when index is provided" do
 
     before do
-      @output_buffer = ActiveSupport::SafeBuffer.new ''
+      @output_buffer = ActionView::OutputBuffer.new ''
       mock_everything
 
       concat(semantic_form_for(@new_post) do |builder|
@@ -57,15 +57,15 @@ RSpec.describe 'color input' do
     end
 
     it 'should index the id of the wrapper' do
-      expect(output_buffer).to have_tag("li#post_author_attributes_3_name_input")
+      expect(output_buffer.to_str).to have_tag("li#post_author_attributes_3_name_input")
     end
 
     it 'should index the id of the select tag' do
-      expect(output_buffer).to have_tag("input#post_author_attributes_3_name")
+      expect(output_buffer.to_str).to have_tag("input#post_author_attributes_3_name")
     end
 
     it 'should index the name of the select tag' do
-      expect(output_buffer).to have_tag("input[@name='post[author_attributes][3][name]']")
+      expect(output_buffer.to_str).to have_tag("input[@name='post[author_attributes][3][name]']")
     end
 
   end
@@ -77,7 +77,7 @@ RSpec.describe 'color input' do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:title, :as => :color, :required => true))
         end)
-        expect(output_buffer).to have_tag("input[@required]")
+        expect(output_buffer.to_str).to have_tag("input[@required]")
       end
     end
   end

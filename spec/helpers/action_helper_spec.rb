@@ -22,21 +22,21 @@ RSpec.describe 'with action class finder' do
           concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
             concat(builder.action(:submit))
           end)
-          expect(output_buffer).to have_tag('form li.action.input_action', :count => 1)
+          expect(output_buffer.to_str).to have_tag('form li.action.input_action', :count => 1)
         end
 
         it 'should default to a button for reset' do
           concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
             concat(builder.action(:reset))
           end)
-          expect(output_buffer).to have_tag('form li.action.input_action', :count => 1)
+          expect(output_buffer.to_str).to have_tag('form li.action.input_action', :count => 1)
         end
 
         it 'should default to a link for cancel' do
           concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
             concat(builder.action(:cancel))
           end)
-          expect(output_buffer).to have_tag('form li.action.link_action', :count => 1)
+          expect(output_buffer.to_str).to have_tag('form li.action.link_action', :count => 1)
         end
       end
 
@@ -203,26 +203,26 @@ RSpec.describe 'with action class finder' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.action(:submit, :wrapper_html => {:id => :another_id}))
           end)
-          expect(output_buffer).to have_tag("form li#another_id")
+          expect(output_buffer.to_str).to have_tag("form li#another_id")
         end
 
         it 'should append given classes to li default classes' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.action(:submit, :wrapper_html => {:class => :another_class}))
           end)
-          expect(output_buffer).to have_tag("form li.action")
-          expect(output_buffer).to have_tag("form li.input_action")
-          expect(output_buffer).to have_tag("form li.another_class")
+          expect(output_buffer.to_str).to have_tag("form li.action")
+          expect(output_buffer.to_str).to have_tag("form li.input_action")
+          expect(output_buffer.to_str).to have_tag("form li.another_class")
         end
 
         it 'should allow classes to be an array' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.action(:submit, :wrapper_html => {:class => [ :my_class, :another_class ]}))
           end)
-          expect(output_buffer).to have_tag("form li.action")
-          expect(output_buffer).to have_tag("form li.input_action")
-          expect(output_buffer).to have_tag("form li.my_class")
-          expect(output_buffer).to have_tag("form li.another_class")
+          expect(output_buffer.to_str).to have_tag("form li.action")
+          expect(output_buffer.to_str).to have_tag("form li.input_action")
+          expect(output_buffer.to_str).to have_tag("form li.my_class")
+          expect(output_buffer.to_str).to have_tag("form li.another_class")
         end
       end
 
@@ -231,9 +231,9 @@ RSpec.describe 'with action class finder' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.action(:submit))
           end)
-          expect(output_buffer).to have_tag("form li#post_submit_action")
-          expect(output_buffer).to have_tag("form li.action")
-          expect(output_buffer).to have_tag("form li.input_action")
+          expect(output_buffer.to_str).to have_tag("form li#post_submit_action")
+          expect(output_buffer.to_str).to have_tag("form li.action")
+          expect(output_buffer.to_str).to have_tag("form li.input_action")
         end
       end
 

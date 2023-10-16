@@ -7,7 +7,7 @@ RSpec.describe 'search input' do
   include FormtasticSpecHelper
 
   before do
-    @output_buffer = ActiveSupport::SafeBuffer.new ''
+    @output_buffer = ActionView::OutputBuffer.new ''
     mock_everything
   end
 
@@ -42,11 +42,11 @@ RSpec.describe 'search input' do
     it_should_have_label_and_input_with_id("context2_post_search")
 
   end
-  
+
   describe "when index is provided" do
 
     before do
-      @output_buffer = ActiveSupport::SafeBuffer.new ''
+      @output_buffer = ActionView::OutputBuffer.new ''
       mock_everything
 
       concat(semantic_form_for(@new_post) do |builder|
@@ -55,31 +55,31 @@ RSpec.describe 'search input' do
         end)
       end)
     end
-    
+
     it 'should index the id of the wrapper' do
-      expect(output_buffer).to have_tag("li#post_author_attributes_3_name_input")
+      expect(output_buffer.to_str).to have_tag("li#post_author_attributes_3_name_input")
     end
-    
+
     it 'should index the id of the select tag' do
-      expect(output_buffer).to have_tag("input#post_author_attributes_3_name")
+      expect(output_buffer.to_str).to have_tag("input#post_author_attributes_3_name")
     end
-    
+
     it 'should index the name of the select tag' do
-      expect(output_buffer).to have_tag("input[@name='post[author_attributes][3][name]']")
+      expect(output_buffer.to_str).to have_tag("input[@name='post[author_attributes][3][name]']")
     end
-    
+
   end
-  
+
   describe "when required" do
     it "should add the required attribute to the input's html options" do
-      with_config :use_required_attribute, true do 
+      with_config :use_required_attribute, true do
         concat(semantic_form_for(@new_post) do |builder|
           concat(builder.input(:title, :as => :search, :required => true))
         end)
-        expect(output_buffer).to have_tag("input[@required]")
+        expect(output_buffer.to_str).to have_tag("input[@required]")
       end
     end
   end
-  
+
 end
 

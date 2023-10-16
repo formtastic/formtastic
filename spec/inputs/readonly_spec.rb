@@ -7,7 +7,7 @@ RSpec.describe 'readonly option' do
   include FormtasticSpecHelper
 
   before do
-    @output_buffer = ActiveSupport::SafeBuffer.new ''
+    @output_buffer = ActionView::OutputBuffer.new ''
     mock_everything
   end
 
@@ -21,7 +21,7 @@ RSpec.describe 'readonly option' do
             concat(semantic_form_for(@new_post) do |builder|
               concat(builder.input(:title, :as => type, input_html: {readonly: true}))
             end)
-              expect(output_buffer).to have_tag((type == :text ? 'textarea' : 'input') + '[@readonly]')
+              expect(output_buffer.to_str).to have_tag((type == :text ? 'textarea' : 'input') + '[@readonly]')
           end
         end
 
@@ -31,7 +31,7 @@ RSpec.describe 'readonly option' do
               concat(semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title, :as => type))
               end)
-                expect(output_buffer).not_to have_tag((type == :text ? 'textarea' : 'input') + '[@readonly]')
+                expect(output_buffer.to_str).not_to have_tag((type == :text ? 'textarea' : 'input') + '[@readonly]')
             end
           end
           describe "when column is readonly attribute" do
@@ -41,7 +41,7 @@ RSpec.describe 'readonly option' do
               concat(semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title, :as => type))
               end)
-                expect(output_buffer).to have_tag((type == :text ? 'textarea' : 'input') + '[@readonly]')
+                expect(output_buffer.to_str).to have_tag((type == :text ? 'textarea' : 'input') + '[@readonly]')
             end
           end
         end
