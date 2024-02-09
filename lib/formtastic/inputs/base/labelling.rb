@@ -14,7 +14,7 @@ module Formtastic
           {
             :for => input_html_options[:id],
             :class => ['label'],
-          }
+          }.merge(options[:label_html] || {})
         end
         
         def label_text
