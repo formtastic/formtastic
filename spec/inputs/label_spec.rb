@@ -40,6 +40,21 @@ RSpec.describe 'Formtastic::FormBuilder#label' do
     expect(output_buffer.to_str).to have_tag('label', :text => /Title/)
   end
 
+  it 'should apply a "for" attribute to the label' do
+    concat(semantic_form_for(@new_post) do |builder|
+      builder.input(:title)
+    end)
+    puts output_buffer.to_str
+    expect(output_buffer.to_str).to have_tag('label[for=post_title]')
+  end
+
+  it 'should apply a "label" class to the label' do
+    concat(semantic_form_for(@new_post) do |builder|
+      builder.input(:title)
+    end)
+    expect(output_buffer.to_str).to have_tag('label.label')
+  end
+
   it 'should use i18n instead of the method name when method given as a String' do
     with_config :i18n_cache_lookups, true do
       ::I18n.backend.store_translations :en, { :formtastic => { :labels => { :post => { :title => "I18n title" } } } }
@@ -66,6 +81,24 @@ RSpec.describe 'Formtastic::FormBuilder#label' do
       expect(output_buffer.to_str).to have_tag('label abbr', '*')
     end
   end
+
+  describe "when label_html is given" do
+    it "should allow label_html to override the class" do
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input(:title, :label_html => { :class => 'my_class' } )
+      end)
+      expect(output_buffer.to_str).to have_tag('label.my_class', /Title/)
+    end
+
+    it "should allow label_html to add custom attributes" do
+      concat(semantic_form_for(@new_post) do |builder|
+        builder.input(:title, :label_html => { :data => { :tooltip => 'Great Tooltip' } } )
+      end)
+      aggregate_failures do
+        expect(output_buffer.to_str).to have_tag('label[data-tooltip="Great Tooltip"]')
+      end
+    end
+  end 
 
   describe 'when a collection is given' do
     it 'should use a supplied label_method for simple collections' do

@@ -177,6 +177,9 @@ module Formtastic
       # @example Changing or adding to HTML attributes in the main `<input>` or `<select>` tag
       #   <%= f.input :title, :input_html => { :onchange => "somethingAwesome();", :class => 'awesome' } %>
       #
+      # @example Changing or adding to HTML attributes in the main `<label>` tag
+      #   <%= f.input :title, :label_html => { :data => { :tooltip => 'Great Tooltip' } } %>
+      #
       # @example Changing or adding to HTML attributes in the wrapper `<li>` tag
       #   <%= f.input :title, :wrapper_html => { :class => "important-input" } %>
       #
