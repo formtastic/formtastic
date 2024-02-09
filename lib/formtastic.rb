@@ -13,6 +13,7 @@ module Formtastic
   autoload :InputClassFinder
   autoload :ActionClassFinder
   autoload :Deprecation
+  autoload :Reflection
 
   eager_autoload do
     autoload :I18n
