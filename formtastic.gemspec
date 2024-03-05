@@ -27,8 +27,10 @@ Gem::Specification.new do |s|
 
   s.add_dependency(%q<actionpack>, [">= 6.0.0"])
 
-  s.add_development_dependency(%q<rspec-rails>, ["~> 3.4"])
+  s.add_development_dependency(%q<rspec-rails>, [">= 4.0"])
   s.add_development_dependency(%q<rspec-dom-testing>, [">= 0.1.0"])
+  s.add_development_dependency(%q<rspec-mocks>, ["~> 3.12.2"])
+
   s.add_development_dependency(%q<yard>, ["~> 0.9.20"])
   s.add_development_dependency(%q<ammeter>, ["~> 1.1.3"])
   s.add_development_dependency(%q<rake>)

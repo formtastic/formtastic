@@ -18,7 +18,7 @@ RSpec.describe 'Formtastic::Helpers::FormHelper.builder' do
   end
 
   before do
-    @output_buffer = ActiveSupport::SafeBuffer.new ''
+    @output_buffer = ActionView::OutputBuffer.new ''
     mock_everything
   end
 
@@ -88,9 +88,9 @@ RSpec.describe 'Formtastic::Helpers::FormHelper.builder' do
           concat(builder.inputs)
         end)
 
-        expect(output_buffer).to_not have_tag('input#post_title')
-        expect(output_buffer).to_not have_tag('li#post_created_at_input')
-        expect(output_buffer).to have_tag('textarea#post_body')
+        expect(output_buffer.to_str).to_not have_tag('input#post_title')
+        expect(output_buffer.to_str).to_not have_tag('li#post_created_at_input')
+        expect(output_buffer.to_str).to have_tag('textarea#post_body')
       end
     end
 

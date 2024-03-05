@@ -7,7 +7,7 @@ RSpec.describe 'country input' do
   include FormtasticSpecHelper
 
   before do
-    @output_buffer = ActiveSupport::SafeBuffer.new ''
+    @output_buffer = ActionView::OutputBuffer.new ''
     mock_everything
   end
 
@@ -40,13 +40,13 @@ RSpec.describe 'country input' do
     #it_should_apply_error_logic_for_input_type(:country)
 
     it 'should generate a label for the input' do
-      expect(output_buffer).to have_tag('form li label')
-      expect(output_buffer).to have_tag('form li label[@for="post_country"]')
-      expect(output_buffer).to have_tag('form li label', :text => /Country/)
+      expect(output_buffer.to_str).to have_tag('form li label')
+      expect(output_buffer.to_str).to have_tag('form li label[@for="post_country"]')
+      expect(output_buffer.to_str).to have_tag('form li label', :text => /Country/)
     end
 
     it "should generate a select" do
-      expect(output_buffer).to have_tag("form li select")
+      expect(output_buffer.to_str).to have_tag("form li select")
     end
 
   end
@@ -81,7 +81,7 @@ RSpec.describe 'country input' do
   describe "when namespace is provided" do
 
     before do
-      @output_buffer = ActiveSupport::SafeBuffer.new ''
+      @output_buffer = ActionView::OutputBuffer.new ''
       mock_everything
 
       concat(semantic_form_for(@new_post, :namespace => 'context2') do |builder|
@@ -108,7 +108,7 @@ RSpec.describe 'country input' do
       end
 
       it "should render a country input" do
-        expect(output_buffer).to have_tag "form li.country"
+        expect(output_buffer.to_str).to have_tag "form li.country"
       end
     end
 
@@ -122,8 +122,8 @@ RSpec.describe 'country input' do
       end
 
       it "should render a country input" do
-        expect(output_buffer).not_to have_tag "form li.country"
-        expect(output_buffer).to have_tag "form li.string", :count => 2
+        expect(output_buffer.to_str).not_to have_tag "form li.country"
+        expect(output_buffer.to_str).to have_tag "form li.string", :count => 2
       end
 
     end

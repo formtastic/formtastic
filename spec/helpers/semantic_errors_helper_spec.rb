@@ -7,7 +7,7 @@ RSpec.describe 'Formtastic::FormBuilder#semantic_errors' do
   include FormtasticSpecHelper
 
   before do
-    @output_buffer = ActiveSupport::SafeBuffer.new ''
+    @output_buffer = ActionView::OutputBuffer.new ''
     mock_everything
     @title_errors = ['must not be blank', 'must be awesome']
     @base_errors = ['base error message', 'nasty error']
@@ -96,7 +96,7 @@ RSpec.describe 'Formtastic::FormBuilder#semantic_errors' do
       end
     end
   end
-  
+
   describe 'when :base is passed in as an argument' do
     before do
       allow(@errors).to receive(:[]).with(errors_matcher(:base)).and_return(@base_error)
@@ -109,5 +109,5 @@ RSpec.describe 'Formtastic::FormBuilder#semantic_errors' do
       end
     end
   end
-  
+
 end
