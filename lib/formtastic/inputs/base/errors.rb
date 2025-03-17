@@ -10,7 +10,7 @@ module Formtastic
         
         def error_sentence_html
           error_class = builder.default_inline_error_class
-          template.content_tag(:p, errors.to_sentence, :class => error_class)
+          template.content_tag(:p, errors.to_sentence, id: "#{method}_error", :class => error_class)
         end
                 
         def error_list_html

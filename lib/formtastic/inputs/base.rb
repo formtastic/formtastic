@@ -59,6 +59,7 @@ module Formtastic
       autoload :Timeish
       autoload :Validations
       autoload :Wrapping
+      autoload :Aria
 
       include Html
       include Options
@@ -71,6 +72,7 @@ module Formtastic
       include Associations
       include Labelling
       include Wrapping
+      include Aria
 
     end
   end

@@ -43,12 +43,30 @@ module Formtastic
         html_options = args.extract_options!
         html_options[:class] ||= "errors"
 
-        full_errors = @object.errors[:base]
-        full_errors += semantic_error_list_from_attributes(args)
-        return nil if full_errors.blank?
+        if Formtastic::FormBuilder.semantic_errors_link_to_inputs
+          attribute_error_hash = semantic_error_hash_from_attributes(args)
+          return nil if @object.errors[:base].blank? && attribute_error_hash.blank?
 
-        template.content_tag(:ul, html_options) do
-          full_errors.map { |error| template.content_tag(:li, error) }.join.html_safe
+          template.content_tag(:ul, html_options) do
+            (
+              @object.errors[:base].map { |base_error| template.content_tag(:li, base_error) } <<
+              attribute_error_hash.map { |attribute, error_message|
+                template.content_tag(:li) do
+                  template.content_tag(:a, href: "##{object_name}_#{attribute}") do
+                    error_message
+                  end
+                end
+              }
+            ).join.html_safe
+          end
+        else
+          full_errors = @object.errors[:base]
+          full_errors += semantic_error_list_from_attributes(args)
+          return nil if full_errors.blank?
+
+          template.content_tag(:ul, html_options) do
+            full_errors.map { |error| template.content_tag(:li, error) }.join.html_safe
+          end
         end
       end
 
@@ -85,6 +103,21 @@ module Formtastic
         end
 
         attribute_errors
+      end
+
+      # returns { 'attribute': 'error_message_for_attribute' }
+      def semantic_error_hash_from_attributes(*args)
+        attribute_error_hash = {}
+        args = args.flatten
+        args.each do |attribute|
+          next if attribute == :base
+
+          full_message = error_message_for_attribute(attribute)
+
+          attribute_error_hash[attribute] = full_message unless full_message.blank?
+        end
+
+        attribute_error_hash
       end
 
       # Returns "Attribute error_message_sentence" localized, humanized

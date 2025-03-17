@@ -25,7 +25,7 @@ module Formtastic
             :required => required_attribute?,
             :autofocus => autofocus?,
             :readonly => readonly?
-          }.merge(options[:input_html] || {})
+          }.merge(options[:input_html] || {}).merge(default_aria_attributes)
         end
 
         def dom_id
