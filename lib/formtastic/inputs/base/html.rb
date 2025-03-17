@@ -20,12 +20,17 @@ module Formtastic
         end
 
         def input_html_options
-          {
+          opts = {
             :id => dom_id,
             :required => required_attribute?,
             :autofocus => autofocus?,
             :readonly => readonly?
           }.merge(options[:input_html] || {})
+          if errors?
+            opts['aria-invalid'] ||= true
+            opts['aria-describedby'] = "#{opts['aria-describedby']} #{method}_error "
+          end
+          opts
         end
 
         def dom_id
