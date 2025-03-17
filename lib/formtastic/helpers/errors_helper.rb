@@ -42,23 +42,31 @@ module Formtastic
       def semantic_errors(*args)
         html_options = args.extract_options!
         args = args - [:base]
-        full_errors = args.inject([]) do |array, method|
-          attribute = localized_string(method, method.to_sym, :label) || humanized_attribute_name(method)
-          errors = Array(@object.errors[method.to_sym]).to_sentence
-          errors.present? ? array << [attribute, errors].join(" ") : array ||= []
+        full_errors = {}
+        args.each do |attribute|
+          full_errors[attribute] = error_message_for_attribute(attribute)
         end
-        full_errors << @object.errors[:base]
-        full_errors.flatten!
-        full_errors.compact!
-        return nil if full_errors.blank?
+        full_errors.compact_blank!
+        base_errors = @object.errors[:base]
+        base_errors = Array(@object.errors[:base]) if base_errors.is_a?(String)
+        return nil if full_errors.blank? && base_errors.blank?
         html_options[:class] ||= "errors"
         template.content_tag(:ul, html_options) do
-          full_errors.map { |error| template.content_tag(:li, error) }.join.html_safe
+          (
+            base_errors.map { |base_error| template.content_tag(:li, base_error) } <<
+            full_errors.map { |attribute, error_message|
+              template.content_tag(:li) do
+                template.content_tag(:a, href: "##{object_name}_#{attribute}") do
+                  error_message
+                end
+              end
+            }
+          ).join.html_safe
         end
       end
-      
+
       protected
-      
+
       def error_keys(method, options)
         @methods_for_error ||= {}
         @methods_for_error[method] ||= begin
@@ -76,6 +84,16 @@ module Formtastic
 
       def render_inline_errors?
         @object && @object.respond_to?(:errors) && Formtastic::FormBuilder::INLINE_ERROR_TYPES.include?(inline_errors)
+      end
+
+      def error_message_for_attribute(attribute)
+        attribute_string = localized_string(attribute, attribute.to_sym, :label) || humanized_attribute_name(attribute)
+        error_message = @object.errors[attribute.to_sym]&.to_sentence
+
+        return nil if error_message.blank?
+
+        full_message = [attribute_string, error_message].join(" ")
+        full_message
       end
     end
   end
