@@ -27,6 +27,9 @@ Gem::Specification.new do |s|
 
   s.add_dependency(%q<actionpack>, [">= 6.0.0"])
 
+  s.add_development_dependency(%q<activesupport>, [">= 6.0.0"])
+  s.add_development_dependency(%q<activerecord>, [">= 6.0.0"])
+
   s.add_development_dependency(%q<rspec-rails>, [">= 4.0"])
   s.add_development_dependency(%q<rspec-dom-testing>, [">= 0.1.0"])
   s.add_development_dependency(%q<rspec-mocks>, ["~> 3.12.2"])
