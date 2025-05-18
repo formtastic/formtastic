@@ -21,14 +21,14 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.extra_rdoc_files = ["README.md"]
 
-  s.required_ruby_version = '>= 2.6.0'
+  s.required_ruby_version = '>= 2.7.0'
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.rubygems_version = %q{1.3.6}
 
-  s.add_dependency(%q<actionpack>, [">= 6.0.0"])
+  s.add_dependency(%q<actionpack>, [">= 7.1.0"])
 
-  s.add_development_dependency(%q<activesupport>, [">= 6.0.0"])
-  s.add_development_dependency(%q<activerecord>, [">= 6.0.0"])
+  s.add_development_dependency(%q<activesupport>, [">= 7.1.0"])
+  s.add_development_dependency(%q<activerecord>, [">= 7.1.0"])
 
   s.add_development_dependency(%q<rspec-rails>, [">= 4.0"])
   s.add_development_dependency(%q<rspec-dom-testing>, [">= 0.1.0"])
