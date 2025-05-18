@@ -32,19 +32,14 @@ Gem::Specification.new do |s|
   s.add_dependency(%q<actionpack>, [">= 7.1.0"])
 
   # Development dependencies (for people working on Formtastic) are different to the minimum support
-  # version. Here we can expect a more modern stack with the latest Rails major version at a minimum,
-  # along with modern and compatible versions of the associated development tools. We also be more
-  # specific about the version numbers, because this isn't where we worry about backwards compatibilty
-  # or edge compatibiluty -- the appraisal gem files cover that.
-  s.add_development_dependency(%q<activesupport>, ["~> 8.0.2"])
-  s.add_development_dependency(%q<activerecord>, ["~> 8.0.2"])
-
-  s.add_development_dependency(%q<rspec-rails>, [">= 4.0"])
-  s.add_development_dependency(%q<rspec-dom-testing>, [">= 0.1.0"])
-  s.add_development_dependency(%q<rspec-mocks>, ["~> 3.12.2"])
-
-  s.add_development_dependency(%q<yard>, ["~> 0.9.20"])
-  s.add_development_dependency(%q<ammeter>, ["~> 1.1.3"])
+  # version. Instead of specifying a specific version of each, we just specify the stack, and let the
+  # details of which versions work with each version of rails be managed in the Appraisal.
+  s.add_development_dependency(%q<appraisal>)
+  s.add_development_dependency(%q<rspec-rails>)
+  s.add_development_dependency(%q<rspec-dom-testing>)
+  s.add_development_dependency(%q<rspec-mocks>)
+  s.add_development_dependency(%q<yard>)
+  s.add_development_dependency(%q<ammeter>)
   s.add_development_dependency(%q<rake>)
-  s.add_development_dependency(%q<sqlite3>, ["~> 2.6.0"])
+  s.add_development_dependency(%q<sqlite3>)
 end
