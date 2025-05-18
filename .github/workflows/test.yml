@@ -18,11 +18,9 @@ jobs:
 
       matrix:
         gemfile:
-          - gemfiles/rails_6.0/Gemfile
-          - gemfiles/rails_6.1/Gemfile
-          - gemfiles/rails_7.0/Gemfile
-          - gemfiles/rails_7.1/Gemfile
-          - gemfiles/rails_edge/Gemfile
+          - gemfiles/rails_7.gemfile
+          - gemfiles/rails_8.gemfile
+          - gemfiles/rails_edge.gemfile
 
         ruby:
           - 2.6.6
