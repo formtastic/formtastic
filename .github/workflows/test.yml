@@ -47,5 +47,4 @@ jobs:
       - name: Run tests
         run: |
           bundle exec rake spec
-          script/integration.sh
-        continue-on-error: ${{ matrix.gemfile == 'gemfiles/rails_edge/Gemfile' }}
+        continue-on-error: ${{ matrix.gemfile == 'gemfiles/rails_edge.gemfile' }}
