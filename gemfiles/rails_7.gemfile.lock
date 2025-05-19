@@ -145,7 +145,7 @@ GEM
       rspec-mocks (~> 3.13)
       rspec-support (~> 3.13)
     rspec-support (3.13.3)
-    securerandom (0.4.1)
+    securerandom (0.3.2)
     sqlite3 (1.7.3-aarch64-linux)
     sqlite3 (1.7.3-arm-linux)
     sqlite3 (1.7.3-arm64-darwin)
@@ -183,6 +183,7 @@ DEPENDENCIES
   rspec-dom-testing
   rspec-mocks
   rspec-rails
+  securerandom (~> 0.3.2)
   sqlite3 (~> 1.7.0)
   yard
 

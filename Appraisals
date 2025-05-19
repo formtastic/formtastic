@@ -3,6 +3,7 @@ appraise "rails-7" do
   gem "activesupport", "~> 7.1.0"
   gem "activerecord", "~> 7.1.0"
   gem "sqlite3", "~> 1.7.0"
+  gem "securerandom", "~> 0.3.2"
 end
 
 appraise "rails-8" do
