@@ -22,14 +22,14 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = ["README.md"]
 
   # Minimum Ruby version is probably the same as whatever the minimum Rails version currently expects.
-  s.required_ruby_version = '>= 2.7.0'
+  s.required_ruby_version = '>= 3.1.0'
 
   # Minimum Ruby Gems version also matches whatever the minimum Rails version currently expects.
   s.required_rubygems_version = ">= 1.8.11"
 
   # User dependency is really just Rails, where we want describe the minimum version we support,
   # which is probably the oldest version that hasn't reached end-of-life for security updates.
-  s.add_dependency(%q<actionpack>, [">= 7.1.0"])
+  s.add_dependency(%q<actionpack>, [">= 7.2.0"])
 
   # Development dependencies (for people working on Formtastic) are different to the minimum support
   # version. Instead of specifying a specific version of each, we just specify the stack, and let the
