@@ -2,7 +2,9 @@ appraise "rails-7" do
   gem "actionpack", "~> 7.1.0"
   gem "activesupport", "~> 7.1.0"
   gem "activerecord", "~> 7.1.0"
-  gem "sqlite3", "~> 1.7.0"
+  gem "sqlite3", "~> 1.6.9"
+  gem "nokogiri", "~> 1.15.7"
+  gem "zeitwerk", "~> 2.6.18"
   gem "securerandom", "~> 0.3.2"
 end
 
