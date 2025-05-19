@@ -27,6 +27,16 @@ jobs:
           - 3.0.0
           - 3.3.4
 
+        exclude:
+          - ruby: 2.7.2
+            gemfile: gemfiles/rails_8.gemfile
+          - ruby: 2.7.2
+            gemfile: gemfiles/rails_edge.gemfile
+          - ruby: 3.0.0
+            gemfile: gemfiles/rails_8.gemfile
+          - ruby: 3.0.0
+            gemfile: gemfiles/rails_edge.gemfile
+
     env:
       BUNDLE_GEMFILE: ${{ matrix.gemfile }}
 
