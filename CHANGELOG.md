@@ -1,4 +1,12 @@
+## 6.0.0 / edge
+
+ * Removed support for Rails 6.0 & 7.1 (min version is 7.2)
+ * Removed support for Ruby < 3.1 in line with Rails 7.2
+ * Added requirement for min Ruby Gems version in line with Rails 7.2
+
+
 ## 5.0.0
+
  * Added support for Rails 7.1 ([#1371](https://github.com/formtastic/formtastic/pull/1371))
  * Removed support for Rails < 6.0.0 ([#1354](https://github.com/formtastic/formtastic/pull/1354))
  * Removed support for Rubies < 2.6.0 ([#1332](https://github.com/formtastic/formtastic/pull/1332), [#1355](https://github.com/formtastic/formtastic.git/pull/1355))
@@ -8,6 +16,7 @@
  * Use frozen_string_literal internally ([#1339](https://github.com/formtastic/formtastic/pull/1339))
 
 ## 4.0.0
+
   * Fixed default_columns_for_object when object has non-standard foreign keys (#1241)
   * Fixed missing constants in production (#911)
   * Removed support for Rails 3 and 4.0 (#1108)
