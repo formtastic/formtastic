@@ -51,7 +51,7 @@ jobs:
           bundler-cache: true
           bundler: latest
 
-      - name: Run specs
+      - name: Run tests
         run: |
           bundle exec rake spec
         continue-on-error: ${{ matrix.gemfile == 'gemfiles/rails_edge.gemfile' }}
