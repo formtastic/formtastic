@@ -18,16 +18,6 @@ jobs:
     strategy:
       fail-fast: false
 
-      matrix:
-        gemfile:
-          - gemfiles/rails_8.gemfile
-
-        ruby:
-          - 3.3.4
-
-    env:
-      BUNDLE_GEMFILE: ${{ matrix.gemfile }}
-
     steps:
       - uses: actions/checkout@v2
 
@@ -38,10 +28,9 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ matrix.ruby }}
+          ruby-version: 3.3.4
           bundler-cache: true
           bundler: latest
 
       - name: Run integration
         run: script/integration.sh
-        continue-on-error: ${{ matrix.gemfile == 'gemfiles/rails_edge.gemfile' }}
