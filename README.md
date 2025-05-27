@@ -16,10 +16,8 @@ Formtastic is a Rails FormBuilder DSL (with some other goodies) to make it far e
 
 ## Compatibility
 
-* Formtastic 5 requires Rails 6.0 and Ruby 2.6 minimum
-* Formtastic 4 requires Rails 5.2 and Ruby 2.4 minimum
-* Formtastic 3 requires Rails 3.2.13 minimum
-* Formtastic 2 requires Rails 3
+* Formtastic edge requires Rails 7.2 and Ruby 3.1 minimum, inline with Rails minimum supported versions
+* Formtastic 5.0 requires Rails 6.0 and Ruby 2.6 minimum
 * Formtastic, much like Rails, is very ActiveRecord-centric. Many are successfully using other ActiveModel-like ORMs and objects (DataMapper, MongoMapper, Mongoid, Authlogic, Devise...) but we're not guaranteeing full compatibility at this stage. Patches are welcome!
 
 ## The Story
@@ -614,12 +612,7 @@ There are none other than Rails itself, but...
 
 ## How to contribute
 
-* Fork the project on Github
-* Install development dependencies (`bundle install` and `bin/appraisal install`)
-* Create a topic branch for your changes
-* Ensure that you provide *documentation* and *test coverage* for your changes (patches won't be accepted without)
-* Ensure that all tests pass (`bundle exec rake`)
-* Create a pull request on Github (these are also a great place to start a conversation around a patch as early as possible)
+See `CONTRIBUTING.md`
 
 
 ## Project Info
