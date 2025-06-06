@@ -111,6 +111,8 @@ RSpec.describe 'Formtastic::FormBuilder#fields_for' do
         end)
       end)
       expect(output_buffer.to_str).to match(/oh noes/)
+      expect(output_buffer.to_str).to include('aria-invalid="true"')
+      expect(output_buffer.to_str).to include("aria-describedby", "login_error")
     end
 
   end
