@@ -5,12 +5,9 @@ module Formtastic
     # Rails doesn't come with a `country_select` helper by default any more, so you'll need to do
     # one of the following:
     #
-    # * install the [country_select](https://github.com/stefanpenner/country_select) gem
+    # * install the [country_select](https://github.com/countries/country_select) gem
     # * install any other country_select plugin that behaves in a similar way
     # * roll your own `country_select` helper with the same args and options as the Rails one
-    #
-    # Formtastic supports both 1.x and 2.x of stefanpenner/country_select, but if you're upgrading
-    # from 1.x, they behave quite differently, so please see their [upgrade instructions](https://github.com/stefanpenner/country_select/blob/master/UPGRADING.md).
     #
     # By default, Formtastic includes a handful of English-speaking countries as "priority
     # countries", which can be set in the `priority_countries` configuration array in the
@@ -71,11 +68,17 @@ module Formtastic
       CountrySelectPluginMissing = Class.new(StandardError)
 
       def to_html
-        raise CountrySelectPluginMissing, "To use the :country input, please install a country_select plugin, like this one: https://github.com/stefanpenner/country_select" unless builder.respond_to?(:country_select)
+        raise CountrySelectPluginMissing, "To use the :country input, please install a country_select plugin, like this one: https://github.com/countries/country_select" unless builder.respond_to?(:country_select)
         input_wrapping do
           label_html <<
-          builder.country_select(method, priority_countries, input_options, input_html_options)
+          builder.country_select(method, input_options_including_priorities, input_html_options)
         end
+      end
+
+      def input_options_including_priorities
+        return input_options unless priority_countries
+
+        input_options.merge(:priority_countries => priority_countries)
       end
       
       def priority_countries
