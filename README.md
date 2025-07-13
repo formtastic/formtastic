@@ -9,17 +9,15 @@ Formtastic is a Rails FormBuilder DSL (with some other goodies) to make it far e
 
 ## Documentation & Support
 
-* [Documentation is available on rdoc.info](https://rdoc.info/projects/formtastic/formtastic)
+* [Documentation is available on rubydoc.info](https://rubydoc.info/github/formtastic/formtastic)
 * [We track issues & bugs on GitHub](https://github.com/formtastic/formtastic/issues)
 * [We have a wiki on GitHub](https://github.com/formtastic/formtastic/wiki)
 * [StackOverflow can help](https://stackoverflow.com/questions/tagged/formtastic)
 
 ## Compatibility
 
-* Formtastic 5 requires Rails 6.0 and Ruby 2.6 minimum
-* Formtastic 4 requires Rails 5.2 and Ruby 2.4 minimum
-* Formtastic 3 requires Rails 3.2.13 minimum
-* Formtastic 2 requires Rails 3
+* Formtastic edge requires Rails 7.2 and Ruby 3.1 minimum, inline with Rails minimum supported versions
+* Formtastic 5.0 requires Rails 6.0 and Ruby 2.6 minimum
 * Formtastic, much like Rails, is very ActiveRecord-centric. Many are successfully using other ActiveModel-like ORMs and objects (DataMapper, MongoMapper, Mongoid, Authlogic, Devise...) but we're not guaranteeing full compatibility at this stage. Patches are welcome!
 
 ## The Story
@@ -608,18 +606,13 @@ You can use your new input with `:as => :date_picker`.
 
 There are none other than Rails itself, but...
 
-* If you want to use the `:country` input, you'll need to install the [country-select plugin](https://github.com/stefanpenner/country_select) (or any other country_select plugin with the same API). Both 1.x and 2.x are supported, but they behave differently when storing data, so please see their [upgrade notes](https://github.com/stefanpenner/country_select/blob/master/UPGRADING.md) if switching from 1.x.
+* If you want to use the `:country` input, you'll need to install the [country-select plugin](https://github.com/countries/country_select) (or any other country_select plugin with the same API).
 * There are a bunch of development dependencies if you plan to contribute to Formtastic
 
 
 ## How to contribute
 
-* Fork the project on Github
-* Install development dependencies (`bundle install` and `bin/appraisal install`)
-* Create a topic branch for your changes
-* Ensure that you provide *documentation* and *test coverage* for your changes (patches won't be accepted without)
-* Ensure that all tests pass (`bundle exec rake`)
-* Create a pull request on Github (these are also a great place to start a conversation around a patch as early as possible)
+See `CONTRIBUTING.md`
 
 
 ## Project Info
@@ -628,5 +621,5 @@ Formtastic was created by [Justin French](https://www.justinfrench.com) with con
 
 The project is hosted on Github: [https://github.com/formtastic/formtastic](https://github.com/formtastic/formtastic), where your contributions, forkings, comments, issues and feedback are greatly welcomed.
 
-Copyright (c) 2007-2021, released under the MIT license.
+Copyright (c) 2007-2025, released under the MIT license.
 
