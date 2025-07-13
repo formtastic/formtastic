@@ -206,7 +206,7 @@ RSpec.describe 'FormHelper' do
       end
     end
 
-    describe 'without :namespace option' do
+    describe 'with :custom_namespace configured' do
       before do
         expect(Formtastic::FormBuilder).to receive(:custom_namespace).and_return('context2')
       end
@@ -220,6 +220,23 @@ RSpec.describe 'FormHelper' do
       it 'should prefix html id' do
         form = semantic_form_for(@new_post, &Proc.new{})
         assert_match 'id="context2_new_post"', form
+      end
+    end
+
+    describe 'without :namespace or :custom_namespace' do
+      #before do
+      #  expect(Formtastic::FormBuilder).to receive(:custom_namespace).and_return(nil)
+      #end
+
+      it 'defaults to nil' do
+        semantic_form_for(@new_post) do |builder|
+          expect(builder.dom_id_namespace).to eq(nil)
+        end
+      end
+
+      it 'should not prefix html id' do
+        form = semantic_form_for(@new_post, &Proc.new{})
+        assert_match 'id="new_post"', form
       end
     end
 
