@@ -510,7 +510,7 @@ RSpec.describe 'check_boxes input' do
     end
 
     it "should not check any items" do
-      expect(output_buffer.to_str).to have_tag('form li input[@checked]', :count => 0)
+      expect(output_buffer.to_str).not_to have_tag('form li input[@checked]')
     end
 
     describe "and the attribute has values" do

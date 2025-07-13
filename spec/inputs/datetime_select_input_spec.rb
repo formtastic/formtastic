@@ -163,7 +163,7 @@ RSpec.describe 'datetime select input' do
       concat(semantic_form_for(@new_post) do |builder|
         concat(builder.input(:created_at, :as => :datetime_select, :labels => false))
       end)
-      expect(output_buffer.to_str).to have_tag('form li.datetime_select fieldset ol li label', :count => 0)
+      expect(output_buffer.to_str).not_to have_tag('form li.datetime_select fieldset ol li label')
     end
   end
 
