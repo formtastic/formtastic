@@ -4,6 +4,7 @@
  * Removed support for Ruby < 3.1 in line with Rails 7.2
  * Added requirement for min Ruby Gems version in line with Rails 7.2
  * Fixed country_select compatibility by switching from v1 to v2 syntax ([#1382](https://github.com/formtastic/formtastic/pull/1382))
+ * Fixed that passing caller to Deprecation#warn is deprecated ([#1384](https://github.com/formtastic/formtastic/pull/1384))
 
 ## 5.0.0
 
