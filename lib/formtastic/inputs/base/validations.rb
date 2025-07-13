@@ -183,7 +183,22 @@ module Formtastic
         end
 
         def column_limit
-          column.limit if column? && column.respond_to?(:limit)
+          return unless column?
+          return unless column.respond_to?(:limit)
+
+          limit = column.limit # already in characters for string, text, etc
+
+          if column.type == :integer && column.limit.is_a?(Integer)
+            return {
+              1 => 3, # 8 bit
+              2 => 5, # 16 bit
+              3 => 7, # 24 bit
+              4 => 10, # 32 bit
+              8 => 19, # 64 bit
+            }[limit] || nil
+          end
+
+          return limit
         end
 
         def limit

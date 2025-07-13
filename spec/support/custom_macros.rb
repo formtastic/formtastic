@@ -171,10 +171,19 @@ module CustomMacros
       end
     end
 
-    def it_should_have_maxlength_matching_column_limit
+    def it_should_have_maxlength_matching_string_column_limit
       it 'should have a maxlength matching column limit' do
+        expect(@new_post.column_for_attribute(:title).type).to eq(:string)
         expect(@new_post.column_for_attribute(:title).limit).to eq(50)
         expect(output_buffer.to_str).to have_tag("form li input[@maxlength='50']")
+      end
+    end
+
+    def it_should_have_maxlength_matching_integer_column_limit
+      it 'should have a maxlength matching column limit' do
+        expect(@new_post.column_for_attribute(:status).type).to eq(:integer)
+        expect(@new_post.column_for_attribute(:status).limit).to eq(1)
+        expect(output_buffer.to_str).to have_tag("form li input[@maxlength='3']")
       end
     end
 
