@@ -75,46 +75,44 @@ RSpec.describe MyInput do
   end
 
   describe '#collection' do
-
     context 'when the raw collection is a string' do
       it 'returns the string' do
-        instance.stub(:raw_collection) { "one_status_only" }
-        instance.collection.should eq "one_status_only"
+        allow(instance).to receive(:raw_collection).and_return("one_status_only")
+        expect(instance.collection).to eq "one_status_only"
       end
     end
 
     context 'when the raw collection is an array of strings' do
       it 'returns the array of symbols' do
-        instance.stub(:raw_collection) { ["active", "inactive", "pending"] }
-        instance.collection.instance_of?(Array).should eq(true)
-        instance.collection.should eq ["active", "inactive", "pending"]
+        allow(instance).to receive(:raw_collection).and_return(["active", "inactive", "pending"])
+        expect(instance.collection).to be_an(Array)
+        expect(instance.collection).to eq ["active", "inactive", "pending"]
       end
     end
 
     context 'when the raw collection is an array of arrays' do
       it 'returns the array of arrays' do
-        instance.stub(:raw_collection) { [["inactive", "0"], ["active", "1"], ["pending", "2"]] }
-        instance.collection.instance_of?(Array).should eq(true)
-        instance.collection.should eq [["inactive", "0"], ["active", "1"], ["pending", "2"]]
+        allow(instance).to receive(:raw_collection).and_return([["inactive", "0"], ["active", "1"], ["pending", "2"]])
+        expect(instance.collection).to be_an(Array)
+        expect(instance.collection).to eq [["inactive", "0"], ["active", "1"], ["pending", "2"]]
       end
     end
 
     context 'when the raw collection is an array of symbols' do
       it 'returns the array of symbols' do
-        instance.stub(:raw_collection) { [:active, :inactive, :pending] }
-        instance.collection.instance_of?(Array).should eq(true)
-        instance.collection.should eq [:active, :inactive, :pending]
+        allow(instance).to receive(:raw_collection).and_return([:active, :inactive, :pending])
+        expect(instance.collection).to be_an(Array)
+        expect(instance.collection).to eq [:active, :inactive, :pending]
       end
     end
 
     context 'when the raw collection is a hash' do
       it 'will be mapped into array form' do
-        instance.stub(:raw_collection) { { inactive: 0, active: 1, pending: 2 } }
-        instance.collection.instance_of?(Array).should eq(true)
-        instance.collection.should eq [[:inactive, 0], [:active, 1], [:pending, 2]]
+        allow(instance).to receive(:raw_collection).and_return({ inactive: 0, active: 1, pending: 2 })
+        expect(instance.collection).to be_an(Array)
+        expect(instance.collection).to eq [[:inactive, 0], [:active, 1], [:pending, 2]]
       end
     end
-
   end
 
 end
