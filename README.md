@@ -606,7 +606,7 @@ You can use your new input with `:as => :date_picker`.
 
 There are none other than Rails itself, but...
 
-* If you want to use the `:country` input, you'll need to install the [country-select plugin](https://github.com/stefanpenner/country_select) (or any other country_select plugin with the same API). Both 1.x and 2.x are supported, but they behave differently when storing data, so please see their [upgrade notes](https://github.com/stefanpenner/country_select/blob/master/UPGRADING.md) if switching from 1.x.
+* If you want to use the `:country` input, you'll need to install the [country-select plugin](https://github.com/countries/country_select) (or any other country_select plugin with the same API).
 * There are a bunch of development dependencies if you plan to contribute to Formtastic
 
 
