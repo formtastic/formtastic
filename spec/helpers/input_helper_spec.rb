@@ -731,6 +731,17 @@ RSpec.describe 'with input class finder' do
 
     end
 
+    describe ':label_method option' do
+      it "should allow label_html to add custom attributes" do
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:title, :label_html => { :data => { :tooltip => 'Great Tooltip' } }))
+        end)
+        aggregate_failures do
+          expect(output_buffer.to_str).to have_tag('form li label[data-tooltip="Great Tooltip"]')
+        end
+      end
+    end
+
     describe ':hint option' do
 
       describe 'when provided' do
