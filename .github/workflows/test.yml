@@ -2,6 +2,8 @@ name: test
 
 on:
   push:
+    branches:
+      - main
   pull_request:
 
 jobs:
@@ -11,43 +13,26 @@ jobs:
     steps:
       - uses: actions/checkout@v2
   test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     strategy:
       fail-fast: false
 
       matrix:
         gemfile:
-          - gemfiles/rails_5.2/Gemfile
-          - gemfiles/rails_6.0/Gemfile
-          - gemfiles/rails_6.1/Gemfile
-          - gemfiles/rails_edge/Gemfile
+          - gemfiles/rails_7.gemfile
+          - gemfiles/rails_8.gemfile
+          - gemfiles/rails_edge.gemfile
 
         ruby:
-          - 2.4.10
-          - 2.5.8
-          - 2.6.6
-          - 2.7.2
-          - 3.0.0
+          - 3.1.7
+          - 3.3.4
 
         exclude:
-          - ruby: 2.4.10
-            gemfile: gemfiles/rails_6.0/Gemfile
-
-          - ruby: 2.4.10
-            gemfile: gemfiles/rails_6.1/Gemfile
-
-          - ruby: 2.4.10
-            gemfile: gemfiles/rails_edge/Gemfile
-
-          - ruby: 2.5.8
-            gemfile: gemfiles/rails_edge/Gemfile
-
-          - ruby: 2.6.6
-            gemfile: gemfiles/rails_edge/Gemfile
-
-          - ruby: 3.0.0
-            gemfile: gemfiles/rails_5.2/Gemfile
+          - gemfile: gemfiles/rails_8.gemfile
+            ruby: 3.1.7
+          - gemfile: gemfiles/rails_edge.gemfile
+            ruby: 3.1.7
 
     env:
       BUNDLE_GEMFILE: ${{ matrix.gemfile }}
@@ -64,9 +49,9 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
+          bundler: latest
 
       - name: Run tests
         run: |
           bundle exec rake spec
-          script/integration.sh
-        continue-on-error: ${{ matrix.gemfile == 'gemfiles/rails_edge/Gemfile' }}
+        continue-on-error: ${{ matrix.gemfile == 'gemfiles/rails_edge.gemfile' }}

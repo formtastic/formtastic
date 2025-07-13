@@ -15,8 +15,6 @@ elsif Rails.version >= '6.1'
     gsub_file 'Gemfile', /gem 'rails'.*/, "gem 'rails', '~> #{Rails.version}', github: 'rails/rails', branch: '6-1-stable'"
 elsif Rails.version >= '6.0'
     gsub_file 'Gemfile', /gem 'rails'.*/, "gem 'rails', '~> #{Rails.version}', github: 'rails/rails', branch: '6-0-stable'"
-elsif Rails.version >= '5.2'
-    gsub_file 'Gemfile', /gem 'rails'.*/, "gem 'rails', '~> #{Rails.version}', github: 'rails/rails', branch: '5-2-stable'"
 end
 
 ### Ensure Dummy App's Ruby version matches the current environments Ruby Version
@@ -41,7 +39,7 @@ end
 formtastic = -> do
   generate(:scaffold, 'user name:string password:digest')
   generate('formtastic:install')
-  generate('formtastic:form', 'user name password:password --force')
+  generate('formtastic:form', 'user name password --force')
 
   rails_command('db:migrate')
 

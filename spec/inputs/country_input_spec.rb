@@ -7,13 +7,13 @@ RSpec.describe 'country input' do
   include FormtasticSpecHelper
 
   before do
-    @output_buffer = ActiveSupport::SafeBuffer.new ''
+    @output_buffer = ActionView::OutputBuffer.new ''
     mock_everything
   end
 
   describe "when country_select is not available as a helper from a plugin" do
 
-    it "should raise an error, sugesting the author installs a plugin" do
+    it "should raise an error, suggesting the author installs a plugin" do
       expect {
         semantic_form_for(@new_post) do |builder|
           concat(builder.input(:country, :as => :country))
@@ -40,13 +40,13 @@ RSpec.describe 'country input' do
     #it_should_apply_error_logic_for_input_type(:country)
 
     it 'should generate a label for the input' do
-      expect(output_buffer).to have_tag('form li label')
-      expect(output_buffer).to have_tag('form li label[@for="post_country"]')
-      expect(output_buffer).to have_tag('form li label', :text => /Country/)
+      expect(output_buffer.to_str).to have_tag('form li label')
+      expect(output_buffer.to_str).to have_tag('form li label[@for="post_country"]')
+      expect(output_buffer.to_str).to have_tag('form li label', :text => /Country/)
     end
 
     it "should generate a select" do
-      expect(output_buffer).to have_tag("form li select")
+      expect(output_buffer.to_str).to have_tag("form li select")
     end
 
   end
@@ -57,7 +57,7 @@ RSpec.describe 'country input' do
       priority_countries = ["Foo", "Bah"]
       semantic_form_for(@new_post) do |builder|
         allow(builder).to receive(:country_select).and_return("<select><option>...</option></select>".html_safe)
-        expect(builder).to receive(:country_select).with(:country, priority_countries, {}, {:id => "post_country", :required => false, :autofocus => false, :readonly => false}).and_return("<select><option>...</option></select>".html_safe)
+        expect(builder).to receive(:country_select).with(:country, { :priority_countries => priority_countries }, {:id => "post_country", :required => false, :autofocus => false, :readonly => false}).and_return("<select><option>...</option></select>".html_safe)
 
         concat(builder.input(:country, :as => :country, :priority_countries => priority_countries))
       end
@@ -70,7 +70,7 @@ RSpec.describe 'country input' do
 
       semantic_form_for(@new_post) do |builder|
         allow(builder).to receive(:country_select).and_return("<select><option>...</option></select>".html_safe)
-        expect(builder).to receive(:country_select).with(:country, priority_countries, {}, {:id => "post_country", :required => false, :autofocus => false, :readonly => false}).and_return("<select><option>...</option></select>".html_safe)
+        expect(builder).to receive(:country_select).with(:country, { :priority_countries => priority_countries }, {:id => "post_country", :required => false, :autofocus => false, :readonly => false}).and_return("<select><option>...</option></select>".html_safe)
 
         concat(builder.input(:country, :as => :country))
       end
@@ -81,12 +81,12 @@ RSpec.describe 'country input' do
   describe "when namespace is provided" do
 
     before do
-      @output_buffer = ActiveSupport::SafeBuffer.new ''
+      @output_buffer = ActionView::OutputBuffer.new ''
       mock_everything
 
       concat(semantic_form_for(@new_post, :namespace => 'context2') do |builder|
         allow(builder).to receive(:country_select).and_return("<select><option>...</option></select>".html_safe)
-        expect(builder).to receive(:country_select).with(:country, [], {}, {:id => "context2_post_country", :required => false, :autofocus => false, :readonly => false}).and_return("<select><option>...</option></select>".html_safe)
+        expect(builder).to receive(:country_select).with(:country, { :priority_countries => [] }, {:id => "context2_post_country", :required => false, :autofocus => false, :readonly => false}).and_return("<select><option>...</option></select>".html_safe)
         concat(builder.input(:country, :priority_countries => []))
       end)
     end
@@ -108,11 +108,11 @@ RSpec.describe 'country input' do
       end
 
       it "should render a country input" do
-        expect(output_buffer).to have_tag "form li.country"
+        expect(output_buffer.to_str).to have_tag "form li.country"
       end
     end
 
-    describe "whent the attribute is 'country_something'" do
+    describe "when the attribute is 'country_something'" do
 
       before do
         concat(semantic_form_for(@new_post) do |builder|
@@ -122,8 +122,8 @@ RSpec.describe 'country input' do
       end
 
       it "should render a country input" do
-        expect(output_buffer).not_to have_tag "form li.country"
-        expect(output_buffer).to have_tag "form li.string", :count => 2
+        expect(output_buffer.to_str).not_to have_tag "form li.country"
+        expect(output_buffer.to_str).to have_tag "form li.string", :count => 2
       end
 
     end

@@ -7,7 +7,7 @@ RSpec.describe 'radio input' do
   include FormtasticSpecHelper
 
   before do
-    @output_buffer = ActiveSupport::SafeBuffer.new ''
+    @output_buffer = ActionView::OutputBuffer.new ''
     mock_everything
   end
 
@@ -28,53 +28,53 @@ RSpec.describe 'radio input' do
     it_should_use_the_collection_when_provided(:radio, 'input')
 
     it 'should generate a legend containing a label with text for the input' do
-      expect(output_buffer).to have_tag('form li fieldset legend.label label')
-      expect(output_buffer).to have_tag('form li fieldset legend.label label', :text => /Author/)
+      expect(output_buffer.to_str).to have_tag('form li fieldset legend.label label')
+      expect(output_buffer.to_str).to have_tag('form li fieldset legend.label label', :text => /Author/)
     end
 
     it 'should not link the label within the legend to any input' do
-      expect(output_buffer).not_to have_tag('form li fieldset legend label[@for]')
+      expect(output_buffer.to_str).not_to have_tag('form li fieldset legend label[@for]')
     end
 
     it 'should generate an ordered list with a list item for each choice' do
-      expect(output_buffer).to have_tag('form li fieldset ol')
-      expect(output_buffer).to have_tag('form li fieldset ol li.choice', :count => ::Author.all.size)
+      expect(output_buffer.to_str).to have_tag('form li fieldset ol')
+      expect(output_buffer.to_str).to have_tag('form li fieldset ol li.choice', :count => ::Author.all.size)
     end
 
     it 'should have one option with a "checked" attribute' do
-      expect(output_buffer).to have_tag('form li input[@checked]', :count => 1)
+      expect(output_buffer.to_str).to have_tag('form li input[@checked]', :count => 1)
     end
 
     describe "each choice" do
 
       it 'should not give the choice label the .label class' do
-        expect(output_buffer).not_to have_tag('li.choice label.label')
+        expect(output_buffer.to_str).not_to have_tag('li.choice label.label')
       end
 
       it 'should not add the required attribute to each input' do
-        expect(output_buffer).not_to have_tag('li.choice input[@required]')
+        expect(output_buffer.to_str).not_to have_tag('li.choice input[@required]')
       end
 
 
       it 'should contain a label for the radio input with a nested input and label text' do
         ::Author.all.each do |author|
-          expect(output_buffer).to have_tag('form li fieldset ol li label', /#{author.to_label}/)
-          expect(output_buffer).to have_tag("form li fieldset ol li label[@for='post_author_id_#{author.id}']")
+          expect(output_buffer.to_str).to have_tag('form li fieldset ol li label', /#{author.to_label}/)
+          expect(output_buffer.to_str).to have_tag("form li fieldset ol li label[@for='post_author_id_#{author.id}']")
         end
       end
 
       it 'should use values as li.class when value_as_class is true' do
         ::Author.all.each do |author|
-          expect(output_buffer).to have_tag("form li fieldset ol li.author_#{author.id} label")
+          expect(output_buffer.to_str).to have_tag("form li fieldset ol li.author_#{author.id} label")
         end
       end
 
       it "should have a radio input" do
         ::Author.all.each do |author|
-          expect(output_buffer).to have_tag("form li fieldset ol li label input#post_author_id_#{author.id}")
-          expect(output_buffer).to have_tag("form li fieldset ol li label input[@type='radio']")
-          expect(output_buffer).to have_tag("form li fieldset ol li label input[@value='#{author.id}']")
-          expect(output_buffer).to have_tag("form li fieldset ol li label input[@name='post[author_id]']")
+          expect(output_buffer.to_str).to have_tag("form li fieldset ol li label input#post_author_id_#{author.id}")
+          expect(output_buffer.to_str).to have_tag("form li fieldset ol li label input[@type='radio']")
+          expect(output_buffer.to_str).to have_tag("form li fieldset ol li label input[@value='#{author.id}']")
+          expect(output_buffer.to_str).to have_tag("form li fieldset ol li label input[@name='post[author_id]']")
         end
       end
 
@@ -87,7 +87,7 @@ RSpec.describe 'radio input' do
           concat(builder.input(:author, :as => :radio))
         end)
 
-        expect(output_buffer).to have_tag("form li fieldset ol li label input[@checked='checked']")
+        expect(output_buffer.to_str).to have_tag("form li fieldset ol li label input[@checked='checked']")
       end
 
       it "should mark the input as disabled if options attached for disabling" do
@@ -95,8 +95,8 @@ RSpec.describe 'radio input' do
           concat(builder.input(:author, :as => :radio, :collection => [["Test", 'test'], ["Try", "try", {:disabled => true}]]))
         end)
 
-        expect(output_buffer).not_to have_tag("form li fieldset ol li label input[@value='test'][@disabled='disabled']")
-        expect(output_buffer).to have_tag("form li fieldset ol li label input[@value='try'][@disabled='disabled']")
+        expect(output_buffer.to_str).not_to have_tag("form li fieldset ol li label input[@value='test'][@disabled='disabled']")
+        expect(output_buffer.to_str).to have_tag("form li fieldset ol li label input[@value='try'][@disabled='disabled']")
       end
 
       it "should not contain invalid HTML attributes" do
@@ -105,31 +105,31 @@ RSpec.describe 'radio input' do
           concat(builder.input(:author, :as => :radio))
         end)
 
-        expect(output_buffer).not_to have_tag("form li fieldset ol li input[@find_options]")
+        expect(output_buffer.to_str).not_to have_tag("form li fieldset ol li input[@find_options]")
       end
 
     end
 
     describe 'and no object is given' do
       before(:example) do
-        output_buffer.replace ''
+        @output_buffer = ActionView::OutputBuffer.new ''
         concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
           concat(builder.input(:author_id, :as => :radio, :collection => ::Author.all))
         end)
       end
 
       it 'should generate a fieldset with legend' do
-        expect(output_buffer).to have_tag('form li fieldset legend', :text => /Author/)
+        expect(output_buffer.to_str).to have_tag('form li fieldset legend', :text => /Author/)
       end
 
       it 'should generate an li tag for each item in the collection' do
-        expect(output_buffer).to have_tag('form li fieldset ol li', :count => ::Author.all.size)
+        expect(output_buffer.to_str).to have_tag('form li fieldset ol li', :count => ::Author.all.size)
       end
 
       it 'should generate labels for each item' do
         ::Author.all.each do |author|
-          expect(output_buffer).to have_tag('form li fieldset ol li label', :text => /#{author.to_label}/)
-          expect(output_buffer).to have_tag("form li fieldset ol li label[@for='project_author_id_#{author.id}']")
+          expect(output_buffer.to_str).to have_tag('form li fieldset ol li label', :text => /#{author.to_label}/)
+          expect(output_buffer.to_str).to have_tag("form li fieldset ol li label[@for='project_author_id_#{author.id}']")
         end
       end
 
@@ -137,15 +137,15 @@ RSpec.describe 'radio input' do
         concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
           concat(builder.input(:author_id, :as => :radio, :collection => [["<b>Item 1</b>", 1], ["<b>Item 2</b>", 2]]))
         end)
-        expect(output_buffer).to have_tag('form li fieldset ol li label', text: %r{<b>Item [12]</b>}, count: 2)
+        expect(output_buffer.to_str).to have_tag('form li fieldset ol li label', text: %r{<b>Item [12]</b>}, count: 2)
       end
 
       it 'should generate inputs for each item' do
         ::Author.all.each do |author|
-          expect(output_buffer).to have_tag("form li fieldset ol li label input#project_author_id_#{author.id}")
-          expect(output_buffer).to have_tag("form li fieldset ol li label input[@type='radio']")
-          expect(output_buffer).to have_tag("form li fieldset ol li label input[@value='#{author.id}']")
-          expect(output_buffer).to have_tag("form li fieldset ol li label input[@name='project[author_id]']")
+          expect(output_buffer.to_str).to have_tag("form li fieldset ol li label input#project_author_id_#{author.id}")
+          expect(output_buffer.to_str).to have_tag("form li fieldset ol li label input[@type='radio']")
+          expect(output_buffer.to_str).to have_tag("form li fieldset ol li label input[@value='#{author.id}']")
+          expect(output_buffer.to_str).to have_tag("form li fieldset ol li label input[@name='project[author_id]']")
         end
       end
     end
@@ -166,15 +166,15 @@ RSpec.describe 'radio input' do
     end
 
     it 'should have a radio input for each defined enum status' do
-      expect(output_buffer).to have_tag("form li input[@name='post[status]'][@type='radio']", :count => @new_post.class.statuses.count)
+      expect(output_buffer.to_str).to have_tag("form li input[@name='post[status]'][@type='radio']", :count => @new_post.class.statuses.count)
       @new_post.class.statuses.each do |label, value|
-        expect(output_buffer).to have_tag("form li input[@value='#{label}']")
-        expect(output_buffer).to have_tag("form li label", :text => /#{label.humanize}/)
+        expect(output_buffer.to_str).to have_tag("form li input[@value='#{label}']")
+        expect(output_buffer.to_str).to have_tag("form li label", :text => /#{label.humanize}/)
       end
     end
 
     it 'should have one radio input with a "checked" attribute' do
-      expect(output_buffer).to have_tag("form li input[@name='post[status]'][@checked]", :count => 1)
+      expect(output_buffer.to_str).to have_tag("form li input[@name='post[status]'][@checked]", :count => 1)
     end
   end
 
@@ -197,7 +197,7 @@ RSpec.describe 'radio input' do
     end
 
     it "should do foo" do
-      expect(output_buffer).to have_tag("legend.label label", :text => /Translated/)
+      expect(output_buffer.to_str).to have_tag("legend.label label", :text => /Translated/)
     end
 
   end
@@ -211,13 +211,13 @@ RSpec.describe 'radio input' do
     end
 
     it "should output the correct label title" do
-      expect(output_buffer).to have_tag("legend.label label", :text => /The authors/)
+      expect(output_buffer.to_str).to have_tag("legend.label label", :text => /The authors/)
     end
   end
 
   describe "when :label option is false" do
     before do
-      @output_buffer = ActiveSupport::SafeBuffer.new ''
+      @output_buffer = ActionView::OutputBuffer.new ''
       allow(@new_post).to receive(:author_ids).and_return(nil)
       concat(semantic_form_for(@new_post) do |builder|
         concat(builder.input(:authors, :as => :radio, :label => false))
@@ -225,12 +225,12 @@ RSpec.describe 'radio input' do
     end
 
     it "should not output the legend" do
-      expect(output_buffer).not_to have_tag("legend.label")
-      expect(output_buffer).not_to include("&gt;")
+      expect(output_buffer.to_str).not_to have_tag("legend.label")
+      expect(output_buffer.to_str).not_to include("&gt;")
     end
 
     it "should not cause escaped HTML" do
-      expect(output_buffer).not_to include("&gt;")
+      expect(output_buffer.to_str).not_to include("&gt;")
     end
   end
 
@@ -243,20 +243,20 @@ RSpec.describe 'radio input' do
     end
 
     it "should output the correct label title" do
-      expect(output_buffer).to have_tag("legend.label label abbr")
+      expect(output_buffer.to_str).to have_tag("legend.label label abbr")
     end
   end
 
   describe "when :namespace is given on form" do
     before do
-      @output_buffer = ActiveSupport::SafeBuffer.new ''
+      @output_buffer = ActionView::OutputBuffer.new ''
       allow(@new_post).to receive(:author_ids).and_return(nil)
       concat(semantic_form_for(@new_post, :namespace => "custom_prefix") do |builder|
         concat(builder.input(:authors, :as => :radio, :label => ''))
       end)
 
-      expect(output_buffer).to match(/for="custom_prefix_post_author_ids_(\d+)"/)
-      expect(output_buffer).to match(/id="custom_prefix_post_author_ids_(\d+)"/)
+      expect(output_buffer.to_str).to match(/for="custom_prefix_post_author_ids_(\d+)"/)
+      expect(output_buffer.to_str).to match(/id="custom_prefix_post_author_ids_(\d+)"/)
     end
     it_should_have_input_wrapper_with_id("custom_prefix_post_authors_input")
   end
@@ -264,7 +264,7 @@ RSpec.describe 'radio input' do
   describe "when index is provided" do
 
     before do
-      @output_buffer = ActiveSupport::SafeBuffer.new ''
+      @output_buffer = ActionView::OutputBuffer.new ''
       mock_everything
 
       concat(semantic_form_for(@new_post) do |builder|
@@ -275,23 +275,23 @@ RSpec.describe 'radio input' do
     end
 
     it 'should index the id of the wrapper' do
-      expect(output_buffer).to have_tag("li#post_author_attributes_3_name_input")
+      expect(output_buffer.to_str).to have_tag("li#post_author_attributes_3_name_input")
     end
 
     it 'should index the id of the select tag' do
-      expect(output_buffer).to have_tag("input#post_author_attributes_3_name_true")
-      expect(output_buffer).to have_tag("input#post_author_attributes_3_name_false")
+      expect(output_buffer.to_str).to have_tag("input#post_author_attributes_3_name_true")
+      expect(output_buffer.to_str).to have_tag("input#post_author_attributes_3_name_false")
     end
 
     it 'should index the name of the select tag' do
-      expect(output_buffer).to have_tag("input[@name='post[author_attributes][3][name]']")
+      expect(output_buffer.to_str).to have_tag("input[@name='post[author_attributes][3][name]']")
     end
 
   end
 
   describe "when collection contains integers" do
     before do
-      @output_buffer = ActiveSupport::SafeBuffer.new ''
+      @output_buffer = ActionView::OutputBuffer.new ''
       mock_everything
 
       concat(semantic_form_for(:project) do |builder|
@@ -300,15 +300,15 @@ RSpec.describe 'radio input' do
     end
 
     it 'should output the correct labels' do
-      expect(output_buffer).to have_tag("li.choice label", :text => /1/)
-      expect(output_buffer).to have_tag("li.choice label", :text => /2/)
-      expect(output_buffer).to have_tag("li.choice label", :text => /3/)
+      expect(output_buffer.to_str).to have_tag("li.choice label", :text => /1/)
+      expect(output_buffer.to_str).to have_tag("li.choice label", :text => /2/)
+      expect(output_buffer.to_str).to have_tag("li.choice label", :text => /3/)
     end
   end
 
   describe "when collection contains symbols" do
     before do
-      @output_buffer = ActiveSupport::SafeBuffer.new ''
+      @output_buffer = ActionView::OutputBuffer.new ''
       mock_everything
 
       concat(semantic_form_for(:project) do |builder|
@@ -317,9 +317,9 @@ RSpec.describe 'radio input' do
     end
 
     it 'should output the correct labels' do
-      expect(output_buffer).to have_tag("li.choice label", :text => /A/)
-      expect(output_buffer).to have_tag("li.choice label", :text => /B/)
-      expect(output_buffer).to have_tag("li.choice label", :text => /C/)
+      expect(output_buffer.to_str).to have_tag("li.choice label", :text => /A/)
+      expect(output_buffer.to_str).to have_tag("li.choice label", :text => /B/)
+      expect(output_buffer.to_str).to have_tag("li.choice label", :text => /C/)
     end
   end
 

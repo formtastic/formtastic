@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 module Formtastic
   module Helpers
-    autoload :ButtonsHelper, 'formtastic/helpers/buttons_helper'
     autoload :ActionHelper, 'formtastic/helpers/action_helper'
     autoload :ActionsHelper, 'formtastic/helpers/actions_helper'
     autoload :ErrorsHelper, 'formtastic/helpers/errors_helper'

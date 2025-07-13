@@ -452,8 +452,6 @@ class ::ActionView::Base
   include Formtastic::Helpers::FormHelper
 end
 
-::ActiveSupport::Deprecation.silenced = false
-
 RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
 

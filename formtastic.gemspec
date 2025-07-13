@@ -21,16 +21,25 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.extra_rdoc_files = ["README.md"]
 
-  s.required_ruby_version = '>= 2.4.0'
-  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.rubygems_version = %q{1.3.6}
+  # Minimum Ruby version is probably the same as whatever the minimum Rails version currently expects.
+  s.required_ruby_version = '>= 3.1.0'
 
-  s.add_dependency(%q<actionpack>, [">= 5.2.0"])
+  # Minimum Ruby Gems version also matches whatever the minimum Rails version currently expects.
+  s.required_rubygems_version = ">= 1.8.11"
 
-  s.add_development_dependency(%q<rspec-rails>, ["~> 3.4"])
-  s.add_development_dependency(%q<rspec-dom-testing>, [">= 0.1.0"])
-  s.add_development_dependency(%q<yard>, ["~> 0.9.20"])
-  s.add_development_dependency(%q<ammeter>, ["~> 1.1.3"])
+  # User dependency is really just Rails, where we want describe the minimum version we support,
+  # which is probably the oldest version that hasn't reached end-of-life for security updates.
+  s.add_dependency(%q<actionpack>, [">= 7.2.0"])
+
+  # Development dependencies (for people working on Formtastic) are different to the minimum support
+  # version. Instead of specifying a specific version of each, we just specify the stack, and let the
+  # details of which versions work with each version of rails be managed in the Appraisal.
+  s.add_development_dependency(%q<appraisal>)
+  s.add_development_dependency(%q<rspec-rails>)
+  s.add_development_dependency(%q<rspec-dom-testing>)
+  s.add_development_dependency(%q<rspec-mocks>)
+  s.add_development_dependency(%q<yard>)
+  s.add_development_dependency(%q<ammeter>)
   s.add_development_dependency(%q<rake>)
-  s.add_development_dependency(%q<sqlite3>, ["~> 1.4"])
+  s.add_development_dependency(%q<sqlite3>)
 end

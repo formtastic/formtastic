@@ -12,7 +12,7 @@ RSpec.describe Formtastic::FormGenerator do
   destination File.expand_path("../../../../../tmp", __FILE__)
 
   before do
-    @output_buffer = ActiveSupport::SafeBuffer.new ''
+    @output_buffer = ActionView::OutputBuffer.new ''
     prepare_destination
     mock_everything
     allow(::Post).to receive(:reflect_on_all_associations).with(:belongs_to).and_return([
@@ -22,7 +22,7 @@ RSpec.describe Formtastic::FormGenerator do
       double('reflection', :name => :attachment, :options => {:polymorphic => true}, :macro => :belongs_to),
     ])
   end
-  
+
   after do
     FileUtils.rm_rf(File.expand_path("../../../../../tmp", __FILE__))
   end
@@ -83,14 +83,14 @@ RSpec.describe Formtastic::FormGenerator do
     end
 
     describe 'haml' do
-      
+
       describe 'app/views/posts/_form.html.haml' do
         before { run_generator %w(Post --template-engine haml) }
         subject { file('app/views/posts/_form.html.haml') }
         it { is_expected.to exist }
         it { is_expected.to contain "= semantic_form_for @post do |f|" }
       end
-      
+
       context 'with copy option' do
         describe 'app/views/posts/_form.html.haml' do
           before { run_generator %w(Post --copy --template-engine haml) }
@@ -98,7 +98,7 @@ RSpec.describe Formtastic::FormGenerator do
           it { is_expected.not_to exist }
         end
       end
-      
+
     end
 
     describe 'slim' do
@@ -111,10 +111,10 @@ RSpec.describe Formtastic::FormGenerator do
       end
     end
   end
-  
+
   describe 'with copy option' do
     before { run_generator %w(Post --copy) }
-  
+
     describe 'app/views/posts/_form.html.erb' do
       subject { file('app/views/posts/_form.html.erb') }
       it { is_expected.not_to exist }

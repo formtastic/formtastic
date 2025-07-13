@@ -30,8 +30,8 @@ RSpec.describe 'with input class finder' do
             concat(semantic_form_for(@new_post) do |builder|
               concat(builder.input(:title, :required => true))
             end)
-            expect(output_buffer).not_to have_tag('form li.optional')
-            expect(output_buffer).to have_tag('form li.required')
+            expect(output_buffer.to_str).not_to have_tag('form li.optional')
+            expect(output_buffer.to_str).to have_tag('form li.required')
           end
         end
 
@@ -40,7 +40,7 @@ RSpec.describe 'with input class finder' do
             concat(semantic_form_for(@new_post) do |builder|
               concat(builder.input(:title, :required => true))
             end)
-            expect(output_buffer).to have_tag('form li.required label', :text => /required yo/)
+            expect(output_buffer.to_str).to have_tag('form li.required label', :text => /required yo/)
           end
         end
       end
@@ -60,8 +60,8 @@ RSpec.describe 'with input class finder' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :required => false))
           end)
-          expect(output_buffer).not_to have_tag('form li.required')
-          expect(output_buffer).to have_tag('form li.optional')
+          expect(output_buffer.to_str).not_to have_tag('form li.required')
+          expect(output_buffer.to_str).to have_tag('form li.optional')
         end
 
         it 'should set and "optional" class also when there is presence validator' do
@@ -71,15 +71,15 @@ RSpec.describe 'with input class finder' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :required => false))
           end)
-          expect(output_buffer).not_to have_tag('form li.required')
-          expect(output_buffer).to have_tag('form li.optional')
+          expect(output_buffer.to_str).not_to have_tag('form li.required')
+          expect(output_buffer.to_str).to have_tag('form li.optional')
         end
 
         it 'should append the "optional" string to the label' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :required => false))
           end)
-          expect(output_buffer).to have_tag('form li.optional label', :text => /#{@string}$/)
+          expect(output_buffer.to_str).to have_tag('form li.optional label', :text => /#{@string}$/)
         end
 
       end
@@ -95,8 +95,8 @@ RSpec.describe 'with input class finder' do
             concat(semantic_form_for(:project, :url => 'http://test.host/') do |builder|
               concat(builder.input(:title))
             end)
-            expect(output_buffer).not_to have_tag('form li.required')
-            expect(output_buffer).to have_tag('form li.optional')
+            expect(output_buffer.to_str).not_to have_tag('form li.required')
+            expect(output_buffer.to_str).to have_tag('form li.optional')
 
             Formtastic::FormBuilder.all_fields_required_by_default = true
           end
@@ -126,8 +126,8 @@ RSpec.describe 'with input class finder' do
                 concat(builder.input(:title))
                 concat(builder.input(:body))
               end)
-              expect(output_buffer).to have_tag('form li.required')
-              expect(output_buffer).not_to have_tag('form li.optional')
+              expect(output_buffer.to_str).to have_tag('form li.required')
+              expect(output_buffer.to_str).not_to have_tag('form li.optional')
             end
 
             it 'should be required when there is :on => :create option on create' do
@@ -138,8 +138,8 @@ RSpec.describe 'with input class finder' do
                 concat(semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:title))
                 end)
-                expect(output_buffer).to have_tag('form li.required')
-                expect(output_buffer).not_to have_tag('form li.optional')
+                expect(output_buffer.to_str).to have_tag('form li.required')
+                expect(output_buffer.to_str).not_to have_tag('form li.optional')
               end
             end
 
@@ -151,8 +151,8 @@ RSpec.describe 'with input class finder' do
                 concat(semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:title))
                 end)
-                expect(output_buffer).to have_tag('form li.required')
-                expect(output_buffer).not_to have_tag('form li.optional')
+                expect(output_buffer.to_str).to have_tag('form li.required')
+                expect(output_buffer.to_str).not_to have_tag('form li.optional')
               end
             end
 
@@ -164,8 +164,8 @@ RSpec.describe 'with input class finder' do
                 concat(semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:title))
                 end)
-                expect(output_buffer).to have_tag('form li.required')
-                expect(output_buffer).not_to have_tag('form li.optional')
+                expect(output_buffer.to_str).to have_tag('form li.required')
+                expect(output_buffer.to_str).not_to have_tag('form li.optional')
               end
             end
 
@@ -177,8 +177,8 @@ RSpec.describe 'with input class finder' do
                 concat(semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:title))
                 end)
-                expect(output_buffer).to have_tag('form li.required')
-                expect(output_buffer).not_to have_tag('form li.optional')
+                expect(output_buffer.to_str).to have_tag('form li.required')
+                expect(output_buffer.to_str).not_to have_tag('form li.optional')
               end
             end
 
@@ -190,8 +190,8 @@ RSpec.describe 'with input class finder' do
                 concat(semantic_form_for(@fred) do |builder|
                   concat(builder.input(:login))
                 end)
-                expect(output_buffer).to have_tag('form li.required')
-                expect(output_buffer).not_to have_tag('form li.optional')
+                expect(output_buffer.to_str).to have_tag('form li.required')
+                expect(output_buffer.to_str).not_to have_tag('form li.optional')
               end
             end
 
@@ -203,8 +203,8 @@ RSpec.describe 'with input class finder' do
                 concat(semantic_form_for(@fred) do |builder|
                   concat(builder.input(:login))
                 end)
-                expect(output_buffer).to have_tag('form li.required')
-                expect(output_buffer).not_to have_tag('form li.optional')
+                expect(output_buffer.to_str).to have_tag('form li.required')
+                expect(output_buffer.to_str).not_to have_tag('form li.optional')
               end
             end
 
@@ -215,8 +215,8 @@ RSpec.describe 'with input class finder' do
               concat(semantic_form_for(@fred) do |builder|
                 concat(builder.input(:login))
               end)
-              expect(output_buffer).not_to have_tag('form li.required')
-              expect(output_buffer).to have_tag('form li.optional')
+              expect(output_buffer.to_str).not_to have_tag('form li.required')
+              expect(output_buffer.to_str).to have_tag('form li.optional')
             end
 
             it 'should not be required when there is :create option in validation contexts array on update' do
@@ -226,8 +226,8 @@ RSpec.describe 'with input class finder' do
               concat(semantic_form_for(@fred) do |builder|
                 concat(builder.input(:login))
               end)
-              expect(output_buffer).not_to have_tag('form li.required')
-              expect(output_buffer).to have_tag('form li.optional')
+              expect(output_buffer.to_str).not_to have_tag('form li.required')
+              expect(output_buffer.to_str).to have_tag('form li.optional')
             end
 
             it 'should not be required when there is :on => :update option on create' do
@@ -237,8 +237,8 @@ RSpec.describe 'with input class finder' do
               concat(semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title))
               end)
-              expect(output_buffer).not_to have_tag('form li.required')
-              expect(output_buffer).to have_tag('form li.optional')
+              expect(output_buffer.to_str).not_to have_tag('form li.required')
+              expect(output_buffer.to_str).to have_tag('form li.optional')
             end
 
             it 'should not be required when there is :update option in validation contexts array on create' do
@@ -248,8 +248,8 @@ RSpec.describe 'with input class finder' do
               concat(semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title))
               end)
-              expect(output_buffer).not_to have_tag('form li.required')
-              expect(output_buffer).to have_tag('form li.optional')
+              expect(output_buffer.to_str).not_to have_tag('form li.required')
+              expect(output_buffer.to_str).to have_tag('form li.optional')
             end
 
             it 'should be not be required if the optional :if condition is not satisifed' do
@@ -354,11 +354,11 @@ RSpec.describe 'with input class finder' do
             end)
 
             if options[:required]
-              expect(output_buffer).not_to have_tag('form li.optional')
-              expect(output_buffer).to have_tag('form li.required')
+              expect(output_buffer.to_str).not_to have_tag('form li.optional')
+              expect(output_buffer.to_str).to have_tag('form li.required')
             else
-              expect(output_buffer).to have_tag('form li.optional')
-              expect(output_buffer).not_to have_tag('form li.required')
+              expect(output_buffer.to_str).to have_tag('form li.optional')
+              expect(output_buffer.to_str).not_to have_tag('form li.required')
             end
           end
 
@@ -382,8 +382,8 @@ RSpec.describe 'with input class finder' do
               concat(semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title))
               end)
-              expect(output_buffer).not_to have_tag('form li.required')
-              expect(output_buffer).to have_tag('form li.optional')
+              expect(output_buffer.to_str).not_to have_tag('form li.required')
+              expect(output_buffer.to_str).to have_tag('form li.optional')
             end
           end
 
@@ -398,8 +398,8 @@ RSpec.describe 'with input class finder' do
             concat(semantic_form_for(@new_post) do |builder|
               concat(builder.input(:title))
             end)
-            expect(output_buffer).not_to have_tag('form li.required')
-            expect(output_buffer).to have_tag('form li.optional')
+            expect(output_buffer.to_str).not_to have_tag('form li.required')
+            expect(output_buffer.to_str).to have_tag('form li.optional')
 
             Formtastic::FormBuilder.all_fields_required_by_default = true
           end
@@ -418,7 +418,7 @@ RSpec.describe 'with input class finder' do
           concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
             concat(builder.input(:anything))
           end)
-          expect(output_buffer).to have_tag('form li.string')
+          expect(output_buffer.to_str).to have_tag('form li.string')
         end
 
         it 'should default to password for forms without objects if column is password' do
@@ -427,7 +427,7 @@ RSpec.describe 'with input class finder' do
             concat(builder.input(:password_confirmation))
             concat(builder.input(:confirm_password))
           end)
-          expect(output_buffer).to have_tag('form li.password', :count => 3)
+          expect(output_buffer.to_str).to have_tag('form li.password', :count => 3)
         end
 
         it 'should default to a string for methods on objects that don\'t respond to "column_for_attribute"' do
@@ -599,21 +599,21 @@ RSpec.describe 'with input class finder' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :label => "Kustom"))
           end)
-          expect(output_buffer).to have_tag("form li label", :text => /Kustom/)
+          expect(output_buffer.to_str).to have_tag("form li label", :text => /Kustom/)
         end
 
         it 'should not generate a label if false' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :label => false))
           end)
-          expect(output_buffer).not_to have_tag("form li label")
+          expect(output_buffer.to_str).not_to have_tag("form li label")
         end
 
         it 'should be dupped if frozen' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :label => "Kustom".freeze))
           end)
-          expect(output_buffer).to have_tag("form li label", :text => /Kustom/)
+          expect(output_buffer.to_str).to have_tag("form li label", :text => /Kustom/)
         end
       end
 
@@ -635,7 +635,7 @@ RSpec.describe 'with input class finder' do
                   concat(semantic_form_for(@new_post) do |builder|
                     concat(builder.input(:meta_description))
                   end)
-                  expect(output_buffer).to have_tag('form li label', :text => /Localized title/)
+                  expect(output_buffer.to_str).to have_tag('form li label', :text => /Localized title/)
                 end
               end
             end
@@ -650,7 +650,7 @@ RSpec.describe 'with input class finder' do
                 concat(semantic_form_for(:project, :url => 'http://test.host') do |builder|
                   concat(builder.input(:meta_description))
                 end)
-                expect(output_buffer).to have_tag("form li label", :text => /#{'meta_description'.humanize}/)
+                expect(output_buffer.to_str).to have_tag("form li label", :text => /#{'meta_description'.humanize}/)
               end
             end
           end
@@ -663,7 +663,7 @@ RSpec.describe 'with input class finder' do
               concat(semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:meta_description))
               end)
-              expect(output_buffer).to have_tag("form li label", :text => /#{'meta_description'.humanize}/)
+              expect(output_buffer.to_str).to have_tag("form li label", :text => /#{'meta_description'.humanize}/)
             end
           end
 
@@ -675,7 +675,7 @@ RSpec.describe 'with input class finder' do
                 concat(semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:meta_description))
                 end)
-                expect(output_buffer).to have_tag("form li label", :text => /#{'meta_description'.capitalize}/)
+                expect(output_buffer.to_str).to have_tag("form li label", :text => /#{'meta_description'.capitalize}/)
               end
             end
           end
@@ -704,7 +704,7 @@ RSpec.describe 'with input class finder' do
                 concat(builder.input(:title, :label => true))
                 concat(builder.input(:published, :as => :boolean, :label => true))
               end)
-              expect(output_buffer).to have_tag('form li label', :text => Regexp.new('^' + @localized_label_text))
+              expect(output_buffer.to_str).to have_tag('form li label', :text => Regexp.new('^' + @localized_label_text))
             end
           end
 
@@ -723,12 +723,23 @@ RSpec.describe 'with input class finder' do
                 concat(builder.input(:title, :label => true))
                 concat(builder.input(:published, :as => :boolean, :label => true))
               end)
-              expect(output_buffer).to have_tag('form li label', :text => Regexp.new('^' + @default_localized_label_text))
+              expect(output_buffer.to_str).to have_tag('form li label', :text => Regexp.new('^' + @default_localized_label_text))
             end
           end
         end
       end
 
+    end
+
+    describe ':label_method option' do
+      it "should allow label_html to add custom attributes" do
+        concat(semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:title, :label_html => { :data => { :tooltip => 'Great Tooltip' } }))
+        end)
+        aggregate_failures do
+          expect(output_buffer.to_str).to have_tag('form li label[data-tooltip="Great Tooltip"]')
+        end
+      end
     end
 
     describe ':hint option' do
@@ -744,7 +755,7 @@ RSpec.describe 'with input class finder' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :hint => hint_text))
           end)
-          expect(output_buffer).to have_tag("form li p.inline-hints", :text => hint_text)
+          expect(output_buffer.to_str).to have_tag("form li p.inline-hints", :text => hint_text)
         end
 
         it 'should have a custom hint class defaulted for all forms' do
@@ -753,7 +764,7 @@ RSpec.describe 'with input class finder' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :hint => hint_text))
           end)
-          expect(output_buffer).to have_tag("form li p.custom-hint-class", :text => hint_text)
+          expect(output_buffer.to_str).to have_tag("form li p.custom-hint-class", :text => hint_text)
         end
       end
 
@@ -788,7 +799,7 @@ RSpec.describe 'with input class finder' do
                 concat(semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:title, :hint => true))
                 end)
-                expect(output_buffer).to have_tag('form li p.inline-hints', :text => @localized_hint_text)
+                expect(output_buffer.to_str).to have_tag('form li p.inline-hints', :text => @localized_hint_text)
               end
             end
 
@@ -797,7 +808,7 @@ RSpec.describe 'with input class finder' do
                 concat(semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:title, :hint => true))
                 end)
-                expect(output_buffer).to have_tag('form li p.inline-hints', :text => @default_localized_hint_text)
+                expect(output_buffer.to_str).to have_tag('form li p.inline-hints', :text => @default_localized_hint_text)
               end
             end
           end
@@ -808,7 +819,7 @@ RSpec.describe 'with input class finder' do
                 concat(semantic_form_for(@new_post) do |builder|
                   concat(builder.input(:title, :hint => false))
                 end)
-                expect(output_buffer).not_to have_tag('form li p.inline-hints', :text => @localized_hint_text)
+                expect(output_buffer.to_str).not_to have_tag('form li p.inline-hints', :text => @localized_hint_text)
               end
             end
           end
@@ -828,7 +839,7 @@ RSpec.describe 'with input class finder' do
               semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title, :hint => true))
               end
-              expect(output_buffer).not_to have_tag('form li p.inline-hints', :text => @localized_hint_text)
+              expect(output_buffer.to_str).not_to have_tag('form li p.inline-hints', :text => @localized_hint_text)
             end
           end
         end
@@ -839,7 +850,7 @@ RSpec.describe 'with input class finder' do
               concat(semantic_form_for(@new_post) do |builder|
                 concat(builder.input(:title))
               end)
-              expect(output_buffer).not_to have_tag('form li p.inline-hints')
+              expect(output_buffer.to_str).not_to have_tag('form li p.inline-hints')
             end
           end
         end
@@ -854,25 +865,25 @@ RSpec.describe 'with input class finder' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :wrapper_html => {:id => :another_id}))
           end)
-          expect(output_buffer).to have_tag("form li#another_id")
+          expect(output_buffer.to_str).to have_tag("form li#another_id")
         end
 
         it 'should append given classes to li default classes' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :wrapper_html => {:class => :another_class}, :required => true))
           end)
-          expect(output_buffer).to have_tag("form li.string")
-          expect(output_buffer).to have_tag("form li.required")
-          expect(output_buffer).to have_tag("form li.another_class")
+          expect(output_buffer.to_str).to have_tag("form li.string")
+          expect(output_buffer.to_str).to have_tag("form li.required")
+          expect(output_buffer.to_str).to have_tag("form li.another_class")
         end
 
         it 'should allow classes to be an array' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title, :wrapper_html => {:class => [ :my_class, :another_class ]}))
           end)
-          expect(output_buffer).to have_tag("form li.string")
-          expect(output_buffer).to have_tag("form li.my_class")
-          expect(output_buffer).to have_tag("form li.another_class")
+          expect(output_buffer.to_str).to have_tag("form li.string")
+          expect(output_buffer.to_str).to have_tag("form li.my_class")
+          expect(output_buffer.to_str).to have_tag("form li.another_class")
         end
 
         describe 'when nil' do
@@ -880,7 +891,7 @@ RSpec.describe 'with input class finder' do
             concat(semantic_form_for(@new_post) do |builder|
               concat(builder.input(:title, :wrapper_html => {:id => nil}))
             end)
-            expect(output_buffer).to have_tag('form li:not([id])')
+            expect(output_buffer.to_str).to have_tag('form li:not([id])')
           end
         end
       end
@@ -890,8 +901,8 @@ RSpec.describe 'with input class finder' do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(:title))
           end)
-          expect(output_buffer).to have_tag("form li#post_title_input")
-          expect(output_buffer).to have_tag("form li.string")
+          expect(output_buffer.to_str).to have_tag("form li#post_title_input")
+          expect(output_buffer.to_str).to have_tag("form li.string")
         end
       end
 
@@ -933,7 +944,7 @@ RSpec.describe 'with input class finder' do
         concat(builder.input(:title, my_options))
         concat(builder.input(:publish_at, my_options))
       end)
-      expect(output_buffer).to have_tag 'li.string', :count => 2
+      expect(output_buffer.to_str).to have_tag 'li.string', :count => 2
     end
   end
 

@@ -43,7 +43,7 @@ module Formtastic
 
       if options[:copy]
         template = File.read("#{self.class.source_root}/_form.html.#{engine}")
-        erb = ERB.new(template, nil, '-')
+        erb = ERB.new(template, trim_mode: '-')
         generated_code = erb.result(binding).strip rescue nil
         puts "The following code has been copied to the clipboard, just paste it in your views:" if save_to_clipboard(generated_code)
         puts generated_code || "Error: Nothing generated. Does the model exist?"

@@ -7,7 +7,7 @@ RSpec.describe "*select: options[:include_blank]" do
   include FormtasticSpecHelper
 
   before do
-    @output_buffer = ActiveSupport::SafeBuffer.new ''
+    @output_buffer = ActionView::OutputBuffer.new ''
     mock_everything
 
     allow(@new_post).to receive(:author_id).and_return(nil)
@@ -30,7 +30,7 @@ RSpec.describe "*select: options[:include_blank]" do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(attribute, :as => as))
           end)
-          expect(output_buffer).to have_tag("form li select option[@value='']", "")
+          expect(output_buffer.to_str).to have_tag("form li select option[@value='']", "")
         end
 
         it 'blank value should not be included if the default value specified in config is false' do
@@ -38,7 +38,7 @@ RSpec.describe "*select: options[:include_blank]" do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(attribute, :as => as))
           end)
-          expect(output_buffer).not_to have_tag("form li select option[@value='']", "")
+          expect(output_buffer.to_str).not_to have_tag("form li select option[@value='']", "")
         end
 
         after do
@@ -51,7 +51,7 @@ RSpec.describe "*select: options[:include_blank]" do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(attribute, :as => as, :include_blank => false))
           end)
-          expect(output_buffer).not_to have_tag("form li select option[@value='']", "")
+          expect(output_buffer.to_str).not_to have_tag("form li select option[@value='']", "")
         end
       end
 
@@ -60,7 +60,7 @@ RSpec.describe "*select: options[:include_blank]" do
           concat(semantic_form_for(@new_post) do |builder|
             concat(builder.input(attribute, :as => as, :include_blank => true))
           end)
-          expect(output_buffer).to have_tag("form li select option[@value='']", "")
+          expect(output_buffer.to_str).to have_tag("form li select option[@value='']", "")
         end
       end
 
@@ -70,7 +70,7 @@ RSpec.describe "*select: options[:include_blank]" do
             concat(semantic_form_for(@new_post) do |builder|
               concat(builder.input(attribute, :as => as, :include_blank => 'string'))
             end)
-            expect(output_buffer).to have_tag("form li select option[@value='']", "string")
+            expect(output_buffer.to_str).to have_tag("form li select option[@value='']", "string")
           end
         end
       end
