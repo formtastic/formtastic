@@ -39,6 +39,7 @@ module FormtasticTest
     config.active_support.deprecation = :stderr
     config.secret_key_base = "secret"
     config.eager_load = false
+    config.active_support.to_time_preserves_timezone = :zone
   end
 end
 FormtasticTest::Application.initialize!
