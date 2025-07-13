@@ -3,7 +3,7 @@
  * Removed support for Rails 6.0 & 7.1 (min version is 7.2)
  * Removed support for Ruby < 3.1 in line with Rails 7.2
  * Added requirement for min Ruby Gems version in line with Rails 7.2
-
+ * Fixed country_select compatibility by switching from v1 to v2 syntax ([#1382](https://github.com/formtastic/formtastic/pull/1382))
 
 ## 5.0.0
 
