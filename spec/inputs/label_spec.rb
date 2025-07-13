@@ -44,7 +44,6 @@ RSpec.describe 'Formtastic::FormBuilder#label' do
     concat(semantic_form_for(@new_post) do |builder|
       builder.input(:title)
     end)
-    puts output_buffer.to_str
     expect(output_buffer.to_str).to have_tag('label[for=post_title]')
   end
 
