@@ -157,6 +157,7 @@ module Formtastic
         options[:html] ||= {}
         options[:html][:novalidate] = !@@builder.perform_browser_validations unless options[:html].key?(:novalidate)
         options[:custom_namespace] = options.delete(:namespace)
+        options[:custom_namespace] ||= Formtastic::FormBuilder.custom_namespace
 
         singularizer = defined?(ActiveModel::Naming.singular) ? ActiveModel::Naming.method(:singular) : ActionController::RecordIdentifier.method(:singular_class_name)
 
