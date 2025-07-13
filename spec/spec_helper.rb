@@ -365,6 +365,7 @@ module FormtasticSpecHelper
     end
 
     allow(@new_post).to receive(:title)
+    allow(@new_post).to receive(:status)
     allow(@new_post).to receive(:email)
     allow(@new_post).to receive(:url)
     allow(@new_post).to receive(:phone)
@@ -390,6 +391,7 @@ module FormtasticSpecHelper
     allow(@new_post).to receive(:document).and_return(@mock_file)
     allow(@new_post).to receive(:column_for_attribute).with(:meta_description).and_return(double('column', :type => :string, :limit => 255))
     allow(@new_post).to receive(:column_for_attribute).with(:title).and_return(double('column', :type => :string, :limit => 50))
+    allow(@new_post).to receive(:column_for_attribute).with(:status).and_return(double('column', :type => :integer, :limit => 1))
     allow(@new_post).to receive(:column_for_attribute).with(:body).and_return(double('column', :type => :text))
     allow(@new_post).to receive(:column_for_attribute).with(:published).and_return(double('column', :type => :boolean))
     allow(@new_post).to receive(:column_for_attribute).with(:publish_at).and_return(double('column', :type => :date))

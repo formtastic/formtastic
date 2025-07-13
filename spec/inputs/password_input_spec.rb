@@ -24,7 +24,7 @@ RSpec.describe 'password input' do
   it_should_have_input_with_id("post_title")
   it_should_have_input_with_type(:password)
   it_should_have_input_with_name("post[title]")
-  it_should_have_maxlength_matching_column_limit
+  it_should_have_maxlength_matching_string_column_limit
   it_should_use_default_text_field_size_when_not_nil(:string)
   it_should_not_use_default_text_field_size_when_nil(:string)
   it_should_apply_custom_input_attributes_when_input_html_provided(:string)
