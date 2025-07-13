@@ -118,7 +118,7 @@ RSpec.describe 'time_zone input' do
   describe "when priority time zone is provided" do
     let(:time_zones) { [ActiveSupport::TimeZone['Alaska'], ActiveSupport::TimeZone['Hawaii']] }
     let(:input_html_options) do
-      { id: "post_title", required: false, autofocus: false, readonly: false }
+      { id: "post_title", required: false, autofocus: false, readonly: false, namespace: nil }
     end
 
     context "by priority_zone option" do

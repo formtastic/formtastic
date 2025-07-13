@@ -57,7 +57,7 @@ RSpec.describe 'country input' do
       priority_countries = ["Foo", "Bah"]
       semantic_form_for(@new_post) do |builder|
         allow(builder).to receive(:country_select).and_return("<select><option>...</option></select>".html_safe)
-        expect(builder).to receive(:country_select).with(:country, { :priority_countries => priority_countries }, {:id => "post_country", :required => false, :autofocus => false, :readonly => false}).and_return("<select><option>...</option></select>".html_safe)
+        expect(builder).to receive(:country_select).with(:country, { :priority_countries => priority_countries }, {:id => "post_country", :required => false, :autofocus => false, :readonly => false, :namespace => nil}).and_return("<select><option>...</option></select>".html_safe)
 
         concat(builder.input(:country, :as => :country, :priority_countries => priority_countries))
       end
@@ -70,7 +70,7 @@ RSpec.describe 'country input' do
 
       semantic_form_for(@new_post) do |builder|
         allow(builder).to receive(:country_select).and_return("<select><option>...</option></select>".html_safe)
-        expect(builder).to receive(:country_select).with(:country, { :priority_countries => priority_countries }, {:id => "post_country", :required => false, :autofocus => false, :readonly => false}).and_return("<select><option>...</option></select>".html_safe)
+        expect(builder).to receive(:country_select).with(:country, { :priority_countries => priority_countries }, {:id => "post_country", :required => false, :autofocus => false, :readonly => false, :namespace => nil}).and_return("<select><option>...</option></select>".html_safe)
 
         concat(builder.input(:country, :as => :country))
       end
@@ -86,7 +86,7 @@ RSpec.describe 'country input' do
 
       concat(semantic_form_for(@new_post, :namespace => 'context2') do |builder|
         allow(builder).to receive(:country_select).and_return("<select><option>...</option></select>".html_safe)
-        expect(builder).to receive(:country_select).with(:country, { :priority_countries => [] }, {:id => "context2_post_country", :required => false, :autofocus => false, :readonly => false}).and_return("<select><option>...</option></select>".html_safe)
+        expect(builder).to receive(:country_select).with(:country, { :priority_countries => [] }, {:id => "context2_post_country", :required => false, :autofocus => false, :readonly => false, :namespace => nil}).and_return("<select><option>...</option></select>".html_safe)
         concat(builder.input(:country, :priority_countries => []))
       end)
     end
