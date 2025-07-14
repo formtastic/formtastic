@@ -41,24 +41,19 @@ module Formtastic
       #   <% end %>
       def semantic_errors(*args)
         html_options = args.extract_options!
-        args = args - [:base]
-        full_errors = args.inject([]) do |array, method|
-          attribute = localized_string(method, method.to_sym, :label) || humanized_attribute_name(method)
-          errors = Array(@object.errors[method.to_sym]).to_sentence
-          errors.present? ? array << [attribute, errors].join(" ") : array ||= []
-        end
-        full_errors << @object.errors[:base]
-        full_errors.flatten!
-        full_errors.compact!
-        return nil if full_errors.blank?
         html_options[:class] ||= "errors"
+
+        full_errors = semantic_error_list_from_base
+        full_errors += semantic_error_list_from_attributes(args)
+        return nil if full_errors.blank?
+
         template.content_tag(:ul, html_options) do
           full_errors.map { |error| template.content_tag(:li, error) }.join.html_safe
         end
       end
-      
+
       protected
-      
+
       def error_keys(method, options)
         @methods_for_error ||= {}
         @methods_for_error[method] ||= begin
@@ -76,6 +71,41 @@ module Formtastic
 
       def render_inline_errors?
         @object && @object.respond_to?(:errors) && Formtastic::FormBuilder::INLINE_ERROR_TYPES.include?(inline_errors)
+      end
+
+      def semantic_error_list_from_base
+        if @object.errors[:base].is_a?(Array)
+          @object.errors[:base]
+        else
+          # ActiveModel::Errors :base should be an array, we could remove this conditional
+          # still need to confirm String base errors are supported in Rails
+          Array(@object.errors[:base])
+        end
+      end
+
+      def semantic_error_list_from_attributes(*args)
+        attribute_errors = []
+        args = args.flatten
+        args.each do |attribute|
+          next if attribute == :base
+
+          full_message = error_message_for_attribute(attribute)
+
+          attribute_errors << full_message unless full_message.blank?
+        end
+
+        attribute_errors
+      end
+
+      # Returns "Attribute error_message_sentence" localized, humanized
+      def error_message_for_attribute(attribute)
+        attribute_string = localized_string(attribute, attribute.to_sym, :label) || humanized_attribute_name(attribute)
+        error_message = @object.errors[attribute.to_sym]&.to_sentence
+
+        return nil if error_message.blank?
+
+        full_message = [attribute_string, error_message].join(" ")
+        full_message
       end
     end
   end
