@@ -1,6 +1,5 @@
 # encoding: utf-8
 # frozen_string_literal: true
-require 'formtastic/engine' if defined?(::Rails)
 
 module Formtastic
   extend ActiveSupport::Autoload
@@ -41,4 +40,10 @@ module Formtastic
   class UnsupportedEnumCollection < NameError
   end
 
+end
+
+if defined?(::Rails)
+  ActiveSupport.on_load(:action_view) do
+    include Formtastic::Helpers::FormHelper
+  end
 end

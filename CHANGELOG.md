@@ -7,6 +7,9 @@
  * Fixed that passing caller to Deprecation#warn is deprecated ([#1384](https://github.com/formtastic/formtastic/pull/1384))
  * Added `lable_html` option for overriding & adding label HTML attributes ([#1379](https://github.com/formtastic/formtastic/pull/1379))
  * Added better support for collections of Symbols ([#1391](https://github.com/formtastic/formtastic/pull/1391))
+ * Add formtastic:stylesheets generator (does not include legacy IE stylesheets)
+ * Remove formtastic engine stylesheets
+
 
 ## 5.0.0
 

@@ -99,37 +99,12 @@ $ rails generate formtastic:install
 
 ## Stylesheets
 
-A proof-of-concept set of stylesheets are provided which you can include in your layout. Customization is best achieved by overriding these styles in an additional stylesheet.
+An optional proof-of-concept stylesheet can be generated and installed into your app:
 
-Rails 3.1 introduces an asset pipeline that allows plugins like Formtastic to serve their own Stylesheets, Javascripts, etc without having to run generators that copy them across to the host application. Formtastic makes three stylesheets available as an Engine, you just need to require them in your global stylesheets.
-
-```css
-  # app/assets/stylesheets/application.css
-  *= require formtastic
-  *= require my_formtastic_changes
+```shell
+$ rails generate formtastic:stylesheet
 ```
 
-Conditional stylesheets need to be compiled separately to prevent them being bundled and included with other application styles.  Remove `require_tree .` from application.css and specify required stylesheets individually.
-
-```css
-  # app/assets/stylesheets/ie6.css
-  *= require formtastic_ie6
-
-  # app/assets/stylesheets/ie7.css
-  *= require formtastic_ie7
-```
-
-```erb
-  # app/views/layouts/application.html.erb
-  <%= stylesheet_link_tag 'application' %>
-  <!--[if IE 6]><%= stylesheet_link_tag 'ie6' %><![endif]-->
-  <!--[if IE 7]><%= stylesheet_link_tag 'ie7' %><![endif]-->
-```
-
-```ruby
-  # config/environments/production.rb
-  config.assets.precompile += %w( ie6.css ie7.css )
-```
 
 ## Usage
 
