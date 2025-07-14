@@ -55,6 +55,12 @@ RSpec.describe 'Formtastic::FormBuilder#semantic_errors' do
         expect(builder.semantic_errors(:title)).to have_tag('ul.errors li', :text => title_name << " " << @title_errors.to_sentence)
       end
     end
+
+    it 'should have a href to the input field' do
+      semantic_form_for(@new_post) do |builder|
+        expect(builder.semantic_errors(:title)).to have_tag('ul.errors li a', with: { href: "##{@new_post.model_name}_title" } )
+      end
+    end
   end
 
   describe 'when there are errors on title and base' do
