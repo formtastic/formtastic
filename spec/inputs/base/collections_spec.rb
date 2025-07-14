@@ -74,5 +74,46 @@ RSpec.describe MyInput do
     end
   end
 
+  describe '#collection' do
+    context 'when the raw collection is a string' do
+      it 'returns the string' do
+        allow(instance).to receive(:raw_collection).and_return("one_status_only")
+        expect(instance.collection).to eq "one_status_only"
+      end
+    end
+
+    context 'when the raw collection is an array of strings' do
+      it 'returns the array of symbols' do
+        allow(instance).to receive(:raw_collection).and_return(["active", "inactive", "pending"])
+        expect(instance.collection).to be_an(Array)
+        expect(instance.collection).to eq ["active", "inactive", "pending"]
+      end
+    end
+
+    context 'when the raw collection is an array of arrays' do
+      it 'returns the array of arrays' do
+        allow(instance).to receive(:raw_collection).and_return([["inactive", "0"], ["active", "1"], ["pending", "2"]])
+        expect(instance.collection).to be_an(Array)
+        expect(instance.collection).to eq [["inactive", "0"], ["active", "1"], ["pending", "2"]]
+      end
+    end
+
+    context 'when the raw collection is an array of symbols' do
+      it 'returns the array of symbols' do
+        allow(instance).to receive(:raw_collection).and_return([:active, :inactive, :pending])
+        expect(instance.collection).to be_an(Array)
+        expect(instance.collection).to eq [:active, :inactive, :pending]
+      end
+    end
+
+    context 'when the raw collection is a hash' do
+      it 'will be mapped into array form' do
+        allow(instance).to receive(:raw_collection).and_return({ inactive: 0, active: 1, pending: 2 })
+        expect(instance.collection).to be_an(Array)
+        expect(instance.collection).to eq [[:inactive, 0], [:active, 1], [:pending, 2]]
+      end
+    end
+  end
+
 end
 

@@ -53,7 +53,7 @@ module Formtastic
 
           # Return if we have an Array of strings, integers or arrays
           return raw_collection if (raw_collection.instance_of?(Array) || raw_collection.instance_of?(Range)) &&
-                               ([Array, String].include?(raw_collection.first.class) || raw_collection.first.is_a?(Integer)) &&
+                               ([Array, String, Symbol].include?(raw_collection.first.class) || raw_collection.first.is_a?(Integer)) &&
                                !(options.include?(:member_label) || options.include?(:member_value))
 
           raw_collection.map { |o| [send_or_call(label_method, o), send_or_call(value_method, o)] }
