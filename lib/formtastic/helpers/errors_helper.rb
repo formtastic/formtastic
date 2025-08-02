@@ -43,7 +43,7 @@ module Formtastic
         html_options = args.extract_options!
         html_options[:class] ||= "errors"
 
-        full_errors = semantic_error_list_from_base
+        full_errors = @object.errors[:base]
         full_errors += semantic_error_list_from_attributes(args)
         return nil if full_errors.blank?
 
@@ -71,16 +71,6 @@ module Formtastic
 
       def render_inline_errors?
         @object && @object.respond_to?(:errors) && Formtastic::FormBuilder::INLINE_ERROR_TYPES.include?(inline_errors)
-      end
-
-      def semantic_error_list_from_base
-        if @object.errors[:base].is_a?(Array)
-          @object.errors[:base]
-        else
-          # ActiveModel::Errors :base should be an array, we could remove this conditional
-          # still need to confirm String base errors are supported in Rails
-          Array(@object.errors[:base])
-        end
       end
 
       def semantic_error_list_from_attributes(*args)

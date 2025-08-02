@@ -11,7 +11,7 @@ RSpec.describe 'Formtastic::FormBuilder#semantic_errors' do
     mock_everything
     @title_errors = ['must not be blank', 'must be awesome']
     @base_errors = ['base error message', 'nasty error']
-    @base_error = 'one base error'
+    @base_error = ['one base error']
     @errors = double('errors')
     allow(@new_post).to receive(:errors).and_return(@errors)
   end
@@ -23,7 +23,7 @@ RSpec.describe 'Formtastic::FormBuilder#semantic_errors' do
 
     it 'should render an unordered list' do
       semantic_form_for(@new_post) do |builder|
-        expect(builder.semantic_errors).to have_tag('ul.errors li', :text => @base_error)
+        expect(builder.semantic_errors).to have_tag('ul.errors li', text: 'one base error')
       end
     end
   end
@@ -67,15 +67,15 @@ RSpec.describe 'Formtastic::FormBuilder#semantic_errors' do
       semantic_form_for(@new_post) do |builder|
         title_name = builder.send(:localized_string, :title, :title, :label) || builder.send(:humanized_attribute_name, :title)
         expect(builder.semantic_errors(:title)).to have_tag('ul.errors li', :text => title_name << " " << @title_errors.to_sentence)
-        expect(builder.semantic_errors(:title)).to have_tag('ul.errors li', :text => @base_error)
+        expect(builder.semantic_errors(:title)).to have_tag('ul.errors li', text: 'one base error')
       end
     end
   end
 
   describe 'when there are no errors' do
     before do
-      allow(@errors).to receive(:[]).with(errors_matcher(:title)).and_return(nil)
-      allow(@errors).to receive(:[]).with(errors_matcher(:base)).and_return(nil)
+      allow(@errors).to receive(:[]).with(errors_matcher(:title)).and_return([])
+      allow(@errors).to receive(:[]).with(errors_matcher(:base)).and_return([])
     end
 
     it 'should return nil' do
@@ -92,7 +92,7 @@ RSpec.describe 'Formtastic::FormBuilder#semantic_errors' do
 
     it 'should render an unordered list with given class' do
       semantic_form_for(@new_post) do |builder|
-        expect(builder.semantic_errors(:class => "awesome")).to have_tag('ul.awesome li', :text => @base_error)
+        expect(builder.semantic_errors(:class => "awesome")).to have_tag('ul.awesome li', text: 'one base error')
       end
     end
   end
