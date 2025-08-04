@@ -4,14 +4,20 @@ module Formtastic
     module Base
       module Aria
 
-        def default_aria_attributes
+        def error_aria_attributes
           return {} unless builder.semantic_errors_link_to_inputs
           return {} unless errors?
 
           {
-            'aria-describedby': "#{method}_error",
-            'aria-invalid': 'true'
+            'aria-describedby': describedby,
+            'aria-invalid': options.dig(:input_html, :'aria-invalid') || 'true'
           }
+        end
+
+        def describedby
+          describedby = options.dig(:input_html, :'aria-describedby') || ''
+          describedby += ' ' unless describedby.empty?
+          describedby += "#{method}_error"
         end
 
       end
