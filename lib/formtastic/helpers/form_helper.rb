@@ -157,6 +157,7 @@ module Formtastic
         options[:html] ||= {}
         options[:html][:novalidate] = !@@builder.perform_browser_validations unless options[:html].key?(:novalidate)
         options[:custom_namespace] = options.delete(:namespace)
+        options[:custom_namespace] ||= Formtastic::FormBuilder.custom_namespace
 
         singularizer = defined?(ActiveModel::Naming.singular) ? ActiveModel::Naming.method(:singular) : ActionController::RecordIdentifier.method(:singular_class_name)
 
@@ -172,7 +173,7 @@ module Formtastic
         options[:html][:class] = class_names.compact.join(" ")
 
         with_custom_field_error_proc do
-          self.form_for(record_or_name_or_array, *(args << options), &proc)
+          self.form_for(record_or_name_or_array, *(args << options.merge({ namespace: options[:custom_namespace] })), &proc)
         end
       end
 
@@ -186,7 +187,7 @@ module Formtastic
         options[:custom_namespace] = options.delete(:namespace)
 
         with_custom_field_error_proc do
-          self.fields_for(record_name, record_object, options, &block)
+          self.fields_for(record_name, record_object, options.merge({ namespace: options[:custom_namespace] }), &block)
         end
       end
 

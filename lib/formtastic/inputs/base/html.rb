@@ -25,7 +25,9 @@ module Formtastic
             :required => required_attribute?,
             :autofocus => autofocus?,
             :readonly => readonly?
-          }.merge(options[:input_html] || {})
+          }
+          .merge(options[:input_html] || {})
+          .merge({ namespace: nil }) # namespace has already been added through dom_id
         end
 
         def dom_id
