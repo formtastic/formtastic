@@ -16,6 +16,10 @@ module Formtastic
       # A hash can be used as the last set of arguments to pass HTML attributes to the `<ul>`
       # wrapper.
       #
+      # # in config/initializers/formtastic.rb
+      # Setting `Formtastic::FormBuilder.semantic_errors_link_to_inputs = true`
+      # will render attribute errors as links to the corresponding errored inputs.
+      #
       # @example A list of errors on the base model
       #   <%= semantic_form_for ... %>
       #     <%= f.semantic_errors %>
