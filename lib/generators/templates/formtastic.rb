@@ -117,3 +117,8 @@
 # the errored input's aria-describedby. This ensures that the errored input is read out with
 # the inline error sentence's error explanation, aria-invalid is set to true for errored inputs
 # Formtastic::FormBuilder.semantic_errors_link_to_inputs = true
+
+# You can opt into rendering all errors (base and attribute errors) when no arguments are passed to
+# <%= form.semantic_errors %>
+# Default is false, and will only render base errors when no arguments are passed to `semantic_errors`.
+# Formtastic::FormBuilder.semantic_errors_render_all_attributes = true
