@@ -110,3 +110,10 @@
 
 # Which columns to skip when automatically rendering a form without any fields specified.
 # Formtastic::FormBuilder.skipped_columns = [:created_at, :updated_at, :created_on, :updated_on, :lock_version, :version]
+
+# You can opt-in to accessibility features for the `semantic_errors` helper by setting
+# this to true. Doing so will render the attributes in the error summary list
+# as `<li> <a>` links to the inputs that have errors. the inline error sentence's id is added to
+# the errored input's aria-describedby. This ensures that the errored input is read out with
+# the inline error sentence's error explanation, aria-invalid is set to true for errored inputs
+# Formtastic::FormBuilder.semantic_errors_link_to_inputs = true

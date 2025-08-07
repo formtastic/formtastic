@@ -9,7 +9,7 @@
  * Added better support for collections of Symbols ([#1391](https://github.com/formtastic/formtastic/pull/1391))
  * Add formtastic:stylesheets generator (does not include legacy IE stylesheets)
  * Remove formtastic engine stylesheets
-
+ * Added `semantic_errors_link_to_inputs` config option to improve accessibility of `semantic_errors`. ([#1388](https://github.com/formtastic/formtastic/pull/1388))
 
 ## 5.0.0
 
