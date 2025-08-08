@@ -495,7 +495,7 @@ If you want some basic translations, take a look on the [formtastic_i18n gem](ht
 
 ## Semantic errors
 
-You can show errors on base (by default) and any other attribute just by passing its name to the semantic_errors method:
+You can show all model errors (by default), or only specific attributes by passing their names to the semantic_errors method:
 
 ```erb
   <%= semantic_form_for @post do |f| %>

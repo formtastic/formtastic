@@ -42,10 +42,10 @@ module FormtasticSpecHelper
   include ActionView::Helpers::AssetTagHelper
   include ActiveSupport
   include ActionController::PolymorphicRoutes if defined?(ActionController::PolymorphicRoutes)
-  include ActionDispatch::Routing::PolymorphicRoutes 
+  include ActionDispatch::Routing::PolymorphicRoutes
   include AbstractController::UrlFor if defined?(AbstractController::UrlFor)
   include ActionView::RecordIdentifier if defined?(ActionView::RecordIdentifier)
-  
+
   include Formtastic::Helpers::FormHelper
 
   def default_input_type(column_type, column_name = :generic_column_name)
@@ -118,6 +118,12 @@ module FormtasticSpecHelper
     end
   end
 
+  class ::AuthorWithValidations < Author
+    validates :name, presence: true, length: { minimum: 2 }
+    validates :surname, presence: true, length: { minimum: 2 }
+    validates :login, presence: true, length: { minimum: 8 }
+  end
+
   class ::HashBackedAuthor < Hash
     extend ActiveModel::Naming if defined?(ActiveModel::Naming)
     include ActiveModel::Conversion if defined?(ActiveModel::Conversion)
@@ -152,49 +158,49 @@ module FormtasticSpecHelper
       sym == :options ? false : super
     end
   end
-  
+
   # Model.all returns an association proxy, which quacks a lot like an array.
   # We use this in stubs or mocks where we need to return the later.
-  # 
+  #
   # TODO try delegate?
   # delegate :map, :size, :length, :first, :to_ary, :each, :include?, :to => :array
   class MockScope
     attr_reader :array
-    
+
     def initialize(the_array)
       @array = the_array
     end
-    
+
     def map(&block)
       array.map(&block)
     end
-    
+
     def where(*args)
       # array
       self
     end
-    
+
     def includes(*args)
       self
     end
-    
+
     def size
       array.size
     end
     alias_method :length, :size
-    
+
     def first
       array.first
     end
-    
+
     def to_ary
       array
     end
-    
+
     def each(&block)
       array.each(&block)
     end
-    
+
     def include?(*args)
       array.include?(*args)
     end
@@ -237,7 +243,8 @@ module FormtasticSpecHelper
     def author_path(*args); "/authors/1"; end
     def authors_path(*args); "/authors"; end
     def new_author_path(*args); "/authors/new"; end
-    
+    def author_with_validations_index_path(*args); "/authors"; end
+
     def author_array_or_scope(the_array = [@fred, @bob])
       MockScope.new(the_array)
     end
@@ -250,7 +257,7 @@ module FormtasticSpecHelper
     allow(::Author).to receive(:find).and_return(author_array_or_scope)
     allow(::Author).to receive(:all).and_return(author_array_or_scope)
     allow(::Author).to receive(:where).and_return(author_array_or_scope)
-    allow(::Author).to receive(:human_attribute_name) { |column_name| column_name.humanize }
+    allow(::Author).to receive(:human_attribute_name) { |column_name| column_name.to_s.humanize }
     allow(::Author).to receive(:human_name).and_return('::Author')
     allow(::Author).to receive(:reflect_on_association) { |column_name| double('reflection', :scope => nil, :options => {}, :klass => Post, :macro => :has_many) if column_name == :posts }
     allow(::Author).to receive(:content_columns).and_return([double('column', :name => 'login'), double('column', :name => 'created_at')])
@@ -444,7 +451,7 @@ module FormtasticSpecHelper
     yield
     Formtastic::FormBuilder.send(:"#{config_method_name}=", old_value)
   end
-  
+
   RSpec::Matchers.define :errors_matcher do |expected|
     match { |actual| actual.to_s == expected.to_s }
   end
@@ -462,6 +469,6 @@ RSpec.configure do |config|
   config.run_all_when_everything_filtered = true
 
   config.before(:example) do
-    Formtastic::Localizer.cache.clear!    
+    Formtastic::Localizer.cache.clear!
   end
 end
