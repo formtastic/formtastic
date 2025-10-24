@@ -9,7 +9,7 @@ module Formtastic
       INLINE_ERROR_TYPES = [:sentence, :list, :first]
 
       # Generates an unordered list of error messages on the base object and optionally for a given
-      # set of named attribute. This is idea for rendering a block of error messages at the top of
+      # set of named attributes. This is ideal for rendering a block of error messages at the top of
       # the form for hidden/special/virtual attributes (the Paperclip Rails plugin does this), or
       # errors on the base model.
       #
@@ -19,6 +19,8 @@ module Formtastic
       # # in config/initializers/formtastic.rb
       # Setting `Formtastic::FormBuilder.semantic_errors_link_to_inputs = true`
       # will render attribute errors as links to the corresponding errored inputs.
+      # Setting `Formtastic::FormBuilder.semantic_errors_render_all_attributes`
+      # will render base errors and all errored attributes when no arguments are passed
       #
       # @example A list of errors on the base model
       #   <%= semantic_form_for ... %>
@@ -43,9 +45,18 @@ module Formtastic
       #     <%= f.semantic_errors :something_special, :something_else, :class => "awesome", :onclick => "Awesome();" %>
       #     ...
       #   <% end %>
+      #
+      # @param [Array<Symbol>] *args Optional attribute names to display errors for.
+      #   When empty, displays base errors or full errors based on configuration. HTML options can be passed
+      #   as the last argument hash.
+      # @return [String, nil] HTML string containing error list, or nil if no errors exist
       def semantic_errors(*args)
         html_options = args.extract_options!
         html_options[:class] ||= "errors"
+
+        if Formtastic::FormBuilder.semantic_errors_render_all_attributes && args.empty?
+          args = @object.errors.attribute_names
+        end
 
         if Formtastic::FormBuilder.semantic_errors_link_to_inputs
           attribute_error_hash = semantic_error_hash_from_attributes(args)

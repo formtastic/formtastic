@@ -40,6 +40,7 @@ module Formtastic
     configure :default_error_list_class, 'errors'
     configure :default_hint_class, 'inline-hints'
     configure :semantic_errors_link_to_inputs, false
+    configure :semantic_errors_render_all_attributes, false
     configure :use_required_attribute, false
     configure :perform_browser_validations, false
     # Check {Formtastic::InputClassFinder} to see how are inputs resolved.
