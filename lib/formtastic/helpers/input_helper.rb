@@ -281,7 +281,7 @@ module Formtastic
             return :number
           when :float, :decimal
             return :number
-          when :datetime, :timestamp
+          when :datetime, :timestamp, :timestamptz
             return :datetime_select
           when :time
             return :time_select
