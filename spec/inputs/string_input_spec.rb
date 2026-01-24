@@ -112,6 +112,70 @@ RSpec.describe 'string input' do
         end
       end
 
+      describe 'and validates_length_of was called with a proc for :maximum' do
+        before do
+          allow(@new_post.class).to receive(:validators_on).with(:title).and_return([
+            active_model_length_validator([:title], { :maximum => Proc.new { 128 } })
+          ])
+        end
+
+        it 'should use the proc result as maxlength' do
+          concat(semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:title))
+          end)
+          expect(output_buffer.to_str).to have_tag("form li input##{@new_post.class.name.underscore}_title[@maxlength='128']")
+        end
+      end
+
+      describe 'and validates_length_of was called with a proc for :within' do
+        before do
+          allow(@new_post.class).to receive(:validators_on).with(:title).and_return([
+            active_model_length_validator([:title], { :within => Proc.new { 5..100 } })
+          ])
+        end
+
+        it 'should use the proc result maximum as maxlength' do
+          concat(semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:title))
+          end)
+          expect(output_buffer.to_str).to have_tag("form li input##{@new_post.class.name.underscore}_title[@maxlength='100']")
+        end
+      end
+
+      describe 'and validates_length_of was called with a proc for :minimum' do
+        before do
+          allow(@new_post.class).to receive(:validators_on).with(:title).and_return([
+            active_model_length_validator([:title], { :minimum => Proc.new { 8 }, :allow_blank => false })
+          ])
+        end
+
+        it 'should use the proc result to determine required status' do
+          concat(semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:title))
+          end)
+          expect(output_buffer.to_str).to have_tag("form li.required")
+        end
+      end
+
+      describe 'and validates_length_of was called with a callable object for :maximum' do
+        before do
+          callable = Object.new
+          def callable.call(record)
+            128
+          end
+          allow(@new_post.class).to receive(:validators_on).with(:title).and_return([
+            active_model_length_validator([:title], { :maximum => callable })
+          ])
+        end
+
+        it 'should use the callable result as maxlength' do
+          concat(semantic_form_for(@new_post) do |builder|
+            concat(builder.input(:title))
+          end)
+          expect(output_buffer.to_str).to have_tag("form li input##{@new_post.class.name.underscore}_title[@maxlength='128']")
+        end
+      end
+
       describe 'any conditional validation' do
         describe 'proc that calls an instance method' do
           it 'calls the method on the object' do
