@@ -57,7 +57,7 @@ module Formtastic
             validation.kind == :length
           end
           if validation
-            validation.options[:maximum] || (validation.options[:within].present? ? validation.options[:within].max : nil)
+            option_value(validation.options[:maximum] || (validation.options[:within].present? ? validation.options[:within].max : nil))
           else
             nil
           end
@@ -225,14 +225,24 @@ module Formtastic
 
         # Loosely based on
         # https://github.com/rails/rails/blob/459e7cf62252558bbf65f582a230562ab1a76c5e/activemodel/lib/active_model/validations/numericality.rb#L65-L70
+        # Then updated to match as the previous now relies on this resolver
+        # https://github.com/rails/rails/blob/v8.1.2/activemodel/lib/active_model/validations/resolve_value.rb
         def option_value(option, object)
           case option
           when Symbol
             object.send(option)
           when Proc
-            option.call(object)
+            if option.arity == 0
+              option.call
+            else
+              option.call(object)
+            end
           else
-            option
+            if option.respond_to?(:call)
+              option.call(object)
+            else
+              option
+            end
           end
         end
       end
