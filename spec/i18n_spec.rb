@@ -87,7 +87,7 @@ RSpec.describe 'Formtastic::I18n' do
 
       ::I18n.backend.store_translations :en, {:formtastic => {
           :labels => {
-              :author   => { :name => "Top author name transation" },
+              :author   => { :name => "Top author name translation" },
               :post     => {:title => "Hello post!", :author => {:name => "Hello author name!"}},
               :project  => {:title => "Hello project!"},
             }

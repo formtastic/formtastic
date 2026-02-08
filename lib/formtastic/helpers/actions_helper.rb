@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Formtastic
   module Helpers
-    # ActionsHelper encapsulates the responsibilties of the {#actions} DSL for acting on 
+    # ActionsHelper encapsulates the responsibilities of the {#actions} DSL for acting on 
     # (submitting, cancelling, resetting) forms.
     #
     # {#actions} is a block helper used to wrap the form's actions (buttons, links) in a 

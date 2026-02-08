@@ -65,7 +65,7 @@ module Formtastic
 
         # Could be symbol for the association, or a model (or an array of either, I think? TODO)
         child = parent[:for]
-        # Pull a sybol or model out of Array (TODO: check if there's an Array)
+        # Pull a symbol or model out of Array (TODO: check if there's an Array)
         child = child.first if child.respond_to?(:first)
         # If it's an object, get a symbol from the class name
         child = child.class.name.underscore.to_sym unless child.is_a?(Symbol)

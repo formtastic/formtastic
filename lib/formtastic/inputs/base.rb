@@ -19,7 +19,7 @@ module Formtastic
         warn_deprecated_option!(:member_value, member_deprecation_message)
       end
 
-      # Usefull for deprecating options.
+      # Useful for deprecating options.
       def warn_and_correct_option!(old_option_name, new_option_name)
         if options.key?(old_option_name)
           Deprecation.warn("The :#{old_option_name} option is deprecated in favour of :#{new_option_name} and will be removed from Formtastic in the next version", caller_locations(6))
@@ -27,14 +27,14 @@ module Formtastic
         end
       end
 
-      # Usefull for deprecating options.
+      # Useful for deprecating options.
       def warn_deprecated_option!(old_option_name, instructions)
         if options.key?(old_option_name)
           Deprecation.warn("The :#{old_option_name} option is deprecated in favour of `#{instructions}`. :#{old_option_name} will be removed in the next version", caller_locations(6))
         end
       end
 
-      # Usefull for raising an error on previously supported option.
+      # Useful for raising an error on previously supported option.
       def removed_option!(old_option_name)
         raise ArgumentError, ":#{old_option_name} is no longer available" if options.key?(old_option_name)
       end
