@@ -415,7 +415,7 @@ module CustomMacros
 
         describe 'and the :collection is an OrderedHash of strings' do
           before do
-            @categories = ActiveSupport::OrderedHash.new('General' => 'gen', 'Design' => 'des','Development' => 'dev')
+            @categories = ActiveSupport::OrderedHash['General' => 'gen', 'Design' => 'des','Development' => 'dev']
           end
 
           it "should use the key as the label text and the hash value as the value attribute for each #{countable}" do
