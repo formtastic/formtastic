@@ -59,7 +59,7 @@ module Formtastic
       @@default_form_class = 'formtastic'
       mattr_accessor :default_form_class
 
-      # Allows to set a custom proc to handle the class infered from the model's name. By default it
+      # Allows to set a custom proc to handle the class inferred from the model's name. By default it
       # will infer the name from the class name (eg. Post will be "post").
       @@default_form_model_class_proc = proc { |model_class_name| model_class_name }
       mattr_accessor :default_form_model_class_proc
@@ -85,7 +85,7 @@ module Formtastic
       # documentation.
       #
       # @see http://api.rubyonrails.org/classes/ActionView/Helpers/FormHelper.html Rails' FormHelper documentation (`form_for`, etc)
-      # @see http://api.rubyonrails.org/classes/ActionView/Helpers/FormBuilder.html Rails' FormBuilder documentaion (`text_field`, etc)
+      # @see http://api.rubyonrails.org/classes/ActionView/Helpers/FormBuilder.html Rails' FormBuilder documentation (`text_field`, etc)
       # @see FormHelper The overview of the FormBuilder module
       #
       # @example Resource-oriented form generation

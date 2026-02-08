@@ -137,7 +137,7 @@ RSpec.describe 'Formtastic::FormBuilder#inputs' do
         end
       end
 
-      describe 'as an array containing the a symbole for the association name and the associated object' do
+      describe 'as an array containing the a symbol for the association name and the associated object' do
 
         it 'should nest the inputs with an _attributes suffix on the association name' do
           concat(semantic_form_for(@new_post) do |post|

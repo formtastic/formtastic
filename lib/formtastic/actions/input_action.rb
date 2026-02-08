@@ -6,7 +6,7 @@ module Formtastic
   # wrapper. This the default for `:submit` and `:reset` actions, but `:as => :button` is also
   # available as an alternative.
   #
-  # @example The `:as` can be ommitted, these are functionally equivalent
+  # @example The `:as` can be omitted, these are functionally equivalent
   #   <%= f.action :submit, :as => :input %>
   #   <%= f.action :submit %>
   #

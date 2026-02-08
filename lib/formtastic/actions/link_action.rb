@@ -5,7 +5,7 @@ module Formtastic
   # The link's URL defaults to Rails' built-in `:back` macro (the HTTP referrer, or Javascript for the
   # browser's history), but can be altered with the `:url` option.
   #
-  # @example The `:as` can be ommitted, these are functionally equivalent
+  # @example The `:as` can be omitted, these are functionally equivalent
   #   <%= f.action :cancel, :as => :link %>
   #   <%= f.action :cancel %>
   #
