@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/formtastic/formtastic/workflows/test/badge.svg)](https://github.com/formtastic/formtastic/actions)
 [![Inline docs](https://inch-ci.org/github/justinfrench/formtastic.svg?branch=master)](https://inch-ci.org/github/justinfrench/formtastic)
-[![Code Climate](https://codeclimate.com/github/formtastic/formtastic/badges/gpa.svg)](https://codeclimate.com/github/formtastic/formtastic)
+[![Code Climate](https://qlty.sh/gh/formtastic/projects/formtastic/maintainability.svg)](https://qlty.sh/gh/formtastic/projects/formtastic)
 [![Gem Version](https://badge.fury.io/rb/formtastic.svg)](https://badge.fury.io/rb/formtastic)
 
 Formtastic is a Rails FormBuilder DSL (with some other goodies) to make it far easier to create beautiful, semantically rich, syntactically awesome, readily stylable and wonderfully accessible HTML forms in your Rails applications.
@@ -56,7 +56,7 @@ One day, I finally had enough, so I opened up my text editor, and wrote a DSL fo
   <% end %>
 ```
 
-I also wrote the accompanying HTML output I expected, favoring something very similar to the fieldsets, lists and other semantic elements Aaron Gustafson presented in [Learning to Love Forms](https://www.slideshare.net/AaronGustafson/learning-to-love-forms-webvisions-07), hacking together enough Ruby to prove it could be done.
+I also wrote the accompanying HTML output I expected, favoring something very similar to the fieldsets, lists and other semantic elements Aaron Gustafson presented in [Learning to Love Forms](https://www.slideshare.net/slideshow/learning-to-love-forms-webvisions-07/45589), hacking together enough Ruby to prove it could be done.
 
 
 ## It's awesome because...
@@ -315,7 +315,7 @@ The Formtastic input types:
 * `:search` - a text field (just like string). Default for columns with name matching `"search"`. New in HTML5. Works on Safari.
 * `:hidden` - a hidden field. Creates a hidden field (added for compatibility).
 * `:range` - a slider field.
-* `:datalist` - a text field with a accompanying [datalist tag](https://developer.mozilla.org/en/docs/Web/HTML/Element/datalist) which provides options for autocompletion
+* `:datalist` - a text field with a accompanying [datalist tag](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/datalist) which provides options for autocompletion
 
 The comments in the code are pretty good for each of these (what it does, what the output is, what the options are, etc.) so go check it out.
 
@@ -491,7 +491,7 @@ For more flexible forms; Formtastic finds translations using a bottom-up approac
 Values for `labels`/`hints`/`actions` are can take values: `String` (explicit value), `Symbol` (i18n-lookup-key relative to the current "type", e.g. actions:), `true` (force I18n lookup), `false` (force no I18n lookup). Titles (legends) can only take: `String` and `Symbol` - true/false have no meaning.
 
 *7. Basic Translations*
-If you want some basic translations, take a look on the [formtastic_i18n gem](https://github.com/timoschilling/formtastic_i18n).
+If you want some basic translations, take a look on the [formtastic_i18n gem](https://github.com/formtastic/formtastic_i18n).
 
 ## Semantic errors
 
@@ -592,7 +592,7 @@ See `CONTRIBUTING.md`
 
 ## Project Info
 
-Formtastic was created by [Justin French](https://www.justinfrench.com) with contributions from around 180 awesome developers. Run `git shortlog -n -s` to see the awesome.
+Formtastic was created by [Justin French](https://justinfrench.com) with contributions from around 180 awesome developers. Run `git shortlog -n -s` to see the awesome.
 
 The project is hosted on Github: [https://github.com/formtastic/formtastic](https://github.com/formtastic/formtastic), where your contributions, forkings, comments, issues and feedback are greatly welcomed.
 

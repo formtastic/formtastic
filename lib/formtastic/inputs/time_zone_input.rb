@@ -39,7 +39,7 @@ module Formtastic
     #     Formtastic::FormBuilder.priority_time_zones = [timezone1, timezone2]
     #   ```
     #
-    #   See http://apidock.com/rails/ActionView/Helpers/FormOptionsHelper/time_zone_select for more information.
+    #   See https://apidock.com/rails/ActionView/Helpers/FormOptionsHelper/time_zone_select for more information.
     #
     class TimeZoneInput
       include Base

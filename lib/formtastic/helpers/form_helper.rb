@@ -84,8 +84,8 @@ module Formtastic
       # Most of the examples below have been adapted from the examples found in the Rails `form_for`
       # documentation.
       #
-      # @see http://api.rubyonrails.org/classes/ActionView/Helpers/FormHelper.html Rails' FormHelper documentation (`form_for`, etc)
-      # @see http://api.rubyonrails.org/classes/ActionView/Helpers/FormBuilder.html Rails' FormBuilder documentation (`text_field`, etc)
+      # @see https://api.rubyonrails.org/classes/ActionView/Helpers/FormHelper.html Rails' FormHelper documentation (`form_for`, etc)
+      # @see https://api.rubyonrails.org/classes/ActionView/Helpers/FormBuilder.html Rails' FormBuilder documentation (`text_field`, etc)
       # @see FormHelper The overview of the FormBuilder module
       #
       # @example Resource-oriented form generation
