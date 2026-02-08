@@ -1,4 +1,3 @@
-# encoding: utf-8
 # frozen_string_literal: true
 $LOAD_PATH << 'lib/formtastic'
 require 'active_support/all'
