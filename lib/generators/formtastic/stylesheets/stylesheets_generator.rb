@@ -9,7 +9,6 @@ module Formtastic
 
     desc "Copies Formtastic example stylesheet into your app"
     def copy_files
-      puts "hey"
       copy_file "formtastic.css", "app/assets/stylesheets/formtastic.css"
     end
   end
