@@ -491,6 +491,7 @@ RSpec.describe 'with input class finder' do
         it 'should default to :datetime_select for :datetime and :timestamp column types' do
           expect(default_input_type(:datetime)).to eq(:datetime_select)
           expect(default_input_type(:timestamp)).to eq(:datetime_select)
+          expect(default_input_type(:timestamptz)).to eq(:datetime_select)
         end
 
         it 'should default to :time_select for :time column types' do
