@@ -6,7 +6,7 @@ set -o verbose
 test_app=dummy
 rm -rf ${test_app}
 
-export RAILS_INTEGRATION_VERSION="8.1.1"
+export RAILS_INTEGRATION_VERSION="8.1.2"
 gem install rails -v ${RAILS_INTEGRATION_VERSION}
 rails -v
 
