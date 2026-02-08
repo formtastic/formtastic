@@ -1,15 +1,18 @@
-## 6.0.0 / edge
+## 6.0.0.alpha
 
- * Removed support for Rails 6.0 & 7.1 (min version is 7.2)
+ * Removed support for Rails 6.0 & 7.1 (min version is now 7.2)
  * Removed support for Ruby < 3.1 in line with Rails 7.2
- * Added requirement for min Ruby Gems version in line with Rails 7.2
+ * Added requirement for minimum Ruby Gems version in line with Rails 7.2
+ * Added formtastic:stylesheets generator (does not include legacy IE stylesheets)
+ * Removed formtastic engine stylesheets
+ * Added `semantic_errors_link_to_inputs` config option to improve accessibility of `semantic_errors`. ([#1388](https://github.com/formtastic/formtastic/pull/1388))
  * Fixed country_select compatibility by switching from v1 to v2 syntax ([#1382](https://github.com/formtastic/formtastic/pull/1382))
  * Fixed that passing caller to Deprecation#warn is deprecated ([#1384](https://github.com/formtastic/formtastic/pull/1384))
- * Added `lable_html` option for overriding & adding label HTML attributes ([#1379](https://github.com/formtastic/formtastic/pull/1379))
+ * Added `label_html` option for overriding & adding label HTML attributes ([#1379](https://github.com/formtastic/formtastic/pull/1379))
  * Added better support for collections of Symbols ([#1391](https://github.com/formtastic/formtastic/pull/1391))
- * Add formtastic:stylesheets generator (does not include legacy IE stylesheets)
- * Remove formtastic engine stylesheets
- * Added `semantic_errors_link_to_inputs` config option to improve accessibility of `semantic_errors`. ([#1388](https://github.com/formtastic/formtastic/pull/1388))
+ * Fixed issue with inferred max length for integer columns
+ * Fixed issue with Prox length validations ([#1405](https://github.com/formtastic/formtastic/pull/1405))
+ * Various minor Ruby, Rails, documentation and maintenance activities
 
 ## 5.0.0
 
