@@ -4,9 +4,9 @@ module Formtastic
     # Outputs a label and a text field, along with a datalist tag
     # datalist tag provides a list of options which drives a simple autocomplete
     # on the text field. This is a HTML5 feature, more info can be found at
-    # {https://developer.mozilla.org/en/docs/Web/HTML/Element/datalist <datalist> at MDN}
+    # {https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/datalist <datalist> at MDN}
     # This input accepts a :collection option which takes data in all the usual formats accepted by
-    # {http://apidock.com/rails/ActionView/Helpers/FormOptionsHelper/options_for_select options_for_select}
+    # {https://apidock.com/rails/ActionView/Helpers/FormOptionsHelper/options_for_select options_for_select}
     #
     # @example Input is used as follows
     #   f.input :fav_book, :as => :datalist, :collection => Book.pluck(:name)

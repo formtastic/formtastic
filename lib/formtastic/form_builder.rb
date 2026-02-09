@@ -71,8 +71,8 @@ module Formtastic
     # When constructing a `fields_for` form fragment *outside* of `semantic_form_for`, please use
     # `Formtastic::Helpers::FormHelper#semantic_fields_for`.
     #
-    # @see http://api.rubyonrails.org/classes/ActionView/Helpers/FormBuilder.html#method-i-fields_for ActionView::Helpers::FormBuilder#fields_for
-    # @see http://api.rubyonrails.org/classes/ActionView/Helpers/FormHelper.html#method-i-fields_for ActionView::Helpers::FormHelper#fields_for
+    # @see https://api.rubyonrails.org/classes/ActionView/Helpers/FormBuilder.html#method-i-fields_for ActionView::Helpers::FormBuilder#fields_for
+    # @see https://api.rubyonrails.org/classes/ActionView/Helpers/FormHelper.html#method-i-fields_for ActionView::Helpers::FormHelper#fields_for
     # @see Formtastic::Helpers::FormHelper#semantic_fields_for
     #
     # @example

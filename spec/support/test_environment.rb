@@ -25,7 +25,7 @@ RSpec.configure do |config|
   # module like `RSpec.describe` regardless of this setting.
   # For backwards compatibility this defaults to `true`.
   #
-  # https://relishapp.com/rspec/rspec-core/v/3-0/docs/configuration/global-namespace-dsl
+  # https://rspec.info/features/3-12/rspec-core/configuration/enable-global-dsl/
   config.expose_dsl_globally = false
 end
 

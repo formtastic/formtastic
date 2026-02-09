@@ -18,7 +18,7 @@
 
  * Added support for Rails 7.1 ([#1371](https://github.com/formtastic/formtastic/pull/1371))
  * Removed support for Rails < 6.0.0 ([#1354](https://github.com/formtastic/formtastic/pull/1354))
- * Removed support for Rubies < 2.6.0 ([#1332](https://github.com/formtastic/formtastic/pull/1332), [#1355](https://github.com/formtastic/formtastic.git/pull/1355))
+ * Removed support for Rubies < 2.6.0 ([#1332](https://github.com/formtastic/formtastic/pull/1332), [#1355](https://github.com/formtastic/formtastic/pull/1355))
  * Added support for scopes in relations ([#1343](https://github.com/formtastic/formtastic/pull/1343))
  * Fixed I18n lookup for enum values in nested select fields ([#1342](https://github.com/formtastic/formtastic/pull/1342))
  * Fixed faster input class lookup ([#1336](https://github.com/formtastic/formtastic/pull/1336))
