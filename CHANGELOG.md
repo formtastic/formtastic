@@ -11,7 +11,7 @@
  * Added `label_html` option for overriding & adding label HTML attributes ([#1379](https://github.com/formtastic/formtastic/pull/1379))
  * Added better support for collections of Symbols ([#1391](https://github.com/formtastic/formtastic/pull/1391))
  * Fixed issue with inferred max length for integer columns
- * Fixed issue with Prox length validations ([#1405](https://github.com/formtastic/formtastic/pull/1405))
+ * Fixed issue with Proc length validations ([#1405](https://github.com/formtastic/formtastic/pull/1405))
  * Various minor Ruby, Rails, documentation and maintenance activities
 
 ## 5.0.0
