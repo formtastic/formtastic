@@ -1,4 +1,3 @@
-# review and edit CHANGELOG
 # review & edit README
 # edit lib/formtastic/version.rb
 git ci -am "version bump"                  # commit changes
