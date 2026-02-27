@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # frozen_string_literal: true
 module Formtastic
   module Helpers
@@ -281,7 +280,7 @@ module Formtastic
             return :number
           when :float, :decimal
             return :number
-          when :datetime, :timestamp
+          when :datetime, :timestamp, :timestamptz
             return :datetime_select
           when :time
             return :time_select
@@ -293,7 +292,7 @@ module Formtastic
             return :string
           end
 
-          # Try look for hints in options hash. Quite common senario: Enum keys stored as string in the database.
+          # Try look for hints in options hash. Quite common scenario: Enum keys stored as string in the database.
           return :select    if column.type == :string && options.key?(:collection)
           # Try 3: Assume the input name will be the same as the column type (e.g. string_input).
           return column.type

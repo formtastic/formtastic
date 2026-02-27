@@ -1,20 +1,21 @@
 # frozen_string_literal: true
 gem 'formtastic', path: '..'
-gem 'bcrypt', '~> 3.1.7'
+gem 'bcrypt'
 gem 'rails-dom-testing', group: :test
-gem 'rexml', '~> 3.2' # to compensate for missing dependency in selenium-webdriver
+
+gem 'minitest', '~> 5.27' # TODO: Remove this line when the Rails version used for integration tests will include rails/rails#56202
 
 # to speed up bundle install, reuse the bundle path
 def bundle_path
   File.expand_path ENV.fetch('BUNDLE_PATH', 'vendor/bundle')
 end
 
-if Rails.version >= '6.2'
-    gsub_file 'Gemfile', /gem 'rails'.*/, "gem 'rails', '~> #{Rails.version}', github: 'rails/rails'"
-elsif Rails.version >= '6.1'
-    gsub_file 'Gemfile', /gem 'rails'.*/, "gem 'rails', '~> #{Rails.version}', github: 'rails/rails', branch: '6-1-stable'"
-elsif Rails.version >= '6.0'
-    gsub_file 'Gemfile', /gem 'rails'.*/, "gem 'rails', '~> #{Rails.version}', github: 'rails/rails', branch: '6-0-stable'"
+if Rails.version >= '8.1'
+  gsub_file 'Gemfile', /gem "rails".*/, %(gem "rails", "~> #{Rails.version}", github: "rails/rails", branch: "8-1-stable")
+elsif Rails.version >= '8.0'
+  gsub_file 'Gemfile', /gem "rails".*/, %(gem "rails", "~> #{Rails.version}", github: "rails/rails", branch: "8-0-stable")
+elsif Rails.version >= '7.2'
+  gsub_file 'Gemfile', /gem "rails".*/, %(gem "rails", "~> #{Rails.version}", github: "rails/rails", branch: "7-2-stable")
 end
 
 ### Ensure Dummy App's Ruby version matches the current environments Ruby Version
@@ -26,8 +27,9 @@ if bundle_install?
     previous_bundle_path = bundle_path
 
     require "bundler"
-    Bundler.with_clean_env do
-      system("bundle install --jobs=3 --retry=3 --path=#{previous_bundle_path}")
+    Bundler.with_original_env do
+      system("bundle config set path '#{previous_bundle_path}'")
+      system("bundle install --jobs=3 --retry=3")
     end
   end
 end
@@ -40,12 +42,13 @@ formtastic = -> do
   generate(:scaffold, 'user name:string password:digest')
   generate('formtastic:install')
   generate('formtastic:form', 'user name password --force')
+  generate('formtastic:stylesheets')
 
   rails_command('db:migrate')
+  rails_command('assets:precompile')
 
   in_root do
     inject_into_class 'app/models/user.rb', 'User', "  has_secure_password\n"
-    inject_into_file 'app/assets/stylesheets/application.css', " *= require formtastic\n", before: ' *= require_self'
     inject_into_class 'test/controllers/users_controller_test.rb', 'UsersControllerTest', <<-RUBY
 
     test "should show form" do

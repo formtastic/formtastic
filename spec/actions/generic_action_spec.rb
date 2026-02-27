@@ -1,4 +1,3 @@
-# encoding: utf-8
 # frozen_string_literal: true
 require 'spec_helper'
 
@@ -74,7 +73,7 @@ RSpec.describe 'InputAction::Base' do
         end)
       end
 
-      it "should add the custom class strng to the existing classes" do
+      it "should add the custom class string to the existing classes" do
         expect(output_buffer.to_str).to have_tag('li.action.generic_action.foo_bah_bing')
       end
 
@@ -90,7 +89,7 @@ RSpec.describe 'InputAction::Base' do
         end)
       end
 
-      it "should add the custom class strng to the existing classes" do
+      it "should add the custom class string to the existing classes" do
         expect(output_buffer.to_str).to have_tag('li.action.generic_action.foo_bah_bing.zing_boo')
       end
 

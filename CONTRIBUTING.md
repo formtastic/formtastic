@@ -11,7 +11,7 @@
 * Create a pull request on Github (these are also a great place to start a conversation around a WIP patch as early as possible)
 
 
-## Continuos Integration
+## Continuous Integration
 
 Formtastic supports multiple versions of Rails and Ruby. Here's the approach to managing the complexity:
 

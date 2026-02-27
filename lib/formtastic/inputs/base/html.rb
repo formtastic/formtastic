@@ -27,6 +27,7 @@ module Formtastic
             :readonly => readonly?
           }
           .merge(options[:input_html] || {})
+          .merge(error_aria_attributes)
           .merge({ namespace: nil }) # namespace has already been added through dom_id
         end
 

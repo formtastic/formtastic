@@ -57,7 +57,8 @@ module Formtastic
             validation.kind == :length
           end
           if validation
-            validation.options[:maximum] || (validation.options[:within].present? ? validation.options[:within].max : nil)
+            option_value(validation.options[:maximum], object) ||
+              (validation.options[:within].present? ? option_value(validation.options[:within], object).max : nil)
           else
             nil
           end
@@ -145,8 +146,8 @@ module Formtastic
                 validator.options[:allow_blank] != true
               when :length
                 validator.options[:allow_blank] != true &&
-                validator.options[:minimum].to_i > 0 ||
-                validator.options[:within].try(:first).to_i > 0
+                option_value(validator.options[:minimum], object).to_i > 0 ||
+                option_value(validator.options[:within], object).try(:first).to_i > 0
               else
                 false
               end
@@ -223,16 +224,24 @@ module Formtastic
 
         private
 
-        # Loosely based on
-        # https://github.com/rails/rails/blob/459e7cf62252558bbf65f582a230562ab1a76c5e/activemodel/lib/active_model/validations/numericality.rb#L65-L70
+        # Implements `ActiveModel::Validations::ResolveValue`, introduced by Rails 7.1.
+        # https://github.com/rails/rails/blob/v7.1.0/activemodel/lib/active_model/validations/resolve_value.rb
         def option_value(option, object)
           case option
           when Symbol
             object.send(option)
           when Proc
-            option.call(object)
+            if option.arity == 0
+              option.call
+            else
+              option.call(object)
+            end
           else
-            option
+            if option.respond_to?(:call)
+              option.call(object)
+            else
+              option
+            end
           end
         end
       end

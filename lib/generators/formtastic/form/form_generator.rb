@@ -1,4 +1,3 @@
-# encoding: utf-8
 # frozen_string_literal: true
 module Formtastic
   # Generates a Formtastic form partial based on an existing model. It will not overwrite existing

@@ -16,6 +16,10 @@ module Formtastic
       # A hash can be used as the last set of arguments to pass HTML attributes to the `<ul>`
       # wrapper.
       #
+      # # in config/initializers/formtastic.rb
+      # Setting `Formtastic::FormBuilder.semantic_errors_link_to_inputs = true`
+      # will render attribute errors as links to the corresponding errored inputs.
+      #
       # @example A list of errors on the base model
       #   <%= semantic_form_for ... %>
       #     <%= f.semantic_errors %>
@@ -41,24 +45,37 @@ module Formtastic
       #   <% end %>
       def semantic_errors(*args)
         html_options = args.extract_options!
-        args = args - [:base]
-        full_errors = args.inject([]) do |array, method|
-          attribute = localized_string(method, method.to_sym, :label) || humanized_attribute_name(method)
-          errors = Array(@object.errors[method.to_sym]).to_sentence
-          errors.present? ? array << [attribute, errors].join(" ") : array ||= []
-        end
-        full_errors << @object.errors[:base]
-        full_errors.flatten!
-        full_errors.compact!
-        return nil if full_errors.blank?
         html_options[:class] ||= "errors"
-        template.content_tag(:ul, html_options) do
-          full_errors.map { |error| template.content_tag(:li, error) }.join.html_safe
+
+        if Formtastic::FormBuilder.semantic_errors_link_to_inputs
+          attribute_error_hash = semantic_error_hash_from_attributes(args)
+          return nil if @object.errors[:base].blank? && attribute_error_hash.blank?
+
+          template.content_tag(:ul, html_options) do
+            (
+              @object.errors[:base].map { |base_error| template.content_tag(:li, base_error) } <<
+              attribute_error_hash.map { |attribute, error_message|
+                template.content_tag(:li) do
+                  template.content_tag(:a, href: "##{object_name}_#{attribute}") do
+                    error_message
+                  end
+                end
+              }
+            ).join.html_safe
+          end
+        else
+          full_errors = @object.errors[:base]
+          full_errors += semantic_error_list_from_attributes(args)
+          return nil if full_errors.blank?
+
+          template.content_tag(:ul, html_options) do
+            full_errors.map { |error| template.content_tag(:li, error) }.join.html_safe
+          end
         end
       end
-      
+
       protected
-      
+
       def error_keys(method, options)
         @methods_for_error ||= {}
         @methods_for_error[method] ||= begin
@@ -76,6 +93,46 @@ module Formtastic
 
       def render_inline_errors?
         @object && @object.respond_to?(:errors) && Formtastic::FormBuilder::INLINE_ERROR_TYPES.include?(inline_errors)
+      end
+
+      def semantic_error_list_from_attributes(*args)
+        attribute_errors = []
+        args = args.flatten
+        args.each do |attribute|
+          next if attribute == :base
+
+          full_message = error_message_for_attribute(attribute)
+
+          attribute_errors << full_message unless full_message.blank?
+        end
+
+        attribute_errors
+      end
+
+      # returns { 'attribute': 'error_message_for_attribute' }
+      def semantic_error_hash_from_attributes(*args)
+        attribute_error_hash = {}
+        args = args.flatten
+        args.each do |attribute|
+          next if attribute == :base
+
+          full_message = error_message_for_attribute(attribute)
+
+          attribute_error_hash[attribute] = full_message unless full_message.blank?
+        end
+
+        attribute_error_hash
+      end
+
+      # Returns "Attribute error_message_sentence" localized, humanized
+      def error_message_for_attribute(attribute)
+        attribute_string = localized_string(attribute, attribute.to_sym, :label) || humanized_attribute_name(attribute)
+        error_message = @object.errors[attribute.to_sym]&.to_sentence
+
+        return nil if error_message.blank?
+
+        full_message = [attribute_string, error_message].join(" ")
+        full_message
       end
     end
   end
