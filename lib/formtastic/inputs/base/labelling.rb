@@ -14,6 +14,7 @@ module Formtastic
           {
             :for => input_html_options[:id],
             :class => ['label'],
+            :namespace => nil, # namespace has already been added through input_html_options[:id]
           }.merge(options[:label_html] || {})
         end
         
