@@ -242,6 +242,22 @@ RSpec.describe 'string input' do
 
   end
 
+  describe "when namespace is provided and input_html :id is set" do
+
+    before do
+      concat(semantic_form_for(@new_post, :namespace => 'context2') do |builder|
+        concat(builder.input(:title, :as => :string, :input_html => { :id => 'myid' }))
+      end)
+    end
+
+    it 'does not prefix the custom id' do
+      expect(output_buffer.to_str).to have_tag("form li input#myid")
+      expect(output_buffer.to_str).to have_tag("form li label[@for='myid']")
+      expect(output_buffer.to_str).not_to have_tag("form li label[@for='context2_myid']")
+    end
+
+  end
+
   describe "when index is provided" do
 
     before do
@@ -323,4 +339,3 @@ RSpec.describe 'string input' do
   end
 
 end
-

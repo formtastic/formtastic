@@ -53,10 +53,9 @@ module Formtastic
       end
       
       def label_html_options
-        {
-          :for => input_html_options[:id],
-          :class => super[:class] - ['label'] # remove 'label' class
-        }
+        options = super.merge(:for => input_html_options[:id])
+        options[:class] = options[:class] - ['label'] # remove 'label' class
+        options
       end
 
       def label_text_with_embedded_checkbox

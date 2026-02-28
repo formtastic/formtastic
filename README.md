@@ -217,7 +217,7 @@ Alternatively, the current index can be accessed via the `inputs` block's argume
   <% end %>
 ```
 
-If you have more than one form on the same page, it may lead to HTML invalidation because of the way HTML element id attributes are assigned. You can provide a namespace for your form to ensure uniqueness of id attributes on form elements. The namespace attribute will be prefixed with underscore on the generate HTML id. For example:
+If you have more than one form on the same page, it may lead to HTML invalidation because of the way HTML element id attributes are assigned. You can provide a namespace for your form to ensure uniqueness of all generated id attributes on form elements. The namespace attribute will be prefixed with underscore on the generate HTML id. For example:
 
 ```erb
   <%= semantic_form_for(@post, :namespace => 'cat_form') do |f| %>
@@ -597,4 +597,3 @@ Formtastic was created by [Justin French](https://justinfrench.com) with contrib
 The project is hosted on Github: [https://github.com/formtastic/formtastic](https://github.com/formtastic/formtastic), where your contributions, forkings, comments, issues and feedback are greatly welcomed.
 
 Copyright (c) 2007-2025, released under the MIT license.
-

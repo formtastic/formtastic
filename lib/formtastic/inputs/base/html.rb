@@ -19,13 +19,22 @@ module Formtastic
           raise NotImplementedError
         end
 
+        # HTML attributes for the input element.
+        #
+        # Note: Formtastic generates a fully-namespaced id via {#dom_id}. To
+        # avoid double-prefixing when Rails helpers also apply a form namespace,
+        # the `:namespace` option is cleared here. If you explicitly set an
+        # `:id` via `:input_html`, it is treated as final and is not auto-prefixed.
         def input_html_options
           {
             :id => dom_id,
             :required => required_attribute?,
             :autofocus => autofocus?,
             :readonly => readonly?
-          }.merge(options[:input_html] || {}).merge(error_aria_attributes)
+          }
+          .merge(options[:input_html] || {})
+          .merge(error_aria_attributes)
+          .merge({ namespace: nil }) # namespace has already been added through dom_id
         end
 
         def dom_id
