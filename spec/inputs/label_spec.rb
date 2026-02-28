@@ -98,6 +98,16 @@ RSpec.describe 'Formtastic::FormBuilder#label' do
     end
   end 
 
+  describe "when label_html :for is given with a namespaced form" do
+    it "does not prefix the custom for attribute" do
+      concat(semantic_form_for(@new_post, :namespace => 'context2') do |builder|
+        builder.input(:title, :label_html => { :for => 'custom_for' }, :input_html => { :id => 'custom_for' })
+      end)
+      expect(output_buffer.to_str).to have_tag('label[for=custom_for]')
+      expect(output_buffer.to_str).not_to have_tag('label[for=context2_custom_for]')
+    end
+  end
+
   describe 'when a collection is given' do
     it 'should use a supplied label_method for simple collections' do
       with_deprecation_silenced do
@@ -178,4 +188,3 @@ RSpec.describe 'Formtastic::FormBuilder#label' do
   end
 
 end
-

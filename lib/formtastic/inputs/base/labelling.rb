@@ -10,6 +10,12 @@ module Formtastic
           render_label? ? builder.label(input_name, label_text, label_html_options) : +"".html_safe
         end
         
+        # HTML attributes for the label element.
+        #
+        # By default, the `for` attribute matches the input id. We clear
+        # `:namespace` to avoid Rails re-namespacing a `for` that is already
+        # fully qualified. If you explicitly set `:label_html => { :for => ... }`,
+        # that value is treated as final and is not auto-prefixed.
         def label_html_options
           {
             :for => input_html_options[:id],
