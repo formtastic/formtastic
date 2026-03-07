@@ -18,6 +18,7 @@ RSpec.describe 'Formtastic::FormBuilder#semantic_errors' do
   describe 'when there is only one error on base' do
     before do
       allow(@errors).to receive(:[]).with(errors_matcher(:base)).and_return(@base_error)
+      allow(@errors).to receive(:attribute_names).and_return([:base])
     end
 
     it 'should render an unordered list' do
@@ -30,6 +31,7 @@ RSpec.describe 'Formtastic::FormBuilder#semantic_errors' do
   describe 'when there is more than one error on base' do
     before do
       allow(@errors).to receive(:[]).with(errors_matcher(:base)).and_return(@base_errors)
+      allow(@errors).to receive(:attribute_names).and_return([:base])
     end
 
     it 'should render an unordered list' do
@@ -46,6 +48,7 @@ RSpec.describe 'Formtastic::FormBuilder#semantic_errors' do
     before do
       allow(@errors).to receive(:[]).with(errors_matcher(:title)).and_return(@title_errors)
       allow(@errors).to receive(:[]).with(errors_matcher(:base)).and_return([])
+      allow(@errors).to receive(:attribute_names).and_return([:title])
     end
 
     it 'should render an unordered list' do
@@ -60,6 +63,7 @@ RSpec.describe 'Formtastic::FormBuilder#semantic_errors' do
     before do
       allow(@errors).to receive(:[]).with(errors_matcher(:title)).and_return(@title_errors)
       allow(@errors).to receive(:[]).with(errors_matcher(:base)).and_return(@base_error)
+      allow(@errors).to receive(:attribute_names).and_return([:title, :base])
     end
 
     it 'should render an unordered list' do
@@ -75,6 +79,7 @@ RSpec.describe 'Formtastic::FormBuilder#semantic_errors' do
     before do
       allow(@errors).to receive(:[]).with(errors_matcher(:title)).and_return([])
       allow(@errors).to receive(:[]).with(errors_matcher(:base)).and_return([])
+      allow(@errors).to receive(:attribute_names).and_return([])
     end
 
     it 'should return nil' do
@@ -87,6 +92,7 @@ RSpec.describe 'Formtastic::FormBuilder#semantic_errors' do
   describe 'when there is one error on base and options with class is passed' do
     before do
       allow(@errors).to receive(:[]).with(errors_matcher(:base)).and_return(@base_error)
+      allow(@errors).to receive(:attribute_names).and_return([])
     end
 
     it 'should render an unordered list with given class' do
@@ -99,12 +105,73 @@ RSpec.describe 'Formtastic::FormBuilder#semantic_errors' do
   describe 'when :base is passed in as an argument' do
     before do
       allow(@errors).to receive(:[]).with(errors_matcher(:base)).and_return(@base_error)
+      allow(@errors).to receive(:attribute_names).and_return([:base])
     end
 
     it 'should ignore :base and only render base errors once' do
       semantic_form_for(@new_post) do |builder|
         expect(builder.semantic_errors(:base)).to have_tag('ul li', :count => 1)
         expect(builder.semantic_errors(:base)).not_to have_tag('ul li', :text => "Base #{@base_error}")
+      end
+    end
+  end
+
+  describe 'when no attribute args or base are passed' do
+    before do
+      @author = AuthorWithValidations.new(name: 'a', surname: 'b', login: 'asdf')
+      @author.valid?
+      @author.errors.add(:base, 'Base error')
+    end
+
+    context 'when Formtastic::FormBuilder.semantic_errors_render_all_attributes is true' do
+      before do
+        Formtastic::FormBuilder.semantic_errors_render_all_attributes = true
+      end
+
+      after do
+        Formtastic::FormBuilder.semantic_errors_render_all_attributes = false
+      end
+
+      it 'should render base and all errors when no args are passed' do
+        semantic_form_for(@author) do |builder|
+          without_args = builder.semantic_errors
+
+          expect(without_args).to have_tag('li', text: /Name.*too short/, count: 1)
+          expect(without_args).to have_tag('li', text: /Surname.*too short/, count: 1)
+          expect(without_args).to have_tag('li', text: /Login.*too short/, count: 1)
+          expect(without_args).to have_tag('li', text: /Base error/, count: 1)
+        end
+      end
+
+      it 'should render base and all errors when no args are passed with custom HTML options' do
+        semantic_form_for(@author) do |builder|
+          with_opts = builder.semantic_errors(class: 'custom-errors', id: 'error-summary', data: { controller: 'awesome' })
+
+          expect(with_opts).to have_tag('ul.custom-errors#error-summary[data-controller="awesome"]')
+          expect(with_opts).to have_tag('li', text: /Name.*too short/, count: 1)
+          expect(with_opts).to have_tag('li', text: /Surname.*too short/, count: 1)
+          expect(with_opts).to have_tag('li', text: /Login.*too short/, count: 1)
+          expect(with_opts).to have_tag('li', text: /Base error/, count: 1)
+        end
+      end
+    end # context 'when Formtastic::FormBuilder.semantic_errors_render_all_attributes is true'
+
+    it 'should render base errors when no args are passed' do
+      semantic_form_for(@author) do |builder|
+        without_args = builder.semantic_errors
+
+        expect(without_args).not_to have_tag('li', text: /Login.*too short/, count: 1)
+        expect(without_args).to have_tag('li', text: /Base error/, count: 1)
+      end
+    end
+
+    it 'should render base errors when no args are passed with custom HTML options' do
+      semantic_form_for(@author) do |builder|
+        with_opts = builder.semantic_errors(class: 'custom-errors', id: 'error-summary', data: { controller: 'awesome' })
+
+        expect(with_opts).to have_tag('ul.custom-errors#error-summary[data-controller="awesome"]')
+        expect(with_opts).not_to have_tag('li', text: /Login.*too short/, count: 1)
+        expect(with_opts).to have_tag('li', text: /Base error/, count: 1)
       end
     end
   end
@@ -122,6 +189,7 @@ RSpec.describe 'Formtastic::FormBuilder#semantic_errors' do
     describe 'when there is only one error on base' do
       before do
         allow(@errors).to receive(:[]).with(errors_matcher(:base)).and_return(@base_error)
+        allow(@errors).to receive(:attribute_names).and_return([])
       end
 
       it 'should render an unordered list' do
@@ -134,6 +202,7 @@ RSpec.describe 'Formtastic::FormBuilder#semantic_errors' do
     describe 'when there is more than one error on base' do
       before do
         allow(@errors).to receive(:[]).with(errors_matcher(:base)).and_return(@base_errors)
+        allow(@errors).to receive(:attribute_names).and_return([:base])
       end
 
       it 'should render an unordered list' do
@@ -150,6 +219,7 @@ RSpec.describe 'Formtastic::FormBuilder#semantic_errors' do
       before do
         allow(@errors).to receive(:[]).with(errors_matcher(:title)).and_return(@title_errors)
         allow(@errors).to receive(:[]).with(errors_matcher(:base)).and_return([])
+        allow(@errors).to receive(:attribute_names).and_return([:base, :title])
       end
 
       it 'should render an unordered list' do
@@ -164,6 +234,7 @@ RSpec.describe 'Formtastic::FormBuilder#semantic_errors' do
       before do
         allow(@errors).to receive(:[]).with(errors_matcher(:title)).and_return(@title_errors)
         allow(@errors).to receive(:[]).with(errors_matcher(:base)).and_return(@base_error)
+        allow(@errors).to receive(:attribute_names).and_return([:base, :title])
       end
 
       it 'should render an unordered list where base has no link, and title error attribute links to title input field' do
@@ -183,6 +254,7 @@ RSpec.describe 'Formtastic::FormBuilder#semantic_errors' do
       before do
         allow(@errors).to receive(:[]).with(errors_matcher(:title)).and_return([])
         allow(@errors).to receive(:[]).with(errors_matcher(:base)).and_return([])
+        allow(@errors).to receive(:attribute_names).and_return([])
       end
 
       it 'should return nil' do
@@ -195,6 +267,7 @@ RSpec.describe 'Formtastic::FormBuilder#semantic_errors' do
     describe 'when there is one error on base and options with class is passed' do
       before do
         allow(@errors).to receive(:[]).with(errors_matcher(:base)).and_return(@base_error)
+        allow(@errors).to receive(:attribute_names).and_return([])
       end
 
       it 'should render an unordered list with given class' do
@@ -207,12 +280,72 @@ RSpec.describe 'Formtastic::FormBuilder#semantic_errors' do
     describe 'when :base is passed in as an argument' do
       before do
         allow(@errors).to receive(:[]).with(errors_matcher(:base)).and_return(@base_error)
+        allow(@errors).to receive(:attribute_names).and_return([])
       end
 
       it 'should ignore :base and only render base errors once' do
         semantic_form_for(@new_post) do |builder|
           expect(builder.semantic_errors(:base)).to have_tag('ul li', count: 1)
           expect(builder.semantic_errors(:base)).not_to have_tag('ul li', text: "Base #{@base_error}")
+        end
+      end
+    end
+
+    describe 'when no attribute args or base are passed' do
+      before do
+        @author = AuthorWithValidations.new(name: 'a', surname: 'b', login: 'asdf')
+        @author.valid?
+        @author.errors.add(:base, 'Base error')
+      end
+
+      context 'when Formtastic::FormBuilder.semantic_errors_render_all_attributes is true' do
+        before do
+          Formtastic::FormBuilder.semantic_errors_render_all_attributes = true
+        end
+
+        after do
+          Formtastic::FormBuilder.semantic_errors_render_all_attributes = false
+        end
+
+        it 'should render base and all errors when no args are passed' do
+          semantic_form_for(@author) do |builder|
+            without_args = builder.semantic_errors
+
+            expect(without_args).to have_tag('ul.errors li a', text: /Name.*too short/, count: 1)
+            expect(without_args).to have_tag('ul.errors li a', text: /Surname.*too short/, count: 1)
+            expect(without_args).to have_tag('ul.errors li a', text: /Login.*too short/, count: 1)
+            expect(without_args).to have_tag('ul.errors li', text: /Base error/, count: 1)
+          end
+        end
+
+        it 'should render base and all errors when no args are passed with custom HTML options' do
+          semantic_form_for(@author) do |builder|
+            with_opts = builder.semantic_errors(class: 'custom-errors', id: 'error-summary', data: { role: 'alert' })
+
+            expect(with_opts).to have_tag('ul.custom-errors#error-summary[data-role="alert"]')
+            expect(with_opts).to have_tag('ul.custom-errors li a', text: /Name.*too short/, count: 1)
+            expect(with_opts).to have_tag('ul.custom-errors li a', text: /Surname.*too short/, count: 1)
+            expect(with_opts).to have_tag('ul.custom-errors li a', text: /Login.*too short/, count: 1)
+            expect(with_opts).to have_tag('ul.custom-errors li', text: /Base error/, count: 1)
+          end
+        end
+      end # context 'when Formtastic::FormBuilder.semantic_errors_render_all_attributes is true'
+
+      it 'should render base and all errors when no args are passed' do
+        semantic_form_for(@author) do |builder|
+          without_args = builder.semantic_errors
+
+          expect(without_args).not_to have_tag('ul.errors li a', text: /Login.*too short/, count: 1)
+          expect(without_args).to have_tag('ul.errors li', text: /Base error/, count: 1)
+        end
+      end
+
+      it 'should render base and all errors when no args are passed with custom HTML options' do
+        semantic_form_for(@author) do |builder|
+          with_opts = builder.semantic_errors(class: 'custom-errors', id: 'error-summary', data: { role: 'alert' })
+
+          expect(with_opts).not_to have_tag('ul.custom-errors li a', text: /Login.*too short/, count: 1)
+          expect(with_opts).to have_tag('ul.custom-errors li', text: /Base error/, count: 1)
         end
       end
     end

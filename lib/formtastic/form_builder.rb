@@ -48,6 +48,7 @@ module Formtastic
     configure :priority_time_zones, []
     configure :required_string, proc { %{<abbr title="#{Formtastic::I18n.t(:required)}">*</abbr>}.html_safe }
     configure :semantic_errors_link_to_inputs, false
+    configure :semantic_errors_render_all_attributes, false
     configure :skipped_columns, [:created_at, :updated_at, :created_on, :updated_on, :lock_version, :version]
     configure :use_required_attribute, false
 
